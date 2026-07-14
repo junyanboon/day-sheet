@@ -139,6 +139,25 @@
     .pill { margin-left: 0; }
   }
 </style>
+<script>
+  /* Self-refresh: keep an open tab current without a manual reload.
+     The sheet's data is rebuilt hourly (:40) and pushed here, so this
+     just re-fetches the latest pushed edition. It reloads when you
+     return to the tab (if the page is stale) and every ~10 min while
+     the tab is visible — never while the tab is hidden/backgrounded.
+     Preserved across hourly rebuilds (those do content-only row edits). */
+  (function () {
+    var MAX_AGE = 10 * 60 * 1000; // reload once the page is older than 10 min
+    var loadedAt = Date.now();
+    function maybeReload() {
+      if (document.visibilityState === "visible" && Date.now() - loadedAt > MAX_AGE) {
+        location.reload();
+      }
+    }
+    setInterval(maybeReload, 60 * 1000);
+    document.addEventListener("visibilitychange", maybeReload);
+  })();
+</script>
 </head>
 <body>
 
@@ -291,7 +310,7 @@
 
 <footer>
   <span>Sources: Notion ticket databases · live studio calendars · Zapier Message Queue · Concierge hourly sweep.</span>
-  <span>Names open the Notion ticket ↗ · refreshed hourly at :40 after the Concierge pass · codes and contact info live only in Notion.</span>
+  <span>Names open the Notion ticket ↗ · data rebuilt hourly at :40 after the Concierge pass · this page reloads itself — no manual refresh · codes and contact info live only in Notion.</span>
 </footer>
 
 </div>
