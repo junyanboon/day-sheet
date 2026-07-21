@@ -1,0 +1,110 @@
+name: day-sheet-render
+# Ticket 019 — deterministic tabbed Day Sheet renderer + desk-state snapshot.
+# Lives in THIS public repo (unlimited Actions minutes; a 15-min cron in the private
+# desk-correspondence repo would blow the free tier the watchlist job was engineered
+# around). The renderer script is CANON in desk-correspondence/scripts/ — checked out
+# here read-write via DESK_REPO_PAT so the desk-state snapshot can be pushed back.
+#
+# Every 15 min, ~08:00–23:00 Toronto (GitHub cron is UTC; 11:00–03:59 UTC covers the
+# window in both EDT and EST with a harmless shoulder hour). The 22:45 Toronto tick
+# also runs the end-of-day Workflow Reports finalizer (gated inside the script).
+
+on:
+  schedule:
+    - cron: "0,15,30,45 11-23 * * *"
+    - cron: "0,15,30,45 0-3 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: day-sheet-render
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # Skip cleanly (green) until the two secrets are configured.
+      - name: Gate on setup
+        id: gate
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          DESK_REPO_PAT: ${{ secrets.DESK_REPO_PAT }}
+        run: |
+          if [ -z "$NOTION_TOKEN" ] || [ -z "$DESK_REPO_PAT" ]; then
+            echo "::notice::NOTION_TOKEN / DESK_REPO_PAT not set — setup incomplete, skipping."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.ready == 'true'
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.ready == 'true'
+        with:
+          repository: junyanboon/desk-correspondence
+          token: ${{ secrets.DESK_REPO_PAT }}
+          path: desk
+          # sparse keeps the private checkout minimal — scripts + snapshot dir only
+          sparse-checkout: |
+            scripts
+            desk-state
+          sparse-checkout-cone-mode: true
+
+      - uses: actions/setup-python@v5
+        if: steps.gate.outputs.ready == 'true'
+        with:
+          python-version: "3.12"
+
+      - name: Render Day Sheet + snapshot
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: python3 desk/scripts/day_sheet_build.py --out new-index.html --state-out desk/desk-state/snapshot.json
+        # --state-out is provisional; the script names the dated file itself when
+        # given a directory-less default — we rename below so "changed?" is easy.
+
+      - name: Publish index.html (change-only, stamp line ignored)
+        if: steps.gate.outputs.ready == 'true'
+        run: |
+          strip_stamp() { sed -E 's/Desk · [^<]*//' "$1"; }
+          if [ -f index.html ] && diff -q <(strip_stamp index.html) <(strip_stamp new-index.html) >/dev/null; then
+            echo "no content change — not committing"
+          else
+            mv new-index.html index.html
+            git config user.name "day-sheet-bot"
+            git config user.email "day-sheet-bot@users.noreply.github.com"
+            git add index.html
+            git commit -m "Day Sheet $(date -u +%F' '%H:%M) render"
+            for i in 1 2 3; do
+              git push && break
+              git fetch origin main && git rebase -X theirs origin/main || git rebase --abort
+              sleep $((i * 3))
+            done
+          fi
+
+      - name: Push desk-state snapshot (change-only, race-tolerant)
+        if: steps.gate.outputs.ready == 'true'
+        run: |
+          cd desk
+          TODAY=$(TZ=America/Toronto date +%F)
+          mv desk-state/snapshot.json "desk-state/$TODAY.json"
+          git add desk-state/
+          if git diff --cached -I '"rebuilt_at"' --quiet; then
+            echo "no snapshot change — not committing"
+            exit 0
+          fi
+          git config user.name "day-sheet-bot"
+          git config user.email "day-sheet-bot@users.noreply.github.com"
+          git commit -m "desk-state: $TODAY snapshot"
+          for i in 1 2 3 4 5 6; do
+            if git push; then exit 0; fi
+            git fetch origin main || true
+            if ! git rebase -X theirs origin/main; then git rebase --abort 2>/dev/null || true; fi
+            sleep $((i * 3))
+          done
+          echo "::warning::desk-state push lost the race — non-fatal, next run rewrites."
+          exit 0
