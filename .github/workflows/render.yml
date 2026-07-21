@@ -108,3 +108,24 @@ jobs:
           done
           echo "::warning::desk-state push lost the race — non-fatal, next run rewrites."
           exit 0
+
+      # Retires the 4 LLM "FBS Monitor tick driver" RemoteTriggers (RUNTIMES.md):
+      # bump .rebuild-tick in fbs-monitor so its on:push rebuild fires — deterministic,
+      # zero tokens, same 15-min cadence. No-op until FBS_TICK_PAT (fine-grained,
+      # junyanboon/fbs-monitor, contents:rw) is added as a secret. Runs even when the
+      # render gate is closed — the tick must not depend on Notion setup.
+      - name: Tick fbs-monitor rebuild
+        if: always()
+        continue-on-error: true
+        env:
+          FBS_TICK_PAT: ${{ secrets.FBS_TICK_PAT }}
+        run: |
+          if [ -z "$FBS_TICK_PAT" ]; then
+            echo "::notice::FBS_TICK_PAT not set — tick skipped (LLM tick drivers still own the beat)."
+            exit 0
+          fi
+          API="https://api.github.com/repos/junyanboon/fbs-monitor/contents/.rebuild-tick"
+          SHA=$(curl -sf -H "Authorization: Bearer $FBS_TICK_PAT" "$API" | python3 -c "import json,sys; print(json.load(sys.stdin)['sha'])")
+          NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          BODY=$(python3 -c "import base64,json,sys; print(json.dumps({'message':'chore: rebuild tick (day-sheet piggyback)','content':base64.b64encode(f'tick {sys.argv[1]}'.encode()).decode(),'sha':sys.argv[2],'branch':'main'}))" "$NOW" "$SHA")
+          curl -sf -X PUT -H "Authorization: Bearer $FBS_TICK_PAT" -d "$BODY" "$API" >/dev/null && echo "ticked $NOW"
