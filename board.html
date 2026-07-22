@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dance Annex — Job Board</title></head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dance Annex — Job Board</title><link rel="icon" href="tickets-icon.svg"></head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
 <title>Dance Annex — Job Board Assessment</title>
 <style>
 :root{
@@ -426,6 +426,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
   <div class="meta"><span class="chip"><b>Runtime</b> cloud — GitHub Action, every 15 min 07:00–22:00</span><span class="chip"><b>Ground truth</b> 5 calendar ICS feeds — enumerable</span><span class="chip"><b>Canon</b> watchlist/YYYY-MM-DD.json → Notion DB as projection</span></div>
   <p class="assess"><b>Assess:</b> orphaned by the rulings — the Opener (its old rebuilder) dissolves, the Receptionist (ruled freshness owner on 07-15) is itself slated to retire with the poll. Assigning it to the bloated Concierge by default is exactly the reflex the registry exists to stop.</p>
   <p class="ruling"><b>Ruled + BUILT 07-15 (late):</b> J29 runs in the <b>cloud as its own deterministic job</b> — no persona. <code>watchlist_build.py</code> + a GitHub Action on the desk-correspondence repo: ICS feeds → exact Artist-DB phone match (alias table, never guesses — misses become logged exceptions) → daily canon file committed to the mirror → Notion DB synced for the Zap. Supersedes the Opener Step-6B re-point and the Receptionist-owns-freshness ruling. <b>Pending to go live:</b> six repo secrets (NOTION_TOKEN + 5 ICS URLs), one manual run, alias shake-out.</p>
+</div>
+
+<div class="job" data-v="build">
+  <div class="jhead"><span class="jnum">J30</span><h3>Thermal ground truth</h3><span class="verdict v-build">Build · new — no persona</span></div>
+  <p class="what">New job, banked 07-22. Log a real inside-temperature reading (Google SDM <code>ambientTemperatureCelsius</code>) for 509 + 901 to the 🌡️ Thermal Log every hour, so the Weatherman decides — and alerts — from ground truth instead of inferring from IFTTT crossings. Ends the 509 "malfunction suspected" false-alarm class for good and gives the Sunday re-fit real warm-up/cool-down curves.</p>
+  <div class="meta"><span class="chip"><b>Runtime</b> cloud — GitHub Action, hourly, gated 09:00–23:00 + 03:00 Toronto</span><span class="chip"><b>Ground truth</b> Google Device Access API — the thermostats themselves</span><span class="chip"><b>Canon</b> Kind=observation rows in the Thermal Log (Notion)</span></div>
+  <p class="assess"><b>Assess:</b> pure read→write, zero judgment — exactly the deterministic-job shape (J28/J29 pattern). Briefly ran as a local Claude scheduled task (2026-07-22, one day); demoted from agent to cron the same day: the local scheduler skips unattended fires, the Mac must be awake, and an LLM was burning tokens to copy two JSON fields.</p>
+  <p class="ruling"><b>Ruled + LIVE 07-22:</b> J30 runs in the <b>cloud as its own deterministic job</b> — no persona, no LLM. <code>log_reading.py</code> + GitHub Action on the new <code>sdm-logger</code> repo (5 secrets: 4× SDM OAuth + NOTION_TOKEN). The Weatherman reads the latest row (≤2h) as authoritative inside temp; missing rows fall back to its "telemetry gap" wording. Local <code>tools/sdm-read.sh</code> + tokens stay as the manual fallback.</p>
 </div>
 
 <h2>G · Structural decisions (not jobs)</h2>
