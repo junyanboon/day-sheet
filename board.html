@@ -1,0 +1,622 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dance Annex — Job Board</title></head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
+<title>Dance Annex — Job Board Assessment</title>
+<style>
+:root{
+  --paper:#f7f6f2; --ink:#22251f; --muted:#6b6f63; --line:#dcdbd2;
+  --card:#fffefb; --accent:#3d6b4f; --accent-ink:#fff;
+  --keep:#3d6b4f; --merge:#8a6d1f; --extract:#2f5d8a; --rethink:#a04a2a; --gap:#6b4a8a;
+  --dissolved:#7d7f76; --parked:#9a9c92; --build:#2f5d8a;
+  --chipbg:#eeede6; --rulingbg:#f0efe8;
+  --hot:#a04a2a; --warm:#8a6d1f; --cool:#3d6b4f;
+}
+@media (prefers-color-scheme: dark){:root{
+  --paper:#191b17; --ink:#e8e7de; --muted:#9ba092; --line:#33372e;
+  --card:#20231d; --accent:#7fb894; --accent-ink:#10120e;
+  --keep:#7fb894; --merge:#d4b45a; --extract:#7fa8d0; --rethink:#d98a68; --gap:#b294d4;
+  --dissolved:#8a8d81; --parked:#6f7268; --build:#7fa8d0;
+  --chipbg:#2a2d25; --rulingbg:#252822;
+  --hot:#d98a68; --warm:#d4b45a; --cool:#7fb894;
+}}
+:root[data-theme="dark"]{
+  --paper:#191b17; --ink:#e8e7de; --muted:#9ba092; --line:#33372e;
+  --card:#20231d; --accent:#7fb894; --accent-ink:#10120e;
+  --keep:#7fb894; --merge:#d4b45a; --extract:#7fa8d0; --rethink:#d98a68; --gap:#b294d4;
+  --dissolved:#8a8d81; --parked:#6f7268; --build:#7fa8d0;
+  --chipbg:#2a2d25; --rulingbg:#252822;
+  --hot:#d98a68; --warm:#d4b45a; --cool:#7fb894;
+}
+:root[data-theme="light"]{
+  --paper:#f7f6f2; --ink:#22251f; --muted:#6b6f63; --line:#dcdbd2;
+  --card:#fffefb; --accent:#3d6b4f; --accent-ink:#fff;
+  --keep:#3d6b4f; --merge:#8a6d1f; --extract:#2f5d8a; --rethink:#a04a2a; --gap:#6b4a8a;
+  --dissolved:#7d7f76; --parked:#9a9c92; --build:#2f5d8a;
+  --chipbg:#eeede6; --rulingbg:#f0efe8;
+  --hot:#a04a2a; --warm:#8a6d1f; --cool:#3d6b4f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.55 "Avenir Next","Segoe UI",system-ui,sans-serif;padding:2.5rem 1.25rem 5rem}
+.wrap{max-width:900px;margin:0 auto}
+header h1{font-family:Georgia,"Times New Roman",serif;font-size:2.1rem;line-height:1.15;margin:0 0 .4rem;text-wrap:balance}
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;color:var(--muted);margin-bottom:.6rem}
+header p.lede{color:var(--muted);max-width:62ch;margin:.3rem 0 0}
+.statusbar{background:var(--card);border:1px solid var(--accent);border-radius:8px;padding:1rem 1.2rem;margin:1.6rem 0 0}
+.statusbar h2{border:0;margin:0 0 .3rem;padding:0;font-size:1.05rem}
+.statusbar p{margin:.3rem 0;font-size:.88rem;max-width:75ch}
+.statusbar .tickets{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:.45rem;margin:.7rem 0 0;padding:0;list-style:none}
+.statusbar .tickets li{font-size:.8rem;background:var(--chipbg);border-radius:5px;padding:.4rem .6rem;color:var(--muted)}
+.statusbar .tickets b{color:var(--ink);font-weight:600}
+.tstate{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700;border-radius:999px;padding:.1rem .45rem;margin-right:.3rem;color:var(--paper);display:inline-block}
+.t-ready{background:var(--keep)} .t-blocked{background:var(--merge)} .t-you{background:var(--rethink)} .t-done{background:var(--dissolved)}
+.principles{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.75rem;margin:1.8rem 0 0}
+.pr{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.8rem .95rem}
+.pr b{display:block;font-size:.85rem;margin-bottom:.2rem}
+.pr span{font-size:.8rem;color:var(--muted)}
+h2{font-family:Georgia,serif;font-size:1.35rem;margin:2.6rem 0 .2rem;padding-top:1.4rem;border-top:1px solid var(--line)}
+h2 + p.sub{color:var(--muted);font-size:.88rem;margin:.1rem 0 1rem;max-width:70ch}
+.filters{position:sticky;top:3.05rem;background:var(--paper);padding:.8rem 0;margin-top:2rem;display:flex;flex-wrap:wrap;gap:.5rem;z-index:5;border-bottom:1px solid var(--line)}
+.filters button{font:inherit;font-size:.78rem;letter-spacing:.04em;border:1px solid var(--line);
+  background:var(--card);color:var(--ink);border-radius:999px;padding:.3rem .85rem;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.filters button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.job{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:1.1rem 1.25rem;margin:1rem 0}
+.job.hidden{display:none}
+.job.dimmed{opacity:.68}
+.jhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem}
+.jnum{font-family:Georgia,serif;font-size:1rem;color:var(--muted);min-width:2.6rem}
+.jhead h3{margin:0;font-size:1.05rem;flex:1}
+.verdict{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700;
+  padding:.22rem .6rem;border-radius:999px;color:var(--paper);align-self:center}
+.v-keep{background:var(--keep)} .v-merge{background:var(--merge)} .v-extract{background:var(--extract)}
+.v-rethink{background:var(--rethink)} .v-gap{background:var(--gap)}
+.v-dissolved{background:var(--dissolved)} .v-parked{background:var(--parked)} .v-build{background:var(--build)}
+.job p.what{margin:.55rem 0 .4rem;max-width:70ch}
+.meta{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
+.chip{font-size:.72rem;background:var(--chipbg);border-radius:4px;padding:.18rem .5rem;color:var(--muted)}
+.chip b{color:var(--ink);font-weight:600}
+.assess{border-left:3px solid var(--line);padding:.1rem 0 .1rem .8rem;margin:.7rem 0 0;font-size:.88rem;color:var(--muted)}
+.assess b{color:var(--ink)}
+.ruling{border-left:3px solid var(--accent);background:var(--rulingbg);border-radius:0 6px 6px 0;padding:.55rem .8rem;margin:.7rem 0 0;font-size:.88rem}
+.ruling b{color:var(--accent)}
+.legend{display:flex;flex-wrap:wrap;gap:.9rem;font-size:.78rem;color:var(--muted);margin:1rem 0 0}
+.legend i{display:inline-block;width:.7rem;height:.7rem;border-radius:2px;margin-right:.3rem;vertical-align:-1px}
+footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;max-width:70ch}
+
+/* ---- tabs ---- */
+.tabs{position:sticky;top:0;z-index:6;background:var(--paper);display:flex;gap:.4rem;
+  padding:.6rem 0 0;border-bottom:1px solid var(--line);margin:1.8rem 0 0}
+.tabs button{font:inherit;font-size:.85rem;font-weight:600;letter-spacing:.02em;cursor:pointer;
+  border:1px solid var(--line);border-bottom:none;background:var(--chipbg);color:var(--muted);
+  border-radius:8px 8px 0 0;padding:.5rem 1.1rem;position:relative;top:1px}
+.tabs button[aria-selected="true"]{background:var(--card);color:var(--ink);border-color:var(--line);
+  border-bottom:1px solid var(--card)}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tabpanel[hidden]{display:none}
+
+/* ---- distribution view ---- */
+.dist-note{background:var(--card);border:1px solid var(--rethink);border-radius:8px;padding:1rem 1.2rem;margin:1.4rem 0 0}
+.dist-note h2{border:0;margin:0 0 .3rem;padding:0;font-size:1.05rem}
+.dist-note p{margin:.3rem 0;font-size:.88rem;max-width:75ch}
+.persona{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:1rem 1.2rem;margin:1rem 0}
+.persona.homeless{border-color:var(--rethink)}
+.persona.retiring{opacity:.68}
+.phead{display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem}
+.phead h3{margin:0;font-size:1.05rem;font-family:Georgia,serif}
+.phead .runtime{font-size:.72rem;color:var(--muted);flex:1}
+.load{display:flex;align-items:center;gap:.45rem;font-size:.72rem;color:var(--muted);white-space:nowrap}
+.load .bar{display:inline-flex;gap:2px}
+.load .bar i{width:.55rem;height:.9rem;border-radius:2px;background:var(--chipbg);display:inline-block}
+.load .bar i.f{background:var(--cool)}
+.load.hot .bar i.f{background:var(--hot)}
+.load.warm .bar i.f{background:var(--warm)}
+.jobrow{display:flex;flex-wrap:wrap;gap:.45rem;margin:.7rem 0 0}
+.jc{display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;background:var(--chipbg);
+  border:1px solid var(--line);border-radius:6px;padding:.3rem .6rem;color:var(--ink)}
+.jc .dot{width:.55rem;height:.55rem;border-radius:2px;flex:none}
+.jc .cad{color:var(--muted);font-size:.7rem}
+.jc.gone{opacity:.55;text-decoration:line-through}
+.jc.incoming{border-style:dashed;border-color:var(--accent)}
+.pnote{font-size:.8rem;color:var(--muted);margin:.6rem 0 0;max-width:72ch}
+.pnote b{color:var(--ink)}
+.j29{border:2px solid var(--rethink);border-radius:8px;background:var(--rulingbg);padding:1rem 1.2rem;margin:1rem 0}
+.j29 h3{margin:0 0 .3rem;font-size:1.05rem;font-family:Georgia,serif}
+.j29 p{font-size:.88rem;margin:.35rem 0;max-width:75ch}
+.j29 .options{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.6rem;margin:.7rem 0 0}
+.j29 .opt{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.7rem .85rem;font-size:.8rem}
+.j29 .opt b{display:block;margin-bottom:.15rem}
+.j29 .opt span{color:var(--muted)}
+.distlegend{display:flex;flex-wrap:wrap;gap:.9rem;font-size:.75rem;color:var(--muted);margin:1.1rem 0 0}
+.distlegend i{display:inline-block;width:.65rem;height:.65rem;border-radius:2px;margin-right:.3rem;vertical-align:-1px}
+</style>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Dance Annex · desk restructure working paper · assessed 2026-07-13 · ruled 2026-07-15 · distribution added 2026-07-15</div>
+  <h1>The Job Board: every job, judged — and now ruled</h1>
+  <p class="lede">All the work the desk performs today, decoupled from the personas that happen to run it. The <b>Job Board</b> tab holds the verdicts and your 07-15 rulings. The <b>Distribution</b> tab shows how the surviving jobs land across the personas — built to answer one question: which runtime should own each unassigned job, starting with J29.</p>
+<p class="nav" style="margin:.6rem 0 0;font-size:.85rem">↔ <a href="tickets.html" style="color:var(--accent)">Tickets &amp; decisions</a> · <a href="index.html" style="color:var(--accent)">Day Sheet</a></p></header>
+
+<div class="tabs" role="tablist" aria-label="Views">
+  <button role="tab" id="tab-b" aria-selected="true" aria-controls="panel-board">Job Board</button>
+  <button role="tab" id="tab-d" aria-selected="false" aria-controls="panel-dist">Distribution</button>
+</div>
+
+<!-- ============================ TAB 1 — JOB BOARD ============================ -->
+<section id="panel-board" class="tabpanel" role="tabpanel" aria-labelledby="tab-b">
+
+  <div class="statusbar">
+    <h2>Where the repair stands (2026-07-15, evening)</h2>
+    <p>All 28 verdicts ruled. Dissolved outright: J02, J14, J18, J19. New jobs banked: <b>J28 correspondence ledger</b> (LIVE — Gmail Zaps + SMS poller + repo mirror complete) and <b>J29 watchlist freshness</b> (BUILT as a cloud script — pending six repo secrets). The <b>J03 emergency lane is LIVE end-to-end</b>: Phone.com webhook → keyword paths → Staff Call Queue → on-call SMS note. Cloud Concierge :10 stays off by your ruling; the Brazil-window answer is emerging as the no-persona lane: J28 + J03 + J29 all run unattended without the Mac.</p>
+    <ul class="tickets">
+      <li><span class="tstate t-you">needs you</span><b>004</b> Cadence right-sizing — grilling, now unblocked</li>
+      <li><span class="tstate t-you">needs you</span><b>001</b> Jobs registry — schema confirm + J29 owner call</li>
+      <li><span class="tstate t-ready">ready</span><b>006</b> J28 ledger — LIVE incl. SMS mirror; token + hourly schedule + day-one count remain</li>
+      <li><span class="tstate t-ready">ready</span><b>007</b> Dissolve Opener/Closer → Doorman evening pass</li>
+      <li><span class="tstate t-ready">ready</span><b>008</b> J13 attributed-repair contract</li>
+      <li><span class="tstate t-done">closed</span><b>010</b> J12 → deterministic code — decay_pass.py LIVE (daily Action)</li>
+      <li><span class="tstate t-ready">ready</span><b>011</b> J03 emergency lane LIVE — watchlist freshness (J29) is the tail</li>
+      <li><span class="tstate t-ready">ready</span><b>013</b> SQL-router 429 headroom (tactical)</li>
+      <li><span class="tstate t-ready">ready</span><b>014</b> Repair broken views (FBS straggler, Invariants)</li>
+      <li><span class="tstate t-blocked">blocked</span><b>005</b> J26 cost ledger — needs registry 001</li>
+      <li><span class="tstate t-blocked">blocked</span><b>009</b> Dissolve J14 — needs 008</li>
+      <li><span class="tstate t-blocked">blocked</span><b>015</b> Notion-log → J28 cutover — needs 006 closed</li>
+      <li><span class="tstate t-done">closed</span><b>002 · 003 · 012 · 013b</b> rulings · reliability · :10 stays off · Codex Slack = browser-only</li>
+    </ul>
+  </div>
+
+  <div class="principles">
+    <div class="pr"><b>Closed loops, not open loops</b><span>Every process should measure its own output and feed corrections back in. A job with no feedback path is lossy by design.</span></div>
+    <div class="pr"><b>Queryable &amp; artifact-rich</b><span>Every action leaves an artifact the intelligence layer can learn from. Jobs already do this well (reports, logs, queue rows) — keep it.</span></div>
+    <div class="pr"><b>One job, one accountable owner</b><span>The DRI idea applied to agents: one outcome per agent, no hiding. Jobs sharing an inbox or a board must either merge or define a hard seam.</span></div>
+    <div class="pr"><b>Spec + tests, agent implements</b><span>The software-factory pattern: you define "correct" as checkable criteria; the agent iterates until it passes. Jobs with machine-checkable ground truth fit this today.</span></div>
+    <div class="pr"><b>No human middleware</b><span>Remove routing layers. A job whose only output is "telling another job something" is a candidate to cut.</span></div>
+    <div class="pr"><b>Token-max, not headcount-max</b><span>An uncomfortable API bill is fine if it buys back supervision minutes — but only measurable spend. J26 (ticket 005) makes spend measured; framing is subscription headroom, not cash bleed.</span></div>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--keep)"></i>KEEP — earns its place as-is</span>
+    <span><i style="background:var(--extract)"></i>EXTRACT — pull out into its own agent</span>
+    <span><i style="background:var(--build)"></i>BUILD — new job, ruled in</span>
+    <span><i style="background:var(--rethink)"></i>RECAST — kept, contract changed</span>
+    <span><i style="background:var(--dissolved)"></i>DISSOLVED — ruled out of existence</span>
+    <span><i style="background:var(--parked)"></i>PARKED — real, but not this effort</span>
+  </div>
+
+<div class="filters" role="group" aria-label="Filter by status">
+  <button aria-pressed="true" data-f="all">All</button>
+  <button aria-pressed="false" data-f="keep">Keep</button>
+  <button aria-pressed="false" data-f="extract">Extract</button>
+  <button aria-pressed="false" data-f="build">Build</button>
+  <button aria-pressed="false" data-f="rethink">Recast</button>
+  <button aria-pressed="false" data-f="dissolved">Dissolved</button>
+  <button aria-pressed="false" data-f="parked">Parked</button>
+</div>
+
+<h2>A · Inbound communications</h2>
+<p class="sub">Everything that starts with a customer or staff message arriving.</p>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J01</span><h3>Email triage</h3><span class="verdict v-keep">Keep</span></div>
+  <p class="what">Work the inbox to zero every hour: label each thread, open a ticket when there's a real request, queue a held reply or a courtesy acknowledgement, and log every thread in the audit log.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> hourly</span><span class="chip"><b>Ground truth</b> inbox-zero is binary; audit log per thread</span><span class="chip"><b>Scoreability</b> med-high</span><span class="chip">today: Concierge</span></div>
+  <p class="assess"><b>Assess:</b> the front door — indispensable. The real question is scope: does it still <i>draft replies</i> (see J04) and still handle <i>same-day urgency</i> (see J02), or does it shrink to pure routing + ticket creation?</p>
+  <p class="ruling"><b>Ruled 07-15:</b> keep. Absorbs J02's today-first priority rule as its first pass. Reply-drafting leaves with J04 (sibling map owns the Responder); same-day speed is solved by the event-driven lane (J03 ruling), not a second inbox agent.</p>
+</div>
+
+<div class="job dimmed" data-v="dissolved">
+  <div class="jhead"><span class="jnum">J02</span><h3>Same-day fast-track</h3><span class="verdict v-dissolved">Dissolved</span></div>
+  <p class="what">Before normal triage, scan for anything about <i>today</i> — same-day booking requests, urgent care issues, first-timers arriving — and handle it immediately: build the ticket, hold the confirmation, don't wait a cycle.</p>
+  <div class="meta"><span class="chip">was: Concierge</span></div>
+  <p class="ruling"><b>Ruled 07-15:</b> dissolved as a job — it was triage with a priority rule, and two agents on one inbox violates one-owner. The rule folds into J01; the speed problem it existed for is answered by the event-driven auto-send lane (see J03).</p>
+</div>
+
+<div class="job" data-v="rethink">
+  <div class="jhead"><span class="jnum">J03</span><h3>Quick-answer line → event-driven auto-send lane</h3><span class="verdict v-rethink">Recast · ticket 011</span></div>
+  <p class="what">Match inbound texts/emails against pre-approved answer cards and auto-send the answer (the only auto-send on the desk). Anything not on a card gets left for triage; true emergencies summon a human.</p>
+  <div class="meta"><span class="chip"><b>Today</b> 15-min Receptionist poll</span><span class="chip"><b>Becomes</b> event-driven, one job one owner</span><span class="chip"><b>Scoreability</b> high</span></div>
+  <p class="assess"><b>Assess:</b> already a model micro-agent: one job, bounded authority, fast. Gap: nothing reviews wrong-card matches.</p>
+  <p class="ruling"><b>Ruled 07-15:</b> converge with the emergency fast-lane the sibling map is building — inbound arrives → match cards → auto-send, with emergency as the highest-priority card (reply-gate + phone call). The 15-min Receptionist poll retires once the event lane is live. <b>Closed loop mandatory:</b> per-episode logs, J15 samples auto-sends, results feed J17.</p>
+  <p class="ruling"><b>LIVE 07-15 (evening):</b> the emergency lane is live end-to-end — the "Emergency Call Line" Zap catches every inbound SMS in real time: life-safety/leak keywords page on-call immediately (no verification); lockout/alarm/code-failing keywords page only for numbers verified on the new ⚡ Fast-Track Watchlist <b>DB</b> (E.164-keyed, Zap-lookupable). Rows land in the 📞 Staff Call Queue; the existing published queue Zap sends the on-call SMS note (Dispatch = Note only). Cloud-side, zero polling, no Mac dependency. The tail: watchlist freshness is now its own job — <b>J29</b>, owner unassigned (see Distribution).</p>
+</div>
+
+<div class="job" data-v="extract">
+  <div class="jhead"><span class="jnum">J04</span><h3>Reply drafting (customer-facing messages)</h3><span class="verdict v-extract">Extract — the probe</span></div>
+  <p class="what">Compose every held customer reply from the How-to-Respond template library: pick the template, adapt it to the thread, queue it with provenance for human release. Today invoked from inside five different jobs.</p>
+  <div class="meta"><span class="chip"><b>Ground truth</b> drafted-vs-sent diff per reply (J11 computes it)</span><span class="chip"><b>Scoreability</b> highest on the desk</span><span class="chip"><b>Closed loop?</b> yes — the only true one today</span></div>
+  <p class="assess"><b>Assess:</b> the strongest extraction case and the agreed probe ("Responder") — templates are the spec, human-edit rate is the test.</p>
+  <p class="ruling"><b>Ruled 07-15:</b> confirmed — owned by the <b>self-improving-desk map</b> (its regular-lane + emergency-lane builds). On this map it is a coordinated given: reply-drafting leaves the Concierge, never double-extracted. Ela approves what the probe drafts.</p>
+</div>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J05</span><h3>Handback &amp; staff-drop filing</h3><span class="verdict v-keep">Keep</span></div>
+  <p class="what">Pick up work humans finished their part of: Action rows marked done, codes and screenshots dropped in the staff Slack channel. File the information where it belongs and resume the parked ticket.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> hourly</span><span class="chip"><b>Ground truth</b> ✅ reaction + verified filing</span><span class="chip">today: Concierge</span></div>
+  <p class="assess"><b>Assess:</b> genuinely distinct trigger and output — the human↔agent edge; keep it crisp, don't let it grow judgment work.</p>
+  <p class="ruling"><b>Ruled 07-15 (reliability):</b> the drops scan is currently fragile — Codex cannot read #desk-drops via connector (browser-read only, confirmed 07-15), cloud :10 is off, so only your manual kicks cover it. The <b>J28 ledger (ticket 006)</b> is the durable fix: drops filed to the owned store, runtime-independent.</p>
+</div>
+
+<h2>B · Bookings, access &amp; premises</h2>
+<p class="sub">Turning bookings into open doors, right temperatures, and timely messages.</p>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J06</span><h3>Arrival/departure truth (alarm sweep)</h3><span class="verdict v-keep">Keep</span></div>
+  <p class="what">Read the alarm-system emails against the booking calendars every hour: log who actually arrived and left, flip booking statuses, open a ticket when an alarm doesn't match a booking, queue follow-ups and no-show checks.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> hourly</span><span class="chip"><b>Ground truth</b> alarm emails — external and unfakeable</span><span class="chip"><b>Scoreability</b> high</span><span class="chip">today: Concierge</span></div>
+  <p class="assess"><b>Assess:</b> the desk's ground-truth generator — everything else trusts the board this writes. Best candidate for the <i>second</i> extraction after J04.</p>
+</div>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J07</span><h3>Access pre-flight</h3><span class="verdict v-keep">Keep + evening pass</span></div>
+  <p class="what">Each morning, check every renter booked today and tomorrow against the live alarm panels: is their code on the right panel with the right window? Fix mismatches autonomously; missing codes become an action row for staff.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> daily 08:00 + evening (new)</span><span class="chip"><b>Ground truth</b> live panel state</span><span class="chip"><b>Closed loop?</b> self-verifies its own writes</span><span class="chip">today: Doorman (Mac-bound)</span></div>
+  <p class="assess"><b>Assess:</b> already right-sized and self-verifying; the last must-stay-local job, a single point of failure when the Mac sleeps.</p>
+  <p class="ruling"><b>Ruled 07-15:</b> gains the <b>premises-armed evening pass</b> from the dissolved Closer (ticket 007) — verify armed state against live panel state for today's closed locations. Adds a second daily local fire; Mac-sleep risk flagged.</p>
+</div>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J08</span><h3>Day itinerary &amp; scheduled messages</h3><span class="verdict v-keep">Keep — stays separate</span></div>
+  <p class="what">Pre-dawn: build today's booking itinerary and queue the day's scheduled customer messages — how-to-access, end-of-booking, availability — for each booking that's good to go.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> daily pre-dawn</span><span class="chip"><b>Ground truth</b> queue rows vs board; dedup rules</span><span class="chip">today: Host</span></div>
+  <p class="assess"><b>Assess:</b> deterministic mail-merge — keep. Boundary question: do these templated sends move under the reply-owner when J04 extracts?</p>
+  <p class="ruling"><b>Ruled 07-15:</b> stays a separate batch job — batch and reactive are different failure modes. Not folded into the Responder.</p>
+</div>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J09</span><h3>Tomorrow staffing prep</h3><span class="verdict v-keep">Keep</span></div>
+  <p class="what">Each evening, stage tomorrow's staffing: arrival/departure support blocks and open-shift rows for every booking that needs cover, plus a gap check on non-contract renters.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> daily 19:30</span><span class="chip"><b>Ground truth</b> blocks vs bookings — enumerable</span><span class="chip">today: Planner</span></div>
+  <p class="assess"><b>Assess:</b> clean, checkable, already burned in after the July scope correction. Keep as-is.</p>
+</div>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J10</span><h3>Climate control</h3><span class="verdict v-keep">Keep</span></div>
+  <p class="what">Hourly: read the forecast, move thermostat setpoints up or down the crossing ladder, log the thermal data.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> hourly</span><span class="chip"><b>Ground truth</b> thermal log vs forecast</span><span class="chip"><b>Closed loop?</b> yes — literally a control loop</span><span class="chip">today: Weatherman</span></div>
+  <p class="assess"><b>Assess:</b> the desk's one textbook closed-loop control system. Keep; nothing to do.</p>
+</div>
+
+<h2>C · Ticket lifecycle &amp; state hygiene</h2>
+<p class="sub">Keeping the board truthful after the doing jobs have acted. This is where the overlap lived — two of its four jobs are now gone or recast.</p>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J11</span><h3>Reconcile &amp; feed the learning loop</h3><span class="verdict v-keep">Keep — future scorer</span></div>
+  <p class="what">Match what was actually sent against what was drafted; log correspondence; advance tickets whose sends completed; flag stuck sends; and record every drafted-vs-sent difference as learning data.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> hourly</span><span class="chip"><b>Scoreability</b> high</span><span class="chip"><b>Closed loop?</b> it IS the loop's sensor</span><span class="chip">today: Concierge</span></div>
+  <p class="assess"><b>Assess:</b> the most load-bearing job on this page. Whatever else splits, this stays <i>outside</i> whichever agent drafts replies (scorer ≠ doer).</p>
+  <p class="ruling"><b>Reliability note 07-15:</b> its dedup queries are the main victim of the Notion SQL 429 throttle — passes end "partial / safely stopped." Tactical relief is ticket 013; the structural fix is J28's ledger replacing those SQL reads.</p>
+</div>
+
+<div class="job" data-v="rethink">
+  <div class="jhead"><span class="jnum">J12</span><h3>Sales-lead decay</h3><span class="verdict v-rethink">Recast → code · ticket 010</span></div>
+  <p class="what">Age stale sales tickets by fixed date rules: nudge, then decay the stage, then auto-close. A customer reply reverses the decay.</p>
+  <div class="meta"><span class="chip"><b>Was</b> 2×/day LLM pass</span><span class="chip"><b>Becomes</b> deterministic scheduled code</span><span class="chip"><b>Ground truth</b> date math</span></div>
+  <p class="assess"><b>Assess:</b> so deterministic it barely needs an LLM.</p>
+  <p class="ruling"><b>Ruled 07-15:</b> replace the LLM pass with deterministic plumbing (Zapier or code); nudge <i>wording</i> becomes a held draft owned by J04/Responder, queued like any other reply. Removes two LLM fires a day.</p>
+  <p class="ruling"><b>LIVE 07-17:</b> <code>decay_pass.py</code> — daily <b>sales-decay</b> GitHub Action (desk-correspondence, ~09:05). Abstains + flags anything needing judgment; nudges queue held at Pending Review.</p>
+</div>
+
+<div class="job" data-v="rethink">
+  <div class="jhead"><span class="jnum">J13</span><h3>Self-heal backstop → attributed failure-data collector</h3><span class="verdict v-rethink">Recast · ticket 008</span></div>
+  <p class="what">Re-check every open ticket against ground truth and repair whatever any job missed — finish half-built shells, fix wrong states, send proactive heads-ups.</p>
+  <div class="meta"><span class="chip"><b>Was</b> 2×/day, silent fixes</span><span class="chip"><b>Becomes</b> 1×/day, every repair attributed</span></div>
+  <p class="assess"><b>Assess:</b> the anti-pattern the talk warns about: silently absorbing every other job's failures destroys attributability.</p>
+  <p class="ruling"><b>Ruled 07-15:</b> no silent fixes — every repair names the causing job and files a structured defect row (optimizer-food for the critic/SkillOpt). Cadence drops to 1×/day. Absorbs J14's former repair work.</p>
+</div>
+
+<div class="job dimmed" data-v="dissolved">
+  <div class="jhead"><span class="jnum">J14</span><h3>Invariants fix</h3><span class="verdict v-dissolved">Dissolved · ticket 009</span></div>
+  <p class="what">Hourly: read the latest rail-violations list (produced by the QA job) and repair broken ticket state — wrong positions, unchecked to-dos, contradictory fields.</p>
+  <div class="meta"><span class="chip">was: Concierge hourly step</span></div>
+  <p class="ruling"><b>Ruled 07-15:</b> the hourly pass is cut. Detection stays with J15 (violations list unchanged); repair folds into J13's daily attributed pass. Root cause is fixed upstream by the sibling's single-source ticket-state convention. Lands after ticket 008.</p>
+</div>
+
+<h2>D · Quality &amp; self-improvement</h2>
+<p class="sub">The closed-loop machinery itself — per the talk, this section should be the strongest. The rulings fund it: J17 and J26 are both confirmed builds.</p>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J15</span><h3>Independent QA &amp; review grading</h3><span class="verdict v-keep">Keep — promote</span></div>
+  <p class="what">Twice a day, audit the desk's recent work without doing any of it: check tickets sitting in Review, sweep for defects, grade the desk clean/minor/serious, file each defect as an action row.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> 2×/day</span><span class="chip"><b>Scoreability</b> high</span><span class="chip">today: Custodian/Verifier</span></div>
+  <p class="assess"><b>Assess:</b> the seed of the critic the whole model depends on.</p>
+  <p class="ruling"><b>Ruled 07-15:</b> keeps rail-violation <i>detection</i> (J14's fix side moved to J13); gains sampling of J03's auto-sends for wrong-card matches. Output evolves to defects <i>attributed per job</i>, feeding J17.</p>
+</div>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J16</span><h3>Improvement apply (SOP self-editing)</h3><span class="verdict v-keep">Keep — strengthen</span></div>
+  <p class="what">Twice a day, read accumulated staff feedback and learning-loop suggestions; apply small fixes directly to the SOPs and template library; digest bigger proposals for you.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> 2×/day</span><span class="chip"><b>Closed loop?</b> the actuator of the loop</span><span class="chip">today: Concierge (heavy pass)</span></div>
+  <p class="assess"><b>Assess:</b> the "self-improving" part, live in miniature. Weakness: nothing verifies an SOP edit made things better — pair with J17.</p>
+</div>
+
+<div class="job" data-v="build">
+  <div class="jhead"><span class="jnum">J17</span><h3>Per-job scorecards (the critic)</h3><span class="verdict v-build">Build — confirmed</span></div>
+  <p class="what">A nightly job that computes each job's score from artifacts that already exist (J11's diffs, J15's defects, report counts), writes a one-line trend per job, and hands failing trends to J16 as prompt/SOP change requests.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> nightly</span><span class="chip"><b>Closed loop?</b> this closes it</span></div>
+  <p class="assess"><b>Assess:</b> the missing keystone — accountability with no accounting otherwise.</p>
+  <p class="ruling"><b>Ruled 07-15:</b> build confirmed. Sequenced: the sibling map builds the probe-scoped critic (Responder) first; generalizing to every registry job waits for the Jobs registry (ticket 001) + the probe critic. Score line lives on each job's registry row.</p>
+</div>
+
+<h2>E · Shift bookends &amp; reporting</h2>
+<p class="sub">Fixed-time jobs that verify, report, and publish. The bookends are gone.</p>
+
+<div class="job dimmed" data-v="dissolved">
+  <div class="jhead"><span class="jnum">J18</span><h3>Morning open verification</h3><span class="verdict v-dissolved">Dissolved · ticket 007</span></div>
+  <p class="what">Each morning, verify the day is properly set up: pre-dawn reports exist, boards are ready, morning messages are queued.</p>
+  <div class="meta"><span class="chip">was: Opener, daily 08:20</span></div>
+  <p class="ruling"><b>Ruled 07-15:</b> retired outright. Missing reports are surfaced by Sentinel (J24) and the digest (J23) and investigated by the Ops lead — <b>no fire-missing-generator authority is added anywhere</b>. Run retired via banner flip; heartbeat roster row removed so Sentinel doesn't false-alarm. <b>Orphan to re-home first:</b> the Opener's watchlist rebuild (Step 6B) — now part of J29.</p>
+</div>
+
+<div class="job dimmed" data-v="dissolved">
+  <div class="jhead"><span class="jnum">J19</span><h3>Evening close</h3><span class="verdict v-dissolved">Dissolved · ticket 007</span></div>
+  <p class="what">Each night, confirm premises are secured per the day's arrival/departure log and wrap the day's loose ends.</p>
+  <div class="meta"><span class="chip">was: Closer, daily 21:30</span></div>
+  <p class="ruling"><b>Ruled 07-15:</b> retired. The non-negotiable premises-armed check moves to the <b>Doorman's new evening pass</b> (J07), verified against live panel state rather than board fields. Banner flip + roster edit with J18.</p>
+</div>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J20</span><h3>Issue-prevention report</h3><span class="verdict v-keep">Keep</span></div>
+  <p class="what">Pre-dawn: scan tomorrow's bookings and open work for likely problems and publish a heads-up report.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> daily pre-dawn</span><span class="chip">today: Analyst</span></div>
+  <p class="assess"><b>Assess:</b> keep; cheap and useful. Easy loop upgrade: J17 scores yesterday's predictions against what actually happened.</p>
+</div>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J21</span><h3>Overtime report</h3><span class="verdict v-keep">Keep</span></div>
+  <p class="what">Pre-dawn: compute yesterday's booking overtime and publish the report.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> daily</span><span class="chip">today: Timekeeper</span></div>
+  <p class="assess"><b>Assess:</b> deterministic report generator. Keep; zero restructure value in touching it.</p>
+</div>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J22</span><h3>Staff-hours logging</h3><span class="verdict v-keep">Keep</span></div>
+  <p class="what">Pre-dawn: log staff hours worked into the records that payroll and reporting read.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> daily</span><span class="chip">today: Bookkeeper</span></div>
+  <p class="assess"><b>Assess:</b> keep as-is. Same class as J21.</p>
+</div>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J23</span><h3>Daily ops digest</h3><span class="verdict v-keep">Keep</span></div>
+  <p class="what">Each morning, compile all the pre-dawn reports and overnight alerts into one published dashboard page; a missing report appears on the page as a finding.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> daily 08:40</span><span class="chip">today: Night Watch</span></div>
+  <p class="assess"><b>Assess:</b> the talk's "custom dashboard," in embryo — the natural home for J17's score trends. With J18 gone, this page (plus Sentinel) is where a missing report surfaces.</p>
+</div>
+
+<h2>F · Infrastructure &amp; finance</h2>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J24</span><h3>Run monitoring</h3><span class="verdict v-keep">Keep</span></div>
+  <p class="what">Hourly: check the heartbeat roster for scheduled runs that didn't fire and raise the alarm; two watchers monitor each other so the watchdog itself can't die silently.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> hourly ×2 offset</span><span class="chip">today: Sentinel + Watchman</span></div>
+  <p class="assess"><b>Assess:</b> essential plumbing; detects <i>missed fires</i> only — shallow passes are J15/J17's territory.</p>
+  <p class="ruling"><b>Ruled 07-15:</b> stays surface-and-alert only — it does <b>not</b> gain repair or fire-the-generator authority (that Opener idea is dead; the Ops lead investigates). Roster shrinks as Opener/Closer/Receptionist-poll retire.</p>
+</div>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">J25</span><h3>Month-start finance routine</h3><span class="verdict v-keep">Keep</span></div>
+  <p class="what">On the 1st: run the monthly financial routine and file anything needing hands as staff action rows.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> monthly</span><span class="chip">today: Treasurer</span></div>
+  <p class="assess"><b>Assess:</b> keep; out of the restructure's blast radius.</p>
+</div>
+
+<div class="job" data-v="build">
+  <div class="jhead"><span class="jnum">J26</span><h3>Token &amp; cost ledger</h3><span class="verdict v-build">Build · ticket 005</span></div>
+  <p class="what">A weekly job that tallies what each job costs — runs × pass length as a token proxy, plus a self-reported supervision-minutes line — so "token-max, not headcount-max" is a measured decision, not a vibe.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> weekly</span><span class="chip"><b>Framing</b> subscription headroom + subsidy exposure, not cash bleed (~$380/mo real)</span></div>
+  <p class="assess"><b>Assess:</b> the GO/NO-GO cost criterion is unmeasurable without it.</p>
+  <p class="ruling"><b>Ruled 07-15:</b> build confirmed, on the Jobs registry spine — blocked until the registry (ticket 001) exists. Also populates the sibling map's GO criterion (c).</p>
+</div>
+
+<div class="job dimmed" data-v="parked">
+  <div class="jhead"><span class="jnum">J27</span><h3>Sales &amp; demand generation</h3><span class="verdict v-parked">Parked — own future effort</span></div>
+  <p class="what">Every job above services demand that already arrived. Nothing on the desk creates demand: no outbound follow-up beyond decay nudges, no platform-listing upkeep, no evening-utilization push, no win/loss analysis on lost leads.</p>
+  <div class="meta"><span class="chip"><b>Why it matters</b> the business is demand-constrained; the restructure's purpose is freeing your time for sales</span></div>
+  <p class="ruling"><b>Ruled 07-15:</b> parked out of this map's scope. Its real shape — mailing lists, platform-page upkeep, website refresh — is its own future effort with its own map; too much alongside the desk repair. It returns as a fresh effort, not a resumption.</p>
+</div>
+
+<div class="job" data-v="build">
+  <div class="jhead"><span class="jnum">J28</span><h3>Correspondence ledger</h3><span class="verdict v-build">Build · ticket 006 — LIVE</span></div>
+  <p class="what">New job, banked 07-15. Deterministic, Zapier-logged rows for every inbound/outbound message on Phone.com SMS and Gmail into one queryable store in the owned local workspace — no agent in the write path, no tokens. Channels outside those two get manually dropped with a filing convention.</p>
+  <div class="meta"><span class="chip"><b>Cadence</b> event-driven (Zap per message) + hourly SMS poll</span><span class="chip"><b>Ground truth</b> it IS the ground truth</span><span class="chip"><b>Store</b> owned local store + repo mirror</span></div>
+  <p class="assess"><b>Assess:</b> the spine J17 scorecards and the critic loop read from. Phone.com has no history read via Zapier — but the direct API poller reads full history, so the ledger backfills too.</p>
+  <p class="ruling"><b>Ruled + promoted 07-15:</b> after the finding that Codex cannot read #desk-drops via connector, the ledger is the <b>primary fix</b> for runtime-independent drops coverage — and it replaces the Notion SQL dedup reads that keep 429-aborting J11.</p>
+  <p class="ruling"><b>LIVE 07-15 (evening):</b> Gmail in/out Zaps → private repo → ledger: firing unattended. SMS poller built AND mirrored — SMS files now commit to the same repo path as Gmail, so cloud runtimes see both channels (unblocks ticket 015). Remaining: API token to <code>~/.env</code>, hourly schedule, day-one count check.</p>
+</div>
+
+<div class="job" data-v="build">
+  <div class="jhead"><span class="jnum">J29</span><h3>Watchlist freshness</h3><span class="verdict v-build">Build · new — owner unassigned</span></div>
+  <p class="what">New job, banked 07-15 (evening). The fast-track gate — the ⚡ Watchlist of verified booked-now phones — always reflects who is verifiably booked in the space <i>right now</i>, including last-minute same-day bookings. The emergency lane's verified path reads this gate; stale gate = dark lane.</p>
+  <div class="meta"><span class="chip"><b>Runtime</b> cloud — GitHub Action, every 15 min 07:00–22:00</span><span class="chip"><b>Ground truth</b> 5 calendar ICS feeds — enumerable</span><span class="chip"><b>Canon</b> watchlist/YYYY-MM-DD.json → Notion DB as projection</span></div>
+  <p class="assess"><b>Assess:</b> orphaned by the rulings — the Opener (its old rebuilder) dissolves, the Receptionist (ruled freshness owner on 07-15) is itself slated to retire with the poll. Assigning it to the bloated Concierge by default is exactly the reflex the registry exists to stop.</p>
+  <p class="ruling"><b>Ruled + BUILT 07-15 (late):</b> J29 runs in the <b>cloud as its own deterministic job</b> — no persona. <code>watchlist_build.py</code> + a GitHub Action on the desk-correspondence repo: ICS feeds → exact Artist-DB phone match (alias table, never guesses — misses become logged exceptions) → daily canon file committed to the mirror → Notion DB synced for the Zap. Supersedes the Opener Step-6B re-point and the Receptionist-owns-freshness ruling. <b>Pending to go live:</b> six repo secrets (NOTION_TOKEN + 5 ICS URLs), one manual run, alias shake-out.</p>
+</div>
+
+<h2>G · Structural decisions (not jobs)</h2>
+<p class="sub">Cross-cutting architecture questions the jobs run on top of.</p>
+
+<div class="job" data-v="keep">
+  <div class="jhead"><span class="jnum">T1</span><h3>Ticket taxonomy: CC / Sales / Maintenance as three databases</h3><span class="verdict v-keep">Keep for now — decided 07-13</span></div>
+  <p class="what">Three separate ticket databases, a relic of department-style organization. Assessed against two weeks of evidence (~247 triage audit rows + Verifier reports): the split produces essentially <b>zero misrouting</b>; the measured confusion was label-taxonomy drift, fixed 2026-07-13.</p>
+  <div class="meta"><span class="chip"><b>Cost of the split</b> triplicated conventions</span><span class="chip"><b>Cost of merging now</b> re-point every SOP + racetrack + Zap, twice</span></div>
+  <p class="assess"><b>Decision banked:</b> the three <i>lifecycles</i> are real; the three <i>databases</i> are not load-bearing. Target schema for the future owned store: one ticket entity, a Type field, three lifecycles, boards as filtered views. Don't pay the merge cost on Notion.</p>
+</div>
+
+<footer>
+  <p><b>State of play after the 07-15 rulings:</b> four jobs dissolved (J02, J14, J18, J19), three recast (J03 event-driven — now LIVE, J12 to code, J13 attributed), two builds confirmed (J17 critic, J26 cost ledger), two new jobs banked (J28 ledger — LIVE; J29 watchlist freshness — owner open), one parked for its own effort (J27). What needs you next: the <b>J29 owner call</b> (Distribution tab), the <b>cadence right-sizing grilling (004)</b>, and the <b>registry schema confirm (001)</b>.</p>
+  <p>Sources: Concierge job inventory (2026-07-11), verdict rulings + reliability findings (concierge-repair map, 2026-07-15), live persona roster, and "How To Build A Company With AI From The Ground Up" (Y Combinator, Diana Hu).</p>
+</footer>
+
+</section>
+
+<!-- ============================ TAB 2 — DISTRIBUTION ============================ -->
+<section id="panel-dist" class="tabpanel" role="tabpanel" aria-labelledby="tab-d" hidden>
+
+  <div class="dist-note">
+    <h2>How the surviving jobs land across the personas</h2>
+    <p>Post-rulings target state: every chip is a job from the board, colored by its verdict, with its cadence. The load meter counts <b>LLM fires per day</b> the persona's bundle costs (deterministic/Zapier work shows as zero-load chips). Personas are ordered heaviest first. The bench at the bottom holds jobs with no runtime — the calls this view exists to inform.</p>
+  </div>
+
+  <div class="dist-note" style="border-color:var(--cool)">
+    <h2>Deterministic lane — no persona, no Mac, no tokens</h2>
+    <div class="jobrow">
+      <span class="jc"><span class="dot" style="background:var(--cool)"></span><b>J28 ledger</b>&nbsp;gmail_pull + sms_pull<span class="cad">GitHub Action · 30 min</span></span>
+      <span class="jc"><span class="dot" style="background:var(--cool)"></span><b>J29 watchlist</b>&nbsp;watchlist_build<span class="cad">same Action · 30 min</span></span>
+      <span class="jc"><span class="dot" style="background:var(--cool)"></span><b>J12 decay</b>&nbsp;decay_pass<span class="cad">sales-decay Action · daily ~09:05</span></span>
+      <span class="jc"><span class="dot" style="background:var(--cool)"></span><b>J03 emergency</b>&nbsp;Emergency Call Line Zap<span class="cad">Zapier · event-driven</span></span>
+      <span class="jc"><span class="dot" style="background:var(--cool)"></span><b>Msg sending</b>&nbsp;queue-release Zaps<span class="cad">Zapier · event-driven</span></span>
+    </div>
+    <p style="margin-top:.55rem">All scripts live in the <b>desk-correspondence</b> repo; flags/canon land in the repo (<code>decay/</code>, <code>watchlist/</code>, <code>messages/</code>). All Brazil-proof.</p>
+  </div>
+
+  <div class="j29">
+    <h3>J29 — watchlist freshness: RULED &amp; BUILT (cloud script)</h3>
+    <p>The call was made 07-15 late: <b>own deterministic script, cloud-side — no persona.</b> A GitHub Action on the desk-correspondence repo rebuilds the gate every 15 minutes, 07:00–22:00: five calendar ICS feeds → exact Artist-DB phone resolution (alias table; never guesses) → canon <code>watchlist/YYYY-MM-DD.json</code> committed to the mirror → Notion Watchlist DB synced as the Zap's projection. The 15-min cadence closes the last-minute-booking gap without any append-at-source discipline; unattended by construction (Brazil-proof).</p>
+    <div class="options">
+      <div class="opt"><b>Superseded: Concierge ride-along</b><span>Rejected — the Concierge is the desk's heaviest runtime; ruled too bloated to inherit jobs by default.</span></div>
+      <div class="opt"><b>Superseded: Receptionist ownership</b><span>The earlier 07-15 ruling. Replaced — the persona retires with the poll; freshness can't live on a runtime slated for retirement.</span></div>
+      <div class="opt"><b>LIVE</b><span>Secrets set, Action running every 30 min; alias shake-out ongoing from the exception log.</span></div>
+    </div>
+  </div>
+
+  <h2>LLM personas — by load</h2>
+  <p class="sub">Approximate fires/day for the persona's whole bundle, after the ruled cuts land.</p>
+
+  <div class="persona">
+    <div class="phead"><h3>The Concierge</h3><span class="runtime">hourly sweep · cloud :10 OFF by ruling — manual local kicks · Codex :12 unreliable</span>
+      <span class="load hot"><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span>~12 fires/day</span></div>
+    <div class="jobrow">
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>J01 email triage <span class="cad">hourly</span></span>
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>J05 handback &amp; drops <span class="cad">hourly</span></span>
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>J06 alarm sweep <span class="cad">hourly</span></span>
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>J11 reconcile <span class="cad">hourly</span></span>
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>J16 improvement apply <span class="cad">2×/day heavy</span></span>
+      <span class="jc gone"><i class="dot" style="background:var(--dissolved)"></i>J02 fast-track</span>
+      <span class="jc gone"><i class="dot" style="background:var(--dissolved)"></i>J14 invariants fix</span>
+      <span class="jc gone"><i class="dot" style="background:var(--extract)"></i>J04 reply drafting → Responder</span>
+    </div>
+    <p class="pnote"><b>The bloat, quantified:</b> five live jobs on one hourly pass — the front door (J01), the human edge (J05), the ground-truth generator (J06), the loop's sensor (J11), and the loop's actuator (J16). Even after losing J02/J04/J14, this is the densest bundle on the desk — and J11 (sensor) sharing a runtime with J16 (actuator) is a scorer≠doer smell. <b>Do not park J29 here by default.</b></p>
+  </div>
+
+  <div class="persona retiring">
+    <div class="phead"><h3>The Receptionist</h3><span class="runtime">15-min poll 08:00–22:00 · RETIRES once the event lane is proven</span>
+      <span class="load warm"><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span>~56 polls/day → 0</span></div>
+    <div class="jobrow">
+      <span class="jc"><i class="dot" style="background:var(--rethink)"></i>J03 quick-answer cards <span class="cad">poll → event lane</span></span>
+      <span class="jc gone"><i class="dot" style="background:var(--build)"></i>J29 freshness — moved to cloud script</span>
+    </div>
+    <p class="pnote"><b>Contradiction resolved:</b> the earlier ruling gave watchlist freshness to the Receptionist, but the persona's own end-state is retirement. J29 went to the no-persona lane instead — so nothing now blocks this poll from retiring once the event lane has a few clean days.</p>
+  </div>
+
+  <div class="persona">
+    <div class="phead"><h3>The Custodian / Verifier</h3><span class="runtime">2×/day · cloud</span>
+      <span class="load"><span class="bar"><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>2 fires/day</span></div>
+    <div class="jobrow">
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>J15 QA &amp; grading <span class="cad">2×/day</span></span>
+      <span class="jc incoming"><i class="dot" style="background:var(--keep)"></i>+ J03 auto-send sampling <span class="cad">per ruling 8</span></span>
+    </div>
+    <p class="pnote">The desk's independent critic-in-embryo. Light load, scorer-not-doer by design — the natural host for more <i>judging</i> work (J17 generalization reads its output), a poor host for <i>doing</i> work like J29.</p>
+  </div>
+
+  <div class="persona">
+    <div class="phead"><h3>The Doorman</h3><span class="runtime">daily 08:00 + NEW evening pass · local Mac-bound (alarm panels)</span>
+      <span class="load"><span class="bar"><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>2 fires/day</span></div>
+    <div class="jobrow">
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>J07 access pre-flight <span class="cad">daily 08:00</span></span>
+      <span class="jc incoming"><i class="dot" style="background:var(--keep)"></i>+ premises-armed check <span class="cad">evening · ex-J19</span></span>
+    </div>
+    <p class="pnote">Mac-bound by the alarm panels; the sleep problem makes every job added here less reliable. Interesting overlap: J07 already reads today+tomorrow bookings across all 5 calendars each morning — the same read J29's rebuild needs. A morning watchlist write could ride J07 nearly free; the intraday lane can't.</p>
+  </div>
+
+  <div class="persona">
+    <div class="phead"><h3>Single-job personas (pre-dawn &amp; scheduled)</h3><span class="runtime">each fires once on its own schedule</span>
+      <span class="load"><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span>~6 fires/day total</span></div>
+    <div class="jobrow">
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>Host — J08 itinerary &amp; sends <span class="cad">pre-dawn</span></span>
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>Planner — J09 staffing prep <span class="cad">19:30</span></span>
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>Analyst — J20 issue-prevention <span class="cad">pre-dawn</span></span>
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>Timekeeper — J21 overtime <span class="cad">pre-dawn</span></span>
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>Bookkeeper — J22 staff hours <span class="cad">pre-dawn</span></span>
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>Night Watch — J23 ops digest <span class="cad">08:40</span></span>
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>Treasurer — J25 finance <span class="cad">monthly</span></span>
+    </div>
+    <p class="pnote">The healthy pattern: one job, one owner, one schedule. This is what the registry wants every row to look like. Note the Host (J08) already walks today's bookings pre-dawn — another near-free host for J29's <i>morning</i> rebuild, with the same intraday gap as the Doorman option.</p>
+  </div>
+
+  <div class="persona">
+    <div class="phead"><h3>Watchdogs &amp; control loops</h3><span class="runtime">high-frequency but cheap, bounded passes</span>
+      <span class="load warm"><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i></span>~60 fires/day</span></div>
+    <div class="jobrow">
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>Weatherman — J10 climate <span class="cad">hourly · cloud</span></span>
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>Sentinel — J24 run monitor <span class="cad">hourly</span></span>
+      <span class="jc"><i class="dot" style="background:var(--keep)"></i>Watchman — J24 mutual watch <span class="cad">hourly offset</span></span>
+    </div>
+    <p class="pnote">Narrow, repetitive, self-similar passes — the roster shrinks as Opener/Closer/poll rows retire. Not homes for new jobs; their value is doing one check forever.</p>
+  </div>
+
+  <h2>No-persona lane — deterministic &amp; event-driven</h2>
+  <p class="sub">Jobs with no LLM in the loop. Zero token load; the direction of travel for everything date-math-shaped.</p>
+
+  <div class="persona">
+    <div class="phead"><h3>Zapier / code / webhooks</h3><span class="runtime">event-driven + scheduled scripts · no tokens, no banner, no Mac-sleep exposure (cloud side)</span>
+      <span class="load"><span class="bar"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>0 LLM fires</span></div>
+    <div class="jobrow">
+      <span class="jc"><i class="dot" style="background:var(--build)"></i>J28 correspondence ledger <span class="cad">LIVE · per message + hourly poll</span></span>
+      <span class="jc"><i class="dot" style="background:var(--rethink)"></i>J03 emergency lane (Emergency Call Line Zap) <span class="cad">LIVE · real-time</span></span>
+      <span class="jc"><i class="dot" style="background:var(--rethink)"></i>J12 sales decay → code <span class="cad">ticket 010 · pending</span></span>
+      <span class="jc"><i class="dot" style="background:var(--build)"></i>J29 watchlist script <span class="cad">BUILT · every 15 min · pending secrets</span></span>
+    </div>
+    <p class="pnote">The lane that solved the Brazil problem three times today (J28 mirror, J03 lane, J29 script) — deterministic jobs are unattended by construction. J29 landed here: a GitHub Action, zero tokens, no persona, no Mac.</p>
+  </div>
+
+  <h2>The bench — no runtime yet</h2>
+  <p class="sub">Every one of these needs an owner call at the registry (ticket 001).</p>
+
+  <div class="persona homeless">
+    <div class="phead"><h3>Unassigned jobs</h3><span class="runtime">the calls this tab exists to inform</span></div>
+    <div class="jobrow">
+      <span class="jc"><i class="dot" style="background:var(--build)"></i>J29 watchlist freshness <span class="cad">RESOLVED → cloud script (no-persona lane)</span></span>
+      <span class="jc incoming"><i class="dot" style="background:var(--build)"></i>J17 per-job scorecards <span class="cad">nightly · after registry + probe critic</span></span>
+      <span class="jc incoming"><i class="dot" style="background:var(--build)"></i>J26 cost ledger <span class="cad">weekly · blocked on registry</span></span>
+      <span class="jc incoming"><i class="dot" style="background:var(--rethink)"></i>J13 attributed backstop <span class="cad">1×/day · owner confirm at registry</span></span>
+      <span class="jc incoming"><i class="dot" style="background:var(--extract)"></i>J04 Responder <span class="cad">sibling map builds · Ela approves</span></span>
+    </div>
+    <p class="pnote"><b>Reading the bench:</b> J17 + J26 are judging jobs — natural neighbours of the Custodian or a new nightly "Auditor" fire. J13 is repair-with-attribution — must stay outside the personas it audits. J29's clock is answered: the cloud script owns it as soon as the six secrets land.</p>
+  </div>
+
+  <div class="distlegend">
+    <span><i style="background:var(--keep)"></i>keep</span>
+    <span><i style="background:var(--rethink)"></i>recast</span>
+    <span><i style="background:var(--build)"></i>build/new</span>
+    <span><i style="background:var(--extract)"></i>extract</span>
+    <span><i style="background:var(--dissolved)"></i>dissolved (struck)</span>
+    <span>dashed border = incoming / pending assignment</span>
+  </div>
+
+  <footer>
+    <p><b>How to use this tab:</b> pick J29's home first (it has the clock), then rule the bench at the registry confirm (ticket 001). Load bars are approximate fires/day for the persona's whole bundle after ruled cuts; deterministic work costs no tokens and no attention. Distribution snapshot: 2026-07-15 evening.</p>
+  </footer>
+
+</section>
+</div>
+<script>
+// tabs
+var tabs=[document.getElementById('tab-b'),document.getElementById('tab-d')];
+var panels=[document.getElementById('panel-board'),document.getElementById('panel-dist')];
+tabs.forEach(function(t,i){
+  t.addEventListener('click',function(){
+    tabs.forEach(function(b,j){b.setAttribute('aria-selected',String(i===j));panels[j].hidden=(i!==j);});
+    window.scrollTo({top:0});
+  });
+});
+// board filters
+document.querySelectorAll('.filters button').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.filters button').forEach(function(b){b.setAttribute('aria-pressed','false')});
+    btn.setAttribute('aria-pressed','true');
+    var f = btn.dataset.f;
+    document.querySelectorAll('.job').forEach(function(j){
+      j.classList.toggle('hidden', f!=='all' && j.dataset.v!==f);
+    });
+  });
+});
+</script>
+
+
+</body></html>
