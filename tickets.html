@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-23 23:29 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-23 23:40 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -539,7 +539,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Artist DB alarm-code lookup + Anthropic step (claude-opus-4-8) between step 11 and step 12,</p>
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
-</div></details></details></div><div class="job"><div class="jnum">#033</div><div class="jhead"><span class="emoji">⚡</span><h4>Instant text replies; retire the answering robot</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Common questions get an instant automatic reply</li><li>Emergencies page staff right away</li><li>AI polishes each reply before it sends</li><li>The old hourly answering robot retires</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Receptionist — quick answers become watchlist-verified canned sends on the J03 event lane</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#033</div><div class="jhead"><span class="emoji">⚡</span><h4>Instant text replies; retire the answering robot</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Emergencies already page staff within a minute (live since Jul 22)</li><li>New: the instant-reply system for common questions is now built and tested</li><li>It only answers people booked today, and AI checks each reply before it sends</li><li>Junyan flips it on, then the old hourly answering robot retires</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Receptionist — quick answers become watchlist-verified canned sends on the J03 event lane</b></p><h2>Question</h2>
 
 <p>Ruled by Junyan 2026-07-21 (grilled in the 025 step-2 session): the Receptionist persona</p>
 <p>dissolves. The watchlist quick answers stop being a polling LLM job and become</p>
@@ -732,11 +732,84 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>034 — retire the last two Zaps + cancel Zapier</b></p>
 <p>(next session, Junyan&#x27;s call).</p>
 <ul>
-<li>- <b>Still open on this ticket:</b> the canned quick-answer branch (watchlist card match +</li>
+<li>- ~~<b>Still open on this ticket:</b> the canned quick-answer branch (watchlist card match +</li>
 </ul>
 <p>slot-fill), the LLM review/personalize step + Claude RemoteTrigger wiring (addendum</p>
 <p>2/4), Responder queue handoff (addendum 3), JOB 7 §7 extension, HTR classification</p>
-<p>step, watched window → Receptionist retirement, 025/015 scope updates.</p>
+<p>step, watched window → Receptionist retirement, 025/015 scope updates.~~</p>
+
+<p><b>PROGRESS — 2026-07-23 session (canned lane BUILT, commit <code>2f55f58</code>):</b></p>
+
+<ul>
+<li>- <b>Canned quick-answer branch built</b> — <code>services/event-gate/cards.py</code>: code-owned</li>
+</ul>
+<p>conservative keyword patterns for all 14 ⚡ Auto-send cards (codes, alarm-already-off,</p>
+<p>leak photo request, thermostat w/ per-studio how-to fill, 5 per-studio sound cards,</p>
+<p>693 lights, 901 washroom, 509A street door, 901 daytime door [9AM–9PM gate], 901</p>
+<p>stuck-inside). Card BODIES fetch live from the ⚡ Auto-send view (10-min cache) —</p>
+<p>demoting a card in Notion stops the lane with no code change; watchlist-verified only;</p>
+<p>multi-studio rows skip studio cards; codes card refuses to fire without an alarm code;</p>
+<p>unfilled placeholders block the send; 12-h per-topic-per-sender dedup. Wired into both</p>
+<p>paths: dropped messages get a card check, and verified emergency forwards (leak) get</p>
+<p>summons + SCQ <b>then</b> the renter card. 83 tests green (was 52).</p>
+<ul>
+<li>- <b>Send path rides the send engine, not direct SMS (design):</b> a match writes a 📤</li>
+</ul>
+<p>Message Queue row (<code>QA-&lt;card&gt;-&lt;stamp&gt;</code>, Status <b>Pending Review</b>, Artist relation</p>
+<p>via the watchlist&#x27;s new <code>Artist Page ID</code> column, <code>Source HTR Row</code> → the card) and</p>
+<p>invokes the reviewer trigger. Every failure mode degrades to a Pending Review row =</p>
+<p>today&#x27;s held-reply status quo. Watchlist projection + <code>watchlist_build.py</code> +</p>
+<p><code>actuator.lookup_watchlist</code> extended (alarm code + artist page id).</p>
+<ul>
+<li>- <b>Addendum 2/4 built:</b> the <b>Quick-Answer Reviewer</b> trigger exists —</li>
+</ul>
+<p><code>trig_01EqZAjkp5V8xt33w45shqci</code>, event-driven (fallback cron Jan 1 only), Notion-only</p>
+<p>connector; reviews <code>QA-*</code> Pending Review rows (placeholder/name/right-card/code-leak</p>
+<p>checks), personalizes greeting-only, snapshots <code>Drafted Body</code>, flips to Ready to Send</p>
+<p>or holds + comments. Gate side: <code>invoke_reviewer()</code> posts the run endpoint with</p>
+<p><code>REVIEWER_TRIGGER_ID</code> + <code>CLAUDE_TRIGGER_TOKEN</code> env.</p>
+<ul>
+<li>- <b>Library edits landed (git canon):</b> JOB 7 §7 extended to sample <code>QA-</code> rows +</li>
+</ul>
+<p>event-gate sources (Causing Job axis updated); JOB 0 gained the standing</p>
+<p><b>deterministic-eligible classification step</b> (advisory fast-track-candidate vs</p>
+<p>needs-judgment on every HTR suggestion; promotion happens on the registry page +</p>
+<p>needs a code pattern, demotion is Notion-only); fast-track / house-rules /</p>
+<p>concierge-orchestration now describe the lane and the Receptionist&#x27;s staged</p>
+<p>retirement.</p>
+<ul>
+<li>- <b>Addendum 3 (Responder handoff):</b> no gate change needed — unmatched inbounds</li>
+</ul>
+<p>already fall through silently; the sibling&#x27;s Responder drafts from the J28 ledger,</p>
+<p>which the SMS poller feeds. Coordination note stands: the Responder must skip threads</p>
+<p>with a fresh <code>QA-</code> queue row (encoded in fast-track.md + orchestration check-first</p>
+<p>lines).</p>
+
+<p><b>OWNER ACTIONS (Junyan) — in order:</b></p>
+
+<ol>
+<li>1. Deploy the gate (Claude&#x27;s gcloud deploy was permission-blocked):</li>
+</ol>
+<p><code>cd desk-correspondence &amp;&amp; gcloud run deploy event-gate --source services/event-gate --region us-central1 --project danceannex-skedda --update-env-vars REVIEWER_TRIGGER_ID=trig_01EqZAjkp5V8xt33w45shqci</code></p>
+<p>(lane stays OFF — behavior-neutral until step 3).</p>
+<ol>
+<li>2. Decide the trigger-run auth (addendum 4&#x27;s open input): mint/locate a token for</li>
+</ol>
+<p><code>POST /v1/code/triggers/{id}/run</code> and add <code>CLAUDE_TRIGGER_TOKEN=&lt;token&gt;</code> to the</p>
+<p>service env. Without it the lane still works, rows just wait at Pending Review.</p>
+<ol>
+<li>3. Flip <code>QUICK_ANSWER_ENABLED=1</code>, then run the card tests from the test line</li>
+</ol>
+<p>(647-773-3887 is NOT on the watchlist — add a test booking or text from a</p>
+<p>watchlisted number): &quot;what&#x27;s my code&quot;, &quot;speaker help&quot;, &quot;too hot&quot;.</p>
+<ol>
+<li>4. Watched window (a few clean JOB 7 §7 days), then retire the Receptionist:</li>
+</ol>
+<p>disable+delete <code>trig_01Rz8uECDq7TaKhocQZ1Hyvx</code>, Notion page → stub (library pages</p>
+<p>already word the retirement as staged; a one-line edit flips them to past tense).</p>
+
+<p><b>Still open before this ticket closes:</b> owner actions 1–4 above, first live <code>QA-</code></p>
+<p>send verified end-to-end, Receptionist retirement, then the 025/015 scope notes.</p>
 
 <p>Resolution records: J03 test results, the native-actuation gate (Zapier removed), the</p>
 <p>card list with fill sources, the LLM review/personalize step design, the</p>
@@ -3014,5 +3087,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-23 23:29 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-23 23:40 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
