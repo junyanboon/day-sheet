@@ -69,13 +69,13 @@ details[open]>summary::after{content:" −"}
 .done-num{flex:none;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   font-size:.76rem;font-weight:700;letter-spacing:.03em;color:var(--accent-ink);
   background:var(--accent);border-radius:5px;padding:.1rem .4rem;
-  font-variant-numeric:tabular-nums;text-align:center;min-width:3.1rem}
+  font-variant-numeric:tabular-nums;text-align:center;width:3.5rem}
 .done-title{flex:1;min-width:0}
 .done-date{flex:none;width:5.6rem;text-align:right;color:var(--muted);font-size:.75rem;
   font-weight:400;white-space:nowrap;font-variant-numeric:tabular-nums}
 .done-row[open] .done-date{visibility:hidden}
 @media (max-width:560px){
-  .done-num{min-width:2.8rem;font-size:.72rem}
+  .done-num{width:3.1rem;font-size:.72rem}
   .done-date{width:4.9rem;font-size:.7rem}
 }
 .done-body{padding:0 1rem 1rem 2.6rem}
@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-23 23:26 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-23 23:29 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -94,14 +94,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">4</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">3</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">4</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">26</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">3</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -539,103 +539,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Artist DB alarm-code lookup + Anthropic step (claude-opus-4-8) between step 11 and step 12,</p>
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
-</div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">4</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
-
-<p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
-
-<p>Split the FBS AI Support flow into the two-layer pattern: <b>the LLM updates the board first</b></p>
-<p>(creates/curates rows: booking type, GTG, template variant, artist link — all judgment), and a</p>
-<p><b>deterministic 15-min script under J29</b> (same GitHub Action, zero tokens, no persona) executes</p>
-<p>what blessed rows imply:</p>
-
-<ol>
-<li>1. <b>Pop the canned responses (HTA/EOB/AVA):</b> query FBS rows the LLM has blessed (GTG set +</li>
-</ol>
-<p>fields complete) → compute due messages from arrival/departure times (pure date math) → merge</p>
-<p>the canned template verbatim (placeholder fill only, no composition) → write the 📬 Zapier</p>
-<p>Message Queue row (create complete at Pending Review, THEN flip Ready to Send — the known</p>
-<p>write-order gotcha) → <b>hard dedup</b>: one queue row per booking × message type, checked before</p>
-<p>writing (queue query now; J28 ledger later). A half-filled row simply doesn&#x27;t fire —</p>
-<p>under-admit, never guess.</p>
-<ol>
-<li>2. <b>Update board arrival/departure times — RESOLVED 2026-07-15 (late): source = the 🚪 Alarm</li>
-</ol>
-<p>Activity Log</b> (<code>815836641dd442d5871568e7ccb05f27</code>, DS <code>collection://53106ddb-3308-4917-8b0b-7b8cdf6cb2b4</code></p>
-<p>— schema already built: Event/State/Studio/Event At/Source/Dedup Key). Falls under <b>J06</b>.</p>
-<p>Capture splits two ways:</p>
-<ul>
-<li>- <b>Real-time triggers (ALL events): a Zap</b> — Gmail alarm-notification email → parse</li>
-</ul>
-<p>studio/state/actor/timestamp → create Activity Log row. Junyan&#x27;s hands (Zapier UI); same</p>
-<p>pattern as J28. This is what actually records &quot;all of the alarm triggers&quot; — the Doorman</p>
-<p>can&#x27;t (no event-history endpoint in the fork; it only snapshots).</p>
-<ul>
-<li>- <b>Panel-truth reconciliation: the Doorman</b> — DONE 2026-07-15: SKILL.md gained step (a2),</li>
-</ul>
-<p>logs each studio&#x27;s partition state from the (a) live read as <code>Source = Panel Snapshot</code>,</p>
-<p>change-only (queries the studio&#x27;s latest row first), Toronto observation time, never</p>
-<p>fabricates on a failed read.</p>
-<p>The J29 FBS-times script then reads disarm/arm rows per studio per booking window from this DB</p>
-<p>— no email access needed.</p>
-
-<p>Requirements on the LLM side (board-updating pass): fields must be machine-readable — real GTG</p>
-<p>checkbox/status, template-variant field, clean date props, linked Artist with phone. The script</p>
-<p>trusts them literally.</p>
-
-<p>Registry call MADE: <b>all of this lives under J29</b> (Junyan 2026-07-15) — J29&#x27;s scope = &quot;gate +</p>
-<p>FBS board freshness + canned-send execution.&quot; Speed requirement noted: deterministic 15-min</p>
-<p>cadence satisfies it.</p>
-
-<p>Still to settle at build time: which persona step this retires (who queues HTA/EOB/AVA today —</p>
-<p>Host J08? queue-fbs-messages manual runs?), where canned wording is fetched from (HTR DB at run</p>
-<p>time vs frozen copies in the repo), and the go-live check (one full day: script-queued messages ==</p>
-<p>what the manual flow would have queued, zero dupes).</p>
-
-<p>Resolution records: the arrival/departure source (a/b), the LLM-side field contract, the retired</p>
-<p>step, wording source, and the day-one parity check.</p>
-</div></details></details></div><div class="job"><div class="jnum">#026</div><div class="jhead"><span class="emoji">🧠</span><h4>Write down big decisions as they happen</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Save big choices the moment they&#x27;re made</li><li>So future robots don&#x27;t undo them</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Design the Sweep-Feedback decision-capture loop</b></p><h2>Question</h2>
-
-<p>The 🔧 Sweep Feedback inbox accumulated ~27 unactioned <code>New</code> rows over three weeks because</p>
-<p><b>the loop has no closing step</b>: J0/J15 file the signal and the desk applies <i>quick fixes</i>, but</p>
-<p>the &quot;human accepts → land in canon → mark Applied&quot; step for design / HTR / owner-directive rows</p>
-<p>has no owner and no cadence, so rows sit <code>New</code> indefinitely. Design the standing loop that</p>
-<p>prevents re-accumulation. Settle:</p>
-
-<ul>
-<li>- <b>Routing by row type</b> (the exits, so nothing stays <code>New</code>):</li>
-<li>- <b>HTR proposals/suggestions</b> → land as <code>Needs review</code> rows in the How-to-Respond DB,</li>
-</ul>
-<p><b>sourcing wording from the actual sent message</b> (now queryable via the J28 ledger — no more</p>
-<p>archaeology), then mark the sweep row Applied with a link. (Pattern proven 2026-07-17.)</p>
-<ul>
-<li>- <b>Owner directives</b> → straight to capture-sop-update (pre-approved by definition).</li>
-<li>- <b>Design sessions</b> → exactly two exits: <b>graduate to this wayfinder map</b>, or <b>park with a</li>
-</ul>
-<p>one-line &quot;won&#x27;t do.&quot;</b> Never left <code>New</code>.</p>
-<ul>
-<li>- <b>Attributed defects</b> (the new J13/JOB 7 stream, ticket 008) → the critic/optimizer feed;</li>
-</ul>
-<p>define whether/when they get a human pass or stay machine-consumed.</p>
-<ul>
-<li>- <b>Owner + cadence:</b> who runs the accept pass, and on what beat — candidate: a weekly ~20-min</li>
-</ul>
-<p>clear riding the Monday-AM meeting that ticket 004 already scheduled.</p>
-<ul>
-<li>- <b>Relation to J0/J16:</b> this is the operational form of the feedback-apply jobs, which exist but</li>
-</ul>
-<p>don&#x27;t close the loop. Decide whether this <i>is</i> J16&#x27;s spec or a distinct job — coordinate with the</p>
-<p>registry (001) and the J17/SkillOpt lane (sibling map) so the accept pass and the scorecard/</p>
-<p>optimizer reads don&#x27;t fork.</p>
-
-<p>Success = a documented, owned, cadenced loop such that the Sweep Feedback board is cleared on a</p>
-<p>regular beat and never accumulates a multi-week backlog again.</p>
-
-<h2>Context</h2>
-
-<p>Graduated 2026-07-17 from the Sweep-Feedback processing session (27 → 15 open). The processing</p>
-<p>itself proved the routing (created 3 HTR rows + edited 1, closed 6 superseded/resolved, recorded</p>
-<p>4 owner-approved-pending) — this ticket makes that a standing process instead of a one-off cleanup.</p>
 </div></details></details></div><div class="job"><div class="jnum">#033</div><div class="jhead"><span class="emoji">⚡</span><h4>Instant text replies; retire the answering robot</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Common questions get an instant automatic reply</li><li>Emergencies page staff right away</li><li>AI polishes each reply before it sends</li><li>The old hourly answering robot retires</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Receptionist — quick answers become watchlist-verified canned sends on the J03 event lane</b></p><h2>Question</h2>
 
 <p>Ruled by Junyan 2026-07-21 (grilled in the 025 step-2 session): the Receptionist persona</p>
@@ -839,6 +742,103 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>card list with fill sources, the LLM review/personalize step design, the</p>
 <p>Claude-invocation wiring, the HTR-review classification step landing in the library,</p>
 <p>the trigger retirement, and the 025/015 scope updates.</p>
+</div></details></details></div></div>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">3</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+
+<p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
+
+<p>Split the FBS AI Support flow into the two-layer pattern: <b>the LLM updates the board first</b></p>
+<p>(creates/curates rows: booking type, GTG, template variant, artist link — all judgment), and a</p>
+<p><b>deterministic 15-min script under J29</b> (same GitHub Action, zero tokens, no persona) executes</p>
+<p>what blessed rows imply:</p>
+
+<ol>
+<li>1. <b>Pop the canned responses (HTA/EOB/AVA):</b> query FBS rows the LLM has blessed (GTG set +</li>
+</ol>
+<p>fields complete) → compute due messages from arrival/departure times (pure date math) → merge</p>
+<p>the canned template verbatim (placeholder fill only, no composition) → write the 📬 Zapier</p>
+<p>Message Queue row (create complete at Pending Review, THEN flip Ready to Send — the known</p>
+<p>write-order gotcha) → <b>hard dedup</b>: one queue row per booking × message type, checked before</p>
+<p>writing (queue query now; J28 ledger later). A half-filled row simply doesn&#x27;t fire —</p>
+<p>under-admit, never guess.</p>
+<ol>
+<li>2. <b>Update board arrival/departure times — RESOLVED 2026-07-15 (late): source = the 🚪 Alarm</li>
+</ol>
+<p>Activity Log</b> (<code>815836641dd442d5871568e7ccb05f27</code>, DS <code>collection://53106ddb-3308-4917-8b0b-7b8cdf6cb2b4</code></p>
+<p>— schema already built: Event/State/Studio/Event At/Source/Dedup Key). Falls under <b>J06</b>.</p>
+<p>Capture splits two ways:</p>
+<ul>
+<li>- <b>Real-time triggers (ALL events): a Zap</b> — Gmail alarm-notification email → parse</li>
+</ul>
+<p>studio/state/actor/timestamp → create Activity Log row. Junyan&#x27;s hands (Zapier UI); same</p>
+<p>pattern as J28. This is what actually records &quot;all of the alarm triggers&quot; — the Doorman</p>
+<p>can&#x27;t (no event-history endpoint in the fork; it only snapshots).</p>
+<ul>
+<li>- <b>Panel-truth reconciliation: the Doorman</b> — DONE 2026-07-15: SKILL.md gained step (a2),</li>
+</ul>
+<p>logs each studio&#x27;s partition state from the (a) live read as <code>Source = Panel Snapshot</code>,</p>
+<p>change-only (queries the studio&#x27;s latest row first), Toronto observation time, never</p>
+<p>fabricates on a failed read.</p>
+<p>The J29 FBS-times script then reads disarm/arm rows per studio per booking window from this DB</p>
+<p>— no email access needed.</p>
+
+<p>Requirements on the LLM side (board-updating pass): fields must be machine-readable — real GTG</p>
+<p>checkbox/status, template-variant field, clean date props, linked Artist with phone. The script</p>
+<p>trusts them literally.</p>
+
+<p>Registry call MADE: <b>all of this lives under J29</b> (Junyan 2026-07-15) — J29&#x27;s scope = &quot;gate +</p>
+<p>FBS board freshness + canned-send execution.&quot; Speed requirement noted: deterministic 15-min</p>
+<p>cadence satisfies it.</p>
+
+<p>Still to settle at build time: which persona step this retires (who queues HTA/EOB/AVA today —</p>
+<p>Host J08? queue-fbs-messages manual runs?), where canned wording is fetched from (HTR DB at run</p>
+<p>time vs frozen copies in the repo), and the go-live check (one full day: script-queued messages ==</p>
+<p>what the manual flow would have queued, zero dupes).</p>
+
+<p>Resolution records: the arrival/departure source (a/b), the LLM-side field contract, the retired</p>
+<p>step, wording source, and the day-one parity check.</p>
+</div></details></details></div><div class="job"><div class="jnum">#026</div><div class="jhead"><span class="emoji">🧠</span><h4>Write down big decisions as they happen</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Save big choices the moment they&#x27;re made</li><li>So future robots don&#x27;t undo them</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Design the Sweep-Feedback decision-capture loop</b></p><h2>Question</h2>
+
+<p>The 🔧 Sweep Feedback inbox accumulated ~27 unactioned <code>New</code> rows over three weeks because</p>
+<p><b>the loop has no closing step</b>: J0/J15 file the signal and the desk applies <i>quick fixes</i>, but</p>
+<p>the &quot;human accepts → land in canon → mark Applied&quot; step for design / HTR / owner-directive rows</p>
+<p>has no owner and no cadence, so rows sit <code>New</code> indefinitely. Design the standing loop that</p>
+<p>prevents re-accumulation. Settle:</p>
+
+<ul>
+<li>- <b>Routing by row type</b> (the exits, so nothing stays <code>New</code>):</li>
+<li>- <b>HTR proposals/suggestions</b> → land as <code>Needs review</code> rows in the How-to-Respond DB,</li>
+</ul>
+<p><b>sourcing wording from the actual sent message</b> (now queryable via the J28 ledger — no more</p>
+<p>archaeology), then mark the sweep row Applied with a link. (Pattern proven 2026-07-17.)</p>
+<ul>
+<li>- <b>Owner directives</b> → straight to capture-sop-update (pre-approved by definition).</li>
+<li>- <b>Design sessions</b> → exactly two exits: <b>graduate to this wayfinder map</b>, or <b>park with a</li>
+</ul>
+<p>one-line &quot;won&#x27;t do.&quot;</b> Never left <code>New</code>.</p>
+<ul>
+<li>- <b>Attributed defects</b> (the new J13/JOB 7 stream, ticket 008) → the critic/optimizer feed;</li>
+</ul>
+<p>define whether/when they get a human pass or stay machine-consumed.</p>
+<ul>
+<li>- <b>Owner + cadence:</b> who runs the accept pass, and on what beat — candidate: a weekly ~20-min</li>
+</ul>
+<p>clear riding the Monday-AM meeting that ticket 004 already scheduled.</p>
+<ul>
+<li>- <b>Relation to J0/J16:</b> this is the operational form of the feedback-apply jobs, which exist but</li>
+</ul>
+<p>don&#x27;t close the loop. Decide whether this <i>is</i> J16&#x27;s spec or a distinct job — coordinate with the</p>
+<p>registry (001) and the J17/SkillOpt lane (sibling map) so the accept pass and the scorecard/</p>
+<p>optimizer reads don&#x27;t fork.</p>
+
+<p>Success = a documented, owned, cadenced loop such that the Sweep Feedback board is cleared on a</p>
+<p>regular beat and never accumulates a multi-week backlog again.</p>
+
+<h2>Context</h2>
+
+<p>Graduated 2026-07-17 from the Sweep-Feedback processing session (27 → 15 open). The processing</p>
+<p>itself proved the routing (created 3 HTR rows + edited 1, closed 6 superseded/resolved, recorded</p>
+<p>4 owner-approved-pending) — this ticket makes that a standing process instead of a one-off cleanup.</p>
 </div></details></details></div><div class="job"><div class="jnum">#035</div><div class="jhead"><span class="emoji">✅</span><h4>Build proper checks that catch work done wrong</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The retired checker robots were really there to double-check everyone else</li><li>Replace them with small automatic checks that can&#x27;t forget or get tired</li><li>Each check that fails shows up on a list a person already reads</li><li>Checks only report problems — they never quietly fix things themselves</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rebuild the bookends&#x27; verification layer as invariants — the Opener&#x27;s checks get a durable home</b></p><h2>Question</h2>
 
 <p><b>Re-scoped 2026-07-23 (Junyan, post-007):</b> the bookends&#x27; real purpose was</p>
@@ -3014,5 +3014,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-23 23:26 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-23 23:29 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
