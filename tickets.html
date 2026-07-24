@@ -70,7 +70,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-22 17:03 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-23 23:13 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -80,14 +80,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">3</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">5</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">23</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">4</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">4</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">25</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">5</span></h3><div class="job"><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job</h4></div><div class="jnum">#001</div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job</h4></div><div class="jnum">#001</div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -673,38 +673,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Artist DB alarm-code lookup + Anthropic step (claude-opus-4-8) between step 11 and step 12,</p>
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
-</div></details></details></div><div class="job"><div class="jhead"><span class="emoji">🔌</span><h4>Turn off the last two paid automations</h4></div><div class="jnum">#034</div><details><summary>Details</summary><ul class="plain-bullets"><li>Two paid automations are left</li><li>Replace both with our own small programs</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Retire the last two Zaps — Phone.com contact-sync + Gmail agreements-to-Drive — and cancel Zapier</b></p><h2>Question</h2>
-
-<p>Ticket 029 believed the Emergency Call Line Zap was the last Zapier dependency; the</p>
-<p>event-gate poller (033) has now replaced that one natively. But Junyan&#x27;s Zapier</p>
-<p>dashboard (2026-07-22) shows <b>two more Zaps still ON</b>:</p>
-
-<ol>
-<li>1. <b>&quot;Add Phone.com contact via webhook&quot;</b> — the 📇 Phone.com Contact Sync Queue path:</li>
-</ol>
-<p>Notion automation (<code>Page added → Send webhook</code>) → Zapier Catch Hook → Phone.com</p>
-<p>contact create. Documented in <code>library/process-studio-tickets.md</code> (the direct</p>
-<p>connector <i>write</i> is blocked, which is why the Zap exists). Native replacement:</p>
-<p>the Phone.com API token can create contacts directly — likely a small extension of</p>
-<p>an existing deterministic service (event-gate pattern, or a poller over the Queue</p>
-<p>DB), honoring the queue&#x27;s idempotency-key + dedup contract.</p>
-<ol>
-<li>2. <b>&quot;Gmail attachments to Google Drive (2026-agreements folder)&quot;</b> — files signed</li>
-</ol>
-<p>agreements into Drive. Native replacement candidate: extend <code>gmail_pull.py</code> (it</p>
-<p>already reads all mail on the 30-min Action) to detect matching attachments and</p>
-<p>upload via the Drive API — needs a Drive scope/credential decision.</p>
-
-<p>Work: for each Zap, read its exact trigger/filter/action config in Zapier before</p>
-<p>building (don&#x27;t rebuild from the library doc alone), build + verify the native</p>
-<p>replacement, watched window, then turn the Zap off. When both are off, <b>cancel or</p>
-<p>downgrade the Zapier subscription</b> (the actual destination of this lane) and update</p>
-<p>the map note that still calls the Emergency Call Line &quot;the last blocker.&quot;</p>
-
-<p>Resolution records: the two replacement designs, verification evidence, Zaps off,</p>
-<p>subscription decision.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">3</span></h3><div class="job"><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><div class="jnum">#016</div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">4</span></h3><div class="job"><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><div class="jnum">#016</div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1003,19 +973,54 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>card list with fill sources, the LLM review/personalize step design, the</p>
 <p>Claude-invocation wiring, the HTR-review classification step landing in the library,</p>
 <p>the trigger retirement, and the 025/015 scope updates.</p>
+</div></details></details></div><div class="job"><div class="jhead"><span class="emoji">✅</span><h4>Build proper checks that catch work done wrong</h4></div><div class="jnum">#035</div><details><summary>Details</summary><ul class="plain-bullets"><li>The retired checker robots were really there to double-check everyone else</li><li>Replace them with small automatic checks that can&#x27;t forget or get tired</li><li>Each check that fails shows up on a list a person already reads</li><li>Checks only report problems — they never quietly fix things themselves</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rebuild the bookends&#x27; verification layer as invariants — the Opener&#x27;s checks get a durable home</b></p><h2>Question</h2>
+
+<p><b>Re-scoped 2026-07-23 (Junyan, post-007):</b> the bookends&#x27; real purpose was</p>
+<p><i>verification</i> — the Opener&#x27;s night-watch item count was it checking the overnight</p>
+<p>fleet&#x27;s work, not doing new work. Retiring the runs (007, Ruling 2) was right, but the</p>
+<p>verification layer they carried needs a named, durable home. Per the</p>
+<p><b>level-up plan</b> doctrine, the bottleneck is <b>trusted</p>
+<p>verification</b> — so the home should be deterministic invariants + monitor-by-exception</p>
+<p>(desk_invariants_v2&#x27;s structured defects → 3-strike escalation to Actions rows), NOT a</p>
+<p>resurrected LLM pass that re-reads everything.</p>
+
+<p>Design with Junyan, check by check from the Opener&#x27;s old Steps 3/4/6/6B/6C/7/7B/8:</p>
+
+<ul>
+<li>- <b>Existence invariants</b> (IPR / Overtime / FBS itinerary / watchlist freshness /</li>
+</ul>
+<p>Day Sheet freshness): pure date-filtered queries → v2 invariants. The Sentinel covers</p>
+<p><i>run</i> heartbeats; these cover <i>artifact</i> existence — decide if they&#x27;re one roster or two.</p>
+<ul>
+<li>- <b>Reconciliation invariants</b> (FBS board ↔ message queue ↔ calendars; duplicate/orphan</li>
+</ul>
+<p>board rows; yesterday&#x27;s hours vs Staff Scheduling): deterministic diffs → v2, with the</p>
+<p>Custodian&#x27;s 09:35 pass as the human-facing reviewer of whatever v2 flags.</p>
+<ul>
+<li>- <b>Completeness sweeps</b> (<code>[Unpaid]</code> → Money Request Queue incl. prior-day back-check;</li>
+</ul>
+<p>GTG no-show surfacing): mostly date math + plan rates — candidate for a small script on</p>
+<p>the deterministic lane, with only the discretionary residue routed to Actions rows.</p>
+<ul>
+<li>- <b>Escalation contract:</b> every failed check must land somewhere a human already looks</li>
+</ul>
+<p>(Actions <code>For = Ops Lead</code> / <code>For = Junyan</code> per the 027 split, or the Fixer Report) —</p>
+<p>&quot;check exists&quot; is not done until &quot;failure is seen&quot; is wired.</p>
+<ul>
+<li>- <b>No fire-repair authority</b> (Ruling 2 stands): invariants detect and escalate; the Ops</li>
+</ul>
+<p>lead investigates. Nothing auto-refires generators.</p>
+
+<p>Interim coverage until this lands: Custodian 02:35 + 09:35 passes, Sentinel missing-run</p>
+<p>detection, desk_invariants v1 hourly. Watch the Fixer Report for rot — unpaid-charge</p>
+<p>misses are the most likely first symptom and raise this ticket&#x27;s urgency.</p>
+
+<p>Coordinate with Phase 0 of the level-up plan (v2 swap is gated on Junyan&#x27;s explicit go)</p>
+<p>— these checks should land as v2 invariants, not a parallel checker.</p>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">5</span></h3><div class="job"><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><div class="jnum">#005</div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">4</span></h3><div class="job"><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><div class="jnum">#005</div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
 <p>Build the crude-but-real J26 cost ledger on the Jobs registry spine: per job, runs × pass length (proxy for token spend) plus a self-reported supervision-minutes line, tallied weekly. Framing: <b>subscription headroom + exposure if the subsidy changes</b>, not cash bleed (~$240/mo Claude + $140/mo ChatGPT actual). It also populates the sibling map&#x27;s GO criterion (c). Decide the tally mechanism (likely a weekly scheduled job writing registry rows) and stand it up.</p>
-</div></details></details></div><div class="job"><div class="jhead"><span class="emoji">🧹</span><h4>Retire two leftover checker robots</h4></div><div class="jnum">#007</div><span class="pill p-wait">needs 019 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Morning checker: deleted</li><li>Evening lock-up check moves to the door robot</li><li>Final switch-off still to do</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Opener; move Closer&#x27;s arm-and-sweep to the Doorman (Closer persona repurposed, not retired)</b></p><blockquote>**NOTE 2026-07-17 (Junyan) — both bookends still dissolve; the Closer&#x27;s <i>verification value</i> is preserved elsewhere.<b> Ruling 2&#x27;s dissolution stands: the Opener&#x27;s morning surfacing → the renderer (019); the Closer&#x27;s arm-and-sweep → the Doorman evening pass; retire both runs + their Run Monitor roster rows. What briefly looked like &quot;revive the Closer&quot; resolved to </b>fold the end-of-day report review/verification into the Custodian<b> (a middle-of-night Junyan-facing pass) — see </b><b>027</b>**. So no Closer <i>persona</i> survives; its verification job is absorbed by the Custodian, not this ticket. This ticket is unchanged from its original dissolution scope.</blockquote>
-
-<h2>Question</h2>
-
-<p>Execute Ruling 2 (<b>rulings table</b>): retire the Opener and Closer personas outright. Steps: (1) add the <b>premises-armed evening pass to the Doorman (J07)</b> — verify armed state against <b>live panel state</b> for today&#x27;s closed locations; note the Doorman is Mac-bound, so this adds a second daily local fire (flag the sleep risk per <b>local-tasks-miss-runs-on-sleep</b>); (2) disable/retire the Opener and Closer runs (confirm the 🚦 production-banner flip per <b>dance-annex-persona-renames-and-cloud-shifts</b>); (3) <b>remove their rows from the Run Monitor heartbeat roster</b> so Sentinel doesn&#x27;t false-alarm; (4) confirm NO fire-missing-generator authority is added anywhere — missing reports are surfaced by Sentinel/digest and investigated by the Ops lead. Resolution records the banner flips, the Doorman prompt/SOP change, and the roster edit.</p>
-
-<p><b>⚠️ Constraint found 2026-07-16 (Junyan) — RULED same day:</b> the Opener carries a second, unaccounted function — it is the <b>morning surfacing/aggregation layer</b>: its run rolls up every overnight agent&#x27;s report (Planner, Closer, Sentinel, Doorman, Watchman, Timekeeper, Analyst, Host) into the &quot;Waiting on You&quot; digest on the <a href="https://junyanboon.github.io/night-watch/" target="_blank" rel="noopener">Night Watch page</a> (held charges, good-to-go watches, attribution calls, hold-or-release decisions). Ruling 2&#x27;s premise (&quot;no bookends job&quot;) missed this.</p>
-
-<p><b>Junyan&#x27;s ruling (2026-07-16):</b> the <b>night-watch + Day Sheet renderers (ticket 019) take over the Opener&#x27;s surfacing work</b> — deterministic aggregation of the overnight agents&#x27; already-structured flags, no LLM on the render path. The <b>&quot;Waiting on You&quot; queue is processed by the Ops lead on the morning shift</b> (the renderer surfaces; the Ops lead acts — same split as ticket 020). Sequencing: <b>this ticket is now blocked by 019</b> — the renderer absorbs the digest first, then the Opener retires. The Closer half is unaffected (its arm-and-sweep duty is exactly what the Doorman evening pass absorbs) and may proceed independently if convenient.</p>
 </div></details></details></div><div class="job"><div class="jhead"><span class="emoji">✂️</span><h4>Stop keeping two copies of messages</h4></div><div class="jnum">#015</div><span class="pill p-wait">needs 006 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Today messages get saved in two places</li><li>Switch fully to our own record</li><li>Freeze the old copy</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cut correspondence canon over from the Notion Correspondence Log to J28</b></p><h2>Question</h2>
 
 <p>Junyan&#x27;s direction (2026-07-15): stop using the <b>Notion Correspondence Log</b> as the desk&#x27;s</p>
@@ -1155,7 +1160,198 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span>✅</span><span class="emoji">📄</span> Build the Day Sheet web page<span class="done-date">2026-07-20</span></summary><div class="done-body"><ul class="plain-bullets"><li>Rebuilds itself every 15 minutes</li><li>Works without the Mac or AI</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the tabbed Day Sheet renderer + desk-state snapshot</b></p><h2>Question</h2>
+<details class="done-row"><summary><span>✅</span><span class="emoji">🧹</span> Retire the morning and evening checker robots<span class="done-date">2026-07-23</span></summary><div class="done-body"><ul class="plain-bullets"><li>Both are switched off — the morning one&#x27;s schedule is disabled, the evening one is gone</li><li>The door robot now does a late-night check that every empty studio is locked and armed</li><li>It looks at the real alarm panel, not a checklist someone filled in</li><li>Their checking work still needs a permanent home — that&#x27;s the next job</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Opener; move Closer&#x27;s arm-and-sweep to the Doorman (Closer persona repurposed, not retired)</b></p><blockquote>**NOTE 2026-07-17 (Junyan) — both bookends still dissolve; the Closer&#x27;s <i>verification value</i> is preserved elsewhere.<b> Ruling 2&#x27;s dissolution stands: the Opener&#x27;s morning surfacing → the renderer (019); the Closer&#x27;s arm-and-sweep → the Doorman evening pass; retire both runs + their Run Monitor roster rows. What briefly looked like &quot;revive the Closer&quot; resolved to </b>fold the end-of-day report review/verification into the Custodian<b> (a middle-of-night Junyan-facing pass) — see </b><b>027</b>**. So no Closer <i>persona</i> survives; its verification job is absorbed by the Custodian, not this ticket. This ticket is unchanged from its original dissolution scope.</blockquote>
+
+<h2>Question</h2>
+
+<p>Execute Ruling 2 (<b>rulings table</b>): retire the Opener and Closer personas outright. Steps: (1) add the <b>premises-armed evening pass to the Doorman (J07)</b> — verify armed state against <b>live panel state</b> for today&#x27;s closed locations; note the Doorman is Mac-bound, so this adds a second daily local fire (flag the sleep risk per <b>local-tasks-miss-runs-on-sleep</b>); (2) disable/retire the Opener and Closer runs (confirm the 🚦 production-banner flip per <b>dance-annex-persona-renames-and-cloud-shifts</b>); (3) <b>remove their rows from the Run Monitor heartbeat roster</b> so Sentinel doesn&#x27;t false-alarm; (4) confirm NO fire-missing-generator authority is added anywhere — missing reports are surfaced by Sentinel/digest and investigated by the Ops lead. Resolution records the banner flips, the Doorman prompt/SOP change, and the roster edit.</p>
+
+<p><b>⚠️ Constraint found 2026-07-16 (Junyan) — RULED same day:</b> the Opener carries a second, unaccounted function — it is the <b>morning surfacing/aggregation layer</b>: its run rolls up every overnight agent&#x27;s report (Planner, Closer, Sentinel, Doorman, Watchman, Timekeeper, Analyst, Host) into the &quot;Waiting on You&quot; digest on the <a href="https://junyanboon.github.io/night-watch/" target="_blank" rel="noopener">Night Watch page</a> (held charges, good-to-go watches, attribution calls, hold-or-release decisions). Ruling 2&#x27;s premise (&quot;no bookends job&quot;) missed this.</p>
+
+<p><b>Junyan&#x27;s ruling (2026-07-16):</b> the <b>night-watch + Day Sheet renderers (ticket 019) take over the Opener&#x27;s surfacing work</b> — deterministic aggregation of the overnight agents&#x27; already-structured flags, no LLM on the render path. The <b>&quot;Waiting on You&quot; queue is processed by the Ops lead on the morning shift</b> (the renderer surfaces; the Ops lead acts — same split as ticket 020). Sequencing: <b>this ticket is now blocked by 019</b> — the renderer absorbs the digest first, then the Opener retires. The Closer half is unaffected (its arm-and-sweep duty is exactly what the Doorman evening pass absorbs) and may proceed independently if convenient.</p>
+
+<h2>Resolution — 2026-07-23 (CLOSED)</h2>
+
+<p>Executed in full; both bookends are gone.</p>
+
+<ol>
+<li>1. <b>Doorman evening arm-check LIVE:</b> new cloud trigger <code>trig_01DLD9ENLKbe9NjnwgFKTsAY</code>,</li>
+</ol>
+<p>23:35 Toronto daily (<code>35 3 <i> </i> *</code> UTC), same env + connectors as the morning Doorman</p>
+<p>(Notion, Google-Calendar, alarm-mcp). Verifies armed state against <b>live</p>
+<p><code>panel_snapshot</code></b> for studios with occupancy-zero tonight (calendar-derived; occupied</p>
+<p>studios skipped and noted); closed-but-unarmed → deduped Maintenance <code>Urgent Issue</code> row;</p>
+<p>change-only Alarm Activity Log rows (a2 pattern); heartbeat reuses/self-heals the day&#x27;s</p>
+<p><code>The Doorman — &lt;date&gt;</code> report (no new roster row needed). Read-only, no repair or</p>
+<p>trigger-firing authority. <b>The ticket&#x27;s Mac-bound/sleep-risk note was stale</b> — the</p>
+<p>Doorman went cloud on 2026-07-20, so the second daily fire carries no sleep risk.</p>
+<p>First fire: tonight 23:35.</p>
+<ol>
+<li>2. <b>Opener retired:</b> trigger <code>trig_01AqS6KMXmAUQthAFcbirT86</code> DISABLED (was still firing</li>
+</ol>
+<p>daily 08:20). <b>Closer:</b> its trigger is already DELETED (API 404 confirmed) — nothing</p>
+<p>to flip.</p>
+<ol>
+<li>3. <b>Run Monitor roster:</b> both rows set <code>Monitoring = Paused</code> (Junyan&#x27;s call — rows kept so</li>
+</ol>
+<p>historical report links aren&#x27;t orphaned) with a RETIRED + &quot;do NOT set back to Live&quot; note in</p>
+<p><code>Expected</code> — Opener <code>3907503281c481b188e4f2bc1f7efbe2</code>, Closer</p>
+<p><code>3907503281c4810fa73ae033d0e02a20</code>. <b>The Sentinel was told explicitly</b> (prompt §0, added</p>
+<p>2026-07-23): both are dissolved personas, never alert on them, never restore them to Live —</p>
+<p>and the Doorman roster row now legitimately carries TWO passes (08:00 + 23:35) checking in on</p>
+<p>one heartbeat, so one Doorman report/day stays correct.</p>
+<ol>
+<li>4. <b>Banner flips:</b> 🚦 RETIRED-RUN callouts prepended to <b>Workflow: Autonomous Morning</b></li>
+</ol>
+<p>(<code>3857503281c4815382dada33ab286e2d</code>) and <b>Workflow: Autonomous Evening</b></p>
+<p>(<code>3867503281c481b39783c32a638237a5</code>), each with the full ownership map. Pages stay as</p>
+<p>reference logic.</p>
+<ol>
+<li>5. <b>No fire-missing-generator authority anywhere:</b> the Opener&#x27;s Steps 4/7 (fire the</li>
+</ol>
+<p>Analyst/Timekeeper when a report is missing) die with it; the banner states the rule</p>
+<p>(Sentinel surfaces, Ops lead investigates). The new evening pass has explicitly no such</p>
+<p>authority.</p>
+
+<p><b>Graduated:</b> <b>035 — rehome the Opener&#x27;s orphaned deterministic steps</b></p>
+<p>(unpaid-charges scan / hours reconcile / staff-time-blocker verify had no runner after</p>
+<p>retirement — deliberate, but they need ruled homes).</p>
+
+<p><b>Banked checks:</b> (a) tonight&#x27;s 23:35 arm-check report section appears on today&#x27;s Doorman</p>
+<p>report; (b) tomorrow 08:20 passes with no Opener fire and no Sentinel false alarm;</p>
+<p>(c) Custodian Fixer Report stays clean of rot from the orphaned steps until 035 rules.</p>
+</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🔌</span> Turn off the last two paid automations<span class="done-date">2026-07-22</span></summary><div class="done-body"><ul class="plain-bullets"><li>Two paid automations are left</li><li>Replace both with our own small programs</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Retire the last two Zaps — Phone.com contact-sync + Gmail agreements-to-Drive — and cancel Zapier</b></p><h2>Resolution (2026-07-22)</h2>
+
+<p>Both Zaps replaced by deterministic pollers on the same 30-min watchlist Action;</p>
+<p>Zaps off; only the Zapier subscription downgrade remains (Junyan, in progress).</p>
+
+<p><b>1. Phone.com contact-sync → <code>scripts/contact_sync.py</code></b> (fab-sol: GPT-5.6 Sol</p>
+<p>built to brief, Fable reviewed). Reads the 📇 Contact Sync Queue for <code>Queued</code> rows,</p>
+<p>creates the Phone.com contact via API, then flips <code>Status → Verified</code> only after an</p>
+<p>independent read-back. Adds what the Zap never had: <b>full-address-book dedup</b></p>
+<p>(incl. email match) so re-runs and the parallel-window overlap can&#x27;t double-create.</p>
+<p>Live on the Action; verified green (0 rows pending at cutover — auth + queue + book</p>
+<p>paths exercised via dry-run against live APIs).</p>
+
+<p><b>2. Gmail agreements → Drive → <code>scripts/agreements_pull.py</code>.</b> Scans the</p>
+<p><code>Sales - Agreements</code> label on the shared 30-min cursor, uploads <b>every</b> matching</p>
+<p>attachment (the Zap took only the first), with <b>filename-in-folder dedup</b>. Folder =</p>
+<p><code>Dance Annex Rental Agreements</code> (<code>11QMG3lcUAasnG-CpajavC_Im-2u-w5OR</code>), secret</p>
+<p><code>AGREEMENTS_FOLDER_ID</code>. <code>gmail_auth_setup.py</code> gained <code>--drive</code>; token re-minted with</p>
+<p><code>gmail.readonly + drive</code>.</p>
+
+<p><b>Verification (live cloud run 29973517647, green):</b> cursor rewound 7d as a probe →</p>
+<p>the run <b>actually uploaded</b> the one backfilled agreement</p>
+<p>(<code>Dance_Annex_Long_Term_Rental_Agreement-katerynazozulia96_…pdf</code>, 590 KB); a re-scan</p>
+<p>then <b>skipped it as existing</b> (dedup proven, no dupes).</p>
+
+<p><b>Gotcha banked (cost ~an hour):</b> the Drive lane failed three times before working —</p>
+<p>(a) <code>~/.env</code> wasn&#x27;t saved after the first mint, so the secret-sync re-uploaded the old</p>
+<p>Gmail-only token; (b) even with a drive-scoped token, the <b>Drive API was never</p>
+<p>enabled</b> on the OAuth client&#x27;s project; (c) the enable kept landing on the <i>wrong</i></p>
+<p>project because the console defaulted to another Google account — the client lives in</p>
+<p>project <b><code>445475352448</code> / <code>desk-correspondence</code>, owned by thedanceannex@gmail.com</b></p>
+<p>(<b>desk-account-standard</b>). Enable APIs on that exact project/account, and always</p>
+<p>verify a re-minted token&#x27;s scopes with <code>tokeninfo</code> before trusting it.</p>
+
+<p><b>Remaining (Junyan):</b> cancel/downgrade the Zapier subscription now that no Zap is on.</p>
+
+<h2>Question</h2>
+
+<p>Ticket 029 believed the Emergency Call Line Zap was the last Zapier dependency; the</p>
+<p>event-gate poller (033) has now replaced that one natively. But Junyan&#x27;s Zapier</p>
+<p>dashboard (2026-07-22) shows <b>two more Zaps still ON</b>:</p>
+
+<ol>
+<li>1. <b>&quot;Add Phone.com contact via webhook&quot;</b> — the 📇 Phone.com Contact Sync Queue path:</li>
+</ol>
+<p>Notion automation (<code>Page added → Send webhook</code>) → Zapier Catch Hook → Phone.com</p>
+<p>contact create. Documented in <code>library/process-studio-tickets.md</code> (the direct</p>
+<p>connector <i>write</i> is blocked, which is why the Zap exists). Native replacement:</p>
+<p>the Phone.com API token can create contacts directly — likely a small extension of</p>
+<p>an existing deterministic service (event-gate pattern, or a poller over the Queue</p>
+<p>DB), honoring the queue&#x27;s idempotency-key + dedup contract.</p>
+<ol>
+<li>2. <b>&quot;Gmail attachments to Google Drive (2026-agreements folder)&quot;</b> — files signed</li>
+</ol>
+<p>agreements into Drive. Native replacement candidate: extend <code>gmail_pull.py</code> (it</p>
+<p>already reads all mail on the 30-min Action) to detect matching attachments and</p>
+<p>upload via the Drive API — needs a Drive scope/credential decision.</p>
+
+<p>Work: for each Zap, read its exact trigger/filter/action config in Zapier before</p>
+<p>building (don&#x27;t rebuild from the library doc alone), build + verify the native</p>
+<p>replacement, watched window, then turn the Zap off. When both are off, <b>cancel or</p>
+<p>downgrade the Zapier subscription</b> (the actual destination of this lane) and update</p>
+<p>the map note that still calls the Emergency Call Line &quot;the last blocker.&quot;</p>
+
+<p>Resolution records: the two replacement designs, verification evidence, Zaps off,</p>
+<p>subscription decision.</p>
+
+<p>---</p>
+
+<h2>Progress — 2026-07-22 (claude, fab-sol session)</h2>
+
+<p><b>Both Zap configs read live in the Zapier editor</b> (the ticket&#x27;s mandated first step):</p>
+
+<ol>
+<li>1. <b>&quot;Add Phone.com contact via webhook&quot;</b> (Zap 369414990): Catch Hook</li>
+</ol>
+<p><code>hooks.zapier.com/hooks/catch/22797125/43jxr8y/</code> ← Notion queue page-added</p>
+<p>automation → Phone.com <b>Create Contact</b> (Extension &quot;Dance Annex&quot; = 2236892;</p>
+<p>First/Last from webhook rich-text plain; Phone from phone property — <b>no email</p>
+<p>mapped and NO dedup step</b>, despite <code>library/process-studio-tickets.md</code> requiring</p>
+<p>the Zap to dedup) → Notion: queue row <b>Status = Verified</b>.</p>
+<ol>
+<li>2. <b>&quot;Gmail attachments to Google Drive (2026-agreements folder)&quot;</b> (Zap 371911386):</li>
+</ol>
+<p>Gmail New Email on label <b>&quot;Sales - Agreements&quot;</b> → Filter: attachment filename</p>
+<p>exists → Get Attachment by Filename (<b>first attachment only</b>) → Drive Upload</p>
+<p>into folder <b>&quot;Dance Annex Rental Agreements&quot;</b>.</p>
+
+<p><b>Replacements BUILT</b> (in <code>desk-store/correspondence/repo</code>, working tree, not yet</p>
+<p>committed — implementation by GPT-5.6 Sol per fab-sol, reviewed by Claude):</p>
+
+<ul>
+<li>- <code>scripts/contact_sync.py</code> — 30-min watchlist-Action step; polls the 📇 queue for</li>
+</ul>
+<p><code>Status=Queued</code>, <b>dedups against the full Phone.com ext-2236892 address book</b></p>
+<p>(normalized phone, then email — fixes the Zap&#x27;s missing dedup), creates incl.</p>
+<p>email, <b>verifies by independent read-back</b> before setting Status=Verified +</p>
+<p>Verification Note + Verified checkbox. Uses existing NOTION_TOKEN +</p>
+<p>PHONECOM_API_TOKEN secrets — runs as soon as merged. Latency instant→≤30 min</p>
+<p>(accepted: contacts matter only when the artist later texts).</p>
+<ul>
+<li>- <code>scripts/agreements_pull.py</code> — same Action; resolves the &quot;Sales - Agreements&quot;</li>
+</ul>
+<p>label id, cursor state in <code>state/agreements_pull_state.json</code>, handles <b>all</b></p>
+<p>attachments (Zap took only the first), Drive-side filename-in-folder dedup,</p>
+<p>multipart upload to <code>$AGREEMENTS_FOLDER_ID</code>. Gates skip-green until that secret</p>
+<p>exists; loud exit with re-mint instruction if the token lacks Drive scope.</p>
+<ul>
+<li>- <code>scripts/gmail_auth_setup.py</code> gained <code>--drive</code> (gmail.readonly + drive scopes);</li>
+</ul>
+<p><code>.github/workflows/watchlist.yml</code> gained both steps (house gate style);</p>
+<p><code>CREDENTIALS.md</code> updated (rows + §2 re-mint note).</p>
+
+<p><b>Verification so far:</b> py_compile clean; workflow YAML valid; no-env runs exit</p>
+<p>with clear setup messages; <code>--dry-run</code> supported on both.</p>
+
+<p><b>Remaining (blocked on Junyan&#x27;s hands):</b></p>
+<ol>
+<li>1. Review + commit/push the repo changes.</li>
+<li>2. Create/locate the Drive folder, set <code>AGREEMENTS_FOLDER_ID</code> Actions secret.</li>
+<li>3. Re-mint the OAuth refresh token with <code>--drive</code> (browser consent as</li>
+</ol>
+<p>thedanceannex@gmail.com); update <code>~/.env</code> + <code>GMAIL_REFRESH_TOKEN</code> secret.</p>
+<ol>
+<li>4. Watched parallel window (Zaps stay ON; both scripts idempotent, so</li>
+</ol>
+<p>double-processing is safe) — then flip both Zaps OFF.</p>
+<ol>
+<li>5. Cancel/downgrade the Zapier subscription; update the map note that called the</li>
+</ol>
+<p>Emergency Call Line &quot;the last blocker&quot;.</p>
+</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">📄</span> Build the Day Sheet web page<span class="done-date">2026-07-20</span></summary><div class="done-body"><ul class="plain-bullets"><li>Rebuilds itself every 15 minutes</li><li>Works without the Mac or AI</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the tabbed Day Sheet renderer + desk-state snapshot</b></p><h2>Question</h2>
 
 <p>Make https://junyanboon.github.io/day-sheet/ the single act-on surface so Junyan/Ela stop</p>
 <p>reading Notion. Per the 004 rulings:</p>
@@ -2618,6 +2814,17 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>into &quot;🗑 ZZ TEST graveyard — Send Engine fixtures (safe to delete)&quot;</p>
 <p>(page 3a57503281c48117ae52c111c8873a5f) for one-click permanent deletion. Live queue</p>
 <p>verified: zero ZZ rows remain. Only ticket item left: the parallel-watch week.</p>
+
+<h2>Progress (2026-07-23) — first production catch by the hardened engine</h2>
+
+<p>&quot;901 bass courtesy — Marco Alberto&quot; errored on release: the row was bound to a</p>
+<p>DUPLICATE contact-less artist record (Night Watch created &quot;Marco Alberto [Skedda]&quot;</p>
+<p>while &quot;Marcos Villa [Phone.com]&quot; already held the phone). Engine behavior exactly as</p>
+<p>designed (matrix case M3): Error + comment + alert, no send, no stall. Fix: repointed</p>
+<p>Artist to the real record, re-released → Sent 12:41 EDT. Dupe flagged for merge; sweep</p>
+<p>feedback row 3a675032…0195 Applied with the upstream learning (search phone + name</p>
+<p>variants before creating artist records). Matrix table in SETUP.md annotated with this</p>
+<p>real-world confirmation + the new &quot;duplicate artist → empty rollup&quot; failure class.</p>
 </div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">✈️</span> Move everything to the cloud before the trip<span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>The desk now runs by itself in the cloud</li><li>It keeps working while Junyan travels</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move everything that can move to the cloud — the Brazil runtime decision</b></p><h2>Question</h2>
 
 <p>Junyan&#x27;s ruling (2026-07-21): &quot;I want to move everything I can to the cloud.&quot; This is the</p>
@@ -2725,5 +2932,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-22 17:03 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-23 23:13 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
