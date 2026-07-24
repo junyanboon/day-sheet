@@ -60,17 +60,26 @@ details[open]>summary::after{content:" −"}
 .done-list{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .done-row{border-bottom:1px solid var(--line)}.done-row:last-child{border-bottom:0}
 .done-row>summary{display:flex;align-items:center;gap:.7rem;padding:.75rem 1rem;margin:0;font-size:.92rem;font-weight:600;color:var(--ink)}
-.done-row>summary::after{content:"›";color:var(--muted);margin-left:auto;font-weight:400;font-size:1.1rem}
+.done-row>summary::after{content:"›";color:var(--muted);margin-left:.55rem;font-weight:400;font-size:1.1rem;flex:none}
 .done-row[open]>summary::after{content:"⌄"}
-.done-date{color:var(--muted);font-size:.75rem;font-weight:400;margin-left:auto;white-space:nowrap}
-.done-row[open] .done-date{display:none}
+.done-check{flex:none}
+.done-num{flex:none;width:3.2rem;font-family:Georgia,serif;font-size:.78rem;font-weight:400;
+  color:var(--muted);font-variant-numeric:tabular-nums}
+.done-title{flex:1;min-width:0}
+.done-date{flex:none;width:5.6rem;text-align:right;color:var(--muted);font-size:.75rem;
+  font-weight:400;white-space:nowrap;font-variant-numeric:tabular-nums}
+.done-row[open] .done-date{visibility:hidden}
+@media (max-width:560px){
+  .done-num{width:2.8rem}
+  .done-date{width:4.9rem;font-size:.7rem}
+}
 .done-body{padding:0 1rem 1rem 2.6rem}
 .later{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:1rem 1.2rem;color:var(--muted);font-size:.9rem}
 footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem}
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-23 23:18 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-23 23:22 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -80,14 +89,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">4</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">4</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">25</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">5</span></h3><div class="job"><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job</h4></div><div class="jnum">#001</div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job</h4></div><div class="jnum">#001</div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -673,38 +682,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Artist DB alarm-code lookup + Anthropic step (claude-opus-4-8) between step 11 and step 12,</p>
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
-</div></details></details></div><div class="job"><div class="jhead"><span class="emoji">🗂️</span><h4>Stand up Codex as the token-exhaustion backup lane — Claude runs dry, the desk keeps running</h4></div><div class="jnum">#036</div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Stand up Codex as the token-exhaustion backup lane — Claude runs dry, the desk keeps running</b></p><h2>Question</h2>
-
-<p>Junyan is hitting Claude usage limits too quickly. The desk (and Junyan&#x27;s own working</p>
-<p>sessions) must not stall when that happens: <b>define and stand up the Codex backup lane</b></p>
-<p>so work continues on the OpenAI subscription when Claude tokens are exhausted.</p>
-
-<p>What has to be decided / verified:</p>
-
-<ul>
-<li>- <b>Scope</b>: which of the two consumers does this cover — (a) the <b>cloud Concierge</li>
-</ul>
-<p>passes</b> (Claude :10 primary, Codex :12 already authorized backup per the dual-runtime</p>
-<p>banner), (b) <b>Junyan&#x27;s interactive sessions</b> (the /sol and /fab-sol lanes via the</p>
-<p>local CLIProxyAPI already exist for delegating work to GPT-5.6 Sol), or both?</p>
-<ul>
-<li>- <b>Trigger condition</b>: what counts as &quot;Claude ran out&quot; — a failed :10 pass, a usage</li>
-</ul>
-<p>warning, Junyan&#x27;s judgment mid-session? Manual flip vs automatic failover?</p>
-<ul>
-<li>- <b>Codex :12 readiness</b>: is the :12 trigger currently enabled and passing? Known</li>
-</ul>
-<p>historical gaps: it couldn&#x27;t read Slack #desk-drops (<b>013b</b> —</p>
-<p>since made moot by the J28 ledger), and its last logged pass was 07-13. A verified</p>
-<p>green Codex pass at current library state is a precondition for calling it a real backup.</p>
-<ul>
-<li>- <b>Token-diet on Claude</b>: the complementary lever — what&#x27;s still burning Claude quota</li>
-</ul>
-<p>that could move to /sol, /fab-sol, or the deterministic lane by default?</p>
-
-<p>Prior facts (don&#x27;t re-litigate): Codex :12 stays authorized backup (031); the ChatGPT</p>
-<p>Slack connector doesn&#x27;t work (013b); real cash is ~$240/mo Claude + $140/mo ChatGPT</p>
-<p>backup — the backup subscription is already paid for (Notes, cost framing).</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">4</span></h3><div class="job"><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><div class="jnum">#016</div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -1192,7 +1169,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span>✅</span><span class="emoji">🧹</span> Retire the morning and evening checker robots<span class="done-date">2026-07-23</span></summary><div class="done-body"><ul class="plain-bullets"><li>Both are switched off — the morning one&#x27;s schedule is disabled, the evening one is gone</li><li>The door robot now does a late-night check that every empty studio is locked and armed</li><li>It looks at the real alarm panel, not a checklist someone filled in</li><li>Their checking work still needs a permanent home — that&#x27;s the next job</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Opener; move Closer&#x27;s arm-and-sweep to the Doorman (Closer persona repurposed, not retired)</b></p><blockquote>**NOTE 2026-07-17 (Junyan) — both bookends still dissolve; the Closer&#x27;s <i>verification value</i> is preserved elsewhere.<b> Ruling 2&#x27;s dissolution stands: the Opener&#x27;s morning surfacing → the renderer (019); the Closer&#x27;s arm-and-sweep → the Doorman evening pass; retire both runs + their Run Monitor roster rows. What briefly looked like &quot;revive the Closer&quot; resolved to </b>fold the end-of-day report review/verification into the Custodian<b> (a middle-of-night Junyan-facing pass) — see </b><b>027</b>**. So no Closer <i>persona</i> survives; its verification job is absorbed by the Custodian, not this ticket. This ticket is unchanged from its original dissolution scope.</blockquote>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#007</span><span class="emoji">🧹</span><span class="done-title">Retire the morning and evening checker robots</span><span class="done-date">2026-07-23</span></summary><div class="done-body"><ul class="plain-bullets"><li>Both are switched off — the morning one&#x27;s schedule is disabled, the evening one is gone</li><li>The door robot now does a late-night check that every empty studio is locked and armed</li><li>It looks at the real alarm panel, not a checklist someone filled in</li><li>Their checking work still needs a permanent home — that&#x27;s the next job</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Opener; move Closer&#x27;s arm-and-sweep to the Doorman (Closer persona repurposed, not retired)</b></p><blockquote>**NOTE 2026-07-17 (Junyan) — both bookends still dissolve; the Closer&#x27;s <i>verification value</i> is preserved elsewhere.<b> Ruling 2&#x27;s dissolution stands: the Opener&#x27;s morning surfacing → the renderer (019); the Closer&#x27;s arm-and-sweep → the Doorman evening pass; retire both runs + their Run Monitor roster rows. What briefly looked like &quot;revive the Closer&quot; resolved to </b>fold the end-of-day report review/verification into the Custodian<b> (a middle-of-night Junyan-facing pass) — see </b><b>027</b>**. So no Closer <i>persona</i> survives; its verification job is absorbed by the Custodian, not this ticket. This ticket is unchanged from its original dissolution scope.</blockquote>
 
 <h2>Question</h2>
 
@@ -1252,7 +1229,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Banked checks:</b> (a) tonight&#x27;s 23:35 arm-check report section appears on today&#x27;s Doorman</p>
 <p>report; (b) tomorrow 08:20 passes with no Opener fire and no Sentinel false alarm;</p>
 <p>(c) Custodian Fixer Report stays clean of rot from the orphaned steps until 035 rules.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🔌</span> Turn off the last two paid automations<span class="done-date">2026-07-22</span></summary><div class="done-body"><ul class="plain-bullets"><li>The last two paid automations now run as our own small programs</li><li>One files signed agreements; one adds phone contacts</li><li>Both were switched off — and the paid plan is cancelled</li><li>The front desk no longer pays a monthly automation bill</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Retire the last two Zaps — Phone.com contact-sync + Gmail agreements-to-Drive — and cancel Zapier</b></p><h2>Resolution (2026-07-22)</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#034</span><span class="emoji">🔌</span><span class="done-title">Turn off the last two paid automations</span><span class="done-date">2026-07-22</span></summary><div class="done-body"><ul class="plain-bullets"><li>The last two paid automations now run as our own small programs</li><li>One files signed agreements; one adds phone contacts</li><li>Both were switched off — and the paid plan is cancelled</li><li>The front desk no longer pays a monthly automation bill</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Retire the last two Zaps — Phone.com contact-sync + Gmail agreements-to-Drive — and cancel Zapier</b></p><h2>Resolution (2026-07-22)</h2>
 
 <p>Both Zaps replaced by deterministic pollers on the same 30-min watchlist Action;</p>
 <p>Zaps off; only the Zapier subscription downgrade remains (Junyan, in progress).</p>
@@ -1386,7 +1363,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>5. Cancel/downgrade the Zapier subscription; update the map note that called the</li>
 </ol>
 <p>Emergency Call Line &quot;the last blocker&quot;.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">📄</span> Build the Day Sheet web page<span class="done-date">2026-07-20</span></summary><div class="done-body"><ul class="plain-bullets"><li>Rebuilds itself every 15 minutes</li><li>Works without the Mac or AI</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the tabbed Day Sheet renderer + desk-state snapshot</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#019</span><span class="emoji">📄</span><span class="done-title">Build the Day Sheet web page</span><span class="done-date">2026-07-20</span></summary><div class="done-body"><ul class="plain-bullets"><li>Rebuilds itself every 15 minutes</li><li>Works without the Mac or AI</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the tabbed Day Sheet renderer + desk-state snapshot</b></p><h2>Question</h2>
 
 <p>Make https://junyanboon.github.io/day-sheet/ the single act-on surface so Junyan/Ela stop</p>
 <p>reading Notion. Per the 004 rulings:</p>
@@ -1473,7 +1450,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>(the hourly :40 LLM edition now fights the renderer and loses within 15 min; retire the step</p>
 <p>at its source). Night-watch&#x27;s morning page remains LLM-built — its deterministic absorption</p>
 <p>rides 007/030 follow-ups if wanted; the Opener-digest content itself already renders here.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🗑️</span> Retire the old Day Sheet writer<span class="done-date">2026-07-20</span></summary><div class="done-body"><ul class="plain-bullets"><li>The AI page writer is switched off</li><li>The self-building page is the only one now</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Retire the LLM Day Sheet edition writer (renderer owns the page now)</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#030</span><span class="emoji">🗑️</span><span class="done-title">Retire the old Day Sheet writer</span><span class="done-date">2026-07-20</span></summary><div class="done-body"><ul class="plain-bullets"><li>The AI page writer is switched off</li><li>The self-building page is the only one now</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Retire the LLM Day Sheet edition writer (renderer owns the page now)</b></p><h2>Question</h2>
 
 <p>Since 2026-07-20 the Day Sheet is rendered deterministically every 15 min by</p>
 <p><code>desk-correspondence/scripts/day_sheet_build.py</code> (ticket <b>019</b> —</p>
@@ -1521,7 +1498,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Banked check:</b> one day of <code>day-sheet-bot</code>-only commits on <code>junyanboon/day-sheet</code></p>
 <p>(~Jul 21 EOD) confirms nothing else writes editions.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">📝</span> No more silent fixes<span class="done-date">2026-07-17</span></summary><div class="done-body"><ul class="plain-bullets"><li>Every fix gets a note: what broke, and which job caused it</li><li>Runs once a day instead of twice</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Recast J13 — attributed-repair contract</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#008</span><span class="emoji">📝</span><span class="done-title">No more silent fixes</span><span class="done-date">2026-07-17</span></summary><div class="done-body"><ul class="plain-bullets"><li>Every fix gets a note: what broke, and which job caused it</li><li>Runs once a day instead of twice</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Recast J13 — attributed-repair contract</b></p><h2>Question</h2>
 
 <p>Execute Ruling 3: change the self-heal backstop&#x27;s contract so <b>every repair names the causing job and files a structured defect row</b> (causing job, symptom, what correct looked like) — no silent fixes — and drop cadence from 2×/day to 1×/day. Settle: where defect rows land (extend J15&#x27;s defect stream vs a new DB — prefer extending), the row schema (must be optimizer-food: enough context to later become a SkillOpt/critic training example), the prompt edit to the Concierge heavy pass (via RemoteTrigger job_config), and how J13 absorbs J14&#x27;s former rail-violation repairs (ticket 009). Also absorbs Ruling 5&#x27;s repair residue. Resolution records the prompt diff, the defect-row schema, the cadence change, and one observed attributed-repair example.</p>
 
@@ -1543,7 +1520,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>J14 absorption (Ruling 5):</b> JOB 7 §6 explicitly absorbs J14&#x27;s former rail-violation repairs — invariant defects repaired in the reconcile pass file rows attributed to the <i>causing</i> job, not to the checker that surfaced them. This is the piece ticket 009 (dissolve J14) was blocked on; <b>009 now unblocked.</b></p>
 
 <p><b>Observed attributed-repair example — not yet captured</b> (the success criterion&#x27;s one live example): the :10 cloud runtime is off and JOB 7 runs on manual local kicks, so the first real <code>Attributed defect</code> row lands on the next HEAVY-PM local pass. Banked as a one-line follow-up check on 009&#x27;s run rather than holding this ticket open — the contract, schema, and cadence (the decisions this ticket owed) are all settled and live.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🛑</span> Stop the hourly fix-it pass<span class="done-date">2026-07-17</span></summary><div class="done-body"><ul class="plain-bullets"><li>The hourly pass wasted money</li><li>Repairs now happen once a day, all written down</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve J14 — invariants fix</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#009</span><span class="emoji">🛑</span><span class="done-title">Stop the hourly fix-it pass</span><span class="done-date">2026-07-17</span></summary><div class="done-body"><ul class="plain-bullets"><li>The hourly pass wasted money</li><li>Repairs now happen once a day, all written down</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve J14 — invariants fix</b></p><h2>Question</h2>
 
 <p>Execute Ruling 5: cut the hourly J14 invariants-fix pass. Detection stays with J15 (rail-violations list unchanged); repair folds into J13&#x27;s daily attributed pass (ticket 008 must land first so violations arrive as attributed defects, not silent fixes). Remove the J14 step from the Concierge hourly prompt; verify J15&#x27;s violations list has a consumer (J13&#x27;s daily pass reads it). Root cause is fixed upstream by the sibling&#x27;s <b>single-source ticket-state convention</b> — nudge that ticket if still unclaimed. Resolution records the prompt diff and a week-later check that violation counts aren&#x27;t accumulating unrepaired.</p>
 
@@ -1564,7 +1541,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Sibling nudge:</b> the root-cause ticket <b>single-source ticket-state convention</b> is <b>claimed (junyan) and open</b> — no nudge needed, it&#x27;s already on his queue.</p>
 
 <p><b>Banked follow-up (week-later check, ~2026-07-24):</b> confirm invariant-violation counts on the 🩺 page aren&#x27;t accumulating unrepaired between HEAVY-PM passes (the Custodian&#x27;s QA defect-count trend is the read). If hourly-detected defects routinely rot for most of a day before the PM sweep, the cadence answer is a second JOB 7 block, not resurrecting J14.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🚨</span> One fast lane for urgent texts<span class="done-date">2026-07-17</span></summary><div class="done-body"><ul class="plain-bullets"><li>Urgent texts page staff instantly</li><li>Known renters get fast-tracked</li><li>Still needs a live test</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Converge J03 quick-answer with the emergency fast-lane</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#011</span><span class="emoji">🚨</span><span class="done-title">One fast lane for urgent texts</span><span class="done-date">2026-07-17</span></summary><div class="done-body"><ul class="plain-bullets"><li>Urgent texts page staff instantly</li><li>Known renters get fast-tracked</li><li>Still needs a live test</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Converge J03 quick-answer with the emergency fast-lane</b></p><h2>Question</h2>
 
 <p>Execute Ruling 8: register the converged <b>event-driven auto-send lane</b> as one job with one owner — inbound arrives → match against pre-approved cards → auto-send; emergency = the highest-priority card, carrying the reply-gate + Zapier-phone-call behavior. The <b>sibling&#x27;s <b>emergency fast-lane build</b> owns the plumbing</b> — this ticket coordinates (don&#x27;t double-build): extend that build&#x27;s card-matching to the general quick-answer cards, or sequence it (emergency first, cards second). Then: retire the 15-min Receptionist poll once the event lane is live (banner flip + heartbeat roster edit). <b>Closed loop is mandatory:</b> per-episode auto-send logs, J15 samples auto-sends each sweep for wrong-card matches, results feed J17. Resolution records the lane owner, what the sibling build absorbed, the poll retirement, and the loop wiring.</p>
 
@@ -1702,7 +1679,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Poll retirement: DEFERRED — do not flip yet.</b> Evidence says premature: (1) the only two webhook episodes (07-15 ~21:35, &quot;Yes sorry thank you&quot;) were BOTH loose matches — no distress/life-safety keywords in the text — before the filters were tightened; (2) Junyan&#x27;s deliberate <code>test — water leak in 527</code> (07-16 01:44Z) produced <b>NO</b> queue row, so the life-safety path has zero verified end-to-end passes since the filter edits; (3) 07-16→07-17 real traffic produced zero rows (clean = no false positives, but also no true-positive proof). <b>Junyan&#x27;s flip checklist (blocks retirement):</b> ① text a life-safety keyword test SMS from a non-watchlist number → confirm a Staff Call Queue row + on-call note SMS arrives; ② text a distress keyword from a watchlist number → confirm the verified-path row; ③ then a few days of clean §7 episodes → retire the 15-min <code>the-receptionist</code> trigger (banner flip on the Receptionist page + heartbeat roster edit). Until then the poll stays — it is also the general quick-answer surface the event lane doesn&#x27;t cover.</p>
 
 <p><b>Housekeeping:</b> old inline watchlist table on the parent page stays as documentation until the DB projection retires (J29 syncs the DB; nothing reads the inline table).</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">⏰</span> Run each job only as often as needed<span class="done-date">2026-07-16</span></summary><div class="done-body"><ul class="plain-bullets"><li>Mail sorting: every 2 hours</li><li>Reports: once a day</li><li>Fewer wasted runs, lower cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cadence right-sizing — which jobs earn hourly fires</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#004</span><span class="emoji">⏰</span><span class="done-title">Run each job only as often as needed</span><span class="done-date">2026-07-16</span></summary><div class="done-body"><ul class="plain-bullets"><li>Mail sorting: every 2 hours</li><li>Reports: once a day</li><li>Fewer wasted runs, lower cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cadence right-sizing — which jobs earn hourly fires</b></p><h2>Question</h2>
 
 <p>With the verdict rulings (002) and the reliability findings (003) in hand, decide with Junyan which jobs actually earn the hourly Concierge cadence and which drop to 2–3×/day or daily — the notional 12 × $20 runs bundle jobs with wildly different real cadences (decay 2×/day; reconciliation every 2–3h; arguably only triage earns hourly). Decide the new run schedule and apply it to the cloud trigger(s), honouring the 🚦 production-banner gate. Success = materially fewer no-op fires without any job missing its real cadence.</p>
 
@@ -1767,7 +1744,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>017 J01 SOP/execution research (AFK) · 018 J01 rearchitecture grilling · 019 Day Sheet tabbed</p>
 <p>renderer + desk-state snapshot · 020 Ops-lead live monitor · 021 J06 capture Zap (Junyan&#x27;s</p>
 <p>hands, ASAP — the dormant Door-Watch spec).</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🔬</span> Study where mail sorting goes wrong<span class="done-date">2026-07-16</span></summary><div class="done-body"><ul class="plain-bullets"><li>Read weeks of mail-sorting history</li><li>Found 6 common tasks and 8 common mistakes</li><li>Feeds the redesign (018)</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Mine the SOPs + ticket history for J01&#x27;s recurring actions and failure modes</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#017</span><span class="emoji">🔬</span><span class="done-title">Study where mail sorting goes wrong</span><span class="done-date">2026-07-16</span></summary><div class="done-body"><ul class="plain-bullets"><li>Read weeks of mail-sorting history</li><li>Found 6 common tasks and 8 common mistakes</li><li>Feeds the redesign (018)</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Mine the SOPs + ticket history for J01&#x27;s recurring actions and failure modes</b></p><h2>Question</h2>
 
 <p>Evidence base for the J01 rearchitecture (018). Junyan&#x27;s #1 pain point (2026-07-16): tickets end</p>
 <p>up in the wrong place with the wrong SOPs attached and wrong things checked off; he hand-clears</p>
@@ -1835,7 +1812,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Unblocks:</b> <b>018 J01 rearchitecture</b> (still gated on</p>
 <p>006 correspondence ledger). Legacy-SOP fixes + stale cross-ref repairs are owned by 018 per its</p>
 <p>Question.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🚶</span> Walk through a full day together<span class="done-date">2026-07-16</span></summary><div class="done-body"><ul class="plain-bullets"><li>Junyan walked through a whole day of desk work</li><li>5 big design choices came out of it</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Walk a full Concierge day with Junyan — the lived process, end to end</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#022</span><span class="emoji">🚶</span><span class="done-title">Walk through a full day together</span><span class="done-date">2026-07-16</span></summary><div class="done-body"><ul class="plain-bullets"><li>Junyan walked through a whole day of desk work</li><li>5 big design choices came out of it</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Walk a full Concierge day with Junyan — the lived process, end to end</b></p><h2>Question</h2>
 
 <p>Junyan&#x27;s direction (2026-07-16): the 017 evidence pass isn&#x27;t deep enough — walk through the</p>
 <p>WHOLE Concierge process with him across a day&#x27;s work, so the rearchitecture (018) is designed</p>
@@ -1893,7 +1870,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>issues-to-clear → sharpens ticket 020&#x27;s scope).</p>
 
 <p><b>Unblocks:</b> 018 (now waits only on 006).</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">⚖️</span> Decide what happens to every job<span class="done-date">2026-07-15</span></summary><div class="done-body"><ul class="plain-bullets"><li>Went through all 28 jobs with Junyan</li><li>Each one: keep, fix, merge, or delete</li><li>4 jobs deleted; 2 new ones added</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rule on every Job Board verdict with Junyan</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#002</span><span class="emoji">⚖️</span><span class="done-title">Decide what happens to every job</span><span class="done-date">2026-07-15</span></summary><div class="done-body"><ul class="plain-bullets"><li>Went through all 28 jobs with Junyan</li><li>Each one: keep, fix, merge, or delete</li><li>4 jobs deleted; 2 new ones added</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rule on every Job Board verdict with Junyan</b></p><h2>Question</h2>
 
 <p>Walk the <a href="https://claude.ai/code/artifact/a40ea44c-9c21-43e3-8faf-16feb2247024" target="_blank" rel="noopener">Job Board</a> with Junyan and get an explicit ruling (confirm/overrule/modify) on each verdict: merges (J02→J01; J18/J19 bookends, incl. J24 absorbing &quot;fire missing generators&quot;), rethinks (J13 self-heal attributability; J14 — really the state-with-no-single-home question, coordinate with sibling ticket 006), gaps (J17, J26, and <b>where J27 demand-generation lives</b>), and boundary calls on keeps (J08 templated sends vs the Responder; J03 auto-send sampling reviewer; J12 → plain code). Output: a rulings table (asset) that becomes the implementation backlog — each actionable ruling graduates into its own ticket.</p>
 
@@ -1911,7 +1888,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 
 <p>Implementation tickets cut: 006 (J28 ledger), 007 (bookends dissolution), 008 (J13 contract), 009 (J14 dissolution), 010 (J12 deterministic), 011 (J03/emergency convergence).</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🔍</span> Find out why robots kept missing work<span class="done-date">2026-07-15</span></summary><div class="done-body"><ul class="plain-bullets"><li>The main robot had silently stopped for 2 days</li><li>Found the things that break runs most often</li><li>Made a ticket to fix each cause</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Reliability diagnostic — missed fires vs shallow passes</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#003</span><span class="emoji">🔍</span><span class="done-title">Find out why robots kept missing work</span><span class="done-date">2026-07-15</span></summary><div class="done-body"><ul class="plain-bullets"><li>The main robot had silently stopped for 2 days</li><li>Found the things that break runs most often</li><li>Made a ticket to fix each cause</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Reliability diagnostic — missed fires vs shallow passes</b></p><h2>Question</h2>
 
 <p>Pull the Concierge rolling reports and Run Monitor rows since the 2026-07-11 cloud re-migration and separate the two failure modes, which need different fixes: <b>scheduler/thaw misses</b> (run never fired — cross-check the dual-runtime banner arrangement, Claude :10 vs Codex :12) vs <b>density failures</b> (run fired but sub-step counts are missing/zero — quota burned for nothing). Quantify each per day, name the worst sub-steps, and note anything implicating the Receptionist duplicate-report fork (Custodian row 39c7503281c481d3b438d385cc1ec1e2). Output: a findings asset; fixes graduate into their own tickets.</p>
 
@@ -1926,7 +1903,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Receptionist duplicate fork:</b> confirmed — two Receptionist rows on 07-12 and 07-13, self-resolved to one row from 07-14; largely mooted by ticket 011 (retire the 15-min poll).</p>
 
 <p><b>Graduated tickets:</b> 012 (restore cloud :10 — the headline; +Codex-drops capability), 013 (SQL-router 429 headroom), 014 (repair FBS straggler view + Invariants page). Added <b>012 as a blocker of 004</b> — cadence right-sizing is meaningless while the cloud trigger fires zero passes.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">💬</span> Can the backup robot read Slack?<span class="done-date">2026-07-15</span></summary><div class="done-body"><ul class="plain-bullets"><li>No — not reliably</li><li>Staff photos now save into our own files instead</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Can the Codex runtime be granted Slack #desk-drops read?</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#013b</span><span class="emoji">💬</span><span class="done-title">Can the backup robot read Slack?</span><span class="done-date">2026-07-15</span></summary><div class="done-body"><ul class="plain-bullets"><li>No — not reliably</li><li>Staff photos now save into our own files instead</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Can the Codex runtime be granted Slack #desk-drops read?</b></p><h2>Question</h2>
 
 <p>Graduated from <b>Restore the cloud Concierge (:10) runtime (012)</b> — Junyan&#x27;s ruling 2026-07-15: <b>investigate</b> whether the ChatGPT/Codex runtime (:12) can be given Slack read access to <b>#desk-drops</b> (channel <code>C0BFNUTH22H</code>).</p>
 
@@ -1951,7 +1928,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- <b>Chosen fallback / durable fix: the J28 correspondence ledger (<b>ticket 006</b>)</b> — Zapier files drops into the owned store, making the drops scan runtime-independent. Promoted from fallback to primary.</li>
 <li>- Optional CAPABILITIES row touch-up (Junyan-approved wording in findings): note the browser-read-only path, read + report, no marking — drops stay unprocessed until a Claude pass ✅-reacts.</li>
 </ul>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">📨</span> Keep one record of every customer message<span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Texts and emails save automatically every 30 minutes</li><li>6,369 old messages loaded in</li><li>Stored in our own files, not a rented service</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build J28 — the correspondence ledger</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#006</span><span class="emoji">📨</span><span class="done-title">Keep one record of every customer message</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Texts and emails save automatically every 30 minutes</li><li>6,369 old messages loaded in</li><li>Stored in our own files, not a rented service</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build J28 — the correspondence ledger</b></p><h2>Question</h2>
 
 <p>Build the deterministic correspondence ledger (new job J28, banked 2026-07-15): Zapier-logged rows for <b>every inbound/outbound message on Phone.com SMS and Gmail</b> into one queryable store — no agent in the write path, no tokens. Channels outside those two are dropped manually into #desk-drops with a filing convention so the ledger stays complete. Store question PRE-ANSWERED 2026-07-15: <b>the owned local workspace store, not a new Notion DB</b> (Junyan&#x27;s full-canon ruling — <b>data-sovereignty-wayfinder</b>); note Zapier must be able to write rows into it (a file/DB the Zap can append to, or a queue the local side ingests) — settle that write path here. Also settle: the row schema (timestamp, channel, direction, counterparty, body/pointer, related ticket), the Zap triggers per channel (note: Phone.com has no history read — this ledger IS the fix, logging forward from go-live only), and dedup vs the existing Correspondence Log J11 writes. Resolution records: the store, the Zaps, the drop convention, and a day-one row-count sanity check. This is the ground-truth spine J17 scorecards and the critic loop read from.</p>
 
@@ -2013,7 +1990,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Watchlist Action hardened (J29, ticket 011)</b> in the same repo: gated to skip-green until</p>
 <p>secrets exist (no 15-min failure spam) + race-tolerant best-effort canon push (retry-rebase ×6,</p>
 <p>never fails the run — Notion sync is the real output). Commit 019d879.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🤖</span> Let a small program close cold sales leads<span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>A script ages quiet leads by simple date rules</li><li>Unsure cases get flagged for a human</li><li>Runs every morning</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move J12 sales-lead decay to deterministic code</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#010</span><span class="emoji">🤖</span><span class="done-title">Let a small program close cold sales leads</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>A script ages quiet leads by simple date rules</li><li>Unsure cases get flagged for a human</li><li>Runs every morning</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move J12 sales-lead decay to deterministic code</b></p><h2>Question</h2>
 
 <p>Execute Ruling 7: replace the 2×/day LLM decay pass with deterministic plumbing — a scheduled pass (Zapier or code) applying the fixed date rules (nudge → decay stage → auto-close; customer reply reverses). Nudge <i>wording</i> becomes a held draft owned by the reply-drafting job (J04/Responder), queued like any other reply. Settle: where the deterministic pass runs (Zapier scheduled Zap vs a cloud-trigger plain-code step), how reply-reversal is detected, and removing the decay step from the Concierge heavy pass. Watch the SMS/URL gotchas (<b>sms-url-mangle-fix</b>) if nudges go by text. Resolution records the Zap/code, the prompt removal, and one observed decay cycle matching the old behavior.</p>
 
@@ -2055,7 +2032,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>deadline ×1, no clock ×2). <b>Banked check:</b> one observed live decay cycle — Nicholas</p>
 <p>Walsh&#x27;s Follow-up 2026-07-19 lapses ~Jul 20 and should produce the first held Phase A</p>
 <p>nudge; confirm it matches old behavior, then the cycle box is ticked.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">☁️</span> Turn the cloud robot back on?<span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Found why it was off (a safety flip)</li><li>Kept off at first; turned back on for the trip</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Restore the cloud Concierge (:10) runtime — it is firing zero passes</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#012</span><span class="emoji">☁️</span><span class="done-title">Turn the cloud robot back on?</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Found why it was off (a safety flip)</li><li>Kept off at first; turned back on for the trip</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Restore the cloud Concierge (:10) runtime — it is firing zero passes</b></p><h2>Question</h2>
 
 <p>The <b>reliability findings</b> show the authorized cloud Concierge runtime <b>[Claude] :10 (<code>trig_01XVReGFYaBMcLrDovBMevzp</code>) has logged ZERO passes across 07-13 → 07-15</b> — the desk is being carried by Codex :12 (07-13 only) and Junyan&#x27;s manual [Claude-local] kicks (07-14, 07-15). This is a <b>missed-fire defect at the runtime level</b> and it fails hard against the Brazil departure (Jul 27), when manual kicks stop.</p>
 
@@ -2084,7 +2061,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Open risk flagged (NOT resolved here):</b> local (C) is manual-kick and its hourly schedule &quot;frequently skips&quot; (Mac sleep + App Nap — <b>local-tasks-miss-runs-on-sleep</b>). Under the local-only ruling, <b>nothing fires unattended during Brazil (dep. Jul 27)</b> once manual kicks stop, and Codex :12 has only ever logged passes on 07-13. This is a genuine unattended-coverage gap left open by the ruling; banked to the map&#x27;s <b>Not yet specified</b> as the Brazil-window coverage question (Junyan has a plan or will re-decide nearer departure).</p>
 
 <p><b>Unblocks:</b> <b>Cadence right-sizing (004)</b> — its premise shifts from &quot;right-size a trigger firing zero passes&quot; to &quot;right-size the <b>local</b> runtime&#x27;s job bundle,&quot; but the cadence question stands and is now answerable.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🚦</span> Stop overloading the database<span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Heavy reads were hitting a speed limit</li><li>Spread them out; the failures stopped</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Notion SQL collection-router (429) headroom for heavy passes</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#013</span><span class="emoji">🚦</span><span class="done-title">Stop overloading the database</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Heavy reads were hitting a speed limit</li><li>Spread them out; the failures stopped</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Notion SQL collection-router (429) headroom for heavy passes</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: Junyan ruled full canon moves off Notion — <b>data-sovereignty-wayfinder</b> is the strategic fix for the 429s. This ticket is now tactical relief only: keep the desk running during the transition, don&#x27;t build anything durable around the Notion SQL router.)</b></p>
 
@@ -2124,7 +2101,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>criterion:</b> the &quot;deep per-artist SQL dedup&quot; check the Custodian/Fixer passes keep skipping</p>
 <p>(&quot;throttle discipline&quot;) must run against the J28 ledger post-cutover — 015 isn&#x27;t done while</p>
 <p>that check is silently skipped.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🔧</span> Fix two broken lookups<span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>A morning booking check always failed</li><li>Pointed it at the right list; works now</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Repair the broken integration surfaces (FBS straggler view, Invariants page)</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#014</span><span class="emoji">🔧</span><span class="done-title">Fix two broken lookups</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>A morning booking check always failed</li><li>Pointed it at the right list; works now</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Repair the broken integration surfaces (FBS straggler view, Invariants page)</b></p><h2>Question</h2>
 
 <p>The <b>reliability findings</b> surface two persistent integration-surface breaks that make Concierge sub-steps fall through even when a pass fires:</p>
 
@@ -2146,7 +2123,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Break 2 — Desk Invariants page: verified healthy, no repair needed.</b> The 🩺 Desk Invariants — latest run page (<code>3987503281c481ef88eafdc23640ad20</code>) fetches cleanly; latest run 2026-07-20 22:25 EDT, 0 defects. Concierge reports on 07-15/07-17/07-20 all read the checker fresh. The 07-12 unavailability was transient and predates the JOB 10 rearchitecture (cloud Verifier rewrite at :25, hourly fixer retired per ticket 009). Nothing to change.</p>
 
 <p><b>Banked check:</b> the next live Concierge pass should log Step 4.5 running against the DS query (no more &quot;view could not be fetched&quot; lines) — confirm in the next rolling report.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">❓</span> Replace the paid email-logging service?<span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Question: can our own program save email instead?</li><li>Answer: yes</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Replace the Zapier email-logging Zaps with a deterministic Gmail poller?</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#023</span><span class="emoji">❓</span><span class="done-title">Replace the paid email-logging service?</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Question: can our own program save email instead?</li><li>Answer: yes</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Replace the Zapier email-logging Zaps with a deterministic Gmail poller?</b></p><h2>Question</h2>
 
 <p>Junyan&#x27;s direction (2026-07-16): Zapier email logging is too expensive and error-prone</p>
 <p>(git write-races). Decide whether one deterministic poller (the <code>sms_pull.py</code> pattern,</p>
@@ -2218,7 +2195,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Graduated:</b> ticket 024 (build <code>gmail_pull.py</code> + Action piggyback + parallel-diff cutover).</p>
 <p>Google Cloud project + OAuth consent + secrets are Junyan-hands steps inside 024&#x27;s checklist.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">📥</span> Build the email saver<span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Built; runs every 30 minutes</li><li>Paid email service switched off</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build gmail_pull.py and cut the ledger over from the Gmail Zaps</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#024</span><span class="emoji">📥</span><span class="done-title">Build the email saver</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Built; runs every 30 minutes</li><li>Paid email service switched off</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build gmail_pull.py and cut the ledger over from the Gmail Zaps</b></p><h2>Question</h2>
 
 <p>Execute the decision in <b>023</b>: make one deterministic poller</p>
 <p>the ledger&#x27;s sole Gmail writer, then retire Zaps 1+2.</p>
@@ -2339,7 +2316,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>second record (email is in both J28 and Notion) and the old 429 write pressure. Making J28</p>
 <p>canonical + repointing/retiring those Notion-log writes is exactly <b>ticket 015</b> — now</p>
 <p>effectively unblocked (006&#x27;s poller+mirror is live).</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🌙</span> A night robot that reviews the day<span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Runs at 2:35 AM when the studio is empty</li><li>Checks the whole day&#x27;s work</li><li>Makes a &#x27;fix these&#x27; list for Junyan</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold end-of-day verification into the Custodian — a middle-of-night, Junyan-facing &quot;Fix these&quot; pass</b></p><h2>Implemented 2026-07-17</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#027</span><span class="emoji">🌙</span><span class="done-title">A night robot that reviews the day</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Runs at 2:35 AM when the studio is empty</li><li>Checks the whole day&#x27;s work</li><li>Makes a &#x27;fix these&#x27; list for Junyan</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold end-of-day verification into the Custodian — a middle-of-night, Junyan-facing &quot;Fix these&quot; pass</b></p><h2>Implemented 2026-07-17</h2>
 
 <p>All four build defaults shipped as specified:</p>
 
@@ -2491,7 +2468,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>the one person who can fix it (him), coupled to the loop that makes the agents better. Reverses the</p>
 <p>Closer half of Ruling 2 only in <i>spirit</i> (the verification value is preserved) — the Closer <i>persona</i></p>
 <p>stays dissolved (007); its arm-and-sweep still goes to the Doorman, its verification value comes here.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🏷️</span> Label warning-system errors properly<span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Alerts about the robots themselves now get filed the right way</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Causing Job for reliability-layer defects — give Sentinel/Watchman escalations an honest home</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#028</span><span class="emoji">🏷️</span><span class="done-title">Label warning-system errors properly</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Alerts about the robots themselves now get filed the right way</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Causing Job for reliability-layer defects — give Sentinel/Watchman escalations an honest home</b></p><h2>Question</h2>
 
 <p>The 2026-07-18 Slack reroute (<b>handoff</b>)</p>
 <p>left three producers filing 🔧 Sweep Feedback rows with <code>Causing Job = Unknown</code> — the</p>
@@ -2529,7 +2506,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Implementation: two select options added to the Sweep Feedback DB; three trigger prompts</p>
 <p>re-pointed (Sentinel <code>trig_01DqFwHqGCQ4R63rkjibb65D</code>, Watchman <code>trig_011mpmLosff2dYEf3Pg5VT35</code>,</p>
 <p>Weatherman <code>trig_01XrgdtzNqjzRJtaoEp2Ebnu</code>).</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">📤</span> Send texts with our own program<span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Our own sender replaced the paid sending service</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the message-queue send engine — retire the Zapier send Zaps</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#029</span><span class="emoji">📤</span><span class="done-title">Send texts with our own program</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Our own sender replaced the paid sending service</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the message-queue send engine — retire the Zapier send Zaps</b></p><h2>Question</h2>
 
 <p>Execute <b>message-queue-send-engine-spec.md</b></p>
 <p>(2026-07-18, Ready to build): replace the Notion SMS/Email sender Zaps with a stateless</p>
@@ -2860,7 +2837,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>feedback row 3a675032…0195 Applied with the upstream learning (search phone + name</p>
 <p>variants before creating artist records). Matrix table in SETUP.md annotated with this</p>
 <p>real-world confirmation + the new &quot;duplicate artist → empty rollup&quot; failure class.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">✈️</span> Move everything to the cloud before the trip<span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>The desk now runs by itself in the cloud</li><li>It keeps working while Junyan travels</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move everything that can move to the cloud — the Brazil runtime decision</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#031</span><span class="emoji">✈️</span><span class="done-title">Move everything to the cloud before the trip</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>The desk now runs by itself in the cloud</li><li>It keeps working while Junyan travels</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move everything that can move to the cloud — the Brazil runtime decision</b></p><h2>Question</h2>
 
 <p>Junyan&#x27;s ruling (2026-07-21): &quot;I want to move everything I can to the cloud.&quot; This is the</p>
 <p>trip plan the <b>Brazil-window unattended coverage</b> fog was waiting on (departure Jul 27).</p>
@@ -2909,7 +2886,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Banked check: today&#x27;s first unattended cloud passes (08:10 / 10:10 Toronto) must appear on</p>
 <p>the rolling report — the first unattended :10 passes since 07-13.</p>
-</div></details></div></details><details class="done-row"><summary><span>✅</span><span class="emoji">🏦</span> Move the bookkeeping robot to the cloud?<span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Decided no</li><li>It stays on the Mac and runs while Junyan is present</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Migrate the Accountant to a cloud RemoteTrigger before its Jul 25 fire</b></p><h2>Question</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#032</span><span class="emoji">🏦</span><span class="done-title">Move the bookkeeping robot to the cloud?</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Decided no</li><li>It stays on the Mac and runs while Junyan is present</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Migrate the Accountant to a cloud RemoteTrigger before its Jul 25 fire</b></p><h2>Question</h2>
 
 <p>Ruled by Junyan 2026-07-21 (ticket 031): the Accountant — the last enabled recurring local</p>
 <p>Mac task (cron <code>0 8 10,25 <i> </i></code>, Accounting Day: Cindia inbox + QBO bills, sales-receipt</p>
@@ -2967,5 +2944,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-23 23:18 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-23 23:22 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
