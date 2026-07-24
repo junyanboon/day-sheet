@@ -79,7 +79,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-23 23:22 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-23 23:23 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -89,14 +89,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">4</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">4</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">25</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">26</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job</h4></div><div class="jnum">#001</div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">3</span></h3><div class="job"><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job</h4></div><div class="jnum">#001</div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -140,154 +140,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Resolved when live alarm events appear as Activity Log rows. Unblocks: 020 (Ops-lead monitor)</p>
 <p>and the J06-residual cadence re-cut (needs a few days of rows — see 004 resolution).</p>
-</div></details></details></div><div class="job"><div class="jhead"><span class="emoji">📚</span><h4>Move the robots&#x27; manual into our own storage</h4></div><div class="jnum">#025</div><details><summary>Details</summary><ul class="plain-bullets"><li>The manual now lives in our own files</li><li>Notion keeps a read-only copy</li><li>One last cleanup step remains</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Port the desk procedure library to the desk-correspondence repo (git canon)</b></p><h2>Question</h2>
-
-<p>Ruled by Junyan 2026-07-17: port the Concierge, the Receptionist, and Process Studio</p>
-<p>Tickets out of Notion into the owned git store — <code>library/</code> in <code>desk-correspondence</code></p>
-<p>(the repo every runtime reaches; GitHub connector confirmed on claude.ai AND Codex).</p>
-<p>This executes <b>data-sovereignty-wayfinder</b>&#x27;s full-canon ruling for the desk library</p>
-<p>and absorbs ticket 015&#x27;s read-repoint mechanics (edit once during the port, not twice).</p>
-
-<p><b>Staged order — each step = port as-is (no restructuring; 018 owns that) + watched</p>
-<p>pass + Notion original becomes a pointer stub:</b></p>
-
-<ol>
-<li>1. <b>Process Studio Tickets</b> (<code>242f0d1b66904dcdbf7353cf77577360</code>) — most-invoked</li>
-</ol>
-<p>sub-procedure, self-contained: the canary.</p>
-<ol>
-<li>2. <b>HOUSE-RULES + Concierge orchestration + JOB 0–7 pages</b> — with the J28</li>
-</ol>
-<p>correspondence repoint folded in: reads → <code>threads/&lt;person&gt;.md</code>; JOB 4 drop-log →</p>
-<p>repo message JSONs (<code>drop-&lt;slack-ts&gt;.json</code>, channel=tagvenue/peerspace/call/</p>
-<p>slack-drop) via GitHub Create-File API (needs a fine-grained PAT, contents rw,</p>
-<p>this repo only — Junyan creates); Notion Correspondence Log writes stay as</p>
-<p>double-book during the transition.</p>
-<ol>
-<li>3. <b>Receptionist</b> — last; touching the live-answer lane only after the pattern is</li>
-</ol>
-<p>proven. **(Corrected 2026-07-21, live API: only ONE trigger exists — &quot;The</p>
-<p>Receptionist (cloud :00)&quot; <code>trig_01Rz8uECDq7TaKhocQZ1Hyvx</code>, hourly <code>0 0-2,12-23 <i> </i> *</code>,</p>
-<p>firing healthily; the :15/:30/:45 siblings are deleted, not disabled. Step 3 is a</p>
-<p>one-trigger repoint — SUPERSEDED same day: Junyan ruled the Receptionist DISSOLVES —</p>
-<p>quick answers become watchlist-verified canned sends on the J03 event lane, owned by</p>
-<p><b>033</b>. <b>Step 3 is DELETED from this ticket</b></p>
-<p>— nothing to port; 033 retires the trigger and stubs the page. This ticket now closes</p>
-<p>on step-2 bed-in + the Correspondence-Log freeze (which closes 015).)<b></p>
-
-<p></b>Step-2 design constraint (2026-07-17, Destiny Nwobosi Tagvenue closure):<b> the</p>
-<p>Notion-log writes are LOAD-BEARING for platform-native channels — a Tagvenue outbound&#x27;s</p>
-<p>only record today is its Notion Correspondence Log row (pollers can&#x27;t see platform</p>
-<p>messages). At cutover: Gmail/SMS logging steps are removed outright (pollers own them);</p>
-<p>platform/call logging steps are REPOINTED to write repo message JSONs (Contents API via</p>
-<p>GITHUB_DROPS_PAT) — never removed before the replacement path is live.</p>
-
-<p>Out of scope: Notion ticket DBs / boards / queues (human UI, ruled T1 — they stay).</p>
-<p>After step 2 beds in a few days: freeze the Notion Correspondence Log read-only +</p>
-<p>strip the logging/dedupe ritual — that CLOSES ticket 015.</p>
-
-<p>Resolution records: the ported file map, watched-pass results per stage, the PAT in</p>
-<p>place, and the Notion stubs pointing at the repo.</p>
-
-<h2>Progress (2026-07-17) — step 1 staged</h2>
-
-<ul>
-<li>- </b>PAT ready:<b> <code>GITHUB_DROPS_PAT</code> in <code>~/.env</code>, write-probe verified (create+delete via</li>
-</ul>
-<p>Contents API), expires Jul 1 2027 (calendar reminder Jun 14 2027 + CREDENTIALS.md</p>
-<p>runbook §1 in the repo).</p>
-<ul>
-<li>- </b>Process Studio Tickets PORTED:<b> full 62.8K-char faithful copy →</li>
-</ul>
-<p><code>library/process-studio-tickets.md</code> (+ <code>library/README.md</code> with per-runtime read</p>
-<p>instructions and the edit-here rule). One linked DB + 13 mention-page refs point at</p>
-<p>live Notion DBs — valid, those stay (T1).</p>
-<ul>
-<li>- </b>Redirect banner LIVE<b> on the Notion page (top): canon = the git file; per-runtime</li>
-</ul>
-<p>fetch instructions; Notion body below = frozen mirror fallback (flag <code>⚠ library fetch</p>
-<p>failed</code> if used). Reversible by deleting the banner.</p>
-<ul>
-<li>- </b>WATCHED PASS: PASSED (2026-07-17, live work)<b> — /process-studio-tickets invoked on</li>
-</ul>
-<p>two real Day Sheet items (Isabel rebooking + Walsh Fall agreement). Verified: (a) the</p>
-<p>Notion fetch led with the banner; (b) executed from the git file (local clone, pulled</p>
-<p>fresh); (c) full procedure run — context-first (J28 threads + ticket), stale-cache</p>
-<p>catch (the procedure&#x27;s own rule caught a Jun-6 snapshot), find-don&#x27;t-duplicate,</p>
-<p>fulfillment-advance (Isabel&#x27;s off-sweep booking detected + advanced), exact-studio</p>
-<p>calendar verification with proof tuples, held Pending-Review drafts, Action-row</p>
-<p>park/resume mechanics — all off the ported file; (d) NO mirror fallback. Bonus catch:</p>
-<p>the prior JOB 7 Walsh analysis used the wrong studios (509s) — corrected live to 901</p>
-<p>(20/20 free). </b>Step 1 canary CLEARED — next: collapse the Notion page to a stub,</p>
-<p>update the skill&#x27;s pointer to git, then step 2.<b></p>
-
-<h2>Progress (2026-07-21) — step 1 CLOSED OUT, step 2 staged</h2>
-
-<ul>
-<li>- </b>Step 1 complete, upgraded design:<b> instead of a frozen stub, <code>scripts/</li>
-</ul>
-<p>library_mirror_sync.py</code> (on the 30-min watchlist Action) rewrites the Notion page</p>
-<p>from git on every change — Notion is a live PROJECTION, canon always wins. The</p>
-<p>/process-studio-tickets skill reads git-first. Nothing left in step 1.</p>
-<ul>
-<li>- </b>Step 2 STAGED (commit 3f1610c):<b> all 11 pages ported faithfully to <code>library/</code> —</li>
-</ul>
-<p>house-rules, concierge-orchestration, job-0-feedback, job-1-adt-alarm, fast-track,</p>
-<p>job-2-triage, job-3-reconcile, job-4-handback, job-5-decay, job-7-self-heal,</p>
-<p>response-resolver. ADDITIVE ONLY: not in MIRRORS, trigger prompt untouched — the</p>
-<p>live 2-hourly Concierge still reads Notion; nothing can break mid-port.</p>
-<h2>Progress (2026-07-21, later session) — step 2 CUT OVER, watched pass PASSED</h2>
-
-<ul>
-<li>- </b>&quot;Stale&quot; files were never stale:<b> all 7 pages&#x27; <code>last_edited_time</code> (Notion REST) exactly</li>
-</ul>
-<p>matches each file&#x27;s snapshot date — no edits since; headers stamped &quot;Verified current&quot;.</p>
-<p>The MCP cache was fresh; no re-port needed.</p>
-<ul>
-<li>- </b>J28 repoints folded in (19 edits, commit <code>84df441</code>):<b> canonical 📗 J28 ledger repoint</li>
-</ul>
-<p>block in HOUSE-RULES; Gmail/SMS Notion-log writes REMOVED (pollers verified capturing</p>
-<p>both directions: 1,826 in / 2,714 out SMS · 1,390 in / 439 out Gmail); platform/call</p>
-<p>logging REPOINTED to repo drop JSONs (<code>log_drop.py</code> / Contents API — Destiny Nwobosi</p>
-<p>constraint honored, replacement live before removal); context reads → <code>threads/&lt;person&gt;.md</code>;</p>
-<p>Drop-scan ✅-verification now checks the drop JSON, not Notion rows. Dedupe ritual scoped</p>
-<p>Receptionist-only until step 3.</p>
-<ul>
-<li>- </b>MIRRORS extended to all 11 files + synced:<b> every Notion page is now a live git</li>
-</ul>
-<p>projection (library_mirror_sync, 30-min Action). Canon = git.</p>
-<ul>
-<li>- </b>Trigger prompt v5 live<b> (<code>concierge-cloud-v5-2026-07-21</code>): thin prompt, git-first read</li>
-</ul>
-<p>ladder (env checkout → GitHub API → Notion projection with a mandatory <code>⚠ library fetch</p>
-<p>failed</code> flag), J28 logging rules inline, cadence/cron unchanged.</p>
-<ul>
-<li>- </b>WATCHED PASS: PASSED<b> — manual fire 12:44 UTC → rolling-report Pass 3 (08:50 EDT,</li>
-</ul>
-<p>[Claude cloud]): full checklist density (JOB 1–4 + fast-track ✅, live panel read), no</p>
-<p>projection-fallback flag, correct dedup vs Pass 2, and the J28 rule exercised live —</p>
-<p>Shaka Lee inbound SMS archived with &quot;no Correspondence Log row per the 2026-07-21</p>
-<p>repoint,&quot; poller capture confirmed. Junyan confirmed the pass.</p>
-<ul>
-<li>- </b>Remaining:<b> step 3 (Receptionist, 4 cloud triggers) after a few clean days; then</li>
-</ul>
-<p>freeze the Notion Correspondence Log read-only + strip the logging/dedupe ritual from</p>
-<p>process-studio-tickets.md (13 remaining references) — that CLOSES ticket 015.</p>
-
-<ul>
-<li>- </b>⚠ Cutover precondition (RESOLVED above):<b> 7 of 11 fetches returned Notion CACHE snapshots older</li>
-</ul>
-<p>than today (each file header records its &quot;as of&quot; date; oldest 07-06: job-0,</p>
-<p>fast-track). Before cutover, re-diff those 7 against live Notion and refresh.</p>
-<ul>
-<li>- </b>Remaining for step 2 cutover (one sitting, then watched pass):** (1) refresh the 7</li>
-</ul>
-<p>stale files; (2) fold in the J28 repoints (Gmail/SMS logging steps OUT — pollers own</p>
-<p>them; platform/call logging → repo drop JSONs via log_drop.py — never remove before</p>
-<p>the replacement is live, per the Destiny Nwobosi constraint); (3) add all 11 to</p>
-<p>MIRRORS; (4) repoint the Concierge trigger prompt git-first/Notion-projection-</p>
-<p>fallback; (5) watch the next 2-hourly pass end-to-end. Then step 3 (Receptionist)</p>
-<p>after a few clean days, and the Correspondence-Log freeze that closes 015.</p>
 </div></details></details></div><div class="job"><div class="jhead"><span class="emoji">🧪</span><h4>Test the emergency line end to end</h4></div><div class="jnum">#026</div><details><summary>Details</summary><ul class="plain-bullets"><li>Send test emergency texts</li><li>Watch staff actually get paged</li><li>Then retire the old backup check</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Verify the Emergency Call Line Zap end-to-end, then retire the Receptionist 15-min poll</b></p><h2>Question</h2>
 
 <p>Execute ticket 011&#x27;s banked flip checklist (HITL — Junyan texts, Claude verifies + flips):</p>
@@ -1085,6 +937,27 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>The Custodian/Fixer &quot;deep per-artist dedup&quot; check — currently skipped every pass under</p>
 <p>&quot;throttle discipline&quot; — must run against the J28 ledger post-cutover. 015 isn&#x27;t done while</p>
 <p>that check is silently skipped.</p>
+
+
+<h2>Scope amendment (2026-07-23, from 025&#x27;s close)</h2>
+
+<p>025 closed WITHOUT the Correspondence-Log freeze — Junyan ruled the freeze VOID: the</p>
+<p>Notion log is a permanent two-way-synced projection (07-18 design), never frozen.</p>
+<p>This ticket no longer &quot;closes when 025 beds in&quot;; it stands on its own remaining</p>
+<p>content:</p>
+
+<ol>
+<li>1. <b>Drafted-vs-sent diff recompute</b> — queue-drafted body vs J28 actual-sent text</li>
+</ol>
+<p>(ground truth), replacing the Message-Queue <code>Status=Sent</code> proxy.</p>
+<ol>
+<li>2. <b>Deep per-artist dedup check</b> (acceptance criterion from 013) — the</li>
+</ol>
+<p>Custodian/Fixer check must run against the J28 ledger, not stay silently skipped.</p>
+
+<p>Already-moot parts: consumer repoint (done inside 025&#x27;s port), write-path cutover</p>
+<p>(done — pollers/log_drop own all writes), backfill decision (done in 006: 90-day</p>
+<p>backfill executed), the freeze (void).</p>
 </div></details></details></div><div class="job"><div class="jhead"><span class="emoji">🏗️</span><h4>Redesign how mail gets handled</h4></div><div class="jnum">#018</div><span class="pill p-wait">needs 017 first</span> <span class="pill p-wait">needs 006 first</span> <span class="pill p-wait">needs 022 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Organize work by person, not by ticket</li><li>Split mail sorting into smaller jobs</li><li>The biggest fix on the list</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rearchitect J01 — ledger-fed triage, sub-job split, ticket-advancement contract</b></p><h2>Question</h2>
 
 <p>Design J01&#x27;s next form with Junyan, from 017&#x27;s evidence:</p>
@@ -2316,6 +2189,198 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>second record (email is in both J28 and Notion) and the old 429 write pressure. Making J28</p>
 <p>canonical + repointing/retiring those Notion-log writes is exactly <b>ticket 015</b> — now</p>
 <p>effectively unblocked (006&#x27;s poller+mirror is live).</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#025</span><span class="emoji">📚</span><span class="done-title">Move the robots&#x27; manual into our own storage</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>The manual now lives in our own files — done</li><li>Notion shows an auto-updated copy that stays, permanently</li><li>The old plan to freeze the Notion log was dropped</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Port the desk procedure library to the desk-correspondence repo (git canon)</b></p><h2>Question</h2>
+
+<p>Ruled by Junyan 2026-07-17: port the Concierge, the Receptionist, and Process Studio</p>
+<p>Tickets out of Notion into the owned git store — <code>library/</code> in <code>desk-correspondence</code></p>
+<p>(the repo every runtime reaches; GitHub connector confirmed on claude.ai AND Codex).</p>
+<p>This executes <b>data-sovereignty-wayfinder</b>&#x27;s full-canon ruling for the desk library</p>
+<p>and absorbs ticket 015&#x27;s read-repoint mechanics (edit once during the port, not twice).</p>
+
+<p><b>Staged order — each step = port as-is (no restructuring; 018 owns that) + watched</p>
+<p>pass + Notion original becomes a pointer stub:</b></p>
+
+<ol>
+<li>1. <b>Process Studio Tickets</b> (<code>242f0d1b66904dcdbf7353cf77577360</code>) — most-invoked</li>
+</ol>
+<p>sub-procedure, self-contained: the canary.</p>
+<ol>
+<li>2. <b>HOUSE-RULES + Concierge orchestration + JOB 0–7 pages</b> — with the J28</li>
+</ol>
+<p>correspondence repoint folded in: reads → <code>threads/&lt;person&gt;.md</code>; JOB 4 drop-log →</p>
+<p>repo message JSONs (<code>drop-&lt;slack-ts&gt;.json</code>, channel=tagvenue/peerspace/call/</p>
+<p>slack-drop) via GitHub Create-File API (needs a fine-grained PAT, contents rw,</p>
+<p>this repo only — Junyan creates); Notion Correspondence Log writes stay as</p>
+<p>double-book during the transition.</p>
+<ol>
+<li>3. <b>Receptionist</b> — last; touching the live-answer lane only after the pattern is</li>
+</ol>
+<p>proven. **(Corrected 2026-07-21, live API: only ONE trigger exists — &quot;The</p>
+<p>Receptionist (cloud :00)&quot; <code>trig_01Rz8uECDq7TaKhocQZ1Hyvx</code>, hourly <code>0 0-2,12-23 <i> </i> *</code>,</p>
+<p>firing healthily; the :15/:30/:45 siblings are deleted, not disabled. Step 3 is a</p>
+<p>one-trigger repoint — SUPERSEDED same day: Junyan ruled the Receptionist DISSOLVES —</p>
+<p>quick answers become watchlist-verified canned sends on the J03 event lane, owned by</p>
+<p><b>033</b>. <b>Step 3 is DELETED from this ticket</b></p>
+<p>— nothing to port; 033 retires the trigger and stubs the page. This ticket now closes</p>
+<p>on step-2 bed-in + the Correspondence-Log freeze (which closes 015).)<b></p>
+
+<p></b>Step-2 design constraint (2026-07-17, Destiny Nwobosi Tagvenue closure):<b> the</p>
+<p>Notion-log writes are LOAD-BEARING for platform-native channels — a Tagvenue outbound&#x27;s</p>
+<p>only record today is its Notion Correspondence Log row (pollers can&#x27;t see platform</p>
+<p>messages). At cutover: Gmail/SMS logging steps are removed outright (pollers own them);</p>
+<p>platform/call logging steps are REPOINTED to write repo message JSONs (Contents API via</p>
+<p>GITHUB_DROPS_PAT) — never removed before the replacement path is live.</p>
+
+<p>Out of scope: Notion ticket DBs / boards / queues (human UI, ruled T1 — they stay).</p>
+<p>After step 2 beds in a few days: freeze the Notion Correspondence Log read-only +</p>
+<p>strip the logging/dedupe ritual — that CLOSES ticket 015.</p>
+
+<p>Resolution records: the ported file map, watched-pass results per stage, the PAT in</p>
+<p>place, and the Notion stubs pointing at the repo.</p>
+
+<h2>Progress (2026-07-17) — step 1 staged</h2>
+
+<ul>
+<li>- </b>PAT ready:<b> <code>GITHUB_DROPS_PAT</code> in <code>~/.env</code>, write-probe verified (create+delete via</li>
+</ul>
+<p>Contents API), expires Jul 1 2027 (calendar reminder Jun 14 2027 + CREDENTIALS.md</p>
+<p>runbook §1 in the repo).</p>
+<ul>
+<li>- </b>Process Studio Tickets PORTED:<b> full 62.8K-char faithful copy →</li>
+</ul>
+<p><code>library/process-studio-tickets.md</code> (+ <code>library/README.md</code> with per-runtime read</p>
+<p>instructions and the edit-here rule). One linked DB + 13 mention-page refs point at</p>
+<p>live Notion DBs — valid, those stay (T1).</p>
+<ul>
+<li>- </b>Redirect banner LIVE<b> on the Notion page (top): canon = the git file; per-runtime</li>
+</ul>
+<p>fetch instructions; Notion body below = frozen mirror fallback (flag <code>⚠ library fetch</p>
+<p>failed</code> if used). Reversible by deleting the banner.</p>
+<ul>
+<li>- </b>WATCHED PASS: PASSED (2026-07-17, live work)<b> — /process-studio-tickets invoked on</li>
+</ul>
+<p>two real Day Sheet items (Isabel rebooking + Walsh Fall agreement). Verified: (a) the</p>
+<p>Notion fetch led with the banner; (b) executed from the git file (local clone, pulled</p>
+<p>fresh); (c) full procedure run — context-first (J28 threads + ticket), stale-cache</p>
+<p>catch (the procedure&#x27;s own rule caught a Jun-6 snapshot), find-don&#x27;t-duplicate,</p>
+<p>fulfillment-advance (Isabel&#x27;s off-sweep booking detected + advanced), exact-studio</p>
+<p>calendar verification with proof tuples, held Pending-Review drafts, Action-row</p>
+<p>park/resume mechanics — all off the ported file; (d) NO mirror fallback. Bonus catch:</p>
+<p>the prior JOB 7 Walsh analysis used the wrong studios (509s) — corrected live to 901</p>
+<p>(20/20 free). </b>Step 1 canary CLEARED — next: collapse the Notion page to a stub,</p>
+<p>update the skill&#x27;s pointer to git, then step 2.<b></p>
+
+<h2>Progress (2026-07-21) — step 1 CLOSED OUT, step 2 staged</h2>
+
+<ul>
+<li>- </b>Step 1 complete, upgraded design:<b> instead of a frozen stub, <code>scripts/</li>
+</ul>
+<p>library_mirror_sync.py</code> (on the 30-min watchlist Action) rewrites the Notion page</p>
+<p>from git on every change — Notion is a live PROJECTION, canon always wins. The</p>
+<p>/process-studio-tickets skill reads git-first. Nothing left in step 1.</p>
+<ul>
+<li>- </b>Step 2 STAGED (commit 3f1610c):<b> all 11 pages ported faithfully to <code>library/</code> —</li>
+</ul>
+<p>house-rules, concierge-orchestration, job-0-feedback, job-1-adt-alarm, fast-track,</p>
+<p>job-2-triage, job-3-reconcile, job-4-handback, job-5-decay, job-7-self-heal,</p>
+<p>response-resolver. ADDITIVE ONLY: not in MIRRORS, trigger prompt untouched — the</p>
+<p>live 2-hourly Concierge still reads Notion; nothing can break mid-port.</p>
+<h2>Progress (2026-07-21, later session) — step 2 CUT OVER, watched pass PASSED</h2>
+
+<ul>
+<li>- </b>&quot;Stale&quot; files were never stale:<b> all 7 pages&#x27; <code>last_edited_time</code> (Notion REST) exactly</li>
+</ul>
+<p>matches each file&#x27;s snapshot date — no edits since; headers stamped &quot;Verified current&quot;.</p>
+<p>The MCP cache was fresh; no re-port needed.</p>
+<ul>
+<li>- </b>J28 repoints folded in (19 edits, commit <code>84df441</code>):<b> canonical 📗 J28 ledger repoint</li>
+</ul>
+<p>block in HOUSE-RULES; Gmail/SMS Notion-log writes REMOVED (pollers verified capturing</p>
+<p>both directions: 1,826 in / 2,714 out SMS · 1,390 in / 439 out Gmail); platform/call</p>
+<p>logging REPOINTED to repo drop JSONs (<code>log_drop.py</code> / Contents API — Destiny Nwobosi</p>
+<p>constraint honored, replacement live before removal); context reads → <code>threads/&lt;person&gt;.md</code>;</p>
+<p>Drop-scan ✅-verification now checks the drop JSON, not Notion rows. Dedupe ritual scoped</p>
+<p>Receptionist-only until step 3.</p>
+<ul>
+<li>- </b>MIRRORS extended to all 11 files + synced:<b> every Notion page is now a live git</li>
+</ul>
+<p>projection (library_mirror_sync, 30-min Action). Canon = git.</p>
+<ul>
+<li>- </b>Trigger prompt v5 live<b> (<code>concierge-cloud-v5-2026-07-21</code>): thin prompt, git-first read</li>
+</ul>
+<p>ladder (env checkout → GitHub API → Notion projection with a mandatory <code>⚠ library fetch</p>
+<p>failed</code> flag), J28 logging rules inline, cadence/cron unchanged.</p>
+<ul>
+<li>- </b>WATCHED PASS: PASSED<b> — manual fire 12:44 UTC → rolling-report Pass 3 (08:50 EDT,</li>
+</ul>
+<p>[Claude cloud]): full checklist density (JOB 1–4 + fast-track ✅, live panel read), no</p>
+<p>projection-fallback flag, correct dedup vs Pass 2, and the J28 rule exercised live —</p>
+<p>Shaka Lee inbound SMS archived with &quot;no Correspondence Log row per the 2026-07-21</p>
+<p>repoint,&quot; poller capture confirmed. Junyan confirmed the pass.</p>
+<ul>
+<li>- </b>Remaining:<b> step 3 (Receptionist, 4 cloud triggers) after a few clean days; then</li>
+</ul>
+<p>freeze the Notion Correspondence Log read-only + strip the logging/dedupe ritual from</p>
+<p>process-studio-tickets.md (13 remaining references) — that CLOSES ticket 015.</p>
+
+<ul>
+<li>- </b>⚠ Cutover precondition (RESOLVED above):<b> 7 of 11 fetches returned Notion CACHE snapshots older</li>
+</ul>
+<p>than today (each file header records its &quot;as of&quot; date; oldest 07-06: job-0,</p>
+<p>fast-track). Before cutover, re-diff those 7 against live Notion and refresh.</p>
+<ul>
+<li>- </b>Remaining for step 2 cutover (one sitting, then watched pass):<b> (1) refresh the 7</li>
+</ul>
+<p>stale files; (2) fold in the J28 repoints (Gmail/SMS logging steps OUT — pollers own</p>
+<p>them; platform/call logging → repo drop JSONs via log_drop.py — never remove before</p>
+<p>the replacement is live, per the Destiny Nwobosi constraint); (3) add all 11 to</p>
+<p>MIRRORS; (4) repoint the Concierge trigger prompt git-first/Notion-projection-</p>
+<p>fallback; (5) watch the next 2-hourly pass end-to-end. Then step 3 (Receptionist)</p>
+<p>after a few clean days, and the Correspondence-Log freeze that closes 015.</p>
+
+
+<h2>Resolution (2026-07-23) — CLOSED</h2>
+
+<p></b>All porting done; the &quot;Correspondence-Log freeze&quot; closing condition ruled VOID.<b></p>
+
+<ul>
+<li>- </b>Step 1 (Process Studio Tickets)<b> — done; Notion page is a live git projection</li>
+</ul>
+<p>(<code>library_mirror_sync.py</code>, 30-min Action), skill reads git-first.</p>
+<ul>
+<li>- </b>Step 2 (HOUSE-RULES + orchestration + JOB pages)<b> — done; all 11 files canon in</li>
+</ul>
+<p><code>library/</code>, MIRRORS synced, trigger prompt v5 git-first, watched pass PASSED</p>
+<p>2026-07-21, two clean days of bed-in confirmed (07-22, 07-23).</p>
+<ul>
+<li>- </b>Step 3 (Receptionist)<b> — deleted 2026-07-21; ownership moved to</li>
+</ul>
+<p><b>033</b> (Receptionist dissolves; 033 retires</p>
+<p>the trigger and stubs the page). The Receptionist-only dedupe ritual in</p>
+<p>house-rules stays until 033 lands.</p>
+<ul>
+<li>- </b>Freeze ruling (Junyan, 2026-07-23):<b> the Notion Correspondence Log is NEVER</li>
+</ul>
+<p>frozen — the 07-18 two-way-projection design supersedes it permanently</p>
+<p>(<code>notion_log_sync.py</code> ledger→Notion / <code>notion_log_ingest.py</code> Notion→ledger; both</p>
+<p>cursors verified live 07-24T02:22Z). Git is canon; Notion is a complete</p>
+<p>staff-facing projection so Notion-only runtimes keep a write surface.</p>
+<ul>
+<li>- </b>Consequence for <b>015</b>:** 015 no longer closes with</li>
+</ul>
+<p>this ticket — its remaining content (drafted-vs-sent diff recompute + the deep</p>
+<p>per-artist dedup acceptance criterion) is handed back to 015 as its own scope.</p>
+<ul>
+<li>- Library cleanup landed: house-rules J28 block corrected (commit <code>c271049</code> in</li>
+</ul>
+<p>desk-correspondence) — no longer says &quot;being retired&quot;, no longer points at the</p>
+<p>deleted step 3.</p>
+<ul>
+<li>- File map: <code>library/</code> = house-rules, concierge-orchestration, job-0-feedback,</li>
+</ul>
+<p>job-1-adt-alarm, fast-track, job-2-triage, job-3-reconcile, job-4-handback,</p>
+<p>job-5-decay, job-7-self-heal, response-resolver, process-studio-tickets (+ README).</p>
+<p>PAT <code>GITHUB_DROPS_PAT</code> in place (expires Jul 2027, runbook CREDENTIALS.md §1).</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#027</span><span class="emoji">🌙</span><span class="done-title">A night robot that reviews the day</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Runs at 2:35 AM when the studio is empty</li><li>Checks the whole day&#x27;s work</li><li>Makes a &#x27;fix these&#x27; list for Junyan</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold end-of-day verification into the Custodian — a middle-of-night, Junyan-facing &quot;Fix these&quot; pass</b></p><h2>Implemented 2026-07-17</h2>
 
 <p>All four build defaults shipped as specified:</p>
@@ -2944,5 +3009,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-23 23:22 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-23 23:23 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
