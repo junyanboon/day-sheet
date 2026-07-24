@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-24 08:09 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-24 10:37 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -636,7 +636,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Graduated 2026-07-17 from the Sweep-Feedback processing session (27 → 15 open). The processing</p>
 <p>itself proved the routing (created 3 HTR rows + edited 1, closed 6 superseded/resolved, recorded</p>
 <p>4 owner-approved-pending) — this ticket makes that a standing process instead of a one-off cleanup.</p>
-</div></details></details></div><div class="job"><div class="jnum">#033</div><div class="jhead"><span class="emoji">⚡</span><h4>Instant text replies; retire the answering robot</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Emergencies already page staff within a minute (live since Jul 22)</li><li>New: the instant-reply system for common questions is now built and tested</li><li>It only answers people booked today, and AI checks each reply before it sends</li><li>Junyan flips it on, then the old hourly answering robot retires</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Receptionist — quick answers become watchlist-verified canned sends on the J03 event lane</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#033</div><div class="jhead"><span class="emoji">⚡</span><h4>Instant text replies; retire the answering robot</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Emergencies already page staff within a minute (live since Jul 22)</li><li>The quick-reply system is ON and passed its live test — Junyan texted and got the right answers back</li><li>It only answers people booked today, and an AI checks each reply before it sends</li><li>Still tuning how fast the AI checker wakes up; the old hourly robot covers meanwhile, then retires</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Receptionist — quick answers become watchlist-verified canned sends on the J03 event lane</b></p><h2>Question</h2>
 
 <p>Ruled by Junyan 2026-07-21 (grilled in the 025 step-2 session): the Receptionist persona</p>
 <p>dissolves. The watchlist quick answers stop being a polling LLM job and become</p>
@@ -895,19 +895,27 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>the tokenless self-poll alternative). Finding: the per-trigger <code>api_token</code> CANNOT be</p>
 <p>set via the triggers HTTP API (<code>api_token_hint</code> stays empty on both create and</p>
 <p>update — probe trigger <code>trig_01WhLxhqesRMZoNsB13dr9u5</code>, disabled, delete in UI). So</p>
-<p>the working credential is a <code>claude setup-token</code> (account-scoped Claude Code OAuth</p>
-<p>token), stored in <b>Secret Manager</b> (<code>claude-trigger-token</code>) and bound to the</p>
-<p>service as <code>CLAUDE_TRIGGER_TOKEN</code> — NOT a plain env var. Runtime SA:</p>
-<p><code>249118612005-compute@developer.gserviceaccount.com</code>. Commands handed to Junyan</p>
-<p>(token via hidden <code>read</code>, never through chat). <b>Caveat to verify at first live</p>
-<p>send:</b> the run endpoint base (<code>CLAUDE_TRIGGER_API_BASE</code>, default</p>
-<p><code>https://api.anthropic.com</code>) + headers — if the invoke 401s, that&#x27;s the knob;</p>
-<p><code>invoke_reviewer</code> sends only Bearer + Content-Type today.</p>
+<p>Secret Manager wiring DONE (Junyan ran the three commands; secret</p>
+<p><code>claude-trigger-token</code> bound as <code>CLAUDE_TRIGGER_TOKEN</code>, runtime SA</p>
+<p><code>249118612005-compute@developer.gserviceaccount.com</code>; token never through chat).</p>
+<p><b>2026-07-24, the 401 resolved:</b> a <code>claude setup-token</code> credential is NOT accepted</p>
+<p>by the routines API — the working auth is the <b>per-routine token generated only in</p>
+<p>the claude.ai web UI</b> (claude.ai/code/routines → Quick-Answer Reviewer → Edit →</p>
+<p>Add trigger → API → Generate token; shown once, durable, rotate from the same</p>
+<p>modal), and the endpoint is <code>POST /v1/claude_code/routines/{id}/fire</code> with</p>
+<p><code>anthropic-version: 2023-06-01</code> + <code>anthropic-beta:</p>
+<p>experimental-cc-routine-2026-04-01</code> (gate code fixed + pushed). <b>Junyan still to</p>
+<p>do:</b> generate the routine token in the UI, then</p>
+<p><code>printf %s &quot;&lt;token&gt;&quot; | gcloud secrets versions add claude-trigger-token --data-file=- --project danceannex-skedda</code></p>
+<p>and destroy the unusable v1 (holds a live account setup-token — hygiene):</p>
+<p><code>gcloud secrets versions destroy 1 --secret claude-trigger-token --project danceannex-skedda</code>.</p>
 <ol>
-<li>3. Flip <code>QUICK_ANSWER_ENABLED=1</code>, then run the card tests from a WATCHLISTED number</li>
+<li>3. Flip <code>QUICK_ANSWER_ENABLED=1</code> (Claude&#x27;s gcloud update was permission-blocked):</li>
 </ol>
-<p>(647-773-3887 is NOT on the watchlist — add a test booking or text from a booked</p>
-<p>number): &quot;what&#x27;s my code&quot;, &quot;speaker help&quot;, &quot;too hot&quot;. Confirm a <code>QA-</code> row appears at</p>
+<p><code>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --update-env-vars QUICK_ANSWER_ENABLED=1</code></p>
+<p>then test from the test line — <b>647-773-3887 IS now permanently watchlisted</b></p>
+<p>(studio 693, code 8693; injected by <code>watchlist_build.py</code> + a live row for today):</p>
+<p>&quot;what&#x27;s my code&quot;, &quot;speaker help&quot;, &quot;too hot&quot;. Confirm a <code>QA-</code> row appears at</p>
 <p>Pending Review, the reviewer flips it to Ready to Send, and the send engine</p>
 <p>dispatches.</p>
 <ol>
@@ -916,8 +924,56 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>disable+delete <code>trig_01Rz8uECDq7TaKhocQZ1Hyvx</code>, Notion page → stub (library pages</p>
 <p>already word the retirement as staged; a one-line edit flips them to past tense).</p>
 
-<p><b>Still open before this ticket closes:</b> owner actions 1–4 above, first live <code>QA-</code></p>
-<p>send verified end-to-end, Receptionist retirement, then the 025/015 scope notes.</p>
+<p><b>LIVE-TEST FINDINGS — 2026-07-24 morning (lane ON, revision 00007):</b></p>
+
+<ul>
+<li>- <b>Gate → card → queue: WORKS.</b> Junyan&#x27;s test texts produced correct rows</li>
+</ul>
+<p>(<code>QA-codes-0724-0934</code> — right code 8693, right name; <code>QA-sound-693-0724-0935</code>) at</p>
+<p>Pending Review with Artist relation + Source HTR Row. The test line is now</p>
+<p>PERMANENTLY watchlisted (builder injects it; studio 693, code 8693). NOTE: his first</p>
+<p>&quot;what&#x27;s my code&quot; was answered by the OLD hourly Receptionist (its 9:00 pass) — lucky</p>
+<p>timing, not the new lane.</p>
+<ul>
+<li>- <b>Routines fire API: BROKEN (Anthropic-side, suspected).</b> With the CORRECT</li>
+</ul>
+<p>per-routine token (UI-generated, hint-verified prefix+suffix, 216 chars clean) and</p>
+<p>the EXACT example request from the UI modal (<code>POST</p>
+<p>/v1/claude_code/routines/{id}/fire</code>, <code>anthropic-beta:</p>
+<p>experimental-cc-routine-2026-04-01</code>), the API returns 401 &quot;OAuth access token is</p>
+<p>invalid&quot;, request_id null. Report to Anthropic if it persists</p>
+<p>(<code>req_011CdLyg2BorXfATGs5XGVSC</code>). Gate keeps attempting on every queued reply —</p>
+<p>self-heals when fixed.</p>
+<ul>
+<li>- <b>API-created routines don&#x27;t run:</b> both reviewer runs (manual + scheduled 10:07)</li>
+</ul>
+<p>died at session init with &quot;An API error occurred&quot; — the routine was created via the</p>
+<p>HTTP API; suspicion: malformed kickoff event vs UI-created routines. FIX: recreate</p>
+<p>the reviewer via the claude.ai UI (then regenerate its API token → secret</p>
+<p><code>claude-trigger-token</code> → update gate <code>REVIEWER_TRIGGER_ID</code>).</p>
+<ul>
+<li>- <b>Cron floor is 1 hour</b> for routines (10-min sweep rejected) — the FBS :06/:21/:36/:51</li>
+</ul>
+<p>four-trigger pattern exists precisely because of this. Reviewer cron set to hourly</p>
+<p>:05 studio hours meanwhile.</p>
+<ul>
+<li>- <b>Local 10-min sweep created</b> (Mac scheduled task <code>qa-reviewer-local-sweep</code>, every</li>
+</ul>
+<p>10 min 8:00–23:59, race-safe re-read-before-write) — Junyan chose script+cron backup</p>
+<p>over Zapier (Zapier ruled out: subscription cancelled per ticket 034, free plan can&#x27;t</p>
+<p>webhook, and it would call the same broken fire URL). First run hadn&#x27;t visibly fired</p>
+<p>by 10:25 — verify it isn&#x27;t stuck on a permission prompt (click Run now once to</p>
+<p>pre-approve tools).</p>
+<ul>
+<li>- <b>End-to-end completion of the test:</b> Claude (this session) performed the review</li>
+</ul>
+<p>per the reviewer checklist and released both rows to Ready to Send via the Notion</p>
+<p>connector (~10:30) — send engine dispatch pending verification.</p>
+
+<p><b>Still open before this ticket closes:</b> recreate the reviewer routine via UI + token</p>
+<p>+ gate repoint; verify local sweep runs; first fully-automated <code>QA-</code> send (no human in</p>
+<p>the loop); fire-API bug report if still 401; watched window (JOB 7 §7); Receptionist</p>
+<p>retirement; 025/015 scope notes.</p>
 
 <p>Resolution records: J03 test results, the native-actuation gate (Zapier removed), the</p>
 <p>card list with fill sources, the LLM review/personalize step design, the</p>
@@ -3102,5 +3158,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-24 08:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-24 10:37 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
