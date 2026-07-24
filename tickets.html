@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-24 10:37 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-24 11:28 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -636,7 +636,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Graduated 2026-07-17 from the Sweep-Feedback processing session (27 → 15 open). The processing</p>
 <p>itself proved the routing (created 3 HTR rows + edited 1, closed 6 superseded/resolved, recorded</p>
 <p>4 owner-approved-pending) — this ticket makes that a standing process instead of a one-off cleanup.</p>
-</div></details></details></div><div class="job"><div class="jnum">#033</div><div class="jhead"><span class="emoji">⚡</span><h4>Instant text replies; retire the answering robot</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Emergencies already page staff within a minute (live since Jul 22)</li><li>The quick-reply system is ON and passed its live test — Junyan texted and got the right answers back</li><li>It only answers people booked today, and an AI checks each reply before it sends</li><li>Still tuning how fast the AI checker wakes up; the old hourly robot covers meanwhile, then retires</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Receptionist — quick answers become watchlist-verified canned sends on the J03 event lane</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#033</div><div class="jhead"><span class="emoji">⚡</span><h4>Instant text replies; retire the answering robot</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Emergencies already page staff within a minute (live since Jul 22)</li><li>The quick-reply system is ON and fully automatic — Junyan texted and got the right answers back with no one touching anything</li><li>It only answers people booked today; an AI double-checks every reply within 10 minutes before it sends</li><li>The checker runs on the same trusted timer rails as the day sheet; the old hourly robot covers for one more week, then retires</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Receptionist — quick answers become watchlist-verified canned sends on the J03 event lane</b></p><h2>Question</h2>
 
 <p>Ruled by Junyan 2026-07-21 (grilled in the 025 step-2 session): the Receptionist persona</p>
 <p>dissolves. The watchlist quick answers stop being a polling LLM job and become</p>
@@ -970,10 +970,44 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>per the reviewer checklist and released both rows to Ready to Send via the Notion</p>
 <p>connector (~10:30) — send engine dispatch pending verification.</p>
 
-<p><b>Still open before this ticket closes:</b> recreate the reviewer routine via UI + token</p>
-<p>+ gate repoint; verify local sweep runs; first fully-automated <code>QA-</code> send (no human in</p>
-<p>the loop); fire-API bug report if still 401; watched window (JOB 7 §7); Receptionist</p>
-<p>retirement; 025/015 scope notes.</p>
+<p><b>REVIEWER LANE FINAL — 2026-07-24 afternoon (Junyan&#x27;s &quot;ride the cron rails&quot; call):</b></p>
+
+<ul>
+<li>- <b>The reviewer of record is now a GitHub Action on the cron-job.org rails</b> —</li>
+</ul>
+<p><code>qa-review.yml</code> in desk-correspondence: cron-job.org job &quot;qa-review 10-min tick&quot;</p>
+<p>(cloned from the day-sheet dispatch job; <code>day-sheet-dispatch</code> PAT edited to cover</p>
+<p>desk-correspondence + Actions write — no new token) POSTs a workflow_dispatch every</p>
+<p>10 min → bash pre-check queries Notion for Pending <code>QA-*</code> rows (idle tick = ~5s,</p>
+<p>zero Claude) → only when rows wait, headless <code>claude -p</code> (secret</p>
+<p><code>CLAUDE_CODE_OAUTH_TOKEN</code>, subscription-billed) runs <code>scripts/qa_review_prompt.md</code></p>
+<p>and releases/holds.</p>
+<ul>
+<li>- <b>FULLY-AUTOMATED E2E VERIFIED 15:25Z:</b> seeded row <code>QA-sound-693-e2e-test</code> →</li>
+</ul>
+<p>run 30105224890 → pre-check &quot;1 pending&quot; → Claude reviewed → <b>Ready to Send at</p>
+<p>11:26:48 with zero humans</b> → send engine dispatched.</p>
+<ul>
+<li>- <b>Root cause of the day&#x27;s token 401s found:</b> Junyan&#x27;s pastes line-wrapped, so</li>
+</ul>
+<p><code>read</code> stored only the first line of each token — fixed with</p>
+<p><code>pbpaste | tr -d &#x27;[:space:]&#x27;</code>. (The routines-fire 401 with the CORRECT full token</p>
+<p>remains unexplained — possible Anthropic-side bug; moot now, lane doesn&#x27;t use it.)</p>
+<ul>
+<li>- <b>Redundant reviewers retired:</b> cloud routine <code>trig_01EqZAjkp5V8xt33w45shqci</code></li>
+</ul>
+<p>DISABLED (API-created routines error at session init — recreate via UI if ever</p>
+<p>wanted); Mac task <code>qa-reviewer-local-sweep</code> PAUSED (kept as manual fallback).</p>
+<p>Gate still fires the routine best-effort per queued row (harmless; self-heals if</p>
+<p>the fire API is fixed AND the routine is rebuilt via UI — or point</p>
+<p><code>REVIEWER_TRIGGER_ID</code> elsewhere / unset).</p>
+<ul>
+<li>- <b>Hygiene debt:</b> the <code>CLAUDE_CODE_OAUTH_TOKEN</code> value was pasted into the Claude</li>
+</ul>
+<p>chat once — rotate it (new <code>claude setup-token</code>, re-set the gh secret) at leisure.</p>
+
+<p><b>Still open before this ticket closes:</b> watched window (JOB 7 §7 samples <code>QA-</code></p>
+<p>rows); Receptionist trigger retirement after the clean window; 025/015 scope notes.</p>
 
 <p>Resolution records: J03 test results, the native-actuation gate (Zapier removed), the</p>
 <p>card list with fill sources, the LLM review/personalize step design, the</p>
@@ -3158,5 +3192,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-24 10:37 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-24 11:28 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
