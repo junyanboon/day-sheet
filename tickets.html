@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-24 14:57 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-24 20:59 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1021,7 +1021,59 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>card list with fill sources, the LLM review/personalize step design, the</p>
 <p>Claude-invocation wiring, the HTR-review classification step landing in the library,</p>
 <p>the trigger retirement, and the 025/015 scope updates.</p>
-</div></details></details></div><div class="job"><div class="jnum">#035</div><div class="jhead"><span class="emoji">✅</span><h4>Build proper checks that catch work done wrong</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The retired checker robots were really there to double-check everyone else</li><li>Replace them with small automatic checks that can&#x27;t forget or get tired</li><li>Each check that fails shows up on a list a person already reads</li><li>Checks only report problems — they never quietly fix things themselves</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rebuild the bookends&#x27; verification layer as invariants — the Opener&#x27;s checks get a durable home</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#035</div><div class="jhead"><span class="emoji">🚨</span><h4>Make sure a warning actually gets acted on</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>On Jul 24 a renter couldn&#x27;t get into her studio — her door code was never set up</li><li>The robot spotted it at 6am and wrote a warning. Nobody acted on it all day</li><li>So the problem isn&#x27;t spotting things — it&#x27;s that a warning can sit and go stale</li><li>Fix: keep re-checking a flagged booking as the clock runs down, and get louder</li><li>Nobody should ever arrive at a door we already knew was going to fail</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rebuild the bookends&#x27; verification layer as invariants — the Opener&#x27;s checks get a durable home</b></p><h2>Motivating failure — the Vicky Yeung lockout, 2026-07-24 (READ THIS FIRST)</h2>
+
+<p>A renter <b>was actually locked out of 509A</b> at 19:30 on Jul 24. This is the concrete cost of</p>
+<p>the missing verification layer, and the acceptance test for whatever this ticket builds.</p>
+
+<p><b>The timeline:</b></p>
+<ol>
+<li>1. <b>Jul 23, 06:02</b> — the Doorman&#x27;s live check returned <code>manual_no_match</code> for Vicky Yeung (no</li>
+</ol>
+<p>Alarm.com user at all). It <b>suppressed the alert</b>, reasoning that a prior Access/PIN row</p>
+<p>(&quot;Extend Vicky&#x27;s window to cover Jul 24 + Jul 26&quot;) was already marked <code>Processed</code>. <b>A full</p>
+<p>day of lead time was lost to a Notion row status that did not reflect the panel.</b></p>
+<ol>
+<li>2. <b>Jul 24, 06:02</b> — the Doorman got the same <code>manual_no_match</code>, and this time correctly raised</li>
+</ol>
+<p>an Action row at <code>Pending Review</code>, explicitly noting the earlier fix had not landed on the panel.</p>
+<ol>
+<li>3. <b>06:02 → 19:30 (13.5 hours)</b> — the row sat in the queue. <b>Nothing re-checked it, nothing</li>
+</ol>
+<p>escalated as the booking approached, nobody actioned it.</b></p>
+<ol>
+<li>4. <b>19:30</b> — Vicky arrived and could not get in. Confirmed by Junyan.</li>
+<li>5. <b>19:36</b> — an Alarm.com user was created by hand (window 19:36 Jul 24 → Aug 24). She got in</li>
+</ol>
+<p>~6 min late. Jul 26 repeat booking now verifies <code>pass</code>.</p>
+
+<p><b>Two distinct defects, only one of which is fixed:</b></p>
+<ul>
+<li>- <b>(A) FIXED 2026-07-24 in the Doorman prompt</b> — a PRIME DIRECTIVE (&quot;the live panel is the only</li>
+</ul>
+<p>truth; a <code>Processed</code>/<code>Done</code> row NEVER suppresses an alert; dedup only against <i>open</i> rows&quot;),</p>
+<p>urgent <code>TODAY &lt;HH:MM&gt; —</code> titling for same-day gaps, <code>Raised by = The Doorman</code> (was the retired</p>
+<p>Opener), and a <b>second independent access look at 04:00</b> (step A5) so a broken gate surfaces</p>
+<p>~2h earlier with the whole day to fix it.</p>
+<ul>
+<li>- <b>(B) STILL OPEN — this ticket.</b> *An urgent, correctly-raised flag with a hard deadline sat in a</li>
+</ul>
+<p>queue for 13.5 hours and nothing noticed.* Detection was never the problem on Jul 24 — the desk</p>
+<p><b>knew</b> at 06:02. What is missing is the closing half: <b>nothing verifies that a flagged gate</p>
+<p>got fixed before the renter arrives.</b> More detection cannot fix this; only an escalating,</p>
+<p>deadline-aware check can.</p>
+
+<p><b>The invariant this ticket must produce (acceptance test — replay Jul 24 against it):</b></p>
+<blockquote>No booking may start while an <code>Access / PIN</code> flag against it is still open. Re-verify against the</blockquote>
+<blockquote><b>live panel</b> (not the row status) on a schedule as the booking approaches; escalate louder as</blockquote>
+<blockquote>the clock runs down; and if it is still unresolved close to the start time, put it somewhere a</blockquote>
+<blockquote>human is guaranteed to see <i>that hour</i> — not in a queue that is read once a morning.</blockquote>
+
+<p>Open questions for Junyan: which surface escalates (Concierge 2-hourly pass / desk_invariants_v2 /</p>
+<p>the Day Sheet&#x27;s Actions tab), at what thresholds, and <b>who gets pinged when it is 2h out and still</p>
+<p>broken</b> — Ops Lead (Ela) by default, but Brazil means it cannot rely on Junyan noticing.</p>
+
+<h2>Question</h2>
 
 <p><b>Re-scoped 2026-07-23 (Junyan, post-007):</b> the bookends&#x27; real purpose was</p>
 <p><i>verification</i> — the Opener&#x27;s night-watch item count was it checking the overnight</p>
@@ -3200,5 +3252,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-24 14:57 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-24 20:59 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
