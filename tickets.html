@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-25 15:04 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-25 19:57 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -636,7 +636,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Graduated 2026-07-17 from the Sweep-Feedback processing session (27 → 15 open). The processing</p>
 <p>itself proved the routing (created 3 HTR rows + edited 1, closed 6 superseded/resolved, recorded</p>
 <p>4 owner-approved-pending) — this ticket makes that a standing process instead of a one-off cleanup.</p>
-</div></details></details></div><div class="job"><div class="jnum">#033</div><div class="jhead"><span class="emoji">⚡</span><h4>Instant text replies; retire the answering robot</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Emergencies already page staff within a minute (live since Jul 22)</li><li>DONE Jul 24: renters who text a common question now get the right answer back on their own, start to finish</li><li>Proved for real — Junyan texted &quot;it&#x27;s too hot in here&quot; at 12:30 and the studio&#x27;s how-to arrived at 12:41, nobody involved</li><li>It only answers people booked today, and an AI double-checks every reply before it sends</li><li>The old hourly answering robot is switched OFF — the new lane is the only responder now (one flip puts it back if this week goes badly)</li><li>Left to do: watch it for a week, then delete the old robot for good</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Receptionist — quick answers become watchlist-verified canned sends on the J03 event lane</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#033</div><div class="jhead"><span class="emoji">⚡</span><h4>Instant text replies; retire the answering robot</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Emergencies already page staff within a minute (live since Jul 22)</li><li>DONE Jul 24: renters who text a common question now get the right answer back on their own, start to finish</li><li>Proved for real — Junyan texted &quot;it&#x27;s too hot in here&quot; at 12:30 and the studio&#x27;s how-to arrived at 12:41, nobody involved</li><li>It only answers people booked today, and an AI double-checks every reply before it sends</li><li>The old hourly answering robot is switched OFF — the new lane is the only responder now (one flip puts it back if this week goes badly)</li><li>First catch of the watch week: a renter said her door wouldn&#x27;t lock and nothing answered — now it does, and it files a repair ticket automatically</li><li>Left to do: approve the new door-lock wording, watch it for a week, then delete the old robot for good</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Receptionist — quick answers become watchlist-verified canned sends on the J03 event lane</b></p><h2>Question</h2>
 
 <p>Ruled by Junyan 2026-07-21 (grilled in the 025 step-2 session): the Receptionist persona</p>
 <p>dissolves. The watchlist quick answers stop being a polling LLM job and become</p>
@@ -1013,7 +1013,59 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>SOLE automatic reply path. Revert = flip the trigger&#x27;s <code>enabled</code> back + Run Monitor</p>
 <p>back to Live.</p>
 
-<p><b>Still open before this ticket closes:</b> clean JOB 7 §7 week watching <code>QA-</code> sends →</p>
+<p><b>FIRST WATCH-WEEK CATCH — 2026-07-25 (the Chelly Li 693 lock gap):</b></p>
+
+<ul>
+<li>- <b>The miss:</b> Sat Jul 25 16:07, Chelly Li (693, 15:00–16:00) texted *&quot;Hey the door</li>
+</ul>
+<p>won&#x27;t lock?&quot;* + 2 videos. <b>Neither lane fired</b> — &quot;won&#x27;t lock&quot; wasn&#x27;t in the</p>
+<p>emergency classifier (which knows <code>locked out</code>/<code>locked in</code> but not the inverse) and</p>
+<p>no HTR card existed. A human replied with thanks; she left unable to lock</p>
+<p>(<i>&quot;I do need to run now&quot;</i>). <b>NOT a retirement regression</b> — the old Receptionist</p>
+<p>read the same card table and would also have stayed silent.</p>
+<ul>
+<li>- <b>What should have happened:</b> the Door Lock SOP</li>
+</ul>
+<p>(<a href="https://app.notion.com/p/aa0ce61fa7d444a28bdc7db87e0b6979" target="_blank" rel="noopener">aa0ce61f</a>) <b>Case B</b></p>
+<p>prescribes T4 ack + *&quot;push the door fully shut and re-seat it — a misaligned strike</p>
+<p>plate blocks the deadbolt (known 693 cause)&quot;* + file a Maintenance ticket. She got</p>
+<p>the ack only; <b>the fix she could have applied on-site never reached her.</b></p>
+<ul>
+<li>- <b>Saved by the alarm, not the lock:</b> she armed on her way out; panel confirmed 693</li>
+</ul>
+<p><code>armed_away</code>, doors closed, at 19:30. Banked as a standing card instruction.</p>
+<ul>
+<li>- <b>Ruling (Junyan): a card that promises a ticket must file one.</b> So <code>files_maintenance</code></li>
+</ul>
+<p>fires at MATCH time, before the reply is composed — the promise holds even if the</p>
+<p>reply is held, the card demoted, or the row unpublished.</p>
+<ul>
+<li>- <b>Built (commit <code>e981347</code>, 102 tests green):</b> <code>wont-lock</code> card — matches the</li>
+</ul>
+<p>won&#x27;t-lock / can&#x27;t-lock / not-latching family incl. both of Chelly&#x27;s verbatim</p>
+<p>messages; <b>excludes</b> locked-out/locked-in (that stays the emergency lane&#x27;s); any</p>
+<p>studio; files an Urgent 🛠️ ticket with studio+&quot;lock&quot; dedup and multi-studio skip.</p>
+<ul>
+<li>- <b>Filed tonight&#x27;s real ticket</b> —</li>
+</ul>
+<p><a href="https://app.notion.com/p/3a87503281c4815890f1ea02583ca07e" target="_blank" rel="noopener">693 Front Door Lock Not Locking — recurring</a></p>
+<p>(Urgent, action date Jul 26). <b>Hardware finding worth escalating: May 30 → Jun 1</p>
+<p>battery → Jun 13 → Jun 16 → Jul 11 → Jul 20 battery → Jul 25.</b> Battery swaps are</p>
+<p>not holding; the SOP names door sag / strike-plate alignment — a carpentry fix.</p>
+<ul>
+<li>- <b>Governance note:</b> wording drafted for Junyan (HTR carve-out — agents don&#x27;t write</li>
+</ul>
+<p>that DB). Until he publishes the row and <code>LOCK_CARD_HTR_ID</code> is set, the card matches</p>
+<p>and files the ticket but sends no reply.</p>
+<ul>
+<li>- <b>Honest limitation:</b> replies run through the 10-min reviewer, so a renter at the</li>
+</ul>
+<p>door gets the fix in ~10 min. Chelly left ~13 min after texting — this would have</p>
+<p><i>just</i> caught her. If that proves too slow across the week, consider a</p>
+<p>review-bypass for cards whose value is purely time-critical.</p>
+
+<p><b>Still open before this ticket closes:</b> publish the <code>wont-lock</code> HTR row + set</p>
+<p><code>LOCK_CARD_HTR_ID</code> + redeploy; clean JOB 7 §7 week watching <code>QA-</code> sends →</p>
 <p>then DELETE the trigger + stub the Notion page + flip the library pages to past tense;</p>
 <p>rotate <code>CLAUDE_CODE_OAUTH_TOKEN</code> (was pasted in chat); 025/015 scope notes.</p>
 
@@ -3311,5 +3363,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-25 15:04 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-25 19:57 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
