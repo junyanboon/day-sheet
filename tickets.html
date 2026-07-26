@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-25 19:57 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-26 00:12 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -636,7 +636,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Graduated 2026-07-17 from the Sweep-Feedback processing session (27 → 15 open). The processing</p>
 <p>itself proved the routing (created 3 HTR rows + edited 1, closed 6 superseded/resolved, recorded</p>
 <p>4 owner-approved-pending) — this ticket makes that a standing process instead of a one-off cleanup.</p>
-</div></details></details></div><div class="job"><div class="jnum">#033</div><div class="jhead"><span class="emoji">⚡</span><h4>Instant text replies; retire the answering robot</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Emergencies already page staff within a minute (live since Jul 22)</li><li>DONE Jul 24: renters who text a common question now get the right answer back on their own, start to finish</li><li>Proved for real — Junyan texted &quot;it&#x27;s too hot in here&quot; at 12:30 and the studio&#x27;s how-to arrived at 12:41, nobody involved</li><li>It only answers people booked today, and an AI double-checks every reply before it sends</li><li>The old hourly answering robot is switched OFF — the new lane is the only responder now (one flip puts it back if this week goes badly)</li><li>First catch of the watch week: a renter said her door wouldn&#x27;t lock and nothing answered — now it does, and it files a repair ticket automatically</li><li>Left to do: approve the new door-lock wording, watch it for a week, then delete the old robot for good</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Receptionist — quick answers become watchlist-verified canned sends on the J03 event lane</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#033</div><div class="jhead"><span class="emoji">⚡</span><h4>Instant text replies; retire the answering robot</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Emergencies already page staff within a minute (live since Jul 22)</li><li>DONE Jul 24: renters who text a common question now get the right answer back on their own, start to finish</li><li>Proved for real — Junyan texted &quot;it&#x27;s too hot in here&quot; at 12:30 and the studio&#x27;s how-to arrived at 12:41, nobody involved</li><li>It only answers people booked today, and an AI double-checks every reply before it sends</li><li>First catch of the watch week: a renter said her door wouldn&#x27;t lock and nothing answered — now it does, and it files a repair ticket automatically</li><li>The old hourly robot was switched off, then switched back ON — it also wrote friendly one-off replies (like turning a cancellation into a rebooking), which nothing else does yet</li><li>It retires for real once the reply-writing robot is built — that&#x27;s on the other plan</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Dissolve the Receptionist — quick answers become watchlist-verified canned sends on the J03 event lane</b></p><h2>Question</h2>
 
 <p>Ruled by Junyan 2026-07-21 (grilled in the 025 step-2 session): the Receptionist persona</p>
 <p>dissolves. The watchlist quick answers stop being a polling LLM job and become</p>
@@ -1007,11 +1007,47 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>chat once — rotate it (new <code>claude setup-token</code>, re-set the gh secret) at leisure.</p>
 
 <p><b>RECEPTIONIST RETIRED — 2026-07-24 12:22 (Junyan: &quot;retire it now and see if it&#x27;s</p>
-<p>working&quot;)</b>: trigger <code>trig_01Rz8uECDq7TaKhocQZ1Hyvx</code> DISABLED (last pass 12:01; not</p>
-<p>deleted — 10-second revert during the watch week); Run Monitor row → <code>Not reporting</code></p>
-<p>with a retirement note (no Sentinel false alarms). The quick-answer lane is now the</p>
-<p>SOLE automatic reply path. Revert = flip the trigger&#x27;s <code>enabled</code> back + Run Monitor</p>
-<p>back to Live.</p>
+<p>working&quot;)</b>: trigger <code>trig_01Rz8uECDq7TaKhocQZ1Hyvx</code> DISABLED; Run Monitor →</p>
+<p><code>Not reporting</code>. <b>↺ REVERSED 2026-07-25 — the retirement was PREMATURE.</b></p>
+
+<p><b>RETIREMENT REVERSED — 2026-07-25 (Junyan: &quot;the Receptionist&#x27;s job wasn&#x27;t captured</p>
+<p>by other agents, i.e. courtesy replies&quot;). Trigger re-ENABLED, Run Monitor → Live.</b></p>
+
+<ul>
+<li>- <b>The error and its cause:</b> the retirement was justified on &quot;the event-gate lane</li>
+</ul>
+<p>covers its ⚡ cards&quot;, which was true — but the Receptionist&#x27;s <i>actual</i> scope was</p>
+<p>wider than its <i>written</i> scope. Its own prompt says <b>&quot;Answers are pre-written cards</p>
+<p>sent VERBATIM — you never compose reply wording. No card match = no reply.&quot;</b> The</p>
+<p>queue disproves it: <code>Booking cancellation → move offer</code> (Jul 22, Raised by = The</p>
+<p>Receptionist) — *&quot;Hi Julia, thanks for letting us know! Rather than cancel these,</p>
+<p>you&#x27;re welcome to move your July 23 &amp; 30 bookings…&quot;* — a <b>composed, judgment-bearing,</p>
+<p>revenue-saving reply no card produces</b> (the card lane matches nothing on &quot;I need to</p>
+<p>cancel&quot;, verified).</p>
+<ul>
+<li>- <b>⚠️ TRANSFERABLE LESSON — do not retire a persona against its documented scope.</b></li>
+</ul>
+<p>Verify against what it <i>actually emitted</i> (queue rows, ledger outbounds, run</p>
+<p>reports). Prompt-vs-behaviour drift made a scope-based retirement decision wrong.</p>
+<p>Apply this to every remaining persona retirement on this map.</p>
+<ul>
+<li>- <b>Why nothing caught it:</b> addendum 3 assigned non-card replies to the <b>Responder</b></li>
+</ul>
+<p>— but the Responder is UNBUILT and several tickets deep in the sibling map</p>
+<p>(<b>003 probe agent</b> →</p>
+<p><b>007 auto-send rebooking</b>,</p>
+<p>both open, 007 blocked by 003 blocked by 002). Ticket 007 <i>is</i> precisely the Julia</p>
+<p>case. So the work fell only to the Concierge&#x27;s 2-hourly pass.</p>
+<ul>
+<li>- <b>Running both is safe:</b> the Receptionist&#x27;s dedup skips any message with a Message</li>
+</ul>
+<p>Queue row for that artist+card newer than the inbound — which is exactly what the</p>
+<p>gate writes within ~1 min. No double-send; cost is one hourly LLM pass.</p>
+<ul>
+<li>- <b>Revised retirement precondition:</b> the Receptionist retires when the <b>Responder</b></li>
+</ul>
+<p>covers composed/courtesy replies — NOT when the card lane ships. That gates this</p>
+<p>ticket&#x27;s close on the sibling map.</p>
 
 <p><b>FIRST WATCH-WEEK CATCH — 2026-07-25 (the Chelly Li 693 lock gap):</b></p>
 
@@ -3363,5 +3399,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-25 19:57 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-26 00:12 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
