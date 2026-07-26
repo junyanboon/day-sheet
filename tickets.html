@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-26 00:12 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-26 00:29 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -95,7 +95,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">4</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">5</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">4</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">26</div><div class="l">✅ Finished</div></div>
 </div>
@@ -540,7 +540,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">4</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">5</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1044,10 +1044,15 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Queue row for that artist+card newer than the inbound — which is exactly what the</p>
 <p>gate writes within ~1 min. No double-send; cost is one hourly LLM pass.</p>
 <ul>
-<li>- <b>Revised retirement precondition:</b> the Receptionist retires when the <b>Responder</b></li>
+<li>- <b>Revised retirement precondition:</b> the Receptionist retires when its jobs have</li>
 </ul>
-<p>covers composed/courtesy replies — NOT when the card lane ships. That gates this</p>
-<p>ticket&#x27;s close on the sibling map.</p>
+<p>homes — NOT when the card lane ships. <b>Graduated</p>
+<p><b>036 — Rehome the Receptionist&#x27;s jobs, then retire it</b></b></p>
+<p>(Junyan 2026-07-25: &quot;we can retire it but we need to find a new place for its jobs&quot;),</p>
+<p>which owns the retirement from here. Full inventory there: <b>6 gaps</b>, not just</p>
+<p>courtesy replies — the biggest is <b>the reply-triggered escalation ladder</b>, since</p>
+<p>every card this lane sends ends &quot;reply here and we&#x27;ll jump in&quot; and only the</p>
+<p>Receptionist listens for that reply.</p>
 
 <p><b>FIRST WATCH-WEEK CATCH — 2026-07-25 (the Chelly Li 693 lock gap):</b></p>
 
@@ -1264,6 +1269,98 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Coordinate with Phase 0 of the level-up plan (v2 swap is gated on Junyan&#x27;s explicit go)</p>
 <p>— these checks should land as v2 invariants, not a parallel checker.</p>
+</div></details></details></div><div class="job"><div class="jnum">#036</div><div class="jhead"><span class="emoji">🏠</span><h4>Find new homes for the old robot&#x27;s jobs before switching it off</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Switching it off once already broke things — it did more than anyone had written down</li><li>Listed all 13 of its jobs; 7 are already covered, 6 still need a home</li><li>Biggest one: every automatic reply says &#x27;reply here and we&#x27;ll jump in&#x27; — someone has to be listening</li><li>Then it can retire for good</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rehome the Receptionist&#x27;s jobs, then retire it</b></p><h2>Question</h2>
+
+<p>Ruled by Junyan 2026-07-25: <b>&quot;We can retire it but we need to find a new place for its</p>
+<p>jobs.&quot;</b> The 2026-07-24 retirement was reversed the next day because the event-gate</p>
+<p>quick-answer lane covered its ⚡ cards but not its other work. This ticket inventories</p>
+<p>every job on <a href="https://app.notion.com/p/3907503281c481009529de3611a7b15d" target="_blank" rel="noopener">The Receptionist (lean)</a></p>
+<p>against a home, builds the missing homes, and only then retires the trigger.</p>
+
+<p><b>Method note (the lesson that created this ticket):</b> the inventory below is taken from</p>
+<p>the procedure page AND cross-checked against what the persona <i>actually emitted</i></p>
+<p>(Message Queue rows, Correspondence Log, run reports). The Jul-24 retirement failed</p>
+<p>because it was judged against the persona&#x27;s <i>written</i> scope — whose prompt says</p>
+<p>&quot;you never compose reply wording&quot; — while the queue shows it composing</p>
+<p><code>Booking cancellation → move offer</code> (Jul 22). <b>Never retire a persona against its</p>
+<p>documented scope alone.</b></p>
+
+<h2>The inventory</h2>
+
+<p>| # | Receptionist job (page step) | Covered by | Status |</p>
+<p>|---|---|---|---|</p>
+<p>| 1 | Inbound sweep, every 15–60 min (Step 2) | event-gate 1-min Phone.com poll | ✅ better |</p>
+<p>| 2 | Watchlist gate — who is in the space (Step 3) | event-gate <code>lookup_watchlist</code> | ✅ same source |</p>
+<p>| 3 | Card classification, 11 rows (Step 4) | <code>cards.py</code>, 14 cards + <code>wont-lock</code> | ✅ superset |</p>
+<p>| 4 | Card auto-send, Mode 2 (Step 5) | queue row → reviewer → send engine | ✅ |</p>
+<p>| 5 | Life-safety first-contact summon (Step 6 Case A) | event-gate classifier + actuator | ✅ |</p>
+<p>| 6 | <b>Reply-triggered escalation (Step 6 Case B)</b> | — | ❌ <b>GAP 1</b> |</p>
+<p>| 7 | <b>Card B — 901 night lockbox, staff-queued, never auto-send (Step 5.2)</b> | — | ❌ <b>GAP 2</b> |</p>
+<p>| 8 | <b>Thermostat card → ✅ Actions row for 901 / &quot;can you set it&quot; (Step 4 row 3)</b> | — | ❌ <b>GAP 3</b> |</p>
+<p>| 9 | Gmail thread hygiene — archive comfort / <code>INBOX</code>-label emergency (Step 5.5) | Concierge JOB 2 triage | ⚠️ <b>GAP 4</b> — verify |</p>
+<p>| 10 | <b>Composed / courtesy replies</b> (undocumented; observed) | Responder (sibling, unbuilt) | ❌ <b>GAP 5</b> |</p>
+<p>| 11 | Positive close-out handling — &quot;thanks/all good&quot; (Step 6 Case B.1) | — | ⚠️ <b>GAP 6</b> — low harm |</p>
+<p>| 12 | Correspondence Log row + dedup (Step 5.4) | J28 SMS poller + two-way Notion sync | ✅ |</p>
+<p>| 13 | Heartbeat / rolling run report (Step 7) | n/a once retired | ✅ |</p>
+
+<h2>The gaps, and the proposed home for each</h2>
+
+<p><b>GAP 1 — reply-triggered escalation. The most important, and a LIVE promise breach.</b></p>
+<p>Every card ends <i>&quot;if you need assistance, just reply here and we&#x27;ll jump in.&quot;</i> In the</p>
+<p>Receptionist that footer is load-bearing: a still-stuck reply to an EMERGENCY-class card</p>
+<p>(901 can&#x27;t-get-in daytime · 901 can&#x27;t-get-out · leak · code failing at the door) pages</p>
+<p>on-call; a comfort-class one goes to the Concierge. <b>The event-gate lane sends the</p>
+<p>same footer and nothing listens.</b> Same defect class as the maintenance-ticket promise:</p>
+<p>a card that promises a response must be backed by one.</p>
+<p>→ <b>Home: event-gate.</b> It already has the actuator (summons SMS + Staff Call Queue</p>
+<p>row) and per-sender state. Needs: remember which card class went to which number today,</p>
+<p>classify the next inbound as close-out vs still-stuck, and summon on still-stuck +</p>
+<p>emergency-class. Deterministic; no LLM needed.</p>
+
+<p><b>GAP 2 — Card B, 901 night lockbox.</b> Must queue at <code>Pending Review</code> and <b>never</b></p>
+<p>auto-release (code 5789 is human-only).</p>
+<p>→ <b>Home: event-gate</b>, via a <code>hold_for_human</code> flag on the card that queues the row and</p>
+<p>skips the reviewer invoke.</p>
+
+<p><b>GAP 3 — thermostat → Actions row.</b> 901 has no renter control, so the card send must</p>
+<p>also raise an ✅ Actions to Perform row (Type=Other, For=Ops Lead, Pending Review).</p>
+<p>→ <b>Home: event-gate</b>, same <code>files_*</code> side-effect pattern as <code>files_maintenance</code>.</p>
+
+<p><b>GAP 4 — Gmail thread hygiene.</b> Likely already covered by the Concierge&#x27;s JOB 2</p>
+<p>triage, and largely vestigial now that J28 is canon. → <b>Verify, expect no work.</b></p>
+
+<p><b>GAP 5 — composed / courtesy replies.</b> The Julia cancellation→move offer class.</p>
+<p>→ <b>Durable home: the Responder</b> (<b>sibling 003</b></p>
+<p>→ <b>007</b>, both open, 007</p>
+<p>blocked by 003 blocked by 002 — several tickets deep).</p>
+<p>→ <b>NEEDS A JUNYAN RULING:</b> the Concierge&#x27;s response-resolver already drafts held</p>
+<p>replies on its 2-hourly pass. Is <b>2-hourly drafting good enough</b> to release the</p>
+<p>Receptionist now, or must the Responder land first? This is the long pole on the whole</p>
+<p>retirement — everything else is buildable in a session.</p>
+
+<p><b>GAP 6 — positive close-out.</b> &quot;Thanks, all good&quot; currently matches no card and falls</p>
+<p>to the Concierge. Low harm; accept unless it proves noisy.</p>
+
+<h2>Retirement precondition (replaces the Jul-24 one)</h2>
+
+<p>Retire the trigger when GAPs 1–3 are built and verified, GAP 4 is confirmed, and GAP 5</p>
+<p>has a ruled home. <b>Not</b> when the card lane ships.</p>
+
+<h2>Notes</h2>
+
+<ul>
+<li>- No harm was done during the Jul 24 12:22 → Jul 26 00:11 retirement window: the only</li>
+</ul>
+<p>cards the lane sent in that period went to Junyan&#x27;s test line, so no real renter hit</p>
+<p>the missing escalation ladder.</p>
+<ul>
+<li>- Running both agents meanwhile is safe — the Receptionist&#x27;s dedup skips any message</li>
+</ul>
+<p>with a Message Queue row for that artist+card newer than the inbound, which is what</p>
+<p>the gate writes within ~1 min.</p>
+
+<p>Resolution records: the built escalation/hold/actions-row code, the GAP 4 verification,</p>
+<p>Junyan&#x27;s GAP 5 ruling, and the trigger retirement + page stub.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">4</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -3399,5 +3496,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-26 00:12 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-26 00:29 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
