@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-26 00:29 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-28 01:35 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1269,7 +1269,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Coordinate with Phase 0 of the level-up plan (v2 swap is gated on Junyan&#x27;s explicit go)</p>
 <p>— these checks should land as v2 invariants, not a parallel checker.</p>
-</div></details></details></div><div class="job"><div class="jnum">#036</div><div class="jhead"><span class="emoji">🏠</span><h4>Find new homes for the old robot&#x27;s jobs before switching it off</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Switching it off once already broke things — it did more than anyone had written down</li><li>Listed all 13 of its jobs; 7 are already covered, 6 still need a home</li><li>Biggest one: every automatic reply says &#x27;reply here and we&#x27;ll jump in&#x27; — someone has to be listening</li><li>Then it can retire for good</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rehome the Receptionist&#x27;s jobs, then retire it</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#036</div><div class="jhead"><span class="emoji">🏠</span><h4>Find new homes for the old robot&#x27;s jobs before switching it off</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Switching it off once already broke things — it did more than anyone had written down</li><li>Listed all 13 of its jobs; 7 are already covered, 6 still need a home</li><li>BUILT Jul 28: the fast robot now writes one-off replies itself — a staff member reads and sends each one</li><li>So a reply is ready in seconds instead of hours, but a human always pushes the send button</li><li>Also built in guards so nobody ever gets a pile of robot texts: at most 2 automatic replies per person per half-day, and rapid-fire texts get ONE combined reply, not three</li><li>Still to do: someone listening when a renter replies &#x27;still stuck&#x27; — that&#x27;s the biggest remaining gap</li><li>Then it can retire for good</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rehome the Receptionist&#x27;s jobs, then retire it</b></p><h2>Question</h2>
 
 <p>Ruled by Junyan 2026-07-25: <b>&quot;We can retire it but we need to find a new place for its</p>
 <p>jobs.&quot;</b> The 2026-07-24 retirement was reversed the next day because the event-gate</p>
@@ -1330,13 +1330,32 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>triage, and largely vestigial now that J28 is canon. → <b>Verify, expect no work.</b></p>
 
 <p><b>GAP 5 — composed / courtesy replies.</b> The Julia cancellation→move offer class.</p>
-<p>→ <b>Durable home: the Responder</b> (<b>sibling 003</b></p>
-<p>→ <b>007</b>, both open, 007</p>
-<p>blocked by 003 blocked by 002 — several tickets deep).</p>
-<p>→ <b>NEEDS A JUNYAN RULING:</b> the Concierge&#x27;s response-resolver already drafts held</p>
-<p>replies on its 2-hourly pass. Is <b>2-hourly drafting good enough</b> to release the</p>
-<p>Receptionist now, or must the Responder land first? This is the long pole on the whole</p>
-<p>retirement — everything else is buildable in a session.</p>
+<p>→ <b>RULED by Junyan 2026-07-28: build it in the gate</b> (&quot;Okay let&#x27;s build it then&quot;),</p>
+<p>after his two-lane latency requirement — emergency replies immediate (already at the</p>
+<p>1-min floor), courtesy/ticket drafts &quot;generated as fast as possible… for it to be</p>
+<p>usable by staff&quot;. 2-hourly Concierge drafting was ruled NOT good enough.</p>
+<p>→ <b>BUILT 2026-07-28: <code>drafter.py</code></b> in event-gate. Two lanes on the gate&#x27;s own</p>
+<p>1-minute clock via direct Messages API calls (<code>claude-opus-5</code>, metered — ~$10/mo at</p>
+<p>current volume, deliberately off the subscription):</p>
+<ol>
+<li>1. <i>Inline card review</i> — a freshly queued QA- row is reviewed in ~3 s and flipped</li>
+</ol>
+<p>to Ready to Send; card replies land in <b>~90 s</b> instead of ~11 min. The hourly</p>
+<p>GitHub Actions sweep stays on as the safety net for anything held.</p>
+<ol>
+<li>2. <i>Composed drafts</i> — no-card verified messages get a DR- row drafted in Junyan&#x27;s</li>
+</ol>
+<p>voice at Pending Review, <b>never auto-released</b>. Staff open the queue and the</p>
+<p>reply is already written (~10 s after the poll sees the text).</p>
+<p>→ <b>Barrage guards</b> (Junyan&#x27;s explicit design constraint — &quot;we don&#x27;t want a</p>
+<p>situation where the person gets a barrage of messages&quot;): per-topic 12 h dedup (was</p>
+<p>already there) + per-sender cap of 2 auto-releases/12 h (past it, rows hold for a</p>
+<p>human) + fact-preservation check in code (a reviewed body may not introduce any</p>
+<p>digit-run or URL the canned original lacked) + one-open-draft-per-renter (a burst of</p>
+<p>texts <i>updates</i> the single DR- row — process-local map, durable Notion query as the</p>
+<p>cold-start backstop) + pure acks (&quot;ok&quot;, &quot;thanks 🙏&quot;) never draft.</p>
+<p>This satisfies the sibling map&#x27;s Responder scope for the SMS channel; the sibling</p>
+<p>tickets should be annotated rather than double-built.</p>
 
 <p><b>GAP 6 — positive close-out.</b> &quot;Thanks, all good&quot; currently matches no card and falls</p>
 <p>to the Concierge. Low harm; accept unless it proves noisy.</p>
@@ -3496,5 +3515,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-26 00:29 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-28 01:35 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
