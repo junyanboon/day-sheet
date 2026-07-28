@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-28 01:35 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-28 15:46 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -95,7 +95,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">5</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">6</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">4</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">26</div><div class="l">✅ Finished</div></div>
 </div>
@@ -540,7 +540,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">5</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">6</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1380,6 +1380,27 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Resolution records: the built escalation/hold/actions-row code, the GAP 4 verification,</p>
 <p>Junyan&#x27;s GAP 5 ruling, and the trigger retirement + page stub.</p>
+</div></details></details></div><div class="job"><div class="jnum">#037</div><div class="jhead"><span class="emoji">📰</span><h4>Make sure the robot always reads its morning reports</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>On Jul 28 the main robot skipped reading the overnight reports — it ran out of room</li><li>The night checker caught it and raised a red flag (that part worked)</li><li>Two fixes went in the same day: read reports FIRST, and a broken file link was repaired</li><li>Now we watch 3 mornings: if the flag stays green, we&#x27;re done</li><li>If not: a small program will squeeze all the reports into one short page every night</li><li>That way the morning read is always small enough to finish</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Make morning report intake constant-size — verify the reorder, build the night digest only if needed</b></p><h2>Question</h2>
+
+<p>On the 2026-07-28 morning pass the Concierge <b>skipped report intake entirely</b> — it ran out of context after doing its desk jobs, and the Night Watch flagged a red &quot;unverified — treat as not all-clear&quot; banner. Source handoff: <b>HANDOFF-report-intake-too-big.md</b>. Structural risk: one pass carries all desk jobs + full report intake, and intake is what gets sacrificed when the context budget runs out — silently, until an external auditor notices.</p>
+
+<p>Two mitigations already landed the same day: (1) the routine reordered so <b>intake fires FIRST</b> on the morning pass; (2) the 6-day git-canon outage (the biggest context drain — every pass burned tokens on Notion fallbacks) was fixed at 10:18 EDT. So this ticket is <b>gated: verify before building.</b></p>
+
+<p><b>Phase 1 — verify (do not build yet).</b> Watch the acceptance window: 3 consecutive mornings (starting with the 2026-07-28 4:10 PM run as the first signal) with report intake completed + all desk jobs done + no red Night Watch banner for &quot;reports not consumed&quot;. If clean, close this ticket as &quot;reorder + git fix sufficed&quot; and bank the digest as a known design.</p>
+
+<p><b>Phase 2 — build the pre-digest (only if a morning stays red, or a heavy-report day overflows again).</b> Make intake small and constant-size:</p>
+<ul>
+<li>- <code>night_digest_build.py</code> in <code>desk-correspondence/scripts/</code> (pattern: <code>day_sheet_build.py</code>, ticket 019&#x27;s deterministic no-persona lane): collect the overnight Workflow Reports, boil to ONE bounded markdown digest (<code>reports/night-digest-YYYY-MM-DD.md</code>, newest-first; per report: status line, failures/degradations, human-items, pointer to full report).</li>
+<li>- <b>Scheduling correction to the source handoff:</b> NOT the Mac scheduler — the local lane was disabled by the Brazil ruling (ticket 031, &quot;move everything to the cloud&quot;; Mac = fallback only). Ride the cloud deterministic lane (the 30-min watchlist Action or a dedicated job), and because it is morning-critical, back it with the <b>Apps Script tick pattern</b> (the scheduler-reliability fog: bare GitHub cron drops runs) so it reliably finishes before the first Concierge fire (08:10 Toronto).</li>
+<li>- Repoint the Concierge instructions: morning intake = read the digest (git-first), open a full report only when flagged; digest read stays the first job of the pass.</li>
+<li>- Repoint the Night Watch audit so digest-based intake counts as consumption — <b>coordinate with the Custodian night pass (ticket 027)</b>, which owns that audit surface.</li>
+</ul>
+
+<p><b>Out of scope / fallback:</b> the &quot;Report Reader&quot; split routine (handoff step 3) — do not build pre-emptively; if the digest itself isn&#x27;t enough, that&#x27;s a new ticket. Don&#x27;t duplicate the same-day <code>notion_log_ingest.py</code> SKIP_MEDIUMS fix (separate background task).</p>
+
+<p>Resolution records: the 3-morning verification result; if built — script location, schedule + tick, the Concierge + Night Watch repoints, and a heavy-day test.</p>
+
+<p><b>Sibling note:</b> today&#x27;s incident is logged on <b>self-improving-desk-wayfinder</b> as evidence for its thesis (a monolith pass silently sacrifices jobs under context pressure) — no build lands there.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">4</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -3515,5 +3536,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-28 01:35 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-28 15:46 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
