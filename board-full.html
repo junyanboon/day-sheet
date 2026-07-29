@@ -436,6 +436,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
   <p class="ruling"><b>Ruled + LIVE 07-22:</b> J30 runs in the <b>cloud as its own deterministic job</b> — no persona, no LLM. <code>log_reading.py</code> + GitHub Action on the new <code>sdm-logger</code> repo (5 secrets: 4× SDM OAuth + NOTION_TOKEN). The Weatherman reads the latest row (≤2h) as authoritative inside temp; missing rows fall back to its "telemetry gap" wording. Local <code>tools/sdm-read.sh</code> + tokens stay as the manual fallback.</p>
 </div>
 
+<div class="job" data-v="build">
+  <div class="jhead"><span class="jnum">J32</span><h3>Error sweep &amp; self-heal</h3><span class="verdict v-build">Build · new persona — The Mechanic · LIVE 07-29</span></div>
+  <p class="what">New job, banked 07-29. Hourly sweep of the studio inbox (thedanceannex@gmail.com) for [Send Engine] Error emails and GitHub Actions failure notifications, plus a direct check of recent workflow runs. Auto-fixes safe plumbing only: reruns transiently-failed workflows (timeouts, 5xx, rate limits) and repairs the known bad-Source-Email pattern on already-approved Message Queue rows. Everything judgment-y — repeated failures, content problems, money, new message decisions — is reported, never acted on. J31 (claimed-shift mirror) is carded in Notion; number minted ahead of the registry schema review.</p>
+  <div class="meta"><span class="chip"><b>Runtime</b> local — Claude scheduled task <code>error-sweeper</code>, hourly (Mac must be awake)</span><span class="chip"><b>Ground truth</b> the error emails + <code>gh run</code> conclusions + Message Queue rows</span><span class="chip"><b>Owner</b> The Mechanic (new persona)</span></div>
+  <p class="assess"><b>Assess:</b> unlike J28–J30 this is NOT deterministic-job shape — diagnosing a failure log and deciding "transient vs code bug" or "plumbing vs judgment" needs an LLM, so it gets a persona. First persona whose job is maintaining the other automations. Born from the 07-28 incident: watchlist-refresh #201/#202 died on a Notion timeout (transient — all later runs green), and a Send Engine dispatch failed on a bare message id in Source Email while the row was wrongly reconciled as sent — Samara's confirmation never went out until re-queued by hand on 07-29.</p>
+  <p class="ruling"><b>Ruled + LIVE 07-29:</b> runs as a local Claude scheduled task, hourly. Hard rails: studio inbox only (never the personal Gmail), never composes new customer messages, never charges, never touches production config; a repaired Source Email only re-enables dispatch of a message that was already approved when queued. Known gap: local scheduler skips unattended fires when the Mac sleeps — candidate for cloud promotion if that bites.</p>
+</div>
+
 <h2>G · Structural decisions (not jobs)</h2>
 <p class="sub">Cross-cutting architecture questions the jobs run on top of.</p>
 
