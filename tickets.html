@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-29 15:30 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-29 21:05 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1382,10 +1382,18 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ol>
 <p>failure names itself (<code>dr_why</code>, <code>held-api-&lt;reason&gt;</code>) — the diagnostic gap that made</p>
 <p>the 2026-07-29 04:53 UTC failure unreadable.</p>
-<p>→ <b>Known residual</b>: the 12 h per-topic dedup is process-local and resets on deploy</p>
-<p>(visible at 17:28→17:29 — the pre-deploy revision suppressed the text, the fresh one</p>
-<p>sent it). Worst case is one extra helpful reply after a restart. Durable backstop</p>
-<p>(queue-DB query, as the draft lane already has) is worth doing but not urgent.</p>
+<p>→ <b>Residual FIXED 2026-07-29</b> (commit <code>52c62d9</code>): the 12 h per-topic dedup was</p>
+<p>process-local and reset on deploy (visible at 17:28→17:29 — the pre-deploy revision</p>
+<p>suppressed the text, the fresh one sent it). <code>cards.recent_card_row_exists()</code> now asks</p>
+<p>the queue DB the same question the in-memory map answers, mirroring the draft lane&#x27;s</p>
+<p><code>_find_open_draft_row</code>. <b>Fails open on a Notion error</b> — a missed dedup costs one</p>
+<p>extra helpful reply; a false suppression costs a renter their answer. Needs a gate</p>
+<p>redeploy to take effect.</p>
+<p>→ <b>Sweep cadence dropped to hourly</b> (same commit): inline review is now the reviewer</p>
+<p>of record, so the GitHub Actions sweep only picks up rows inline review <i>held</i> — rare,</p>
+<p>and an hour is fine. The native backstop cron is retimed in <code>qa-review.yml</code>; the</p>
+<p>cron-job.org job &quot;qa-review 10-min tick&quot; still needs the same change in its web UI</p>
+<p>(that job is what actually fires — the native schedule is only a backstop).</p>
 
 <p><b>GAP 6 — positive close-out.</b> &quot;Thanks, all good&quot; currently matches no card and falls</p>
 <p>to the Concierge. Low harm; accept unless it proves noisy.</p>
@@ -3566,5 +3574,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-29 15:30 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-29 21:05 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
