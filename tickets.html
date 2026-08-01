@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-01 00:56 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-01 08:34 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -616,8 +616,11 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>reports its side-effect outcomes via <code>_stamp()</code>, so a suppressed reply still logs whether</p>
 <p>the row was raised. 145 tests pass (was 142). <b>Needs a gate redeploy to take effect.</b></p>
 
-<p><b>GAP 4 — Gmail thread hygiene.</b> Likely already covered by the Concierge&#x27;s JOB 2</p>
-<p>triage, and largely vestigial now that J28 is canon. → <b>Verify, expect no work.</b></p>
+<p><b>GAP 4 — Gmail thread hygiene. ✅ CLOSED 2026-07-31 (Junyan): &quot;This is covered by the</p>
+<p>Concierge not the Receptionist.&quot;</b> Owner ruling, no build. JOB 2 keeps sole ownership of</p>
+<p>inbox state — the Responder is explicitly barred from labelling, archiving, or marking</p>
+<p>read (two writers there would corrupt JOB 2&#x27;s audit invariants). Nothing to verify and</p>
+<p>nothing to rehome: this job was never leaving the Concierge.</p>
 
 <p><b>GAP 5 — composed / courtesy replies.</b> The Julia cancellation→move offer class.</p>
 <p>→ <b>RULED by Junyan 2026-07-28: build it in the gate</b> (&quot;Okay let&#x27;s build it then&quot;),</p>
@@ -685,8 +688,11 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>cron-job.org job &quot;qa-review 10-min tick&quot; still needs the same change in its web UI</p>
 <p>(that job is what actually fires — the native schedule is only a backstop).</p>
 
-<p><b>GAP 6 — positive close-out.</b> &quot;Thanks, all good&quot; currently matches no card and falls</p>
-<p>to the Concierge. Low harm; accept unless it proves noisy.</p>
+<p><b>GAP 6 — positive close-out. ✅ CLOSED 2026-07-31 (Junyan): &quot;This also should be owned by</p>
+<p>the Responder.&quot;</b> &quot;Thanks, all good&quot; is a courtesy/acknowledgement reply carrying no</p>
+<p>question or request — already the first line of the Responder&#x27;s Scope. No build; this</p>
+<p>records the owner so it stops reading as unassigned. It does NOT fall to the Concierge</p>
+<p>anymore (that path was carved out 2026-07-29).</p>
 
 <h2>Retirement precondition (replaces the Jul-24 one)</h2>
 
@@ -748,10 +754,40 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>GAP 1 drops from &quot;breach&quot; to &quot;missing feature.&quot; Build it because a still-stuck renter</p>
 <p>deserves an escalation, not because the wording obliges one.</p>
 <ul>
-<li>- <b>Retirement precondition now reads: GAP 1 built + verified, GAP 4 confirmed.</b></li>
+<li>- <b>Retirement precondition now reads: GAP 1 built + verified. That is the whole list.</b></li>
 </ul>
-<p>GAPs 2, 3, 5 are done. GAP 1 is the last real build between here and retiring the</p>
-<p>Receptionist.</p>
+<p>GAPs 2, 3, 5 done; GAPs 4 and 6 closed by owner ruling 2026-07-31 (below).</p>
+
+<h3>Update 2026-07-31 (second) — Junyan&#x27;s gap-by-gap ruling</h3>
+
+<p>Junyan reviewed all six and ruled. Recorded verbatim in intent:</p>
+
+<ul>
+<li>- <b>GAP 4 → CLOSED</b>, &quot;covered by the Concierge not the Receptionist.&quot; No build.</li>
+<li>- <b>GAP 6 → CLOSED</b>, &quot;should be owned by the Responder.&quot; Already inside its Scope&#x27;s first</li>
+</ul>
+<p>line; this records the owner.</p>
+<ul>
+<li>- <b>GAP 5 → the last Concierge residue removed.</b> The 2026-07-29 carve-out moved the</li>
+</ul>
+<p><i>composing</i> of the non-ticket reply class to the Responder but left the Concierge</p>
+<p>emitting the <b>courtesy-reply approval block</b> in its Output. That moved to the</p>
+<p>Responder today: the doer surfaces its own work, and a reviewer can now tell whose</p>
+<p>draft they are approving. Concierge Output no longer emits it.</p>
+<ul>
+<li>- <b>GAP 1 → still open, and the premise that it was covered does not hold.</b> Junyan&#x27;s</li>
+</ul>
+<p>reasoning was that the Responder handles replies and the cards no longer promise a</p>
+<p>listener. Both are true, and neither closes this gap. <code>the-responder.md</code> line 26 bars</p>
+<p>the Responder from emergencies outright — *&quot;lockout / code-not-working / alarm: never</p>
+<p>reply, never auto-send… ticket 006 — NOT built; until it lands, emergencies are</p>
+<p>entirely out of your scope&quot;* — and its 30-min cadence is the wrong instrument for a</p>
+<p>renter locked out at 21:00 regardless. <b>Split the gap honestly:</b> comfort-class</p>
+<p>still-stuck is now covered by the Responder ✅; <b>emergency-class still-stuck is</p>
+<p>unowned</b> 🔴. What is missing is not a drafter but a <b>summon</b> — remember which card</p>
+<p>class went to which number today, classify the next inbound as close-out vs still-stuck,</p>
+<p>and page on still-stuck + emergency-class. Deterministic; no LLM. This remains the sole</p>
+<p>retirement blocker.</p>
 <ul>
 <li>- Also ported into canon this pass: the 527-lockbox key hand-off now lives in the live</li>
 </ul>
@@ -3749,5 +3785,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-01 00:56 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-01 08:34 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
