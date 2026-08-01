@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-01 10:22 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-01 17:34 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -101,7 +101,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">5</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">4</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">5</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">27</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
@@ -1338,7 +1338,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Resolution records: the checker (where it runs, cadence, match rules), the first live</p>
 <p>mismatch-or-clean-week readout, and the 015 seam note (what 015 still owns after this).</p>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">4</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">5</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
 <p>Build the crude-but-real J26 cost ledger on the Jobs registry spine: per job, runs × pass length (proxy for token spend) plus a self-reported supervision-minutes line, tallied weekly. Framing: <b>subscription headroom + exposure if the subsidy changes</b>, not cash bleed (~$240/mo Claude + $140/mo ChatGPT actual). It also populates the sibling map&#x27;s GO criterion (c). Decide the tally mechanism (likely a weekly scheduled job writing registry rows) and stand it up.</p>
 </div></details></details></div><div class="job"><div class="jnum">#015</div><div class="jhead"><span class="emoji">✂️</span><h4>Stop keeping two copies of messages</h4></div><span class="pill p-wait">needs 006 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Today messages get saved in two places</li><li>Switch fully to our own record</li><li>Freeze the old copy</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cut correspondence canon over from the Notion Correspondence Log to J28</b></p><h2>Question</h2>
@@ -1500,6 +1500,64 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>the monitor&#x27;s audience is the <b>duty manager</b>; it must show (a) queued/waiting outbound</p>
 <p>messages (responses must be fast), (b) arrivals/departures, (c) an <b>issues-to-clear list</b> —</p>
 <p>it is the coordination surface between the future FBS day-assistant agent and the human.</p>
+</div></details></details></div><div class="job"><div class="jnum">#039</div><div class="jhead"><span class="emoji">🕵️</span><h4>Always know WHO sent every customer message</h4></div><span class="pill p-wait">needs 038 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>On Jul 30, eleven held messages went out in one hour — and no record said who did it</li><li>It was Ela doing her job, but a runaway program would have looked exactly the same</li><li>The sending robot stamps its own name over the person who pressed go</li><li>Fix: the robot notes who handed it each message BEFORE stamping, and AI helpers announce a send before making it</li><li>Then a checker matches every real sent message to a known sender — anything unmatched raises a flag</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Send attribution — every outbound must match one authorised origin</b></p><h2>Question</h2>
+
+<p>Raised on the 2026-07-31 fixer run, from two live incidents:</p>
+
+<ol>
+<li>1. <b>The Jul 30 bulk release</b> — 11 held 📤 Message Queue rows (several carrying</li>
+</ol>
+<p>explicit DO-NOT-RELEASE prose) flipped to Sent in one hour. It took a day and a</p>
+<p>direct question to Junyan to learn it was Ela working the queue, because Notion</p>
+<p>keeps only <code>last_edited_by</code> and the send engine overwrites the releaser&#x27;s identity</p>
+<p>seconds after every release (<code>created_by</code> is also useless — every agent writes</p>
+<p>through Junyan&#x27;s integration token). A staff member clearing her list and a</p>
+<p>runaway program are <b>indistinguishable in the record</b>.</p>
+<ol>
+<li>2. <b>The direct-send hole</b> — an LLM running process-studio-tickets (or any skill with</li>
+</ol>
+<p><code>send_sms</code>) can put a message on the wire with no queue row at all. The J28 ledger</p>
+<p>records it as <code>source: api-sms-poll</code> — capture method, not actor. Phone.com&#x27;s raw</p>
+<p>API confirms (checked 2026-07-31): no user/device/client attribution exists at the</p>
+<p>carrier; everything sends as ext 100 &quot;Dance Annex&quot;.</p>
+
+<h2>The design (ruled directions, 2026-07-31 fixer session)</h2>
+
+<p><b>Reconcile, don&#x27;t enumerate.</b> The invariant: *every outbound message in the J28</p>
+<p>ledger matches exactly one authorised origin.* Three parts:</p>
+
+<ul>
+<li>- <b>Release capture (send-engine hook, NOT a poller).</b> Junyan rejected the 3-min</li>
+</ul>
+<p>poller as too much machinery. Instead the Apps Script send engine (repair 029)</p>
+<p>reads the row&#x27;s <code>last_edited_by</code> BEFORE it claims/overwrites the row — at that</p>
+<p>moment it is still the releaser — and writes the actor into its send record.</p>
+<p>Event-driven, zero polling, cannot miss a send.</p>
+<ul>
+<li>- <b>Send-intent declarations (direct-send lane).</b> Any skill/agent authorised to send</li>
+</ul>
+<p>off-queue writes a one-line intent to the ledger (who, recipient, body hash, ticket)</p>
+<p>BEFORE calling <code>send_sms</code>/Gmail. An undeclared send must never look authorised.</p>
+<ul>
+<li>- <b>The reconciler.</b> Rides 038&#x27;s queue-row ↔ ledger-outbound join (build the join</li>
+</ul>
+<p>once — this is why this ticket is blocked-by 038), extended with the intent lane:</p>
+<p>every ledger outbound matches a released queue row or a declared intent. Unmatched</p>
+<p>outbound → Attributed defect (<code>Causing Job</code> = send path), surfaced on the Fixer</p>
+<p>Report / night watch like 038&#x27;s mismatches. Derived checks, all from the same data:</p>
+<p>unknown actor, Pending-Review→Sent gate bypass, per-actor release bursts,</p>
+<p>hold-language-in-Reasoning released while its gate was unsatisfied.</p>
+
+<h2>Out of scope, related</h2>
+
+<p>The deeper cure for the hold-violation class — a real <code>Hold Until</code>/<code>Release Gate</code></p>
+<p>property on the queue so held rows never appear in the staff working set (today holds</p>
+<p>are prose in <code>Reasoning</code>, invisible at click time) — is a production schema change</p>
+<p>Junyan has not yet ruled on. Raise it at ruling time; do not build it here.</p>
+
+<p>Resolution records: the send-engine hook line (Junyan pastes it — production Apps</p>
+<p>Script), the intent-declaration convention + which skills write it, the reconciler</p>
+<p>(where it runs, match rules), and the first unmatched-send-or-clean-week readout.</p>
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
@@ -3886,5 +3944,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-01 10:22 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-01 17:34 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
