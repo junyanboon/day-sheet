@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-31 23:07 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-01 00:56 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -539,7 +539,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Artist DB alarm-code lookup + Anthropic step (claude-opus-4-8) between step 11 and step 12,</p>
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
-</div></details></details></div><div class="job"><div class="jnum">#036</div><div class="jhead"><span class="emoji">🏠</span><h4>Find new homes for the old robot&#x27;s jobs before switching it off</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Switching it off once already broke things — it did more than anyone had written down</li><li>Listed all 13 of its jobs; 7 are already covered, 6 still need a home</li><li>BUILT Jul 28: the fast robot now writes one-off replies itself — a staff member reads and sends each one</li><li>So a reply is ready in seconds instead of hours, but a human always pushes the send button</li><li>Also built in guards so nobody ever gets a pile of robot texts: at most 2 automatic replies per person per half-day, and rapid-fire texts get ONE combined reply, not three</li><li>PROVED FOR REAL Jul 29: Junyan texted &quot;it&#x27;s too hot in here&quot; and the how-to came back in 90 seconds — no human, no waiting for the hourly robot</li><li>Same minute, &quot;can I add an hour tonight?&quot; had a written reply waiting for staff — and it was careful: it promised to check, not that the hour was free</li><li>Two hidden bugs only showed up once real texts came through, and both are fixed — one had been quietly making every fast reply fall back to the slow robot</li><li>Still to do: someone listening when a renter replies &#x27;still stuck&#x27; — that&#x27;s the biggest remaining gap</li><li>Then it can retire for good</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rehome the Receptionist&#x27;s jobs, then retire it</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#036</div><div class="jhead"><span class="emoji">🏠</span><h4>Find new homes for the old robot&#x27;s jobs before switching it off</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Switching it off once already broke things — it did more than anyone had written down</li><li>Listed all 13 of its jobs; 7 are already covered, 6 still need a home</li><li>BUILT Jul 28: the fast robot now writes one-off replies itself — a staff member reads and sends each one</li><li>So a reply is ready in seconds instead of hours, but a human always pushes the send button</li><li>Also built in guards so nobody ever gets a pile of robot texts: at most 2 automatic replies per person per half-day, and rapid-fire texts get ONE combined reply, not three</li><li>PROVED FOR REAL Jul 29: Junyan texted &quot;it&#x27;s too hot in here&quot; and the how-to came back in 90 seconds — no human, no waiting for the hourly robot</li><li>Same minute, &quot;can I add an hour tonight?&quot; had a written reply waiting for staff — and it was careful: it promised to check, not that the hour was free</li><li>Two hidden bugs only showed up once real texts came through, and both are fixed — one had been quietly making every fast reply fall back to the slow robot</li><li>BUILT Jul 31: someone now listens when a renter replies &#x27;still stuck&#x27; — an urgent text goes to on-call staff</li><li>A &#x27;thanks, all good&#x27; reply is recognized and closes things out quietly</li><li>At 901 after dark, a can&#x27;t-get-in text now calls staff to bring the key — no robot ever mentions key codes</li><li>Junyan also ruled: only ONE robot writes replies now — the fast one stops composing, ending the two-robots-one-job mixup</li><li>Still to do: Junyan deploys the update, one live test, a quiet week — then the old robot retires for good</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rehome the Receptionist&#x27;s jobs, then retire it</b></p><h2>Question</h2>
 
 <p>Ruled by Junyan 2026-07-25: <b>&quot;We can retire it but we need to find a new place for its</p>
 <p>jobs.&quot;</b> The 2026-07-24 retirement was reversed the next day because the event-gate</p>
@@ -777,6 +777,48 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>anything needing deep context), but that is Junyan&#x27;s ruling to make, not a build decision.</p>
 <p>Owner: this ticket, before retirement — a decommission that leaves two composers running</p>
 <p>just moves the ambiguity.</p>
+
+<h2>Update 2026-07-31/08-01 — rulings + build (commit <code>3561a128</code>, 146 tests green)</h2>
+
+<p><b>RULED by Junyan 2026-07-31: &quot;I would prefer to only have the responder responsible</p>
+<p>for drafting messages.&quot;</b> The overlap is resolved by ownership, not a channel split —</p>
+<p><b>The Responder is the sole composer on every channel.</b> <code>drafter.py</code>&#x27;s composed-draft</p>
+<p>lane (DR- rows) is DELETED from the gate; the inline card review stays (cards are</p>
+<p>pre-approved wording, not drafting). <code>library/the-responder.md</code> records the ruling.</p>
+<p>Accepted cost: SMS draft latency returns to the Responder&#x27;s ~15–45 min floor — the</p>
+<p>sibling&#x27;s <b>008 push path</b></p>
+<p>is the sanctioned fix if live evidence shows drafts losing the race.</p>
+
+<p><b>GAP 1 BUILT — <code>escalation.py</code>.</b> Still-stuck replies after an emergency-class card</p>
+<p>(<code>codes</code>, <code>leak-photo</code>, <code>door-in-901</code>, <code>stuck-inside-901</code>) summon on-call through the</p>
+<p>existing actuator (🚨 SMS + SCQ row, <code>[REPLY-ESCALATION …]</code>-marked), sharing the 30-min</p>
+<p>cooldown. Close-outs (&quot;thanks, all good&quot;) log and stop — GAP 6 rides along. Comfort-class</p>
+<p>still-stuck falls through to the held-reply flow. Process-local card memory + durable</p>
+<p>Notion queue-query backstop (survives deploys; fails closed). Ruling: same summons path</p>
+<p>as the life-safety lane (Junyan chose over a softer first step).</p>
+
+<p><b>GAP 2 (rescoped) BUILT</b> — inside escalation: a 901 night can&#x27;t-get-in / lockbox ask</p>
+<p>summons staff to bring the key; the gate never composes a word about codes (tests assert</p>
+<p>no <code>5789</code> can appear).</p>
+
+<p><b>GAP 3 BUILT twice, better version kept</b> — a parallel session shipped</p>
+<p><code>file_actions_row</code> with per-artist 12 h dedup + <code>Basis</code> + <code>_stamp</code> reporting</p>
+<p>(commit <code>b79372cc</code>); this session&#x27;s simpler version was dropped in the rebase and its</p>
+<p>escalation hook re-applied on top.</p>
+
+<p><b>GAP 4 VERIFIED — no work.</b> JOB 2 triages the whole inbox (mandatory, non-preemptable,</p>
+<p>counted per pass), labels + archives every handled thread, and the Responder carve-out</p>
+<p>owns the reply side. One stale line to fix at retirement: <code>job-2-triage.md</code> still says</p>
+<p><code>the-receptionist</code> runs fast-track (moved to the Concierge 2026-07-02).</p>
+
+<p><b>Remaining before retirement:</b> (1) Junyan deploys the gate (gcloud is owner-blocked</p>
+<p>for Claude): <code>gcloud run deploy event-gate --source services/event-gate --region us-central1 --project danceannex-skedda</code>;</p>
+<p>(2) live verification from the test line — send a codes card trigger, then &quot;still not</p>
+<p>working&quot; → expect 🚨 summons + SCQ row; then &quot;thanks all good&quot; → expect silence;</p>
+<p>(3) a clean watched window on JOB 7 §7; (4) THEN disable+delete</p>
+<p><code>trig_01Rz8uECDq7TaKhocQZ1Hyvx</code>, stub the Notion page, flip the library pages to past</p>
+<p>tense (incl. the job-2-triage.md fast-track line), and rotate <code>CLAUDE_CODE_OAUTH_TOKEN</code></p>
+<p>(ticket 033&#x27;s hygiene debt).</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">6</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -3707,5 +3749,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-31 23:07 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-01 00:56 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
