@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-29 21:05 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-07-31 21:32 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -95,7 +95,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">6</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">7</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">4</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">26</div><div class="l">✅ Finished</div></div>
 </div>
@@ -540,7 +540,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">6</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">7</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1418,6 +1418,46 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Resolution records: the built escalation/hold/actions-row code, the GAP 4 verification,</p>
 <p>Junyan&#x27;s GAP 5 ruling, and the trigger retirement + page stub.</p>
+
+<h2>Update 2026-07-30 (Junyan: &quot;I&#x27;m looking to decommission the receptionist&quot;)</h2>
+
+<p>Junyan restated the intent to retire the persona. Status against <b>this ticket&#x27;s own</p>
+<p>retirement precondition</b> (GAPs 1–3 built + verified, GAP 4 confirmed, GAP 5 ruled):</p>
+
+<ul>
+<li>- <b>GAP 5 — CLOSED twice over, and that is the problem.</b> It has <i>two</i> homes now:</li>
+</ul>
+<p>event-gate&#x27;s <code>drafter.py</code> compose lane (built + verified live 2026-07-29, SMS channel)</p>
+<p><b>and The Responder</b> (self-improving-desk ticket 003, went live 2026-07-29, all</p>
+<p>channels). Neither knew about the other at build time.</p>
+<ul>
+<li>- <b>GAPs 1, 2, 3 — still open.</b> Reply-triggered escalation, Card B night-lockbox hold,</li>
+</ul>
+<p>and the thermostat Actions row remain unbuilt. <b>The retirement precondition is NOT</p>
+<p>met</b>, so the trigger stays live regardless of the decommission intent. GAP 1 is the</p>
+<p>blocker that matters: every card still promises &quot;reply here and we&#x27;ll jump in.&quot;</p>
+<ul>
+<li>- <b>GAP 4</b> — still unverified.</li>
+</ul>
+
+<h3>⚠️ New finding — The Responder and <code>drafter.py</code> overlap on SMS</h3>
+
+<p>Both lanes now compose a held draft for a non-ticket SMS inbound from a verified sender.</p>
+<p><code>drafter.py</code> writes <code>DR-</code> rows ~70 s after the poll; The Responder writes its own rows on</p>
+<p>a :20/:50 pass with a 3 h lookback. The Responder&#x27;s dedup check (a) reads the live Message</p>
+<p>Queue, so it <i>should</i> skip a <code>DR-</code> row that already exists — but that is dedup by luck of</p>
+<p>timing, not by an owned boundary, and <b>two agents doing one job is precisely the</p>
+<p>attribution break the probe exists to measure.</b> Evidence it is live, not theoretical:</p>
+<p><code>DR-3887-0729-2044</code> (event-gate) and The Responder&#x27;s 21:51 pass both processed the same</p>
+<p>2026-07-29 test-line inbound and reached <i>opposite</i> conclusions about whether to draft.</p>
+
+<p><b>Do not resolve by deleting one lane.</b> They differ in a way that matters: <code>drafter.py</code></p>
+<p>is a ~70 s deterministic-trigger lane on metered Opus (SMS only), The Responder is a</p>
+<p>30-min pass with full ledger/calendar/HTR context across SMS <b>and email</b>. The likely</p>
+<p>right split is <i>channel + latency</i> (gate owns fast SMS composes; Responder owns email and</p>
+<p>anything needing deep context), but that is Junyan&#x27;s ruling to make, not a build decision.</p>
+<p>Owner: this ticket, before retirement — a decommission that leaves two composers running</p>
+<p>just moves the ambiguity.</p>
 </div></details></details></div><div class="job"><div class="jnum">#037</div><div class="jhead"><span class="emoji">📰</span><h4>Make sure the robot always reads its morning reports</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>On Jul 28 the main robot skipped reading the overnight reports — it ran out of room</li><li>The night checker caught it and raised a red flag (that part worked)</li><li>Two fixes went in the same day: read reports FIRST, and a broken file link was repaired</li><li>Now we watch 3 mornings: if the flag stays green, we&#x27;re done</li><li>If not: a small program will squeeze all the reports into one short page every night</li><li>That way the morning read is always small enough to finish</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Make morning report intake constant-size — verify the reorder, build the night digest only if needed</b></p><h2>Question</h2>
 
 <p>On the 2026-07-28 morning pass the Concierge <b>skipped report intake entirely</b> — it ran out of context after doing its desk jobs, and the Night Watch flagged a red &quot;unverified — treat as not all-clear&quot; banner. Source handoff: <b>HANDOFF-report-intake-too-big.md</b>. Structural risk: one pass carries all desk jobs + full report intake, and intake is what gets sacrificed when the context budget runs out — silently, until an external auditor notices.</p>
@@ -1439,6 +1479,48 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Resolution records: the 3-morning verification result; if built — script location, schedule + tick, the Concierge + Night Watch repoints, and a heavy-day test.</p>
 
 <p><b>Sibling note:</b> today&#x27;s incident is logged on <b>self-improving-desk-wayfinder</b> as evidence for its thesis (a monolith pass silently sacrifices jobs under context pressure) — no build lands there.</p>
+</div></details></details></div><div class="job"><div class="jnum">#038</div><div class="jhead"><span class="emoji">📬</span><h4>Double-check that every message we sent actually went out</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Today, when the sending program says &#x27;Sent&#x27;, we just believe it</li><li>But phone records and the email Sent folder show what REALLY left the building</li><li>New plan: compare every &#x27;Sent&#x27; message against those real records</li><li>If a message claims &#x27;Sent&#x27; but never shows up there, raise a flag — never stay quiet</li><li>Even a clean day gets reported, so silence can&#x27;t hide a breakdown</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Send verification — prove a dispatched message actually went out</b></p><h2>Question</h2>
+
+<p>Raised by Junyan 2026-07-31: &quot;I want a way to double-check to see if the message we</p>
+<p>sent actually went out.&quot; Today the desk&#x27;s proof of sending is the send engine (Apps</p>
+<p>Script poller, repair <b>029</b>) flipping a 📤 Message</p>
+<p>Queue row to <code>Status = Sent</code> — a <b>self-report, not ground truth</b>. If the Phone.com or</p>
+<p>Gmail API call silently failed after the flip (or the poller died mid-batch), nothing</p>
+<p>would notice; the row would read as delivered forever.</p>
+
+<p>Build the <b>send-verification loop</b>, deterministic and no-persona:</p>
+
+<ul>
+<li>- <b>Ground truth is the J28 ledger</b> — the SMS poller reads Phone.com&#x27;s <i>sent</i> messages</li>
+</ul>
+<p>and <code>gmail_pull.py</code> reads the Sent mailbox, so a genuinely dispatched message appears</p>
+<p>in the ledger within ~30 min regardless of what the queue row claims.</p>
+<ul>
+<li>- <b>The check:</b> for every queue row flipped to <code>Sent</code>, confirm a matching ledger</li>
+</ul>
+<p>outbound exists (recipient + timestamp window + body match) within a grace window.</p>
+<p>A <code>Sent</code> row with <b>no ledger counterpart files a Run Error / Attributed defect row</b></p>
+<p>(<code>Causing Job</code> = send engine) — never a silent pass. Report zero-mismatch results too</p>
+<p>(the 035 lesson: a failure that looks like a quiet success).</p>
+<ul>
+<li>- <b>Where it runs:</b> likely a small script on the 30-min watchlist Action (same rails as</li>
+</ul>
+<p>the pollers), or a leg of <code>day_sheet_build.py</code> — decide in-build; no new agent.</p>
+<ul>
+<li>- <b>Seam with <b>015</b>:</b> 015&#x27;s remaining item 1 is the</li>
+</ul>
+<p><i>drafted-vs-sent diff</i> (queue body vs actual-sent text — content fidelity). This</p>
+<p>ticket is the <i>existence</i> check (did it go out at all). Same join (queue row ↔ ledger</p>
+<p>outbound); build the join once so 015&#x27;s diff can ride it — coordinate, don&#x27;t</p>
+<p>double-build. Also the sanctioned send-time <code>Message Body</code> snapshot (sibling 004&#x27;s</p>
+<p>ground-truth note) lives on this same seam.</p>
+<ul>
+<li>- <b>Surface:</b> mismatches should land where Junyan already looks — the Fixer Report /</li>
+</ul>
+<p>night watch &quot;Fix these&quot; feed, not a new page.</p>
+
+<p>Resolution records: the checker (where it runs, cadence, match rules), the first live</p>
+<p>mismatch-or-clean-week readout, and the 015 seam note (what 015 still owns after this).</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">4</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -1519,7 +1601,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Already-moot parts: consumer repoint (done inside 025&#x27;s port), write-path cutover</p>
 <p>(done — pollers/log_drop own all writes), backfill decision (done in 006: 90-day</p>
 <p>backfill executed), the freeze (void).</p>
-</div></details></details></div><div class="job"><div class="jnum">#018</div><div class="jhead"><span class="emoji">🏗️</span><h4>Redesign how mail gets handled</h4></div><span class="pill p-wait">needs 017 first</span> <span class="pill p-wait">needs 006 first</span> <span class="pill p-wait">needs 022 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Organize work by person, not by ticket</li><li>Split mail sorting into smaller jobs</li><li>The biggest fix on the list</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rearchitect J01 — ledger-fed triage, sub-job split, ticket-advancement contract</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#018</div><div class="jhead"><span class="emoji">🏗️</span><h4>Redesign how mail gets handled</h4></div><span class="pill p-wait">needs 017 first</span> <span class="pill p-wait">needs 006 first</span> <span class="pill p-wait">needs 022 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Organize work by person, not by ticket</li><li>Split mail sorting into smaller jobs</li><li>The biggest fix on the list</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rearchitect J01 — ledger-fed triage, sub-job split, ticket-advancement contract</b></p><blockquote><b>Extraction landed (2026-07-29, self-improving-desk ticket 003):</b> the &quot;draft responses&quot; sub-job this rearchitecture deferred is now OUT of J01/JOB 2. <b>The Responder</b> (canon <code>library/the-responder.md</code>, cloud triggers <code>trig_01WA9KLVfMD82gAYupxsBwH5</code> :20 + <code>trig_015q8fhqzYvVjv5N6rnmH7wK</code> :50, 30-min cadence 08:20–22:50 Toronto) exclusively owns non-ticket held replies: courtesy/acknowledgement replies, quick answers, nudge holding replies, PBF-adjacent replies. JOB 2 keeps inbox hygiene, classification, the audit log, and all ticket-forming/ticket-lifecycle replies — its courtesy-reply section is now a carve-out pointer. Design J01&#x27;s sub-job split around that boundary.</blockquote>
+
+<h2>Question</h2>
 
 <p>Design J01&#x27;s next form with Junyan, from 017&#x27;s evidence:</p>
 <ul>
@@ -3574,5 +3658,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-07-29 21:05 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-07-31 21:32 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
