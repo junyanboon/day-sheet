@@ -84,7 +84,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-01 08:34 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-01 08:35 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -806,6 +806,19 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><code>DR-3887-0729-2044</code> (event-gate) and The Responder&#x27;s 21:51 pass both processed the same</p>
 <p>2026-07-29 test-line inbound and reached <i>opposite</i> conclusions about whether to draft.</p>
 
+<p>→ <b>RESOLVED 2026-07-31 by owner ruling, recorded in <code>library/the-responder.md</code>:</b> The</p>
+<p>Responder is the <b>SOLE composer across ALL channels</b>; the event-gate&#x27;s composed-draft</p>
+<p>lane (<code>drafter.py</code> DR- rows, SMS) is <b>RETIRED</b>. The gate now only sends pre-approved</p>
+<p>cards and summons. This picks the opposite branch from the analysis below — the split is</p>
+<p>by <i>owner</i>, not by channel+latency — and it is the cleaner rule: one composer, no</p>
+<p>attribution ambiguity, nothing to dedup by luck of timing. <b>Known cost, accepted:</b> SMS</p>
+<p>composed drafts go from ~70 s to the Responder&#x27;s ≤30 min cadence. Worth re-visiting only</p>
+<p>if a renter-facing complaint traces to that delay. <b>Note the inline CARD review path in</p>
+<p><code>drafter.py</code> is NOT retired</b> — that is the reviewer of record for QA- rows (~3 s) and has</p>
+<p>nothing to do with composing.</p>
+
+<p>&lt;details&gt;&lt;summary&gt;Superseded analysis (kept for the reasoning, not the conclusion)&lt;/summary&gt;</p>
+
 <p><b>Do not resolve by deleting one lane.</b> They differ in a way that matters: <code>drafter.py</code></p>
 <p>is a ~70 s deterministic-trigger lane on metered Opus (SMS only), The Responder is a</p>
 <p>30-min pass with full ledger/calendar/HTR context across SMS <b>and email</b>. The likely</p>
@@ -813,6 +826,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>anything needing deep context), but that is Junyan&#x27;s ruling to make, not a build decision.</p>
 <p>Owner: this ticket, before retirement — a decommission that leaves two composers running</p>
 <p>just moves the ambiguity.</p>
+
+<p>&lt;/details&gt;</p>
 
 <h2>Update 2026-07-31/08-01 — rulings + build (commit <code>3561a128</code>, 146 tests green)</h2>
 
@@ -3785,5 +3800,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-01 08:34 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-01 08:35 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
