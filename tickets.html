@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-01 17:34 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-03 20:17 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">5</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">5</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">27</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">7</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">6</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">28</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">3</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -544,163 +544,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Artist DB alarm-code lookup + Anthropic step (claude-opus-4-8) between step 11 and step 12,</p>
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
-</div></details></details></div><div class="job"><div class="jnum">#035</div><div class="jhead"><span class="emoji">🚨</span><h4>Make sure a warning actually gets acted on</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>On Jul 24 a renter couldn&#x27;t get into her studio — her door code was never set up</li><li>The robot spotted it at 6am and wrote a warning. Nobody acted on it all day</li><li>So the problem isn&#x27;t spotting things — it&#x27;s that a warning can sit and go stale</li><li>DONE: jobs the two retired robots used to do now have new owners</li><li>(billing scan, thank-you texts, staff hours, staff shift emails — all re-homed)</li><li>DONE: every job must now say what it did each time, even if the answer is &#x27;nothing&#x27;</li><li>STILL TO DO: keep re-checking a flagged booking as the clock runs down, and get louder</li><li>STILL TO DO: text and Slack both Junyan and Ela, and agree an emergency door code</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rebuild the bookends&#x27; verification layer as invariants — the Opener&#x27;s checks get a durable home</b></p><h2>Motivating failure — the Vicky Yeung lockout, 2026-07-24 (READ THIS FIRST)</h2>
-
-<p>A renter <b>was actually locked out of 509A</b> at 19:30 on Jul 24. This is the concrete cost of</p>
-<p>the missing verification layer, and the acceptance test for whatever this ticket builds.</p>
-
-<p><b>The timeline:</b></p>
-<ol>
-<li>1. <b>Jul 23, 06:02</b> — the Doorman&#x27;s live check returned <code>manual_no_match</code> for Vicky Yeung (no</li>
-</ol>
-<p>Alarm.com user at all). It <b>suppressed the alert</b>, reasoning that a prior Access/PIN row</p>
-<p>(&quot;Extend Vicky&#x27;s window to cover Jul 24 + Jul 26&quot;) was already marked <code>Processed</code>. <b>A full</p>
-<p>day of lead time was lost to a Notion row status that did not reflect the panel.</b></p>
-<ol>
-<li>2. <b>Jul 24, 06:02</b> — the Doorman got the same <code>manual_no_match</code>, and this time correctly raised</li>
-</ol>
-<p>an Action row at <code>Pending Review</code>, explicitly noting the earlier fix had not landed on the panel.</p>
-<ol>
-<li>3. <b>06:02 → 19:30 (13.5 hours)</b> — the row sat in the queue. <b>Nothing re-checked it, nothing</li>
-</ol>
-<p>escalated as the booking approached, nobody actioned it.</b></p>
-<ol>
-<li>4. <b>19:30</b> — Vicky arrived and could not get in. Confirmed by Junyan.</li>
-<li>5. <b>19:36</b> — an Alarm.com user was created by hand (window 19:36 Jul 24 → Aug 24). She got in</li>
-</ol>
-<p>~6 min late. Jul 26 repeat booking now verifies <code>pass</code>.</p>
-
-<p><b>Two distinct defects, only one of which is fixed:</b></p>
-<ul>
-<li>- <b>(A) FIXED 2026-07-24 in the Doorman prompt</b> — a PRIME DIRECTIVE (&quot;the live panel is the only</li>
-</ul>
-<p>truth; a <code>Processed</code>/<code>Done</code> row NEVER suppresses an alert; dedup only against <i>open</i> rows&quot;),</p>
-<p>urgent <code>TODAY &lt;HH:MM&gt; —</code> titling for same-day gaps, <code>Raised by = The Doorman</code> (was the retired</p>
-<p>Opener), and a <b>second independent access look at 04:00</b> (step A5) so a broken gate surfaces</p>
-<p>~2h earlier with the whole day to fix it.</p>
-<ul>
-<li>- <b>(B) STILL OPEN — this ticket.</b> *An urgent, correctly-raised flag with a hard deadline sat in a</li>
-</ul>
-<p>queue for 13.5 hours and nothing noticed.* Detection was never the problem on Jul 24 — the desk</p>
-<p><b>knew</b> at 06:02. What is missing is the closing half: <b>nothing verifies that a flagged gate</p>
-<p>got fixed before the renter arrives.</b> More detection cannot fix this; only an escalating,</p>
-<p>deadline-aware check can.</p>
-
-<p><b>The invariant this ticket must produce (acceptance test — replay Jul 24 against it):</b></p>
-<blockquote>No booking may start while an <code>Access / PIN</code> flag against it is still open. Re-verify against the</blockquote>
-<blockquote><b>live panel</b> (not the row status) on a schedule as the booking approaches; escalate louder as</blockquote>
-<blockquote>the clock runs down; and if it is still unresolved close to the start time, put it somewhere a</blockquote>
-<blockquote>human is guaranteed to see <i>that hour</i> — not in a queue that is read once a morning.</blockquote>
-
-<p>Open questions for Junyan: which surface escalates (Concierge 2-hourly pass / desk_invariants_v2 /</p>
-<p>the Day Sheet&#x27;s Actions tab), at what thresholds, and <b>who gets pinged when it is 2h out and still</p>
-<p>broken</b> — Ops Lead (Ela) by default, but Brazil means it cannot rely on Junyan noticing.</p>
-
-<h2>Rehoming: DONE 2026-07-25 (the orphaned-jobs half of this ticket)</h2>
-
-<p>Junyan&#x27;s diagnosis, confirmed: <b>this was an incomplete retirement handoff, not a bug.</b> Ticket 007</p>
-<p>retired the Opener and Closer without giving their jobs an active owner, and the Custodian was only</p>
-<p>told to detect problems <i>after</i> they appear. Every orphan is now re-homed to a robot that already</p>
-<p>reads the same data — no new scheduled agents:</p>
-
-<p>| Orphaned job | New owner | Where |</p>
-<p>|---|---|---|</p>
-<p>| Unpaid-charge scan (Opener Step 8) | <b>Concierge JOB 32</b>, HEAVY-AM | <code>library/concierge-orchestration.md</code> (git canon) |</p>
-<p>| End-of-day booking review + <b>PBF reconciliation</b> + incident sweep (Closer E2/E3) | <b>Concierge JOB 33</b>, HEAVY-PM | same file |</p>
-<p>| Yesterday&#x27;s working-hours reconcile (Opener 7B) | <b>The Timekeeper</b> | trigger prompt |</p>
-<p>| Next-day staff shift messages (Closer E4) | <b>The Planner</b>, Step T5 | trigger prompt |</p>
-
-<p>Two cross-cutting rules went in with them:</p>
-<ul>
-<li>- <b>Every re-homed job must report its own result each pass — including zero — and file a</li>
-</ul>
-<p><code>Type = Run Error</code> row if it cannot run.</b> *A job whose failure looks identical to a quiet success</p>
-<p>is exactly how this went unnoticed for two days.*</p>
-<ul>
-<li>- <b>JOB 32 never derives a price</b> (Junyan&#x27;s 2026-07-23 pricing rule supersedes the Opener&#x27;s old</li>
-</ul>
-<p>arithmetic): <code>Amount</code> stays blank, <code>Basis</code> records only observable facts. A derived number becomes</p>
-<p>a wrong charge to a real renter.</p>
-
-<p><b><code>Raised by</code> fallback fixed too</b> — the Actions DB had no option for the robots actually writing</p>
-<p>rows, so their true source only survived in free-text Notes. Added: <b>The Doorman, The Sentinel,</p>
-<p>Desk Invariants</b> (needed before <code>desk_invariants_v2</code>&#x27;s auto-escalation can attribute itself) and</p>
-<p><b>Gap audit</b>. <code>Other</code> is no longer a legitimate destination for a known writer.</p>
-
-<p>Damage found and repaired on the way: <b>2 unbilled <code>[Unpaid]</code> bookings on Jul 25</b> (Sara D&#x27;Amato</p>
-<p>509A 14:00–16:00 ≈$42.94; David Garzon 509A 17:00–18:30 ≈$40.68) had no charge row — both now filed</p>
-<p>at Pending Review, <code>Raised by = Gap audit</code>, <code>Amount</code> blank pending a Skedda check. Jul 24 verified</p>
-<p>clean. <b>PBF has been unowned since Jul 22</b> — the backlog needs a one-off catch-up sweep.</p>
-
-<h2>Still open — the escalation half (Junyan&#x27;s rulings, 2026-07-25)</h2>
-
-<ul>
-<li>- <b>The re-check lives in the checker program</b> (<code>desk_invariants_v2</code>), not an LLM pass — Junyan&#x27;s</li>
-</ul>
-<p>choice. Invariant: <i>no booking may start while an <code>Access / PIN</code> flag against it is open.</i></p>
-<p>Re-verify against the <b>live panel</b>, not the row status, and escalate louder as the clock runs down.</p>
-<ul>
-<li>- **Escalation reaches BOTH Junyan and Ela, by SMS <i>and</i> Slack.<b> Not a queue entry — a push.</li>
-<li>- </b>A verifier tool is needed<b> — something that re-runs a gate&#x27;s check and returns pass/fail on</li>
-</ul>
-<p>demand, so &quot;is this actually fixed?&quot; is one call rather than a human opening Alarm.com.</p>
-<ul>
-<li>- </b>⚠️ An emergency access code is needed for when neither Junyan nor Ela is reachable.<b> This is the</li>
-</ul>
-<p>Brazil-shaped hole: today a lockout at 19:30 depends on a human answering. </b>Design this with</p>
-<p>Junyan before building<b> — a standing fallback code is a real security decision (who may receive</p>
-<p>it, how it rotates, how its use is logged and reviewed), not a config change.</p>
-
-<p>Blocked on: the <code>desk_invariants_v2</code> swap is gated on Junyan&#x27;s explicit go (Phase 0 of the</p>
-<p><b>level-up plan</b>); the SMS/Slack push path exists (message queue +</p>
-<p>Slack) but has never carried an operational alert.</p>
-
-<h2>Question</h2>
-
-<p></b>Re-scoped 2026-07-23 (Junyan, post-007):** the bookends&#x27; real purpose was</p>
-<p><i>verification</i> — the Opener&#x27;s night-watch item count was it checking the overnight</p>
-<p>fleet&#x27;s work, not doing new work. Retiring the runs (007, Ruling 2) was right, but the</p>
-<p>verification layer they carried needs a named, durable home. Per the</p>
-<p><b>level-up plan</b> doctrine, the bottleneck is <b>trusted</p>
-<p>verification</b> — so the home should be deterministic invariants + monitor-by-exception</p>
-<p>(desk_invariants_v2&#x27;s structured defects → 3-strike escalation to Actions rows), NOT a</p>
-<p>resurrected LLM pass that re-reads everything.</p>
-
-<p>Design with Junyan, check by check from the Opener&#x27;s old Steps 3/4/6/6B/6C/7/7B/8:</p>
-
-<ul>
-<li>- <b>Existence invariants</b> (IPR / Overtime / FBS itinerary / watchlist freshness /</li>
-</ul>
-<p>Day Sheet freshness): pure date-filtered queries → v2 invariants. The Sentinel covers</p>
-<p><i>run</i> heartbeats; these cover <i>artifact</i> existence — decide if they&#x27;re one roster or two.</p>
-<ul>
-<li>- <b>Reconciliation invariants</b> (FBS board ↔ message queue ↔ calendars; duplicate/orphan</li>
-</ul>
-<p>board rows; yesterday&#x27;s hours vs Staff Scheduling): deterministic diffs → v2, with the</p>
-<p>Custodian&#x27;s 09:35 pass as the human-facing reviewer of whatever v2 flags.</p>
-<ul>
-<li>- <b>Completeness sweeps</b> (<code>[Unpaid]</code> → Money Request Queue incl. prior-day back-check;</li>
-</ul>
-<p>GTG no-show surfacing): mostly date math + plan rates — candidate for a small script on</p>
-<p>the deterministic lane, with only the discretionary residue routed to Actions rows.</p>
-<ul>
-<li>- <b>Escalation contract:</b> every failed check must land somewhere a human already looks</li>
-</ul>
-<p>(Actions <code>For = Ops Lead</code> / <code>For = Junyan</code> per the 027 split, or the Fixer Report) —</p>
-<p>&quot;check exists&quot; is not done until &quot;failure is seen&quot; is wired.</p>
-<ul>
-<li>- <b>No fire-repair authority</b> (Ruling 2 stands): invariants detect and escalate; the Ops</li>
-</ul>
-<p>lead investigates. Nothing auto-refires generators.</p>
-
-<p>Interim coverage until this lands: Custodian 02:35 + 09:35 passes, Sentinel missing-run</p>
-<p>detection, desk_invariants v1 hourly. Watch the Fixer Report for rot — unpaid-charge</p>
-<p>misses are the most likely first symptom and raise this ticket&#x27;s urgency.</p>
-
-<p>Coordinate with Phase 0 of the level-up plan (v2 swap is gated on Junyan&#x27;s explicit go)</p>
-<p>— these checks should land as v2 invariants, not a parallel checker.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">5</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">7</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1337,8 +1182,134 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Resolution records: the checker (where it runs, cadence, match rules), the first live</p>
 <p>mismatch-or-clean-week readout, and the 015 seam note (what 015 still owns after this).</p>
+</div></details></details></div><div class="job"><div class="jnum">#042</div><div class="jhead"><span class="emoji">🪜</span><h4>Build the get-louder ladder for door problems</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The plan from the Vicky lockout, now being built for real</li><li>Rule: no booking may start while a door problem against it is still open</li><li>It always asks the real door panel — never a ticked box in the office software</li><li>If the door starts working on its own, it closes quietly and nobody is bothered</li><li>If not, it gets louder: Ela in the morning, Junyan 2 hours before, code 45 minutes before</li><li>The emergency code opens EVERY studio forever, so each send demands it be reset</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the deadline escalation ladder in event-gate — no booking starts behind an open access flag</b></p><h2>Question</h2>
+
+<p>Build the design ruled in <b>035</b> (2026-08-03). Everything below is</p>
+<p>settled — this ticket is construction, not design. Re-open 035&#x27;s rulings only if the build proves</p>
+<p>one of them impossible.</p>
+
+<p><b>The invariant:</b> <i>no booking may start while an <code>Access / PIN</code> flag against it is still open.</i></p>
+<p>Re-verify against the <b>live panel</b> (<code>alarm-mcp</code>), never the Notion row status. A passing check</p>
+<p><b>auto-closes the flag silently</b> — nobody is touched when the system heals itself.</p>
+
+<p><b>Home:</b> the existing <code>event-gate</code> Cloud Run service, on its 1-min Cloud Scheduler tick.</p>
+<p>Not a GitHub Action (Actions cron silently drops runs — fatal for a deadline check), not the Mac,</p>
+<p>not a new service.</p>
+
+<h3>The four rungs</h3>
+
+<p>| Rung | Trigger | Action | Owner |</p>
+<p>|---|---|---|---|</p>
+<p>| 1 | Morning of the booking | Heads-up to the morning ops person (Ela) | <b>The Doorman</b>, folded into its existing ~06:00 access look |</p>
+<p>| 2 | Continuous | Re-verify every open access flag against the live panel every 30 min; silent while unresolved-but-not-urgent | <code>event-gate</code> |</p>
+<p>| 3 | <b>2h before booking start</b>, still failing | <b>Direct message to Junyan</b> — a real push (<code>escalation.py</code> path), not a queue row | <code>event-gate</code> |</p>
+<p>| 4 | <b>45 min before start</b>, still failing | Send the Alarm.com <b><code>Emergency Code</code></b> user to the renter, <b>and</b> file the mandatory reset row | <code>event-gate</code> |</p>
+
+<h3>Rung 4 — handle as a master key, not a PIN</h3>
+
+<p>The Alarm.com <code>Emergency Code</code> user is <b><code>Locations: All</code> / <code>Access Period: At All Times</code> /</p>
+<p><code>Access Type: Existing + Future</code></b> — every studio, no expiry, including studios not yet created.</p>
+<p>Each send permanently arms one more person with entry to everything until a human rotates it.</p>
+<p>Junyan accepted this trade because <code>alarm-mcp</code> is <b>read-only by deliberate design</b></p>
+<p>(<code>adc_client.py</code>: <i>&quot;exposes NO arm / disarm / lock / unlock calls&quot;</i>) — there is no way to mint a</p>
+<p>time-boxed per-renter user the way Junyan did by hand on Jul 24, so the standing code is the only</p>
+<p>unattended path through a door.</p>
+
+<p><b>Never write the code digits into git, a ticket, a log line, or a Notion body.</b> Reference the</p>
+<p>Alarm.com user by name; read the value at send time from a secret.</p>
+
+<p><b>Mandatory rotation guardrail</b> — the send is not complete until all three land:</p>
+<ol>
+<li>1. A row in <b>✅ Actions to Perform</b>: emergency code must be reset. Records recipient, time,</li>
+</ol>
+<p>studio, booking. Urgent-until-confirmed — this row must not be allowed to age quietly.</p>
+<ol>
+<li>2. A loud notice to <b>both</b> Junyan and Ela that the key went out and to whom.</li>
+<li>3. A <b>J28 ledger</b> entry for the send.</li>
+</ol>
+
+<h3>Build order</h3>
+
+<p>All four rungs ship together, sequenced 1→4 (Junyan, 2026-08-03) — explicitly <i>not</i> 1–3 first, so</p>
+<p>the ladder cannot end up permanently three-quarters built.</p>
+
+<h3>Acceptance test — replay Jul 24 (Vicky Yeung, 509A, 19:30)</h3>
+
+<p>Flag raised 06:02. Expected: Ela told ~06:02 · re-verified every 30 min all day ·</p>
+<p><b>Junyan paged 17:30</b> · at 18:45, code sent + reset row filed. Zero silent hours.</p>
+
+<h3>Also required (035&#x27;s cross-cutting rule, ticket 036 lineage)</h3>
+
+<p>Each rung reports its own result every pass <b>including zero</b>, and files a <code>Type = Run Error</code> row</p>
+<p>if it cannot run. A failure that looks like a quiet success is how the original 13.5 hours hid.</p>
+
+<h3>Banked risk to audit</h3>
+
+<p>If the reset rows are filed and then ignored, the guardrail becomes the very ignored-queue-row</p>
+<p>disease this ticket cures — one level up. First post-launch audit: are reset rows being cleared?</p>
+</div></details></details></div><div class="job"><div class="jnum">#043</div><div class="jhead"><span class="emoji">🔌</span><h4>The safety checker was dead — nobody noticed</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A small program is meant to check hourly for things going wrong at the desk</li><li>It has been crashing every single time — 122 crashes, the last one Aug 1</li><li>It always fails the same way: it asks Notion a question Notion no longer understands</li><li>A newer, better version was written back in July and never switched on</li><li>So the desk has had no safety checker at all, and nothing told anyone</li><li>Fix it, then move it to the cloud so a closed laptop can&#x27;t switch it off</li><li>This is the same illness as the lockout — the thing watching for silence went silent</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The invariants checker is dead and Mac-bound — repair it and move it to the cloud</b></p><h2>Question</h2>
+
+<p>Surfaced while grilling <b>035</b> on 2026-08-03. <b>Urgent</b> — this is a</p>
+<p>live blind spot, not a planned improvement.</p>
+
+<h3>What is broken</h3>
+
+<ul>
+<li>- <code>desk_invariants.py</code> (v1, hourly launchd <code>ca.danceannex.desk-invariants.plist</code> on Junyan&#x27;s Mac)</li>
+</ul>
+<p>is <b>crashing every run</b>. <code>desk_invariants.log</code> holds <b>122 tracebacks</b>, most recent</p>
+<p><b>2026-08-01 10:25</b>.</p>
+<ul>
+<li>- Every one is the same: <code>HTTP 400</code> from Notion at <code>desk_invariants.py:101</code> —</li>
+</ul>
+<p><code>query(DS_CC, {&quot;property&quot;: &quot;Status&quot;, &quot;status&quot;: {&quot;does_not_equal&quot;: &quot;Resolved&quot;}})</code> against the</p>
+<p>Customer Care data source. Almost certainly a renamed property, or <code>Status</code> retyped from</p>
+<p><code>status</code> to <code>select</code>. Confirm against the live schema before patching.</p>
+<ul>
+<li>- <b><code>desk_invariants_v2.py</code> was never swapped in.</b> The plist still points at v1; v2 has sat</li>
+</ul>
+<p>untouched since Jul 22, its Phase 0 go-ahead never given.</p>
+
+<p><b>So the desk has had no invariants checker running at all, for an unknown stretch, and nothing</p>
+<p>reported that.</b> This is the Vicky lockout&#x27;s exact pathology one level up: the thing that watches</p>
+<p>for silent failure was itself failing silently.</p>
+
+<h3>What this ticket must do</h3>
+
+<ol>
+<li>1. <b>Establish the blackout window.</b> When did v1 last complete a clean run? What did the 🩺 Desk</li>
+</ol>
+<p>Invariants page show during the gap, and did anything read it and believe it? A stale page that</p>
+<p>still renders &quot;healthy&quot; is worse than a blank one.</p>
+<ol>
+<li>2. <b>Fix the query.</b> Diff the checker&#x27;s assumed Customer Care schema against the live one.</li>
+<li>3. <b>Move it to the cloud.</b> Junyan&#x27;s ruling in 035: <i>&quot;everything needs to be in the cloud.&quot;</i></li>
+</ol>
+<p>A Mac-bound launchd checker is not an acceptable home — laptop lid, sleep</p>
+<p>(<b>local-tasks-miss-runs-on-sleep</b>), and no visibility while he is away. Decide the venue:</p>
+<p>folding into <code>event-gate</code> (as <b>042</b> does) versus its own</p>
+<p>Cloud Run job. <b>GitHub Actions is disqualified</b> for anything deadline-shaped (cron drops runs).</p>
+<ol>
+<li>4. <b>Settle the v1 → v2 question in the same move.</b> v2 adds structured defects with stable keys,</li>
+</ol>
+<p>persistence state, 3-consecutive-run auto-escalation to an Actions row</p>
+<p>(<code>Raised by = Desk Invariants</code> — the picklist option added by 035&#x27;s rehoming pass), trend</p>
+<p>history, and invariant I (verified-send vs the J28 ledger). Migrating a broken v1 to the cloud</p>
+<p>unchanged would be wasted work. Junyan&#x27;s explicit go is still required for the swap.</p>
+<ol>
+<li>5. <b>The checker must report its own health.</b> It has to be impossible for this to happen again</li>
+</ol>
+<p>unnoticed: a run that cannot complete files a <code>Type = Run Error</code> row, and a checker that has not</p>
+<p>reported inside its cadence is itself a Sentinel-visible missing run.</p>
+
+<h3>Why it is urgent</h3>
+
+<p><b>044</b> parks the bookends&#x27; existence, reconciliation, and</p>
+<p>completeness checks here — that ticket cannot start until this checker is alive and hosted</p>
+<p>somewhere trustworthy. And every day it stays dead, the desk is running with its smoke detector</p>
+<p>unplugged.</p>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">5</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">6</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
 <p>Build the crude-but-real J26 cost ledger on the Jobs registry spine: per job, runs × pass length (proxy for token spend) plus a self-reported supervision-minutes line, tallied weekly. Framing: <b>subscription headroom + exposure if the subsidy changes</b>, not cash bleed (~$240/mo Claude + $140/mo ChatGPT actual). It also populates the sibling map&#x27;s GO criterion (c). Decide the tally mechanism (likely a weekly scheduled job writing registry rows) and stand it up.</p>
 </div></details></details></div><div class="job"><div class="jnum">#015</div><div class="jhead"><span class="emoji">✂️</span><h4>Stop keeping two copies of messages</h4></div><span class="pill p-wait">needs 006 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Today messages get saved in two places</li><li>Switch fully to our own record</li><li>Freeze the old copy</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cut correspondence canon over from the Notion Correspondence Log to J28</b></p><h2>Question</h2>
@@ -1558,10 +1529,302 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Resolution records: the send-engine hook line (Junyan pastes it — production Apps</p>
 <p>Script), the intent-declaration convention + which skills write it, the reconciler</p>
 <p>(where it runs, match rules), and the first unmatched-send-or-clean-week readout.</p>
+</div></details></details></div><div class="job"><div class="jnum">#044</div><div class="jhead"><span class="emoji">🧾</span><h4>Give the last retired-robot checks a new home</h4></div><span class="pill p-wait">needs 043 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Two robots were retired. Most of their jobs were re-homed. Some checks were not</li><li>The leftovers: does today&#x27;s paperwork exist, do the lists match, did anyone go unbilled</li><li>Each one needs a named owner — a check with no owner is how the lockout happened</li><li>Waiting on the safety checker being fixed and moved to the cloud first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rehome the bookends&#x27; remaining checks — existence, reconciliation, completeness</b></p><h2>Question</h2>
+
+<p>The residue of <b>035</b>. That ticket settled the <b>escalation</b> half —</p>
+<p>the deadline-aware access ladder, now <b>042</b>. It deliberately did</p>
+<p><b>not</b> settle the rest of the Opener&#x27;s and Closer&#x27;s verification layer. This ticket owns that.</p>
+
+<p>Blocked by <b>043</b>: there is no point designing new</p>
+<p>invariants until a checker exists, runs, and is hosted somewhere that survives a closed laptop.</p>
+
+<p>Design with Junyan, check by check, from the Opener&#x27;s old Steps 3/4/6/6B/6C/7/7B/8:</p>
+
+<ul>
+<li>- <b>Existence invariants</b> (IPR / Overtime / FBS itinerary / watchlist freshness / Day Sheet</li>
+</ul>
+<p>freshness): pure date-filtered queries. The Sentinel covers <i>run</i> heartbeats; these cover</p>
+<p><i>artifact</i> existence — decide whether that is one roster or two.</p>
+<ul>
+<li>- <b>Reconciliation invariants</b> (FBS board ↔ message queue ↔ calendars; duplicate/orphan board</li>
+</ul>
+<p>rows; yesterday&#x27;s hours vs Staff Scheduling): deterministic diffs, with the Custodian&#x27;s 09:35</p>
+<p>pass as the human-facing reviewer of whatever gets flagged.</p>
+<ul>
+<li>- <b>Completeness sweeps</b> (<code>[Unpaid]</code> → Money Request Queue including the prior-day back-check;</li>
+</ul>
+<p>GTG no-show surfacing): mostly date math and plan rates — a small script on the deterministic</p>
+<p>lane, with only the discretionary residue routed to Actions rows. <b>JOB 32 never derives a</p>
+<p>price</b> (Junyan, 2026-07-23) still binds anything touching money.</p>
+<ul>
+<li>- <b>Escalation contract:</b> every failed check lands where a human already looks — Actions</li>
+</ul>
+<p><code>For = Ops Lead</code> / <code>For = Junyan</code> per the 027 split, or the Fixer Report. <i>&quot;Check exists&quot;</i> is not</p>
+<p>done until <i>&quot;failure is seen&quot;</i> is wired. 035 proved this is the part that gets skipped.</p>
+<ul>
+<li>- <b>No fire-repair authority</b> (Ruling 2 stands): invariants detect and escalate; the Ops lead</li>
+</ul>
+<p>investigates. Nothing auto-refires generators.</p>
+
+<p><b>Carry 035&#x27;s standing lesson in:</b> a retirement is not done until every step of the retired job</p>
+<p>names its new owner. Each check designed here closes with a named owner, or it does not ship.</p>
+
+<p><b>PBF backlog</b> — flagged unowned since Jul 22 in 035&#x27;s rehoming pass and never caught up. Confirm</p>
+<p>whether JOB 33 has actually been clearing it since, or whether the one-off catch-up sweep is still</p>
+<p>outstanding.</p>
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#036</span><span class="emoji">🏠</span><span class="done-title">Find new homes for the old robot&#x27;s jobs before switching it off</span><span class="done-date">2026-08-01</span></summary><div class="done-body"><ul class="plain-bullets"><li>Switching it off once already broke things — it did more than anyone had written down</li><li>Listed all 13 of its jobs; 7 are already covered, 6 still need a home</li><li>BUILT Jul 28: the fast robot now writes one-off replies itself — a staff member reads and sends each one</li><li>So a reply is ready in seconds instead of hours, but a human always pushes the send button</li><li>Also built in guards so nobody ever gets a pile of robot texts: at most 2 automatic replies per person per half-day, and rapid-fire texts get ONE combined reply, not three</li><li>PROVED FOR REAL Jul 29: Junyan texted &quot;it&#x27;s too hot in here&quot; and the how-to came back in 90 seconds — no human, no waiting for the hourly robot</li><li>Same minute, &quot;can I add an hour tonight?&quot; had a written reply waiting for staff — and it was careful: it promised to check, not that the hour was free</li><li>Two hidden bugs only showed up once real texts came through, and both are fixed — one had been quietly making every fast reply fall back to the slow robot</li><li>BUILT Jul 31: someone now listens when a renter replies &#x27;still stuck&#x27; — an urgent text goes to on-call staff</li><li>A &#x27;thanks, all good&#x27; reply is recognized and closes things out quietly</li><li>At 901 after dark, a can&#x27;t-get-in text now calls staff to bring the key — no robot ever mentions key codes</li><li>Junyan also ruled: only ONE robot writes replies now — the fast one stops composing, ending the two-robots-one-job mixup</li><li>LIVE Aug 1: all of it is deployed and running (the deploy error was just the wrong Google account signed in)</li><li>PROVED FOR REAL Aug 1: texted &#x27;what&#x27;s my code&#x27; — got the code back; replied &#x27;still not working&#x27; — an urgent alert reached staff in about a minute</li><li>That&#x27;s the exact hole that forced us to switch the old robot back on in July</li><li>The &#x27;thanks, all good&#x27; reply stayed quiet too — no false alarm</li><li>RETIRED Aug 1: the old robot is switched OFF for good. The front desk is two robots now, not three</li><li>It had sent nothing at all for ten days — the new setup had already taken over the work</li><li>Big lesson written down: never switch a robot off based on what its instructions SAY it does — check what it actually did</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rehome the Receptionist&#x27;s jobs, then retire it</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#035</span><span class="emoji">🚨</span><span class="done-title">Make sure a warning actually gets acted on</span><span class="done-date">2026-08-03</span></summary><div class="done-body"><ul class="plain-bullets"><li>On Jul 24 a renter couldn&#x27;t get into her studio — her door code was never set up</li><li>The robot spotted it at 6am and wrote a warning. Nobody acted on it all day</li><li>So the problem isn&#x27;t spotting things — it&#x27;s that a warning can sit and go stale</li><li>DONE: jobs the two retired robots used to do now have new owners</li><li>(billing scan, thank-you texts, staff hours, staff shift emails — all re-homed)</li><li>DONE: every job must now say what it did each time, even if the answer is &#x27;nothing&#x27;</li><li>DONE Aug 3: Junyan and Claude designed the whole follow-up plan. It gets louder as the clock runs down</li><li>Morning: tell Ela. Every 30 min: re-check the real door panel. 2 hours before: text Junyan</li><li>45 minutes before: send the renter the emergency door code, and demand it be changed after</li><li>It lives in the cloud, not on Junyan&#x27;s laptop — the laptop version had quietly died</li><li>Building it is now its own job (see &#x27;Build the get-louder ladder&#x27;)</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rebuild the bookends&#x27; verification layer as invariants — the Opener&#x27;s checks get a durable home</b></p><h2>RESOLUTION 2026-08-03 — the escalation half is designed; build graduates to <b>042</b></h2>
+
+<p>Grilled with Junyan. Defect (B) — *&quot;a correctly-raised urgent flag sat in a queue 13.5h with</p>
+<p>nothing re-checking it&quot;* — now has a full design, ruled end to end. Every open question in the</p>
+<p>&quot;Still open&quot; block below is answered.</p>
+
+<p><b>Ground finding that reframed the ticket:</b> the interim coverage this ticket leaned on <b>is dead</b>.</p>
+<p><code>desk_invariants.py</code> (v1, hourly launchd on the Mac) has <b>122 tracebacks</b>, latest 2026-08-01 10:25,</p>
+<p>all <code>HTTP 400</code> on a Notion <code>Status does_not_equal Resolved</code> query against the Customer Care data</p>
+<p>source — almost certainly a renamed/retyped property. The plist still points at <b>v1</b>;</p>
+<p><code>desk_invariants_v2.py</code> was never swapped in (untouched since Jul 22). So no invariants checker has</p>
+<p>been running at all, and nobody noticed — <i>the same failure as the Vicky lockout, one level up.</i></p>
+<p>Graduated as <b>043</b>.</p>
+
+<h3>Rulings</h3>
+
+<ol>
+<li>1. <b>Cloud, not the Mac</b> (Junyan: *&quot;I want to move it to the cloud — everything needs to be in the</li>
+</ol>
+<p>cloud&quot;*). The Jul 25 ruling (&quot;the re-check lives in <code>desk_invariants_v2</code>&quot;) stands on <i>substance</i></p>
+<p>— deterministic checker, not an LLM pass — but its <b>venue is overruled</b>: a Mac-bound launchd</p>
+<p>script is not an acceptable home for a renter-facing deadline check, and v1 just proved why.</p>
+<ol>
+<li>2. <b>Home = the existing <code>event-gate</code> Cloud Run service.</b> Already deployed and healthy, already</li>
+</ol>
+<p>ticks every minute on Cloud Scheduler, already reaches the live panel via <code>alarm-mcp</code></p>
+<p>(<code>https://alarm-mcp-cfnon4wh3q-uc.a.run.app</code>), and already carries the only push path at the desk</p>
+<p>that has been <b>proven to page a human</b> (<code>escalation.py</code>, ticket 036, live in ~4 min).</p>
+<p><b>GitHub Actions ruled OUT</b> for this job specifically: the map&#x27;s own scheduler-reliability fog</p>
+<p>records Actions cron silently dropping runs (watchlist 3×/12h). A dropped poll is recoverable;</p>
+<p>a dropped <i>deadline</i> check is worse than no check, because it reads as coverage.</p>
+<ol>
+<li>3. <b>The invariant:</b> <i>no booking may start while an <code>Access / PIN</code> flag against it is open.</i></li>
+</ol>
+<p>Re-verify against the <b>live panel</b>, never the row status. A passing panel check <b>auto-closes</p>
+<p>the flag silently</b> — no human is touched when the system fixes itself.</p>
+<ol>
+<li>4. <b>The ladder</b> (Junyan&#x27;s shape — starts the day with a human holding it, then escalates *up the</li>
+</ol>
+<p>chain*, rather than staying quiet then bursting):</p>
+
+<p>| Rung | When | Action |</p>
+<p>|---|---|---|</p>
+<p>| 1 | <b>Morning of the booking</b> | <b>The Doorman</b> tells the morning ops person (Ela) at its existing ~06:00 look — it is already awake, already reads the panel, already raises the row |</p>
+<p>| 2 | <i>(re-check loop)</i> | <code>event-gate</code> re-verifies open access flags against the live panel every 30 min; silent while it holds |</p>
+<p>| 3 | <b>2h before start, still broken</b> | <b>Direct message to Junyan</b> — a real page, not a queue row |</p>
+<p>| 4 | <b>45 min before start, still broken</b> | <b>Send the Alarm.com <code>Emergency Code</code> user to the renter</b> + file the mandatory reset row |</p>
+
+<ol>
+<li>5. <b>Doorman split — half yes.</b> Junyan asked whether this is the Doorman&#x27;s job. Rung 1 <b>yes</b>;</li>
+</ol>
+<p>rungs 2–4 <b>no</b>. The Doorman fires 04:00 + ~06:00 and is then asleep — it did its job perfectly</p>
+<p>at 06:02 on Jul 24 and the next 13.5 hours had no owner. Waking an LLM pass all day to watch a</p>
+<p>clock is expensive work that plain code already does for free on the gate&#x27;s 1-min tick.</p>
+<p><b>Doorman spots and tells Ela; <code>event-gate</code> does the nagging.</b></p>
+<ol>
+<li>6. <b>Rung 4 — the emergency code, with the risk named.</b> The safer design (auto-create a time-boxed</li>
+</ol>
+<p>per-renter Alarm.com user, as Junyan did by hand on Jul 24: window 19:36 Jul 24 → Aug 24) is</p>
+<p><b>not available</b>: <code>alarm-mcp</code> is read-only <i>by deliberate design</i> (<code>adc_client.py</code>: *&quot;exposes NO</p>
+<p>arm / disarm / lock / unlock calls&quot;*), with no user-creation path. Given read-only, the standing</p>
+<p>code is the only tool that gets a renter through a door unattended.</p>
+<p><b>What is being sent is a master key</b>, and the build must treat it as one — the Alarm.com</p>
+<p><code>Emergency Code</code> user is <code>Locations: All</code> / <code>Access Period: At All Times</code> /</p>
+<p><code>Access Type: Existing + Future</code>: every studio, no expiry, including studios not yet added.</p>
+<p>Junyan accepted this with the rotation guardrail (next ruling).</p>
+<p><b>The code digits are deliberately not recorded here or anywhere in git</b> — reference the</p>
+<p>Alarm.com user by name only.</p>
+<ol>
+<li>7. <b>Mandatory rotation guardrail</b> (Junyan): the moment the code is sent, the system <b>files a row</li>
+</ol>
+<p>in ✅ Actions to Perform</b> that the emergency code must be reset — naming recipient, time, studio,</p>
+<p>and booking. Plus a loud notice to Junyan and Ela and a J28 ledger entry: a master key leaving the</p>
+<p>building is never quiet. Residual risk accepted and banked: <b>if rotation is not actually done,</p>
+<p>the guardrail decays into exactly the ignored-queue-row disease this ticket exists to cure</b> —</p>
+<p>the reset row must be treated as urgent-until-confirmed, and its rot is the first thing to audit.</p>
+<ol>
+<li>8. <b>All four rungs build together</b> (Junyan, 2026-08-03) — not 1–3 first. Sequenced 1→4 inside one</li>
+</ol>
+<p>build ticket so the ladder cannot ship permanently three-quarters done.</p>
+
+<h3>Acceptance test (unchanged — replay Jul 24)</h3>
+
+<p>Flag raised 06:02, booking 19:30. Under this design: Ela is told at ~06:02; the gate re-verifies</p>
+<p>every 30 min all day; <b>Junyan is paged at 17:30 with two hours of runway</b>; at 18:45, if still</p>
+<p>broken, Vicky receives the emergency code and a reset row is filed. The 13.5-hour silence is gone.</p>
+
+<h3>What this ticket did NOT settle</h3>
+
+<p>The <b>other</b> bookend check families in the Question below — existence invariants, reconciliation</p>
+<p>invariants, completeness sweeps — were not designed here. They need the cloud checker to exist</p>
+<p>first. Graduated as <b>044</b>, blocked by 043.</p>
+
+
+<h2>Motivating failure — the Vicky Yeung lockout, 2026-07-24 (READ THIS FIRST)</h2>
+
+<p>A renter <b>was actually locked out of 509A</b> at 19:30 on Jul 24. This is the concrete cost of</p>
+<p>the missing verification layer, and the acceptance test for whatever this ticket builds.</p>
+
+<p><b>The timeline:</b></p>
+<ol>
+<li>1. <b>Jul 23, 06:02</b> — the Doorman&#x27;s live check returned <code>manual_no_match</code> for Vicky Yeung (no</li>
+</ol>
+<p>Alarm.com user at all). It <b>suppressed the alert</b>, reasoning that a prior Access/PIN row</p>
+<p>(&quot;Extend Vicky&#x27;s window to cover Jul 24 + Jul 26&quot;) was already marked <code>Processed</code>. <b>A full</p>
+<p>day of lead time was lost to a Notion row status that did not reflect the panel.</b></p>
+<ol>
+<li>2. <b>Jul 24, 06:02</b> — the Doorman got the same <code>manual_no_match</code>, and this time correctly raised</li>
+</ol>
+<p>an Action row at <code>Pending Review</code>, explicitly noting the earlier fix had not landed on the panel.</p>
+<ol>
+<li>3. <b>06:02 → 19:30 (13.5 hours)</b> — the row sat in the queue. <b>Nothing re-checked it, nothing</li>
+</ol>
+<p>escalated as the booking approached, nobody actioned it.</b></p>
+<ol>
+<li>4. <b>19:30</b> — Vicky arrived and could not get in. Confirmed by Junyan.</li>
+<li>5. <b>19:36</b> — an Alarm.com user was created by hand (window 19:36 Jul 24 → Aug 24). She got in</li>
+</ol>
+<p>~6 min late. Jul 26 repeat booking now verifies <code>pass</code>.</p>
+
+<p><b>Two distinct defects, only one of which is fixed:</b></p>
+<ul>
+<li>- <b>(A) FIXED 2026-07-24 in the Doorman prompt</b> — a PRIME DIRECTIVE (&quot;the live panel is the only</li>
+</ul>
+<p>truth; a <code>Processed</code>/<code>Done</code> row NEVER suppresses an alert; dedup only against <i>open</i> rows&quot;),</p>
+<p>urgent <code>TODAY &lt;HH:MM&gt; —</code> titling for same-day gaps, <code>Raised by = The Doorman</code> (was the retired</p>
+<p>Opener), and a <b>second independent access look at 04:00</b> (step A5) so a broken gate surfaces</p>
+<p>~2h earlier with the whole day to fix it.</p>
+<ul>
+<li>- <b>(B) STILL OPEN — this ticket.</b> *An urgent, correctly-raised flag with a hard deadline sat in a</li>
+</ul>
+<p>queue for 13.5 hours and nothing noticed.* Detection was never the problem on Jul 24 — the desk</p>
+<p><b>knew</b> at 06:02. What is missing is the closing half: <b>nothing verifies that a flagged gate</p>
+<p>got fixed before the renter arrives.</b> More detection cannot fix this; only an escalating,</p>
+<p>deadline-aware check can.</p>
+
+<p><b>The invariant this ticket must produce (acceptance test — replay Jul 24 against it):</b></p>
+<blockquote>No booking may start while an <code>Access / PIN</code> flag against it is still open. Re-verify against the</blockquote>
+<blockquote><b>live panel</b> (not the row status) on a schedule as the booking approaches; escalate louder as</blockquote>
+<blockquote>the clock runs down; and if it is still unresolved close to the start time, put it somewhere a</blockquote>
+<blockquote>human is guaranteed to see <i>that hour</i> — not in a queue that is read once a morning.</blockquote>
+
+<p>Open questions for Junyan: which surface escalates (Concierge 2-hourly pass / desk_invariants_v2 /</p>
+<p>the Day Sheet&#x27;s Actions tab), at what thresholds, and <b>who gets pinged when it is 2h out and still</p>
+<p>broken</b> — Ops Lead (Ela) by default, but Brazil means it cannot rely on Junyan noticing.</p>
+
+<h2>Rehoming: DONE 2026-07-25 (the orphaned-jobs half of this ticket)</h2>
+
+<p>Junyan&#x27;s diagnosis, confirmed: <b>this was an incomplete retirement handoff, not a bug.</b> Ticket 007</p>
+<p>retired the Opener and Closer without giving their jobs an active owner, and the Custodian was only</p>
+<p>told to detect problems <i>after</i> they appear. Every orphan is now re-homed to a robot that already</p>
+<p>reads the same data — no new scheduled agents:</p>
+
+<p>| Orphaned job | New owner | Where |</p>
+<p>|---|---|---|</p>
+<p>| Unpaid-charge scan (Opener Step 8) | <b>Concierge JOB 32</b>, HEAVY-AM | <code>library/concierge-orchestration.md</code> (git canon) |</p>
+<p>| End-of-day booking review + <b>PBF reconciliation</b> + incident sweep (Closer E2/E3) | <b>Concierge JOB 33</b>, HEAVY-PM | same file |</p>
+<p>| Yesterday&#x27;s working-hours reconcile (Opener 7B) | <b>The Timekeeper</b> | trigger prompt |</p>
+<p>| Next-day staff shift messages (Closer E4) | <b>The Planner</b>, Step T5 | trigger prompt |</p>
+
+<p>Two cross-cutting rules went in with them:</p>
+<ul>
+<li>- <b>Every re-homed job must report its own result each pass — including zero — and file a</li>
+</ul>
+<p><code>Type = Run Error</code> row if it cannot run.</b> *A job whose failure looks identical to a quiet success</p>
+<p>is exactly how this went unnoticed for two days.*</p>
+<ul>
+<li>- <b>JOB 32 never derives a price</b> (Junyan&#x27;s 2026-07-23 pricing rule supersedes the Opener&#x27;s old</li>
+</ul>
+<p>arithmetic): <code>Amount</code> stays blank, <code>Basis</code> records only observable facts. A derived number becomes</p>
+<p>a wrong charge to a real renter.</p>
+
+<p><b><code>Raised by</code> fallback fixed too</b> — the Actions DB had no option for the robots actually writing</p>
+<p>rows, so their true source only survived in free-text Notes. Added: <b>The Doorman, The Sentinel,</p>
+<p>Desk Invariants</b> (needed before <code>desk_invariants_v2</code>&#x27;s auto-escalation can attribute itself) and</p>
+<p><b>Gap audit</b>. <code>Other</code> is no longer a legitimate destination for a known writer.</p>
+
+<p>Damage found and repaired on the way: <b>2 unbilled <code>[Unpaid]</code> bookings on Jul 25</b> (Sara D&#x27;Amato</p>
+<p>509A 14:00–16:00 ≈$42.94; David Garzon 509A 17:00–18:30 ≈$40.68) had no charge row — both now filed</p>
+<p>at Pending Review, <code>Raised by = Gap audit</code>, <code>Amount</code> blank pending a Skedda check. Jul 24 verified</p>
+<p>clean. <b>PBF has been unowned since Jul 22</b> — the backlog needs a one-off catch-up sweep.</p>
+
+<h2>Still open — the escalation half (Junyan&#x27;s rulings, 2026-07-25)</h2>
+
+<ul>
+<li>- <b>The re-check lives in the checker program</b> (<code>desk_invariants_v2</code>), not an LLM pass — Junyan&#x27;s</li>
+</ul>
+<p>choice. Invariant: <i>no booking may start while an <code>Access / PIN</code> flag against it is open.</i></p>
+<p>Re-verify against the <b>live panel</b>, not the row status, and escalate louder as the clock runs down.</p>
+<ul>
+<li>- **Escalation reaches BOTH Junyan and Ela, by SMS <i>and</i> Slack.<b> Not a queue entry — a push.</li>
+<li>- </b>A verifier tool is needed<b> — something that re-runs a gate&#x27;s check and returns pass/fail on</li>
+</ul>
+<p>demand, so &quot;is this actually fixed?&quot; is one call rather than a human opening Alarm.com.</p>
+<ul>
+<li>- </b>⚠️ An emergency access code is needed for when neither Junyan nor Ela is reachable.<b> This is the</li>
+</ul>
+<p>Brazil-shaped hole: today a lockout at 19:30 depends on a human answering. </b>Design this with</p>
+<p>Junyan before building<b> — a standing fallback code is a real security decision (who may receive</p>
+<p>it, how it rotates, how its use is logged and reviewed), not a config change.</p>
+
+<p>Blocked on: the <code>desk_invariants_v2</code> swap is gated on Junyan&#x27;s explicit go (Phase 0 of the</p>
+<p><b>level-up plan</b>); the SMS/Slack push path exists (message queue +</p>
+<p>Slack) but has never carried an operational alert.</p>
+
+<h2>Question</h2>
+
+<p></b>Re-scoped 2026-07-23 (Junyan, post-007):** the bookends&#x27; real purpose was</p>
+<p><i>verification</i> — the Opener&#x27;s night-watch item count was it checking the overnight</p>
+<p>fleet&#x27;s work, not doing new work. Retiring the runs (007, Ruling 2) was right, but the</p>
+<p>verification layer they carried needs a named, durable home. Per the</p>
+<p><b>level-up plan</b> doctrine, the bottleneck is <b>trusted</p>
+<p>verification</b> — so the home should be deterministic invariants + monitor-by-exception</p>
+<p>(desk_invariants_v2&#x27;s structured defects → 3-strike escalation to Actions rows), NOT a</p>
+<p>resurrected LLM pass that re-reads everything.</p>
+
+<p>Design with Junyan, check by check from the Opener&#x27;s old Steps 3/4/6/6B/6C/7/7B/8:</p>
+
+<ul>
+<li>- <b>Existence invariants</b> (IPR / Overtime / FBS itinerary / watchlist freshness /</li>
+</ul>
+<p>Day Sheet freshness): pure date-filtered queries → v2 invariants. The Sentinel covers</p>
+<p><i>run</i> heartbeats; these cover <i>artifact</i> existence — decide if they&#x27;re one roster or two.</p>
+<ul>
+<li>- <b>Reconciliation invariants</b> (FBS board ↔ message queue ↔ calendars; duplicate/orphan</li>
+</ul>
+<p>board rows; yesterday&#x27;s hours vs Staff Scheduling): deterministic diffs → v2, with the</p>
+<p>Custodian&#x27;s 09:35 pass as the human-facing reviewer of whatever v2 flags.</p>
+<ul>
+<li>- <b>Completeness sweeps</b> (<code>[Unpaid]</code> → Money Request Queue incl. prior-day back-check;</li>
+</ul>
+<p>GTG no-show surfacing): mostly date math + plan rates — candidate for a small script on</p>
+<p>the deterministic lane, with only the discretionary residue routed to Actions rows.</p>
+<ul>
+<li>- <b>Escalation contract:</b> every failed check must land somewhere a human already looks</li>
+</ul>
+<p>(Actions <code>For = Ops Lead</code> / <code>For = Junyan</code> per the 027 split, or the Fixer Report) —</p>
+<p>&quot;check exists&quot; is not done until &quot;failure is seen&quot; is wired.</p>
+<ul>
+<li>- <b>No fire-repair authority</b> (Ruling 2 stands): invariants detect and escalate; the Ops</li>
+</ul>
+<p>lead investigates. Nothing auto-refires generators.</p>
+
+<p>Interim coverage until this lands: Custodian 02:35 + 09:35 passes, Sentinel missing-run</p>
+<p>detection, desk_invariants v1 hourly. Watch the Fixer Report for rot — unpaid-charge</p>
+<p>misses are the most likely first symptom and raise this ticket&#x27;s urgency.</p>
+
+<p>Coordinate with Phase 0 of the level-up plan (v2 swap is gated on Junyan&#x27;s explicit go)</p>
+<p>— these checks should land as v2 invariants, not a parallel checker.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#036</span><span class="emoji">🏠</span><span class="done-title">Find new homes for the old robot&#x27;s jobs before switching it off</span><span class="done-date">2026-08-01</span></summary><div class="done-body"><ul class="plain-bullets"><li>Switching it off once already broke things — it did more than anyone had written down</li><li>Listed all 13 of its jobs; 7 are already covered, 6 still need a home</li><li>BUILT Jul 28: the fast robot now writes one-off replies itself — a staff member reads and sends each one</li><li>So a reply is ready in seconds instead of hours, but a human always pushes the send button</li><li>Also built in guards so nobody ever gets a pile of robot texts: at most 2 automatic replies per person per half-day, and rapid-fire texts get ONE combined reply, not three</li><li>PROVED FOR REAL Jul 29: Junyan texted &quot;it&#x27;s too hot in here&quot; and the how-to came back in 90 seconds — no human, no waiting for the hourly robot</li><li>Same minute, &quot;can I add an hour tonight?&quot; had a written reply waiting for staff — and it was careful: it promised to check, not that the hour was free</li><li>Two hidden bugs only showed up once real texts came through, and both are fixed — one had been quietly making every fast reply fall back to the slow robot</li><li>BUILT Jul 31: someone now listens when a renter replies &#x27;still stuck&#x27; — an urgent text goes to on-call staff</li><li>A &#x27;thanks, all good&#x27; reply is recognized and closes things out quietly</li><li>At 901 after dark, a can&#x27;t-get-in text now calls staff to bring the key — no robot ever mentions key codes</li><li>Junyan also ruled: only ONE robot writes replies now — the fast one stops composing, ending the two-robots-one-job mixup</li><li>LIVE Aug 1: all of it is deployed and running (the deploy error was just the wrong Google account signed in)</li><li>PROVED FOR REAL Aug 1: texted &#x27;what&#x27;s my code&#x27; — got the code back; replied &#x27;still not working&#x27; — an urgent alert reached staff in about a minute</li><li>That&#x27;s the exact hole that forced us to switch the old robot back on in July</li><li>The &#x27;thanks, all good&#x27; reply stayed quiet too — no false alarm</li><li>RETIRED Aug 1: the old robot is switched OFF for good. The front desk is two robots now, not three</li><li>It had sent nothing at all for ten days — the new setup had already taken over the work</li><li>Big lesson written down: never switch a robot off based on what its instructions SAY it does — check what it actually did</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rehome the Receptionist&#x27;s jobs, then retire it</b></p><h2>Question</h2>
 
 <p>Ruled by Junyan 2026-07-25: <b>&quot;We can retire it but we need to find a new place for its</p>
 <p>jobs.&quot;</b> The 2026-07-24 retirement was reversed the next day because the event-gate</p>
@@ -3944,5 +4207,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-01 17:34 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-03 20:17 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
