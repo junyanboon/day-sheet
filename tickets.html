@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-03 20:17 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-04 06:57 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">7</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">6</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">28</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">8</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">5</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">29</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -545,7 +545,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">7</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">8</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1247,69 +1247,89 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>If the reset rows are filed and then ignored, the guardrail becomes the very ignored-queue-row</p>
 <p>disease this ticket cures — one level up. First post-launch audit: are reset rows being cleared?</p>
-</div></details></details></div><div class="job"><div class="jnum">#043</div><div class="jhead"><span class="emoji">🔌</span><h4>The safety checker was dead — nobody noticed</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A small program is meant to check hourly for things going wrong at the desk</li><li>It has been crashing every single time — 122 crashes, the last one Aug 1</li><li>It always fails the same way: it asks Notion a question Notion no longer understands</li><li>A newer, better version was written back in July and never switched on</li><li>So the desk has had no safety checker at all, and nothing told anyone</li><li>Fix it, then move it to the cloud so a closed laptop can&#x27;t switch it off</li><li>This is the same illness as the lockout — the thing watching for silence went silent</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The invariants checker is dead and Mac-bound — repair it and move it to the cloud</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#044</div><div class="jhead"><span class="emoji">🧾</span><h4>Give the last retired-robot checks a new home</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Two robots were retired. Most of their jobs were re-homed. Some checks were not</li><li>The leftovers: does today&#x27;s paperwork exist, do the lists match, did anyone go unbilled</li><li>Each one needs a named owner — a check with no owner is how the lockout happened</li><li>Waiting on the safety checker being fixed and moved to the cloud first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rehome the bookends&#x27; remaining checks — existence, reconciliation, completeness</b></p><h2>Question</h2>
 
-<p>Surfaced while grilling <b>035</b> on 2026-08-03. <b>Urgent</b> — this is a</p>
-<p>live blind spot, not a planned improvement.</p>
+<p>The residue of <b>035</b>. That ticket settled the <b>escalation</b> half —</p>
+<p>the deadline-aware access ladder, now <b>042</b>. It deliberately did</p>
+<p><b>not</b> settle the rest of the Opener&#x27;s and Closer&#x27;s verification layer. This ticket owns that.</p>
 
-<h3>What is broken</h3>
+<p><b>Unblocked 2026-08-04:</b> <b>043</b> closed — the checker</p>
+<p>runs in the cloud inside <code>event-gate</code> (<code>POST /invariants/&lt;token&gt;</code>, Cloud Scheduler <code>desk-invariants</code></p>
+<p>at :25), survives a closed laptop, escalates a defect seen 3 runs in a row to an ✅ Actions row, and</p>
+<p>files a <code>Run Error</code> row if it cannot run. New invariants designed here land as checks in</p>
+<p><code>dc-canon/services/event-gate/invariants.py</code> and inherit all of that for free.</p>
+
+<p>Design with Junyan, check by check, from the Opener&#x27;s old Steps 3/4/6/6B/6C/7/7B/8:</p>
 
 <ul>
-<li>- <code>desk_invariants.py</code> (v1, hourly launchd <code>ca.danceannex.desk-invariants.plist</code> on Junyan&#x27;s Mac)</li>
+<li>- <b>Existence invariants</b> (IPR / Overtime / FBS itinerary / watchlist freshness / Day Sheet</li>
 </ul>
-<p>is <b>crashing every run</b>. <code>desk_invariants.log</code> holds <b>122 tracebacks</b>, most recent</p>
-<p><b>2026-08-01 10:25</b>.</p>
+<p>freshness): pure date-filtered queries. The Sentinel covers <i>run</i> heartbeats; these cover</p>
+<p><i>artifact</i> existence — decide whether that is one roster or two.</p>
 <ul>
-<li>- Every one is the same: <code>HTTP 400</code> from Notion at <code>desk_invariants.py:101</code> —</li>
+<li>- <b>Reconciliation invariants</b> (FBS board ↔ message queue ↔ calendars; duplicate/orphan board</li>
 </ul>
-<p><code>query(DS_CC, {&quot;property&quot;: &quot;Status&quot;, &quot;status&quot;: {&quot;does_not_equal&quot;: &quot;Resolved&quot;}})</code> against the</p>
-<p>Customer Care data source. Almost certainly a renamed property, or <code>Status</code> retyped from</p>
-<p><code>status</code> to <code>select</code>. Confirm against the live schema before patching.</p>
+<p>rows; yesterday&#x27;s hours vs Staff Scheduling): deterministic diffs, with the Custodian&#x27;s 09:35</p>
+<p>pass as the human-facing reviewer of whatever gets flagged.</p>
 <ul>
-<li>- <b><code>desk_invariants_v2.py</code> was never swapped in.</b> The plist still points at v1; v2 has sat</li>
+<li>- <b>Completeness sweeps</b> (<code>[Unpaid]</code> → Money Request Queue including the prior-day back-check;</li>
 </ul>
-<p>untouched since Jul 22, its Phase 0 go-ahead never given.</p>
+<p>GTG no-show surfacing): mostly date math and plan rates — a small script on the deterministic</p>
+<p>lane, with only the discretionary residue routed to Actions rows. <b>JOB 32 never derives a</p>
+<p>price</b> (Junyan, 2026-07-23) still binds anything touching money.</p>
+<ul>
+<li>- <b>Escalation contract:</b> every failed check lands where a human already looks — Actions</li>
+</ul>
+<p><code>For = Ops Lead</code> / <code>For = Junyan</code> per the 027 split, or the Fixer Report. <i>&quot;Check exists&quot;</i> is not</p>
+<p>done until <i>&quot;failure is seen&quot;</i> is wired. 035 proved this is the part that gets skipped.</p>
+<ul>
+<li>- <b>No fire-repair authority</b> (Ruling 2 stands): invariants detect and escalate; the Ops lead</li>
+</ul>
+<p>investigates. Nothing auto-refires generators.</p>
 
-<p><b>So the desk has had no invariants checker running at all, for an unknown stretch, and nothing</p>
-<p>reported that.</b> This is the Vicky lockout&#x27;s exact pathology one level up: the thing that watches</p>
-<p>for silent failure was itself failing silently.</p>
+<p><b>Carry 035&#x27;s standing lesson in:</b> a retirement is not done until every step of the retired job</p>
+<p>names its new owner. Each check designed here closes with a named owner, or it does not ship.</p>
+
+<p><b>PBF backlog</b> — flagged unowned since Jul 22 in 035&#x27;s rehoming pass and never caught up. Confirm</p>
+<p>whether JOB 33 has actually been clearing it since, or whether the one-off catch-up sweep is still</p>
+<p>outstanding.</p>
+</div></details></details></div><div class="job"><div class="jnum">#045</div><div class="jhead"><span class="emoji">📤</span><h4>Sixteen approved messages never went out</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The message sender is not sending — 16 messages approved and then stuck</li><li>The oldest has been waiting about 10 days; most piled up in one hour on Aug 3</li><li>Found the moment the safety checker came back to life, which is the point of it</li><li>First job: read the 16 and decide which are still safe to send this late</li><li>Then find why the sender stopped, and make it report its own failures like the checker now does</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The send engine is not draining the queue — 16 messages stuck at Ready to Send</b></p><h2>Question</h2>
+
+<p>Surfaced by the repaired invariants checker on its first live cloud run, 2026-08-04 (see</p>
+<p><b>043</b>). <b>Urgent</b> — these are real customer</p>
+<p>messages that were approved to go out and did not.</p>
+
+<p><b>16 📤 Message Queue rows sit at <code>Ready to Send</code>.</b> Invariant G fires at 10 minutes because</p>
+<p>dispatch is a matter of seconds. The oldest has been waiting <b>~10 days</b> (<code>Amandeep Singh</p>
+<p>Bharaj — Aug 6 payment check-in</code>, ~14,385 minutes at detection); an <code>EOB</code> row has been waiting</p>
+<p>~17 hours. Between 22:35 and 23:47 on 2026-08-03 the count went from 2 to 16, so this is</p>
+<p>actively getting worse, not a historical residue.</p>
+
+<p>The send engine (<b>029</b>, Apps Script poller dispatching</p>
+<p>Phone.com SMS + Gmail) is LIVE by the last ruling — so either its time trigger has stopped</p>
+<p>firing, its Notion query no longer matches these rows, or it is erroring per-row and swallowing</p>
+<p>it. Note the shape of the suspicion: <b>the same Apps-Script-trigger fragility the map&#x27;s scheduler</p>
+<p>fog is about</b>, and the same &quot;fails quietly&quot; class as 043.</p>
 
 <h3>What this ticket must do</h3>
 
 <ol>
-<li>1. <b>Establish the blackout window.</b> When did v1 last complete a clean run? What did the 🩺 Desk</li>
+<li>1. <b>Drain the backlog first</b> — read the 16 rows, decide row by row what is still safe and</li>
 </ol>
-<p>Invariants page show during the gap, and did anything read it and believe it? A stale page that</p>
-<p>still renders &quot;healthy&quot; is worse than a blank one.</p>
+<p>wanted to send 10 days late (some certainly are not; <code>Will Not Send</code> exists for that). A</p>
+<p>payment check-in for a date that has passed must not go out unread.</p>
 <ol>
-<li>2. <b>Fix the query.</b> Diff the checker&#x27;s assumed Customer Care schema against the live one.</li>
-<li>3. <b>Move it to the cloud.</b> Junyan&#x27;s ruling in 035: <i>&quot;everything needs to be in the cloud.&quot;</i></li>
+<li>2. <b>Find why dispatch stopped.</b> Apps Script execution log first: is the trigger firing at all?</li>
+<li>3. <b>Give the send engine the same self-health contract 043 just gave the checker</b> — a poller</li>
 </ol>
-<p>A Mac-bound launchd checker is not an acceptable home — laptop lid, sleep</p>
-<p>(<b>local-tasks-miss-runs-on-sleep</b>), and no visibility while he is away. Decide the venue:</p>
-<p>folding into <code>event-gate</code> (as <b>042</b> does) versus its own</p>
-<p>Cloud Run job. <b>GitHub Actions is disqualified</b> for anything deadline-shaped (cron drops runs).</p>
+<p>that cannot run, or that runs and dispatches nothing while rows wait, must file its own</p>
+<p><code>Run Error</code> row. &quot;Ready to Send&quot; ageing past minutes is already detectable; it should not have</p>
+<p>taken a five-day-dead invariants checker coming back to life to surface it.</p>
 <ol>
-<li>4. <b>Settle the v1 → v2 question in the same move.</b> v2 adds structured defects with stable keys,</li>
+<li>4. <b>Do not re-flip rows by hand</b> without recording why — invariant G&#x27;s own advice.</li>
 </ol>
-<p>persistence state, 3-consecutive-run auto-escalation to an Actions row</p>
-<p>(<code>Raised by = Desk Invariants</code> — the picklist option added by 035&#x27;s rehoming pass), trend</p>
-<p>history, and invariant I (verified-send vs the J28 ledger). Migrating a broken v1 to the cloud</p>
-<p>unchanged would be wasted work. Junyan&#x27;s explicit go is still required for the swap.</p>
-<ol>
-<li>5. <b>The checker must report its own health.</b> It has to be impossible for this to happen again</li>
-</ol>
-<p>unnoticed: a run that cannot complete files a <code>Type = Run Error</code> row, and a checker that has not</p>
-<p>reported inside its cadence is itself a Sentinel-visible missing run.</p>
-
-<h3>Why it is urgent</h3>
-
-<p><b>044</b> parks the bookends&#x27; existence, reconciliation, and</p>
-<p>completeness checks here — that ticket cannot start until this checker is alive and hosted</p>
-<p>somewhere trustworthy. And every day it stays dead, the desk is running with its smoke detector</p>
-<p>unplugged.</p>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">6</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">5</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
 <p>Build the crude-but-real J26 cost ledger on the Jobs registry spine: per job, runs × pass length (proxy for token spend) plus a self-reported supervision-minutes line, tallied weekly. Framing: <b>subscription headroom + exposure if the subsidy changes</b>, not cash bleed (~$240/mo Claude + $140/mo ChatGPT actual). It also populates the sibling map&#x27;s GO criterion (c). Decide the tally mechanism (likely a weekly scheduled job writing registry rows) and stand it up.</p>
 </div></details></details></div><div class="job"><div class="jnum">#015</div><div class="jhead"><span class="emoji">✂️</span><h4>Stop keeping two copies of messages</h4></div><span class="pill p-wait">needs 006 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Today messages get saved in two places</li><li>Switch fully to our own record</li><li>Freeze the old copy</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cut correspondence canon over from the Notion Correspondence Log to J28</b></p><h2>Question</h2>
@@ -1529,49 +1549,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Resolution records: the send-engine hook line (Junyan pastes it — production Apps</p>
 <p>Script), the intent-declaration convention + which skills write it, the reconciler</p>
 <p>(where it runs, match rules), and the first unmatched-send-or-clean-week readout.</p>
-</div></details></details></div><div class="job"><div class="jnum">#044</div><div class="jhead"><span class="emoji">🧾</span><h4>Give the last retired-robot checks a new home</h4></div><span class="pill p-wait">needs 043 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Two robots were retired. Most of their jobs were re-homed. Some checks were not</li><li>The leftovers: does today&#x27;s paperwork exist, do the lists match, did anyone go unbilled</li><li>Each one needs a named owner — a check with no owner is how the lockout happened</li><li>Waiting on the safety checker being fixed and moved to the cloud first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rehome the bookends&#x27; remaining checks — existence, reconciliation, completeness</b></p><h2>Question</h2>
-
-<p>The residue of <b>035</b>. That ticket settled the <b>escalation</b> half —</p>
-<p>the deadline-aware access ladder, now <b>042</b>. It deliberately did</p>
-<p><b>not</b> settle the rest of the Opener&#x27;s and Closer&#x27;s verification layer. This ticket owns that.</p>
-
-<p>Blocked by <b>043</b>: there is no point designing new</p>
-<p>invariants until a checker exists, runs, and is hosted somewhere that survives a closed laptop.</p>
-
-<p>Design with Junyan, check by check, from the Opener&#x27;s old Steps 3/4/6/6B/6C/7/7B/8:</p>
-
-<ul>
-<li>- <b>Existence invariants</b> (IPR / Overtime / FBS itinerary / watchlist freshness / Day Sheet</li>
-</ul>
-<p>freshness): pure date-filtered queries. The Sentinel covers <i>run</i> heartbeats; these cover</p>
-<p><i>artifact</i> existence — decide whether that is one roster or two.</p>
-<ul>
-<li>- <b>Reconciliation invariants</b> (FBS board ↔ message queue ↔ calendars; duplicate/orphan board</li>
-</ul>
-<p>rows; yesterday&#x27;s hours vs Staff Scheduling): deterministic diffs, with the Custodian&#x27;s 09:35</p>
-<p>pass as the human-facing reviewer of whatever gets flagged.</p>
-<ul>
-<li>- <b>Completeness sweeps</b> (<code>[Unpaid]</code> → Money Request Queue including the prior-day back-check;</li>
-</ul>
-<p>GTG no-show surfacing): mostly date math and plan rates — a small script on the deterministic</p>
-<p>lane, with only the discretionary residue routed to Actions rows. <b>JOB 32 never derives a</p>
-<p>price</b> (Junyan, 2026-07-23) still binds anything touching money.</p>
-<ul>
-<li>- <b>Escalation contract:</b> every failed check lands where a human already looks — Actions</li>
-</ul>
-<p><code>For = Ops Lead</code> / <code>For = Junyan</code> per the 027 split, or the Fixer Report. <i>&quot;Check exists&quot;</i> is not</p>
-<p>done until <i>&quot;failure is seen&quot;</i> is wired. 035 proved this is the part that gets skipped.</p>
-<ul>
-<li>- <b>No fire-repair authority</b> (Ruling 2 stands): invariants detect and escalate; the Ops lead</li>
-</ul>
-<p>investigates. Nothing auto-refires generators.</p>
-
-<p><b>Carry 035&#x27;s standing lesson in:</b> a retirement is not done until every step of the retired job</p>
-<p>names its new owner. Each check designed here closes with a named owner, or it does not ship.</p>
-
-<p><b>PBF backlog</b> — flagged unowned since Jul 22 in 035&#x27;s rehoming pass and never caught up. Confirm</p>
-<p>whether JOB 33 has actually been clearing it since, or whether the one-off catch-up sweep is still</p>
-<p>outstanding.</p>
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
@@ -4203,9 +4180,149 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Risk accepted and banked:</b> the Aug 31 HST instalment ($3,813.44) now has NO cloud</p>
 <p>watcher - the Aug 10 run happens only if Junyan kicks it manually mid-Brazil, or tracks</p>
 <p>the date personally.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#043</span><span class="emoji">🔌</span><span class="done-title">The safety checker is alive again, and in the cloud</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>The hourly checker had been dead since Jul 29 — 84 crashes in a row, and nothing said so</li><li>The cause: a Notion field it asks about every run was deleted, so every run failed</li><li>Worse, its report page kept showing the last good day, so it still looked healthy</li><li>Fixed, and moved off Junyan&#x27;s laptop into the cloud — a closed lid can&#x27;t stop it now</li><li>The better July version is the one that went up: it now chases a problem that won&#x27;t go away</li><li>A problem seen three times in a row becomes a row on the Ops Lead&#x27;s list, five per run at most</li><li>And if the checker itself ever fails, it files its own error row — that&#x27;s the whole lesson</li><li>It found 27 things on its first day back, including 16 messages stuck unsent</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The invariants checker is dead and Mac-bound — repair it and move it to the cloud</b></p><h2>Question</h2>
+
+<p>Surfaced while grilling <b>035</b> on 2026-08-03. <b>Urgent</b> — this is a</p>
+<p>live blind spot, not a planned improvement.</p>
+
+<h3>What is broken</h3>
+
+<ul>
+<li>- <code>desk_invariants.py</code> (v1, hourly launchd <code>ca.danceannex.desk-invariants.plist</code> on Junyan&#x27;s Mac)</li>
+</ul>
+<p>is <b>crashing every run</b>. <code>desk_invariants.log</code> holds <b>122 tracebacks</b>, most recent</p>
+<p><b>2026-08-01 10:25</b>.</p>
+<ul>
+<li>- Every one is the same: <code>HTTP 400</code> from Notion at <code>desk_invariants.py:101</code> —</li>
+</ul>
+<p><code>query(DS_CC, {&quot;property&quot;: &quot;Status&quot;, &quot;status&quot;: {&quot;does_not_equal&quot;: &quot;Resolved&quot;}})</code> against the</p>
+<p>Customer Care data source. Almost certainly a renamed property, or <code>Status</code> retyped from</p>
+<p><code>status</code> to <code>select</code>. Confirm against the live schema before patching.</p>
+<ul>
+<li>- <b><code>desk_invariants_v2.py</code> was never swapped in.</b> The plist still points at v1; v2 has sat</li>
+</ul>
+<p>untouched since Jul 22, its Phase 0 go-ahead never given.</p>
+
+<p><b>So the desk has had no invariants checker running at all, for an unknown stretch, and nothing</p>
+<p>reported that.</b> This is the Vicky lockout&#x27;s exact pathology one level up: the thing that watches</p>
+<p>for silent failure was itself failing silently.</p>
+
+<h3>What this ticket must do</h3>
+
+<ol>
+<li>1. <b>Establish the blackout window.</b> When did v1 last complete a clean run? What did the 🩺 Desk</li>
+</ol>
+<p>Invariants page show during the gap, and did anything read it and believe it? A stale page that</p>
+<p>still renders &quot;healthy&quot; is worse than a blank one.</p>
+<ol>
+<li>2. <b>Fix the query.</b> Diff the checker&#x27;s assumed Customer Care schema against the live one.</li>
+<li>3. <b>Move it to the cloud.</b> Junyan&#x27;s ruling in 035: <i>&quot;everything needs to be in the cloud.&quot;</i></li>
+</ol>
+<p>A Mac-bound launchd checker is not an acceptable home — laptop lid, sleep</p>
+<p>(<b>local-tasks-miss-runs-on-sleep</b>), and no visibility while he is away. Decide the venue:</p>
+<p>folding into <code>event-gate</code> (as <b>042</b> does) versus its own</p>
+<p>Cloud Run job. <b>GitHub Actions is disqualified</b> for anything deadline-shaped (cron drops runs).</p>
+<ol>
+<li>4. <b>Settle the v1 → v2 question in the same move.</b> v2 adds structured defects with stable keys,</li>
+</ol>
+<p>persistence state, 3-consecutive-run auto-escalation to an Actions row</p>
+<p>(<code>Raised by = Desk Invariants</code> — the picklist option added by 035&#x27;s rehoming pass), trend</p>
+<p>history, and invariant I (verified-send vs the J28 ledger). Migrating a broken v1 to the cloud</p>
+<p>unchanged would be wasted work. Junyan&#x27;s explicit go is still required for the swap.</p>
+<ol>
+<li>5. <b>The checker must report its own health.</b> It has to be impossible for this to happen again</li>
+</ol>
+<p>unnoticed: a run that cannot complete files a <code>Type = Run Error</code> row, and a checker that has not</p>
+<p>reported inside its cadence is itself a Sentinel-visible missing run.</p>
+
+<h3>Why it is urgent</h3>
+
+<p><b>044</b> parks the bookends&#x27; existence, reconciliation, and</p>
+<p>completeness checks here — that ticket cannot start until this checker is alive and hosted</p>
+<p>somewhere trustworthy. And every day it stays dead, the desk is running with its smoke detector</p>
+<p>unplugged.</p>
+
+<p>---</p>
+
+<h2>Resolution — 2026-08-04</h2>
+
+<p><b>The checker is alive, hosted in the cloud, and now reports its own health.</b></p>
+
+<h3>1. The blackout window</h3>
+
+<p>Last clean run <b>2026-07-29 13:25 -03</b> (the 🩺 page&#x27;s own heading — it had been serving that</p>
+<p>five-day-old snapshot ever since, complete with 10 defects, reading exactly like a healthy run;</p>
+<p>nothing on the page said how old it was). <b>84 crashed runs</b> followed: 72 × <code>HTTP 400</code> from the</p>
+<p>CC query, and <b>12 × DNS failure</b> — the laptop asleep or offline, the Mac-bound half of the</p>
+<p>problem showing up in the evidence rather than the argument. Nothing else read the page during</p>
+<p>the gap that we can attribute, but nothing <i>could</i> have told the difference either — which is</p>
+<p>the finding that matters.</p>
+
+<h3>2. The query</h3>
+
+<p>Not a rename and not a retype: the Customer Care DB&#x27;s <b><code>Status</code> property has been deleted</p>
+<p>outright</b>. CC now carries <code>Position</code> alone, with the same option set as Sales</p>
+<p>(<code>Routing / In Progress / Gate:* / Review / Won / Lost / Done</code>). The query is now the Sales</p>
+<p>shape — open = Position not in Won/Lost/Done, <code>Review</code> deliberately still open, because</p>
+<p>finishers stop there. <b>Invariant F (<code>Status=Resolved</code> vs <code>Position</code>) is retired</b>: with no</p>
+<p><code>Status</code> property, Position cannot disagree with it.</p>
+
+<h3>3. The venue — folded into <code>event-gate</code> (Junyan&#x27;s ruling)</h3>
+
+<p>Same Cloud Run service as <b>042</b>&#x27;s ladder: one container, one</p>
+<p><code>NOTION_TOKEN</code>, one deploy, one health route to watch, rather than a second thing that can die</p>
+<p>quietly. <code>POST /invariants/&lt;GATE_PATH_TOKEN&gt;</code> (<code>?dry_run=true</code> to read without writing), fired by</p>
+<p>its own Cloud Scheduler job *<i><code>desk-invariants</code>, <code>25 8-22 </i> <i> </i></code> America/Toronto<b>. The route is</p>
+<p>read-and-report, so the SMS lane&#x27;s <code>GATE_DISABLED</code> does not gate it — <code>INVARIANTS_DISABLED=1</code> is</p>
+<p>its own kill switch. GitHub Actions stayed disqualified.</p>
+
+<h3>4. v1 → v2 — </b>v2 shipped<b> (Junyan&#x27;s go)</h3>
+
+<p><code>invariants.py</code> in <code>dc-canon/services/event-gate</code> is the v2 port: stable defect keys, run</p>
+<p>persistence, 3-consecutive-run escalation to an ✅ Actions row (<code>Raised by = Desk Invariants</code>,</p>
+<p><code>For = Ops Lead</code>), trend history, and invariant I. Three things changed in the move, each because</p>
+<p>the cloud is not a Mac:</p>
+
+<ul>
+<li>- </b>State lives on the 🩺 page**, as chunked JSON <code>code</code> blocks — Cloud Run instances are</li>
+</ul>
+<p>ephemeral, and a bucket would have meant another credential. *(Caught in flight: at 27 defects</p>
+<p>the state overran Notion&#x27;s 2000-char text cap and parsed back as a cold start — run counts</p>
+<p>reset every pass, escalation silently never fires. Exactly this ticket&#x27;s disease. Now chunked,</p>
+<p>with history dropped before defects if it ever overflows, and tested.)*</p>
+<ul>
+<li>- <b>Escalation is capped at 5 rows per run</b>, most-persistent first. A five-day backlog would</li>
+</ul>
+<p>otherwise have landed as 27 rows in one pass, which is how a list gets ignored.</p>
+<ul>
+<li>- <b>Invariant I is skipped, not alarmed,</b> where the J28 ledger is unreachable (<code>INV_LEDGER_URL</code></li>
+</ul>
+<p>unset today); the 🩺 page says so on every run. An unreachable ledger is a venue fact, not a</p>
+<p>desk defect. Wiring the ledger URL is the one piece left — see the fog note on the map.</p>
+
+<h3>5. Self-health</h3>
+
+<p>A run that cannot complete files one <code>Type = Run Error</code> row (<code>Raised by = Desk Invariants</code>,</p>
+<p><code>For = Ops Lead</code>), deduped against the open row — 84 broken runs file one row, not 84, but never</p>
+<p>zero. The next clean run marks that row <code>Processed</code>, so a stale alarm can&#x27;t linger either.</p>
+<p>Verified end-to-end against live Notion (filed, deduped, cleaned up). 168 tests green.</p>
+
+<h3>Cutover</h3>
+
+<p>launchd <code>ca.danceannex.desk-invariants</code> <b>unloaded</b>, plist renamed <code>.RETIRED-2026-08-04</code>, and</p>
+<p>both Mac scripts carry 🚦 RETIRED / DO-NOT-RE-ENABLE banners (kept as manual fallback only).</p>
+<p>Shipped in <code>desk-correspondence</code> commit <code>a5e11ae</code>; Cloud Run revision <code>event-gate-00017-nls</code>.</p>
+
+<h3>What it found on day one</h3>
+
+<p>27 defects on the first live cloud runs, 5 already escalated to the Ops Lead — including the</p>
+<p><b>Studio 693 alarm-trigger ticket sitting 48h+ untouched</b> and, most urgent, <b>16 message-queue</p>
+<p>rows stuck at <code>Ready to Send</code></b> (dispatch is seconds; one has been waiting ~10 days). The send</p>
+<p>engine is not draining the queue. That is a live desk problem this checker&#x27;s absence was hiding —</p>
+<p>flagged to Junyan, not fixed here.</p>
 </div></details></div></details>
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-03 20:17 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-04 06:57 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
