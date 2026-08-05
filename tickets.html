@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-05 09:54 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-05 12:09 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">7</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">8</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">8</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">31</div><div class="l">✅ Finished</div></div>
 </div>
@@ -545,7 +545,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">7</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">8</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1343,6 +1343,66 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>A &quot;Complete booking whose PBF never resolved within 24h&quot; check belongs in the completeness family —</p>
 <p>cheap, deterministic, and it would have caught this on Aug 1. Add it to 049 as <b>U</b> when that</p>
 <p>ticket is picked up.</p>
+</div></details></details></div><div class="job"><div class="jnum">#050</div><div class="jhead"><span class="emoji">🔍</span><h4>Find out why thank-you messages stopped going out</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Seven finished bookings have no thank-you message. Every one is from Jul 31 or later</li><li>Jul 31 is the day that job moved from one robot to another. That is not a coincidence</li><li>The desk already had a rule saying this means the sweep is broken. Nobody read the line</li><li>Find out which it is: the sweep never ran, ran and saw nothing, or raised a flag nobody read</li><li>Best guess to test first: the new owner only looks at TODAY&#x27;s bookings</li><li>But a booking usually finishes late in the day — so it may never be looked at again</li><li>Do not change any code until we know which one it is</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Responder&#x27;s PBF sweep is missing completed bookings — diagnose it</b></p><h2>Question</h2>
+
+<p>Surfaced 2026-08-05 by the live read on <b>046</b>. <b>Seven bookings</p>
+<p>sit <code>Booking Status = Complete</code> with <code>PBF = Unsent</code>, and every one of them dates from 2026-07-31 or</p>
+<p>later — the exact day PBF initial sends moved from Concierge JOB 33 to The Responder.</b> The</p>
+<p>pre-handoff backlog is clean (Jun 28 → Jul 30 all resolved), so this is not an old pile: it is a new</p>
+<p>leak that started at the handoff and has run continuously for five days.</p>
+
+<p>Why does this need diagnosis rather than a fix? Because <b>the desk already had a tripwire for it and</p>
+<p>the tripwire did not fire.</b> Two of them, in fact:</p>
+
+<ul>
+<li>- <code>library/job-1-adt-alarm.md</code> Step 5: a Complete + <code>PBF = Unsent</code> booking still Unsent *the</li>
+</ul>
+<p>following day* means <b>the Responder&#x27;s sweep is broken</b> — flag it.</p>
+<ul>
+<li>- <code>library/the-responder.md</code> pass step 7 + the 🧾 PASS LEDGER rule: the sweep must report</li>
+</ul>
+<p><code>PBF: 0 found · no-show: 0 found</code> every pass, precisely so a silent no-op is distinguishable from</p>
+<p>a sweep that never ran, with 3-consecutive → run-first and 5-consecutive → <code>Attributed defect</code>.</p>
+
+<p>Four of these rows are five days past the JOB 1 line. So either the sweep is not running, or it is</p>
+<p>running and reporting <code>0 found</code> while seven qualifying rows sit in plain sight, or it is filing the</p>
+<p>escalation and nobody reads it. <b>Establish which before changing any code</b> — the three have very</p>
+<p>different fixes, and 045&#x27;s lesson is that guessing at a mechanism produces a confident wrong answer.</p>
+
+<p>Read the Responder&#x27;s rolling reports for 2026-07-31 → 2026-08-05 and answer, in order:</p>
+
+<ol>
+<li>1. Did the Responder run its passes at all over that window? (Run Monitor + Workflow Reports.)</li>
+<li>2. Does step 7 appear in the pass ledger each pass, and what does it report — <code>ran</code>, <code>skipped</code>, or a</li>
+</ol>
+<p>count?</p>
+<ol>
+<li>3. If it reports a count, why do these seven rows not match its query? Candidate causes worth</li>
+</ol>
+<p>checking specifically: the <b>AI Monitor — Today view&#x27;s absolute-date filter</b> (HOUSE-RULES warns</p>
+<p>the relative &quot;today&quot; filter silently returns the wrong day past ~20:00 Toronto — and the sweep</p>
+<p>only looks at <i>today&#x27;s</i> rows, so a booking that flips to <code>Complete</code> after the last pass of its</p>
+<p>own day may never be seen again); the <b>cross-status dedup</b> skipping rows it shouldn&#x27;t; or</p>
+<p><code>Type of Booking</code> filtering.</p>
+<ol>
+<li>4. Did the 3-consecutive / 5-consecutive escalation ever fire? If it did, where did the row go and</li>
+</ol>
+<p>why did no one act on it — that is a second, separate defect from the sweep itself.</p>
+
+<p><b>Suspicion worth testing first, not assuming:</b> the sweep reads the <i>Today</i> view, but a PBF becomes</p>
+<p>due when a booking completes, which is often the last pass of the day or after it. A same-day-only</p>
+<p>window with a 30-min cadence has an obvious hole at the day boundary — and the leak starting exactly</p>
+<p>at the handoff is consistent with the old owner (JOB 1, hourly, with an every-sweep backstop</p>
+<p>explicitly written to catch bookings that completed in an <i>earlier</i> sweep) having covered that hole</p>
+<p>in a way the new owner does not.</p>
+
+<p><b>Not this ticket&#x27;s job:</b> the eight outstanding rows themselves. Junyan dispositions those directly</p>
+<p>— most are stale enough that <code>Will Not Send</code> is the correct call, since a &quot;how did it go&quot; five days</p>
+<p>late reads worse than silence (RESPONSE-RESOLVER step 2 forbids the tense mismatch anyway).</p>
+
+<p>Feeds <b>049</b>&#x27;s check <b>U</b>, which needs this ticket&#x27;s answer to pick</p>
+<p>its window: U must fire while sending is still the right answer, not merely observe that a row is</p>
+<p>unsent.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">8</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -1624,7 +1684,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>or the review seat drowns.</p>
 
 <p><b>No fire-repair authority</b> (Ruling 2) — detect and escalate; the Ops Lead investigates.</p>
-</div></details></details></div><div class="job"><div class="jnum">#049</div><div class="jhead"><span class="emoji">💸</span><h4>Build the checks for bookings that never got billed</h4></div><span class="pill p-wait">needs 046 first</span> <span class="pill p-wait">needs 047 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Two checks, waiting until the paperwork checks have proven themselves</li><li>First: did every unpaid booking get a bill raised — including yesterday&#x27;s, checked again</li><li>That is the gap that let two bookings go unbilled on Jul 25</li><li>Second: a booking marked good-to-go where nobody seems to have shown up</li><li>The robot never works out a price. It only checks that a bill exists</li><li>A third one to add: a finished booking whose thank-you message never went out within a day</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the completeness invariants (S, T) — unbilled bookings and no-shows</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#049</div><div class="jhead"><span class="emoji">💸</span><h4>Build the checks for bookings that never got billed</h4></div><span class="pill p-wait">needs 046 first</span> <span class="pill p-wait">needs 047 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Two checks, waiting until the paperwork checks have proven themselves</li><li>First: did every unpaid booking get a bill raised — including yesterday&#x27;s, checked again</li><li>That is the gap that let two bookings go unbilled on Jul 25</li><li>Second: a booking marked good-to-go where nobody seems to have shown up</li><li>The robot never works out a price. It only checks that a bill exists</li><li>A third one to add: a finished booking whose thank-you message never got settled within a day</li><li>Settled means either sent OR marked will-not-send — the robot only cares that someone decided</li><li>It has to catch it inside a day. A thank-you five days late reads worse than saying nothing</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the completeness invariants (S, T) — unbilled bookings and no-shows</b></p><h2>Question</h2>
 
 <p>Graduated from <b>044</b>; split out of the old combined</p>
 <p>existence+completeness ticket on 2026-08-05 when Junyan ruled <b>existence ships first, alone</b>.</p>
@@ -1651,7 +1711,22 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>filter <code>Type</code> ∈ {Charge, Refund, Credit, Platform charge request, Invoice}, or Access/PIN, Decision,</p>
 <p>Review and Run-Error rows come back as if they were charges.</p>
 
-<p>Both ship <code>Provisional</code> and graduate through <b>046</b>&#x27;s lane —</p>
+<p><b>U — a completed booking whose <code>PBF</code> never resolved.</b> Added 2026-08-05 from</p>
+<p><b>046</b>&#x27;s live read: seven bookings sat <code>Complete</code> + <code>PBF = Unsent</code></p>
+<p>for up to five days, unseen. <b>Design constraint from Junyan (2026-08-05): these were all stale by</p>
+<p>the time they surfaced, so U cannot simply assert &quot;this row is unsent.&quot;</b> A &quot;thanks for coming in,</p>
+<p>how did it go&quot; sent five days late reads worse than silence, and RESPONSE-RESOLVER step 2 forbids</p>
+<p>the tense mismatch outright — so by the time a day-five check fires, <i>there is no good outcome left</i>.</p>
+<p>U must therefore fire <b>inside the window where sending is still correct (~24h, matching JOB 1</p>
+<p>Step 5&#x27;s &quot;still Unsent the following day&quot; line)</b>, and treat a row past that window as owing a</p>
+<p><code>Will Not Send</code> rather than a send. Note the check is on <b>resolution, not delivery</b> — <code>Sent</code> and</p>
+<p><code>Will Not Send</code> both clear it; only an unresolved field is the defect.</p>
+
+<p>Pick U&#x27;s exact window after <b>050</b> reports why the Responder&#x27;s</p>
+<p>sweep is missing these — a check tuned against a mechanism nobody has confirmed is how invariant G</p>
+<p>cried wolf.</p>
+
+<p>All three ship <code>Provisional</code> and graduate through <b>046</b>&#x27;s lane —</p>
 <p>promotion gate, 5 consecutive clean review days.</p>
 </div></details></details></div></div>
 </div>
@@ -4628,5 +4703,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-05 09:54 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-05 12:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
