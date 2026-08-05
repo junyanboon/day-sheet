@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-04 06:57 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-04 20:44 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">8</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">7</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">5</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">29</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">30</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -545,7 +545,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">8</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">7</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1293,41 +1293,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>PBF backlog</b> — flagged unowned since Jul 22 in 035&#x27;s rehoming pass and never caught up. Confirm</p>
 <p>whether JOB 33 has actually been clearing it since, or whether the one-off catch-up sweep is still</p>
 <p>outstanding.</p>
-</div></details></details></div><div class="job"><div class="jnum">#045</div><div class="jhead"><span class="emoji">📤</span><h4>Sixteen approved messages never went out</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The message sender is not sending — 16 messages approved and then stuck</li><li>The oldest has been waiting about 10 days; most piled up in one hour on Aug 3</li><li>Found the moment the safety checker came back to life, which is the point of it</li><li>First job: read the 16 and decide which are still safe to send this late</li><li>Then find why the sender stopped, and make it report its own failures like the checker now does</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The send engine is not draining the queue — 16 messages stuck at Ready to Send</b></p><h2>Question</h2>
-
-<p>Surfaced by the repaired invariants checker on its first live cloud run, 2026-08-04 (see</p>
-<p><b>043</b>). <b>Urgent</b> — these are real customer</p>
-<p>messages that were approved to go out and did not.</p>
-
-<p><b>16 📤 Message Queue rows sit at <code>Ready to Send</code>.</b> Invariant G fires at 10 minutes because</p>
-<p>dispatch is a matter of seconds. The oldest has been waiting <b>~10 days</b> (<code>Amandeep Singh</p>
-<p>Bharaj — Aug 6 payment check-in</code>, ~14,385 minutes at detection); an <code>EOB</code> row has been waiting</p>
-<p>~17 hours. Between 22:35 and 23:47 on 2026-08-03 the count went from 2 to 16, so this is</p>
-<p>actively getting worse, not a historical residue.</p>
-
-<p>The send engine (<b>029</b>, Apps Script poller dispatching</p>
-<p>Phone.com SMS + Gmail) is LIVE by the last ruling — so either its time trigger has stopped</p>
-<p>firing, its Notion query no longer matches these rows, or it is erroring per-row and swallowing</p>
-<p>it. Note the shape of the suspicion: <b>the same Apps-Script-trigger fragility the map&#x27;s scheduler</p>
-<p>fog is about</b>, and the same &quot;fails quietly&quot; class as 043.</p>
-
-<h3>What this ticket must do</h3>
-
-<ol>
-<li>1. <b>Drain the backlog first</b> — read the 16 rows, decide row by row what is still safe and</li>
-</ol>
-<p>wanted to send 10 days late (some certainly are not; <code>Will Not Send</code> exists for that). A</p>
-<p>payment check-in for a date that has passed must not go out unread.</p>
-<ol>
-<li>2. <b>Find why dispatch stopped.</b> Apps Script execution log first: is the trigger firing at all?</li>
-<li>3. <b>Give the send engine the same self-health contract 043 just gave the checker</b> — a poller</li>
-</ol>
-<p>that cannot run, or that runs and dispatches nothing while rows wait, must file its own</p>
-<p><code>Run Error</code> row. &quot;Ready to Send&quot; ageing past minutes is already detectable; it should not have</p>
-<p>taken a five-day-dead invariants checker coming back to life to surface it.</p>
-<ol>
-<li>4. <b>Do not re-flip rows by hand</b> without recording why — invariant G&#x27;s own advice.</li>
-</ol>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">5</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -4320,9 +4285,66 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>rows stuck at <code>Ready to Send</code></b> (dispatch is seconds; one has been waiting ~10 days). The send</p>
 <p>engine is not draining the queue. That is a live desk problem this checker&#x27;s absence was hiding —</p>
 <p>flagged to Junyan, not fixed here.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#045</span><span class="emoji">🐺</span><span class="done-title">The checker cried wolf — now it doesn&#x27;t</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Yesterday&#x27;s alarm said 16 approved messages were stuck and never sent</li><li>They were not. Every one was a message scheduled for later — that&#x27;s a feature</li><li>The 10-day-old one was simply waiting for its August 6 date, exactly as asked</li><li>Measured properly, the sender hits its times to the minute. It was never broken</li><li>Two more own-goals found: the checker was flagging its OWN alarm rows as problems</li><li>And those same rows were quietly hiding a real one — a door ticket with nobody on it</li><li>Fixed: yesterday&#x27;s 27 problems are really 11, and all 11 are real</li><li>A checker that cries wolf trains everyone to ignore it — that&#x27;s the whole point</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The checker cried wolf — invariant G counted scheduled sends as stuck</b></p><h2>Question</h2>
+
+<p>Cut 2026-08-04 as *&quot;the send engine is not draining the queue — 16 messages stuck at Ready to</p>
+<p>Send&quot;*, on the repaired checker&#x27;s first live report (<b>043</b>).</p>
+
+<p><b>That premise was wrong, and the ticket&#x27;s real subject is the checker.</b> Investigating it first</p>
+<p>is what this ticket did; the finding inverted it.</p>
+
+<h2>Resolution — 2026-08-04</h2>
+
+<p><b>The send engine is healthy. Invariant G was lying.</b> Three self-inflicted false alarms found</p>
+<p>and fixed; the first day&#x27;s report went from <b>27 defects to 11</b>, all genuine.</p>
+
+<h3>1. G ignored <code>Send After</code> — the queue&#x27;s scheduled-send feature</h3>
+
+<p>The 📤 queue supports scheduled sends: EOB, AVA, and dated payment check-ins sit at</p>
+<p><code>Ready to Send</code> with a future <code>Send After</code> <b>by design</b>. G measured every such row as stuck.</p>
+<p>The headline &quot;~10 days stuck&quot; row — <code>Amandeep Singh Bharaj — Aug 6 payment check-in</code>, created</p>
+<p>Jul 25 — was correctly waiting for its <b>Aug 6 09:00</b> date. Nothing needed rescuing; no message</p>
+<p>was late; <b>no row needed a human decision about sending it late</b>, which was to be step 1 of</p>
+<p>this ticket.</p>
+
+<p>Measured over the 22 scheduled rows dispatched since Aug 3: <b>median lag from <code>Send After</code> to</p>
+<p><code>Sent At</code> = 0.0 minutes.</b> The engine (<b>029</b>) hits its times</p>
+<p>exactly. The overnight 2 → 16 climb was the evening&#x27;s EOB/AVA rows queueing for their slots, and</p>
+<p>by morning they had all gone out on schedule.</p>
+
+<h3>2. G measured from creation, not release</h3>
+
+<p>A row is created at <code>Pending Review</code> and released to <code>Ready to Send</code> later, so age-since-creation</p>
+<p>charged human review time (median 64 min) to the engine. Notion records no release timestamp, so</p>
+<p>G now measures from <code>Send After</code> when set, else the row&#x27;s <b>last edit</b> — which is the Status flip</p>
+<p>in the ordinary case, and errs safe: a genuinely undispatched row stops being edited, so its age</p>
+<p>keeps growing. Threshold raised 10 → <b>15 minutes</b>, to absorb clock skew and one missed poll.</p>
+
+<h3>3. The checker was generating its own defects</h3>
+
+<p>Exposed once G went quiet: <b>invariant C flagged the checker&#x27;s own escalation rows</b> (blank</p>
+<p><code>Gate Type</code>, linked to a gate ticket) — which escalate into more rows, which trip C again. And</p>
+<p>the mirror image: <b>invariant B was being silenced by those same rows</b> — &quot;this gate ticket has</p>
+<p>no open Action row&quot; was cleared by the row the checker had filed <i>about that very absence</i>, so an</p>
+<p>orphaned gate would go quiet forever without a human ever raising the real gate row. Rows with</p>
+<p><code>Raised by = Desk Invariants</code> are now excluded from both.</p>
+
+<p>Shipped: 174 tests green, commit <code>ba978e6e</code>, revision <code>event-gate-00018-hh7</code>.</p>
+
+<h3>The lesson worth keeping</h3>
+
+<p>A checker that cries wolf is worse than no checker — it teaches the desk to skim past its page,</p>
+<p>which is a slower version of the blackout 043 just fixed. <b>43 of the first 44 alarms were noise</p>
+<p>(16 G + 9 C + 2 B suppressions).</b> Any new invariant designed in</p>
+<p><b>044</b> must be tested against a day of live data before it is</p>
+<p>allowed to escalate to a human, and must never count its own output as desk state.</p>
+
+<p><b>Still standing from the first report:</b> the <b>Studio 693 alarm-trigger ticket</b> (open, untouched</p>
+<p>48h+, sitting at <code>Gate: Staff</code> with no action row) and the <b>Aug 1 Studio 509 door-left-open</p>
+<p>ticket</b>. Those were real, and they are on the Ops Lead&#x27;s list.</p>
 </div></details></div></details>
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-04 06:57 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-04 20:44 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
