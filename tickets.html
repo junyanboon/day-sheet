@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-05 12:09 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-05 13:08 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">8</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">8</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">31</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">3</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -544,6 +544,44 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Artist DB alarm-code lookup + Anthropic step (claude-opus-4-8) between step 11 and step 12,</p>
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
+</div></details></details></div><div class="job"><div class="jnum">#051</div><div class="jhead"><span class="emoji">🗂️</span><h4>Concierge tail jobs starve every pass — pick and ship the anti-starvation rule</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Concierge tail jobs starve every pass — pick and ship the anti-starvation rule</b></p><h2>Question</h2>
+
+<p>Source handoff: <b>HANDOFF-2026-08-04-concierge-tail-starvation.md</b>.</p>
+
+<p>Across recent Concierge passes the same tail jobs are deferred every pass and never run. As of</p>
+<p>the 2026-08-04 20:10 HEAVY-PM pass: JOB 3, JOB 4, JOB 31 at <code>deferred-since = 2</code>; JOB 0, JOB 7</p>
+<p>at 1. Structural, not incidental: JOB 1 (alarm reconciliation) and JOB 2 (inbox triage) are</p>
+<p>mandatory, front-loaded, and <b>unbounded</b> — they scale with the day&#x27;s activity and consume the</p>
+<p>pass budget before the tail is reached. &quot;Defer with a named first slice&quot; records the debt but</p>
+<p>never pays it; nothing in the loop causes an aged job to win.</p>
+
+<p>Same failure class as <b>037</b> (report intake sacrificed under context</p>
+<p>pressure); that ticket fixed <i>which</i> step got sacrificed by reordering — this one is about the</p>
+<p>steps that are permanently last.</p>
+
+<p><b>Junyan to pick one:</b></p>
+
+<ol>
+<li>1. <b>Cap the front half</b> — timebox/size-cap JOB 1 / JOB 2 so the tail always gets a slice.</li>
+</ol>
+<p>Fixes the cause; risks leaving alarm/inbox work half-done.</p>
+<ol>
+<li>2. <b>Reassign by pass type</b> — dedicated pass slot for JOB 3 / 4 / 31; costs a new trigger +</li>
+</ol>
+<p><code>RUNTIMES.md</code> entry. Most robust if tail work keeps growing.</p>
+<ol>
+<li>3. <b>Escalate on age</b> — any job at <code>deferred-since &gt;= 2</code> is promoted above the <i>optional</i> half</li>
+</ol>
+<p>of JOB 1 / JOB 2 next pass. Smallest self-correcting change; requires the routine to mark its</p>
+<p>mandatory vs optional sub-steps explicitly (it currently does not).</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- No job sits at <code>deferred-since &gt;= 2</code> across three consecutive days.</li>
+<li>- Rolling daily report: every JOB line attempted or deferred with the counter <b>falling</b>.</li>
+<li>- JOB 1 and JOB 2 still complete their mandatory halves on a heavy day.</li>
+</ul>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">8</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -1343,7 +1381,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>A &quot;Complete booking whose PBF never resolved within 24h&quot; check belongs in the completeness family —</p>
 <p>cheap, deterministic, and it would have caught this on Aug 1. Add it to 049 as <b>U</b> when that</p>
 <p>ticket is picked up.</p>
-</div></details></details></div><div class="job"><div class="jnum">#050</div><div class="jhead"><span class="emoji">🔍</span><h4>Find out why thank-you messages stopped going out</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Seven finished bookings have no thank-you message. Every one is from Jul 31 or later</li><li>Jul 31 is the day that job moved from one robot to another. That is not a coincidence</li><li>The desk already had a rule saying this means the sweep is broken. Nobody read the line</li><li>Find out which it is: the sweep never ran, ran and saw nothing, or raised a flag nobody read</li><li>Best guess to test first: the new owner only looks at TODAY&#x27;s bookings</li><li>But a booking usually finishes late in the day — so it may never be looked at again</li><li>Do not change any code until we know which one it is</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Responder&#x27;s PBF sweep is missing completed bookings — diagnose it</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#050</div><div class="jhead"><span class="emoji">🔍</span><h4>Find out why thank-you messages stopped going out</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Seven finished bookings have no thank-you message. Every one is from Jul 31 or later</li><li>Jul 31 is the day that job moved from one robot to another. That is not a coincidence</li><li>The desk already had a rule saying this means the sweep is broken. Nobody read the line</li><li>Find out which it is: the sweep never ran, ran and saw nothing, or raised a flag nobody read</li><li>Best guess to test first: the new owner only looks at TODAY&#x27;s bookings</li><li>But a booking usually finishes late in the day — so it may never be looked at again</li><li>Do not change any code until we know which one it is</li><li>This matters more than it looks: past one day a thank-you is never sent</li><li>So a missed pass is a message lost for good, not late. Catching up later fixes nothing</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Responder&#x27;s PBF sweep is missing completed bookings — diagnose it</b></p><h2>Question</h2>
 
 <p>Surfaced 2026-08-05 by the live read on <b>046</b>. <b>Seven bookings</p>
 <p>sit <code>Booking Status = Complete</code> with <code>PBF = Unsent</code>, and every one of them dates from 2026-07-31 or</p>
@@ -1396,13 +1434,18 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>explicitly written to catch bookings that completed in an <i>earlier</i> sweep) having covered that hole</p>
 <p>in a way the new owner does not.</p>
 
-<p><b>Not this ticket&#x27;s job:</b> the eight outstanding rows themselves. Junyan dispositions those directly</p>
-<p>— most are stale enough that <code>Will Not Send</code> is the correct call, since a &quot;how did it go&quot; five days</p>
-<p>late reads worse than silence (RESPONSE-RESOLVER step 2 forbids the tense mismatch anyway).</p>
+<p><b>Not this ticket&#x27;s job:</b> the eight outstanding rows themselves. <b>Junyan ruled 2026-08-05 that a</p>
+<p>PBF more than 1 day past the booking is never sent</b> — so all eight are <code>Will Not Send</code>, with no</p>
+<p>judgment left in any of them. Do not send a single one as part of diagnosing this.</p>
 
-<p>Feeds <b>049</b>&#x27;s check <b>U</b>, which needs this ticket&#x27;s answer to pick</p>
-<p>its window: U must fire while sending is still the right answer, not merely observe that a row is</p>
-<p>unsent.</p>
+<p><b>That ruling raises the stakes on the diagnosis.</b> If a PBF is unsendable after 24h, then every</p>
+<p>pass the sweep misses is a customer message permanently lost, not merely delayed — there is no</p>
+<p>catch-up sweep that can repair it later. The 30-min cadence bought nothing on those seven bookings.</p>
+<p>Whatever the mechanism turns out to be, the fix has to close the window inside a day, and a</p>
+<p>&quot;backfill the backlog&quot; remedy is worthless here by construction.</p>
+
+<p>Feeds <b>049</b>&#x27;s check <b>U</b>, whose window the ruling now fixes at a</p>
+<p>hard 24h — so U no longer waits on this ticket to be specified, only to be built alongside it.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">8</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -1684,7 +1727,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>or the review seat drowns.</p>
 
 <p><b>No fire-repair authority</b> (Ruling 2) — detect and escalate; the Ops Lead investigates.</p>
-</div></details></details></div><div class="job"><div class="jnum">#049</div><div class="jhead"><span class="emoji">💸</span><h4>Build the checks for bookings that never got billed</h4></div><span class="pill p-wait">needs 046 first</span> <span class="pill p-wait">needs 047 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Two checks, waiting until the paperwork checks have proven themselves</li><li>First: did every unpaid booking get a bill raised — including yesterday&#x27;s, checked again</li><li>That is the gap that let two bookings go unbilled on Jul 25</li><li>Second: a booking marked good-to-go where nobody seems to have shown up</li><li>The robot never works out a price. It only checks that a bill exists</li><li>A third one to add: a finished booking whose thank-you message never got settled within a day</li><li>Settled means either sent OR marked will-not-send — the robot only cares that someone decided</li><li>It has to catch it inside a day. A thank-you five days late reads worse than saying nothing</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the completeness invariants (S, T) — unbilled bookings and no-shows</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#049</div><div class="jhead"><span class="emoji">💸</span><h4>Build the checks for bookings that never got billed</h4></div><span class="pill p-wait">needs 046 first</span> <span class="pill p-wait">needs 047 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Two checks, waiting until the paperwork checks have proven themselves</li><li>First: did every unpaid booking get a bill raised — including yesterday&#x27;s, checked again</li><li>That is the gap that let two bookings go unbilled on Jul 25</li><li>Second: a booking marked good-to-go where nobody seems to have shown up</li><li>The robot never works out a price. It only checks that a bill exists</li><li>A third one to add: a finished booking whose thank-you message never got settled within a day</li><li>House rule from Junyan: past one day, a thank-you is never sent. No exceptions, no judgement call</li><li>So the check has one day to notice, and after that the only right answer is mark it will-not-send</li><li>It must never nudge anyone to send a late one — that is the one thing the rule forbids</li><li>Settled means sent OR marked will-not-send. The robot only cares that somebody decided</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the completeness invariants (S, T) — unbilled bookings and no-shows</b></p><h2>Question</h2>
 
 <p>Graduated from <b>044</b>; split out of the old combined</p>
 <p>existence+completeness ticket on 2026-08-05 when Junyan ruled <b>existence ships first, alone</b>.</p>
@@ -1713,18 +1756,33 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>U — a completed booking whose <code>PBF</code> never resolved.</b> Added 2026-08-05 from</p>
 <p><b>046</b>&#x27;s live read: seven bookings sat <code>Complete</code> + <code>PBF = Unsent</code></p>
-<p>for up to five days, unseen. <b>Design constraint from Junyan (2026-08-05): these were all stale by</p>
-<p>the time they surfaced, so U cannot simply assert &quot;this row is unsent.&quot;</b> A &quot;thanks for coming in,</p>
-<p>how did it go&quot; sent five days late reads worse than silence, and RESPONSE-RESOLVER step 2 forbids</p>
-<p>the tense mismatch outright — so by the time a day-five check fires, <i>there is no good outcome left</i>.</p>
-<p>U must therefore fire <b>inside the window where sending is still correct (~24h, matching JOB 1</p>
-<p>Step 5&#x27;s &quot;still Unsent the following day&quot; line)</b>, and treat a row past that window as owing a</p>
-<p><code>Will Not Send</code> rather than a send. Note the check is on <b>resolution, not delivery</b> — <code>Sent</code> and</p>
-<p><code>Will Not Send</code> both clear it; only an unresolved field is the defect.</p>
+<p>for up to five days, unseen.</p>
 
-<p>Pick U&#x27;s exact window after <b>050</b> reports why the Responder&#x27;s</p>
-<p>sweep is missing these — a check tuned against a mechanism nobody has confirmed is how invariant G</p>
-<p>cried wolf.</p>
+<p><b>RULED by Junyan, 2026-08-05: a PBF more than 1 day past the booking is never sent.</b> This is a</p>
+<p>standing policy, not a per-case judgment — it makes U the sharpest check in the roster:</p>
+
+<ul>
+<li>- <b>The window is 1 day, hard.</b> Not a tuning parameter, not something to pick after</li>
+</ul>
+<p><b>050</b> reports. A booking <code>Complete</code> with <code>PBF = Unsent</code></p>
+<p>more than 24h after its booking date is a defect, full stop.</p>
+<ul>
+<li>- <b>The check is on resolution, not delivery.</b> <code>Sent</code> and <code>Will Not Send</code> both clear it. U never</li>
+</ul>
+<p>asserts that a message went out — only that somebody decided.</p>
+<ul>
+<li>- <b>Past the window there is exactly one correct resolution: <code>Will Not Send</code>.</b> A late</li>
+</ul>
+<p>&quot;how did it go&quot; reads worse than silence, and RESPONSE-RESOLVER step 2 forbids the tense mismatch</p>
+<p>outright. So U&#x27;s escalation text says <i>mark it <code>Will Not Send</code></i> — it must never read as</p>
+<p>&quot;send the missing PBF&quot;, which would push staff into the one action the rule forbids.</p>
+
+<p>Note what this rule does to the defect&#x27;s shape: the damage is done at 24h and cannot be repaired</p>
+<p>after. That makes U a <b>deadline check</b>, closer in kind to 042&#x27;s ladder than to the rest of this</p>
+<p>family — worth remembering if U ever starts to look like it wants escalation rungs.</p>
+
+<p><b>Do NOT let U&#x27;s escalation imply a send.</b> The one way this check can do harm is by prompting a</p>
+<p>stale PBF back out the door.</p>
 
 <p>All three ship <code>Provisional</code> and graduate through <b>046</b>&#x27;s lane —</p>
 <p>promotion gate, 5 consecutive clean review days.</p>
@@ -4703,5 +4761,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-05 12:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-05 13:08 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
