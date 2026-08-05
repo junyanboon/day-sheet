@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-05 13:15 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-05 19:49 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -106,7 +106,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">3</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">3</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -124,6 +124,59 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>J29&quot; meant no standing <i>SkillOpt</i> job — the number was never assigned; no conflict.)</p>
 
 <p><b>Renderer-job scope note 2026-07-16 (Junyan-approved):</b> register the <b>published-board renderer as ONE job, not one per board</b> — outputs: the watchlist build, the tabbed Day Sheet + desk-state snapshot (ticket 019), the Ops-lead FBS board (ticket 020), and the night-watch page including the absorbed Opener &quot;Waiting on You&quot; digest (007 ruling). One shared cadence (15-min GitHub Action), one failure mode, one cost line — that&#x27;s the granularity the registry scores and bills at. <b>ID collision to settle at schema review:</b> J29 above is banked as <i>Watchlist freshness</i>, which is broader than rendering (its append-at-source lane is a write-path rule, not a render). Either <b>broaden J29</b> to &quot;published boards &amp; watchlist freshness&quot; (the rendering lane absorbs the boards; append-at-source stays a distinct rule inside it) or <b>mint J30</b> for the renderer and keep J29 pure — Junyan picks at the batched schema review. Also at that review: <b>name the renderer job&#x27;s accountable owner</b> (the Ops lead <i>processes</i> the Waiting-on-You queue on the morning shift, but owning &quot;boards render correctly and on time&quot; is a separate hat — and J29&#x27;s persona is deliberately unassigned pending the job-distribution view), and settle a <b>convention for minting new job IDs</b> — the desk is still evolving past J28.</p>
+
+<h2>Handoff verification — REQUIRED schema, added 2026-08-05 (Junyan)</h2>
+
+<p>The registry must answer <i>&quot;is this job&#x27;s owner actually doing it?&quot;</i>, not just <i>&quot;who owns it?&quot;</i>. Ruled</p>
+<p>into this ticket rather than a separate effort — the registry is where it belongs, because the field</p>
+<p>is the fix.</p>
+
+<p><b>Why it&#x27;s mandatory rather than nice-to-have.</b> This map has now found the same failure three</p>
+<p>times: the Vicky lockout (detection fired, nothing re-checked before she arrived), the dead</p>
+<p>invariants checker (v2 written, never swapped in, stale page read as health for 5 days), and the PBF</p>
+<p>sweep (<b>050</b> — the job moved owner on 07-31 and stopped</p>
+<p>being done the same day, for 5 days). <b>The third is the one that proves the gap</b>, because</p>
+<p>everything upstream of it was done correctly: the handoff was deliberate, the owner was named per</p>
+<p>035&#x27;s standing lesson, the new owner&#x27;s procedure was sound, and it carried <i>two</i> written tripwires —</p>
+<p>JOB 1 Step 5&#x27;s &quot;still Unsent the next day means the sweep is broken&quot; and the Responder&#x27;s own pass</p>
+<p>ledger. <b>Neither was read.</b> The signal existed and had no listener — the same disease as the</p>
+<p>checker&#x27;s stale page, one level up.</p>
+
+<p>So the missing thing is not naming and not detection. It is that <b>a handoff has no acceptance</p>
+<p>test</b>: no point in the process forces the question &quot;is the new owner producing what the old owner</p>
+<p>produced?&quot;. Three fixes were weighed (a written handoff checklist; one invariant per handoff; a</p>
+<p>registry field). Junyan chose the registry — the checklist is one more rule needing a reader, which</p>
+<p>is precisely what failed here, and a check per handoff grows the roster without bound.</p>
+
+<p><b>Add to every job&#x27;s schema:</b></p>
+
+<ul>
+<li>- <b><code>produces</code></b> — the job&#x27;s observable output, stated so a machine can look for it: a named</li>
+</ul>
+<p>artifact, a DB row class, a queue row, a report line. A job whose output cannot be named this way</p>
+<p>is a schema smell worth raising at the review, not a field to leave blank.</p>
+<ul>
+<li>- <b><code>last_verified_producing</code></b> — timestamp of the last confirmed sighting of that output.</li>
+<li>- <b><code>verify_within</code></b> — how long the job may go without producing before that silence is a defect.</li>
+</ul>
+<p>Per-job, because cadences differ wildly (a 30-min sweep and a 10th/25th Accountant run are not</p>
+<p>the same silence).</p>
+<ul>
+<li>- <b><code>owner_since</code></b> — when the current owner took it. Makes a handoff a dated event the registry can</li>
+</ul>
+<p>reason about, rather than a fact with no history.</p>
+
+<p><b>The check that makes the fields real</b> (otherwise this is just more unread prose): a job whose</p>
+<p><code>last_verified_producing</code> is older than its <code>verify_within</code> is a <b>defect</b>, escalating like any</p>
+<p>other. It joins the invariant roster through <b>046</b>&#x27;s probation lane</p>
+<p>like everything else — provisional first, human-marked real-or-noise, graduating on 5 clean days.</p>
+
+<p><b>Sharper rule at a handoff:</b> when <code>owner_since</code> changes, <code>verify_within</code> is halved for the first</p>
+<p>two cycles. The PBF leak began on the <i>first day</i> under the new owner — that is exactly when a job</p>
+<p>is least proven and most deserves a short leash.</p>
+
+<p><b>Junyan&#x27;s framing (2026-08-05): build it quickly, don&#x27;t gold-plate it.</b> Four fields and one</p>
+<p>check. Do not let this grow into a handoff-workflow subsystem.</p>
 
 <p><b>J31 minted provisionally 2026-07-21 — Claimed-shift mirror.</b> Junyan asked for near-real-time</p>
 <p>reflection of Open Shifts claims on Staff Scheduling, connected to a ticker as an operating-library</p>
@@ -4797,5 +4850,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-05 13:15 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-05 19:49 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
