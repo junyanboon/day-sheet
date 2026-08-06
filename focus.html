@@ -1,0 +1,336 @@
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Still — Focus of the Day</title>
+<style>
+  :root {
+    --paper:#f4f4f2; --card:#fbfbfa; --ink:#17181a; --mute:#6d6f74; --hair:#e0e0dd;
+    --accent:#1f5f4b;          /* focus green */
+    --accent-soft:#e2efe9;
+    --late:#a83a26; --late-soft:#f7e7e3;
+    --soon:#8a6100; --soon-soft:#f6eed9;
+    --cond:"Avenir Next Condensed","Arial Narrow","Helvetica Neue",sans-serif;
+    --sans:"Avenir Next",Avenir,Seravek,"Segoe UI",Ubuntu,sans-serif;
+    --text:Seravek,"Avenir Next","Segoe UI",Ubuntu,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){ :root{
+    --paper:#121315; --card:#191a1d; --ink:#e9e9e6; --mute:#8f9197; --hair:#2c2e32;
+    --accent:#59bd97; --accent-soft:#152722;
+    --late:#e07a66; --late-soft:#331914;
+    --soon:#d6a747; --soon-soft:#2b2311;
+  }}
+  :root[data-theme="light"]{
+    --paper:#f4f4f2; --card:#fbfbfa; --ink:#17181a; --mute:#6d6f74; --hair:#e0e0dd;
+    --accent:#1f5f4b; --accent-soft:#e2efe9;
+    --late:#a83a26; --late-soft:#f7e7e3;
+    --soon:#8a6100; --soon-soft:#f6eed9;
+  }
+  :root[data-theme="dark"]{
+    --paper:#121315; --card:#191a1d; --ink:#e9e9e6; --mute:#8f9197; --hair:#2c2e32;
+    --accent:#59bd97; --accent-soft:#152722;
+    --late:#e07a66; --late-soft:#331914;
+    --soon:#d6a747; --soon-soft:#2b2311;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font:16px/1.55 var(--text);margin:0;padding:0 clamp(1rem,4vw,2rem) 5rem}
+  .sheet{max-width:760px;margin:0 auto}
+
+  header{padding:3rem 0 0}
+  .kicker{display:flex;align-items:center;gap:.7rem}
+  .kicker span{font:600 .7rem/1 var(--sans);letter-spacing:.3em;text-transform:uppercase;color:var(--mute)}
+  .kicker i{flex:1;height:1px;background:var(--hair)}
+  h1{font:800 clamp(2.6rem,10vw,4.6rem)/.95 var(--cond);text-transform:uppercase;letter-spacing:.01em;margin:.7rem 0 .3rem}
+  h1 em{font-style:normal;color:var(--accent)}
+  .sub{font:500 .95rem/1.4 var(--text);color:var(--mute);margin:0}
+
+  /* focus panel */
+  .focus{margin:2.2rem 0 0;border:1px solid var(--hair);border-top:3px solid var(--accent);background:var(--card);border-radius:2px;padding:1.4rem 1.4rem 1.5rem}
+  .focus .lab{font:700 .68rem/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+  .focus .empty{font:500 1.05rem/1.5 var(--text);color:var(--mute);margin:.8rem 0 1.1rem}
+  .focus .what{font:600 1.5rem/1.25 var(--text);margin:.7rem 0 .35rem;text-wrap:balance}
+  .focus .meta{font:.85rem/1.5 var(--text);color:var(--mute);margin:0 0 1.1rem}
+  .focus .meta a{color:inherit}
+  .focus-actions{display:flex;flex-wrap:wrap;gap:.5rem}
+
+  button{font:600 .84rem/1 var(--sans);letter-spacing:.02em;border-radius:2px;border:1px solid var(--hair);
+    background:transparent;color:var(--ink);padding:.62rem .95rem;cursor:pointer}
+  button:hover{border-color:var(--accent);color:var(--accent)}
+  button.primary{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+  button.primary:hover{filter:brightness(1.08);color:var(--paper)}
+  button:focus-visible, input:focus-visible, select:focus-visible, .pick:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  h2{font:700 .72rem/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--mute);
+    margin:2.6rem 0 .2rem;padding-bottom:.6rem;border-bottom:2px solid var(--ink);display:flex;align-items:baseline;gap:.6rem}
+  h2 .count{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--mute);letter-spacing:.08em}
+
+  ul{list-style:none;margin:0;padding:0}
+  li.task{display:flex;align-items:flex-start;gap:.85rem;padding:.85rem .2rem;border-bottom:1px solid var(--hair)}
+  li.task.is-focus{background:var(--accent-soft);border-bottom-color:var(--accent);padding-left:.7rem;padding-right:.7rem}
+  li.task.done .title{text-decoration:line-through;color:var(--mute)}
+  .tick{appearance:none;flex:none;width:17px;height:17px;margin-top:.28rem;border:1.5px solid var(--mute);border-radius:2px;cursor:pointer;background:transparent}
+  .tick:checked{background:var(--accent);border-color:var(--accent)}
+  .body{flex:1;min-width:0}
+  .title{font:500 1rem/1.4 var(--text);margin:0;text-wrap:pretty}
+  .title a{color:inherit;text-decoration:none;border-bottom:1px solid var(--hair)}
+  .title a:hover{border-bottom-color:var(--accent)}
+  .tags{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.35rem;font:600 .68rem/1.5 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+  .tag{border:1px solid var(--hair);border-radius:2px;padding:.1rem .4rem}
+  .tag.late{color:var(--late);border-color:var(--late);background:var(--late-soft)}
+  .tag.soon{color:var(--soon);border-color:var(--soon);background:var(--soon-soft)}
+  .tag.hi{color:var(--late)}
+  .pick{font:600 .68rem/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);
+    background:none;border:1px solid var(--hair);border-radius:2px;padding:.4rem .55rem;cursor:pointer;flex:none;margin-top:.2rem}
+  .pick:hover{color:var(--accent);border-color:var(--accent)}
+
+  /* add form */
+  .add{margin-top:1.1rem;display:flex;flex-wrap:wrap;gap:.5rem}
+  .add input[type=text]{flex:1 1 16rem;min-width:0;font:500 .95rem/1.3 var(--text);color:var(--ink);
+    background:var(--card);border:1px solid var(--hair);border-radius:2px;padding:.62rem .7rem}
+  .add select{font:600 .78rem/1 var(--sans);color:var(--ink);background:var(--card);border:1px solid var(--hair);border-radius:2px;padding:.62rem .5rem}
+  .note{font:.8rem/1.5 var(--text);color:var(--mute);margin:.7rem 0 0}
+  footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--hair);font:.78rem/1.6 var(--text);color:var(--mute)}
+  @media (prefers-reduced-motion:no-preference){ li.task{transition:background .15s ease} }
+</style>
+
+<div class="sheet">
+<header>
+  <div class="kicker"><span>Still</span><i></i><span id="today">Today</span></div>
+  <h1>Focus of the<em> Day</em></h1>
+  <p class="sub">One thing at the top. Everything else waits its turn.</p>
+</header>
+
+<section class="focus" id="focusPanel" aria-live="polite"></section>
+
+<h2>Today <span class="count" id="todayCount"></span></h2>
+<ul id="todayList"></ul>
+
+<h2>Everything else <span class="count" id="laterCount"></span></h2>
+<ul id="laterList"></ul>
+
+<h2>Add a task</h2>
+<form class="add" id="addForm">
+  <input type="text" id="addTitle" placeholder="What needs doing?" aria-label="Task" required>
+  <select id="addWhen" aria-label="When">
+    <option value="today">Today</option>
+    <option value="later">Later</option>
+  </select>
+  <select id="addEst" aria-label="Estimate">
+    <option>10 min</option><option selected>30 min</option><option>60 min</option><option>90 min+</option>
+  </select>
+  <button class="primary" type="submit">Add</button>
+</form>
+<p class="note">Tasks you add live in this browser. The ones above came from the Notion Tasks Inbox on 6 Aug 2026 — reopen that list in Notion for the full notes.</p>
+
+<footer>
+  Pulled from the Tasks Inbox · America/Toronto · <button id="reset" style="padding:.35rem .5rem">Reset today</button>
+</footer>
+</div>
+
+<script>
+(function () {
+  var TZ = "America/Toronto";
+  var TODAY = "2026-08-06";
+
+  /* Snapshot of the open Tasks Inbox rows. due = null when the task has no date. */
+  var SEED = [
+    {id:"3a675032", t:"Spacca: answer Alex on contents limits + revenue figure (SP010675 move)", type:"Finance", est:"30 min", pri:"high", status:"In Progress", due:"2026-07-30", url:"https://app.notion.com/3a67503281c48190bb94f7b4dac94bf9"},
+    {id:"3a775032a", t:"Check CRA My Account for new mail", type:"Admin", est:"10 min", pri:"med", status:"Not Started", due:"2026-08-07", url:"https://app.notion.com/3a77503281c48190b5cef36f6f60a5d7"},
+    {id:"3ad75032", t:"Complete Virgin FlyReady for LA8126", type:"Admin", est:"30 min", pri:"high", status:"Not Started", due:"2026-08-20", url:"https://app.notion.com/3ad7503281c481d7a5b7fb88e1476172"},
+    {id:"3b475032b", t:"Pay 🇺🇸💳13001 Amex Business Platinum — due Aug 11", type:"Finance", est:"10 min", pri:"high", status:"Not Started", due:"2026-08-11", url:"https://app.notion.com/3b47503281c4813c8d86f71e1fc2dfc5"},
+    {id:"3ac75032b", t:"Finish 8867 Scotia Momentum 25k tier — $1,259 to go", type:"Finance", est:"10 min", pri:"med", status:"Not Started", due:"2026-08-08", url:"https://app.notion.com/3ac7503281c48193adf4ccc78014462c"},
+    {id:"3b375032", t:"Update the Chexy standing rent payment to $3,446.50", type:"Finance", est:"10 min", pri:"high", status:"Not Started", due:null, url:"https://app.notion.com/3b37503281c48182ac46ed63091bf630"},
+    {id:"3b075032", t:"Issue the COI for Rosanna once the SP010675 merge completes", type:"Ops", est:"10 min", pri:"high", status:"Waiting", due:null, url:"https://app.notion.com/3b07503281c481859bc6f4abc678c3d4"},
+    {id:"3b475032a", t:"Pay 💳1034 National Bank WE MC — due Aug 17", type:"Finance", est:"10 min", pri:"med", status:"Not Started", due:"2026-08-17", url:"https://app.notion.com/3b47503281c481318fd0dcb2030731db"},
+    {id:"3ae75032b", t:"After TD switch confirms — update Credit Card Tracker + YNAB", type:"Finance", est:"10 min", pri:"med", status:"Not Started", due:"2026-08-17", url:"https://app.notion.com/3ae7503281c4813e8972e2337749b461"},
+    {id:"3ac75032a", t:"Downgrade 9712 Caney RBC WJ WE MC → no-fee Ion", type:"Finance", est:"30 min", pri:"med", status:"Not Started", due:"2026-08-20", url:"https://app.notion.com/3ac7503281c48109887ad415f333a675"},
+    {id:"3ae75032c", t:"New TD card arrives — activate, first purchase, 1Password, destroy old card", type:"Finance", est:"30 min", pri:"high", status:"Not Started", due:"2026-08-24", url:"https://app.notion.com/3ae7503281c481a88ccdc6df3bc1c1a1"},
+    {id:"3ae75032a", t:"Clear the $7,500 TD MSR — one Chexy business rent payment", type:"Finance", est:"30 min", pri:"high", status:"Not Started", due:"2026-09-15", url:"https://app.notion.com/3ae7503281c48122b19be3a8bc273c93"},
+    {id:"3ae75032d", t:"Verify TD switch — fee refund + 126k bonus actually posted", type:"Finance", est:"10 min", pri:"med", status:"Not Started", due:"2026-09-30", url:"https://app.notion.com/3ae7503281c481cca029db1b2c6cd151"},
+    {id:"3ac75032c", t:"Design a YNAB-replacement budget tool", type:"Deep Work", est:"90 min+", pri:"med", status:"Not Started", due:null, url:"https://app.notion.com/3ac7503281c481cfb7f8c186db747c69"},
+    {id:"3a775032b", t:"Build an award-travel plan covering all six live deal destinations", type:"Personal", est:"90 min+", pri:"med", status:"Not Started", due:null, url:"https://app.notion.com/3a77503281c48154bc78fa34f58597e6"}
+  ];
+
+  var KEY = "still.focus.v1";
+  var state = load();
+
+  function load() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(KEY) || "{}");
+      return {focus: raw.focus || null, done: raw.done || {}, added: raw.added || [], today: raw.today || {}};
+    } catch (e) { return {focus:null, done:{}, added:[], today:{}}; }
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+  function all() { return SEED.concat(state.added); }
+  function byId(id) { return all().filter(function (x) { return x.id === id; })[0]; }
+
+  /* A task belongs to today if it's due on or before today, or you put it there. */
+  function isToday(x) {
+    if (state.today[x.id] === true) return true;
+    if (state.today[x.id] === false) return false;
+    return !!x.due && x.due <= TODAY;
+  }
+
+  function dueLabel(x) {
+    if (!x.due) return null;
+    if (x.due < TODAY) return {cls:"late", text:"Overdue " + pretty(x.due)};
+    if (x.due === TODAY) return {cls:"late", text:"Due today"};
+    var days = Math.round((Date.parse(x.due) - Date.parse(TODAY)) / 86400000);
+    return {cls: days <= 3 ? "soon" : "", text:"Due " + pretty(x.due)};
+  }
+  function pretty(d) {
+    var p = d.split("-");
+    var m = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+p[1] - 1];
+    return m + " " + (+p[2]);
+  }
+
+  function row(x) {
+    var li = document.createElement("li");
+    li.className = "task" + (state.done[x.id] ? " done" : "") + (state.focus === x.id ? " is-focus" : "");
+
+    var tick = document.createElement("input");
+    tick.type = "checkbox"; tick.className = "tick"; tick.checked = !!state.done[x.id];
+    tick.setAttribute("aria-label", "Mark done: " + x.t);
+    tick.onchange = function () {
+      if (tick.checked) state.done[x.id] = true; else delete state.done[x.id];
+      if (tick.checked && state.focus === x.id) state.focus = null;
+      save(); render();
+    };
+
+    var body = document.createElement("div"); body.className = "body";
+    var title = document.createElement("p"); title.className = "title";
+    if (x.url) {
+      var a = document.createElement("a");
+      a.href = x.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = x.t;
+      title.appendChild(a);
+    } else { title.textContent = x.t; }
+
+    var tags = document.createElement("div"); tags.className = "tags";
+    function tag(text, cls) {
+      var s = document.createElement("span"); s.className = "tag" + (cls ? " " + cls : ""); s.textContent = text; tags.appendChild(s);
+    }
+    var d = dueLabel(x); if (d) tag(d.text, d.cls);
+    if (x.pri === "high") tag("High", "hi");
+    if (x.status && x.status !== "Not Started") tag(x.status);
+    if (x.type) tag(x.type);
+    if (x.est) tag(x.est);
+
+    body.appendChild(title); body.appendChild(tags);
+
+    var pick = document.createElement("button");
+    pick.className = "pick"; pick.type = "button";
+    pick.textContent = state.focus === x.id ? "Focused" : "Focus";
+    pick.onclick = function () { state.focus = (state.focus === x.id) ? null : x.id; save(); render(); };
+
+    li.appendChild(tick); li.appendChild(body); li.appendChild(pick);
+    return li;
+  }
+
+  function renderFocus() {
+    var p = document.getElementById("focusPanel");
+    p.innerHTML = "";
+    var lab = document.createElement("div"); lab.className = "lab"; lab.textContent = "Focus of the day";
+    p.appendChild(lab);
+
+    var x = state.focus ? byId(state.focus) : null;
+    if (!x) {
+      var e = document.createElement("p"); e.className = "empty";
+      e.textContent = "Nothing chosen yet. Pick the one task today is actually for.";
+      p.appendChild(e);
+      var acts = document.createElement("div"); acts.className = "focus-actions";
+      var b = document.createElement("button"); b.className = "primary"; b.type = "button";
+      b.textContent = "Set focus of the day";
+      b.onclick = suggest;
+      acts.appendChild(b);
+      p.appendChild(acts);
+      return;
+    }
+
+    var w = document.createElement("p"); w.className = "what"; w.textContent = x.t;
+    var meta = document.createElement("p"); meta.className = "meta";
+    var bits = [];
+    var d = dueLabel(x); if (d) bits.push(d.text);
+    if (x.est) bits.push(x.est);
+    if (x.type) bits.push(x.type);
+    meta.textContent = bits.join(" · ");
+    if (x.url) {
+      meta.appendChild(document.createTextNode(" · "));
+      var a = document.createElement("a"); a.href = x.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Open in Notion";
+      meta.appendChild(a);
+    }
+    p.appendChild(w); p.appendChild(meta);
+
+    var acts2 = document.createElement("div"); acts2.className = "focus-actions";
+    var done = document.createElement("button"); done.className = "primary"; done.type = "button";
+    done.textContent = "Mark it done";
+    done.onclick = function () { state.done[x.id] = true; state.focus = null; save(); render(); };
+    var swap = document.createElement("button"); swap.type = "button"; swap.textContent = "Choose something else";
+    swap.onclick = function () { state.focus = null; save(); render(); };
+    acts2.appendChild(done); acts2.appendChild(swap);
+    p.appendChild(acts2);
+  }
+
+  /* Suggest: the most overdue high-priority open task in today's list. */
+  function suggest() {
+    var open = all().filter(function (x) { return !state.done[x.id] && isToday(x); });
+    if (!open.length) open = all().filter(function (x) { return !state.done[x.id]; });
+    if (!open.length) return;
+    open.sort(function (a, b) {
+      var pa = a.pri === "high" ? 0 : 1, pb = b.pri === "high" ? 0 : 1;
+      if (pa !== pb) return pa - pb;
+      return (a.due || "9999") < (b.due || "9999") ? -1 : 1;
+    });
+    state.focus = open[0].id; save(); render();
+    document.getElementById("focusPanel").scrollIntoView({block:"nearest", behavior:"smooth"});
+  }
+
+  function render() {
+    renderFocus();
+    var open = all().filter(function (x) { return !state.done[x.id]; });
+    var doneList = all().filter(function (x) { return state.done[x.id]; });
+    var today = open.filter(isToday);
+    var later = open.filter(function (x) { return !isToday(x); });
+    function cmp(a, b) { return (a.due || "9999") < (b.due || "9999") ? -1 : 1; }
+    today.sort(cmp); later.sort(cmp);
+
+    fill("todayList", today.concat(doneList.filter(isToday)));
+    fill("laterList", later);
+    document.getElementById("todayCount").textContent = today.length + " open";
+    document.getElementById("laterCount").textContent = later.length + " waiting";
+  }
+
+  function fill(id, items) {
+    var ul = document.getElementById(id);
+    ul.innerHTML = "";
+    items.forEach(function (x) { ul.appendChild(row(x)); });
+  }
+
+  document.getElementById("addForm").onsubmit = function (ev) {
+    ev.preventDefault();
+    var input = document.getElementById("addTitle");
+    var text = input.value.trim();
+    if (!text) return;
+    var x = {
+      id: "own-" + Date.now(),
+      t: text,
+      type: "Task",
+      est: document.getElementById("addEst").value,
+      pri: "med",
+      status: "Not Started",
+      due: document.getElementById("addWhen").value === "today" ? TODAY : null,
+      url: null
+    };
+    state.added.push(x);
+    state.today[x.id] = document.getElementById("addWhen").value === "today";
+    save(); input.value = ""; render(); input.focus();
+  };
+
+  document.getElementById("reset").onclick = function () {
+    state = {focus:null, done:{}, added:state.added, today:state.today};
+    save(); render();
+  };
+
+  document.getElementById("today").textContent = new Date(TODAY + "T12:00:00Z")
+    .toLocaleDateString("en-CA", {weekday:"long", month:"long", day:"numeric", timeZone:TZ});
+
+  render();
+})();
+</script>
