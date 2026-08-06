@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-05 19:49 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-05 20:21 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -102,7 +102,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">8</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">8</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">32</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">33</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1396,71 +1396,57 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>A &quot;Complete booking whose PBF never resolved within 24h&quot; check belongs in the completeness family —</p>
 <p>cheap, deterministic, and it would have caught this on Aug 1. Add it to 049 as <b>U</b> when that</p>
 <p>ticket is picked up.</p>
-</div></details></details></div><div class="job"><div class="jnum">#050</div><div class="jhead"><span class="emoji">🔍</span><h4>Find out why thank-you messages stopped going out</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Seven finished bookings have no thank-you message. Every one is from Jul 31 or later</li><li>Jul 31 is the day that job moved from one robot to another. That is not a coincidence</li><li>The desk already had a rule saying this means the sweep is broken. Nobody read the line</li><li>Find out which it is: the sweep never ran, ran and saw nothing, or raised a flag nobody read</li><li>Best guess to test first: the new owner only looks at TODAY&#x27;s bookings</li><li>But a booking usually finishes late in the day — so it may never be looked at again</li><li>Do not change any code until we know which one it is</li><li>This matters more than it looks: past one day a thank-you is never sent</li><li>So a missed pass is a message lost for good, not late. Catching up later fixes nothing</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Responder&#x27;s PBF sweep is missing completed bookings — diagnose it</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#052</div><div class="jhead"><span class="emoji">✋</span><h4>Decide who presses send on a thank-you message</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A thank-you dies if nobody releases it within one day</li><li>Right now it is shown to a person once a night and never again</li><li>Choice 1: let the robot just send it, like it already does for the we-missed-you text</li><li>Choice 2: keep the check, but nag before the day runs out</li><li>Choice 3: show the waiting list every pass instead of once a night</li><li>Junyan&#x27;s call. Worth noting: we already auto-send to people who did NOT show up</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A held PBF has 24h to be released or it dies — who releases it, and what happens when nobody does</b></p><h2>Question</h2>
 
-<p>Surfaced 2026-08-05 by the live read on <b>046</b>. <b>Seven bookings</p>
-<p>sit <code>Booking Status = Complete</code> with <code>PBF = Unsent</code>, and every one of them dates from 2026-07-31 or</p>
-<p>later — the exact day PBF initial sends moved from Concierge JOB 33 to The Responder.</b> The</p>
-<p>pre-handoff backlog is clean (Jun 28 → Jul 30 all resolved), so this is not an old pile: it is a new</p>
-<p>leak that started at the handoff and has run continuously for five days.</p>
+<p>Graduated from <b>050</b>, which found that the Responder&#x27;s PBF</p>
+<p>sweep works: it finds every completed booking on its own day and queues the PBF within the hour.</p>
+<p><b>Seven PBFs still died between 2026-07-31 and 2026-08-04 — every one of them sitting at</p>
+<p><code>Pending Review</code>, correctly drafted, never released.</b></p>
 
-<p>Why does this need diagnosis rather than a fix? Because <b>the desk already had a tripwire for it and</p>
-<p>the tripwire did not fire.</b> Two of them, in fact:</p>
+<p>Two canon rules meet here and, together, guarantee losses:</p>
 
 <ul>
-<li>- <code>library/job-1-adt-alarm.md</code> Step 5: a Complete + <code>PBF = Unsent</code> booking still Unsent *the</li>
+<li>- <b>Every PBF is held</b> — <code>the-responder.md</code> Scope and AUTONOMY: nothing this lane composes leaves</li>
 </ul>
-<p>following day* means <b>the Responder&#x27;s sweep is broken</b> — flag it.</p>
+<p><code>Pending Review</code>, and a human releases it.</p>
 <ul>
-<li>- <code>library/the-responder.md</code> pass step 7 + the 🧾 PASS LEDGER rule: the sweep must report</li>
+<li>- <b>A PBF more than 1 day past its booking is never sent</b> (Junyan, 2026-08-05).</li>
 </ul>
-<p><code>PBF: 0 found · no-show: 0 found</code> every pass, precisely so a silent no-op is distinguishable from</p>
-<p>a sweep that never ran, with 3-consecutive → run-first and 5-consecutive → <code>Attributed defect</code>.</p>
 
-<p>Four of these rows are five days past the JOB 1 line. So either the sweep is not running, or it is</p>
-<p>running and reporting <code>0 found</code> while seven qualifying rows sit in plain sight, or it is filing the</p>
-<p>escalation and nobody reads it. <b>Establish which before changing any code</b> — the three have very</p>
-<p>different fixes, and 045&#x27;s lesson is that guessing at a mechanism produces a confident wrong answer.</p>
+<p>So a held PBF has <b>≤24h of shelf life</b>, and the only thing that surfaces it is the courtesy-reply</p>
+<p>approval block on the Responder&#x27;s <b>22:50 pass</b>. One appearance, one night. Miss that night and the</p>
+<p>message is dead — and no later pass re-surfaces it, because the cross-status dedup (correctly) sees</p>
+<p>a row already exists and reports <code>found · deduped</code> forever.</p>
 
-<p>Read the Responder&#x27;s rolling reports for 2026-07-31 → 2026-08-05 and answer, in order:</p>
+<p>Decide the release policy. The candidates, with what each costs:</p>
 
 <ol>
-<li>1. Did the Responder run its passes at all over that window? (Run Monitor + Workflow Reports.)</li>
-<li>2. Does step 7 appear in the pass ledger each pass, and what does it report — <code>ran</code>, <code>skipped</code>, or a</li>
+<li>1. <b>Auto-send the PBF</b>, as the no-show &quot;we missed you&quot; text already does. The precedent exists and</li>
 </ol>
-<p>count?</p>
+<p>the confidence gate is the same one: <code>Booking Status = Complete</code>, set upstream by Concierge JOB 1</p>
+<p>Step 4, which the desk already trusts to auto-send on. Cheapest, and it removes the human from a</p>
+<p>message class with no per-case judgment in it. Cost: a wrong <code>Complete</code> flip now reaches a</p>
+<p>customer unreviewed.</p>
 <ol>
-<li>3. If it reports a count, why do these seven rows not match its query? Candidate causes worth</li>
+<li>2. <b>Keep the hold, add a deadline escalation</b> — an unreleased PBF pages before its window closes</li>
 </ol>
-<p>checking specifically: the <b>AI Monitor — Today view&#x27;s absolute-date filter</b> (HOUSE-RULES warns</p>
-<p>the relative &quot;today&quot; filter silently returns the wrong day past ~20:00 Toronto — and the sweep</p>
-<p>only looks at <i>today&#x27;s</i> rows, so a booking that flips to <code>Complete</code> after the last pass of its</p>
-<p>own day may never be seen again); the <b>cross-status dedup</b> skipping rows it shouldn&#x27;t; or</p>
-<p><code>Type of Booking</code> filtering.</p>
+<p>rather than after. Rides <b>042</b>&#x27;s ladder. Cost: another thing</p>
+<p>to read, which is precisely what failed here; and it still needs a human awake inside 24h.</p>
 <ol>
-<li>4. Did the 3-consecutive / 5-consecutive escalation ever fire? If it did, where did the row go and</li>
+<li>3. <b>Re-surface every pass, not once a night.</b> Cheapest change to the current shape, but it turns</li>
 </ol>
-<p>why did no one act on it — that is a second, separate defect from the sweep itself.</p>
+<p>the approval block into a repeating list — and the 2026-08-03 ping-pong lesson says a line</p>
+<p>repeated on consecutive passes is a dropped ball wearing a uniform, not a fix.</p>
 
-<p><b>Suspicion worth testing first, not assuming:</b> the sweep reads the <i>Today</i> view, but a PBF becomes</p>
-<p>due when a booking completes, which is often the last pass of the day or after it. A same-day-only</p>
-<p>window with a 30-min cadence has an obvious hole at the day boundary — and the leak starting exactly</p>
-<p>at the handoff is consistent with the old owner (JOB 1, hourly, with an every-sweep backstop</p>
-<p>explicitly written to catch bookings that completed in an <i>earlier</i> sweep) having covered that hole</p>
-<p>in a way the new owner does not.</p>
+<p><b>Junyan&#x27;s call, and it is the shape of the fix, not a detail of it</b> — 050 established the</p>
+<p>mechanism, so this ticket is the ruling and the canon edit that follows it, nothing more.</p>
 
-<p><b>Not this ticket&#x27;s job:</b> the eight outstanding rows themselves. <b>Junyan ruled 2026-08-05 that a</p>
-<p>PBF more than 1 day past the booking is never sent</b> — so all eight are <code>Will Not Send</code>, with no</p>
-<p>judgment left in any of them. Do not send a single one as part of diagnosing this.</p>
+<p>Note the asymmetry worth putting to him directly: the no-show text — sent to someone who did <i>not</i></p>
+<p>show up — auto-sends today, while the thank-you to someone who did is held. If the risk model</p>
+<p>justifies the first, it is hard to argue it forbids the second.</p>
 
-<p><b>That ruling raises the stakes on the diagnosis.</b> If a PBF is unsendable after 24h, then every</p>
-<p>pass the sweep misses is a customer message permanently lost, not merely delayed — there is no</p>
-<p>catch-up sweep that can repair it later. The 30-min cadence bought nothing on those seven bookings.</p>
-<p>Whatever the mechanism turns out to be, the fix has to close the window inside a day, and a</p>
-<p>&quot;backfill the backlog&quot; remedy is worthless here by construction.</p>
-
-<p>Feeds <b>049</b>&#x27;s check <b>U</b>, whose window the ruling now fixes at a</p>
-<p>hard 24h — so U no longer waits on this ticket to be specified, only to be built alongside it.</p>
+<p>Related but not this ticket: <b>049</b>&#x27;s check U detects an unresolved</p>
+<p>PBF after the fact. Detection is settled; this is about preventing the loss in the first place.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">8</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -1806,6 +1792,15 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Do NOT let U&#x27;s escalation imply a send.</b> The one way this check can do harm is by prompting a</p>
 <p>stale PBF back out the door.</p>
+
+<p><b>U is the only detector pointed at this event — confirmed by <b>050</b>,</p>
+<p>2026-08-05.</b> Both existing tripwires are structurally incapable of firing on it: the Responder&#x27;s</p>
+<p>pass-ledger counters count <code>skipped</code> (step 7 ran every pass, so nothing ever climbed), and JOB 1</p>
+<p>Step 5&#x27;s &quot;flag it if still Unsent the following day&quot; has <b>no query behind it</b> — Step 1 pulls</p>
+<p>today&#x27;s rows only, and the 07-21 completeness sweep filters to <code>Booking Status ∈ {Upcoming, In</p>
+<p>Studio}</code>, so a yesterday <code>Complete</code> + <code>PBF = Unsent</code> row is returned by neither. <b>When U ships,</p>
+<p>delete JOB 1 Step 5&#x27;s prose flag or give it that query</b> — an unfireable tripwire left in canon</p>
+<p>beside a working check is worse than no rule, because it reads as coverage.</p>
 
 <p>All three ship <code>Provisional</code> and graduate through <b>046</b>&#x27;s lane —</p>
 <p>promotion gate, 5 consecutive clean review days.</p>
@@ -4846,9 +4841,203 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Still standing from the first report:</b> the <b>Studio 693 alarm-trigger ticket</b> (open, untouched</p>
 <p>48h+, sitting at <code>Gate: Staff</code> with no action row) and the <b>Aug 1 Studio 509 door-left-open</p>
 <p>ticket</b>. Those were real, and they are on the Ops Lead&#x27;s list.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#050</span><span class="emoji">🔍</span><span class="done-title">We found out why thank-you messages stopped going out</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>The robot was doing its job. It found every finished booking and wrote the thank-you the same hour</li><li>But a thank-you is not sent by the robot. It waits for a person to press send</li><li>Seven of them waited, and nobody pressed send. After one day they can never be sent</li><li>The ones a person did release went out in 15 to 45 minutes, so nothing is broken further down</li><li>The robot shows the waiting list once a night, at 10:50pm. Miss that night and it is never shown again</li><li>One booking was a real miss: Sarra&#x27;s Jul 31 event ended at 11:30pm, after the last check of the day</li><li>The two alarms meant to catch this could never have gone off — they were watching the wrong thing</li><li>The board is clean now. Next: Junyan decides who presses send, or if the robot should just send it</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Responder&#x27;s PBF sweep is missing completed bookings — diagnose it</b></p><h2>Question</h2>
+
+<p>Surfaced 2026-08-05 by the live read on <b>046</b>. <b>Seven bookings</p>
+<p>sit <code>Booking Status = Complete</code> with <code>PBF = Unsent</code>, and every one of them dates from 2026-07-31 or</p>
+<p>later — the exact day PBF initial sends moved from Concierge JOB 33 to The Responder.</b> The</p>
+<p>pre-handoff backlog is clean (Jun 28 → Jul 30 all resolved), so this is not an old pile: it is a new</p>
+<p>leak that started at the handoff and has run continuously for five days.</p>
+
+<p>Why does this need diagnosis rather than a fix? Because <b>the desk already had a tripwire for it and</p>
+<p>the tripwire did not fire.</b> Two of them, in fact:</p>
+
+<ul>
+<li>- <code>library/job-1-adt-alarm.md</code> Step 5: a Complete + <code>PBF = Unsent</code> booking still Unsent *the</li>
+</ul>
+<p>following day* means <b>the Responder&#x27;s sweep is broken</b> — flag it.</p>
+<ul>
+<li>- <code>library/the-responder.md</code> pass step 7 + the 🧾 PASS LEDGER rule: the sweep must report</li>
+</ul>
+<p><code>PBF: 0 found · no-show: 0 found</code> every pass, precisely so a silent no-op is distinguishable from</p>
+<p>a sweep that never ran, with 3-consecutive → run-first and 5-consecutive → <code>Attributed defect</code>.</p>
+
+<p>Four of these rows are five days past the JOB 1 line. So either the sweep is not running, or it is</p>
+<p>running and reporting <code>0 found</code> while seven qualifying rows sit in plain sight, or it is filing the</p>
+<p>escalation and nobody reads it. <b>Establish which before changing any code</b> — the three have very</p>
+<p>different fixes, and 045&#x27;s lesson is that guessing at a mechanism produces a confident wrong answer.</p>
+
+<p>Read the Responder&#x27;s rolling reports for 2026-07-31 → 2026-08-05 and answer, in order:</p>
+
+<ol>
+<li>1. Did the Responder run its passes at all over that window? (Run Monitor + Workflow Reports.)</li>
+<li>2. Does step 7 appear in the pass ledger each pass, and what does it report — <code>ran</code>, <code>skipped</code>, or a</li>
+</ol>
+<p>count?</p>
+<ol>
+<li>3. If it reports a count, why do these seven rows not match its query? Candidate causes worth</li>
+</ol>
+<p>checking specifically: the <b>AI Monitor — Today view&#x27;s absolute-date filter</b> (HOUSE-RULES warns</p>
+<p>the relative &quot;today&quot; filter silently returns the wrong day past ~20:00 Toronto — and the sweep</p>
+<p>only looks at <i>today&#x27;s</i> rows, so a booking that flips to <code>Complete</code> after the last pass of its</p>
+<p>own day may never be seen again); the <b>cross-status dedup</b> skipping rows it shouldn&#x27;t; or</p>
+<p><code>Type of Booking</code> filtering.</p>
+<ol>
+<li>4. Did the 3-consecutive / 5-consecutive escalation ever fire? If it did, where did the row go and</li>
+</ol>
+<p>why did no one act on it — that is a second, separate defect from the sweep itself.</p>
+
+<p><b>Suspicion worth testing first, not assuming:</b> the sweep reads the <i>Today</i> view, but a PBF becomes</p>
+<p>due when a booking completes, which is often the last pass of the day or after it. A same-day-only</p>
+<p>window with a 30-min cadence has an obvious hole at the day boundary — and the leak starting exactly</p>
+<p>at the handoff is consistent with the old owner (JOB 1, hourly, with an every-sweep backstop</p>
+<p>explicitly written to catch bookings that completed in an <i>earlier</i> sweep) having covered that hole</p>
+<p>in a way the new owner does not.</p>
+
+<p><b>Not this ticket&#x27;s job:</b> the eight outstanding rows themselves. <b>Junyan ruled 2026-08-05 that a</p>
+<p>PBF more than 1 day past the booking is never sent</b> — so all eight are <code>Will Not Send</code>, with no</p>
+<p>judgment left in any of them. Do not send a single one as part of diagnosing this.</p>
+
+<p><b>That ruling raises the stakes on the diagnosis.</b> If a PBF is unsendable after 24h, then every</p>
+<p>pass the sweep misses is a customer message permanently lost, not merely delayed — there is no</p>
+<p>catch-up sweep that can repair it later. The 30-min cadence bought nothing on those seven bookings.</p>
+<p>Whatever the mechanism turns out to be, the fix has to close the window inside a day, and a</p>
+<p>&quot;backfill the backlog&quot; remedy is worthless here by construction.</p>
+
+<p>Feeds <b>049</b>&#x27;s check <b>U</b>, whose window the ruling now fixes at a</p>
+<p>hard 24h — so U no longer waits on this ticket to be specified, only to be built alongside it.</p>
+
+<h2>Resolution — 2026-08-05</h2>
+
+<p>**The sweep is not broken. The premise is wrong twice over, and the real defect is one step</p>
+<p>downstream: a PBF is <i>queued</i> by a robot but <i>released</i> by a human, and nobody was releasing them.**</p>
+
+<p>Evidence: the Responder&#x27;s rolling dailies for 2026-07-31 → 2026-08-05 (six pages, every 30-min</p>
+<p>pass), the 📤 Message Queue&#x27;s PBF rows since 2026-07-29 (live SQL), and the AI Monitor board rows</p>
+<p>for 2026-07-29 → 2026-08-08 (live SQL).</p>
+
+<h3>1. Did the Responder run its passes? — Yes, all six days, every pass</h3>
+
+<p>A rolling daily exists for each of 07-31, 08-01, 08-02, 08-03, 08-04, 08-05, each with a continuous</p>
+<p>30-minute pass sequence (08:20 → 22:50). No missing-report day, no silent gap. The 09:50 pass on</p>
+<p>08-05 escalated that <i>the Concierge</i> had not run — that is a different robot and a separate</p>
+<p>incident (it started at 14:18Z).</p>
+
+<h3>2. Does step 7 appear each pass, and what does it report? — Present every pass, with real counts</h3>
+
+<p>Not <code>skipped</code>, not a manufactured <code>0 found</code>. The counts move with the board, and from 08-05 the</p>
+<p>pass ledger emits the machine line (<code>LEDGER-V1 job=STEP 7 state=ran since=0 …</code>) as well. Sample:</p>
+
+<ul>
+<li>- 07-31 16:50 — <code>PBF: 2 found · 2 queued · no-show: 1 found · 1 queued</code></li>
+<li>- 07-31 18:51 — <code>PBF: 3 found · 1 queued</code> (two deduped)</li>
+<li>- 08-01 14:21 — <code>PBF: 1 found · 1 queued</code>, explicitly noting every earlier pass reported <code>0 found</code></li>
+</ul>
+<p>because nothing had reached <code>Complete</code> yet</p>
+<ul>
+<li>- 08-05 all passes — <code>PBF: 0 found · no-show: 0 found · PBF expired: 0</code>, with the absolute date</li>
+</ul>
+<p>filter verified on the returned rows every time</p>
+
+<p>The <b>AI Monitor Today-view date filter — the ticket&#x27;s named suspect — is being handled correctly.</b></p>
+<p>Every pass either re-asserts the absolute date or verifies the returned rows carry it; the 08-05</p>
+<p>08:50 pass caught it stale at <code>2026-08-04</code> on arrival and reset it before reading. No pass read the</p>
+<p>wrong day.</p>
+
+<h3>3. Why did the seven rows not match its query? — They <i>did</i> match. It queued them; they were never released</h3>
+
+<p>The queue tells the story. Every one of the leaked bookings has a PBF row created by</p>
+<p><code>Raised by = The Responder</code>, same day, usually within the hour of the booking completing:</p>
+
+<p>| Booking | PBF row created | Sent At |</p>
+<p>|---|---|---|</p>
+<p>| Vladimir Sidorkin (509A, Jul 31) | 07-31 20:56Z | never |</p>
+<p>| Samara I. (509B, Jul 31) | 07-31 22:57Z | never |</p>
+<p>| Amandeep Kaur (693, Jul 31) | 08-01 00:26Z | never |</p>
+<p>| Jake Maresca (509A, Aug 1) | 08-01 18:26Z | never |</p>
+<p>| Julia S. (901, Aug 1) | 08-01 20:54Z | never |</p>
+<p>| Kristel San Jose (901, Aug 3) | 08-04 02:25Z | never |</p>
+<p>| Eunyi C (Aug 4) | 08-04 15:27Z | never |</p>
+
+<p>Against the ones that worked in the same window — Melisa Pustilnik (sent 43 min after queueing),</p>
+<p>Sierra Goulding (26 min), Dee Adelubi Brown / Ayden Mauro / Tanisha Chakma (15 min). <b>The send</p>
+<p>engine is healthy</b> (already established by <b>045</b>: median lag from</p>
+<p><code>Send After</code> to <code>Sent At</code> = 0.0 min). The difference between a PBF that arrives and a PBF that dies</p>
+<p>is entirely whether a human released it from <code>Pending Review</code>.</p>
+
+<p>So the mechanism is <b>hold-and-forget</b>, and it is self-concealing:</p>
+
+<ul>
+<li>- canon holds every PBF at <code>Pending Review</code> — never auto-send (<code>the-responder.md</code> Scope; AUTONOMY);</li>
+<li>- the cross-status dedup correctly skips any booking that already has a row in <b>any</b> status, so</li>
+</ul>
+<p>from the next pass onward the sweep reports <code>found · deduped</code> — <i>forever</i>, truthfully, and</p>
+<p>indistinguishably from a healthy pass;</p>
+<ul>
+<li>- the courtesy/PBF approval block is emitted on the <b>22:50 pass only</b>, so a held PBF gets exactly</li>
+</ul>
+<p>one appearance in front of a human on the night it is drafted, and none after.</p>
+
+<p>The ticket&#x27;s leading suspicion — the same-day window with a hole at the day boundary — is <b>not</b></p>
+<p>the mechanism for these seven; every one was found and queued on its own day. It is real but rarer:</p>
+<p><b>Sarra Genevieve (509A, Jul 31, FBS event 18:45–23:30)</b> has <i>no</i> queue row at all — she completed</p>
+<p>after the day&#x27;s last pass, and no later pass ever looks at a past date. She is the single true</p>
+<p>sweep miss in the window, and she is the case Junyan ruled <code>Will Not Send</code> on 08-05.</p>
+
+<p>Two other rows in the map&#x27;s eight were never leaks: <b>Divine Mokuye</b> is a Studio Viewing (field</p>
+<p>never flipped), and the Jun 27 straggler predates the handoff.</p>
+
+<h3>4. Did the 3/5-consecutive escalation ever fire? — No, and it could not have</h3>
+
+<p>Both tripwires are structurally incapable of firing on this failure:</p>
+
+<ul>
+<li>- <b>The Responder&#x27;s pass-ledger counters count <code>skipped</code>, not <code>found-and-unresolved</code>.</b> Step 7 ran</li>
+</ul>
+<p>every pass, so <code>deferred-since</code> stayed 0 and no counter ever climbed. The ledger was built to</p>
+<p>distinguish a silent no-op from a sweep that never ran — a real gap, correctly closed — but the</p>
+<p>failure that actually happened is a <i>third</i> state the contract has no name for: ran, found it,</p>
+<p>queued it, and it died in review.</p>
+<ul>
+<li>- <b>JOB 1 Step 5&#x27;s next-day flag has no query behind it.</b> Step 1 pulls <i>today&#x27;s</i> rows only, and the</li>
+</ul>
+<p>07-21 completeness sweep queries only <code>Booking Date &lt; today AND Booking Status ∈ {Upcoming, In</p>
+<p>Studio}</code>. A <code>Complete</code> + <code>PBF = Unsent</code> booking from yesterday is returned by neither. The rule</p>
+<p>says &quot;flag it if still Unsent the following day&quot; and nothing the job reads can ever see it.</p>
+
+<p><b>So the finding is not &quot;nobody read the tripwire&quot; — it is that neither tripwire was watching this</p>
+<p>event.</b> That is a sharper and more uncomfortable answer than the ticket&#x27;s framing: the desk had</p>
+<p>two detectors pointed at a sweep that was working, and none pointed at the review queue where the</p>
+<p>messages were actually dying.</p>
+
+<h3>State as of this session</h3>
+
+<p>Live SQL over the AI Monitor board returns <b>zero <code>Complete</code> + <code>PBF = Unsent</code> rows</b> for</p>
+<p>2026-07-29 → 2026-08-05. All eight are resolved under Junyan&#x27;s 1-day rule. Nothing outstanding.</p>
+
+<h3>What falls out</h3>
+
+<ul>
+<li>- <b>The fix is a release policy, not sweep code</b> — graduated as</li>
+</ul>
+<p><b>052</b>. Under the 1-day rule a held PBF has ≤24h to be released or</p>
+<p>it is dead, and the current path gives it one 22:50 appearance. Junyan&#x27;s call: auto-send PBFs</p>
+<p>(as the no-show text already does), or escalate an unreleased one before its window closes.</p>
+<ul>
+<li>- <b><b>049</b>&#x27;s check U is confirmed as the right detector</b> and its</li>
+</ul>
+<p>design is unchanged by this — it asserts <i>resolution</i>, which is exactly the event both existing</p>
+<p>tripwires miss. Noted there that JOB 1 Step 5&#x27;s prose rule needs deleting or backing with a query</p>
+<p>once U ships; two unfireable tripwires should not survive the arrival of a working one.</p>
+<ul>
+<li>- <b>The pass-ledger contract has a blind spot worth generalising</b> beyond PBF: a step that finds</li>
+</ul>
+<p>work, hands it off correctly, and never sees it resolved reports a clean pass forever. Banked in</p>
+<p>the map&#x27;s fog, not ticketed — the registry&#x27;s <code>produces</code> / <code>verify_within</code> fields</p>
+<p>(<b>001</b>) may already cover it.</p>
 </div></details></div></details>
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-05 19:49 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-05 20:21 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
