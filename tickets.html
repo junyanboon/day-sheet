@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-05 22:16 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-06 16:30 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">11</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">14</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">9</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">35</div><div class="l">✅ Finished</div></div>
 </div>
@@ -772,7 +772,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>notify-after SMS, the Actions-to-Perform drain, and then the pilot week — which is where every</p>
 <p>acceptance criterion is actually earned.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">11</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">14</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1710,6 +1710,159 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>capability on the desk; propose the containment before proposing the path</p>
 
 <p>Findings land as a linked asset. The build, if there is one, is a separate ticket.</p>
+</div></details></details></div><div class="job"><div class="jnum">#060</div><div class="jhead"><span class="emoji">🏓</span><h4>Messages nobody claims — make &#x27;not my job&#x27; leave a mark</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Three renters this week wrote to us and no robot picked it up — Junyan caught each one himself</li><li>Each robot looked, decided &#x27;not mine&#x27;, and wrote nothing down — so it looked like nothing was wrong</li><li>The rule going in: every message must end somewhere — handled, given a ticket, or a robot&#x27;s name on the &#x27;no&#x27;</li><li>A separate watcher, outside all the robots, rings when a message sits too long with no answer</li><li>It names the person waiting — &#x27;Himanshi, booking question, 4 hours&#x27; — not just a number</li><li>We tried fixing this with more instructions three times; it failed three times — this time it&#x27;s a watcher, not a rule</li><li>First step: read the robot&#x27;s actual work logs to find out whether it even looks at new messages</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Ping-pong — every inbound message gets a recorded disposition, checked from outside the passes</b></p><h2>Question</h2>
+
+<p>From <b>HANDOFF-concierge-ping-pong.md</b> (2026-08-06,</p>
+<p>diagnosed not fixed). A renter&#x27;s message lands in the Correspondence Log; the Responder decides</p>
+<p>it is not its lane and leaves it; the Concierge never picks it up; <b>no error, no skip record, no</p>
+<p>ticket — the message just ages.</b> Three cases in one week (Shauna Hardy, Himanshi Mehta across two</p>
+<p>consecutive Responder passes, David Diep&#x27;s follow-through), all resolved by Junyan, none by the</p>
+<p>fleet. Junyan&#x27;s framing ruling: *picking up new messages in the Correspondence Log is part of the</p>
+<p>Concierge&#x27;s sweep — and that part is not happening.*</p>
+
+<p>The core defect: <b>declining to act is invisible.</b> Every pass reports success because, from each</p>
+<p>agent&#x27;s view, nothing went wrong. Nothing in the fleet records what a job chose <i>not</i> to do.</p>
+
+<p>Prompt-level fixes have failed <b>three times</b> (pass ledger skipped on 3 of 5 passes; 3-deferral</p>
+<p>escalation unpaid next morning; claimed-but-undispatched message invisible 13 days). Common</p>
+<p>property: the detector lived inside the failing pass. The handoff&#x27;s conclusion, adopted as this</p>
+<p>ticket&#x27;s premise: <b>the check must live outside the passes</b> and require no agent&#x27;s cooperation.</p>
+
+<p>Two halves to resolve:</p>
+
+<ol>
+<li>1. <b>Ground truth first (AFK, before the grilling):</b> read actual Concierge pass transcripts and</li>
+</ol>
+<p>answer §4&#x27;s candidate break points — does the sweep issue a Correspondence Log query at all?</p>
+<p>Is there a watermark? Do the drops correlate with long passes (the 051 starvation shape)?</p>
+<p>§4&#x27;s points 1–2 and 5 produce identical symptoms and need different fixes; do not guess.</p>
+<ol>
+<li>2. <b>The design decision (Junyan&#x27;s, per the handoff):</b> the disposition contract + the external</li>
+</ol>
+<p>detector. Candidate shape to grill, not to assume: every Correspondence Log entry must reach a</p>
+<p>recorded disposition (actioned / linked to ticket / explicitly declined, decliner named), and a</p>
+<p>new <b>invariant</b> — *no log entry older than N without a disposition and without a linked</p>
+<p>ticket* — rides the 046 probation lane like any other check, named per message (&quot;Himanshi</p>
+<p>Mehta, Aug-15 booking request, 4h, no disposition&quot;), immune to pass truncation.</p>
+
+<p>Seams that bound the design — settle them in the grilling, don&#x27;t rediscover them later:</p>
+
+<ul>
+<li>- <b>The Triager (<b>054</b>) is the structural fix for intake</b> — its whole job is</li>
+</ul>
+<p>&quot;read inbound, make the stub, stop.&quot; Decide whether this ticket ships an interim detector and</p>
+<p>054 ships the disposition writer, or 054 accelerates and this ticket is detection only. Do NOT</p>
+<p>build a second intake path here.</p>
+<ul>
+<li>- <b>The invariant venue exists</b> — <code>event-gate</code>&#x27;s checker + the 046 probation lane. A new check</li>
+</ul>
+<p>goes there, not into any persona&#x27;s prompt (the three failed attempts all lived in prompts).</p>
+<ul>
+<li>- <b>Detection without repair makes the pile bigger:</b> JOB 7 — the repair path — did not run at</li>
+</ul>
+<p>all on Aug 5 while detection ran ~15 times (§6). The acceptance below includes the repair path</p>
+<p>actually draining what the detector finds.</p>
+<ul>
+<li>- <b>The store is corrupted and the feed is flaky</b> — duplicates (<b>061</b>)</li>
+</ul>
+<p>and the watchlist-refresh failure that keeps SMS turns out of the ledger</p>
+<p>(<b>062</b>). Any watermark/disposition scheme inherits both;</p>
+<p>build order may need 061 first.</p>
+
+<h2>Acceptance</h2>
+
+<p>From the handoff&#x27;s §7, adopted verbatim as the fixed-when:</p>
+
+<ol>
+<li>1. Every Correspondence Log entry reaches a recorded disposition; silence is not a disposition.</li>
+<li>2. An entry with no disposition past a bounded interval raises a signal <b>from outside the</li>
+</ol>
+<p>passes</b> — no agent cooperation required.</p>
+<ol>
+<li>3. The signal names the message and the renter, not a count.</li>
+<li>4. It survives a truncated pass — fires exactly when load is highest.</li>
+</ol>
+
+<p>Plus: the three known cases would each have been caught within N, and the detector&#x27;s findings are</p>
+<p>demonstrably drained (repair path alive), not accumulating.</p>
+</div></details></details></div><div class="job"><div class="jnum">#061</div><div class="jhead"><span class="emoji">👯</span><h4>The message log keeps writing the same message twice — fix the copier</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>18 batches of doubled messages in one day; it&#x27;s the copying program, not the robots</li><li>Why it matters: every robot checks this log to avoid doing things twice — a messy log fools them all</li><li>Fix the copier, clean out the doubles, and add a check so it stays clean</li><li>The ping-pong fix leans on this log, so this likely goes first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Correspondence Log poller writes duplicates — fix the writer, dedupe the store</b></p><h2>Question</h2>
+
+<p>From <b>HANDOFF-concierge-ping-pong.md</b> §6: the</p>
+<p>Correspondence Log (<code>collection://defec0fd-e817-4191-8a50-b69ad3e72b59</code>) is accumulating</p>
+<p>duplicates — <b>18 duplicate groups in 24 hours across three consecutive windows, 5 open feedback</p>
+<p>rows</b> — and the evidence points at the poller, not agent behaviour.</p>
+
+<p>Why it outranks its size: this log is the shared dedup store every robot reads, and it is the</p>
+<p>same store the ping-pong sweep (<b>060</b>) fails to read. Any</p>
+<p>watermark or per-message disposition scheme 060 designs <b>inherits these duplicates</b> — a</p>
+<p>disposition keyed to one copy of a message leaves its twin looking unhandled, which would</p>
+<p>re-manufacture ping-pong inside the fix. Likely 060&#x27;s build depends on this landing first; 060&#x27;s</p>
+<p>grilling confirms.</p>
+
+<p>Scope:</p>
+
+<ol>
+<li>1. Reproduce: pull the 18 groups, establish the duplicate key (same message id? same</li>
+</ol>
+<p>body+timestamp with different ids?) and which poller writes them (the two-way Notion sync</p>
+<p>cursors from the 07-18 design are a suspect — check both directions).</p>
+<ol>
+<li>2. Fix the writer so it is idempotent against the observed key.</li>
+<li>3. Clean the store: merge/close existing duplicate rows so downstream dedup reads are trustworthy.</li>
+<li>4. Add the check that keeps it fixed: a duplicate-group count on the invariant roster (probation</li>
+</ol>
+<p>lane per 044&#x27;s standing rule — a day of live data before it may escalate).</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Zero new duplicate groups across 48h of live polling.</li>
+<li>- Existing duplicates merged or closed; the 5 feedback rows resolved with the root cause named.</li>
+<li>- The invariant watches it (Provisional is fine).</li>
+</ul>
+</div></details></details></div><div class="job"><div class="jnum">#062</div><div class="jhead"><span class="emoji">📉</span><h4>The text-message collector fails one run in four — and nobody notices</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When it fails, a renter&#x27;s texts never reach the record the robots read</li><li>So the robot sees silence and thinks the renter never wrote — that&#x27;s how David&#x27;s messages got missed</li><li>The cause is known: one script trips over another&#x27;s unfinished work in the shared folder</li><li>Fix the trip, refill the missing days, and make a failed run raise its hand instead of hiding</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>watchlist-refresh fails ~1 run in 4 and takes the J28 ledger pollers down with it</b></p><h2>Question</h2>
+
+<p>From <b>HANDOFF-concierge-ping-pong.md</b> §6:</p>
+<p><code>watchlist-refresh</code> — the 30-min GitHub Action the J28 Gmail/SMS ledger pollers ride — <b>fails</p>
+<p>about one run in four</b>. When it fails, SMS turns never reach the git ledger: during the David</p>
+<p>Diep run his 21:54/21:57 exchange was absent, so <b>an agent reading git-first canon saw no</p>
+<p>messages — indistinguishable from a renter who never wrote.</b> A silent feed gap reads exactly</p>
+<p>like silence from the customer, which feeds the ping-pong class directly.</p>
+
+<p>Root cause is already known (handoff): <code>scripts/sms_pull.py</code> commits without checking whether an</p>
+<p>earlier step left the tree mid-rebase with an unmerged <code>watchlist/</code> file. Fix that concretely:</p>
+
+<ol>
+<li>1. Guard the commit path — detect a dirty/mid-rebase tree, abort/repair (e.g. <code>git rebase --abort</code></li>
+</ol>
+<p>+ clean re-pull) instead of compounding it, and make each poller step fail independently rather</p>
+<p>than poisoning the shared checkout.</p>
+<ol>
+<li>2. Confirm the ~1-in-4 rate from the Actions run history, and re-measure after the fix (target:</li>
+</ol>
+<p>a clean week).</p>
+<ol>
+<li>3. Backfill the gaps: re-run the pollers over the failure windows so the ledger is complete</li>
+</ol>
+<p>(idempotent-by-filename makes this safe by design — verify it holds).</p>
+<ol>
+<li>4. A failed poller run must be <i>visible</i>: on failure, file the deduped <code>Run Error</code> row the 035</li>
+</ol>
+<p>standing rule requires — today it fails silently, which is this map&#x27;s third-time pathology.</p>
+
+<p>Note the standing fog item &quot;Scheduler reliability for the deterministic lane&quot; — Actions cron</p>
+<p>dropping runs is a separate, known problem with an external-tick pattern already prototyped</p>
+<p>(<code>send-engine/FbsTick.gs</code>). This ticket fixes the <i>crash</i>, not the <i>cadence</i>; if the run history</p>
+<p>shows dropped schedules are also material here, say so in the resolution and let the fog item</p>
+<p>sharpen, don&#x27;t absorb it.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- One clean week of watchlist-refresh runs (no rebase/unmerged-file failures).</li>
+<li>- Ledger backfilled through the known gaps; David Diep&#x27;s Aug-5 SMS turns present.</li>
+<li>- A poller failure now files a <code>Run Error</code> row (verified by forcing one).</li>
+</ul>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">9</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -5655,5 +5808,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-05 22:16 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-06 16:30 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
