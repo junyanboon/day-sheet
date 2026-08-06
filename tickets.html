@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-05 20:21 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-05 21:42 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">8</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">8</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">33</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">13</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">9</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">34</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -598,7 +598,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">8</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">13</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1447,8 +1447,235 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Related but not this ticket: <b>049</b>&#x27;s check U detects an unresolved</p>
 <p>PBF after the fact. Detection is settled; this is about preventing the loss in the first place.</p>
+</div></details></details></div><div class="job"><div class="jnum">#053</div><div class="jhead"><span class="emoji">🔁</span><h4>Build the new way tickets get done — the robot suggests, Junyan says yes or fixes it</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A new list replaces the old &#x27;things to do&#x27; board — one suggested next step per ticket</li><li>Each suggestion comes with the proof behind it, so Junyan can decide without digging</li><li>Two moves only: say yes, or rewrite the step to what it should have been, then mark it Ready</li><li>The robot only does steps marked Ready — never one Junyan hasn&#x27;t seen</li><li>After doing it, the robot looks again at the real booking or calendar to check it truly happened</li><li>If Junyan already did the job himself, the robot spots it and ticks it off — no double work</li><li>Steps the robot gets right over and over become automatic; one rewrite and it goes back to asking</li><li>Trying it first on booking changes, the busiest and messiest kind</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Next Action queue + the advancement loop — pilot on Booking Changes</b></p><h2>Question</h2>
+
+<p>Graduated from <b>018</b>, which dissolved J01 and ruled that ticket</p>
+<p>advancement is a <b>loop</b>, not a job. This ticket builds it and runs the pilot. It is the head of</p>
+<p>the frontier — the new Concierge does not exist until this runs.</p>
+
+<p><b>Build order matters: this does NOT wait on the Triager (<b>053</b>).</b> Today&#x27;s JOB 2</p>
+<p>already creates Booking Changes tickets, so the loop pilots on real tickets from day one; the</p>
+<p>Triager replaces the stub-making half afterwards.</p>
+
+<h3>1. The <code>Next Action</code> queue</h3>
+
+<p>A new Notion DB that <b>retires ✅ Actions to Perform</b> (Junyan: one action surface, not two —</p>
+<p>plan the migration of open rows as part of this ticket, and see <b>018</b> §3).</p>
+<p>One open proposal per ticket, max. Fields:</p>
+
+<ul>
+<li>- <code>Ticket</code> relation, <code>Artist</code> relation</li>
+<li>- <b><code>Proposed action</code></b> — the exact action text, editable by the reviewer. This is the field the</li>
+</ul>
+<p>human rewrites.</p>
+<ul>
+<li>- <b><code>Basis</code></b> — the evidence the agent read to propose it (the calendar read, the SOP step, the</li>
+</ul>
+<p>thread history), so the reviewer can judge without re-investigating. A proposal whose Basis does</p>
+<p>not let a reviewer decide is a defective proposal.</p>
+<ul>
+<li>- <code>Source SOP step</code> relation</li>
+<li>- <code>Status</code> — <code>Proposed → Ready → Done</code>, plus <code>Won&#x27;t Do</code>. Reuse the Message Queue&#x27;s verbs so staff</li>
+</ul>
+<p>learn nothing new.</p>
+<ul>
+<li>- <code>Raised by</code>, <code>Action class</code>, <code>Promotion counter</code> (per class, machine-readable — a field, never</li>
+</ul>
+<p>prose)</p>
+<ul>
+<li>- <code>Executed by</code> — agent or human (see §3)</li>
+</ul>
+
+<h3>2. The five beats</h3>
+
+<p><b>PROPOSE → REVIEW → EXECUTE → VERIFY → NEXT.</b> The agent proposes ONE next action; the reviewer</p>
+<p>either approves as-is or <b>rewrites the action text</b>, then marks it <code>Ready</code>; the agent executes</p>
+<p><b>only <code>Ready</code> rows</b>, never a <code>Proposed</code> one; then it re-reads the live source to confirm the</p>
+<p>action actually happened and marks <code>Done</code> with the verification evidence. A read that disagrees is</p>
+<p>raised as a mismatch — <b>never</b> marked Done. Then the next action is proposed, or the ticket</p>
+<p>closes as resolved.</p>
+
+<p>The rewrite is the feedback: the diff between proposed and rewritten text files an SOP improvement</p>
+<p>against <code>Source SOP step</code> <b>and</b> resets that class&#x27;s promotion counter to zero.</p>
+
+<h3>3. Executor-agnostic — the property that dissolves the back-capture tax</h3>
+
+<p>Because VERIFY reads ground truth, it does not care who acted. Junyan moving the booking in Skedda</p>
+<p>himself, or sending the message himself, must close the row as <code>Done</code> / <code>Executed by = human</code> on</p>
+<p>the next sweep with <b>no capture work</b>. A proposal overtaken by reality is closed, not re-proposed</p>
+<p>and not nagged about. Build this as a first-class path, not an edge case — it is the single feature</p>
+<p>that stops the system taxing Junyan for being faster than it.</p>
+
+<p>Off-system actions no read can see keep the existing path: Slack <code>#desk-drops</code>.</p>
+
+<h3>4. Promotion ladder</h3>
+
+<p>Every action class starts human-gated. Approved-unmodified N consecutive times → auto-execute; any</p>
+<p>rewrite → counter to zero. <b>Money (charge / refund / credit / pricing), physical dispatch, and</p>
+<p>alarm-code creation NEVER promote</b>, whatever the counter reads. Decide N as part of the build</p>
+<p>(open question — see the map).</p>
+
+<p><b>Fast track from day one</b>, no human turn: instant booking requests from Skedda and the platforms,</p>
+<p>and booking moves (Junyan&#x27;s ruling — time-critical and already ruled safe).</p>
+
+<h3>5. Tick</h3>
+
+<p>A thin sweep every 5–10 min: read the queue first, exit in seconds when nothing is <code>Ready</code> and</p>
+<p>nothing waits; full agent pass only when there is real work. Cheaper than the current fixed cadence</p>
+<p>that burns a pass whether or not there is anything to do. A true push path (event-gate fires the</p>
+<p>agent on approval) is a later prototype, explicitly NOT a prerequisite.</p>
+
+<h3>6. Pilot</h3>
+
+<p><b>Booking Changes &amp; Manual Help only.</b> Everything else keeps running on today&#x27;s rails.</p>
+<p><b>Junyan reviews personally for week one</b> — his corrections define the standard — then the Ops</p>
+<p>Lead takes review. The Skedda write API makes this class genuinely executable end to end; verify</p>
+<p>what it can actually write as step 0 (the broad canon correction is <b>058</b>).</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A Booking Changes ticket walks end to end through the loop with every action seen before it</li>
+</ul>
+<p>happened, and its Skedda write verified by read-back.</p>
+<ul>
+<li>- A human-executed action closes its row automatically, with no back-capture by Junyan.</li>
+<li>- At least one rewrite produces a recorded SOP improvement and a visible counter reset.</li>
+<li>- Inherited from <b>051</b>: no job at <code>deferred-since &gt;= 2</code> across 3</li>
+</ul>
+<p>consecutive days, counters falling, intake still complete on a heavy day.</p>
+
+<p><a href="https://claude.ai/code/artifact/370948d1-5ad7-411d-bddb-941905121379" target="_blank" rel="noopener">Interactive design walkthrough</a> —</p>
+<p>the Nadia Okonkwo booking move, four turns, with the rewrite beat and the promotion counter live.</p>
+</div></details></details></div><div class="job"><div class="jnum">#054</div><div class="jhead"><span class="emoji">📬</span><h4>A small helper whose only job is opening the mail</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Reads the message, starts a ticket, picks the right procedure, writes it down, stops</li><li>It does not answer, does not fix, does not decide — that&#x27;s the new loop&#x27;s job</li><li>Before it even looks: a program works out who the sender is and whether we already handled this</li><li>The old mail job did far too much, which is why things went to the wrong place</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Triager — stub + route, and nothing else</b></p><h2>Question</h2>
+
+<p>Graduated from <b>018</b>. JOB 2 is too big (Junyan). Split off the intake</p>
+<p>half as <b>one small AI core with one job</b>: read inbound, create the ticket stub, SOP-route it, log</p>
+<p>the correspondence, stop.</p>
+
+<p>Deliberately excluded — these are the loop&#x27;s (<b>052</b>) or nobody&#x27;s:</p>
+<p>no advancement, no drafting, no gates, no money, no lifecycle. &quot;Keep it very clean&quot; (Junyan).</p>
+
+<p><b>Rails in front</b> (the Codex five-lanes shape Junyan endorsed — one small AI core boxed in by</p>
+<p>checks that cannot forget):</p>
+<ul>
+<li>- <b>who-is-this stamp</b> — resolve the sender against the Artist DB deterministically before the LLM</li>
+</ul>
+<p>sees the message; dedup at the same moment</p>
+<ul>
+<li>- <b>already-done check</b> — the J28 thread + open tickets, so an inbound that is already handled</li>
+</ul>
+<p>never reaches the core</p>
+
+<p><b>Rails behind:</b> the routing decision is checked against the 🗺️ SOP Routing table structurally</p>
+<p>(WHO-before-WHAT, whole-table read, disambiguation cell — F3/F4&#x27;s fix surface from</p>
+<p><b>017</b>), and a no-clear-match parks + files rather than guessing.</p>
+
+<p>Inbox hygiene (label/archive/audit log) stays with this lane — it is intake state, and two writers</p>
+<p>there corrupt the audit invariants.</p>
+
+<p>Sequencing: <b>052</b> pilots on tickets today&#x27;s JOB 2 already makes,</p>
+<p>so this is parallel work, not a blocker.</p>
+</div></details></details></div><div class="job"><div class="jnum">#055</div><div class="jhead"><span class="emoji">⚙️</span><h4>Turn three of the robot&#x27;s chores into small programs</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Alarm watching moves to a program that checks every minute and calls staff itself</li><li>The who&#x27;s-in-today list rebuilds itself all day instead of once every two hours</li><li>Copying claimed staff shifts to the calendar is just copying — no thinking needed</li><li>A fourth chore gets deleted outright: another robot already does it</li><li>Rule we learned the hard way: nothing retires until the new owner is seen actually doing it</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move J01&#x27;s deterministic lanes out of the LLM pass — alarm watch, fast-track list, shift mirror</b></p><h2>Question</h2>
+
+<p>Graduated from <b>018</b>, which ruled each of these out of the LLM pass.</p>
+<p>Pure code, no judgment, parallel to everything else.</p>
+
+<ol>
+<li>1. <b>Alarm PENDING→ALARM watch → <code>event-gate</code>.</b> Junyan: *&quot;if there is an alarm it needs to be</li>
+</ol>
+<p>addressed immediately by contacting staff, not by the Concierge 2 hours later.&quot;* The pair check</p>
+<p>is a code diff; it belongs on the minute tick beside the live panel reads already there</p>
+<p>(invariants :25, the Doorman&#x27;s 04:00 pass), paging staff directly. The Concierge exits the alarm</p>
+<p>business — remove JOB 1&#x27;s mandatory half from canon in the same change, and keep the ticket-</p>
+<p>raising behaviour (an alarm-trigger ticket on a real pair) wherever the check lands.</p>
+<ol>
+<li>2. <b>FAST-TRACK list → deterministic renderer.</b> Junyan: *&quot;needs to be kept up to date throughout</li>
+</ol>
+<p>the day depending on who&#x27;s in the studio.&quot;* Today&#x27;s occupants + first-timers derive from the FBS</p>
+<p>board and the studio calendars (019 pattern). The list is data; only <i>acting</i> on someone who</p>
+<p>writes in needs judgment, and that is intake&#x27;s job.</p>
+<ol>
+<li>3. <b>JOB 31 claimed-shift mirror → plain code.</b> Calendar mirror with the two dedup guards. Zero</li>
+</ol>
+<p>judgment. The Planner&#x27;s 19:30 backstop can retire once it runs clean.</p>
+<ol>
+<li>4. <b>JOB 1 remainder — delete, do not rehome.</b> PBF reconcile is redundant (the Responder queues,</li>
+</ol>
+<p>JOB 3&#x27;s successor flips <code>Sent</code>, invariant U catches unresolved); straggler sweep and board</p>
+<p>reconciliation fold into the invariants roster (<b>044</b> family).</p>
+
+<p><b>Standing lesson applies (<b>035</b>):</b> a retirement is not done until</p>
+<p>every step of the retired job names its new owner — and naming an owner is not verifying the owner</p>
+<p>acts. Each lane reports its own result including zero, and files a <code>Run Error</code> row if it cannot run.</p>
+</div></details></details></div><div class="job"><div class="jnum">#058</div><div class="jhead"><span class="emoji">🔑</span><h4>Find a way for the robot to set door codes itself</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Right now only a person can make a code, so every code request waits on a human</li><li>Junyan&#x27;s view: making a code is low risk — a renter stuck outside is the real danger</li><li>This already bit us: Vicky couldn&#x27;t get into 509A even though the desk knew all day</li><li>The backup plan today is a master code that opens everything — we&#x27;d rather not need it</li><li>First step is finding out what the alarm company actually allows</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Find a write path for Alarm.com codes — a lockout is worse than the write risk</b></p><h2>Question</h2>
+
+<p>Graduated from <b>018</b>. PIN generation is human-only across every code SOP</p>
+<p>because <code>alarm-mcp</code> is read-only by design, which makes every access-code issue park on a staff</p>
+<p>gate. Junyan named the risk asymmetry plainly: *&quot;Alarm.com does not have a write API, but I want to</p>
+<p>find a solution around this as it&#x27;s not a high risk to write in the code. It&#x27;s high risk if someone</p>
+<p>is not able to get in.&quot;*</p>
+
+<p>The Vicky Yeung lockout (<b>035</b>) is the standing evidence: detection</p>
+<p>worked, and a renter still could not get in. <b>042</b>&#x27;s rung 4 —</p>
+<p>sending the Alarm.com Emergency Code — exists only because the safer per-renter, time-boxed user is</p>
+<p>impossible without a write path. <b>That code is a master key</b> (<code>All locations / At All Times /</p>
+<p>Existing + Future</code>), so a real write path is also the way to stop reaching for it.</p>
+
+<p>Investigate and report:</p>
+<ul>
+<li>- what Alarm.com actually exposes — documented API, partner/dealer API, or nothing</li>
+<li>- browser automation from <code>event-gate</code> as the fallback (the Codex in-app-browser precedent from</li>
+</ul>
+<p><b>013b</b> was ruled too fragile for unattended fires — say whether a</p>
+<p>server-side headless path is different in kind, or the same trap)</p>
+<ul>
+<li>- whether a per-renter, time-boxed user can be created at all, which is the outcome that matters</li>
+<li>- credential handling and blast radius — write access to the alarm system is the most dangerous</li>
+</ul>
+<p>capability on the desk; propose the containment before proposing the path</p>
+
+<p>Findings land as a linked asset. The build, if there is one, is a separate ticket.</p>
+</div></details></details></div><div class="job"><div class="jnum">#059</div><div class="jhead"><span class="emoji">✍️</span><h4>Fix a wrong fact: the booking system CAN be changed by the robot</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Our written procedures all say only a person can move or cancel a booking</li><li>That&#x27;s not true, and it&#x27;s why so many jobs sat waiting on staff who didn&#x27;t owe anything</li><li>Go through the procedures and mark those steps as robot-doable</li><li>Also fix two links pointing at old retired procedure pages</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Correct the &quot;Skedda has no write API&quot; premise across canon and the SOPs</b></p><h2>Question</h2>
+
+<p>Graduated from <b>018</b>. <b>Skedda has a write API</b> (Junyan, 2026-08-05).</p>
+<p>Canon says otherwise, in load-bearing places:</p>
+
+<ul>
+<li>- <b>017&#x27;s recurring-action inventory</b> §D: *&quot;Skedda has no</li>
+</ul>
+<p>write API, so every create/move/cancel/price change is <code>[STAFF]</code> — the point where the ticket</p>
+<p>parks&quot;*, and records a 2026-06-22 hygiene pass that retagged Booking Changes steps <code>[AI]→[STAFF]</code></p>
+<p>on this basis.</p>
+<ul>
+<li>- The Booking Changes &amp; Manual Help, Billing (Case A correction), Studio Overtime, and Skedda</li>
+</ul>
+<p>Booking Inquiry SOPs all park at that gate.</p>
+
+<p>This stale fact <b>manufactured</b> a large share of the F1 mis-parked-gate family: gates raised for</p>
+<p>work no human needed to do. Correcting it is a prerequisite for the loop promoting any booking</p>
+<p>action to auto-execute.</p>
+
+<p>Scope:</p>
+<ol>
+<li>1. Establish what the API can actually write — create, move, cancel, price change, and what it</li>
+</ol>
+<p>refuses. Record the evidence.</p>
+<ol>
+<li>2. Re-tag the affected SOP steps <code>[STAFF] → [AI]</code> where the API covers them, and update</li>
+</ol>
+<p><b>017&#x27;s asset</b> with a correction note rather than a</p>
+<p>silent edit.</p>
+<ol>
+<li>3. Fix the two live cross-ref drifts 017 flagged while in there: Booking Changes and Skedda Inquiry</li>
+</ol>
+<p>still link &quot;Not this SOP&quot; to the <b>deprecated</b> Refund/Credit and Make-Adjust-Manually pages</p>
+<p>instead of their merged replacements.</p>
+
+<p>The Booking Changes half is urgent because it is the pilot class</p>
+<p>(<b>052</b> verifies it as step 0); the rest of the corpus follows.</p>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">8</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">9</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
 <p>Build the crude-but-real J26 cost ledger on the Jobs registry spine: per job, runs × pass length (proxy for token spend) plus a self-reported supervision-minutes line, tallied weekly. Framing: <b>subscription headroom + exposure if the subsidy changes</b>, not cash bleed (~$240/mo Claude + $140/mo ChatGPT actual). It also populates the sibling map&#x27;s GO criterion (c). Decide the tally mechanism (likely a weekly scheduled job writing registry rows) and stand it up.</p>
 </div></details></details></div><div class="job"><div class="jnum">#015</div><div class="jhead"><span class="emoji">✂️</span><h4>Stop keeping two copies of messages</h4></div><span class="pill p-wait">needs 006 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Today messages get saved in two places</li><li>Switch fully to our own record</li><li>Freeze the old copy</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cut correspondence canon over from the Notion Correspondence Log to J28</b></p><h2>Question</h2>
@@ -1527,62 +1754,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Already-moot parts: consumer repoint (done inside 025&#x27;s port), write-path cutover</p>
 <p>(done — pollers/log_drop own all writes), backfill decision (done in 006: 90-day</p>
 <p>backfill executed), the freeze (void).</p>
-</div></details></details></div><div class="job"><div class="jnum">#018</div><div class="jhead"><span class="emoji">🏗️</span><h4>Redesign how mail gets handled</h4></div><span class="pill p-wait">needs 017 first</span> <span class="pill p-wait">needs 006 first</span> <span class="pill p-wait">needs 022 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Organize work by person, not by ticket</li><li>Split mail sorting into smaller jobs</li><li>The biggest fix on the list</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rearchitect J01 — ledger-fed triage, sub-job split, ticket-advancement contract</b></p><blockquote><b>Extraction landed (2026-07-29, self-improving-desk ticket 003):</b> the &quot;draft responses&quot; sub-job this rearchitecture deferred is now OUT of J01/JOB 2. <b>The Responder</b> (canon <code>library/the-responder.md</code>, cloud triggers <code>trig_01WA9KLVfMD82gAYupxsBwH5</code> :20 + <code>trig_015q8fhqzYvVjv5N6rnmH7wK</code> :50, 30-min cadence 08:20–22:50 Toronto) exclusively owns non-ticket held replies: courtesy/acknowledgement replies, quick answers, nudge holding replies, PBF-adjacent replies. JOB 2 keeps inbox hygiene, classification, the audit log, and all ticket-forming/ticket-lifecycle replies — its courtesy-reply section is now a carve-out pointer. Design J01&#x27;s sub-job split around that boundary.</blockquote>
-
-<blockquote><b>Starvation mandate folded in (2026-08-05, <b>051</b>):</b> the tail</blockquote>
-<blockquote>jobs JOB 3 / 4 / 31 (and 0 / 7) starve every pass — JOB 1/2 are mandatory, front-loaded, unbounded,</blockquote>
-<blockquote>and eat the budget before the tail is reached (<code>deferred-since</code> counters only rise). Junyan ruled</blockquote>
-<blockquote><b>split it up</b> — the fix is this ticket&#x27;s pass-split, not a new mechanism. Design constraint: the</blockquote>
-<blockquote>tail must land where JOB 1/2 don&#x27;t compete for its budget. Acceptance inherited: no job at</blockquote>
-<blockquote><code>deferred-since &gt;= 2</code> across 3 consecutive days; counters falling; JOB 1/2 mandatory halves still</blockquote>
-<blockquote>complete on a heavy day.</blockquote>
-
-<h2>Question</h2>
-
-<p>Design J01&#x27;s next form with Junyan, from 017&#x27;s evidence:</p>
-<ul>
-<li>- <b>Input:</b> the J28 correspondence ledger replaces email triage as the intake (deterministic</li>
-</ul>
-<p>ingest already classifies/lands the correspondence; J01 pulls from the ledger and advances</p>
-<p>tickets).</p>
-<ul>
-<li>- <b>Split:</b> does J01 decompose into sub-jobs, each owning one recurring action (advance alarm</li>
-</ul>
-<p>codes / draft responses / prompt Ops lead for charges / …)? Coordinate with the</p>
-<p>self-improving-desk sibling&#x27;s micro-agent-split boundary — never double-extract; read the</p>
-<p>sibling&#x27;s state first.</p>
-<ul>
-<li>- <b>The advancement contract:</b> the precise, checkable definition of &quot;advance a ticket&quot;</li>
-</ul>
-<p>(which DB, which SOP link, which checkboxes) so wrong-place/wrong-SOP/wrong-checkbox defects</p>
-<p>become detectable, not just annoying. Legacy SOPs flagged by 017 get fixed or retired as part</p>
-<p>of the design.</p>
-<ul>
-<li>- <b>Cadence &amp; home:</b> which persona(s) the sub-jobs park in — driver: Junyan wants all jobs</li>
-</ul>
-<p>parked in personas soon so he can focus on sales.</p>
-
-<h2>Design inputs captured from the Sweep Feedback backlog (2026-07-17)</h2>
-
-<p>The advancement-contract half of this ticket is exactly what a cluster of open 🔧 Sweep Feedback</p>
-<p>design rows kept circling. Folded in here as design inputs so the contract is built to close them:</p>
-
-<ul>
-<li>- <b>Premature &#x27;done&#x27; marking → orphan gates + premature Review advances</b> (Sweep Feedback row</li>
-</ul>
-<p><code>3997503281c481eea59af108599d8b30</code>, now closed as superseded → this ticket). The canonical</p>
-<p>&quot;may-advance&quot; rule the row proposes: a ticket may leave a gate or reach <code>Position = Review</code></p>
-<p>ONLY when a ground-truth read (all linked rows Processed/Sent) passes AND every checklist step</p>
-<p>is checked/N-A; <b>no prose-only gates</b> (a named staff task without a linked Action row is a</p>
-<p>defect the creating job must fix in the same write). This IS the checkable advancement contract.</p>
-<ul>
-<li>- <b>Two related rail bugs still OPEN in Sweep Feedback</b> (not folded — smaller/mechanical, may be</li>
-</ul>
-<p>quick tickets rather than waiting on the full rearchitecture): <code>review_gate.py</code> treats a</p>
-<p><code>Scheduled</code> queue row as an open gate (false-positive on FBS lifecycle sends), and charge/gate</p>
-<p>rows born with blank <code>Gate Type</code> escape the machine-readable auto-clear. Both are &quot;the gate</p>
-<p>machinery trusts a mark instead of a ground-truth read&quot; — the same thesis; the advancement</p>
-<p>contract should subsume their fixes.</p>
 </div></details></details></div><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>A live board for the studio manager</h4></div><span class="pill p-wait">needs 021 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>One screen for the studio manager</li><li>Shows today&#x27;s renters and problems live</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
@@ -1804,10 +1975,333 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>All three ship <code>Provisional</code> and graduate through <b>046</b>&#x27;s lane —</p>
 <p>promotion gate, 5 consecutive clean review days.</p>
+</div></details></details></div><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
+
+<p><b>The end-state is already ruled</b> (<b>018</b> §5, Junyan: *&quot;because the</p>
+<p>responder&#x27;s scope is so narrow I&#x27;m okay folding it in — worst case scenario I would just draft the</p>
+<p>responses&quot;*). This ticket executes it, and owns the coordination the ruling deliberately deferred.</p>
+
+<p><b>Why it folds.</b> The Responder was carved out 2026-07-29 to get one measurable job with one</p>
+<p>accountable owner: single scope, signed work, held-by-default, promotion ladder, scorecard. The</p>
+<p>loop has all four, generalised — <b>a courtesy reply is just a ticket whose loop is one turn long.</b></p>
+<p>The Responder is the loop, hand-built early, for one action class. Keeping both means maintaining a</p>
+<p>&quot;who composes what&quot; treaty forever, and every composer boundary is a place where steps go missing.</p>
+
+<p><b>The evidence it produces defects.</b> Dana Hufe (Tagvenue, 509A Mondays Sep 28–Nov 16): Junyan</p>
+<p>hand-corrected the sequence because the composed message was missing the invoice line, the</p>
+<p>pay-within-24h confirmation condition, and the terms link. A composer that only sees &quot;reply to this</p>
+<p>inbound&quot; cannot know where a <i>procedure</i> is up to. Worse, because he sent it himself off-queue, the</p>
+<p>correction taught the system nothing — precisely what the loop&#x27;s rewrite beat exists to capture.</p>
+
+<p><b>What this ticket must resolve:</b></p>
+
+<ul>
+<li>- <b>Coordination with the <b>self-improving-desk</b> sibling</b> — the</li>
+</ul>
+<p>Responder is that map&#x27;s probe; its scorecard and nightly critic hang off it. Folding is a shared</p>
+<p>decision, not a unilateral one. Read the sibling&#x27;s state first; never double-extract.</p>
+<ul>
+<li>- <b>Latency parity</b> — the Responder&#x27;s ~30-min &quot;a draft exists before a human reads the inbound&quot; is</li>
+</ul>
+<p>a real property. The loop must match it for this class before absorbing it.</p>
+<ul>
+<li>- <b>Class mapping</b> — courtesy / acknowledgement, quick answers, holding replies on nudges,</li>
+</ul>
+<p>PBF-adjacent replies, PBF initial sends, the no-show text (with its <code>Ready to Send</code> carve-out and</p>
+<p>the absolute 1-day PBF expiry rule) become action classes in the queue, most of them</p>
+<p>fast-promoted since they are already trusted.</p>
+<ul>
+<li>- <b>Do not retire before the successor acts</b> (<b>035</b>): the Responder</li>
+</ul>
+<p>keeps running until its classes demonstrably run in the loop.</p>
+
+<p><b>Until this lands</b>, the pilot boundary holds: <i>process-driven</i> messages (steps of an open ticket</p>
+<p>— offers, confirmations, invoices, payment chases) belong to the loop, which holds the procedure</p>
+<p>state; <i>stateless</i> replies stay with the Responder. &quot;Stateless&quot; means no process state, <b>not</b></p>
+<p>deterministic — the truly deterministic quick answers already left to the event-gate card lane</p>
+<p>(<b>033</b>).</p>
+</div></details></details></div><div class="job"><div class="jnum">#057</div><div class="jhead"><span class="emoji">🧪</span><h4>Try out ways for staff and the robot to sort out who did what</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Today the robot guesses hours later by looking at calendars — messy and slow</li><li>Junyan wants something live at a set time of day instead</li><li>He ruled this can&#x27;t be decided by talking — we have to try a few shapes for real</li><li>One option might be that we need nothing at all: the new loop may just notice the work</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The agent↔staff seam — try shapes live, then pick one</b></p><h2>Question</h2>
+
+<p>Graduated from <b>018</b>. JOB 3 (reconcile) and JOB 4 (handback) are both,</p>
+<p>in Junyan&#x27;s words, <i>&quot;related to figuring out what staff has done&quot;</i> — passive inference, hours after</p>
+<p>the fact, which is where the F1/F2/F5 gate-discipline defects concentrate. He wants *&quot;a much more</p>
+<p>interactive process that can happen at a certain time in the day.&quot;*</p>
+
+<p><b>Junyan ruled this cannot be grilled to an answer:</b> *&quot;this needs to be tested out as this seam</p>
+<p>between agent and staff is very messy. We need to actually try out different things to see what can</p>
+<p>work.&quot;* So this is a <b>prototype series, not a design ticket</b> — run cheap shapes against real days</p>
+<p>and let the winner emerge. Do not write a spec first.</p>
+
+<p>Shapes worth trying (not exhaustive — add what the days suggest):</p>
+<ul>
+<li>- a <b>scheduled desk stand-up</b> at a fixed time: agent presents the open proposals and gates, staff</li>
+</ul>
+<p>clear them live in one sitting, together</p>
+<ul>
+<li>- <b>staff-initiated</b> — staff say what they did as they do it, agent reconciles immediately</li>
+<li>- <b>pure executor-agnostic drift</b> — no session at all; the loop&#x27;s verify reads close everything</li>
+</ul>
+<p>observable and the seam simply shrinks to nothing (<b>052</b> §3</p>
+<p>may make the session unnecessary — test this before building a session)</p>
+<ul>
+<li>- a <b>daily digest</b> the Ops Lead answers once</li>
+</ul>
+
+<p>Judge on: gates cleared per day, how long a cleared-but-unmarked gate survives, and how much the</p>
+<p>staff actually engage. The <code>#desk-drops</code> capture path is the fallback throughout, and Junyan wants</p>
+<p>to need it less over time.</p>
+
+<p>Blocked on <b>052</b> because the loop&#x27;s queue is the surface any</p>
+<p>session would work over — and because the executor-agnostic path may dissolve most of the problem.</p>
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#051</span><span class="emoji">🍽️</span><span class="done-title">The robot&#x27;s last chores kept getting skipped — Junyan picked the fix</span><span class="done-date">2026-08-05</span></summary><div class="done-body"><ul class="plain-bullets"><li>Every pass, the robot did its two big jobs first (alarms and inbox) and ran out of room</li><li>So the same small chores at the end of the list got pushed to &#x27;next time&#x27; — forever</li><li>Junyan ruled: split the work up so the small chores get their own turn</li><li>That split is already planned in the big triage-redesign ticket, so it carries the fix</li><li>Bonus ruling: Skedda&#x27;s own paid marker beats a stale [Unpaid] label — four flagged charges turned out already paid</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Concierge tail jobs starve every pass — pick and ship the anti-starvation rule</b></p><h2>Resolution — 2026-08-05</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#018</span><span class="emoji">🏗️</span><span class="done-title">The main robot&#x27;s old job list was scrapped — replaced by a back-and-forth with Junyan</span><span class="done-date">2026-08-05</span></summary><div class="done-body"><ul class="plain-bullets"><li>We went through its seven chores one by one, and almost none of them belonged to a robot that thinks</li><li>The alarm check is now a small program that runs every minute — waiting two hours to notice an alarm was silly</li><li>The who&#x27;s-in-the-studio-today list and the staff-shift copying became small programs too</li><li>The mail sorter shrinks to one small job: open the message, start a ticket, pick the right procedure, stop</li><li>Everything after that becomes a loop: the robot suggests ONE next step, Junyan says yes or rewrites it, the robot does it, then checks it really happened</li><li>Rewriting a suggestion is how Junyan teaches it — the change he makes is the lesson, and the robot has to earn its way back to being trusted</li><li>Best part: if Junyan just does the job himself, the robot notices and ticks it off — no more telling the system what he already did</li><li>Charging money, sending someone out, and making door codes stay human forever, no matter how well the robot does</li><li>First trial run is on booking changes, with Junyan checking every step for the first week</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rearchitect J01 — ledger-fed triage, sub-job split, ticket-advancement contract</b></p><blockquote><b>Extraction landed (2026-07-29, self-improving-desk ticket 003):</b> the &quot;draft responses&quot; sub-job this rearchitecture deferred is now OUT of J01/JOB 2. <b>The Responder</b> (canon <code>library/the-responder.md</code>, cloud triggers <code>trig_01WA9KLVfMD82gAYupxsBwH5</code> :20 + <code>trig_015q8fhqzYvVjv5N6rnmH7wK</code> :50, 30-min cadence 08:20–22:50 Toronto) exclusively owns non-ticket held replies: courtesy/acknowledgement replies, quick answers, nudge holding replies, PBF-adjacent replies. JOB 2 keeps inbox hygiene, classification, the audit log, and all ticket-forming/ticket-lifecycle replies — its courtesy-reply section is now a carve-out pointer. Design J01&#x27;s sub-job split around that boundary.</blockquote>
+
+<blockquote><b>Starvation mandate folded in (2026-08-05, <b>051</b>):</b> the tail</blockquote>
+<blockquote>jobs JOB 3 / 4 / 31 (and 0 / 7) starve every pass — JOB 1/2 are mandatory, front-loaded, unbounded,</blockquote>
+<blockquote>and eat the budget before the tail is reached (<code>deferred-since</code> counters only rise). Junyan ruled</blockquote>
+<blockquote><b>split it up</b> — the fix is this ticket&#x27;s pass-split, not a new mechanism. Design constraint: the</blockquote>
+<blockquote>tail must land where JOB 1/2 don&#x27;t compete for its budget. Acceptance inherited: no job at</blockquote>
+<blockquote><code>deferred-since &gt;= 2</code> across 3 consecutive days; counters falling; JOB 1/2 mandatory halves still</blockquote>
+<blockquote>complete on a heavy day.</blockquote>
+
+<h2>Question</h2>
+
+<p>Design J01&#x27;s next form with Junyan, from 017&#x27;s evidence:</p>
+<ul>
+<li>- <b>Input:</b> the J28 correspondence ledger replaces email triage as the intake (deterministic</li>
+</ul>
+<p>ingest already classifies/lands the correspondence; J01 pulls from the ledger and advances</p>
+<p>tickets).</p>
+<ul>
+<li>- <b>Split:</b> does J01 decompose into sub-jobs, each owning one recurring action (advance alarm</li>
+</ul>
+<p>codes / draft responses / prompt Ops lead for charges / …)? Coordinate with the</p>
+<p>self-improving-desk sibling&#x27;s micro-agent-split boundary — never double-extract; read the</p>
+<p>sibling&#x27;s state first.</p>
+<ul>
+<li>- <b>The advancement contract:</b> the precise, checkable definition of &quot;advance a ticket&quot;</li>
+</ul>
+<p>(which DB, which SOP link, which checkboxes) so wrong-place/wrong-SOP/wrong-checkbox defects</p>
+<p>become detectable, not just annoying. Legacy SOPs flagged by 017 get fixed or retired as part</p>
+<p>of the design.</p>
+<ul>
+<li>- <b>Cadence &amp; home:</b> which persona(s) the sub-jobs park in — driver: Junyan wants all jobs</li>
+</ul>
+<p>parked in personas soon so he can focus on sales.</p>
+
+<h2>Design inputs captured from the Sweep Feedback backlog (2026-07-17)</h2>
+
+<p>The advancement-contract half of this ticket is exactly what a cluster of open 🔧 Sweep Feedback</p>
+<p>design rows kept circling. Folded in here as design inputs so the contract is built to close them:</p>
+
+<ul>
+<li>- <b>Premature &#x27;done&#x27; marking → orphan gates + premature Review advances</b> (Sweep Feedback row</li>
+</ul>
+<p><code>3997503281c481eea59af108599d8b30</code>, now closed as superseded → this ticket). The canonical</p>
+<p>&quot;may-advance&quot; rule the row proposes: a ticket may leave a gate or reach <code>Position = Review</code></p>
+<p>ONLY when a ground-truth read (all linked rows Processed/Sent) passes AND every checklist step</p>
+<p>is checked/N-A; <b>no prose-only gates</b> (a named staff task without a linked Action row is a</p>
+<p>defect the creating job must fix in the same write). This IS the checkable advancement contract.</p>
+<ul>
+<li>- <b>Two related rail bugs still OPEN in Sweep Feedback</b> (not folded — smaller/mechanical, may be</li>
+</ul>
+<p>quick tickets rather than waiting on the full rearchitecture): <code>review_gate.py</code> treats a</p>
+<p><code>Scheduled</code> queue row as an open gate (false-positive on FBS lifecycle sends), and charge/gate</p>
+<p>rows born with blank <code>Gate Type</code> escape the machine-readable auto-clear. Both are &quot;the gate</p>
+<p>machinery trusts a mark instead of a ground-truth read&quot; — the same thesis; the advancement</p>
+<p>contract should subsume their fixes.</p>
+
+<p>---</p>
+
+<h2>RESOLUTION — 2026-08-05: J01 dissolves</h2>
+
+<p>Grilled with Junyan across the full job list. The pass-split framing from</p>
+<p><b>051</b> was answered by a bigger ruling: <b>J01 does not get</p>
+<p>re-sequenced, it gets dissolved.</b> Walking the seven steps of the hourly pass one at a time,</p>
+<p>Junyan ruled each out of the LLM pass — and what was left was not a job at all but a <i>loop</i>.</p>
+
+<h3>1. The deterministic lanes leave the pass</h3>
+
+<ul>
+<li>- <b>JOB 1 alarm read — wrong venue entirely.</b> &quot;If there is an alarm it needs to be addressed</li>
+</ul>
+<p>immediately by contacting staff, not by the Concierge 2 hours later.&quot; A 2-hourly alarm read is</p>
+<p>theatre. The PENDING→ALARM pair check is a pure code diff and moves onto the <code>event-gate</code> tick</p>
+<p>(minutes, pages staff directly), joining the live panel reads already there (invariants :25,</p>
+<p>Doorman 04:00). The Concierge exits the alarm business.</p>
+<ul>
+<li>- <b>FAST-TRACK — deterministic.</b> &quot;Needs to be kept up to date throughout the day depending on</li>
+</ul>
+<p>who&#x27;s in the studio.&quot; Maintaining the who&#x27;s-in-today + first-timer list derives from the FBS</p>
+<p>board and the calendars — a renderer keeps it fresh all day (019 pattern). Judgment only enters</p>
+<p>when someone on the list writes in, which is intake&#x27;s job anyway.</p>
+<ul>
+<li>- <b>JOB 31 claimed-shift mirror — deterministic.</b> Calendar mirror with dedup guards, zero</li>
+</ul>
+<p>judgment. Plain code on a tick.</p>
+<ul>
+<li>- <b>JOB 1 remainder — redundant, dies.</b> Junyan: &quot;isn&#x27;t the PBF auto queued already by the</li>
+</ul>
+<p>responder — this whole section seems redundant.&quot; Correct: the Responder queues, JOB 3&#x27;s</p>
+<p>successor flips <code>Sent</code>, and invariant U (<b>049</b>) catches</p>
+<p>unresolved ones. Nothing left to run.</p>
+
+<h3>2. JOB 2 splits — a thin triager, and everything else becomes the loop</h3>
+
+<p>Junyan: *&quot;maybe it makes sense for an email triager to be separate and then its job is just to make</p>
+<p>a ticket stub and do SOP routing (keep it very clean). Job 2 is too big.&quot;* So:</p>
+
+<ul>
+<li>- <b>The Triager</b> — one small AI core: read inbound, make the ticket stub, SOP-route, log</li>
+</ul>
+<p>correspondence, stop. Rails in front of it (who-is-this stamp, already-done check), rails behind.</p>
+<p>This is the shape the Codex five-lanes artifact argued for and Junyan endorsed: move everything</p>
+<p>possible to deterministic, keep one small AI core boxed in by checks that cannot forget.</p>
+<ul>
+<li>- <b>Everything downstream is not a job — it is a loop</b> (below).</li>
+</ul>
+
+<h3>3. THE ADVANCEMENT CONTRACT — resolved, and it changed species</h3>
+
+<p>017&#x27;s mandate was &quot;make the advancement contract <i>checkable</i>, not more prose rules.&quot; The answer is</p>
+<p>not a static may-advance checklist. Junyan: *&quot;once a stub is created there needs to be some kind of</p>
+<p>loop that keeps working until the ticket is fully resolved… a next action is described and then</p>
+<p>accepted by staff or corrected… this then gets executed by the agent and the loop continues.&quot;*</p>
+
+<p><b>The loop, five beats:</b> PROPOSE → REVIEW (approve <b>or rewrite</b>) → EXECUTE (Ready rows only) →</p>
+<p>VERIFY (ground-truth read) → NEXT.</p>
+
+<ul>
+<li>- <b>New <code>Next Action</code> queue DB, which RETIRES ✅ Actions to Perform.</b> Junyan: &quot;if we create a</li>
+</ul>
+<p>purpose-built queue then we would retire actions-to-perform.&quot; One action surface, not two. One</p>
+<p>open proposal per ticket: <code>Proposed action</code> (editable), <code>Basis</code> (the evidence read, so the</p>
+<p>reviewer judges without re-investigating), <code>Source SOP step</code>, Status</p>
+<p><code>Proposed → Ready → Done</code> + <code>Won&#x27;t Do</code>, <code>Raised by</code>, promotion counter per action class.</p>
+<p>Reuses the Message Queue&#x27;s proven verbs so staff learn nothing new.</p>
+<ul>
+<li>- <b>The rewrite IS the feedback.</b> Approve-as-is or rewrite the action text, then mark Ready —</li>
+</ul>
+<p>those are the only two moves. The diff between proposed and rewritten text is the correction</p>
+<p>signal, and it feeds both the SOP fix and the promotion counter. This is what makes the contract</p>
+<p>checkable at last: a wrong advance is caught <i>before</i> it happens, and the correction is captured</p>
+<p>in-band instead of evaporating.</p>
+<ul>
+<li>- <b>Verify never trusts the write.</b> Write, then read back from the live source; a mismatch is</li>
+</ul>
+<p>raised, never marked Done. This subsumes the 017 rail bugs (<code>review_gate.py</code>&#x27;s Scheduled-as-open</p>
+<p>false positive, blank-<code>Gate Type</code> rows escaping the machine read) — both were &quot;the machinery</p>
+<p>trusts a mark instead of a ground-truth read&quot;, and the loop reads ground truth by construction.</p>
+<ul>
+<li>- <b>Promotion ladder, same as the Responder&#x27;s.</b> Every class starts human-gated; approved-unmodified</li>
+</ul>
+<p>N times in a row earns auto-execute; any rewrite resets to zero. <b>Money (charge/refund/credit/</p>
+<p>pricing), physical dispatch, and alarm-code creation NEVER promote</b>, whatever the counter says.</p>
+<ul>
+<li>- <b>Fast track from day one</b> for classes already ruled safe and time-critical: instant booking</li>
+</ul>
+<p>requests from Skedda and the platforms, and booking moves. Junyan: these &quot;should be fast-tracked</p>
+<p>immediately.&quot;</p>
+<ul>
+<li>- <b>Tick:</b> a thin sweep every 5–10 min that reads the queue first and exits in seconds when</li>
+</ul>
+<p>nothing is Ready and nothing waits — a full agent pass only when there is real work, which is</p>
+<p><i>cheaper</i> than the current fixed cadence that runs whether or not there is anything to do. A true</p>
+<p>push path (event-gate fires the agent on approval) is a later prototype, not a prerequisite.</p>
+<ul>
+<li>- <b>Pilot on Booking Changes &amp; Manual Help</b> — highest traffic, where the F1/F2/F5 gate defects</li>
+</ul>
+<p>concentrate, and the class whose actions the Skedda API makes genuinely executable. <b>Junyan</p>
+<p>reviews personally for week one</b> (his corrections define the standard), Ops Lead after.</p>
+
+<h3>4. EXECUTOR-AGNOSTIC — the ruling that dissolves the back-capture tax</h3>
+
+<p>Junyan named the live pathology: *&quot;rather than letting the agent do it, I want to execute everything</p>
+<p>myself because I can do it faster and more reliably. This causes problems because now I need to</p>
+<p>capture what I did back into the system.&quot;*</p>
+
+<p>The loop answers this for free, because <b>the verify beat reads ground truth and therefore does not</p>
+<p>care who acted.</b> Junyan moves the booking in Skedda himself → the next sweep&#x27;s read sees it → the</p>
+<p>row closes as <code>Done (executed by human)</code> and the loop advances. He sends the message himself → the</p>
+<p>J28 pollers already caught it → same. A proposal overtaken by reality is closed, not nagged about.</p>
+<p>His manual work <i>is</i> execution; the system&#x27;s stance flips from &quot;tell me what you did&quot; to &quot;I notice</p>
+<p>what you did.&quot;</p>
+
+<p>The residue is only what no read can see — a phone call&#x27;s content, an in-person exchange, a</p>
+<p>physical fix. Those keep the existing path: <b>Junyan drops them into Slack <code>#desk-drops</code></b>, which</p>
+<p>the Triager scans. He wants to need this less over time; it shrinks as the loop earns promotions,</p>
+<p>and no new capture surface is built.</p>
+
+<h3>5. The Responder folds into the loop (end-state ruled, sequenced)</h3>
+
+<p>Surfaced by a live defect: Junyan hand-corrected a Responder-shaped sequence for <b>Dana Hufe</b></p>
+<p>(Tagvenue, 509A Mondays Sep 28–Nov 16) — the sent message needed the invoice line, the pay-within-</p>
+<p>24h confirmation condition, and the terms link. Steps were missing because a composer that only</p>
+<p>sees &quot;reply to this inbound&quot; cannot know where a <i>procedure</i> is up to. And because Junyan sent it</p>
+<p>himself, off-queue, the correction taught the system nothing — the exact evaporation the loop&#x27;s</p>
+<p>rewrite beat exists to stop.</p>
+
+<p>First principles: the Responder was carved out on 2026-07-29 to get one measurable job with one</p>
+<p>accountable owner — single scope, signed work, held-by-default, promotion ladder, scorecard. <b>The</p>
+<p>loop has all four properties, generalised. A courtesy reply is just a ticket whose loop is one turn</p>
+<p>long.</b> So the Responder is not a different species; it is the loop, hand-built early, for one</p>
+<p>action class. Maintaining a &quot;who composes what&quot; treaty between them is permanent overhead, and</p>
+<p>every composer boundary is a place where steps go missing.</p>
+
+<p><b>Junyan ruled the fold-in</b> (&quot;because the responder&#x27;s scope is so narrow I&#x27;m okay folding it in —</p>
+<p>worst case scenario I would just draft the responses&quot;). Sequenced, not immediate, for three</p>
+<p>reasons: the loop is unproven and the Responder works (never retire before the new owner</p>
+<p>demonstrably acts — 035&#x27;s standing lesson); the Responder is the <b>self-improving-desk</b> sibling&#x27;s</p>
+<p>probe, so folding it is a shared decision, not a unilateral one; and its ~30-min &quot;draft exists</p>
+<p>before a human reads the inbound&quot; latency must be matched first. Until then the pilot boundary is</p>
+<p><i>process-driven messages belong to the loop, stateless replies stay with the Responder</i> — noting</p>
+<p>&quot;stateless&quot; means no process state, not deterministic (the truly deterministic quick answers</p>
+<p>already left to the event-gate card lane in <b>033</b>).</p>
+
+<h3>6. The staff seam is an experiment, not a design</h3>
+
+<p>JOB 3 (reconcile) and JOB 4 (handback) are both, in Junyan&#x27;s words, &quot;related to figuring out what</p>
+<p>staff has done&quot; — passive inference hours after the fact. He wants &quot;a much more interactive process</p>
+<p>that can happen at a certain time in the day&quot;, and ruled it cannot be settled by grilling: *&quot;this</p>
+<p>needs to be tested out as this seam between agent and staff is very messy. We need to actually try</p>
+<p>out different things to see what can work.&quot;* So it graduates as a <b>series of prototype tickets</b>,</p>
+<p>not a designed answer.</p>
+
+<h3>7. Two premises corrected</h3>
+
+<ul>
+<li>- <b>Skedda HAS a write API.</b> 017&#x27;s inventory and the Booking Changes SOPs all encode &quot;Skedda has</li>
+</ul>
+<p>no write API, so every create/move/cancel is <code>[STAFF]</code>&quot; — a stale fact that manufactured much of</p>
+<p>the F1 mis-parked-gate family. Junyan: &quot;Skedda has a write API.&quot; Correcting it across canon is</p>
+<p>its own ticket; the pilot establishes the truth for Booking Changes first.</p>
+<ul>
+<li>- <b>Alarm.com does not, and that is the risk to solve.</b> Junyan&#x27;s asymmetry: writing a code is low</li>
+</ul>
+<p>risk, <i>a renter unable to get in</i> is high risk. A workaround is wanted, not accepted as a</p>
+<p>permanent human gate.</p>
+
+<h3>8. Transition posture</h3>
+
+<p>A <b>thin Concierge shell</b> keeps the not-yet-rehomed jobs (34 overnight handoff, 0 feedback, 5</p>
+<p>decay-flag review, 7 self-heal, 32 unpaid-charge scan, 33 end-of-day review) until each finds its</p>
+<p>lane, and is killed when empty. Nothing retires before its successor demonstrably acts.</p>
+<p>051&#x27;s acceptance criteria transfer to the pilot: no job at <code>deferred-since &gt;= 2</code> across 3</p>
+<p>consecutive days, counters falling, and intake still complete on a heavy day.</p>
+
+<p><b>Design artifacts:</b> <a href="https://claude.ai/code/artifact/370948d1-5ad7-411d-bddb-941905121379" target="_blank" rel="noopener">the ticket advancement loop, walked end to end</a></p>
+<p>(interactive — the Nadia Okonkwo booking-move example, with the rewrite beat and the promotion</p>
+<p>counter live) · <a href="https://claude.ai/code/artifact/3fd09528-47c6-452f-9f91-86c0c87b1675" target="_blank" rel="noopener">why the tail starved</a>.</p>
+
+<p><b>Graduated:</b> <b>053 loop build</b> (the head of the frontier) ·</p>
+<p><b>054 triager</b> · <b>055 deterministic rehomes</b> ·</p>
+<p><b>056 Responder fold-in</b> ·</p>
+<p><b>057 staff-seam experiments</b> ·</p>
+<p><b>058 Alarm.com write workaround</b> ·</p>
+<p><b>059 Skedda write-API canon correction</b>.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#051</span><span class="emoji">🍽️</span><span class="done-title">The robot&#x27;s last chores kept getting skipped — Junyan picked the fix</span><span class="done-date">2026-08-05</span></summary><div class="done-body"><ul class="plain-bullets"><li>Every pass, the robot did its two big jobs first (alarms and inbox) and ran out of room</li><li>So the same small chores at the end of the list got pushed to &#x27;next time&#x27; — forever</li><li>Junyan ruled: split the work up so the small chores get their own turn</li><li>That split is already planned in the big triage-redesign ticket, so it carries the fix</li><li>Bonus ruling: Skedda&#x27;s own paid marker beats a stale [Unpaid] label — four flagged charges turned out already paid</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Concierge tail jobs starve every pass — pick and ship the anti-starvation rule</b></p><h2>Resolution — 2026-08-05</h2>
 
 <p><b>Junyan ruled: &quot;Let&#x27;s just split it up — we already have a ticket for that.&quot;</b> Option 2 (reassign</p>
 <p>by pass type) is the chosen direction, and the split is NOT new work — it is owned by the existing</p>
@@ -5039,5 +5533,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-05 20:21 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-05 21:42 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
