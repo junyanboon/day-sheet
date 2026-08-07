@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-06 21:34 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-07 14:23 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">14</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">15</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">9</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">35</div><div class="l">✅ Finished</div></div>
 </div>
@@ -825,7 +825,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>nothing auto-executes yet, so nothing can fire it), the Actions-to-Perform drain, and the pilot</p>
 <p>week.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">14</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">15</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1926,6 +1926,85 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Ledger backfilled through the known gaps; David Diep&#x27;s Aug-5 SMS turns present.</li>
 <li>- A poller failure now files a <code>Run Error</code> row (verified by forcing one).</li>
 </ul>
+</div></details></details></div><div class="job"><div class="jnum">#063</div><div class="jhead"><span class="emoji">🔎</span><h4>Our notes say the tools can&#x27;t do things they can actually do</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Someone once wrote down &#x27;this tool can&#x27;t do X&#x27; without ever trying it</li><li>Nobody checks a note like that again — the note itself is the reason nobody tries</li><li>Three were tested this week and all three were wrong, including one that sent Junyan a job the robot could have done</li><li>One had even shut off a working list of open tickets, so the robots stopped using it for months</li><li>Go through the rest, actually try each one, and write down how it was tested</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Audit canon&#x27;s &quot;the tool can&#x27;t do X&quot; claims — most were never tested</b></p><h2>Question</h2>
+
+<p>Graduated from <b>059</b>, whose own headline finding turned out to be</p>
+<p>an instance of the pattern it was fixing.</p>
+
+<p>059 established that Skedda HAS a write API and corrected four SOPs. It recorded <b>one</b> refusal:</p>
+<p><i>&quot;repricing an EXISTING booking — <code>edit_booking</code> has no price field.&quot;</i> That was read off the</p>
+<p><b>tool schema</b>, not the wire. On 2026-08-06 a dry-run showed Skedda&#x27;s booking <code>PUT</code> carries</p>
+<p><code>price</code> and <code>paymentStatus</code>, and <code>client.update_booking</code> merges <code>{<b>current, </b>changes}</code> with no</p>
+<p>whitelist. <b>The capability was always there; skedda-mcp just never exposed the parameter.</b></p>
+
+<p>So the corrected claim is not &quot;Skedda has no write API&quot; but something more general and more</p>
+<p>dangerous:</p>
+
+<blockquote><b>A missing tool argument is not evidence of a missing capability — but canon records it as one,</blockquote>
+<blockquote>and then procedure is built on top of it.</b></blockquote>
+
+<p>Two more instances found the same day, both from a single line in <code>CLAUDE.md</code></p>
+<p>(*&quot;Notion status-property view filters cannot be set through the API. Hand those to Junyan as a</p>
+<p>manual edit&quot;*):</p>
+
+<ul>
+<li>- <b>💵 Processed-to-reconcile</b> lost its <code>Type</code> filter when the view was recreated ~08-03. Canon</li>
+</ul>
+<p>told agents to filter by hand in prose and handed Junyan a manual UI job. <code>notion-update-view</code></p>
+<p>set the three-part filter on the first attempt.</p>
+<ul>
+<li>- <b>🤖 CC Open set (JOB 3/7)</b> was <b>quarantined</b> — <i>&quot;robots must NOT use it&quot;</i> — for the same</li>
+</ul>
+<p>stated reason. Also false, and the note was wrong in two further ways: the DB has no <code>Status</code></p>
+<p>property (it is <code>Position</code>) and no <code>Resolved</code> option (terminal states are Won/Lost/Done). It</p>
+<p>predates the Position migration, so <b>a human following it literally could not have fixed it</p>
+<p>either.</b> Now filtered; returned 22 correctly-open tickets on first read.</p>
+
+<p>Three for three. Every claim tested so far has been false.</p>
+
+<h2>Why it matters</h2>
+
+<p>These are not documentation nits. Each one converted into work:</p>
+
+<ul>
+<li>- staff time (a manual Notion edit that an API call does)</li>
+<li>- degraded procedure (agents filtering in prose; a working view sitting unused)</li>
+<li>- <b>wrong automation tags</b> — 059&#x27;s original premise manufactured &quot;a large share of the F1</li>
+</ul>
+<p>mis-parked-gate family&quot;, gates raised for work no human needed to do</p>
+
+<p>The failure mode is self-sealing: once written down, a capability claim is never retested, because</p>
+<p>the claim itself is the reason nobody tries.</p>
+
+<h2>Scope</h2>
+
+<ol>
+<li>1. <b>Enumerate</b> the remaining untested &quot;cannot / has no / not exposed&quot; claims across <code>CLAUDE.md</code>,</li>
+</ol>
+<p><code>CONTEXT.md</code>, git canon <code>library/</code>, and the Notion Operating Library. Naive grep drowns in</p>
+<p>legitimate operational rules — filter to claims about a <b>tool, API, connector or endpoint</b>.</p>
+<ol>
+<li>2. <b>Test each one against the wire</b>, not the wrapper. A dry-run, a probe call, a schema fetch —</li>
+</ol>
+<p>whatever would actually falsify it. Record the evidence either way; a confirmed limit is worth</p>
+<p>as much as a refuted one, and is what stops the next re-test.</p>
+<ol>
+<li>3. <b>Fix what&#x27;s false</b> — the claim, every procedure built on it, and any automation tag it moved.</li>
+<li>4. <b>Rule on the general fix.</b> Options, for Junyan: require every capability claim in canon to</li>
+</ol>
+<p>carry the date and method of its test; or a periodic re-probe of recorded limits; or accept</p>
+<p>drift and only test on contact. This is the part that stops recurrence, and it is a judgment</p>
+<p>call about how much ceremony canon should carry.</p>
+
+<p>Known candidates not yet tested: Alarm.com PIN masking (058 assumes it); <code>gh</code> absent on cloud</p>
+<p>runners; <code>notion-create-pages</code> 404ing under the SOPs wiki root; Skedda&#x27;s missing single-booking</p>
+<p>GET; Gmail <code>label:</code> not matching user labels (this one HAS evidence — verified in the web UI</p>
+<p>2026-08-06, and is the model for how the others should read).</p>
+
+<h2>Done when</h2>
+
+<p>Every tool-capability claim in canon is either <b>tested with its evidence recorded</b>, or explicitly</p>
+<p>marked untested so the next agent knows not to trust it. Plus Junyan&#x27;s ruling on scope 4.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">9</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -5871,5 +5950,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-06 21:34 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-07 14:23 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
