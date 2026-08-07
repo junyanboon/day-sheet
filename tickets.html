@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-07 14:23 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-07 14:40 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">15</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">16</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">9</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">35</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">36</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -825,7 +825,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>nothing auto-executes yet, so nothing can fire it), the Actions-to-Perform drain, and the pilot</p>
 <p>week.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">15</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">16</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1763,6 +1763,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>capability on the desk; propose the containment before proposing the path</p>
 
 <p>Findings land as a linked asset. The build, if there is one, is a separate ticket.</p>
+
+<p><b>Opening step added 2026-08-07 by <b>063</b> — do this FIRST.</b></p>
+<p>This ticket is built on two claims that have never been probed at the wire: *&quot;Alarm.com has no</p>
+<p>write API&quot;<i> and </i>&quot;the PIN is not retrievable — Alarm.com masks it&quot;*. Both were read off tool</p>
+<p>descriptions, and 063 found that class of claim false or overstated 6 times out of 7. Canon now</p>
+<p>marks both <b>UNTESTED</b>. Probe them against the MFA-gated wire with the Mac alarm CLI before</p>
+<p>designing any workaround — the workaround may not be needed, and if it is, the probe is what</p>
+<p>proves it. Record the evidence either way; that closes two rows of <b>065</b>.</p>
 </div></details></details></div><div class="job"><div class="jnum">#060</div><div class="jhead"><span class="emoji">🏓</span><h4>Messages nobody claims — make &#x27;not my job&#x27; leave a mark</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Three renters this week wrote to us and no robot picked it up — Junyan caught each one himself</li><li>Each robot looked, decided &#x27;not mine&#x27;, and wrote nothing down — so it looked like nothing was wrong</li><li>The rule going in: every message must end somewhere — handled, given a ticket, or a robot&#x27;s name on the &#x27;no&#x27;</li><li>A separate watcher, outside all the robots, rings when a message sits too long with no answer</li><li>It names the person waiting — &#x27;Himanshi, booking question, 4 hours&#x27; — not just a number</li><li>We tried fixing this with more instructions three times; it failed three times — this time it&#x27;s a watcher, not a rule</li><li>First step: read the robot&#x27;s actual work logs to find out whether it even looks at new messages</li><li>Case four, same day: Francisco texted about lost AirPods at 1pm — the collector delivered it 5 hours late, then no robot picked it up either</li><li>Lesson for the watcher: count from when the renter sent it, not from when our copy arrived</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Ping-pong — every inbound message gets a recorded disposition, checked from outside the passes</b></p><h2>Question</h2>
 
 <p>From <b>HANDOFF-concierge-ping-pong.md</b> (2026-08-06,</p>
@@ -1926,85 +1934,74 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Ledger backfilled through the known gaps; David Diep&#x27;s Aug-5 SMS turns present.</li>
 <li>- A poller failure now files a <code>Run Error</code> row (verified by forcing one).</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#063</div><div class="jhead"><span class="emoji">🔎</span><h4>Our notes say the tools can&#x27;t do things they can actually do</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Someone once wrote down &#x27;this tool can&#x27;t do X&#x27; without ever trying it</li><li>Nobody checks a note like that again — the note itself is the reason nobody tries</li><li>Three were tested this week and all three were wrong, including one that sent Junyan a job the robot could have done</li><li>One had even shut off a working list of open tickets, so the robots stopped using it for months</li><li>Go through the rest, actually try each one, and write down how it was tested</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Audit canon&#x27;s &quot;the tool can&#x27;t do X&quot; claims — most were never tested</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#064</div><div class="jhead"><span class="emoji">⚖️</span><h4>Junyan decides how careful we must be before writing &#x27;the tool can&#x27;t do this&#x27;</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The problem isn&#x27;t old notes going stale — it&#x27;s notes written without trying</li><li>So the choice is what to demand of those specific notes, not of every note</li><li>From &#x27;change nothing&#x27; up to &#x27;you may not write it down until you&#x27;ve tried it&#x27;</li><li>Someone has to pay for the trying, and some things are slow or awkward to try</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>What must a capability claim carry before it goes in canon — rule the ceremony</b></p><h2>Question</h2>
 
-<p>Graduated from <b>059</b>, whose own headline finding turned out to be</p>
-<p>an instance of the pattern it was fixing.</p>
+<p>Graduated from <b>063</b>, and sharper than the question 063 cut.</p>
 
-<p>059 established that Skedda HAS a write API and corrected four SOPs. It recorded <b>one</b> refusal:</p>
-<p><i>&quot;repricing an EXISTING booking — <code>edit_booking</code> has no price field.&quot;</i> That was read off the</p>
-<p><b>tool schema</b>, not the wire. On 2026-08-06 a dry-run showed Skedda&#x27;s booking <code>PUT</code> carries</p>
-<p><code>price</code> and <code>paymentStatus</code>, and <code>client.update_booking</code> merges <code>{<b>current, </b>changes}</code> with no</p>
-<p>whitelist. <b>The capability was always there; skedda-mcp just never exposed the parameter.</b></p>
+<p>063 expected &quot;old claims rot, so schedule a re-probe&quot;. The evidence says otherwise: <b>age doesn&#x27;t</p>
+<p>predict a wrong claim, provenance does.</b> Every limit read off a <b>tool schema</b> has been false or</p>
+<p>overstated (6 of 7 across 059 + 063); every limit <b>tested when written</b> has held. So a periodic</p>
+<p>re-probe of everything is the wrong shape — it spends effort uniformly on a risk that is</p>
+<p>concentrated in one place.</p>
 
-<p>So the corrected claim is not &quot;Skedda has no write API&quot; but something more general and more</p>
-<p>dangerous:</p>
+<p>Junyan&#x27;s ruling, on this narrower question: <b>what does canon require of a claim that a tool</p>
+<p>&quot;cannot&quot; do something?</b></p>
 
-<blockquote><b>A missing tool argument is not evidence of a missing capability — but canon records it as one,</blockquote>
-<blockquote>and then procedure is built on top of it.</b></blockquote>
+<p>Options, roughly in ascending ceremony:</p>
 
-<p>Two more instances found the same day, both from a single line in <code>CLAUDE.md</code></p>
-<p>(*&quot;Notion status-property view filters cannot be set through the API. Hand those to Junyan as a</p>
-<p>manual edit&quot;*):</p>
+<ol>
+<li>1. <b>Nothing new</b> — the <code>gotchas.md</code> rule added by 063 (state date + method, or write UNTESTED) is</li>
+</ol>
+<p>already in canon; accept drift and test on contact.</p>
+<ol>
+<li>2. <b>Provenance-tagged claims</b> — every capability limit carries how it was established</li>
+</ol>
+<p>(<code>wire</code> / <code>schema</code> / <code>owner ruling</code>), and a schema-derived one is never treated as binding: an</p>
+<p>agent that hits it must probe before routing work to a human.</p>
+<ol>
+<li>3. <b>Schema-derived claims expire</b> — they carry a date and are re-probed on a cadence (only this</li>
+</ol>
+<p>class, not all claims); wire-tested ones stand until contradicted.</p>
+<ol>
+<li>4. <b>No untested limits in canon at all</b> — a claim can&#x27;t be written until it&#x27;s probed; until then</li>
+</ol>
+<p>it lives as an open question, not a rule.</p>
 
-<ul>
-<li>- <b>💵 Processed-to-reconcile</b> lost its <code>Type</code> filter when the view was recreated ~08-03. Canon</li>
-</ul>
-<p>told agents to filter by hand in prose and handed Junyan a manual UI job. <code>notion-update-view</code></p>
-<p>set the three-part filter on the first attempt.</p>
-<ul>
-<li>- <b>🤖 CC Open set (JOB 3/7)</b> was <b>quarantined</b> — <i>&quot;robots must NOT use it&quot;</i> — for the same</li>
-</ul>
-<p>stated reason. Also false, and the note was wrong in two further ways: the DB has no <code>Status</code></p>
-<p>property (it is <code>Position</code>) and no <code>Resolved</code> option (terminal states are Won/Lost/Done). It</p>
-<p>predates the Position migration, so <b>a human following it literally could not have fixed it</p>
-<p>either.</b> Now filtered; returned 22 correctly-open tickets on first read.</p>
-
-<p>Three for three. Every claim tested so far has been false.</p>
+<p>Second half of the ruling: <b>who pays for a probe.</b> Options 2–4 all cost an agent a call it would</p>
+<p>otherwise skip. Cheap for Skedda or Notion; not cheap for anything MFA-gated or cloud-only (see</p>
+<p><b>065</b>).</p>
 
 <h2>Why it matters</h2>
 
-<p>These are not documentation nits. Each one converted into work:</p>
-
-<ul>
-<li>- staff time (a manual Notion edit that an API call does)</li>
-<li>- degraded procedure (agents filtering in prose; a working view sitting unused)</li>
-<li>- <b>wrong automation tags</b> — 059&#x27;s original premise manufactured &quot;a large share of the F1</li>
-</ul>
-<p>mis-parked-gate family&quot;, gates raised for work no human needed to do</p>
-
-<p>The failure mode is self-sealing: once written down, a capability claim is never retested, because</p>
-<p>the claim itself is the reason nobody tries.</p>
-
-<h2>Scope</h2>
-
-<ol>
-<li>1. <b>Enumerate</b> the remaining untested &quot;cannot / has no / not exposed&quot; claims across <code>CLAUDE.md</code>,</li>
-</ol>
-<p><code>CONTEXT.md</code>, git canon <code>library/</code>, and the Notion Operating Library. Naive grep drowns in</p>
-<p>legitimate operational rules — filter to claims about a <b>tool, API, connector or endpoint</b>.</p>
-<ol>
-<li>2. <b>Test each one against the wire</b>, not the wrapper. A dry-run, a probe call, a schema fetch —</li>
-</ol>
-<p>whatever would actually falsify it. Record the evidence either way; a confirmed limit is worth</p>
-<p>as much as a refuted one, and is what stops the next re-test.</p>
-<ol>
-<li>3. <b>Fix what&#x27;s false</b> — the claim, every procedure built on it, and any automation tag it moved.</li>
-<li>4. <b>Rule on the general fix.</b> Options, for Junyan: require every capability claim in canon to</li>
-</ol>
-<p>carry the date and method of its test; or a periodic re-probe of recorded limits; or accept</p>
-<p>drift and only test on contact. This is the part that stops recurrence, and it is a judgment</p>
-<p>call about how much ceremony canon should carry.</p>
-
-<p>Known candidates not yet tested: Alarm.com PIN masking (058 assumes it); <code>gh</code> absent on cloud</p>
-<p>runners; <code>notion-create-pages</code> 404ing under the SOPs wiki root; Skedda&#x27;s missing single-booking</p>
-<p>GET; Gmail <code>label:</code> not matching user labels (this one HAS evidence — verified in the web UI</p>
-<p>2026-08-06, and is the model for how the others should read).</p>
+<p>The failure mode is self-sealing — a written-down limit is the reason nobody retries — and it</p>
+<p>converts directly into staff time, degraded procedure, and wrong automation tags (063&#x27;s evidence).</p>
+<p>This is the part that stops recurrence; everything else 063 did was cleanup.</p>
 
 <h2>Done when</h2>
 
-<p>Every tool-capability claim in canon is either <b>tested with its evidence recorded</b>, or explicitly</p>
-<p>marked untested so the next agent knows not to trust it. Plus Junyan&#x27;s ruling on scope 4.</p>
+<p>Junyan has ruled, the rule is written into <code>library/gotchas.md</code> (extending the section 063 added),</p>
+<p>and any automation tag that a refuted claim moved is re-checked.</p>
+</div></details></details></div><div class="job"><div class="jnum">#065</div><div class="jhead"><span class="emoji">🧪</span><h4>Four things we still haven&#x27;t actually tried</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>This laptop can&#x27;t reach them — they need the cloud helpers or the alarm login</li><li>Two are about the alarm system, and the alarm job will test them as its first step</li><li>One needs Junyan to run the little test robot built for exactly this</li><li>The point is that &#x27;we never checked&#x27; stays visible instead of quietly becoming &#x27;it can&#x27;t be done&#x27;</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Probe the four capability claims a local session cannot reach</b></p><h2>Question</h2>
+
+<p>Graduated from <b>063</b>. Four claims are still marked <b>UNTESTED</b></p>
+<p>in canon because no local session can falsify them. Each needs a different instrument.</p>
+
+<p>| Claim | Where it lives | Instrument |</p>
+<p>|---|---|---|</p>
+<p>| <code>gh</code> is absent on cloud runners | <code>CLAUDE.md</code> | The <b>🧪 Runner Capability Probe</b> trigger <code>trig_01Dwn1npqqkvxPgxvyvgRLfX</code> (disabled, manual <code>run</code> only — built 2026-08-05 for exactly this). Firing it is a production agent run: <b>Junyan&#x27;s call</b>, not an agent&#x27;s. |</p>
+<p>| RemoteTrigger environment / env-var API | <code>RUNTIMES.md</code> | A direct call to the <code>/v1/code</code> API on an environments path. The <code>RemoteTrigger</code> tool exposes triggers only, and its OAuth token is injected in-process and never exposed — so this needs a token Junyan holds, or a cloud session that carries one. |</p>
+<p>| Alarm.com PIN masking | CAPABILITIES; assumed by <b>058</b> | The Mac alarm CLI against the MFA-gated wire. Fold into 058&#x27;s opening step rather than probing twice. |</p>
+<p>| Alarm.com&#x27;s own write API | <code>library/the-loop.md</code> | Same wire, same session as the PIN probe. Owned by 058. |</p>
+
+<p>The point is not the four answers. It is that <b>an untested claim is now marked untested</b>, and</p>
+<p>this ticket exists so the marking doesn&#x27;t become permanent by neglect — the exact failure 063</p>
+<p>documented.</p>
+
+<h2>Done when</h2>
+
+<p>Each row is either probed with its evidence recorded in canon, or consciously left UNTESTED with a</p>
+<p>one-line reason (cost, risk, nobody needs it) so the next agent inherits a decision rather than a</p>
+<p>gap. The two alarm rows may be closed here by pointing at 058 once 058 has actually run them.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">9</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -5946,9 +5943,141 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Money rules untouched:</b> charging, invoicing, refunds, waivers all remain staff via the Money</p>
 <p>Request Queue — this ticket moved only the booking-system writes. <code>[AI]</code> Skedda writes run under</p>
 <p>018&#x27;s PROPOSE → REVIEW → EXECUTE loop until Booking Changes promotes.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#063</span><span class="emoji">🔎</span><span class="done-title">Checked every note that said &#x27;the tool can&#x27;t do this&#x27; — most were wrong</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>Fourteen of these notes were rounded up and tried for real, one by one</li><li>Three more turned out to be wrong, and one was simply out of date since last week</li><li>One was right: the booking system really has no way to look up a single booking on its own</li><li>The pattern is now clear — a note written by reading a tool&#x27;s menu is usually wrong, and a note written after actually trying has always been right</li><li>Four notes couldn&#x27;t be tested from here, so they now say so plainly instead of sounding certain</li><li>The notes are corrected, and there is a new house rule: say the date you tested it and how, or write UNTESTED</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Audit canon&#x27;s &quot;the tool can&#x27;t do X&quot; claims — most were never tested</b></p><h2>Question</h2>
+
+<p>Graduated from <b>059</b>, whose own headline finding turned out to be</p>
+<p>an instance of the pattern it was fixing.</p>
+
+<p>059 established that Skedda HAS a write API and corrected four SOPs. It recorded <b>one</b> refusal:</p>
+<p><i>&quot;repricing an EXISTING booking — <code>edit_booking</code> has no price field.&quot;</i> That was read off the</p>
+<p><b>tool schema</b>, not the wire. On 2026-08-06 a dry-run showed Skedda&#x27;s booking <code>PUT</code> carries</p>
+<p><code>price</code> and <code>paymentStatus</code>, and <code>client.update_booking</code> merges <code>{<b>current, </b>changes}</code> with no</p>
+<p>whitelist. <b>The capability was always there; skedda-mcp just never exposed the parameter.</b></p>
+
+<p>So the corrected claim is not &quot;Skedda has no write API&quot; but something more general and more</p>
+<p>dangerous:</p>
+
+<blockquote><b>A missing tool argument is not evidence of a missing capability — but canon records it as one,</blockquote>
+<blockquote>and then procedure is built on top of it.</b></blockquote>
+
+<p>Two more instances found the same day, both from a single line in <code>CLAUDE.md</code></p>
+<p>(*&quot;Notion status-property view filters cannot be set through the API. Hand those to Junyan as a</p>
+<p>manual edit&quot;*):</p>
+
+<ul>
+<li>- <b>💵 Processed-to-reconcile</b> lost its <code>Type</code> filter when the view was recreated ~08-03. Canon</li>
+</ul>
+<p>told agents to filter by hand in prose and handed Junyan a manual UI job. <code>notion-update-view</code></p>
+<p>set the three-part filter on the first attempt.</p>
+<ul>
+<li>- <b>🤖 CC Open set (JOB 3/7)</b> was <b>quarantined</b> — <i>&quot;robots must NOT use it&quot;</i> — for the same</li>
+</ul>
+<p>stated reason. Also false, and the note was wrong in two further ways: the DB has no <code>Status</code></p>
+<p>property (it is <code>Position</code>) and no <code>Resolved</code> option (terminal states are Won/Lost/Done). It</p>
+<p>predates the Position migration, so <b>a human following it literally could not have fixed it</p>
+<p>either.</b> Now filtered; returned 22 correctly-open tickets on first read.</p>
+
+<p>Three for three. Every claim tested so far has been false.</p>
+
+<h2>Why it matters</h2>
+
+<p>These are not documentation nits. Each one converted into work:</p>
+
+<ul>
+<li>- staff time (a manual Notion edit that an API call does)</li>
+<li>- degraded procedure (agents filtering in prose; a working view sitting unused)</li>
+<li>- <b>wrong automation tags</b> — 059&#x27;s original premise manufactured &quot;a large share of the F1</li>
+</ul>
+<p>mis-parked-gate family&quot;, gates raised for work no human needed to do</p>
+
+<p>The failure mode is self-sealing: once written down, a capability claim is never retested, because</p>
+<p>the claim itself is the reason nobody tries.</p>
+
+<h2>Scope</h2>
+
+<ol>
+<li>1. <b>Enumerate</b> the remaining untested &quot;cannot / has no / not exposed&quot; claims across <code>CLAUDE.md</code>,</li>
+</ol>
+<p><code>CONTEXT.md</code>, git canon <code>library/</code>, and the Notion Operating Library. Naive grep drowns in</p>
+<p>legitimate operational rules — filter to claims about a <b>tool, API, connector or endpoint</b>.</p>
+<ol>
+<li>2. <b>Test each one against the wire</b>, not the wrapper. A dry-run, a probe call, a schema fetch —</li>
+</ol>
+<p>whatever would actually falsify it. Record the evidence either way; a confirmed limit is worth</p>
+<p>as much as a refuted one, and is what stops the next re-test.</p>
+<ol>
+<li>3. <b>Fix what&#x27;s false</b> — the claim, every procedure built on it, and any automation tag it moved.</li>
+<li>4. <b>Rule on the general fix.</b> Options, for Junyan: require every capability claim in canon to</li>
+</ol>
+<p>carry the date and method of its test; or a periodic re-probe of recorded limits; or accept</p>
+<p>drift and only test on contact. This is the part that stops recurrence, and it is a judgment</p>
+<p>call about how much ceremony canon should carry.</p>
+
+<p>Known candidates not yet tested: Alarm.com PIN masking (058 assumes it); <code>gh</code> absent on cloud</p>
+<p>runners; <code>notion-create-pages</code> 404ing under the SOPs wiki root; Skedda&#x27;s missing single-booking</p>
+<p>GET; Gmail <code>label:</code> not matching user labels (this one HAS evidence — verified in the web UI</p>
+<p>2026-08-06, and is the model for how the others should read).</p>
+
+<h2>Done when</h2>
+
+<p>Every tool-capability claim in canon is either <b>tested with its evidence recorded</b>, or explicitly</p>
+<p>marked untested so the next agent knows not to trust it. Plus Junyan&#x27;s ruling on scope 4.</p>
+
+<h2>Answer</h2>
+
+<p><b>CLOSED 2026-08-07.</b> Full evidence: <b>063 capability-claim audit</b>.</p>
+
+<p><b>Enumerated</b> across <code>CLAUDE.md</code>, <code>CONTEXT.md</code>, <code>RUNTIMES.md</code>, git canon <code>library/*.md</code> and the</p>
+<p>Notion Operating Library <b>CAPABILITIES</b> page — which is where capability claims actually</p>
+<p>concentrate, because recording them is its job. Fourteen tool/API/connector claims survived the</p>
+<p>filter (operational &quot;never&quot; rules and read-only-by-<i>design</i> statements excluded — a policy is not</p>
+<p>a capability claim).</p>
+
+<p><b>Tested at the wire where the wire was reachable.</b> Results:</p>
+
+<ul>
+<li>- <b>Confirmed:</b> Skedda really has <b>no single-booking GET</b> — live <code>GET /bookings/{id}</code> returns</li>
+</ul>
+<p><b>HTTP 405</b> (the path is PUT/DELETE only). The fetch-then-merge in <code>update_booking</code> is</p>
+<p>necessary, not defensive. First claim in this family to survive a probe.</p>
+<ul>
+<li>- <b>Refuted / overstated (3):</b> <code>edit_booking</code> &quot;cannot reprice&quot; was <b>stale</b> in two canon</li>
+</ul>
+<p>locations (<code>waive_booking_charge</code> has existed since 08-06); skedda-mcp&#x27;s &quot;<code>user.name</code>/<code>email</code></p>
+<p>return null&quot; is a <b>list-endpoint artifact</b> — the list carries <code>firstName</code>/<code>lastName</code> and the</p>
+<p>single-user read returns the email as <code>username</code>; &quot;images can&#x27;t be re-inserted via API&quot; confuses</p>
+<p>a <b>dead URL with a dead capability</b> (<code>notion-create-file-upload</code> puts a downloaded copy back).</p>
+<ul>
+<li>- <b>Marked UNTESTED in place (4):</b> Alarm.com PIN masking, Alarm.com&#x27;s own write API, the</li>
+</ul>
+<p>RemoteTrigger environment/env-var API, <code>gh</code> on cloud runners. None was probeable from this</p>
+<p>harness (MFA-gated wire; in-process OAuth token; cloud-only runtime) — so each now says so</p>
+<p>rather than reading as established fact.</p>
+<ul>
+<li>- <b>Not located (1):</b> the <code>notion-create-pages</code> 404 under the SOPs wiki root appears nowhere in</li>
+</ul>
+<p>canon. A claim nobody can find is a claim nobody can retest.</p>
+
+<p><b>The sharper finding.</b> Age doesn&#x27;t predict which claims are wrong — <b>provenance</b> does. Every</p>
+<p>claim read off a <b>tool schema</b> has been false or overstated (6 of 7 now, counting 059&#x27;s three);</p>
+<p>every claim <b>tested when written</b> (Codex↔Slack, Gmail <code>label:</code>, Phone.com international SMS) has</p>
+<p>held. The rule isn&#x27;t &quot;retest old claims&quot;, it&#x27;s <b>&quot;a schema is not a wire.&quot;</b></p>
+
+<p><b>Fixed</b> (commit <code>09f75da3</code>, canon pushed): <code>library/the-loop.md</code> — reprice claim corrected with</p>
+<p>the waive exception, Alarm.com write-API absence downgraded from fact to <b>UNTESTED</b>;</p>
+<p><code>library/gotchas.md</code> — image claim corrected, plus a new <b>&quot;Capability claims — test the wire, not</p>
+<p>the wrapper&quot;</b> section carrying the rule and the standing untested list. Notion <b>CAPABILITIES</b></p>
+<p>page: skedda-mcp gaps re-tested and rewritten, alarm PIN masking flagged UNTESTED.</p>
+
+<p><b>Scope 4 (the ceremony that stops recurrence) is NOT answered here</b> — it is Junyan&#x27;s ruling, and</p>
+<p>it now has a sharper question than the one this ticket cut: not &quot;how much ceremony should canon</p>
+<p>carry&quot; but &quot;what do we require of a <b>schema-derived</b> claim specifically&quot;. Graduated as</p>
+<p><b>064</b>. The wire probes this harness couldn&#x27;t reach graduated as</p>
+<p><b>065</b>; <b>058</b> gains an</p>
+<p>opening step so it stops assuming the PIN limit it was built on.</p>
 </div></details></div></details>
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-07 14:23 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-07 14:40 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
