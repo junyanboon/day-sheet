@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-06 20:32 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-06 21:34 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -597,7 +597,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Artist DB alarm-code lookup + Anthropic step (claude-opus-4-8) between step 11 and step 12,</p>
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
-</div></details></details></div><div class="job"><div class="jnum">#053</div><div class="jhead"><span class="emoji">🔁</span><h4>Build the new way tickets get done — the robot suggests, Junyan says yes or fixes it</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A new list replaces the old &#x27;things to do&#x27; board — one suggested next step per ticket</li><li>Each suggestion comes with the proof behind it, so Junyan can decide without digging</li><li>Two moves only: say yes, or rewrite the step to what it should have been, then mark it Ready</li><li>The robot only does steps marked Ready — never one Junyan hasn&#x27;t seen</li><li>After doing it, the robot looks again at the real booking or calendar to check it truly happened</li><li>If Junyan already did the job himself, the robot spots it and ticks it off — no double work</li><li>Steps the robot gets right over and over become automatic; one rewrite and it goes back to asking</li><li>Trying it first on booking changes, the busiest and messiest kind</li><li>IN PROGRESS: the two new lists exist in Notion and the rulebook page is written</li><li>Checked what Skedda&#x27;s robot arm can really do: move, create, cancel and approve bookings — but not change a price</li><li>Junyan ruled: the old to-do board gets finished off first, then retired — no copying rows over</li><li>Junyan ruled: instant bookings and moves run on their own, and he gets a text each time one happens</li><li>Still to build: the sweep that runs every few minutes, and then a week of real use</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Next Action queue + the advancement loop — pilot on Booking Changes</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#053</div><div class="jhead"><span class="emoji">🔁</span><h4>Build the new way tickets get done — the robot suggests, Junyan says yes or fixes it</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A new list replaces the old &#x27;things to do&#x27; board — one suggested next step per ticket</li><li>Each suggestion comes with the proof behind it, so Junyan can decide without digging</li><li>Two moves only: say yes, or rewrite the step to what it should have been, then mark it Ready</li><li>The robot only does steps marked Ready — never one Junyan hasn&#x27;t seen</li><li>After doing it, the robot looks again at the real booking or calendar to check it truly happened</li><li>If Junyan already did the job himself, the robot spots it and ticks it off — no double work</li><li>Steps the robot gets right over and over become automatic; one rewrite and it goes back to asking</li><li>Trying it first on booking changes, the busiest and messiest kind</li><li>IN PROGRESS: the two new lists exist in Notion and the rulebook page is written</li><li>Checked what Skedda&#x27;s robot arm can really do: move, create, cancel and approve bookings — but not change a price</li><li>Junyan ruled: the old to-do board gets finished off first, then retired — no copying rows over</li><li>Junyan ruled: instant bookings and moves run on their own, and he gets a text each time one happens</li><li>BUILT Aug 6: the little sweep that runs every 10 minutes — it checks the real booking for every open step and ticks off whatever already happened</li><li>It cannot touch bookings itself, on purpose: one robot does the work, a different one checks it. A checker that can also change things isn&#x27;t a checker</li><li>Safety rule built in first: if it can&#x27;t reach the booking system, it says &#x27;couldn&#x27;t check&#x27; — it never reads silence as &#x27;the booking is gone&#x27;</li><li>Junyan needs to switch it on in the cloud (four steps, listed on the ticket) — there&#x27;s a safe practice mode that changes nothing</li><li>Still to build: the thinking half that suggests the next step, and then a week of real use</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Next Action queue + the advancement loop — pilot on Booking Changes</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>, which dissolved J01 and ruled that ticket</p>
 <p>advancement is a <b>loop</b>, not a job. This ticket builds it and runs the pilot. It is the head of</p>
@@ -771,6 +771,59 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>043/042 precedent that GitHub Actions cron is disqualified for anything time-shaped) including the</p>
 <p>notify-after SMS, the Actions-to-Perform drain, and then the pilot week — which is where every</p>
 <p>acceptance criterion is actually earned.</p>
+
+<h2>Build log — 2026-08-06 (session 2; ticket stays OPEN)</h2>
+
+<p><b>The tick is built and green: 18 new tests, 212 across the whole gate, no regressions.</b></p>
+
+<p><b>The architectural call — the tick is split in two, and the split is load-bearing.</b></p>
+<p><code>event-gate</code> on Cloud Run (<code>POST /loop/&lt;token&gt;</code>, kill switch <code>LOOP_DISABLED</code>) owns <b>VERIFY</b> and</p>
+<p><b>REVIEW absorption</b>; the agent pass keeps <b>PROPOSE</b> and <b>EXECUTE</b>. The line is judgment: the</p>
+<p>deterministic half is a read and a comparison, so it is cheap enough to run every 10 minutes, and</p>
+<p>it returns <code>needs_agent_pass</code> so the expensive half only wakes when a machine cannot settle the</p>
+<p>question. An idle tick costs <b>one Notion query</b> and returns <code>idle: true</code> — that is the whole cost</p>
+<p>argument over the fixed 2-hourly cadence it replaces.</p>
+
+<p><b>The tick never writes to Skedda, by construction.</b> Verification and execution are different</p>
+<p>hands: one writer (the agent), one witness (the tick). A witness that can also write is not a</p>
+<p>witness — so <code>skedda_read.py</code> is read-only, not merely used read-only.</p>
+
+<p><b>The failure mode designed against first, because this map has already suffered it twice:</b> a</p>
+<p>failed read must never read as evidence. <code>verify_booking</code> returns <code>unverifiable</code> (not <code>no-match</code>)</p>
+<p>when the Skedda read raises or the row carries no parseable <code>Booking ref</code>, and an <code>unverifiable</code></p>
+<p>row is left untouched. Without that, an expired session cookie returning &quot;nothing is booked&quot; would</p>
+<p>flag or close <b>every open row at once</b> — the dead-checker pathology, one level up. Four of the</p>
+<p>eighteen tests exist solely to hold this line.</p>
+
+<p><b>Files:</b> <code>services/event-gate/loop.py</code> (the tick), <code>skedda_read.py</code> (minimal read-only client —</p>
+<p>cookie from <code>SKEDDA_COOKIE</code> or Secret Manager <code>skedda-cookie</code>, same project the service runs in),</p>
+<p><code>test_loop.py</code>, <code>/loop/&lt;token&gt;</code> in <code>app.py</code>. Canon updated (<code>library/the-loop.md</code> § Who runs which</p>
+<p>beat) and <code>RUNTIMES.md</code> carries the new <code>desk-loop</code> job.</p>
+
+<p><b>One convention this forced, now in canon:</b> <code>Booking ref</code> is the machine-readable handle VERIFY</p>
+<p>matches on and must be written <code>&lt;booking id&gt; @ &lt;YYYY-MM-DD&gt;</code> (e.g. <code>118625498 @ 2026-08-15</code>). A</p>
+<p>booking-class row without it can never close by itself — it is <code>unverifiable</code> forever.</p>
+
+<p><b>Junyan&#x27;s owner actions before the pilot can start</b> (all need gcloud, historically permission-</p>
+<p>blocked for Claude):</p>
+
+<ol>
+<li>1. Deploy the revision: <code>gcloud run deploy event-gate</code> from <code>services/event-gate</code> (account</li>
+</ol>
+<p><code>thedanceannex@</code> — the <code>PERMISSION_DENIED</code> in 036 was the wrong gcloud account, not permissions).</p>
+<ol>
+<li>2. Grant the service access to the <code>skedda-cookie</code> secret, or set <code>SKEDDA_COOKIE</code> on the revision.</li>
+<li>3. Create the <code>desk-loop</code> Cloud Scheduler job — every 10 min, 08:00–22:50 Toronto,</li>
+</ol>
+<p><code>POST /loop/&lt;GATE_PATH_TOKEN&gt;</code>.</p>
+<ol>
+<li>4. Smoke-test with <code>?dry_run=true</code> first: it reports what it <i>would</i> close and writes nothing.</li>
+</ol>
+
+<p><b>Still to build (session 3):</b> the agent pass (PROPOSE/EXECUTE against <code>Ready</code> rows), the</p>
+<p>notify-after SMS wired to real fast-track executions (<code>notify_fast_track</code> exists but is unwired —</p>
+<p>nothing auto-executes yet, so nothing can fire it), the Actions-to-Perform drain, and the pilot</p>
+<p>week.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">14</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -5818,5 +5871,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-06 20:32 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-06 21:34 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
