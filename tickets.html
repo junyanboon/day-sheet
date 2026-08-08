@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-07 20:59 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-07 21:02 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2328,6 +2328,37 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- A week of run history read and reported, with every non-green run&#x27;s cause named.</li>
 <li>- A Run Error row observed being filed AND deduped, then cleaned up.</li>
 </ul>
+
+<h2>Progress — 2026-08-07 (partial; ticket stays open)</h2>
+
+<p><b>Item 2 — Run Error handler: PASSED, in production, cleaned up.</b></p>
+<p>Ran <code>scripts/run_error.py</code> twice against a scratch key</p>
+<p>(<code>run-error-key: watchlist-refresh-scratch/handler_selftest</code>), attended, without touching</p>
+<p>the live emergency-lane watchlist. First call filed one row on ✅ Actions to Perform</p>
+<p>(<code>Type = Run Error</code>, <code>Status = Pending Review</code>, <code>Gate Type = Machine-readable</code>,</p>
+<p><code>For = Junyan</code>). Second call with the same (workflow, step) did <b>not</b> file a second row —</p>
+<p>it appended <code>Repeat occurrence — …</code> to the existing row&#x27;s page. Queried the board after:</p>
+<p>exactly <b>one</b> row carried the key. Row <code>3b675032-81c4-8177-9085-cd758f089f60</code> then set to</p>
+<p><code>Status = Cancelled</code>. Dedup contract holds as written.</p>
+<p>Not exercised: the <code>if: failure()</code> handler firing from inside a real workflow run (this</p>
+<p>tested the script it calls, not the wiring), and the &quot;a Cancelled row no longer matches, so</p>
+<p>the next failure files fresh&quot; branch — that one would need a third live row.</p>
+
+<p><b>Item 3 — ledger completeness: PASSED, no silent hole.</b></p>
+<p>Pulled 150 SMS turns from Phone.com ext 100 and matched every turn from</p>
+<p><b>2026-08-06 00:00Z → 2026-08-08 00:33Z</b> (the last watchlist commit before the check)</p>
+<p>against <code>threads/</code>: <b>118 turns checked, 0 missing.</b> Window deliberately spans the</p>
+<p>2026-08-06 outage day, so this is direct evidence for 062&#x27;s claim that a lost push</p>
+<p>re-captures rather than skips. Turns after 00:33Z were correctly absent — not yet polled.</p>
+<p>Note for whoever repeats this: <code>threads/</code> files are keyed by <b>contact name</b>, not phone</p>
+<p>number, and message bodies are block-quoted — strip <code>&gt; </code> before matching or every turn</p>
+<p>reads as missing.</p>
+
+<p><b>Item 1 — clean week: NOT YET POSSIBLE.</b> The fix (<code>d1bea590</code>) landed 2026-08-07; the</p>
+<p>ticket&#x27;s own measurement window opens <b>2026-08-14</b>. As of 2026-08-08 00:30Z the last 40</p>
+<p><code>watchlist.yml</code> runs are green with every :00/:30 scheduled slot present, but that is ~1 day,</p>
+<p>not a week. Re-read <code>gh run list --workflow=watchlist.yml</code> on or after 2026-08-14 and report</p>
+<p>each non-green run&#x27;s cause.</p>
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
@@ -6216,5 +6247,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-07 20:59 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-07 21:02 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
