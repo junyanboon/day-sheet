@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-07 20:40 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-07 20:52 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">15</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">9</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">37</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">14</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">10</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">38</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -831,7 +831,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
 <p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">15</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">14</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1897,49 +1897,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Existing duplicates merged or closed; the 5 feedback rows resolved with the root cause named.</li>
 <li>- The invariant watches it (Provisional is fine).</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#062</div><div class="jhead"><span class="emoji">📉</span><h4>The text-message collector fails one run in four — and nobody notices</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When it fails, a renter&#x27;s texts never reach the record the robots read</li><li>So the robot sees silence and thinks the renter never wrote — that&#x27;s how David&#x27;s messages got missed</li><li>The cause is known: one script trips over another&#x27;s unfinished work in the shared folder</li><li>Fix the trip, refill the missing days, and make a failed run raise its hand instead of hiding</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>watchlist-refresh fails ~1 run in 4 and takes the J28 ledger pollers down with it</b></p><h2>Question</h2>
-
-<p>From <b>HANDOFF-concierge-ping-pong.md</b> §6:</p>
-<p><code>watchlist-refresh</code> — the 30-min GitHub Action the J28 Gmail/SMS ledger pollers ride — <b>fails</p>
-<p>about one run in four</b>. When it fails, SMS turns never reach the git ledger: during the David</p>
-<p>Diep run his 21:54/21:57 exchange was absent, so <b>an agent reading git-first canon saw no</p>
-<p>messages — indistinguishable from a renter who never wrote.</b> A silent feed gap reads exactly</p>
-<p>like silence from the customer, which feeds the ping-pong class directly.</p>
-
-<p>Root cause is already known (handoff): <code>scripts/sms_pull.py</code> commits without checking whether an</p>
-<p>earlier step left the tree mid-rebase with an unmerged <code>watchlist/</code> file. Fix that concretely:</p>
-
-<ol>
-<li>1. Guard the commit path — detect a dirty/mid-rebase tree, abort/repair (e.g. <code>git rebase --abort</code></li>
-</ol>
-<p>+ clean re-pull) instead of compounding it, and make each poller step fail independently rather</p>
-<p>than poisoning the shared checkout.</p>
-<ol>
-<li>2. Confirm the ~1-in-4 rate from the Actions run history, and re-measure after the fix (target:</li>
-</ol>
-<p>a clean week).</p>
-<ol>
-<li>3. Backfill the gaps: re-run the pollers over the failure windows so the ledger is complete</li>
-</ol>
-<p>(idempotent-by-filename makes this safe by design — verify it holds).</p>
-<ol>
-<li>4. A failed poller run must be <i>visible</i>: on failure, file the deduped <code>Run Error</code> row the 035</li>
-</ol>
-<p>standing rule requires — today it fails silently, which is this map&#x27;s third-time pathology.</p>
-
-<p>Note the standing fog item &quot;Scheduler reliability for the deterministic lane&quot; — Actions cron</p>
-<p>dropping runs is a separate, known problem with an external-tick pattern already prototyped</p>
-<p>(<code>send-engine/FbsTick.gs</code>). This ticket fixes the <i>crash</i>, not the <i>cadence</i>; if the run history</p>
-<p>shows dropped schedules are also material here, say so in the resolution and let the fog item</p>
-<p>sharpen, don&#x27;t absorb it.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- One clean week of watchlist-refresh runs (no rebase/unmerged-file failures).</li>
-<li>- Ledger backfilled through the known gaps; David Diep&#x27;s Aug-5 SMS turns present.</li>
-<li>- A poller failure now files a <code>Run Error</code> row (verified by forcing one).</li>
-</ul>
 </div></details></details></div><div class="job"><div class="jnum">#065</div><div class="jhead"><span class="emoji">🧪</span><h4>Four things we still haven&#x27;t actually tried</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>This laptop can&#x27;t reach them — they need the cloud helpers or the alarm login</li><li>Two are about the alarm system, and the alarm job will test them as its first step</li><li>One needs Junyan to run the little test robot built for exactly this</li><li>The point is that &#x27;we never checked&#x27; stays visible instead of quietly becoming &#x27;it can&#x27;t be done&#x27;</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Probe the four capability claims a local session cannot reach</b></p><h2>Question</h2>
 
 <p>Graduated from <b>063</b>. Four claims are still marked <b>UNTESTED</b></p>
@@ -1962,7 +1919,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>one-line reason (cost, risk, nobody needs it) so the next agent inherits a decision rather than a</p>
 <p>gap. The two alarm rows may be closed here by pointing at 058 once 058 has actually run them.</p>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">9</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">10</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
 <p>Build the crude-but-real J26 cost ledger on the Jobs registry spine: per job, runs × pass length (proxy for token spend) plus a self-reported supervision-minutes line, tallied weekly. Framing: <b>subscription headroom + exposure if the subsidy changes</b>, not cash bleed (~$240/mo Claude + $140/mo ChatGPT actual). It also populates the sibling map&#x27;s GO criterion (c). Decide the tally mechanism (likely a weekly scheduled job writing registry rows) and stand it up.</p>
 </div></details></details></div><div class="job"><div class="jnum">#015</div><div class="jhead"><span class="emoji">✂️</span><h4>Stop keeping two copies of messages</h4></div><span class="pill p-wait">needs 006 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Today messages get saved in two places</li><li>Switch fully to our own record</li><li>Freeze the old copy</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cut correspondence canon over from the Notion Correspondence Log to J28</b></p><h2>Question</h2>
@@ -2340,6 +2297,37 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Blocked on <b>052</b> because the loop&#x27;s queue is the surface any</p>
 <p>session would work over — and because the executor-agnostic path may dissolve most of the problem.</p>
+</div></details></details></div><div class="job"><div class="jnum">#066</div><div class="jhead"><span class="emoji">🗂️</span><h4>Prove the poller fix held — one clean week, and a Run Error row that has actually fired</h4></div><span class="pill p-wait">needs 062 first</span> <details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Prove the poller fix held — one clean week, and a Run Error row that has actually fired</b></p><h2>Question</h2>
+
+<p>Ticket 062 shipped the ident fix and the <code>Run Error</code> failure handler (<code>d1bea590</code>). Neither has</p>
+<p>been observed doing its job in production yet — 062 measured ~19h of green, and the handler has</p>
+<p>never fired. Close the loop:</p>
+
+<ol>
+<li>1. <b>Clean week.</b> Re-read <code>gh run list --workflow=watchlist.yml</code> on or after <b>2026-08-14</b>.</li>
+</ol>
+<p>Expected: no <code>fatal: empty ident name</code> in any run, and no contested-push run that ends with</p>
+<p>messages uncommitted. Report the actual failure count and cause of each, not just green/red —</p>
+<p>a run can be green while a poller step silently loses its push.</p>
+<ol>
+<li>2. <b>Force one Run Error row.</b> The handler is untested in production. Do this deliberately and</li>
+</ol>
+<p>attended, NOT by breaking a live tick of the emergency-lane watchlist — e.g. a</p>
+<p><code>workflow_dispatch</code> run on a scratch branch with a step forced to exit 1, or invoking</p>
+<p><code>scripts/run_error.py</code> directly once and then marking the row Cancelled. Verify: exactly one</p>
+<p>row appears with <code>Type = Run Error</code>, and a <b>second</b> invocation with the same</p>
+<p>(workflow, step) appends to that row rather than filing a second one.</p>
+<ol>
+<li>3. <b>Confirm the ledger has no silent hole</b> across the measurement week: for a day with known</li>
+</ol>
+<p>SMS traffic, spot-check that each turn in Phone.com appears in <code>threads/</code>.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A week of run history read and reported, with every non-green run&#x27;s cause named.</li>
+<li>- A Run Error row observed being filed AND deduped, then cleaned up.</li>
+</ul>
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
@@ -6034,6 +6022,119 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- <b>Chosen fallback / durable fix: the J28 correspondence ledger (<b>ticket 006</b>)</b> — Zapier files drops into the owned store, making the drops scan runtime-independent. Promoted from fallback to primary.</li>
 <li>- Optional CAPABILITIES row touch-up (Junyan-approved wording in findings): note the browser-read-only path, read + report, no marking — drops stay unprocessed until a Claude pass ✅-reacts.</li>
 </ul>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#062</span><span class="emoji">📉</span><span class="done-title">The text-message collector fails one run in four — and nobody notices</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>When it fails, a renter&#x27;s texts never reach the record the robots read</li><li>So the robot sees silence and thinks the renter never wrote — that&#x27;s how David&#x27;s messages got missed</li><li>The cause is known: one script trips over another&#x27;s unfinished work in the shared folder</li><li>Fix the trip, refill the missing days, and make a failed run raise its hand instead of hiding</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>watchlist-refresh fails ~1 run in 4 and takes the J28 ledger pollers down with it</b></p><h2>Question</h2>
+
+<p>From <b>HANDOFF-concierge-ping-pong.md</b> §6:</p>
+<p><code>watchlist-refresh</code> — the 30-min GitHub Action the J28 Gmail/SMS ledger pollers ride — <b>fails</p>
+<p>about one run in four</b>. When it fails, SMS turns never reach the git ledger: during the David</p>
+<p>Diep run his 21:54/21:57 exchange was absent, so <b>an agent reading git-first canon saw no</p>
+<p>messages — indistinguishable from a renter who never wrote.</b> A silent feed gap reads exactly</p>
+<p>like silence from the customer, which feeds the ping-pong class directly.</p>
+
+<p>Root cause is already known (handoff): <code>scripts/sms_pull.py</code> commits without checking whether an</p>
+<p>earlier step left the tree mid-rebase with an unmerged <code>watchlist/</code> file. Fix that concretely:</p>
+
+<ol>
+<li>1. Guard the commit path — detect a dirty/mid-rebase tree, abort/repair (e.g. <code>git rebase --abort</code></li>
+</ol>
+<p>+ clean re-pull) instead of compounding it, and make each poller step fail independently rather</p>
+<p>than poisoning the shared checkout.</p>
+<ol>
+<li>2. Confirm the ~1-in-4 rate from the Actions run history, and re-measure after the fix (target:</li>
+</ol>
+<p>a clean week).</p>
+<ol>
+<li>3. Backfill the gaps: re-run the pollers over the failure windows so the ledger is complete</li>
+</ol>
+<p>(idempotent-by-filename makes this safe by design — verify it holds).</p>
+<ol>
+<li>4. A failed poller run must be <i>visible</i>: on failure, file the deduped <code>Run Error</code> row the 035</li>
+</ol>
+<p>standing rule requires — today it fails silently, which is this map&#x27;s third-time pathology.</p>
+
+<p>Note the standing fog item &quot;Scheduler reliability for the deterministic lane&quot; — Actions cron</p>
+<p>dropping runs is a separate, known problem with an external-tick pattern already prototyped</p>
+<p>(<code>send-engine/FbsTick.gs</code>). This ticket fixes the <i>crash</i>, not the <i>cadence</i>; if the run history</p>
+<p>shows dropped schedules are also material here, say so in the resolution and let the fog item</p>
+<p>sharpen, don&#x27;t absorb it.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- One clean week of watchlist-refresh runs (no rebase/unmerged-file failures).</li>
+<li>- Ledger backfilled through the known gaps; David Diep&#x27;s Aug-5 SMS turns present.</li>
+<li>- A poller failure now files a <code>Run Error</code> row (verified by forcing one).</li>
+</ul>
+
+<h2>Resolution (2026-08-07)</h2>
+
+<p><b>The premise was wrong, and correcting it is most of the answer.</b> <code>watchlist-refresh</code> does</p>
+<p>not fail ~1 run in 4 at random, and the mid-rebase commit bug named in the handoff was not what</p>
+<p>took the ledger down on Aug 5–6. Measured from the run history (<code>gh run list</code>, last 100 runs):</p>
+
+<ul>
+<li>- <b>One contiguous outage</b>, 2026-08-06 02:00Z → 2026-08-07 02:00Z — essentially every 30-min</li>
+</ul>
+<p>tick red or cancelled for ~24 hours.</p>
+<ul>
+<li>- <b>38 consecutive green runs</b> since 2026-08-07 12:00Z, through 00:30Z tonight.</li>
+<li>- Scheduled ticks themselves were <b>not dropped</b> — every :00/:30 slot is present in the history</li>
+</ul>
+<p>even through the outage. The fog item &quot;Scheduler reliability for the deterministic lane&quot; is</p>
+<p><i>not</i> implicated here; the crash was, and the hang below.</p>
+
+<p><b>Three distinct causes in that window, none of them the mid-rebase bug</b> (which was already</p>
+<p>fixed on Aug 4 by <code>0f2e15a3</code>, before the David Diep gap):</p>
+
+<ol>
+<li>1. <b>Canon-completeness check red</b> — <code>library/the-loop.md</code> had no MIRRORS row, so</li>
+</ol>
+<p><code>library_canon_check.py</code> exited 1 and failed the whole run. Fixed by <code>136896ba</code>; that fix is</p>
+<p>what turned the lane green on Aug 7. A content gap, not a code bug.</p>
+<ol>
+<li>2. <b>A GitHub Actions infrastructure outage</b>, ~15:00–17:30Z Aug 6 — runs died at</li>
+</ol>
+<p><code>Failed to resolve action download info. Error: Service Unavailable</code>, before any project step</p>
+<p>ran, across five of Junyan&#x27;s repos. Not ours to fix.</p>
+<ol>
+<li>3. <b>Ident-less rebase in the pollers — the real ledger-gap mechanism, fixed by this ticket.</b></li>
+</ol>
+<p><code>sms_pull.py</code> / <code>gmail_pull.py</code> passed a committer ident to <code>git commit</code> but <i>not</i> to the</p>
+<p><code>git rebase</code> in the push-retry loop. The runner has no global git identity, so a contested</p>
+<p>push led to <code>fatal: empty ident name (for &lt;runner@...&gt;)</code>, the rebase never resolved, the loop</p>
+<p>re-pushed the same rejected head six times, and the run ended with the captured messages</p>
+<p>uncommitted. Reproduced in a local sandbox (ident-less rebase: <code>fatal: no email was given</code>;</p>
+<p>same rebase with <code>-c user.name/-c user.email</code>: rebases cleanly and lands our commit on top).</p>
+
+<p>Also seen and worth naming: one run <b>hung for 2h15m</b> (<code>31124777029</code>), and the <code>concurrency</code></p>
+<p>group cancelled every tick behind it. That manufactured the &quot;cancelled&quot; pattern that had this</p>
+<p>misread as a GitHub billing/quota ceiling for two passes.</p>
+
+<p><b>Shipped</b> — <code>dc-canon</code> (<code>desk-correspondence</code>) commit <code>d1bea590</code>:</p>
+<ul>
+<li>- <code>sms_pull.py</code>, <code>gmail_pull.py</code>: <code>IDENT</code> passed to <code>git rebase</code> as well as <code>git commit</code>.</li>
+<li>- <code>gmail_pull.py</code>: commit with <code>check=False</code> + warn, matching <code>sms_pull</code>, so a failed commit</li>
+</ul>
+<p>can&#x27;t kill the step or poison the shared checkout for the steps behind it.</p>
+<ul>
+<li>- New <code>scripts/run_error.py</code>: files a deduped <code>Type = Run Error</code> row on ✅ Actions to Perform,</li>
+</ul>
+<p><b>one open row per (workflow, step)</b> — a repeat appends a dated line to that row instead of</p>
+<p>fragmenting one root cause across rows. A row moved to Processed no longer matches, so a</p>
+<p>fresh failure after a fix files fresh.</p>
+<ul>
+<li>- <code>watchlist.yml</code>: <code>id:</code> on both poller steps + an <code>if: failure()</code> handler that names the failed</li>
+</ul>
+<p>step and links the run.</p>
+
+<p><b>Backfill — verified, nothing to re-run.</b> <code>threads/David-Diep-Skedda.md</code> now carries the exact</p>
+<p>turns the handoff said were missing: <b>Wed Aug 5, 9:54 PM out, 9:57 PM in ×2</b>. Idempotent-by-</p>
+<p>filename holds, and the cursor rides in the <i>same</i> commit as the messages, so a lost push</p>
+<p>re-captures on the next tick rather than skipping — which is why the gap self-healed.</p>
+
+<p><b>Not verified in production:</b> the Run Error row has never actually fired. Forcing one means</p>
+<p>deliberately failing a live tick of the emergency-lane watchlist, which is not an unattended</p>
+<p>action. Carried to ticket 066 with the clean-week measurement.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#064</span><span class="emoji">⚖️</span><span class="done-title">Junyan ruled: every &#x27;can&#x27;t do this&#x27; note now lives in one table, with proof or the word UNTESTED</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>All the &#x27;the computer can&#x27;t do this&#x27; notes moved into a single table on the tools page</li><li>Each row says the date it was tried and how — or says UNTESTED in plain sight</li><li>An UNTESTED note doesn&#x27;t count: if trying takes half a minute, the robot must try before handing Junyan the job</li><li>If trying is genuinely hard, the robot may still ask — but must admit the ask rests on an unchecked note</li><li>Later, the new step-by-step queue will refuse such asks automatically — a lock, not a reminder</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>What must a capability claim carry before it goes in canon — rule the ceremony</b></p><h2>Question</h2>
 
 <p>Graduated from <b>063</b>, and sharper than the question 063 cut.</p>
@@ -6115,5 +6216,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-07 20:40 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-07 20:52 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
