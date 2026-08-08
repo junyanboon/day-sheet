@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-07 21:09 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-07 21:19 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">14</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">15</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">10</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">38</div><div class="l">✅ Finished</div></div>
 </div>
@@ -831,7 +831,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
 <p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">14</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">15</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1918,6 +1918,51 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Each row is either probed with its evidence recorded in canon, or consciously left UNTESTED with a</p>
 <p>one-line reason (cost, risk, nobody needs it) so the next agent inherits a decision rather than a</p>
 <p>gap. The two alarm rows may be closed here by pointing at 058 once 058 has actually run them.</p>
+</div></details></details></div><div class="job"><div class="jnum">#067</div><div class="jhead"><span class="emoji">🗂️</span><h4>Customer mail that lands in spam never reaches canon — even after a human rescues it</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Customer mail that lands in spam never reaches canon — even after a human rescues it</b></p><h2>Question</h2>
+
+<p>Found while checking 062&#x27;s backfill. Camille Quesada emailed the desk <b>2026-08-06 19:32Z</b></p>
+<p>(&quot;Booking for Sunday, August 9th&quot; — asking for door codes and alarm instructions). Junyan&#x27;s</p>
+<p>Aug-7 reply reached canon; <b>her original never did</b>, so the thread read as the desk writing</p>
+<p>unprompted. Every other turn across Aug 5–7 was present — SMS matched 200/200 against Phone.com,</p>
+<p>and 14 of 15 checked Gmail turns were in the ledger. This was the only hole, and it was <b>not</b></p>
+<p>caused by the outage: the poller&#x27;s cursor rides in the same commit as the messages, so an</p>
+<p>outage-lost message re-captures on the next tick. This one was <i>skipped</i>, not lost.</p>
+
+<p>Most likely mechanism (not yet proven): the message was in <b>spam</b> when the poller ran.</p>
+<p><code>gmail_pull.py</code> lists with <code>includeSpamTrash: false</code> and only ever looks forward from its cursor</p>
+<p>(<code>after:{cursor - 3600}</code>). So a message quarantined at poll time is invisible, and staying</p>
+<p>invisible is permanent — a human un-spamming it later changes nothing, because the cursor has</p>
+<p>already moved past that hour. Her thread carries <b>no labelIds at all</b>, consistent with a</p>
+<p>message that was rescued from spam rather than filed by a normal Gmail filter.</p>
+
+<p>Backfilled by hand: <code>messages/2026/08/06/gmail-19fd88ffa03e12ca.json</code> (commit <code>c80c0f99</code>,</p>
+<p><code>source: backfill-gmail-poller-gap</code>), and the thread now renders correctly.</p>
+
+<p>Decide the fix:</p>
+
+<ol>
+<li>1. <b>Confirm the mechanism first.</b> Is spam the actual cause? Check whether Gmail still shows</li>
+</ol>
+<p>any spam-history signal for that message, and test the poller against a deliberately</p>
+<p>spam-filed message before designing around the theory.</p>
+<ol>
+<li>2. <b>Then choose the repair.</b> Options seen so far: poll with <code>includeSpamTrash: true</code> and drop</li>
+</ol>
+<p>true spam by rule in code (the ledger already enforces <code>ledger_exclude.json</code> that way); or</p>
+<p>add a slower, wider re-scan pass (e.g. once a day over the last 7 days, dedup by filename)</p>
+<p>so <i>any</i> forward-cursor skip self-heals rather than becoming permanent.</p>
+<ol>
+<li>3. <b>Consider the class, not just the cause.</b> A cursor that only moves forward turns <i>every</i></li>
+</ol>
+<p>kind of skip into a permanent hole. The re-scan option fixes the class; the spam flag fixes</p>
+<p>one instance.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Mechanism confirmed or refuted with a real test, not inference.</li>
+<li>- A message the poller skipped on its first pass demonstrably reaches canon on a later one.</li>
+</ul>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">10</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -2477,6 +2522,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Not verified in production:</b> the Run Error row has never actually fired. Forcing one means</p>
 <p>deliberately failing a live tick of the emergency-lane watchlist, which is not an unattended</p>
 <p>action. Carried to ticket 066 with the clean-week measurement.</p>
+
+<p>**Backfill audit, added same night (asked: did <i>everything</i> get backfilled?).<b> SMS: all 200 Phone.com messages since Aug 4 23:45 matched to ledger pointers — </b>0 missing<b>, both extensions. Gmail: 14 of 15 checked customer/platform turns present; </b>one genuine hole** — Camille Quesada&#x27;s 2026-08-06 19:32Z inbound, never polled (not outage-lost; the cursor rides in the message commit, so outage losses re-capture). Backfilled by hand (<code>c80c0f99</code>) and confirmed rendering in <code>threads/Camille-Quesada-Skedda.md</code> after a dispatch run. The skip mechanism is its own defect — <b>067</b>.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#063</span><span class="emoji">🔎</span><span class="done-title">Checked every note that said &#x27;the tool can&#x27;t do this&#x27; — most were wrong</span><span class="done-date">2026-08-07</span></summary><div class="done-body"><ul class="plain-bullets"><li>Fourteen of these notes were rounded up and tried for real, one by one</li><li>Three more turned out to be wrong, and one was simply out of date since last week</li><li>One was right: the booking system really has no way to look up a single booking on its own</li><li>The pattern is now clear — a note written by reading a tool&#x27;s menu is usually wrong, and a note written after actually trying has always been right</li><li>Four notes couldn&#x27;t be tested from here, so they now say so plainly instead of sounding certain</li><li>The notes are corrected, and there is a new house rule: say the date you tested it and how, or write UNTESTED</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Audit canon&#x27;s &quot;the tool can&#x27;t do X&quot; claims — most were never tested</b></p><h2>Question</h2>
 
 <p>Graduated from <b>059</b>, whose own headline finding turned out to be</p>
@@ -6249,5 +6296,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-07 21:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-07 21:19 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
