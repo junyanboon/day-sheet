@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-07 14:46 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-07 20:40 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">16</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">15</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">9</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">36</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">37</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -824,8 +824,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>notify-after SMS wired to real fast-track executions (<code>notify_fast_track</code> exists but is unwired —</p>
 <p>nothing auto-executes yet, so nothing can fire it), the Actions-to-Perform drain, and the pilot</p>
 <p>week.</p>
+
+<p><b>Rider (064 ruling, 2026-08-07): the untested-limit lock.</b> When the queue&#x27;s REVIEW/EXECUTE path</p>
+<p>lands in <code>event-gate</code>, add the refusal: a proposed action whose basis cites a capability limit</p>
+<p>must look the limit up in the CAPABILITIES <b>Limits register</b>; an UNTESTED cell bounces the</p>
+<p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
+<p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">16</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">15</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1934,53 +1940,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Ledger backfilled through the known gaps; David Diep&#x27;s Aug-5 SMS turns present.</li>
 <li>- A poller failure now files a <code>Run Error</code> row (verified by forcing one).</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#064</div><div class="jhead"><span class="emoji">⚖️</span><h4>Junyan decides how careful we must be before writing &#x27;the tool can&#x27;t do this&#x27;</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The problem isn&#x27;t old notes going stale — it&#x27;s notes written without trying</li><li>So the choice is what to demand of those specific notes, not of every note</li><li>From &#x27;change nothing&#x27; up to &#x27;you may not write it down until you&#x27;ve tried it&#x27;</li><li>Someone has to pay for the trying, and some things are slow or awkward to try</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>What must a capability claim carry before it goes in canon — rule the ceremony</b></p><h2>Question</h2>
-
-<p>Graduated from <b>063</b>, and sharper than the question 063 cut.</p>
-
-<p>063 expected &quot;old claims rot, so schedule a re-probe&quot;. The evidence says otherwise: <b>age doesn&#x27;t</p>
-<p>predict a wrong claim, provenance does.</b> Every limit read off a <b>tool schema</b> has been false or</p>
-<p>overstated (6 of 7 across 059 + 063); every limit <b>tested when written</b> has held. So a periodic</p>
-<p>re-probe of everything is the wrong shape — it spends effort uniformly on a risk that is</p>
-<p>concentrated in one place.</p>
-
-<p>Junyan&#x27;s ruling, on this narrower question: <b>what does canon require of a claim that a tool</p>
-<p>&quot;cannot&quot; do something?</b></p>
-
-<p>Options, roughly in ascending ceremony:</p>
-
-<ol>
-<li>1. <b>Nothing new</b> — the <code>gotchas.md</code> rule added by 063 (state date + method, or write UNTESTED) is</li>
-</ol>
-<p>already in canon; accept drift and test on contact.</p>
-<ol>
-<li>2. <b>Provenance-tagged claims</b> — every capability limit carries how it was established</li>
-</ol>
-<p>(<code>wire</code> / <code>schema</code> / <code>owner ruling</code>), and a schema-derived one is never treated as binding: an</p>
-<p>agent that hits it must probe before routing work to a human.</p>
-<ol>
-<li>3. <b>Schema-derived claims expire</b> — they carry a date and are re-probed on a cadence (only this</li>
-</ol>
-<p>class, not all claims); wire-tested ones stand until contradicted.</p>
-<ol>
-<li>4. <b>No untested limits in canon at all</b> — a claim can&#x27;t be written until it&#x27;s probed; until then</li>
-</ol>
-<p>it lives as an open question, not a rule.</p>
-
-<p>Second half of the ruling: <b>who pays for a probe.</b> Options 2–4 all cost an agent a call it would</p>
-<p>otherwise skip. Cheap for Skedda or Notion; not cheap for anything MFA-gated or cloud-only (see</p>
-<p><b>065</b>).</p>
-
-<h2>Why it matters</h2>
-
-<p>The failure mode is self-sealing — a written-down limit is the reason nobody retries — and it</p>
-<p>converts directly into staff time, degraded procedure, and wrong automation tags (063&#x27;s evidence).</p>
-<p>This is the part that stops recurrence; everything else 063 did was cleanup.</p>
-
-<h2>Done when</h2>
-
-<p>Junyan has ruled, the rule is written into <code>library/gotchas.md</code> (extending the section 063 added),</p>
-<p>and any automation tag that a refuted claim moved is re-checked.</p>
 </div></details></details></div><div class="job"><div class="jnum">#065</div><div class="jhead"><span class="emoji">🧪</span><h4>Four things we still haven&#x27;t actually tried</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>This laptop can&#x27;t reach them — they need the cloud helpers or the alarm login</li><li>Two are about the alarm system, and the alarm job will test them as its first step</li><li>One needs Junyan to run the little test robot built for exactly this</li><li>The point is that &#x27;we never checked&#x27; stays visible instead of quietly becoming &#x27;it can&#x27;t be done&#x27;</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Probe the four capability claims a local session cannot reach</b></p><h2>Question</h2>
 
 <p>Graduated from <b>063</b>. Four claims are still marked <b>UNTESTED</b></p>
@@ -6075,9 +6034,86 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- <b>Chosen fallback / durable fix: the J28 correspondence ledger (<b>ticket 006</b>)</b> — Zapier files drops into the owned store, making the drops scan runtime-independent. Promoted from fallback to primary.</li>
 <li>- Optional CAPABILITIES row touch-up (Junyan-approved wording in findings): note the browser-read-only path, read + report, no marking — drops stay unprocessed until a Claude pass ✅-reacts.</li>
 </ul>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#064</span><span class="emoji">⚖️</span><span class="done-title">Junyan ruled: every &#x27;can&#x27;t do this&#x27; note now lives in one table, with proof or the word UNTESTED</span><span class="done-date"></span></summary><div class="done-body"><ul class="plain-bullets"><li>All the &#x27;the computer can&#x27;t do this&#x27; notes moved into a single table on the tools page</li><li>Each row says the date it was tried and how — or says UNTESTED in plain sight</li><li>An UNTESTED note doesn&#x27;t count: if trying takes half a minute, the robot must try before handing Junyan the job</li><li>If trying is genuinely hard, the robot may still ask — but must admit the ask rests on an unchecked note</li><li>Later, the new step-by-step queue will refuse such asks automatically — a lock, not a reminder</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>What must a capability claim carry before it goes in canon — rule the ceremony</b></p><h2>Question</h2>
+
+<p>Graduated from <b>063</b>, and sharper than the question 063 cut.</p>
+
+<p>063 expected &quot;old claims rot, so schedule a re-probe&quot;. The evidence says otherwise: <b>age doesn&#x27;t</p>
+<p>predict a wrong claim, provenance does.</b> Every limit read off a <b>tool schema</b> has been false or</p>
+<p>overstated (6 of 7 across 059 + 063); every limit <b>tested when written</b> has held. So a periodic</p>
+<p>re-probe of everything is the wrong shape — it spends effort uniformly on a risk that is</p>
+<p>concentrated in one place.</p>
+
+<p>Junyan&#x27;s ruling, on this narrower question: <b>what does canon require of a claim that a tool</p>
+<p>&quot;cannot&quot; do something?</b></p>
+
+<p>Options, roughly in ascending ceremony:</p>
+
+<ol>
+<li>1. <b>Nothing new</b> — the <code>gotchas.md</code> rule added by 063 (state date + method, or write UNTESTED) is</li>
+</ol>
+<p>already in canon; accept drift and test on contact.</p>
+<ol>
+<li>2. <b>Provenance-tagged claims</b> — every capability limit carries how it was established</li>
+</ol>
+<p>(<code>wire</code> / <code>schema</code> / <code>owner ruling</code>), and a schema-derived one is never treated as binding: an</p>
+<p>agent that hits it must probe before routing work to a human.</p>
+<ol>
+<li>3. <b>Schema-derived claims expire</b> — they carry a date and are re-probed on a cadence (only this</li>
+</ol>
+<p>class, not all claims); wire-tested ones stand until contradicted.</p>
+<ol>
+<li>4. <b>No untested limits in canon at all</b> — a claim can&#x27;t be written until it&#x27;s probed; until then</li>
+</ol>
+<p>it lives as an open question, not a rule.</p>
+
+<p>Second half of the ruling: <b>who pays for a probe.</b> Options 2–4 all cost an agent a call it would</p>
+<p>otherwise skip. Cheap for Skedda or Notion; not cheap for anything MFA-gated or cloud-only (see</p>
+<p><b>065</b>).</p>
+
+<h2>Why it matters</h2>
+
+<p>The failure mode is self-sealing — a written-down limit is the reason nobody retries — and it</p>
+<p>converts directly into staff time, degraded procedure, and wrong automation tags (063&#x27;s evidence).</p>
+<p>This is the part that stops recurrence; everything else 063 did was cleanup.</p>
+
+<h2>Done when</h2>
+
+<p>Junyan has ruled, the rule is written into <code>library/gotchas.md</code> (extending the section 063 added),</p>
+<p>and any automation tag that a refuted claim moved is re-checked.</p>
+
+<h2>Answer</h2>
+
+<p><b>CLOSED 2026-08-07 — Junyan ruled option C: register + probe rule now, lock when the queue lands.</b></p>
+
+<ol>
+<li>1. <b>Limits register, live on CAPABILITIES.</b> Every &quot;the tool cannot do X&quot; claim is now a table</li>
+</ol>
+<p>row — <code>Limit | Tested (date + method) | Evidence</code> — backfilled from 063&#x27;s audit: 8 tested rows,</p>
+<p>4 UNTESTED (both Alarm.com claims, the RemoteTrigger env API, <code>gh</code> on cloud runners). Refuted</p>
+<p>rows are restated as what IS true, never deleted. New tools start every suspected limit at</p>
+<p>UNTESTED. Loose prose limits are banned; <code>gotchas.md</code> keeps the principle and points here.</p>
+<ol>
+<li>2. <b>Probe rule B, in <code>house-rules.md</code>.</b> An UNTESTED limit is not binding. Reachable from your</li>
+</ol>
+<p>own harness in a few calls → probe first, fill the cell. Not reachable → gate as normal, but</p>
+<p>the Action row must say <b>&quot;based on UNTESTED claim: &lt;limit&gt;&quot;</b>.</p>
+<ol>
+<li>3. <b>The lock rides <b>053</b></b> (rider added): <code>event-gate</code> bounces</li>
+</ol>
+<p>a proposal citing an UNTESTED limit. No separate chokepoint gets built — today gate-raises are</p>
+<p>direct Notion writes with no code in between, so a lock before 053 would be a second queue</p>
+<p>built to be thrown away.</p>
+<ol>
+<li>4. <b>Ruled out:</b> the interim fuzzy prose-matching invariant sweep (noisy-invariant risk, the</li>
+</ol>
+<p>July disease) and option D (no untested limits at all — would leave MFA-gated limits living</p>
+<p>nowhere).</p>
+
+<p>Canon commit <code>1fd1a3a9</code>, pushed. Sign → column → lock, in that order, with the column live today.</p>
 </div></details></div></details>
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-07 14:46 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-07 20:40 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
