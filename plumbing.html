@@ -314,6 +314,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-13 · 23:55Z</span>
+      <h3>The invariants checker stops re-filing its own complaints — memory grace window + crash-safe state publish<span class="kind">FIX</span></h3></summary>
+      <p>Root cause of the ~95-row board found and closed at the source (commit <code>f80ac103</code>, on top of the board-truth dedupe in <code>d4bec0a0</code>). The checker's state dropped any defect absent for <strong>one</strong> pass — but Notion queries transiently omit rows, so a defect that "cleared" for a single read came back with <code>runs=0, escalated=False</code> and re-filed the same complaint on reaching the threshold. Absent defects now keep their run count and escalated flag for <code>MISSING_DROP_AFTER=3</code> consecutive absent passes before being believed cleared.</p>
+      <p>Second window closed in the same commit: <code>publish()</code> deleted the old report blocks <em>before</em> writing the new — a crash between the two left the 🩺 page with no state at all, a full cold start that reset every counter. It now writes first, deletes after; state chunks carry a generation stamp and <code>parse_state()</code> takes the newest generation that parses, falling back to the older instead of amnesia. 12 new/updated tests, 71 passing.</p>
+      <p><strong>Inert until the event-gate redeploy</strong> (Junyan's <code>gcloud run deploy</code>, which also carries the loop's <code>unclassified</code> counter). The ~32 open + ~55 cancelled stale checker rows still need a manual drain after one clean hourly pass.</p>
+    </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-13 · 21:30Z</span>
       <h3>The cookie refresh loop is finally closed — and the guard's own failure mode was the last defect<span class="kind">FIX + PROOF</span></h3></summary>
       <p>The Aug 12–13 refresh aborts were <strong>not</strong> a bad cookie. The job runs <code>python hosting/refresh_and_store.py</code>, so <code>sys.path[0]</code> is <code>hosting/</code> — <code>import skedda</code> failed and the admin guard failed closed on its own import bug, printing "cookie is not admin-authenticated" for a cookie it never tested. Worse than a no-op: because <strong>Skedda keeps one active session per user</strong>, each aborted run had already logged in and killed the fleet's live cookie on the way down. A broken refresh job is an active saboteur — a paused one is safer than a failing one.</p>
