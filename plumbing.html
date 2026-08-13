@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Dance Annex — Message Plumbing Map</title>
+<link rel="icon" href="favicon.svg">
+<!-- ═══════════════════════════════════════════════════════════════════
+  SESSION-MAINTAINED — durable home of the Message Plumbing Map since
+  2026-08-13 (merged from the Claude artifact 79d671e9…, which now
+  redirects here in spirit; see CLAUDE.md → Conventions). Any change to
+  a message route, trigger cadence, connector surface, or failure mode
+  gets a change-log entry here, newest first. A map nobody updates
+  becomes a map nobody trusts.
+═══════════════════════════════════════════════════════════════════ -->
+<style>
+.tabs{display:flex;gap:8px;max-width:1080px;margin:1.4rem auto 0;font-family:ui-monospace,Menlo,monospace}
+.tab{font-size:12.5px;font-weight:650;text-decoration:none;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 16px}
+.tab.on{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.tab:hover:not(.on){border-color:var(--accent);color:var(--accent)}
+</style>
+</head>
+<body>
+<nav class="tabs" aria-label="Boards">
+  <a class="tab" href="index.html">📋 Day Sheet</a>
+  <a class="tab" href="board.html">🎭 Crew Board</a>
+  <a class="tab" href="tickets.html">🎟 Tickets</a>
+  <a class="tab on" href="plumbing.html" aria-current="page">🔧 Plumbing</a>
+</nav>
+<style>
+:root{
+  --bg:#f6f5f1; --panel:#ffffff; --ink:#22251f; --muted:#6b6f63; --line:#d8d6cc;
+  --det:#2e6e4e; --det-bg:#e6f0ea;      /* deterministic = copper-green pipe */
+  --llm:#8a5a2b; --llm-bg:#f3e9dc;      /* LLM = amber */
+  --human:#6b4a8a; --human-bg:#ece4f2;  /* human gate = violet */
+  --alert:#a33b2e; --alert-bg:#f6e3df;
+  --accent:#2e6e4e;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#191b17; --panel:#22251f; --ink:#e8e6dd; --muted:#9aa08f; --line:#3a3e35;
+  --det:#7ec49a; --det-bg:#24352c; --llm:#d9a86a; --llm-bg:#3a3226;
+  --human:#b79ad4; --human-bg:#322a3a; --alert:#e08a7c; --alert-bg:#3d2723; --accent:#7ec49a;}}
+:root[data-theme="dark"]{
+  --bg:#191b17; --panel:#22251f; --ink:#e8e6dd; --muted:#9aa08f; --line:#3a3e35;
+  --det:#7ec49a; --det-bg:#24352c; --llm:#d9a86a; --llm-bg:#3a3226;
+  --human:#b79ad4; --human-bg:#322a3a; --alert:#e08a7c; --alert-bg:#3d2723; --accent:#7ec49a;}
+:root[data-theme="light"]{
+  --bg:#f6f5f1; --panel:#ffffff; --ink:#22251f; --muted:#6b6f63; --line:#d8d6cc;
+  --det:#2e6e4e; --det-bg:#e6f0ea; --llm:#8a5a2b; --llm-bg:#f3e9dc;
+  --human:#6b4a8a; --human-bg:#ece4f2; --alert:#a33b2e; --alert-bg:#f6e3df; --accent:#2e6e4e;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 "Iowan Old Style",Georgia,serif;margin:0;padding:2rem 1.2rem 4rem}
+.wrap{max-width:1080px;margin:0 auto}
+h1{font-size:1.7rem;margin:0 0 .2rem;text-wrap:balance}
+.sub{color:var(--muted);margin:0 0 1.4rem;max-width:62ch}
+.legend{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.4rem;font-family:ui-monospace,Menlo,monospace;font-size:.72rem}
+.legend button{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:.28rem .7rem;cursor:pointer;letter-spacing:.04em}
+.legend button.on{outline:2px solid var(--accent)}
+.legend button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dot{display:inline-block;width:.6em;height:.6em;border-radius:50%;margin-right:.35em}
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem}
+@media(max-width:840px){.cols{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.cols{grid-template-columns:1fr}}
+.col h2{font-family:ui-monospace,Menlo,monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:.2rem 0 .6rem}
+.node{border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:6px;background:var(--panel);padding:.55rem .7rem;margin-bottom:.6rem;cursor:pointer}
+.node:hover{outline:1px solid var(--accent)}
+.node:focus-visible{outline:2px solid var(--accent)}
+.node h3{margin:0;font-size:.95rem}
+.node .cad{font-family:ui-monospace,Menlo,monospace;font-size:.68rem;color:var(--muted)}
+.node.det{border-left-color:var(--det);background:var(--det-bg)}
+.node.llm{border-left-color:var(--llm);background:var(--llm-bg)}
+.node.human{border-left-color:var(--human);background:var(--human-bg)}
+.node.alert{border-left-color:var(--alert);background:var(--alert-bg)}
+.node.dim{opacity:.25}
+.node .flag{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:.6rem;letter-spacing:.06em;padding:0 .3rem;border-radius:3px;border:1px solid currentColor;vertical-align:.1em;margin-left:.3rem}
+#detail{position:sticky;bottom:0;margin-top:1.4rem;border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:.9rem 1.1rem;min-height:5.5rem;box-shadow:0 -4px 18px rgba(0,0,0,.06)}
+#detail h3{margin:0 0 .25rem;font-size:1.05rem}
+#detail .meta{font-family:ui-monospace,Menlo,monospace;font-size:.7rem;color:var(--muted);margin-bottom:.4rem}
+#detail p{margin:.25rem 0;max-width:75ch}
+.badge{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:.65rem;padding:.1rem .45rem;border-radius:999px;border:1px solid var(--line);margin-left:.4rem;vertical-align:middle}
+.badge.ok{color:var(--det);border-color:var(--det)}
+.badge.tok{color:var(--llm);border-color:var(--llm)}
+.gapnote{border:1px dashed var(--alert);border-radius:6px;padding:.55rem .7rem;margin-bottom:.6rem;color:var(--alert);font-size:.85rem;cursor:pointer}
+.gapnote:focus-visible{outline:2px solid var(--accent)}
+
+/* ---- change log ------------------------------------------------------- */
+.logsec{margin-top:2.2rem;border-top:1px solid var(--line);padding-top:1.2rem}
+.logsec h2{font-family:ui-monospace,Menlo,monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 .3rem}
+.logsec .hint{color:var(--muted);font-size:.85rem;margin:0 0 1.1rem;max-width:68ch}
+.log{list-style:none;margin:0;padding:0 0 0 1.1rem;border-left:1px solid var(--line);display:flex;flex-direction:column;gap:1.1rem}
+.entry{position:relative}
+.entry::before{content:"";position:absolute;left:-1.35rem;top:.42em;width:.5rem;height:.5rem;border-radius:50%;background:var(--muted);border:2px solid var(--bg)}
+.entry.det::before{background:var(--det)}
+.entry.llm::before{background:var(--llm)}
+.entry.alert::before{background:var(--alert)}
+.entry .when{font-family:ui-monospace,Menlo,monospace;font-size:.68rem;letter-spacing:.06em;color:var(--muted);font-variant-numeric:tabular-nums}
+.entry h3{margin:.1rem 0 .25rem;font-size:1rem;text-wrap:balance}
+.entry p{margin:.2rem 0;max-width:72ch}
+.entry ul{margin:.35rem 0;padding-left:1.1rem}
+.entry li{margin:.2rem 0;max-width:70ch}
+.kind{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:.62rem;letter-spacing:.06em;padding:.05rem .4rem;border-radius:999px;border:1px solid var(--line);color:var(--muted);margin-left:.4rem;vertical-align:.15em}
+.entry code,.sub code,footer code,.entry p code{font-family:ui-monospace,Menlo,monospace;font-size:.85em}
+.open{border:1px solid var(--alert);border-radius:6px;padding:.6rem .75rem;margin-top:1.4rem;background:var(--alert-bg)}
+.open h3{margin:0 0 .3rem;font-size:.9rem;color:var(--alert);font-family:ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase}
+.open ul{margin:.3rem 0 0;padding-left:1.1rem}
+.open li{margin:.25rem 0;max-width:70ch}
+footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
+</style>
+<div class="wrap">
+<h1>Dance Annex — Message Plumbing Map</h1>
+<p class="sub">Every inbound message path, what moves it, and whether it survives a Claude token outage. Click any node for detail. Compiled 2026-08-11 from <code>RUNTIMES.md</code> and the event-gate source in <code>dc-canon</code> — <strong>maintained since;</strong> see the change log at the foot of the page.</p>
+
+<div class="legend" id="legend">
+  <button data-f="det" class="on"><span class="dot" style="background:var(--det)"></span>DETERMINISTIC — no tokens, always up</button>
+  <button data-f="llm" class="on"><span class="dot" style="background:var(--llm)"></span>LLM — dies in token outage</button>
+  <button data-f="human" class="on"><span class="dot" style="background:var(--human)"></span>HUMAN-GATED</button>
+  <button data-f="alert" class="on"><span class="dot" style="background:var(--alert)"></span>EMERGENCY / ALERTING</button>
+</div>
+
+<div class="cols">
+<div class="col"><h2>Sources</h2>
+  <div class="node det" tabindex="0" data-k="sms"><h3>SMS · Phone.com line</h3><div class="cad">ext100 + ext500 · inbound</div></div>
+  <div class="node det" tabindex="0" data-k="bizmail"><h3>Business Gmail</h3><div class="cad">thedanceannex@gmail.com</div></div>
+  <div class="node det" tabindex="0" data-k="persmail"><h3>Personal Gmail</h3><div class="cad">junyan.boon@gmail.com</div></div>
+  <div class="node det" tabindex="0" data-k="alarm"><h3>Alarm.com panel</h3><div class="cad">alarm-mcp · 5 partitions · shared session</div></div>
+  <div class="node det" tabindex="0" data-k="skedda"><h3>Skedda bookings</h3><div class="cad">via skedda-mcp Cloud Run ⚠ cookie</div></div>
+</div>
+
+<div class="col"><h2>Deterministic plumbing</h2>
+  <div class="node alert" tabindex="0" data-k="gate"><h3>event-gate · emergency lane</h3><div class="cad">poll every 1 min · pure regex</div></div>
+  <div class="node det" tabindex="0" data-k="cards"><h3>event-gate · quick-answer cards</h3><div class="cad">same tick · presence-gated</div></div>
+  <div class="node det" tabindex="0" data-k="watchdog"><h3>alarm-watchdog<span class="flag">DRY RUN</span></h3><div class="cad">1 min · bypass pass :*/15</div></div>
+  <div class="node det" tabindex="0" data-k="loop"><h3>desk-loop + desk-invariants</h3><div class="cad">10-min · hourly:25</div></div>
+  <div class="node det" tabindex="0" data-k="gmailpull"><h3>gmail_pull → ledger</h3><div class="cad">rides flaky GH-Actions cron ⚠</div></div>
+  <div class="node det" tabindex="0" data-k="fbsmon"><h3>fbs-monitor rebuild</h3><div class="cad">~15 min · booking/panel state</div></div>
+  <div class="node alert" tabindex="0" data-k="fbswatch"><h3>fbs-watch (Cloudflare)</h3><div class="cad">15 min · outage → Slack</div></div>
+  <div class="node det" tabindex="0" data-k="sendengine"><h3>Send engine (Apps Script)</h3><div class="cad">drains Message Queue ⚠ 045</div></div>
+  <div class="node det" tabindex="0" data-k="sameday"><h3>Same-day access lane</h3><div class="cad">1 min · ships OFF ⚠</div></div>
+  <div class="node det" tabindex="0" data-k="watchlist"><h3>Watchlist rebuild</h3><div class="cad">15 min · 07:00–22:00</div></div>
+  <div class="gapnote" tabindex="0" data-k="gap">⚠ GAP: no emergency lane watches email. An email-borne emergency waits for the next LLM pass.</div>
+</div>
+
+<div class="col"><h2>LLM fleet (token-gated)</h2>
+  <div class="node llm" tabindex="0" data-k="concierge"><h3>The Concierge</h3><div class="cad">2-hourly 08:10–22:10 · Opus</div></div>
+  <div class="node llm" tabindex="0" data-k="responder"><h3>The Responder ×2</h3><div class="cad">:20/:50 hourly = 30-min</div></div>
+  <div class="node llm" tabindex="0" data-k="receptionist"><h3>The Receptionist</h3><div class="cad">hourly :00</div></div>
+  <div class="node llm" tabindex="0" data-k="doorman"><h3>The Doorman<span class="flag">v3 ADT EVIDENCE</span></h3><div class="cad">04:00 + ~06:00 · Gmail attached</div></div>
+  <div class="node llm" tabindex="0" data-k="reports"><h3>Report generators</h3><div class="cad">Night Watch · Planner · Host · Timekeeper · Bookkeeper</div></div>
+  <div class="node llm" tabindex="0" data-k="watchdogs"><h3>Sentinel + Watchman</h3><div class="cad">hourly · miss → SMS</div></div>
+  <div class="node llm" tabindex="0" data-k="skills"><h3>Interactive skills</h3><div class="cad">process-studio-tickets · triage-personal-inbox</div></div>
+</div>
+
+<div class="col"><h2>Sinks</h2>
+  <div class="node alert" tabindex="0" data-k="oncall"><h3>On-call SMS summons</h3><div class="cad">🚨 to ON_CALL_PHONE</div></div>
+  <div class="node human" tabindex="0" data-k="scq"><h3>Staff Call Queue (Notion)</h3><div class="cad">human dispatch decision</div></div>
+  <div class="node human" tabindex="0" data-k="tickets"><h3>Notion tickets / Tasks Inbox</h3><div class="cad">gates · tracks · positions</div></div>
+  <div class="node det" tabindex="0" data-k="queue"><h3>Message Queue → renter</h3><div class="cad">HTA / EOB / AVA sends</div></div>
+  <div class="node det" tabindex="0" data-k="slack"><h3>Slack #desk-status</h3><div class="cad">outage alerts</div></div>
+  <div class="node det" tabindex="0" data-k="panellog"><h3>Watchdog log (Cloud Logging)</h3><div class="cad">[watchdog] lines · Night Watch feed</div></div>
+  <div class="node human" tabindex="0" data-k="morning"><h3>Morning surfaces</h3><div class="cad">Night Watch page · Fixer Report</div></div>
+</div>
+</div>
+
+<div id="detail"><h3>Click a node</h3><p class="meta">Green pipes keep flowing when Claude tokens run out. Amber stops dead.</p></div>
+
+<section class="logsec">
+  <h2>Change log</h2>
+  <p class="hint">What actually moved in the plumbing, newest first. Each entry takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
+
+  <ul class="log">
+
+    <li class="entry llm">
+      <div class="when">2026-08-13 · 21:00Z</div>
+      <h3>Skedda booking requests were never triaged — the whole label was invisible to JOB 2<span class="kind">GAP + FIX</span></h3>
+      <p>Skedda's own notification mail auto-files to the Gmail label <code>Sales - Skedda</code> and <strong>never carries INBOX</strong>. JOB 2 scans <code>in:inbox</code>, so the one auto-filed label it also swept was Dropbox Sign — Skedda was structurally invisible. Among 18k notifications in that label sit the messages that are <em>not</em> notifications: <code>"&lt;Name&gt;'s booking request is awaiting approval"</code> — real inbound sales requests. <strong>Twelve arrived Aug 8–11 and produced no ticket</strong> (Linxin Li, Himanshi Mehta, Eri Tagawa ×2, Marielle Torrefranca, Tamina Pollack-Paris, August TenWolde, Kate Keenan, Roux Buciu, Kosi Eze, Kristyan Calletor, Aaron Aquino-Annobil). Every one was approved by hand, so the bookings exist — but no ticket, no accept+bill row, no FBS pipeline entry.</p>
+      <p>Fix in <code>job-2-triage.md</code>: a per-pass <code>label:sales---skedda newer_than:1d</code> scan beside the Dropbox Sign one, with handling by subject — <strong>awaiting approval</strong> → Process Studio Tickets as a Sales booking (Skedda Last-Minute SOP if today/tomorrow, else standard), deduped on holder + start + studio; <strong>approved</strong> → advance the matching ticket, or create one so the booking still enters FBS (the accept step is satisfied, the <em>billing</em> step is not); <strong>made / changed / cancelled</strong> → calendar noise, mark read.</p>
+      <p><strong>The gotcha that hides this class:</strong> on the business Gmail connector, <code>label:&lt;labelId&gt;</code> returns ZERO results — even for a label holding 18,339 threads. It reads exactly like an empty label. Only the display-name form works, spaces as hyphens: <code>label:sales---skedda</code>. Any label query returning nothing deserves a second form before it is believed.</p>
+    </li>
+
+    <li class="entry det">
+      <div class="when">2026-08-13 · 19:30Z</div>
+      <h3>The phone book can be pruned now — <code>phonecom-cli</code> learns to delete, and 69 junk contacts go<span class="kind">NEW TOOL + CLEANUP</span></h3>
+      <p>The phone.com surface could only <strong>list</strong> and <strong>create</strong> contacts, so a duplicate was uncorrectable by any agent and the address book could only ever grow. <code>client.contact_delete()</code> and <code>python3 -m phonecom contact-delete &lt;id&gt;</code> close that, dry-run by default like every other write in the CLI.</p>
+      <p><strong>Deliberately NOT added to the MCP connector.</strong> Creation is recoverable, deletion is not, so the fleet still cannot remove a contact — only an attended CLI run can. That asymmetry is the safety property, not an oversight.</p>
+      <p>First run took ext100 from <strong>936 to 867</strong>: 50 exact duplicates, 13 bare-first-name or character-corrupted variants, 6 decided by reading the Artist Database. Now zero duplicates, zero numbers carrying two names, zero contacts with no number. Full pre-delete backup of all 936 records with every field in <code>outputs/phonecom-backups/</code>.</p>
+      <p><strong>The class a duplicate scan cannot see:</strong> the book held <code>Kangbin Zhao</code> against the Artist DB's <code>Kangbin Zhou</code> — one person, two surnames, sharing nothing, so no dedup pass would ever pair them. Only a field-by-field comparison against canon finds it. Junyan's ruling the same day, now in <code>job-2-triage.md</code>: the Artist DB is canon for spelling and digits <em>and</em> is fallible — follow it anyway, report a suspected error, never adjudicate one.</p>
+    </li>
+
+    <li class="entry llm">
+      <div class="when">2026-08-13 · 19:30Z</div>
+      <h3>The unnamed-number watch is real, self-heals, and has one blind spot<span class="kind">AUDIT</span></h3>
+      <p>Audited because two numbers sat nameless in the SMS list. The watch is <strong>not</strong> a job of its own — it lives inside JOB 2 of the Concierge pass and keys on Gmail's phone.com notification subjects: <code>SMS received from (416) 873-3305</code> with no name before the <code>#</code> means that number is missing from the address book. It resolves against the Artist DB and, since the cloud runner gained <code>phonecom-mcp</code> on 2026-07-31, adds the contact itself.</p>
+      <p>It works unattended. Today's 14:10 pass named Manuel Hernandez and verified by re-reading the book (934 → 935); the 12:10 pass had fumbled the tool name and recovered on its own. Because it rides the Concierge, latency is <strong>up to ~2h during the day and up to ~10h across the 22:10–08:10 overnight gap</strong>.</p>
+      <p><strong>The blind spot:</strong> the trigger is an <em>inbound</em> notification, so a renter who only ever <em>receives</em> messages never appears. Aaron Aquino-Annobil got a booking confirmation and an access code and stayed a bare number because he had not texted in. Our own outbound greeting (<code>Hi Aaron,</code>) plus a Skedda phone match resolves that class — a canon change to JOB 2, not new plumbing. Not yet made.</p>
+      <p>Also worth recording: <code>find_user</code> in skedda-mcp advertises phone-substring matching but does <strong>not</strong> match on phone — querying the exact stored string <code>(647) 967-7494</code> returns nothing. Search by name, verify by number.</p>
+    </li>
+
+    <li class="entry det">
+      <div class="when">2026-08-13 · 19:23Z</div>
+      <h3>Every Sales SOP that queues an email now names the threading fields — and so does the SOP-authoring path<span class="kind">DOC + GUARD</span></h3>
+      <p>Follow-through on the 02:55Z Invariant J guard. All <strong>15</strong> Sales SOPs were read, not sampled. Three are deprecated pointers with no procedure. Of the twelve live ones, <strong>every single one that queues an Email row was missing the requirement</strong> — the four fixed on 2026-08-12 (Time Slot New Inquiry, Time Slot Renewal, Skedda Booking Inquiry, Platform Booking Inquiry AI-Ready) and the five swept today: <strong>AAP / 1AP</strong>, <strong>Community Rate</strong>, <strong>Skedda Last-Minute (AI-Ready)</strong>, <strong>Platform Instant Book</strong>, <strong>Platform Last-Minute (AI-Ready)</strong>. Each now states, in its Value rules, that an Email row answering an inbound carries <code>Email Subject</code> prefixed <code>Re:</code> and <code>Source Email</code> in hex-id form, copied at triage.</p>
+      <p>Three lane-specific carve-outs were written in rather than papered over, because a rule that is wrong in a lane gets ignored in every lane. <strong>Community Rate</strong> queues three sequential drafts (T1/T2/T3), so it says explicitly that all three are replies — the "only the opening message is a reply" misreading is the live risk there. <strong>Platform Instant Book</strong> scopes the rule to its fallback path only: the default is an in-thread Gmail reply with the queue row set to <code>Will Not Send</code>, where threading fields are moot, but the documented fallback (staff add the relay to the Artist Page and release the row) does dispatch for real. <strong>Skedda Last-Minute</strong> is almost all exempt SMS, so it flags only the T1 Email branch — and notes that on a &lt;24h booking a row flipped to <code>Error</code> costs hours there are none of.</p>
+      <p><strong>The recurrence was closed at the authoring path, which is the part that mattered.</strong> <code>convert-sop-to-ai-ready</code> §1 told authors to cut "generic boilerplate that lives elsewhere (e.g. channel-by-lead-source is in SOP Mapping)" — the instruction that manufactured this defect, since "elsewhere" only works if the agent is reading elsewhere. That bullet now carries an explicit exception for what a step <em>writes</em>, and a new §4 principle requires every queue-write step to name its own fields, on every queue step rather than the first. Mirrored as a short cross-reference in <code>capture-sop-update</code>. Without this, each new SOP written from the templates would have reproduced the gap indefinitely.</p>
+      <p>Two things surfaced were closed the same day with Junyan's go-ahead. <strong>Platform — Last Minute Booking Request</strong> (legacy) now carries the deprecation banner pointing at the AI-Ready page — the 🗺️ SOP Routing DB was checked first and no row pointed at it, so no re-pointing was needed. And the silent SQL omission was reproduced before recording: the <em>identical</em> query over the SOPs data source returned 14 rows in one run and 16 minutes later — transient staleness, not a filter bug. Now a Known-environment gotcha in the workspace <code>CLAUDE.md</code>: a single <code>query-data-sources</code> result is never proof of coverage; cross-check against a second signal before claiming completeness.</p>
+    </li>
+
+    <li class="entry llm">
+      <div class="when">2026-08-13 · 18:46Z</div>
+      <h3>Retirement sweep rewired: evidence now comes from the ADT emails, not the Activity Log<span class="kind">REROUTE + GUARD</span></h3>
+      <p>The 🚪 Alarm Activity Log turned out to be a husk: its "hourly history sync" never had a runner behind it (109 <code>Alarm.com History</code> rows, all July 11–13 — a one-time backfill), and <strong>none of its 136 rows carries an actor</strong>. It can say a door opened; it cannot say who. The Doorman's Job C ("no disarm by this person in 30 days") was therefore unanswerable from it at any freshness — the sweep correctly refused to run, and the presence model had no expiry arm.</p>
+      <p>The evidence existed all along, one hop upstream: the TELUS/ADT notification emails (Gmail label <code>Artist Care - ADT</code>) name the person right in the subject — the same stream the FBS board and the Timekeeper already parse. Doorman prompt is at <strong>v3</strong> with the Gmail connector attached (read-only, that label only): Job C now searches the label per candidate. Attribution taxonomy verified against the live mailbox: <code>by &lt;Name&gt;</code> = keypad presence; <code>(info@danceannex.ca)</code> = Junyan's remote disarms, never renter presence; <code>(Panel User)</code> = unattributed keypad entry (rare, ~3 in 14 days).</p>
+      <p>Two contingencies baked in: a <strong>feed canary</strong> — zero label mail in 48h across five studios is never real, so the sweep suspends itself and raises a Review row instead of reading silence as absence; and a <strong>keep-bias guard</strong> — an unattributed <code>(Panel User)</code> disarm counts as presence for anyone booked in the window, because a wrongly kept code is clutter but a wrongly deleted one is a lockout. Canon <code>doorman-access-lifecycle.md</code> updated to match, pushed to dc-canon.</p>
+    </li>
+
+    <li class="entry det">
+      <div class="when">2026-08-13 · 02:55Z</div>
+      <h3>The send engine now refuses an unthreaded reply instead of quietly sending one<span class="kind">GUARD</span></h3>
+      <p>A Message Queue row whose <code>Email Subject</code> starts <code>Re:</code> but whose <code>Source Email</code> is blank used to take the brand-new-email path and <strong>succeed</strong> — the row read <code>Sent</code>, and the renter got a "Re: …" attached to nothing she wrote, splitting her conversation into two threads. Nothing in the outcome distinguished that from a correct reply. Engine <strong>v18</strong> checks the pair in <code>validate_()</code>: reply-shaped plus blank field now flips the row to <code>Error</code> with a row comment and an alert email. Live-proven the same night — test row errored ~45s after release, alert quoted the guard's own text, recipient inbox stayed empty (matrix case M10).</p>
+      <p>This is Desk Invariant J, which canon had required <em>in prose</em> since 2026-07-09 — and which still lost <strong>7 reply-shaped rows as new threads between Jul 25 and Aug 4</strong>, including three on the Anneka K. Peerspace relay. A sent row cannot be repaired, so the check moved to the boundary. The invariant checker still flags J at <code>Pending Review</code> hours earlier; the two surfaces are deliberately different — catch-early versus refuse-late.</p>
+      <p><strong>The instructive part is why the field was blank.</strong> Canon mandated it in four places, every one of them in the Responder / RESPONSE-RESOLVER / studio-ticket-triage lanes. The row that surfaced this (a time-slot enquiry, caught pre-send) was drafted by the Concierge straight from a Notion SOP whose queue-write step said only "Channel per lead source, held at Pending Review". The rule was written down nowhere the agent was reading at write time. Fixed in three places: that SOP names the field, <code>concierge-orchestration.md</code> binds it to <em>every</em> queue-writing path including SOP steps, and the engine no longer trusts any of them.</p>
+    </li>
+
+    <li class="entry llm">
+      <div class="when">2026-08-13 · 02:30Z</div>
+      <h3>Alarm.com windows retired — access is now presence-based, and the Doorman owns the lifecycle<span class="kind">POLICY + REROUTE</span></h3>
+      <p>Renter codes are now provisioned with <strong>no window</strong> — a code exists on the panels or it doesn't. Windows earned retirement twice in one day: a freshly written window <em>silently reverted</em> within an hour of a 200 response (Kate Keenan, user 247495111 — a released HTA had already told her she was set), and an expired window wedges its code until a delete, ~10-minute panel sync, and re-add.</p>
+      <p>Canon: <code>library/doorman-access-lifecycle.md</code> in dc-canon. Doorman cloud prompt is at v2 with three jobs: the access pre-flight widened from today+tomorrow to <strong>7 days</strong>; a <strong>revert check</strong> re-reads any Access/PIN row marked Processed in the last 48h against the live panel; and a <strong>retirement sweep</strong> — idle 30 days plus no bookings 60 days ahead — raises Human-confirmed delete rows, max 5 per pass, protected list (staff, allow_permanent, active memberships) untouchable. The sweep never deletes; staff do, in the UI.</p>
+      <p>The delete/re-add race that broke Kate's morning is also now a canon rule: <strong>never delete-then-readd to change access</strong> — the gap invites a second writer, and the late re-add clobbers whatever landed in between. Exactly that happened between 08:50 and 09:44 on Aug 12.</p>
+    </li>
+
+    <li class="entry llm">
+      <div class="when">2026-08-13 · 02:30Z</div>
+      <h3>The Doorman's 04:00 arm-check is back<span class="kind">FIX</span></h3>
+      <p>Cron restored to <code>0 8,10</code> UTC with Junyan's approval — the live trigger had silently been single-fire (<code>0 10</code>) for an unknown stretch, so the overnight "are the empty studios armed" pass simply wasn't happening. Verified on a live re-read; next 04:00 fire is tonight. Closes the defect logged below.</p>
+    </li>
+
+    <li class="entry det">
+      <div class="when">2026-08-13</div>
+      <h3>skedda-mcp learns user tags; refresh job learns to distrust its own cookie<span class="kind">NEW TOOLS + GUARD</span></h3>
+      <p>Two new connector tools, <code>list_user_tags</code> and <code>set_user_tags</code> (dry-run unless confirmed, replaces the whole tag set like the admin UI does), and <code>find_user</code> now returns each person's tags. This closes the Studio Viewing loop: the tag that caps a renter at 15 minutes and $0 is finally visible and removable through the MCP instead of only in the admin UI.</p>
+      <p>The nightly cookie refresh gained <code>_cookie_is_admin()</code> — it probes an admin-only endpoint and <strong>aborts rather than storing</strong> a cookie that can't pass. Weeks of "successful" refreshes had been storing anonymous cookies; because the venue schedule is public, anonymous reads <em>succeed</em> with every price at 0 and every holder null. Silently wrong money data, not a visible failure. Until a verified admin cookie is seeded, treat every fleet Skedda read as suspect — the Doorman's retirement sweep explicitly aborts if bookings come back holderless.</p>
+    </li>
+
+    <li class="entry det">
+      <div class="when">2026-08-13 · 02:20–02:30Z</div>
+      <h3>alarm-watchdog goes live in dry run<span class="kind">NEW ROUTE</span></h3>
+      <p>Two Cloud Scheduler jobs now tick the new <code>/watchdog</code> route on alarm-mcp: every minute for alarms, every fifteen for bypasses. Deterministic — no tokens, so it keeps watching through an outage.</p>
+      <p>It <em>decides</em> and logs; it cannot act. <code>WATCHDOG_ARMED</code> is unset, and the executor that would carry an action out does not exist yet — the route returns 501 even if the variable is set. Two locks, deliberately.</p>
+      <p>Purpose once armed: let a tripped siren run 90 seconds, disarm that partition only, re-arm to the mode it was found in. Ceiling of two trips per partition per hour, then it stops and calls a human instead — repeated trips are exactly when a robot should stop silencing an alarm.</p>
+    </li>
+
+    <li class="entry det">
+      <div class="when">2026-08-13 · 02:09Z</div>
+      <h3>One shared Alarm.com session replaces login-per-call<span class="kind">RESILIENCE</span></h3>
+      <p>Every panel read used to perform a full login and close it: <strong>14.8 seconds</strong>, measured. At one-minute cadence that is ~1,440 logins a day against a provider that locks accounts for repeated authentication — and the token died twice on 2026-08-12 while several surfaces were logging in independently.</p>
+      <p>Now: one session, reused. Warm calls run <strong>0.83s</strong>. Re-login happens only on session death or after six hours, and exactly once — never in a loop, because a lockout costs the whole system while a missed tick costs sixty seconds. Non-session errors never trigger a retry, so a write that failed mid-flight is never blindly re-run.</p>
+      <p>Everything downstream of alarm-mcp gets faster for free, including the presence gate's <code>/panel-states</code> call.</p>
+    </li>
+
+    <li class="entry det">
+      <div class="when">2026-08-13</div>
+      <h3>The panel can now say "the siren is sounding"<span class="kind">SIGNAL</span></h3>
+      <p>Partitions previously reported one flag, <code>faulted</code>, which was true for a low battery, a propped door, a broken sensor <em>and</em> an active alarm alike. Right question for the morning check; useless for anything that acts. Automation keyed to it would have disarmed the studios over a dying battery.</p>
+      <p><code>in_alarm</code> is now its own field, meaning only that the siren is going off. <code>faulted</code> is unchanged, so nothing downstream shifted.</p>
+      <p><strong>Still unproven:</strong> nothing has tripped since, so <code>in_alarm</code> has never been observed true. A deliberate trip on 693 is pending — that single test decides whether the whole watchdog design holds.</p>
+    </li>
+
+    <li class="entry alert">
+      <div class="when">2026-08-13</div>
+      <h3>The Doorman's overnight arm-check has not been firing<span class="kind">DEFECT</span></h3>
+      <p>The registry claimed a twice-daily trigger (<code>0 8,10</code> UTC), branching on the hour: 04:00 for the overnight arm-check that inherited the retired Closer's job, ~06:00 for the access preflight. The live trigger reads <code>0 10</code> — a <strong>single fire</strong>.</p>
+      <p>So the morning preflight has been running and <strong>the 04:00 "are the empty studios armed" pass has not</strong>, for an unknown stretch. Restoring it is a deliberate decision, not a silent fix. <em>(Resolved same night — see the FIX entry above.)</em></p>
+    </li>
+
+    <li class="entry llm">
+      <div class="when">2026-08-13</div>
+      <h3>alarm-mcp is no longer read-only, and its runbook now says so<span class="kind">DOCS</span></h3>
+      <p>Panel control landed 2026-08-11 — <code>arm_alarm</code>, <code>disarm_alarm</code>, <code>panel_state</code> — but <code>README-gcp.md</code> still promised "read-only by construction, the package has no arm/disarm/lock calls." Anyone judging how much to trust the service got a wrong answer from its own documentation.</p>
+      <p>Corrected, along with a retracted theory in the provision route that blamed vanishing access windows on timestamp seconds. Both now state plainly that they were wrong, rather than quietly reading correctly — the failure worth remembering is that the docs kept vouching for a guarantee the code had dropped.</p>
+      <p><strong>Connectors cache their tool lists.</strong> A redeploy alone will not surface a new tool; the connector has to reconnect.</p>
+    </li>
+
+    <li class="entry det">
+      <div class="when">2026-08-11</div>
+      <h3>Map compiled<span class="kind">ORIGIN</span></h3>
+      <p>First pass, built from <code>RUNTIMES.md</code> and the event-gate source in <code>dc-canon</code>. Established the central question the map exists to answer: which paths survive a Claude token outage, and which stop dead.</p>
+    </li>
+
+  </ul>
+
+  <div class="open">
+    <h3>Open, as of 2026-08-13</h3>
+    <ul>
+      <li><strong>Seed a verified admin Skedda cookie.</strong> The guard stops future bad cookies but can't fix the stored one; until a hand-seeded admin cookie lands (browser login → Secret Manager → bounce), fleet Skedda reads return $0/holderless bookings. Root cause after that: confirm <code>skedda-email</code> still holds an admin role and fix the login selectors in <code>refresh_session.py</code>.</li>
+      <li><strong>Migrate legacy alarm windows.</strong> Existing windowed users surface one at a time in the Doorman's 7-day table as <code>legacy-window</code>; each migration is a manual delete → 10-min sync → re-add-as-permanent. No big-bang panel edit.</li>
+      <li><strong>Trip 693 on purpose.</strong> Nothing else proves <code>in_alarm</code> fires on a real trip, or that disarming clears it.</li>
+      <li><strong>Bypass on a disarmed studio</strong> — hold and report, or arm it to clear? Clearing means arming, and a disarmed studio may have someone inside.</li>
+      <li><strong>Rotate <code>mcp-auth-token</code>.</strong> It reached a chat transcript. Rotation now has three touchpoints: the secret, the alarm-mcp redeploy, and <em>both</em> scheduler job headers — miss one and every tick 401s silently.</li>
+      <li><strong>Durable trip ledger</strong> before the watchdog is armed. The count lives in memory today; a cold start would reset a suppressed partition and let it auto-clear again.</li>
+      <li><strong>The email emergency gap</strong> — unchanged since the map was compiled.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>Kill switches: <code>GATE_DISABLED</code> (emergency SMS lane) · <code>LOOP_DISABLED</code> · <code>PRESENCE_GATE_DISABLED</code> · <code>INVARIANTS_DISABLED</code> · <code>SAMEDAY_ENABLED</code> (ships off) · <code>WATCHDOG_ARMED</code> (unset = dry run). Scheduler trust: Cloud Scheduler + RemoteTrigger + Apps Script reliable; GitHub Actions cron unreliable fleet-wide.</footer>
+</div>
+<script>
+const D={
+sms:["SMS · Phone.com line","Sources · account 2679103, ext100-desk (2236892) + ext500 (2236891)","Inbound renter texts. No webhook support exists, so event-gate polls every minute with a 600s lookback. Feeds: emergency lane, quick-answer cards, correspondence ledger. ADDRESS BOOK (2026-08-13): 867 contacts on ext100 after a 69-record cleanup — zero duplicates, zero numbers carrying two names, zero entries without a number. A contact is what turns a bare number into a name in the notification subject, which is exactly what the Concierge's unnamed-number watch keys on, so book hygiene is upstream of identity everywhere. phonecom-cli can now DELETE contacts (dry-run default); the MCP connector deliberately cannot — create is recoverable, delete is not.","ok"],
+bizmail:["Business Gmail","thedanceannex@gmail.com","Booking requests, artist care, invoices, agent alerts. Today: gmail_pull archives to the ledger (deterministic), then everything waits for an LLM pass — Concierge or process-studio-tickets — to become a ticket. This is the lane the triage redesign targets.","tok"],
+persmail:["Personal Gmail","junyan.boon@gmail.com","Triage is fully interactive (triage-personal-inbox skill) under the output contract. No deterministic pre-sort today. Out of scope for phase 1; second routing table later.","tok"],
+alarm:["Alarm.com panel","alarm-mcp · Cloud Run · rev alarm-mcp-00012-wpl · 5 partitions","Panel state read live over ONE shared session (warm reads ~0.8s, was ~15s). Five partitions, not four — Studio 509 has two, and a blanket command is one omitted argument away. Since 2026-08-11 the service can also ARM and DISARM. Partitions now carry in_alarm (siren sounding now) separately from faulted (also true for a low battery). /panel-states is deployed and feeds the presence gate as source 0. Access model since 2026-08-12: renter codes are PERMANENT (no windows) — presence, not expiry; the Doorman lifecycle sweep retires idle ones via Human-confirmed rows.","ok"],
+skedda:["Skedda bookings","skedda-mcp · Cloud Run · daily 06:00 refresh · ⚠ non-admin cookie live","Booking data source for FBS ticks, presence gate schedule fallback, and booking summaries. ⚠ ACTIVE INCIDENT: the stored cookie is anonymous, so reads return real bookings with price 0 / holder null — admin endpoints 401. The refresh job now carries _cookie_is_admin(): it probes an admin-only endpoint and refuses to store a cookie that fails, so this class can't recur silently — but a verified admin cookie still has to be hand-seeded. New tools since 2026-08-13: list_user_tags, set_user_tags, and find_user now returns tags — the Studio Viewing tag (15-min cap + $0 price) is finally MCP-visible.","ok"],
+gate:["event-gate emergency lane","Cloud Run · Cloud Scheduler tick every 1 min · fail-closed","Pure-regex life-safety classifier (~22 patterns: fire, gas, flood, break-in, unconscious, 911, trapped…). On match: 🚨 SMS to on-call + Staff Call Queue row. 30-min per-sender cooldown. Watchlist resolves sender identity. Never LLM, never presence-muted (allow_departed=True). Kill: GATE_DISABLED=1.","ok"],
+cards:["Quick-answer card lane","Same 1-min tick · presence-gated since 2026-08-10","Canned replies to common renter questions. presence.py checks the live panel (/panel-states) → booking-state.json → panel-state.json → schedule, so departed renters aren't texted. Optional LLM drafter exists but is off by default.","ok"],
+watchdog:["alarm-watchdog","Cloud Scheduler ×2 · every 1 min + every 15 min (?bypass=1) · DRY RUN","Reads every partition and decides what should happen about a tripped siren or a stuck bypass. Deterministic, so it keeps watching through a token outage. Currently it only LOGS: WATCHDOG_ARMED is unset AND the executor is unbuilt, so the route 501s even if the flag is set. Once armed: 90s of siren, disarm that partition only, verify, re-arm to the mode it was found in; ceiling of 2 trips per partition per hour, then suppress and call a human. Reacts to in_alarm only — never faulted, or a dying battery would disarm the studios. Bypass detection reads the panel's own trouble feed plus sensor flags; arm state does not gate detection, only the eventual fix.","ok"],
+loop:["desk-loop + desk-invariants","every 10 min 08:00–22:50 · hourly :25 08–22","The advancement loop tick and the invariant checks — deterministic gate advancement (machine-readable gates clear on the agent's own read). Kill: LOOP_DISABLED, INVARIANTS_DISABLED.","ok"],
+gmailpull:["gmail_pull → correspondence ledger","dc-canon/scripts/gmail_pull.py","Archives mail into the ledger. ⚠ Rides the GitHub Actions watchlist cron, which is unreliable fleet-wide — ledger freshness silently degrades on gap days. Banked fix: Apps Script tick.","ok"],
+fbsmon:["fbs-monitor rebuild","~15 min · automated commits to main","Publishes booking-state.json + panel-state.json consumed by the presence gate. If it stalls, 90-min age guard rejects stale state and presence degrades safely. Rebase before pushing.","ok"],
+fbswatch:["fbs-watch","Cloudflare Worker · */15 cron · KV state","Watches fbs-monitor for outage AND the Meta messaging lane via service binding; alerts Slack #desk-status. Deliberately shares no failure domain with GitHub.","ok"],
+sendengine:["Send engine","Google Apps Script time trigger · v18 (2026-08-13)","Drains approved Message Queue rows to renters. ⚠ Under review: left 16 approved rows undispatched ~10 days (ticket 045). Send-Timing Verifier audits daily 05:00. Since v18 it enforces Desk Invariant J: an Email row with a Re: subject and a blank Source Email flips to Error rather than sending as a fresh thread — the class that put 7 replies out unthreaded Jul 25–Aug 4. Deploy note: no git, no clasp here — the project is updated by pasting Code.gs into the Apps Script editor, so the file on disk and the live code can disagree. The startup banner (engine vNN) is the only proof of what is actually deployed; bump it in the same edit as any behavior change.","ok"],
+sameday:["Same-day access lane","send-engine/SameDay.gs · every 1 min · SAMEDAY_ENABLED ships false","Detects same-day bookings from Skedda/platform mail, mirrors the booking, provisions an alarm code via alarm-mcp POST /provision, queues the HTA. ⚠ The ONE lane authorized to auto-send a code to an unverified first-timer with no human gate. Apps Script half not installed yet — cannot fire until enabled.","ok"],
+watchlist:["Fast-Track Watchlist rebuild","15 min · 07:00–22:00 · watchlist_build.py","Builds the Today watchlist that event-gate uses to resolve senders. LIFE-SAFETY vs UNVERIFIED-distress titling depends on it.","ok"],
+gap:["The email emergency gap","No coverage today","event-gate watches SMS only. An emergency arriving by email (alarm mail, urgent renter email) has no fast path — it waits for the next token-gated LLM pass, up to 2h. Design decision pending: extend a deterministic email urgency tier that POSTs to event-gate's actuator.","tok"],
+concierge:["The Concierge","RemoteTrigger · 2-hourly 08:10–22:10 · Opus medium","The main judgment pass: money, alarms, messages, tickets. First thing to stop in a token outage.","tok"],
+responder:["The Responder","two staggered hourly triggers = 30-min cadence","Probe micro-agent lane, answers inbound quickly when tokens exist.","tok"],
+receptionist:["The Receptionist","hourly :00 · card sends, template-driven","Candidate to move to Sonnet tier or deterministic lane — mostly mechanical.","tok"],
+doorman:["The Doorman","RemoteTrigger · cron 0 8,10 UTC = 04:00 + ~06:00 Toronto · prompt v3 (2026-08-13) · Gmail connector attached","Both fires live. Prompt v3 implements the access-lifecycle canon: 04:00 = PROCEDURE A overnight arm-check; ~06:00 = PROCEDURE B, a 7-DAY access pre-flight (allow_permanent is the expected verdict; legacy windows flagged for migration), plus a 48h revert check on Processed Access/PIN rows (the Kate Keenan class), plus the retirement sweep — whose presence evidence is now the ADT notification emails (Gmail label Artist Care - ADT, read-only, that label only), NOT the actor-less Activity Log. Feed canary: zero label mail in 48h = feed down, sweep suspends + Review row. Keep-bias: unattributed (Panel User) disarms count as presence for anyone booked; (info@danceannex.ca) remote disarms never count. Idle 30d + no bookings ±30/60d → Human-confirmed delete row, max 5/pass, protected list untouchable. Cloud runner has no find_user_codes, so digit-matching stays local and attended.","tok"],
+reports:["Report generators","Night Watch 08:40 · Planner 19:30 · Host 04:00 · Timekeeper 04:00 · Bookkeeper 06:00","All flagged deterministic-lane candidates in RUNTIMES.md — they mostly compile, not judge. Night Watch will gain the watchdog rundown once real trip data exists.","tok"],
+watchdogs:["Sentinel + Watchman","hourly, mutual heartbeat","Watch the fleet for missed runs; SMS Junyan on real misses. LLM-based, so a token outage blinds the watchdogs at exactly the moment everything else stops — worth noting in the resilience design. fbs-watch and alarm-watchdog (both deterministic) are the outage-proof watchers.","tok"],
+skills:["Interactive skills","process-studio-tickets · triage-personal-inbox · fixer","Human-in-the-loop sessions Junyan runs. Token-gated and attention-gated.","tok"],
+oncall:["On-call SMS summons","+16479321050 → ON_CALL_PHONE","The emergency terminal. One actuator, one cooldown — the design intent is that any new urgency tier (email included) reuses this, not builds a second summoning path.","ok"],
+scq:["Staff Call Queue","Notion DB 31b25ce4…","Human dispatch decisions. LIFE-SAFETY vs UNVERIFIED distress rows.","ok"],
+tickets:["Notion tickets / Tasks Inbox","CONTEXT.md vocabulary: tracks, positions, gates","Where business mail terminates today. Machine-readable gates clear on agent read; human-confirmed gates need a staff Processed mark.","tok"],
+queue:["Message Queue → renter","HTA / EOB / AVA","Approved outbound messages, drained by the send engine. Human approval upstream; deterministic dispatch downstream.","ok"],
+slack:["Slack #desk-status","incoming webhook (FBS Watch app)","Deterministic outage alerting — works even when every LLM is down.","ok"],
+panellog:["Watchdog log","Cloud Logging · [watchdog] prefixed lines","One line per tick recording what the watchdog saw and what it would have done. During the dry run this is the whole product: it proves the decisions before anything acts. Read it with gcloud logging read '… textPayload:\"[watchdog]\"'. Becomes the Night Watch alarm rundown once real trips exist.","ok"],
+morning:["Morning surfaces","Night Watch page · Fixer Report","Daily human review surfaces. Generated by LLM passes, consumed by Junyan.","tok"]};
+const detail=document.getElementById('detail');
+document.querySelectorAll('[data-k]').forEach(n=>{
+  const show=()=>{const[t,m,b,s]=D[n.dataset.k];
+    detail.innerHTML=`<h3>${t}<span class="badge ${s}">${s==='ok'?'SURVIVES TOKEN OUTAGE':'TOKEN-GATED'}</span></h3><p class="meta">${m}</p><p>${b}</p>`;};
+  n.addEventListener('click',show);
+  n.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show();}});
+});
+document.querySelectorAll('#legend button').forEach(b=>b.addEventListener('click',()=>{
+  b.classList.toggle('on');
+  const on=[...document.querySelectorAll('#legend button.on')].map(x=>x.dataset.f);
+  document.querySelectorAll('.node').forEach(n=>{
+    const cls=['det','llm','human','alert'].find(c=>n.classList.contains(c));
+    n.classList.toggle('dim',!on.includes(cls));
+  });
+}));
+</script>
+
+
+</body>
+</html>
