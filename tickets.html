@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-07 21:19 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-12 22:37 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,8 +100,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">15</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">10</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">16</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">16</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">38</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
@@ -831,7 +831,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
 <p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">15</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">16</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1963,8 +1963,51 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Mechanism confirmed or refuted with a real test, not inference.</li>
 <li>- A message the poller skipped on its first pass demonstrably reaches canon on a later one.</li>
 </ul>
+</div></details></details></div><div class="job"><div class="jnum">#068</div><div class="jhead"><span class="emoji">📮</span><h4>A mail sorter made of simple rules — no AI needed for the boring mail</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A rules list sorts business email the moment it arrives: known shapes get labelled instantly</li><li>Only the confusing leftovers wait for a smart robot to look at them</li><li>It runs in the cloud next to the emergency line, with its own off switch</li><li>First it runs in practice mode — labels only, old Gmail filters stay on — so we can check it agrees with them</li><li>Because it uses no AI, it keeps working even when we run out of tokens</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the mail-rules router on event-gate — shadow mode first</b></p><h2>Question</h2>
+
+<p>Build slice 1 of the triage redesign (<b>decisions of record</b>, decisions 2/4/5/6-rung-1): a deterministic</p>
+<p>rules stage that reads the business inbox and applies labels, running in <b>shadow</b></p>
+<p>next to the live Gmail filters.</p>
+
+<p>Scope:</p>
+
+<ol>
+<li>1. <b>Wire probe first</b> (064 ceremony): confirm from event-gate&#x27;s harness that a</li>
+</ol>
+<p>Gmail API read+label round-trip works with a <code>gmail.modify</code>-scoped refresh token</p>
+<p>before building anything on it.</p>
+<ol>
+<li>2. <b>Rules file</b> in dc-canon (one file, versioned; schema decided here — each rule</li>
+</ol>
+<p>carries match pattern, action, the 🗺️ SOP Routing row id it cites, maturity</p>
+<p>[Provisional/Full], committed-date + evidence per 064).</p>
+<ol>
+<li>3. <b><code>/mail-rules/&lt;token&gt;</code> route on event-gate</b>, own Cloud Scheduler tick (1–5 min),</li>
+</ol>
+<p>own <code>MAIL_DISABLED</code> kill switch, OAuth token in Secret Manager (skedda-cookie</p>
+<p>pattern). Idempotent by message id.</p>
+<ol>
+<li>4. <b>Shadow mode:</b> label-only (distinct <code>rules/</code> label namespace), never archive,</li>
+</ol>
+<p>never stub, filters stay live. Log every decision for the 069 diff.</p>
+<ol>
+<li>5. <b>Register in the 001 jobs registry</b>: <code>produces</code> (labelled mail + decision log),</li>
+</ol>
+<p><code>verify_within</code>, <code>owner_since</code>.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Wire probe recorded (date + method) on the CAPABILITIES page.</li>
+<li>- Rules stage running on its own tick ≥1 business day, decision log populated,</li>
+</ul>
+<p>zero writes outside the <code>rules/</code> label namespace.</p>
+<ul>
+<li>- Kill switch verified: one tick with <code>MAIL_DISABLED=1</code> does nothing and says so.</li>
+<li>- RUNTIMES.md updated (new route + scheduler job).</li>
+</ul>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">10</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">16</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
 <p>Build the crude-but-real J26 cost ledger on the Jobs registry spine: per job, runs × pass length (proxy for token spend) plus a self-reported supervision-minutes line, tallied weekly. Framing: <b>subscription headroom + exposure if the subsidy changes</b>, not cash bleed (~$240/mo Claude + $140/mo ChatGPT actual). It also populates the sibling map&#x27;s GO criterion (c). Decide the tally mechanism (likely a weekly scheduled job writing registry rows) and stand it up.</p>
 </div></details></details></div><div class="job"><div class="jnum">#015</div><div class="jhead"><span class="emoji">✂️</span><h4>Stop keeping two copies of messages</h4></div><span class="pill p-wait">needs 006 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Today messages get saved in two places</li><li>Switch fully to our own record</li><li>Freeze the old copy</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cut correspondence canon over from the Notion Correspondence Log to J28</b></p><h2>Question</h2>
@@ -2406,6 +2449,208 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>each non-green run&#x27;s cause.</p>
 
 <p><b>Asset:</b> <a href="https://claude.ai/code/artifact/2df73154-65ff-4f7f-8869-7c0aab57ffea" target="_blank" rel="noopener">Proving the mail clerk got fixed</a> — plain-language explainer of this ticket&#x27;s two passed items (the alarm&#x27;s file-once/dedupe behaviour, and the 118-message completeness check).</p>
+</div></details></details></div><div class="job"><div class="jnum">#069</div><div class="jhead"><span class="emoji">🗂️</span><h4>Move every old Gmail filter into the new rules list, then delete them one by one</h4></div><span class="pill p-wait">needs 068 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>First: write down every filter that exists today</li><li>Check what secretly depends on them — some tools read the labels filters apply</li><li>Each filter is only deleted after the new rule is proven to do the same job for a full day</li><li>Junyan deletes each one himself — the robot never deletes filters</li><li>The goal: one rules list, one truth, no surprises</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Inventory, port, and retire the Gmail filters — per-filter, on green diffs</b></p><h2>Question</h2>
+
+<p>Junyan wants zero Gmail filters — one rules list, one truth. The debate ruled the</p>
+<p>cutover must follow the 023/024 pattern: shadow, diff, then retire <b>per-filter</b>,</p>
+<p>never batch (<b>decisions</b>, decision 4; blocker B1).</p>
+
+<ol>
+<li>1. <b>Inventory every filter</b> in the business account via the API; commit the dump</li>
+</ol>
+<p>to dc-canon. (Personal account: inventory only, no changes.)</p>
+<ol>
+<li>2. <b>Audit label consumers before anything dies:</b> <code>agreements_pull.py</code> (label</li>
+</ol>
+<p><code>Sales - Agreements</code>), <code>process-studio-tickets</code> (labels <code>Sales - Booking</p>
+<p>Request</code>, <code>Artist Care - Tickets</code>), <code>ledger_exclude.json</code>, and any</p>
+<p>spam-suppression side effects (067&#x27;s forward-only-cursor lesson — a filter that</p>
+<p>rescues mail from spam, if deleted, makes that mail permanently invisible to the</p>
+<p>ledger).</p>
+<ol>
+<li>3. <b>Port each filter</b> into the rules file, or record a deliberate drop.</li>
+<li>4. <b>Per-filter retirement:</b> shadow diff green for that filter&#x27;s traffic →</li>
+</ol>
+<p><b>Junyan deletes that one filter</b> (human-confirmed, not agent-executed) →</p>
+<p>next filter.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Inventory committed; every filter mapped to a rule id or a written drop reason.</li>
+<li>- Consumer audit written into the ticket before the first deletion.</li>
+<li>- All business filters deleted by Junyan on individually-green diffs; consumers</li>
+</ul>
+<p>verified still fed (one agreements mail, one booking-request mail observed</p>
+<p>flowing post-cutover).</p>
+</div></details></details></div><div class="job"><div class="jnum">#070</div><div class="jhead"><span class="emoji">⏰</span><h4>An alarm that still works when the robots run out of fuel</h4></div><span class="pill p-wait">needs 068 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>When tokens run out, the smart robots stop — including the ones whose job is to notice problems</li><li>This alarm is a plain program: it counts the unsorted-mail pile every minute</li><li>Pile too big, or oldest mail waiting too long → one text message to Junyan</li><li>It starts in the practice lane like every new check, so false alarms get caught first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Residue overflow backstop — the alarm that works when tokens are gone</b></p><h2>Question</h2>
+
+<p>When Claude usage limits are exhausted, the residue lane stops and mail piles</p>
+<p>silently — and the Sentinel/Watchman can&#x27;t say so, because they are LLMs too. Build</p>
+<p>the deterministic backstop (<b>decisions</b>, decision 8):</p>
+
+<ul>
+<li>- Count the residue pile (unprocessed-residue label) on <b>event-gate&#x27;s minute tick</b></li>
+</ul>
+<p>(NOT the :25 daytime invariants pass — blind overnight).</p>
+<ul>
+<li>- Over threshold (start: &gt;10 mails, or oldest &gt;4h) → one SMS/Slack alert, deduped,</li>
+</ul>
+<p>no LLM anywhere in the path.</p>
+<ul>
+<li>- Ships <b>Provisional under 046&#x27;s probation lane</b>: files to the Provisional block,</li>
+</ul>
+<p>pages nobody until graduated; graduation counts calendar review days, skipped</p>
+<p>passes neutral.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Backstop live and Provisional; one forced-threshold test observed filing exactly</li>
+</ul>
+<p>one alert row (and deduping a second).</p>
+<ul>
+<li>- Explicitly verified to evaluate outside 08:25–22:25.</li>
+</ul>
+</div></details></details></div><div class="job"><div class="jnum">#071</div><div class="jhead"><span class="emoji">📰</span><h4>A daily page listing the mail that needs eyes but no action</h4></div><span class="pill p-wait">needs 068 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Receipts, stats, notices — worth a glance, never worth a ticket</li><li>A plain program builds the page every day; no AI required</li><li>The page also shows how often each sorting rule fired, so a broken rule is visible</li><li>Nothing on this page ever needs action — anything that does goes elsewhere by design</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Mail Digest page — deterministic daily audit trail for digest-class mail</b></p><h2>Question</h2>
+
+<p>Digest-class mail (FYI: receipts, stats, notices needing eyes but no action) gets a</p>
+<p>deterministic daily page in the 019 renderer pattern (<b>decisions</b>, decision 9):</p>
+
+<ul>
+<li>- One page per day: sender · subject · one machine-extracted line per item.</li>
+<li>- Plus <b>per-rule hit counts</b> and a freshness stamp (the page doubles as the rules</li>
+</ul>
+<p>stage&#x27;s own health surface).</p>
+<ul>
+<li>- Strictly an audit trail — state on the page that nothing here requires action;</li>
+</ul>
+<p>every action routes elsewhere by construction. This is what distinguishes it from</p>
+<p>the surfaces that failed before (those carried action-required signals).</p>
+<ul>
+<li>- LLM garnish (a short summary block) optional, only when tokens exist; page must be</li>
+</ul>
+<p>complete without it.</p>
+
+<p>Decide here: own GitHub Pages repo vs a tab — but NOT a tab on the day-sheet action</p>
+<p>surfaces (awareness and action stay separate).</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Page live, rebuilt deterministically, populated by real digest-tagged mail for</li>
+</ul>
+<p>two consecutive days; complete on a day with zero LLM passes.</p>
+</div></details></details></div><div class="job"><div class="jnum">#072</div><div class="jhead"><span class="emoji">🎟️</span><h4>Let the rules sorter start tickets for robot-written mail</h4></div><span class="pill p-wait">needs 068 first</span> <span class="pill p-wait">needs 053 first</span> <span class="pill p-wait">needs 054 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Booking-system emails always look the same, so a program can start the ticket in minutes</li><li>The smart robot later adds judgment — but the ticket already exists, even with no tokens</li><li>Both ticket-makers share one duplicate-check, so no email ever becomes two tickets</li><li>Only proven mail shapes qualify; anything odd goes to the smart robot instead</li><li>Waits for the new work loop and the mail-opener helper to be ready first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rules-stage ticket stubs — shared front rails, and amend 054 on paper</b></p><h2>Question</h2>
+
+<p>Enable rung 3 of the action ladder (<b>decisions</b>, decisions 6/7): rule-matched</p>
+<p>machine-format mail (Skedda notifications, form submissions) creates its own Notion</p>
+<p>ticket stub deterministically — so tickets exist in minutes, even in a token outage.</p>
+
+<p>The debate&#x27;s blocker B3 binds this ticket:</p>
+
+<ol>
+<li>1. <b>Shared deterministic front rails</b> used by BOTH writers (rules stage and the</li>
+</ol>
+<p>054 Triager): who-is-this stamp, idempotent dedup keyed on message/thread id</p>
+<p>against open tickets + the J28 ledger. One shared audit log.</p>
+<ol>
+<li>2. <b>Amend 054&#x27;s text</b>: the Triager owns the residue partition only; its query</li>
+</ol>
+<p>excludes rules-applied labels; the rules stage is sole hygiene writer for</p>
+<p>matched mail. The partition must be on paper, not implied.</p>
+<ol>
+<li>3. <b>Stub contract:</b> marked <code>source:rules</code>; enters at the first machine-readable</li>
+</ol>
+<p>gate, never past a human-confirmed gate; each rule names its 🗺️ SOP Routing row</p>
+<p>(missing row fails closed to Position=Routing); &quot;proven-stable format&quot; = parser</p>
+<p>extracts every field the entry gate&#x27;s clearing read needs, else residue.</p>
+<ol>
+<li>4. <b>Acceptance test per format</b> before a stub rule leaves Provisional: N real</li>
+</ol>
+<p>historical emails parsed, fields verified against the tickets a human made.</p>
+
+<p>Blocked by 053&#x27;s pilot + Actions-to-Perform drain and 054 existing — no new intake</p>
+<p>class before that (053&#x27;s live ruling).</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Rails shared in code, not duplicated; 054 amended and mirrored.</li>
+<li>- First stub format live with its acceptance test recorded; zero duplicate tickets</li>
+</ul>
+<p>across both writers over a week.</p>
+</div></details></details></div><div class="job"><div class="jnum">#073</div><div class="jhead"><span class="emoji">🚪</span><h4>Mail that must stop at Junyan — one queue, and a timer so nothing rots there</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Money problems, legal letters, government mail: these wait for Junyan, always</li><li>They land on the one shared to-do queue — no new pile is invented</li><li>The truly hot ones (a chargeback, a deadline) also send one text right away</li><li>Lesson from July: things left &#x27;for review&#x27; can die quietly — so a timer watches this queue and speaks up</li><li>Junyan clears the queue in working sessions, live with the agent — the way that actually works</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Human-gate mail intake onto the Next Action queue, plus the queue staleness check</b></p><h2>Question</h2>
+
+<p>Mail that must stop at Junyan (money-above-routine, legal/insurance, government/bank</p>
+<p>senders, LLM-flagged consequential novelty) lands as rows on <b>053&#x27;s Next Action</p>
+<p>queue</b> — one action surface, no new queue (<b>decisions</b>, decision 10). Hot</p>
+<p>deterministic subset (chargeback, government deadline) also fires one SMS via the</p>
+<p>existing phone.com path.</p>
+
+<p>Two halves:</p>
+
+<ol>
+<li>1. <b>Intake</b> — gated behind 053&#x27;s pilot-week acceptance + the Actions-to-Perform</li>
+</ol>
+<p>drain (no new intake class before that, per 053&#x27;s live ruling). Rows enter as</p>
+<p>ticket-linked proposals with <code>Basis</code>. REVIEW is in-session (Fixer-style working</p>
+<p>sessions) — Junyan&#x27;s ruling that only in-session clearing works; passback is</p>
+<p>053&#x27;s executor-agnostic VERIFY.</p>
+<ol>
+<li>2. <b>The staleness check the 050 pathology demands</b> — a lane ending at a human gate</li>
+</ol>
+<p>is where messages go to die. First check whether 001&#x27;s <code>verify_within</code> already</p>
+<p>covers stale queue rows; if not, implement as a staleness read on the existing</p>
+<p>053 /loop tick, escalating via 042&#x27;s ladder. Counts <code>source:rules</code> rows</p>
+<p>explicitly. (Seam note only — this does NOT decide 052.)</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- First human-gate mail class flowing to the queue post-drain; one hot-class SMS</li>
+</ul>
+<p>observed.</p>
+<ul>
+<li>- Staleness check live: a deliberately-held row escalates on schedule; a cleared</li>
+</ul>
+<p>row does not.</p>
+</div></details></details></div><div class="job"><div class="jnum">#074</div><div class="jhead"><span class="emoji">🌱</span><h4>How the sorter learns new rules — with training wheels on and off ramps</h4></div><span class="pill p-wait">needs 068 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>When the same odd mail shows up again and again, the robot writes a suggestion, never a rule</li><li>Junyan approves suggestions in a working session; approved rules start in practice mode</li><li>Every rule carries its proof: what it was tested on and when</li><li>A daily spot-check catches rules that quietly sort mail wrong</li><li>Rules that stop matching anything get flagged for removal — the list never silently rots</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rule promotion and demotion — the learning loop with a probation lane</b></p><h2>Question</h2>
+
+<p>How the residue shrinks without rules rotting (<b>decisions</b>, decision 11). The debate&#x27;s</p>
+<p>major: promotion-only is the 063 self-sealing disease — a wrong committed rule is a</p>
+<p>silent no-op forever. Build both directions:</p>
+
+<ul>
+<li>- <b>Propose:</b> residue passes leave rule proposals (&quot;saw this shape 4×&quot;) with</li>
+</ul>
+<p>evidence; nothing auto-commits.</p>
+<ul>
+<li>- <b>Approve in-session:</b> Junyan reviews proposals in working sessions; approved</li>
+</ul>
+<p>rules are committed to the rules file right there.</p>
+<ul>
+<li>- <b>Probation:</b> new rules start Provisional (label+digest only — no archive, no</li>
+</ul>
+<p>stub) with a residue-pass shadow-check before full power.</p>
+<ul>
+<li>- <b>Ceremony (064):</b> every rule carries Rule | Committed (date+method) | Evidence.</li>
+<li>- <b>Demotion:</b> daily sample of rules-archived mail guards against silent misfiles;</li>
+</ul>
+<p>zero matches for M weeks → sunset flag surfaced for an in-session call.</p>
+
+<p>One ladder philosophy shared with 018&#x27;s promotion ladder — when 053&#x27;s per-class</p>
+<p>promotion numbers get picked (map fog), these should rhyme.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- One rule observed traversing the full arc: proposed → approved in-session →</li>
+</ul>
+<p>Provisional → graduated. One rule observed demoted or sunset-flagged.</p>
+<ul>
+<li>- Sampling check live and logged on the digest page.</li>
+</ul>
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
@@ -6296,5 +6541,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-07 21:19 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-12 22:37 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
