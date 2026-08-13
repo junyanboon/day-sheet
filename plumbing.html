@@ -312,6 +312,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-13 · 22:40Z</span>
+      <h3>The Night Watch measures the real backlog now — and a third of the Ops Lead queue was the invariants checker talking to itself<span class="kind">CONTRACT + CLEANUP</span></h3></summary>
+      <p>The console rendered <strong>1 needs you</strong> on a morning with <strong>139 open Action rows and 48 open tickets</strong>, the oldest 40 days. It was obeying its contract exactly: render only the residuals JOB 34 names. That contract assumed a Concierge that keeps up, and the Concierge now skips half its jobs for budget most passes — so the backlog was invisible and the Ops Lead was hunting two boards by hand.</p>
+      <p>Two additions to <code>junyanboon/night-watch</code>, both read straight from the data sources and both independent of the marker: a <strong>truth band</strong> (open Actions by owner, open tickets per board, age of the oldest — always rendered, including on a failed handshake) and <strong>ACT II &ldquo;The queue&rdquo;</strong> (open tickets grouped by <code>Position</code>, <code>Gate: Staff</code> first, then <code>Review</code>, then by age). Both are gauges and pointers — <code>process-studio-tickets</code> still owns every ticket mechanic. The publisher picked them up on its own next run with no trigger change.</p>
+      <p><strong>Two publisher defects the first live run exposed, now gated:</strong> it read pass 1's marker when three later passes had superseded it, publishing five residuals a 10:35 pass had already closed — so the rule is now <em>take the last marker</em>, and <em>no residual reaches ACT I without its own live row read in this run</em> (the marker nominates, only the row admits). And it flagged the retired Opener as a missing report; the retirement moved out of a Sources bullet into a named <strong>Retired runs</strong> table plus a validate-step check.</p>
+      <p><strong>Then the queue itself: 99 → 62.</strong> Thirty-five rows were <code>Raised by = Desk Invariants</code> — defect notices <em>about</em> other tickets (&ldquo;untouched 50h&rdquo;, &ldquo;gate with no action row&rdquo;), every one with a blank <code>Verify by</code>, so none could ever self-clear. They bred because <strong>the checker files a new row every run a condition persists, and a separate row per condition per ticket</strong>: one sales ticket had generated three. The 35 covered ~18 subjects and ~13 open tickets — all of which ACT II now shows once, with their age. Five pointed at tickets already closed. All cancelled with reasons, not deleted.</p>
+      <p><strong>The generator is unchanged and will refile them.</strong> The real fix — one rolling row per condition updated in place, or annotations on the queue instead of Action rows — is wayfinder ticket <code>043-invariants-checker-dead-and-mac-bound</code>. Until then this cleanup is a sweep, not a cure. Related canon fix the same day: JOB 34's <code>needs_ops</code> must equal the number of <code>RESIDUAL</code> lines, never <code>checked − completed</code> — a miscount that had been forcing &ldquo;handoff incomplete&rdquo; and suppressing the list entirely.</p>
+    </details>
+    </li>
+
     <li class="entry llm">
       <details>
       <summary><span class="when">2026-08-13 · 21:00Z</span>
