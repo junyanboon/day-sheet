@@ -314,6 +314,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-13 · 21:30Z</span>
+      <h3>The cookie refresh loop is finally closed — and the guard's own failure mode was the last defect<span class="kind">FIX + PROOF</span></h3></summary>
+      <p>The Aug 12–13 refresh aborts were <strong>not</strong> a bad cookie. The job runs <code>python hosting/refresh_and_store.py</code>, so <code>sys.path[0]</code> is <code>hosting/</code> — <code>import skedda</code> failed and the admin guard failed closed on its own import bug, printing "cookie is not admin-authenticated" for a cookie it never tested. Worse than a no-op: because <strong>Skedda keeps one active session per user</strong>, each aborted run had already logged in and killed the fleet's live cookie on the way down. A broken refresh job is an active saboteur — a paused one is safer than a failing one.</p>
+      <p>Fix <code>4c56f86</code> (repo root onto <code>sys.path</code>), image rebuilt 21:21Z, scheduler paused, then a supervised manual run (<code>skedda-refresh-gl22s</code>) proved every link: login → <code>_cookie_is_admin</code> probe <strong>passed</strong> → cookie stored → skedda-mcp bounced (<code>COOKIE_REFRESHED_AT=2026-08-13T21:26:30Z</code>) → connector read-back returned <strong>real prices and holders</strong>. Scheduler re-enabled by Junyan; the 06:00 Toronto daily run now deliberately spends and replaces the key each morning. RUNTIMES.md row flipped from 🔴 to ✅ the same hour.</p>
+      <p><strong>Still open, filed as a Sweep Feedback design row:</strong> an aborted refresh alerts nobody (exit 1 into a log nobody reads — three consecutive aborts were found only by a human during a fixer walk), and the one-session rule means any human login to the same Skedda account kills the fleet's cookie — a dedicated robot account would end that race.</p>
+    </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-13 · 22:40Z</span>
       <h3>The Night Watch measures the real backlog now — and a third of the Ops Lead queue was the invariants checker talking to itself<span class="kind">CONTRACT + CLEANUP</span></h3></summary>
       <p>The console rendered <strong>1 needs you</strong> on a morning with <strong>139 open Action rows and 48 open tickets</strong>, the oldest 40 days. It was obeying its contract exactly: render only the residuals JOB 34 names. That contract assumed a Concierge that keeps up, and the Concierge now skips half its jobs for budget most passes — so the backlog was invisible and the Ops Lead was hunting two boards by hand.</p>
@@ -476,7 +486,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <div class="open">
     <h3>Open, as of 2026-08-13</h3>
     <ul>
-      <li><strong>Seed a verified admin Skedda cookie.</strong> The guard stops future bad cookies but can't fix the stored one; until a hand-seeded admin cookie lands (browser login → Secret Manager → bounce), fleet Skedda reads return $0/holderless bookings. Root cause after that: confirm <code>skedda-email</code> still holds an admin role and fix the login selectors in <code>refresh_session.py</code>.</li>
+      <li><strong>✅ Resolved 2026-08-13: admin cookie seeded and the refresh loop proven live</strong> — see the FIX + PROOF entry above. Remaining follow-ups moved to a Sweep Feedback design row: loud alert on refresh failure, dedicated robot Skedda account.</li>
       <li><strong>Migrate legacy alarm windows.</strong> Existing windowed users surface one at a time in the Doorman's 7-day table as <code>legacy-window</code>; each migration is a manual delete → 10-min sync → re-add-as-permanent. No big-bang panel edit.</li>
       <li><strong>Trip 693 on purpose.</strong> Nothing else proves <code>in_alarm</code> fires on a real trip, or that disarming clears it.</li>
       <li><strong>Bypass on a disarmed studio</strong> — hold and report, or arm it to clear? Clearing means arming, and a disarmed studio may have someone inside.</li>
