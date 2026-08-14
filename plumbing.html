@@ -312,6 +312,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-14 · 13:45Z</span>
+      <h3>Seven AVAs sat unsent and nothing noticed — the verifier was scoped to the wrong question<span class="kind">FIX</span></h3></summary>
+      <p>Junyan flagged AVAs stuck at Pending Review. The Host's 04:45 run had queued <strong>9 AVA rows and released only 2</strong>, leaving 7 held with no <code>Reasoning</code> and no <code>Template</code>. The split follows no rule: both <code>GTG=Yes</code> bookings were held, two <code>GTG=No</code> ones released — not GTG, not <code>Staff at Start</code>, not paid status, not send order. AVA is standing auto-send-authorised (<code>autonomy.md</code>, <code>job-2-triage.md</code>, <code>response-resolver.md</code>), so all 9 should have gone out. Released by hand; <code>Template</code> backfilled on all 9.</p>
+      <p><strong>The Host also missed a row entirely:</strong> 10 FBS bookings, 9 AVA rows — Manuel Hernandez's second 509A booking (18:30) got none. Created at Pending Review and deliberately <em>not</em> released: it would be his second identical no-staff text in one day, which is a wording call for a human.</p>
+      <p><strong>Why no alert fired — the interesting part.</strong> The ⏱️ Send-Timing Verifier ran fine (09:23Z, 71s, success) and its timing audit was genuinely clean. It even <em>found the missing Manuel AVA on its own</em>. Two design faults buried it: its prompt said <em>"Rows at <code>Pending Review</code> … no timing exposure, do not flag"</em> — true for timing, catastrophic for delivery — and it emailed only on defects, falling back to a PushNotification for anything else. So a real finding left as a missable phone buzz and no durable artifact. <strong>Every component behaved as specified; the specification was scoped to "will this send at the wrong time?" when the failure was "will this send at all?"</strong></p>
+      <p><strong>Prompt v2</strong> adds three defect classes — <em>unreleased auto-send row</em> (FBS HTA/EOB/AVA at Pending Review; non-FBS holds still ignored), <em>split batch</em> (same-kind rows from one run with different statuses), <em>missing row</em> (calendar bookings with no AVA/EOB) — plus a metadata warning for empty <code>Template</code>/<code>Reasoning</code>. It now <strong>emails every run, clean or not</strong>, with counts and the coverage comparison. Remediation stays narrow: it may fix a <code>Send After</code>, never release a held row or compose a missing one. Also recorded: <code>Time to Send</code> is not SQL-queryable and killed v1's first query on every run.</p>
+      <p><strong>Still open:</strong> why the Host regressed at all (no run report was emitted); a deterministic version of these checks in <code>invariants.py</code>, so an LLM is not the only auditor of an LLM; and an ops-lead review skill with a durable daily output for the judgment-shaped cases an invariant cannot see — like Manuel's duplicate text, where every field is individually correct.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-14 · 12:40Z</span>
