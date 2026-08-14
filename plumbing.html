@@ -175,7 +175,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <li><span class="sev gap">GAP</span><b>No emergency lane watches email.</b>
 <details><summary>An email-borne emergency waits for the next LLM pass</summary><p>SMS has the deterministic 1-min regex lane; email has nothing. Worst case ~2h daytime, ~10h across the overnight Concierge gap. Open since the map was compiled.</p></details></li>
 <li><span class="sev gap">GAP</span><b>Alarm watchdog is unproven and unarmed.</b>
-<details><summary>Code is ready; three infra steps and a soak stand between here and armed</summary><p>Executor built, ledgers durable, and a real 509A trip on 2026-08-14 proved <code>in_alarm</code> fires — no deliberate trip needed. Remaining: (1) create <code>gs://danceannex-alarm-watchdog</code> and grant the Cloud Run service account <code>storage.objectAdmin</code>; (2) redeploy (the image predates the executor, the rising-edge fix and the panel-id matcher); (3) set <code>WATCHDOG_LEDGER_BUCKET</code>, then <code>WATCHDOG_ARMED=true</code> — in that order, since arming without a bucket is refused at startup by design. Then watch the dry-run log across a few real trips before trusting it. Exact commands in <code>hosting/README-gcp.md</code>.</p></details></li>
+<details><summary>Deployed and soaking — one env var from armed, deliberately not set</summary><p>Everything is live as of 2026-08-14 19:52Z: revision <code>alarm-mcp-00014-ng8</code> on image <code>alarm:watchdog-0814</code>, ledgers persisting to <code>gs://danceannex-alarm-watchdog</code> (confirmed — all five partitions recorded, rising-edge tracking working). The executor, the rising-edge fix and the panel-id matcher are all in production. <strong>Only <code>WATCHDOG_ARMED</code> stands between here and acting, and it is off on purpose.</strong> Twice on 2026-08-14 the dry run caught something recorded as settled, which is the whole argument for soaking across several real trips first. <em>Not yet proven in production:</em> the panel-id matcher — the bypass it would have caught was cleared manually before the first sweep on the new code, so it rests on tests until the next stuck bypass.</p></details></li>
 <li><span class="sev later">DECIDE</span><b>Bypass on a disarmed studio — hold or arm-to-clear?</b>
 <details><summary>Policy call, not code</summary><p>Clearing means arming, and a disarmed studio may have someone inside. Junyan's call.</p></details></li>
 <li><span class="sev later">TRICKLE</span><b>Legacy alarm windows migrate one at a time.</b>
@@ -311,6 +311,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-14 · 20:00Z</span>
+      <h3>Watchdog deployed with durable ledgers — still unarmed, on purpose<span class="kind">CHANGE</span></h3></summary>
+      <p>Revision <code>alarm-mcp-00014-ng8</code> (<code>alarm:watchdog-0814</code>) carries the executor, the rising-edge trip fix and the panel-id sensor matcher. <code>WATCHDOG_LEDGER_BUCKET=danceannex-alarm-watchdog</code> is set and the ledger object is being written every tick — verified live, all five partitions recorded as observed. <strong><code>WATCHDOG_ARMED</code> is deliberately not set</strong>: the dry run now runs the corrected logic, and it should soak across several real trips before it is trusted to act.</p>
+      <p>The README's <code>storage.objectAdmin</code> binding turned out to be unnecessary — the Cloud Run service account already holds <code>roles/editor</code> project-wide, which covers it. (That the runtime SA is a project Editor is worth its own look, separately from this work.)</p>
+      <p><strong>Two stuck bypasses cleared by hand today</strong>, 509A Front Door and 693 Front Door, each by a disarm/clean-re-arm cycle on that partition alone. Both cleared — 509A in about 9 minutes, 693 in about 13. Together with the 901 case that is three observations of the same shape, and it closes the question definitively: <em>a clean re-arm does clear a bypass; the panel just takes minutes to say so.</em> The 15-minute sweep cadence is comfortably longer than the settle delay.</p>
+      <p><em>Not proven in production:</em> the panel-id matcher. The 693 bypass it would have caught was cleared manually before the first sweep on the new image, so that fix rests on tests until the next stuck bypass appears.</p>
+    </details>
+    </li>
 
     <li class="entry det">
       <details>
