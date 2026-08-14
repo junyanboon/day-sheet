@@ -312,6 +312,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-14 · 13:58Z</span>
+      <h3>A card's "booking today" scope was enforced only by the code lane — every LLM lane read it as advice<span class="kind">FIX</span></h3></summary>
+      <p>Junyan flagged a queued row: an address reply to Hanano I. [Giggster] for a Studio 693 booking on <strong>Sat Aug 22 — eight days out</strong>. The matched How to Respond row, <em>Which address / building</em>, is scoped in its Auto-send Criteria to "a watchlist-verified renter with a booking <strong>today</strong>." The Responder matched it anyway, swapped "today" for the real booking date per RESPONSE-RESOLVER step 2, and queued at Pending Review.</p>
+      <p><strong>Nothing overrode a gate — the gate was never binding off the code path.</strong> In the event-gate lane the constraint is structural: <code>cards.py</code> filters on <code>Send Mode = Auto-send</code> and <strong>never reads Auto-send Criteria at all</strong>, but the watchlist it gates on <em>is</em> today's bookings, so a not-today renter cannot reach a card. The Responder has no watchlist, and the field's name says it governs auto-send. It declined to auto-send and held for review — by its own reading, correctly. The scope lived in prose, in a field named for a different decision, on lanes that were never told to enforce it.</p>
+      <p><strong>Fix (canon, <code>dc-canon c436b06f</code>):</strong> RESPONSE-RESOLVER step 3 gains context gate (d) — a row's <code>Auto-send Criteria</code> bounds the row's <em>use</em>, not merely its auto-send, on any lane at any Status. An unsatisfiable criteria line is a <strong>NO MATCH</strong> (go to step 4.5), and the mismatch may not be repaired by rewriting a variable: substituting a real future date for "today" widens a row's scope rather than satisfying it.</p>
+      <p><strong>Second defect, filed as an HTR suggestion (agents never edit HTR rows):</strong> this row's wording carries no sender identity. Invisible in the case it was written for — Eunyi C, mid-booking, inside a live SMS thread she started. Outside it, the renter gets a cold text from a number with zero prior history that knows her name, studio, date and time window. The phone.com desk line confirmed no SMS has ever been exchanged with hers.</p>
+      <p><strong>Not a defect:</strong> SMS was the right channel — step 6 prefers it for US/CA numbers once a direct phone is on file, even for platform renters, and she volunteered the number in the Giggster thread when asked. <strong>Still open:</strong> the HTR row itself is unchanged pending Junyan's decision on both proposals, and the same "scope stated in prose the code doesn't read" shape exists on every other Auto-send card.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-14 · 13:44Z</span>
