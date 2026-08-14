@@ -312,6 +312,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-14 · 03:42Z</span>
+      <h3>The quick-answer reviewer was never reviewing — extended thinking ate the entire token budget, and the log called it an outage<span class="kind">FIX</span></h3></summary>
+      <p>Junyan flagged a strange queued message: <code>QA-door-509A-0813-2132</code>, Anita Pandey's 21:32 lockout, sitting at Pending Review. The gate log named it exactly — <code>qa_inline_review: "held-api-failed"</code>, <code>qa_reviewer_invoked: false</code> — and both halves of that line were a defect.</p>
+      <p><strong>The inline reviewer had been dead since the model moved to <code>claude-opus-5</code>.</strong> Extended thinking is on by default there, and a thinking block spends the <em>same</em> <code>max_tokens</code> budget as the answer. Replayed against the live API with the exact Anita context at the shipped <code>max_tokens=700</code>: <code>stop_reason=max_tokens</code>, <code>blocks=['thinking']</code>, all 700 output tokens spent thinking, <strong>zero text</strong>. <code>_anthropic_post</code> saw an empty response and returned <code>None</code>. Every card review since had held this way — not sometimes, <em>every</em> one.</p>
+      <p><strong>And the empty-text path was the one failure path that never set an error string</strong>, so the log read a bare <code>held-api-failed</code> with no detail. A permanent misconfiguration was wearing the costume of a transient API outage, which is why it survived. Commit <code>3c8d604c</code> disables thinking on the review call (this reviewer wants a short deterministic JSON verdict, not reasoning) and names the empty response as <code>empty:&lt;stop_reason&gt;:&lt;blocks&gt;</code>. Two regression tests, 106 passing. Deployed by Junyan as <code>event-gate-00030-7j7</code>. Verified on the fixed path against the same context: <code>end_turn</code>, valid JSON, verdict <code>approve:false</code> — the right answer.</p>
+      <p><strong>The system got lucky, and the luck is worth naming.</strong> Fail-closed design meant an inert reviewer held messages instead of releasing them, so no wrong door code went out. But the belt and the braces were down together: the fallback routine trigger returned <code>false</code> as well, with both env vars set — <strong>still open</strong>, and untestable without firing a live reviewer session. <strong>Also still open:</strong> the presence gate did not suppress a card fired an hour <em>after</em> her booking ended (same class as the Grace Lim false-onsite send), and the <code>door-509A</code> card's Auto-send Criteria claims &ldquo;no code restated&rdquo; while its body restates 5123. Her actual problem was the building auto-locking after hours — the code would not have opened it at 21:32, so the card was wrong for the situation regardless. Sweep Feedback row <code>3bc7503281c4811ab9f1f74ee15ba0df</code>; queue row set to Will Not Send.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-13 · 23:55Z</span>
