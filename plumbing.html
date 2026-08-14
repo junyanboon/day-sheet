@@ -314,6 +314,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-14 · 13:44Z</span>
+      <h3>First real bypass proves the watchdog — and proves nothing else was watching<span class="kind">VALIDATED</span></h3></summary>
+      <p><strong>Studio 901's front door was found bypassed while 901 sat <code>armed_away</code>.</strong> The building reads as armed on every board; the front door would not have triggered if opened. Junyan mentioned it in passing — which is exactly how this class surfaces today.</p>
+      <p>It is the first live exercise of the bypass logic shipped 2026-08-13, and the decision was correct end to end: it matched the panel's real wording <code>Sensor Bypassed (Studio 901 Front Door)</code> — until now guessed at with a loose substring, because no bypass existed to read; resolved the sensor to exactly one partition by name; and proposed the right action (disarm 901 only, re-arm cleanly without <code>force_bypass</code>, restore <code>armed_away</code>). It ignored the four standing <code>Credentials In Conflict</code> troubles, as intended. Dry run, so nothing was sent.</p>
+      <p><strong>The part worth keeping: nothing in the fleet surfaces this.</strong> The Doorman's morning check names bypassed sensors and their <code>Sensor Bypassed</code> trouble mirror in its explicit do-not-file list, as expected daily noise. That was a reasonable call when nothing could act on them — it means a stuck bypass has no reporting path at all, and an armed studio with a switched-off front door looks identical to a healthy one. The watchdog's bypass pass exists precisely for this, and it took a real occurrence to demonstrate the gap rather than argue it.</p>
+      <p><strong>One flaw exposed by the same data:</strong> the watchdog's panel-level report says the trouble feed "does not say which sensor." It does — the name sits in the parentheses. Harmless today (that path is report-only, and the sensor-flag path caught it anyway) but it double-reports, and the stated reasoning is now falsified. Parse the name out and the panel-level report can name its target.</p>
+      <p><strong>Still open:</strong> 901's front door is bypassed as of this writing. The watchdog can restore it — the partition is armed, which is its own evidence nobody is inside — but it stays in dry run until the alarm half is proven by a deliberate 693 trip. Also unchanged: the in-memory trip ledger must become durable before anything is armed, since a cold start would reset a suppressed partition.</p>
+    </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-14 · 13:30Z</span>
       <h3>Money rows were never re-read against Skedda — a paid invoice sat on the fix list for two days<span class="kind">FIX</span></h3></summary>
       <p>Dante De Real's $84.75 invoice was compiled onto the 2026-08-14 Fixer run as unpaid. Live Skedda read <code>payment_status: 3</code> — paid, and paid since 2026-08-12. Junyan caught it; nothing in the loop did.</p>
