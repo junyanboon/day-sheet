@@ -175,7 +175,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <li><span class="sev gap">GAP</span><b>No emergency lane watches email.</b>
 <details><summary>An email-borne emergency waits for the next LLM pass</summary><p>SMS has the deterministic 1-min regex lane; email has nothing. Worst case ~2h daytime, ~10h across the overnight Concierge gap. Open since the map was compiled.</p></details></li>
 <li><span class="sev gap">GAP</span><b>Alarm watchdog is unproven and unarmed.</b>
-<details><summary>Three prerequisites before arming</summary><p>(1) Trip 693 on purpose — nothing else proves <code>in_alarm</code> fires and clears. (2) A durable trip ledger — the count lives in memory, so a cold start would reset a suppressed partition. (3) Then set <code>WATCHDOG_ARMED</code> and build the executor (the route 501s today by design).</p></details></li>
+<details><summary>Two prerequisites left before arming</summary><p>The executor now exists — <code>/watchdog</code> no longer 501s when armed; it disarms and cleanly re-arms one partition by exact id. Remaining: (1) trip 693 on purpose, since nothing else proves <code>in_alarm</code> fires and clears; (2) durable ledgers — both the trip count and the bypass-attempt count live in memory, and a Cloud Run cold start would re-enable auto-clearing on a partition that had already earned a human. Only then set <code>WATCHDOG_ARMED</code>.</p></details></li>
 <li><span class="sev later">DECIDE</span><b>Bypass on a disarmed studio — hold or arm-to-clear?</b>
 <details><summary>Policy call, not code</summary><p>Clearing means arming, and a disarmed studio may have someone inside. Junyan's call.</p></details></li>
 <li><span class="sev later">TRICKLE</span><b>Legacy alarm windows migrate one at a time.</b>
@@ -311,6 +311,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-14 · 22:10Z</span>
+      <h3>The alarm watchdog can now act — executor built, but it stays in dry run<span class="kind">CHANGE</span></h3></summary>
+      <p>Until now <code>/watchdog</code> decided correctly and did nothing: with <code>WATCHDOG_ARMED</code> set it returned <strong>501</strong> by design, because the half that sends commands did not exist. It exists now (<code>alarm_monitor/executor.py</code>, 15 tests against a fake bridge — there is no way to exercise this on the real panel without sirening occupied studios). The armed path disarms and cleanly re-arms <strong>one partition by exact id</strong>, runs on the same shared session that took the snapshot, and returns <strong>207</strong> when some actions fail and others succeed.</p>
+      <p><strong>The decision/execution split is kept absolute:</strong> <code>watchdog.py</code> still performs no I/O, so the dry run runs the identical decision code and simply never calls the executor. That is the only reason a dry-run log can be read as a preview of what would have happened.</p>
+      <p>Three rules are written into it, each one paid for. An auto-clear <strong>re-reads before acting</strong> — it waits out the 90-second siren first, and in that time a person may well have disarmed the panel themselves. A bypass restore records the cycle as <em>attempted</em> and <strong>refuses to judge whether it worked</strong>: <code>verify=True</code> polls the partition state only and says nothing about the bypass flag, so the next scheduled pass reads fresh and decides — the 901 lesson moved from a comment into code. And arming <strong>never</strong> passes <code>force_bypass</code>, which would re-bypass the very sensor the cycle exists to protect and log a success for it.</p>
+      <p><strong>Nothing is armed.</strong> <code>WATCHDOG_ARMED</code> is still unset, and two prerequisites stand: the deliberate 693 trip, and durable ledgers. Both the trip count and the bypass-attempt count are in-memory, and Cloud Run recycles instances freely — a cold start would re-enable auto-clearing on a partition that had already earned a human.</p>
+    </details>
+    </li>
 
     <li class="entry llm">
       <details>
