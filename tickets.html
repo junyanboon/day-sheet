@@ -88,9 +88,9 @@ details[open]>summary::after{content:" −"}
 footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem}
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
-<nav class="tabs"><a class="tabtab" href="index.html">📋 Day Sheet</a><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a><a class="tabtab" href="plumbing.html">🔧 Plumbing</a></nav>
+<nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-12 22:37 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-14 15:01 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">16</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">17</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">16</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">38</div><div class="l">✅ Finished</div></div>
 </div>
@@ -831,7 +831,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
 <p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">16</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">17</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -2006,6 +2006,121 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Kill switch verified: one tick with <code>MAIL_DISABLED=1</code> does nothing and says so.</li>
 <li>- RUNTIMES.md updated (new route + scheduler job).</li>
 </ul>
+</div></details></details></div><div class="job"><div class="jnum">#075</div><div class="jhead"><span class="emoji">🗓️</span><h4>Claimed shifts never reached the calendar — and renters were told nobody was coming</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When staff claim a shift, it is supposed to appear on the staff calendar within the hour</li><li>That step sits last in a long list, so the robot kept running out of room and dropping it</li><li>Worse: the morning &#x27;is someone on shift?&#x27; text is worked out once at 4:45am and never checked again</li><li>So on Aug 14 three renters were told no staff were coming, when Ela had already claimed those shifts</li><li>Fix: give the calendar step its own small helper that also re-checks those texts after every claim</li><li>And make it speak up every run, even a quiet one — silence is how this went unnoticed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>J31 starves at the tail of the pass, and nothing re-reads an AVA after the Host builds it</b></p><h2>Question</h2>
+
+<p>Two defects that share one victim. On 2026-08-14 they combined to text three renters</p>
+<p>&quot;we will not have any staff available for support&quot; for bookings Ela Krystin had already</p>
+<p>claimed.</p>
+
+<p><b>Defect A — J31 never runs.</b> The claimed-shift mirror</p>
+<p>(<code>dc-canon/library/job-31-claimed-shift-mirror.md</code>) is step 8 of the Concierge pass,</p>
+<p>behind a JOB 2 that runs to completion and may not be pre-empted, on a runtime that</p>
+<p>fires every 2 hours. It is the cheapest thing in the pass to defer, so it gets deferred.</p>
+<p>Observed: 15 rows claimed on 📋 Open Shifts across the morning; Staff Scheduling held</p>
+<p><b>2</b> named blocks, both written the previous evening. The 08:10 / 10:10 / 12:10 passes</p>
+<p>produced zero. The Concierge itself was alive — it updated the 901 door-bypass ticket on</p>
+<p>the same day&#x27;s 14:10-stamped pass — so this is job starvation, not a dead trigger.</p>
+<p>*(Not yet confirmed from the rolling report whether the passes logged a deferral or</p>
+<p>skipped J31 silently. Worth reading — a silent skip and a logged deferral want different</p>
+<p>fixes.)*</p>
+
+<p>Moving J31 within the Concierge does not fix this. The Responder extraction</p>
+<p>(sibling map, tickets 003/006) is the precedent: a job that keeps losing to triage gets</p>
+<p>its own runtime.</p>
+
+<p><b>Defect B — an AVA is computed once and never revisited.</b> The Host builds every AVA at</p>
+<p>~04:45 Toronto, reading staff coverage at that moment, and picks</p>
+<p><code>ava_staff_available</code> / <code>ava_staff_unavailable</code> from it. Shift claims arrive <i>after</i> that</p>
+<p>— all morning. Nothing anywhere re-reads a queued AVA when coverage changes. The rows sit</p>
+<p>at <code>Ready to Send</code> with a future <code>Send After</code>, fully editable, carrying a statement that</p>
+<p>is no longer true.</p>
+
+<p>The two defects compound: even had J31 mirrored the claims on schedule, the AVA rows</p>
+<p>would still have said no-staff, because no job consumes the mirror&#x27;s output.</p>
+
+<h3>The 2026-08-14 record</h3>
+
+<p>All 9 AVAs built 04:45 EDT; 8 took the no-staff variant (the 9th covered the one claim</p>
+<p>mirrored the night before).</p>
+
+<ul>
+<li>- <b>Sent wrong</b> — Manuel Hernandez (509A, 10:00), Adalia Knight (693, 10:30),</li>
+</ul>
+<p>Shaka Lee (509B, 12:00). Junyan ruled these left alone; Ela attends regardless.</p>
+<ul>
+<li>- <b>Caught before sending</b> — Jessica T. (509B), Amandeep Kaur (693),</li>
+</ul>
+<p>Aaron Aquino-Annobil (901), Dante Paolo De Real (527). Swapped by hand to</p>
+<p><code>ava_staff_available</code>, wording verbatim from the template, Reasoning stamped.</p>
+<ul>
+<li>- <b>Correctly no-staff</b> — Tanisha Chakma (527): Ela holds only her departure, and AVA</li>
+</ul>
+<p>keys off coverage at the <i>start</i>.</p>
+<ul>
+<li>- 14 missing blocks mirrored by hand (13 for Aug 14, 1 for Keti Sharif on Aug 16).</li>
+</ul>
+
+<p><b>Not a defect, recorded so nobody re-files it:</b> Ela&#x27;s claims stack three buildings into</p>
+<p>one half-hour window (18:45–19:15 across 527 / 901 / 693) and two into another. Junyan</p>
+<p>confirmed 2026-08-14 that <b>her claims are all remote — none are on site</b>, so</p>
+<p>multi-building overlap is not a coverage conflict. Any future &quot;impossible shift&quot; check</p>
+<p>must not flag remote claims.</p>
+
+<h3>Adjacent, blocking Defect A&#x27;s own guardrail</h3>
+
+<p>The Claim button does not stamp <code>Claimed On</code> — all 15 rows have it blank. J31 step 4&#x27;s</p>
+<p>midnight lock keys off exactly that field, and its blank branch says *do not revert on</p>
+<p>missing evidence*. So the lock currently never fires and every same-day claim passes as</p>
+<p>&quot;inconclusive&quot;. Fixing the button is a prerequisite for the lock meaning anything; it is</p>
+<p>not a prerequisite for the mirror.</p>
+
+<h2>Proposed shape</h2>
+
+<p>Carve J31 out into its own micro-agent on the Responder pattern — own trigger, hourly,</p>
+<p>own canon file, narrow scope — and give it both halves:</p>
+
+<ol>
+<li>1. <b>Mirror</b> claimed Open Shifts rows onto Staff Scheduling. J31 as written, cheap</li>
+</ol>
+<p>short-circuit intact (most hours: one view query, exit).</p>
+<ol>
+<li>2. <b>Re-evaluate today&#x27;s AVA rows</b> against the coverage it just mirrored. An</li>
+</ol>
+<p><code>ava_staff_unavailable</code> row, still unsent, whose booking start is now covered by a</p>
+<p>named block → flip to the available variant. This half does not exist anywhere today.</p>
+
+<p>Observability, because a job that fails silently is how this got a month old:</p>
+
+<ul>
+<li>- Report a line <b>every run, clean or not</b>. The Send-Timing Verifier&#x27;s v1→v2 lesson</li>
+</ul>
+<p>(<code>RUNTIMES.md</code>, 2026-08-14) is that email-only-on-defect is how a real find reaches</p>
+<p>nobody.</p>
+<ul>
+<li>- A desk invariant (J10 family), so failure is visible from outside the agent:</li>
+</ul>
+<p><i>claimed row · shift within 3 days · no named block · claim older than 90 min → flag.</i></p>
+
+<p>Open questions for the session that takes this: whether the AVA re-evaluation belongs to</p>
+<p>the new agent or to the Host as a second late pass; and whether the Planner&#x27;s 19:30</p>
+<p>backstop still earns its place once an hourly mirror exists.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A claim on 📋 Open Shifts becomes a named block on Staff Scheduling within one hour,</li>
+</ul>
+<p>unattended, observed across a full day.</p>
+<ul>
+<li>- A claim landing after the Host&#x27;s AVA build flips the matching unsent AVA row to the</li>
+</ul>
+<p>staff-available variant — observed once end to end on a real booking.</p>
+<ul>
+<li>- The owning agent&#x27;s report shows a line on a clean run, not only on a defect run.</li>
+<li>- The desk invariant fires on a deliberately unmirrored claim.</li>
+<li>- Plumbing Map entries for: the new runtime, the AVA re-evaluation route, and the</li>
+</ul>
+<p><code>Claimed On</code> stamp if that lands in the same session.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">16</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -6541,5 +6656,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-12 22:37 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-14 15:01 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
