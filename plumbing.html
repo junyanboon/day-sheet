@@ -312,6 +312,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-14 · 22:00Z</span>
+      <h3>The Artist DB alarm code is a mirror, not a record — Doorman gets a daily job to keep it true<span class="kind">CHANGE</span></h3></summary>
+      <p><strong>Four artists were carrying a PIN that opens nothing</strong>, found in one afternoon: Shaka Lee, Garjanah Thayakumar, Nabil Fairbairn and Jai Smith. Every one of them is in the batch of five users created together (ids 247283561–247283571) whose Artist rows were left pointing at the codes of the deleted users they replaced. The 2026-08-09 reconciliation caught some of these and was hand-run; nothing has re-checked since, and drift resumed the same week.</p>
+      <p><strong>The Nabil case is the sharp one.</strong> His row was updated to <code>5523</code> on 08-10 and the SMS telling him so went out that night — but the code was never written to the panel, which still held <code>7492</code>, the code he had disclosed to a non-renter the day before. So for four days the record said rotated, the renter had been told rotated, and the compromised PIN was the only one that worked. Written to the panel today and read back verified.</p>
+      <p><strong>New rule, in canon <code>doorman-access-lifecycle.md</code>:</strong> Alarm.com is the sole source of truth for a code; the Artist DB <code>Alarm Code</code> field exists only because the HTA message quotes it, so it is a mirror and the panel always wins. Job D added to the daily sweep — mirror every row carrying a code, once a day, plus a narrow pass immediately before any HTA batch so a message cannot quote yesterday's value. It refuses to mirror (and raises for a human) on split provisioning, on a missing panel user, and on a row that drifts again after being mirrored, which is a revert fight rather than a sync gap.</p>
+      <p><strong>Read gotcha, now fixed at the source:</strong> <code>find_user_codes</code> returns both <code>code</code> and <code>code_slots</code>, and after a panel-side change they disagree — <code>code</code> is a cached mirror that lags while the slot table is fresh. Garjanah's revert to 6440 read as <code>"code": "3271"</code> with all four slots already on 6440; reading <code>code</code> alone reported a successful staff change as failed, and a mirror built on it would have written the dead PIN into the exact field HTA sends. <code>_record()</code> in <code>user_codes.py</code> now derives <code>effective_code</code> from the slots so no caller has to know the rule.</p>
+      <p><em>Not yet plumbed:</em> the cloud Doorman has no <code>find_user_codes</code> — digit reads are local/attended only — so job D cannot run on the 04:00/06:00 trigger until <code>alarm-mcp</code> exposes a read-only bulk code read. That route returns plaintext PINs over HTTP and is pending Junyan's approval. Until it lands, job D is documented but unowned by any runtime, which is exactly the state that produced this entry.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-14 · 20:00Z</span>
