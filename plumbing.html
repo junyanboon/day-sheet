@@ -139,6 +139,7 @@ h1{font-size:1.7rem;margin:0 0 .2rem;text-wrap:balance}
 .entry::before{content:"";position:absolute;left:-1.35rem;top:.42em;width:.5rem;height:.5rem;border-radius:50%;background:var(--muted);border:2px solid var(--bg)}
 .entry.det::before{background:var(--det)}
 .entry.llm::before{background:var(--llm)}
+.entry.human::before{background:var(--human)}
 .entry.alert::before{background:var(--alert)}
 .entry .when{font-family:ui-monospace,Menlo,monospace;font-size:.68rem;letter-spacing:.06em;color:var(--muted);font-variant-numeric:tabular-nums}
 .entry h3{margin:.1rem 0 .25rem;font-size:1rem;text-wrap:balance}
@@ -311,6 +312,19 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+
+    <li class="entry human">
+      <details>
+      <summary><span class="when">2026-08-14 · 00:30Z</span>
+      <h3>Staff can now tell the desk a renter forgot to arm — one line in #desk-drops<span class="kind">NEW SIGNAL</span></h3></summary>
+      <p><strong>The gap:</strong> an arm event at 8:03 PM looks identical whether the renter set it or staff armed remotely 25 minutes later because the renter forgot. The Overtime skill already handles this honestly — <em>&ldquo;unnamed arm = staff remote login, never flag&rdquo;</em>, then route the ambiguity to the Ops Lead as a Review. It behaves correctly and still produces a steady drip of human decisions, because it has no signal that resolves them. On 2026-08-14 three of four open overtime Reviews were this exact shape (Gaby Bondoc 509B Aug 7, Gabrielle Curate 527 Aug 11, Kristel San Jose 901 Aug 3) and <strong>all three were settled by Junyan phoning the renter</strong>. The knowledge existed at close-up; there was no channel for it.</p>
+      <p><strong>The signal.</strong> Staff on FBS support type one line in Slack <code>#desk-drops</code> at close-up: <code>noarm &lt;studio&gt; &lt;renter&gt;</code> — e.g. <code>noarm 527 Gabby</code>. Phone-native, no app, no login, no form; staff surface was the deciding constraint.</p>
+      <p><strong>Inbox vs record.</strong> Slack is the inbox; the booking is the record. New <code>Closed by</code> select on the 🛎️ FBS AI Support board — <code>Renter</code> · <code>Staff — renter forgot to arm</code> · <code>Staff — scheduled close</code> · <code>Unknown — no signal</code> — sits beside the existing <code>Armed</code>/<code>Disarmed</code> fields. Nobody should re-read a chat log months later to learn why a booking was not charged. It also makes the repeat-offender pattern countable for the first time: the Forgot-to-Arm SOP has always said to escalate <em>&ldquo;repeated forgot-to-arm from the same artist&rdquo;</em>, which nothing could actually count.</p>
+      <p><strong>⚠️ The Timekeeper reads #desk-drops DIRECTLY — deliberately not via JOB 4.</strong> JOB 4 owns the drops scan but is routinely skipped or part-run for budget, and the Overtime report runs overnight, ahead of any such pass. A signal parked behind a job that may not run arrives after the Review has already been filed, which defeats the whole point. This is a rare, intentional duplication of a read.</p>
+      <p><strong>Rulings encoded, so the same question is never asked twice:</strong> a staff no-arm drop is Case A <em>with evidence</em> — the T1 reminder is owed (the renter did forget), a charge never is (a staff arm records when staff armed, not when the renter left). Separately, from Melissa Lee 509B Aug 10: <strong>a disarm/arm pair under 5 minutes is not occupancy</strong> — she opened up, looked the room over, left, and came back at 7:25 for a 7:30 booking. Read mechanically that was 31 min early and two billable increments; read as use of the space it is nothing. First arrival now comes from the first pair lasting 5 minutes or longer.</p>
+      <p>Edits: ⏱️ Skill: Generate Overtime Report (Step 3 reads the channel before raising an ambiguous-departure Review; Step 5 gained the in-and-out rule) · ⏰ Someone Didn&rsquo;t Arm / Disarm the Alarm (new trigger, input, value rules, change log) · FBS AI Support schema.</p>
+    </details>
+    </li>
 
     <li class="entry llm">
       <details>
