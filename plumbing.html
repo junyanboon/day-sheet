@@ -312,6 +312,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-14 · 12:40Z</span>
+      <h3>The Fixer webpage is retired — the ledger moves to Notion, and a morning ping replaces the phantom runner<span class="kind">ROUTE</span></h3></summary>
+      <p>The daily report at <code>junyanboon.github.io/fixer-report/</code> had a daily expectation and no runner — every commit was manual, and the page went dark for 7 days without anyone noticing (the Custodian's identically-named Notion page masked the gap). Diagnosis on 2026-08-13 confirmed: nothing ever ran it.</p>
+      <p><strong>Ruling (Junyan, 2026-08-14): kill the webpage, keep the ledger.</strong> The task-list job died when items started being worked live in-session; the one job that mattered — carried items surviving across sessions — now lives on the <a href="https://app.notion.com/p/3bc7503281c481ee9048f93a6ce44712">🔧 Fixer Ledger</a> Notion page. <code>/fixer</code> (skill rewritten) compiles from the ledger + Sweep Feedback + Actions, walks items interactively, and rewrites the ledger at close with a dated change log. The webpage's <code>index.html</code> is a frozen pointer; archives <code>2026-07-18 … 2026-08-14</code> remain the referable history.</p>
+      <p><strong>The cadence gets a real tick:</strong> local scheduled task <code>fixer-ping</code>, daily 08:30 Toronto (09:30 machine-local — this Mac is on UTC-3), reads the ledger + Sweep Feedback counts and pushes a notification telling Junyan to run <code>/fixer</code>. Read-only by design — it counts and pings, never fixes. Runs only while the desktop app is open; a missed morning fires on next launch.</p>
+    </details>
+    </li>
+
     <li class="entry llm">
       <details>
       <summary><span class="when">2026-08-14 · 03:42Z</span>
