@@ -312,6 +312,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-14 · 13:30Z</span>
+      <h3>Money rows were never re-read against Skedda — a paid invoice sat on the fix list for two days<span class="kind">FIX</span></h3></summary>
+      <p>Dante De Real's $84.75 invoice was compiled onto the 2026-08-14 Fixer run as unpaid. Live Skedda read <code>payment_status: 3</code> — paid, and paid since 2026-08-12. Junyan caught it; nothing in the loop did.</p>
+      <p><strong>The row contained its own check and nobody ran it.</strong> Action row <code>3ba7503281c481d882f8f996cd5b3074</code> carries <code>Booking ref: Skedda 119015112</code> and <code>Method = Skedda</code> — together a complete machine-readable verification (read the booking, look at the field). Its <code>Verify by</code> was <strong>blank</strong>, while Abbey Richens's identically-shaped invoice row has one filled in. So the check was not merely unrun, it was never specified. Money rows are written once and only ever closed by a human; no sweep re-reads them.</p>
+      <p><strong>Same disease as the access-gate defect filed 2026-08-13</strong> ("Access-gap rows are filed and carried WITHOUT ever running their own machine-readable Verify by — 3 of 7 open gates were already satisfied"). That one was named for gates; this is the money flavour of it.</p>
+      <p><strong>Fix (partial, and worth being honest about the scope):</strong> the <code>/fixer</code> skill now machine-verifies before presenting — money rows with a <code>Booking ref</code> get an exact-read, Access/PIN rows get <code>check_access_covers</code> / <code>find_user_codes</code>, and any non-empty <code>Verify by</code> is executed — with anything already satisfied marked <em>Already covered</em> before Junyan spends attention on it. <strong>Still open:</strong> this only fires when a human runs <code>/fixer</code>. The unattended loop still carries money rows forever without re-reading them, and a blank <code>Verify by</code> on a row type that implies one is still filed silently.</p>
+    </details>
+    </li>
+
     <li class="entry llm">
       <details>
       <summary><span class="when">2026-08-14 · 13:45Z</span>
