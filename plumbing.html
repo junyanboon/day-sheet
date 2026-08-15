@@ -313,6 +313,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-15 &middot; 17:20Z</span>
+      <h3>HTA template rewritten &mdash; human voice, and the booking date is now in the message<span class="kind">CHANGE</span></h3></summary>
+      <p><strong>The How-to-Access SMS never named its booking's date.</strong> Himanshi Mehta had two first-visit FBS bookings at the same 15:30 slot on consecutive days (693 Sat Aug 15, 527 Sun Aug 16). Both HTAs fired correctly on the day-before rule &mdash; the Host's routing was right, including the not-a-multi-studio-combine call &mdash; but the second message opened &ldquo;You have an upcoming booking at &hellip; Studio 527&rdquo; with no date, arriving on a morning she was due at 693. She read it as a studio correction for today and texted in confused.</p>
+      <p><strong>Fix is in the template, not in Host judgment.</strong> The verbatim HTA template in <em>Skill: Queue FBS Messages</em> (Notion, HTA Step 4) now opens &ldquo;Hi [ArtistFirstName]! Looking forward to having you at Studio [###] [BookingDayPhrase] 🎉&rdquo; &mdash; where <code>[BookingDayPhrase]</code> is a deterministic merge of Booking Date + start time (&ldquo;tomorrow (Sat Aug 16) at 3:30pm&rdquo;). A conditional (&ldquo;only add the date when a nearby second booking exists&rdquo;) was considered and rejected: a detection miss recreates today's confusion silently, behind a believed fix. Unconditional + deterministic beats conditional + judged.</p>
+      <p><strong>Tone pass in the same edit.</strong> The numbered-steps scaffolding (&ldquo;1️⃣ Please write this down&rdquo;, &ldquo;Kindly respond&rdquo;) is gone; the scannable code bullets stay &mdash; renters re-read those at the door. Two candidate drafts were live-tested to the test line (647-773-3887); pure prose lost to the bullet hybrid on phone-screen scannability. The &ldquo;Good to Go!&rdquo; reply string is unchanged, so the GTG gate parse is untouched.</p>
+      <p><strong>Reach:</strong> the Host reads the Notion skill page every run, so this lands on the next 04:15 pass with no trigger edit. Watch the first few rendered HTAs for a correct BookingDayPhrase &mdash; wrong relative-day math (&ldquo;today&rdquo; vs &ldquo;tomorrow&rdquo; across midnight, Toronto time) is the new failure mode this creates.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-15 &middot; 16:05Z</span>
