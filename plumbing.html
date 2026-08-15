@@ -313,6 +313,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-14 &middot; 19:40Z</span>
+      <h3>The access checker reports zero panel coverage for users who are fully provisioned<span class="kind">DEFECT</span></h3></summary>
+      <p><strong>Aaron Aquino-Annobil had a paid 19:00 Studio 901 booking.</strong> <code>check_access_covers</code> returned <code>access_type: none</code>, <code>systems_with_access: 0</code>, <code>code_available: false</code>, verdict <code>manual_no_access</code>, with the instruction to grant access before sending any access message. <code>find_user_codes</code> agreed: <code>panels_covered: 0</code>, <code>code_slots: {}</code>. On that read I told Junyan he would be standing at a locked door in three and a half hours.</p>
+      <p><strong>The panel says otherwise.</strong> The Alarm.com page for the same user shows Access Code <code>4907</code>, Access Period <em>At All Times</em>, Access Type <em>Existing + Future</em>, Locations <em>All</em>. He was fully provisioned the whole time and always had been.</p>
+      <p><strong>Why this shape is dangerous.</strong> The code value read correctly &mdash; <code>4907</code> matched the panel exactly. Only the coverage fields were false. So the connector looks healthy, returns a confident verdict, and the one field the verdict turns on is silently wrong. A false <code>manual_no_access</code> sends the Doorman down the hold-and-gate path for a renter who can already get in: it manufactures an access emergency out of nothing, and it trains the desk to discount a correct verdict later.</p>
+      <p><strong>Interim rule until this is diagnosed: <code>manual_no_access</code> is not sufficient grounds to hold an access message.</strong> Confirm against the Alarm.com UI first. Worth checking whether the coverage fields come from a call that fails soft and returns 0 rather than raising, and whether the fault is per-user or account-wide &mdash; compare <code>panels_covered</code> against the UI for two or three known-good users.</p>
+      <p>Logged as an attributed defect against J07 Doorman (Sweep row <code>3bd7503281c481ffa584e13e99dafb77</code>) and carried on the Fixer Ledger. No message was withheld and no wrong code was sent; Junyan caught the read within the hour.</p>
+    </details>
+    </li>
+
     <li class="entry human">
       <details>
       <summary><span class="when">2026-08-14 · 00:30Z</span>
