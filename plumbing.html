@@ -315,6 +315,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry llm">
       <details>
+      <summary><span class="when">2026-08-14 &middot; 23:20Z</span>
+      <h3>A new alarm user takes ~10 minutes to appear in the UI &mdash; and the grant is weaker than the tool claims<span class="kind">GOTCHA</span></h3></summary>
+      <p><strong>Provisioning Kosi Ese produced a ten-minute window where every read disagreed.</strong> <code>create_user</code> returned 200, the API roster listed her with code 3943 in four panel slots, and the Alarm.com <strong>Users</strong> search returned <em>&ldquo;No Users&rdquo;</em>. On that basis this session recommended treating her as unprovisioned and suspected the creation path of writing phantom records. She appeared normally about ten minutes later.</p>
+      <p><strong>Rule: absence from the UI in the first few minutes is not evidence the create failed.</strong> Wait ~10 minutes before checking, and never re-create a user because the list looks empty. That is the most plausible origin of the duplicate <code>Kristyan Calletor</code> pair now in the account &mdash; a code-less shell (<code>247757468</code>) beside the complete record (<code>247689442</code>). Same eventual-consistency behaviour as the panel&rsquo;s known ~9&ndash;13 minute delay on bypass changes, on a different surface.</p>
+      <p><strong>The real defect the wait exposed:</strong> Kosi&rsquo;s Access Type reads <strong>All Existing Devices</strong>. Aaron Aquino-Annobil and Kristyan Calletor both read <strong>Existing + Future</strong>. <code>create_user</code> documents itself as granting <em>&ldquo;every access point on every panel (Existing + Future)&rdquo;</em>, and <code>check_access_covers</code> returns <code>all_existing_plus_future: true</code> for her &mdash; so the API asserts a grant level the panel does not show.</p>
+      <p>Nothing is broken today: four panels exist and she is on all four. <strong>A panel or access point added later would silently exclude her</strong> &mdash; the same quiet-drift class that left four artists carrying PINs that opened nothing. Fixed by hand for Kosi. Worth auditing every user this tool has created, and worth fixing <code>grant_user_access</code> so the grant matches its own documentation.</p>
+      <p>Both filed on Sweep row <code>3bd7503281c481ffa584e13e99dafb77</code>, alongside the <code>access_type</code>/<code>code_available</code> defect from earlier the same day.</p>
+    </details>
+    </li>
+
+    <li class="entry llm">
+      <details>
       <summary><span class="when">2026-08-14 &middot; 22:40Z</span>
       <h3>The Weatherman can finally raise its hand &mdash; and now it does it where someone is looking<span class="kind">NEW SIGNAL</span></h3></summary>
       <p><strong>Step 8d has been dead since it was written.</strong> The Weatherman&rsquo;s trigger carried Notion, Google Calendar, Google Drive, Gmail and IFTTT &mdash; and <strong>no Slack connector at all</strong>. Every attempt to ping a setpoint anomaly failed on the connector, reported 2026-07-31 and again 2026-08-11, and the item was carried on the Fixer Ledger as a &ldquo;prompt paste&rdquo;. The prompt was never the problem. Connector attached over the RemoteTrigger API; the other five and the prompt read back intact.</p>
