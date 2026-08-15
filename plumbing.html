@@ -315,6 +315,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-15 &middot; 03:10Z</span>
+      <h3>The walkthrough link had two sources; now it has one, and the WhatsApp sender is under version control<span class="kind">FIX</span></h3></summary>
+      <p><strong>The hardcoded map is gone.</strong> <code>STUDIO_VIDEO</code> in <code>dance-annex-desk-webhook/src/send.js</code> listed a YouTube id per studio while the SMS path read the same link live from &#127910; <strong>YouTube Videos</strong>. Two sources that never read each other &mdash; so updating the database left WhatsApp sending a retired video until someone remembered to deploy, and nothing anywhere reported the divergence. The WhatsApp path now reads the same database on every send. <strong>To change a walkthrough, edit the database. There is no longer an ID in the code.</strong></p>
+      <p><strong>Read fresh per send, deliberately uncached.</strong> A walkthrough is re-recorded perhaps twice a year, so the extra Notion call costs nothing worth counting, and a cache would reintroduce exactly the staleness the change removes.</p>
+      <p><strong>It fails the row instead of guessing.</strong> No live walkthrough for the studio, more than one, an empty URL, or a URL with no readable id &mdash; each throws, the row goes to <code>Error</code> with the reason, and the failure is visible in Notion. That is a real behaviour change: the old map always had an answer, including a wrong one. A silently wrong walkthrough is a renter at a locked door, so a failed row is the better outcome. The lookup takes the one row for that studio ending <code>&mdash; HTA</code> and not marked <code>(OBSOLETE</code>; equipment clips are tagged to the same rooms, so the suffix is what identifies a renter-facing video. Verified before deploy: exactly one live row per studio across all five.</p>
+      <p><strong>The repo was not a repo.</strong> The worker was being deployed from an untracked directory &mdash; the only copies of its source were one Mac and Cloudflare. Now <code>git init</code>&rsquo;d with a <code>.gitignore</code> and an initial commit (<code>757fd02</code>), plus <code>npm test</code> covering the lookup against a fixture of the real row mix. <strong>No remote yet</strong> &mdash; pushing it somewhere is Junyan&rsquo;s call. Deployed version <code>780b2e75-6ef0-4b2a-8a8f-53a2e60c9bd8</code>.</p>
+      <p><strong>Still open:</strong> a multi-studio HTA carries two walkthroughs and a WhatsApp URL button holds one, and <code>Studio</code> on the queue row is a single select &mdash; so combined bookings still have no rule. Unchanged by this work.</p>
+    </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-15 &middot; 02:55Z</span>
       <h3>New 901 and 509B tours &mdash; two sources to change, and only one of them is a database<span class="kind">CONTENT</span></h3></summary>
       <p><strong>Re-recorded walkthroughs for 901 and 509B went live.</strong> <code>901 Studio Tour (2026 v2)</code> is <code>dj5OMc-a63c</code>; <code>509B Studio Tour (2026)</code> is <code>o_2BtrrODmY</code>. Both confirmed on the DanceAnnex channel by oembed before anything was changed.</p>
