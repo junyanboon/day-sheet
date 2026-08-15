@@ -315,6 +315,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry llm">
       <details>
+      <summary><span class="when">2026-08-14 &middot; 21:00Z</span>
+      <h3>The prompt fix nobody could apply was never a UI job &mdash; Responder v1.2 written over the API<span class="kind">FIX</span></h3></summary>
+      <p><strong>Both Responder triggers carried a line that contradicted canon:</strong> <em>&ldquo;Junyan&rsquo;s test line (647-773-3887) is always a TEST &mdash; never draft to it.&rdquo;</em> Canon says the opposite, twice &mdash; <code>the-responder.md</code> &sect;78 (<em>&ldquo;the earlier &lsquo;never draft to it&rsquo; reading was wrong and cost a pass&rdquo;</em>) and <code>response-resolver.md</code> &sect;63 (<em>&ldquo;drafting is correct&rdquo;</em>) &mdash; both from Junyan&rsquo;s 2026-07-30 ruling settling a live disagreement between this lane and the event-gate lane, which drafted while the Responder refused.</p>
+      <p><strong>It was flagged for 11 consecutive days.</strong> Sweep Feedback rows on Aug 4, 7, 8 and 11, and a standing Fixer Ledger item reading <em>&ldquo;prompt paste &mdash; canon can&rsquo;t reach the UI&rdquo;</em>. Every one of those entries filed it as work only Junyan could do by hand.</p>
+      <p><strong>That premise was wrong. <code>RemoteTrigger</code> <code>update</code> writes the prompt over the API.</strong> The documented limitation &mdash; that granting an environment access to <code>desk-correspondence</code> is a manual click with no API &mdash; is real, but it was over-generalised into &ldquo;the whole prompt is UI-only&rdquo;. Anything in <code>job_config.ccr.events</code> is agent-writable. Both triggers now run <strong>prompt v1.2</strong>, carrying the canon rule plus its two hard limits: drafts to the test line stay held at Pending Review, and the line never becomes a real renter downstream (no ticket, no billing, no CRM, no Artist DB).</p>
+      <p><strong>&#9888; Mechanics worth keeping.</strong> <code>update</code> is a partial update, but <code>job_config</code> replaces wholesale &mdash; <code>get</code> first and resend the complete <code>ccr</code> block (<code>environment_id</code> + <code>events</code> + <code>session_context</code>) with only the intended edit changed. <code>mcp_connections</code>, <code>cron_expression</code> and <code>enabled</code> are siblings and survive untouched; both triggers were read back to confirm their five connectors and cron were intact.</p>
+      <p><strong>The general lesson is the one to keep.</strong> An item parked as &ldquo;human-only&rdquo; is a claim about a tool surface, and tool surfaces change. This one sat for eleven days behind an assumption nobody re-tested. Registry updated at <code>RUNTIMES.md</code> with the API path and the partial-update gotcha, so the next reader does not re-derive it.</p>
+    </details>
+    </li>
+
+    <li class="entry llm">
+      <details>
       <summary><span class="when">2026-08-14 &middot; 19:40Z</span>
       <h3>The access checker reports zero panel coverage for users who are fully provisioned<span class="kind">DEFECT</span></h3></summary>
       <p><strong>Aaron Aquino-Annobil had a paid 19:00 Studio 901 booking.</strong> <code>check_access_covers</code> returned <code>access_type: none</code>, <code>systems_with_access: 0</code>, <code>code_available: false</code>, verdict <code>manual_no_access</code>, with the instruction to grant access before sending any access message. <code>find_user_codes</code> agreed: <code>panels_covered: 0</code>, <code>code_slots: {}</code>. On that read I told Junyan he would be standing at a locked door in three and a half hours.</p>
