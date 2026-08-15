@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-15 12:11 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-15 18:13 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">19</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">20</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">39</div><div class="l">✅ Finished</div></div>
 </div>
@@ -971,7 +971,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
 <p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">19</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">20</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -2369,6 +2369,85 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Whatever is chosen, the <code>unverifiable</code> guard survives intact — a failed read must still never</li>
 </ul>
 <p>close or flag a row.</p>
+</div></details></details></div><div class="job"><div class="jnum">#077</div><div class="jhead"><span class="emoji">🗣️</span><h4>Reviewing suggestions should feel like a chat, not homework</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan opened the review list and called it what it is: unusable — walls of text in little table boxes</li><li>That&#x27;s what killed the 15-minute-gap suggestion: the right idea, sitting in a form nobody wants to read</li><li>Same afternoon we tried it as a conversation instead: each suggestion in one plain sentence, three buttons — yes, fix the wording, or no</li><li>All three waiting suggestions were cleared in minutes, including the first-ever &#x27;fix the wording&#x27; — Junyan&#x27;s version replaced the robot&#x27;s, and the robot keeps the original so it can learn from the difference</li><li>One turned out to be already handled: Junyan had closed the booking gap himself a different way. We checked the record before believing it, then filed it properly</li><li>So the job: make this chat-style walk the normal way to review, with the most urgent suggestion always first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The review surface is a conversation, not a table — build the review walk</b></p><h2>Question</h2>
+
+<p>Day one of the pilot produced the diagnosis in Junyan&#x27;s own words: looking at the 👀 To Review</p>
+<p>view — 300-word <code>Basis</code> walls in table cells, checkboxes with no verbs — *&quot;it&#x27;s just in a totally</p>
+<p>unusable form… <b>the interaction is where the seam breaks</b>.&quot;* The REVIEW beat was designed as</p>
+<p>&quot;human reads row, flips status&quot;, and the interaction cost of that is what killed the Kateryna</p>
+<p>gap-fill: a correct, time-critical proposal died unread in a queue that is painful to read.</p>
+
+<p>The same afternoon proved the alternative. A conversational walk of the same three rows — each</p>
+<p>presented as a short plain-language summary with 2–3 verdict options, answers written straight</p>
+<p>back to the board — cleared the whole queue in minutes, and exercised every REVIEW verb properly:</p>
+
+<ul>
+<li>- <b>Approve</b> — the Matthew Jadd decision (which turned out already absorbed by the Concierge&#x27;s</li>
+</ul>
+<p>14:10 pass; row closed with the evidence).</p>
+<ul>
+<li>- <b>Won&#x27;t Do / superseded</b> — the gap-fill (Junyan had processed it via <code>process-studio-tickets</code>;</li>
+</ul>
+<p>staff closed the gap by a <i>shift</i>, not the proposed third booking — verified in the ticket</p>
+<p>before closing).</p>
+<ul>
+<li>- <b>Rewrite</b> — the artist-card row, the rewrite beat&#x27;s first live use: Junyan&#x27;s ruling (identity</li>
+</ul>
+<p>= name; emails AND phones both multi-valued) replaced the text, <code>Rewritten</code> ticked, original</p>
+<p>preserved, row <code>Ready</code>.</p>
+
+<p>The fixer skill is the pattern: compile, walk one at a time, act live, write everything back.</p>
+
+<p><b>Build: a review-walk skill</b> (working name <code>/review-queue</code>) that:</p>
+
+<ol>
+<li>1. Reads the 👀 To Review view (and <code>Ready</code> rows whose executor is human, so nothing hides).</li>
+<li>2. Presents each row as: one-line action, plain-language why, deadline if any — <i>never</i> the raw</li>
+</ol>
+<p><code>Basis</code> wall; the Basis is the appendix, offered on request.</p>
+<ol>
+<li>3. Offers the three verbs (approve / rewrite in place / kill) plus &quot;show me the evidence&quot;.</li>
+<li>4. Writes verdicts back immediately: status flip, <code>Rewritten</code> tick, rewrite text into</li>
+</ol>
+<p><code>Proposed action</code> with <code>Original proposal</code> untouched, verification quotes where the row is</p>
+<p>being closed against reality.</p>
+<ol>
+<li>5. Orders by deadline — a row whose window closes soonest is first, which is the cheap half of</li>
+</ol>
+<p>the time-critical-nudge fog (the expensive half, an unprompted push, stays fog).</p>
+<ol>
+<li>6. Ends by naming what it changed, per the standing board-refresh rule.</li>
+</ol>
+
+<p>Open questions for the session that takes this:</p>
+
+<ul>
+<li>- Does the walk also handle the ✅ Actions-to-Perform drain (86→? open rows) so one habit clears</li>
+</ul>
+<p>both boards, or does mixing them muddy the pilot&#x27;s data?</p>
+<ul>
+<li>- Cadence: on demand only, or does the morning routine (<code>/fixer</code>, the Custodian&#x27;s 09:35 pass)</li>
+</ul>
+<p>end by offering the walk when the queue is non-empty?</p>
+<ul>
+<li>- Whether The Loop&#x27;s report should stop restating full Basis text into its rolling daily —</li>
+</ul>
+<p>the report has the same wall problem the board does.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Junyan clears a non-empty To Review queue start to finish in one conversation, without opening</li>
+</ul>
+<p>the Notion table.</p>
+<ul>
+<li>- A rewrite lands correctly: text replaced, original preserved, <code>Rewritten</code> ticked, and (where a</li>
+</ul>
+<p><code>Source SOP step</code> exists) the Sweep Feedback diff filed.</p>
+<ul>
+<li>- A row closed against reality carries the verification quote, exactly as the tick would write it.</li>
+<li>- The walk surfaces the soonest-deadline row first.</li>
+</ul>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -6967,5 +7046,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-15 12:11 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-15 18:13 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
