@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-15 18:13 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-15 18:36 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1849,7 +1849,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Sequencing: <b>052</b> pilots on tickets today&#x27;s JOB 2 already makes,</p>
 <p>so this is parallel work, not a blocker.</p>
-</div></details></details></div><div class="job"><div class="jnum">#055</div><div class="jhead"><span class="emoji">⚙️</span><h4>Turn three of the robot&#x27;s chores into small programs</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Alarm watching moves to a program that checks every minute and calls staff itself</li><li>The who&#x27;s-in-today list rebuilds itself all day instead of once every two hours</li><li>Copying claimed staff shifts to the calendar is just copying — no thinking needed</li><li>A fourth chore gets deleted outright: another robot already does it</li><li>Rule we learned the hard way: nothing retires until the new owner is seen actually doing it</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move J01&#x27;s deterministic lanes out of the LLM pass — alarm watch, fast-track list, shift mirror</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#055</div><div class="jhead"><span class="emoji">⚙️</span><h4>Turn three of the robot&#x27;s chores into small programs</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>DONE (Aug 15): alarm watching is now a program that checks the panels every minute — it texts staff, files the call row and opens the ticket itself; Junyan just has to press deploy</li><li>The who&#x27;s-in-today list rebuilds itself all day instead of once every two hours</li><li>Copying claimed staff shifts to the calendar is just copying — no thinking needed</li><li>A fourth chore gets deleted outright: another robot already does it</li><li>Rule we learned the hard way: nothing retires until the new owner is seen actually doing it</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move J01&#x27;s deterministic lanes out of the LLM pass — alarm watch, fast-track list, shift mirror</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>, which ruled each of these out of the LLM pass.</p>
 <p>Pure code, no judgment, parallel to everything else.</p>
@@ -1877,6 +1877,21 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ol>
 <p>JOB 3&#x27;s successor flips <code>Sent</code>, invariant U catches unresolved); straggler sweep and board</p>
 <p>reconciliation fold into the invariants roster (<b>044</b> family).</p>
+
+<h2>Progress</h2>
+
+<p><b>Lane 1 (alarm watch) BUILT 2026-08-15 — awaiting Junyan&#x27;s deploy.</b> <code>services/event-gate/alarm_watch.py</code></p>
+<p>(dc-canon <code>b9faedec</code>): the PENDING→ALARM email pair becomes an <code>in_alarm</code> false→true edge on alarm-mcp&#x27;s</p>
+<p>live <code>/panel-states</code>, checked on the existing <code>event-gate-poll</code> minute tick. On an edge: on-call summons</p>
+<p>SMS + Staff Call Queue row + deduped <code>Alarm trigger Studio &lt;NNN&gt;</code> CC ticket at <code>Position = Gate: Staff</code>.</p>
+<p>Kill switch <code>ALARM_WATCH_DISABLED</code> (independent of <code>GATE_DISABLED</code>); inert until <code>ALARM_PANEL_URL</code> +</p>
+<p><code>ALARM_PANEL_TOKEN</code> are set; files a <code>Run Error</code> row (<code>Raised by = Alarm Watch</code>) after 15 blind reads,</p>
+<p>clears it on recovery — the 035 lesson honoured. Canon edited in the same commit: JOB 1 Step 3.5 is now</p>
+<p>enrichment + fallback only; orchestration item 1 no longer claims the alarm read. RUNTIMES + Plumbing Map</p>
+<p>updated. <b>Remaining before this lane closes: Junyan deploys event-gate (agent deploys classifier-blocked),</p>
+<p>sets the two env vars, and one live tick is observed with <code>alarm_watch: {ok: true}</code>.</b> Seam noted: alarm-mcp&#x27;s</p>
+<p><code>alarm-watchdog</code> (dry-run) manages the siren; this lane summons people — complementary, keep both.</p>
+<p>Lanes 2–4 (FAST-TRACK renderer, J31 mirror, JOB 1 remainder deletion) untouched.</p>
 
 <p><b>Standing lesson applies (<b>035</b>):</b> a retirement is not done until</p>
 <p>every step of the retired job names its new owner — and naming an owner is not verifying the owner</p>
@@ -7046,5 +7061,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-15 18:13 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-15 18:36 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>

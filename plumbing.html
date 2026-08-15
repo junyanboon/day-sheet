@@ -315,6 +315,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-15 &middot; 22:50Z</span>
+      <h3>Alarm-trigger detection moves to the event gate's minute tick &mdash; the Concierge exits the alarm business<span class="kind">CHANGE</span></h3></summary>
+      <p><strong>A real alarm used to wait up to 2 hours for an LLM pass to read two emails.</strong> Concierge JOB 1 Step 3.5 detected a trigger by finding a PENDING email followed by an ALARM email on the 2-hourly pass &mdash; ruled theatre in wayfinder 018 (<em>&ldquo;if there is an alarm it needs to be addressed immediately by contacting staff, not by the Concierge 2 hours later&rdquo;</em>). New <code>alarm_watch.py</code> in event-gate rides the existing <code>event-gate-poll</code> minute tick: it reads alarm-mcp's live <code>/panel-states</code> and treats a partition's <code>in_alarm</code> false&rarr;true edge as the trigger &mdash; detection in ~1 minute, no email parsing at all.</p>
+      <p><strong>On an edge it does three things, none judgment:</strong> pages on-call by SMS (same Phone.com summons as the emergency lane), files a Staff Call Queue row, and raises the <code>Alarm trigger Studio &lt;NNN&gt;</code> Customer Care ticket at <code>Position = Gate: Staff</code>, deduped per studio+day. Canon edited in the same change: JOB 1 keeps arm/disarm logging and ticket <em>enrichment</em> (who was on site, SOP branch), and its fallback rule if the lane ever misses a genuine pair. 30-min per-partition cooldown; restart mid-alarm re-pages by design (duplicate page &gt; missed alarm). The lane reports itself: 15 consecutive failed panel reads files a <code>Run Error</code> row (<code>Raised by = Alarm Watch</code>), cleared on recovery.</p>
+      <p><strong>Switches and seams:</strong> kill switch <code>ALARM_WATCH_DISABLED=1</code> &mdash; its own lane, deliberately NOT gated by <code>GATE_DISABLED</code>. Complementary to alarm-mcp's <code>alarm-watchdog</code> (still dry-run): the watchdog manages the <em>siren</em>, this lane summons <em>people</em> and raises the ticket. Keep both.</p>
+      <p><strong>Not live yet:</strong> code committed (dc-canon <code>b9faedec</code>, 317 tests green) but event-gate still needs a redeploy plus <code>ALARM_PANEL_URL</code>/<code>ALARM_PANEL_TOKEN</code> env &mdash; the deploy is Junyan's (agent deploys are classifier-blocked). Until then the watch is inert and JOB 1's fallback rule carries detection.</p>
+    </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-15 &middot; 22:45Z</span>
       <h3>WhatsApp HTA verified live for international numbers &mdash; the SMS-to-nowhere path is closed<span class="kind">CHANGE</span></h3></summary>
       <p><strong>Keti Sharif (+61) got her Studio 901 HTA as SMS this morning</strong> &mdash; the Host queued it despite canon's 🌍 rule (phone.com delivers US/CA only; the row reads Sent, nothing arrives). The FBS skill page's HTA step said <code>Channel = SMS</code> unconditionally and still carried the 2026-08-07 &ldquo;WhatsApp PENDING, no connector&rdquo; block, though the lane had gone live 2026-08-11 via <code>dance-annex-desk-webhook</code> (Cloudflare Worker, 5-min queue drain on <code>Channel = WhatsApp/Instagram</code> + <code>Ready to Send</code>).</p>
