@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-14 23:38 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-14 23:42 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -840,8 +840,16 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- <b>Every single row reads <code>Raised by: Human</code>.</b></li>
 </ul>
 
-<p>So the loop has <b>never proposed anything and never executed anything</b>. VERIFY, rewrite</p>
-<p>absorption and the handback pass are live and correct; PROPOSE and EXECUTE had no owner. The</p>
+<p>So the loop has <b>never proposed anything</b>. VERIFY, rewrite absorption and the handback pass are</p>
+<p>live and correct; PROPOSE and EXECUTE had no <i>scheduled</i> owner. <b>Correction to this log&#x27;s first</p>
+<p>draft:</b> EXECUTE has run — once, on 2026-08-07/08, in an attended session, on the David Diep 509A</p>
+<p>move (<code>Executed by: Agent</code>, closed against <code>Booking ref 118753327 @ 2026-08-07 in 509A</code>). That run</p>
+<p>earned its keep, catching three defects: the 21:30 tick <b>false-closed</b> the row because booking</p>
+<p>proof matched id+date while the booking was still in 509B (fixed by space-qualifying refs,</p>
+<p><code>39409fb0</code>); the replacement booking was created <i>internal</i> rather than as David&#x27;s at $0 (Junyan</p>
+<p>caught it); and <code>change_booking_holder</code> 500s on that shape because the fetch→PUT round trip drops</p>
+<p><code>availabilityStatus</code> (worked around by cancel + recreate). What has never happened unattended is</p>
+<p>either beat. The</p>
 <p>implicit assumption was that the Concierge would be the agent pass — and the Concierge starves,</p>
 <p>which is the defect this whole branch of the map exists to fix. Nine days of a half-built loop</p>
 <p>reading as a working one, because the half that ran reported clean. <b>This map&#x27;s own pathology,</p>
@@ -2235,7 +2243,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- A named prevention point for missing MIRRORS rows (write-time vs run-time).</li>
 <li>- The re-run/<code>conclusion</code> measurement rule written into canon so audits stop undercounting.</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#076</div><div class="jhead"><span class="emoji">📮</span><h4>The list can tick off a booking by itself, but never a text message</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The whole point of the new list is that it doesn&#x27;t care who did the job — it looks at the real booking and ticks it off</li><li>That works for bookings. It does not work for text messages: the proof lives in the message log, which the little sweep cannot reach from the cloud</li><li>Found the hard way — Junyan sent David Diep a text on Aug 7 at 9:42pm and the list still said &#x27;waiting&#x27; eight days later</li><li>Nothing was broken. The sweep looked, couldn&#x27;t see proof, and correctly refused to guess. Nothing else ever looked again</li><li>Three ways out, none obviously right: let the sweep reach the message log, or ring a bell when any step sits too long, or stop letting text steps claim a kind of proof nobody can check</li><li>Same shape as the missing thank-yous: the work was done, the notes were honest, and the finishing half was missing</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A Next Action row whose proof is a human mark can never close itself</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#076</div><div class="jhead"><span class="emoji">📮</span><h4>The list can tick off a booking by itself, but never a text message</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The whole point of the new list is that it doesn&#x27;t care who did the job — it looks at the real booking and ticks it off</li><li>That works for bookings. It does not work for text messages: the proof lives in the message log, which the little sweep cannot reach from the cloud</li><li>Found the hard way — Junyan sent David Diep a text on Aug 7 at 9:42pm and the list still said &#x27;waiting&#x27; eight days later</li><li>That night made the proof for us: the same job had two steps, move the booking and text him. The booking step ticked itself off the next morning. The text step never could</li><li>Nothing was broken. The sweep looked, couldn&#x27;t see proof, and correctly refused to guess. Nothing else ever looked again</li><li>Three ways out, none obviously right: let the sweep reach the message log, or ring a bell when any step sits too long, or stop letting text steps claim a kind of proof nobody can check</li><li>Same shape as the missing thank-yous: the work was done, the notes were honest, and the finishing half was missing</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A Next Action row whose proof is a human mark can never close itself</b></p><h2>Question</h2>
 
 <p>The executor-agnostic close exists to remove the back-capture tax: VERIFY reads ground truth, so</p>
 <p>it does not care who acted, and a row Junyan satisfied himself closes on the next tick with no</p>
@@ -2247,6 +2255,12 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>carries the outbound SMS to <code>+16474093506</code> at <b>Fri Aug 7 9:42 PM</b>, byte-identical to the row&#x27;s</p>
 <p><code>Continuation</code>, with two replies from David the same evening. Eight days later the queue still</p>
 <p>showed it as work outstanding.</p>
+
+<p><b>The controlled experiment is already in the data.</b> That incident produced <b>two</b> rows — the</p>
+<p>booking move and the confirmation text — raised together, satisfied the same night. The booking row</p>
+<p>(<code>Proof type = booking</code>, <code>Booking ref 118753327 @ 2026-08-07 in 509A</code>) <b>closed itself on Aug 8</b>,</p>
+<p><code>Verified</code>, exactly as designed. The message row did not, and could not. Same incident, same night,</p>
+<p>same reviewer: the only variable is the proof type.</p>
 
 <p>Nothing was broken. <code>verify_row</code> dispatches on proof type; this row is <code>Proof type = human_mark</code></p>
 <p>with no <code>Booking ref</code>, so it returns <code>unverifiable</code> and the tick leaves it exactly as it was —</p>
@@ -6889,5 +6903,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-14 23:38 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-14 23:42 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
