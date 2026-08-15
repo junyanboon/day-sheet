@@ -313,6 +313,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-15 &middot; 02:55Z</span>
+      <h3>New 901 and 509B tours &mdash; two sources to change, and only one of them is a database<span class="kind">CONTENT</span></h3></summary>
+      <p><strong>Re-recorded walkthroughs for 901 and 509B went live.</strong> <code>901 Studio Tour (2026 v2)</code> is <code>dj5OMc-a63c</code>; <code>509B Studio Tour (2026)</code> is <code>o_2BtrrODmY</code>. Both confirmed on the DanceAnnex channel by oembed before anything was changed.</p>
+      <p><strong>The HTA walkthrough link has two independent sources, and they do not read each other.</strong> SMS HTAs look the link up live from the &#127910; <strong>YouTube Videos</strong> database (<code>collection://24475032-81c4-80c4-b514-000bcb36e6f0</code>). WhatsApp HTAs read a hardcoded <code>STUDIO_VIDEO</code> map in <code>src/send.js</code> in <code>dance-annex-desk-webhook</code>. Updating the database alone leaves the WhatsApp path serving a retired video until a deploy.</p>
+      <p><strong>Both updated.</strong> Database: old rows renamed <code>(OBSOLETE &mdash; do not send)</code> with a retirement note naming the successor &mdash; the 527 precedent &mdash; and new <code>&mdash; HTA</code> rows created. Verified the live lookup now returns exactly one row per studio. Worker: map updated and deployed, version <code>ccecf8f9-ead4-4b5b-a347-17611b816b6e</code>, <code>SEND_ENABLED = "true"</code>.</p>
+      <p><strong>One HTA had already gone out with the old 901 link</strong> (Aaron Aquino-Annobil, booking that evening). The retired videos are still up on YouTube, so his link works and no resend was sent. <strong>Do not unlist the old videos until the bookings already messaged have passed</strong> &mdash; that is exactly how the retired 527 walkthrough started showing renters &ldquo;This video isn&rsquo;t available anymore&rdquo;.</p>
+      <p>Standing shape of the failure: a link that lives in two places drifts in one of them silently, and the artist finds out at a locked door. Worth moving <code>STUDIO_VIDEO</code> to read the Notion database so there is one source instead of two.</p>
+    </details>
+    </li>
+
     <li class="entry llm">
       <details>
       <summary><span class="when">2026-08-14 &middot; 23:20Z</span>
