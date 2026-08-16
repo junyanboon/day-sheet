@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-16 02:20 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-16 02:30 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2596,6 +2596,27 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>board directly, treating mail as pure echo — which the same sweep independently supports, since the</p>
 <p>desk&#x27;s own <code>create_booking</code> calls arrive back as mail. Note also that the tag-based skip rule is</p>
 <p>weaker than assumed: only 2 of 10 holders carried any Skedda tag.</p>
+
+<p><b>⚠️ Second ground finding, 2026-08-16 — SINGLE-WRITER is a hard constraint, learned the hard way.</b></p>
+<p>While this session worked the gap list, the <b>Codex runtime was executing Junyan&#x27;s identical</p>
+<p>instruction in parallel</b>. Both provisioned alarm users for the same renters; Sharon Rupnarain ended</p>
+<p>with <b>two different working codes on all four panels</b>, and Hanano I. accumulated <b>five</b> inert</p>
+<p>codeless shells from failed Codex retries. 018&#x27;s executor-agnostic VERIFY closes a row no matter who</p>
+<p>acted — but it assumes <b>one actor at a time</b>: two agents on the same instruction produce duplicate</p>
+<p>side effects that <i>each verify as correct</i>, because each read-back confirms its own write. Nothing in</p>
+<p>the current design detects this. Whatever owns this lane must be the <b>only</b> thing provisioning, or</p>
+<p>must <b>claim each booking before acting</b>. Also corrected: canon&#x27;s <i>&quot;alarm-mcp is read-only by design&quot;</i></p>
+<p>(ticket 035) is <b>false</b> — <code>create_user</code> / <code>set_user_code</code> / <code>grant_user_access</code> /</p>
+<p><code>set_user_access_window</code> all exist and were used tonight; another 063-class stale claim, and the</p>
+<p>Limits register needs the correction.</p>
+
+<p><b>Third finding — the access gate is usually resolvable, not merely reportable.</b> A Notion code with</p>
+<p>no panel user is <code>code_mirror</code>&#x27;s <b>dormant</b> state: normal, ~530 of ~700 rows, kept so a returning</p>
+<p>renter gets their familiar number. The defect is that nobody <b>re-instates</b> it when they book again.</p>
+<p>So 079&#x27;s access step should <i>fix</i> rather than flag: (a) code matches ⇒ pass; (b) no panel user but a</p>
+<p>code on file ⇒ <b>re-provision that code</b> (deterministic, no judgment); (c) no code anywhere ⇒ mint</p>
+<p>one and write it back; (d) ambiguous ⇒ only then a human gate. Prefer reusing an existing codeless</p>
+<p>shell to creating a new user — that is what stopped Hanano&#x27;s litter at five instead of six.</p>
 
 <p>The <b>full record</b> carries the per-thread dispositions, the</p>
 <p>gap list, and the Diana Leal case — an inquiry ticket parked at <code>Gate: Artist</code> for three days while</p>
@@ -7211,5 +7232,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-16 02:20 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-16 02:30 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
