@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-16 02:30 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-16 03:06 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -102,7 +102,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">39</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">40</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1849,7 +1849,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Sequencing: <b>052</b> pilots on tickets today&#x27;s JOB 2 already makes,</p>
 <p>so this is parallel work, not a blocker.</p>
-</div></details></details></div><div class="job"><div class="jnum">#055</div><div class="jhead"><span class="emoji">⚙️</span><h4>Turn three of the robot&#x27;s chores into small programs</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>DONE (Aug 15): alarm watching is now a program that checks the panels every minute — it texts staff, files the call row and opens the ticket itself; Junyan just has to press deploy</li><li>The who&#x27;s-in-today list rebuilds itself all day instead of once every two hours</li><li>Copying claimed staff shifts to the calendar is just copying — no thinking needed</li><li>A fourth chore gets deleted outright: another robot already does it</li><li>Rule we learned the hard way: nothing retires until the new owner is seen actually doing it</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move J01&#x27;s deterministic lanes out of the LLM pass — alarm watch, fast-track list, shift mirror</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#055</div><div class="jhead"><span class="emoji">⚙️</span><h4>Turn three of the robot&#x27;s chores into small programs</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>DONE and LIVE (Aug 16): alarm watching is now a program that checks the panels every minute — it texts staff, files the call row and opens the ticket itself</li><li>We also made it go blind on purpose to check it would say so — it wrote &#x27;I can&#x27;t see the panels&#x27; on Junyan&#x27;s list, then cleared it once it could see again</li><li>Still to do: the other three chores below</li><li>The who&#x27;s-in-today list rebuilds itself all day instead of once every two hours</li><li>Copying claimed staff shifts to the calendar is just copying — no thinking needed</li><li>A fourth chore gets deleted outright: another robot already does it</li><li>Rule we learned the hard way: nothing retires until the new owner is seen actually doing it</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move J01&#x27;s deterministic lanes out of the LLM pass — alarm watch, fast-track list, shift mirror</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>, which ruled each of these out of the LLM pass.</p>
 <p>Pure code, no judgment, parallel to everything else.</p>
@@ -1898,8 +1898,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>(c) the lane&#x27;s own Run Error row could not file — <code>Alarm Watch</code> was not a <code>Raised by</code> option, so the</p>
 <p>self-report 400&#x27;d. <b>The lane failed AND its failure report failed</b> — the exact shape 035&#x27;s lesson warns</p>
 <p>about, found only because the outage forced a log read. Option added to the schema.</p>
-<p><b>Remaining before this lane closes: one more deploy, then one live tick observed with</p>
-<p><code>alarm_watch: {ok: true, partitions: 5}</code>, and a deliberate blind-read test proving the Run Error row now files.</b> Seam noted: alarm-mcp&#x27;s</p>
+<p><b>LANE 1 IS DONE — LIVE 2026-08-16, revision <code>event-gate-00038-ql4</code>.</b> A live tick reads all five</p>
+<p>partitions (<code>alarm_watch: {ok: true, partitions: 5, alarms: []}</code>), and the blind-read path was</p>
+<p>tested end to end against the real board: 15 forced failures filed the <code>Alarm watch is BLIND</code> row,</p>
+<p>a good read cleared it, zero rows left open. The Concierge no longer detects alarm triggers.</p>
+
+<p><b>Lanes 2–4 remain open and are what keeps this ticket open:</b> the FAST-TRACK who&#x27;s-in-today</p>
+<p>renderer, JOB 31&#x27;s claimed-shift mirror, and JOB 1&#x27;s remainder (delete, don&#x27;t rehome). Each still</p>
+<p>needs 035&#x27;s test applied — a retirement is not done until the new owner is seen acting. Seam noted: alarm-mcp&#x27;s</p>
 <p><code>alarm-watchdog</code> (dry-run) manages the siren; this lane summons people — complementary, keep both.</p>
 <p>Lanes 2–4 (FAST-TRACK renderer, J31 mirror, JOB 1 remainder deletion) untouched.</p>
 
@@ -3218,7 +3224,71 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#066</span><span class="emoji">🗂️</span><span class="done-title">Prove the poller fix held — one clean week, and a Run Error row that has actually fired</span><span class="done-date">2026-08-14</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>Prove the poller fix held — one clean week, and a Run Error row that has actually fired</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#080</span><span class="emoji">🚪</span><span class="done-title">A renter asked which room she was in and nobody answered — now the desk answers itself</span><span class="done-date">2026-08-16</span></summary><div class="done-body"><ul class="plain-bullets"><li>Julia asked &#x27;Am I in studio A or B?&#x27; the night before her booking and got silence</li><li>Junyan answered by hand the next afternoon while driving, said sorry, and gave her 15 free minutes</li><li>The annoying part: the desk already knew. Her room was sitting right there in the day&#x27;s booking list</li><li>It keeps happening because Peerspace and Giggster only advertise the building — a renter genuinely cannot tell 509A from 509B</li><li>DONE Aug 16: ask which room you&#x27;re in and you get an answer in seconds — your room, the address, both codes, and the walkthrough video for YOUR studio</li><li>The video link goes straight to your own studio&#x27;s tour instead of a page with five videos to dig through</li><li>If your booking covers two rooms it stays quiet on purpose — &#x27;which of the two&#x27; is the one question you must never guess at</li><li>If your alarm code is missing you still get told the room; the missing code costs you the codes, not the answer</li><li>Still to watch: no real renter has set this off yet</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Quick-answer card for &quot;which studio am I in?&quot; — the Julia S. gap</b></p><h2>Question</h2>
+
+<p>A renter asked a question the desk already knew the answer to, and got silence.</p>
+
+<p><b>Julia S., Studio 509A, 2026-08-15:</b> *&quot;Am I in studio A or B? I cannot see it on the</p>
+<p>perspective details?&quot;* — &quot;perspective&quot; being <b>Peerspace</b>. No lane matched, nobody answered,</p>
+<p>and Junyan replied by hand at 3:14 PM the next afternoon <i>while driving</i>, apologised, and</p>
+<p>comped 15 minutes at the end of her booking.</p>
+
+<p>The generalisable part: this is <b>platform-shaped</b>, not a one-off. A Peerspace or Giggster</p>
+<p>listing advertises the <i>building</i>, so a renter holding 509A or 509B through a platform is</p>
+<p>structurally unable to know which of the two is theirs. Meanwhile the answer was sitting in</p>
+<p>the watchlist row the gate reads on <b>every</b> inbound message — the desk held it the whole</p>
+<p>time and simply had no card to say it with.</p>
+
+<h2>Answer — CLOSED 2026-08-16, LIVE (revision <code>event-gate-00038-ql4</code>)</h2>
+
+<p>New <b><code>which-studio</code></b> quick-answer card. Junyan approved the wording in-session and directed</p>
+<p>the scope: <i>&quot;I want to send the full card&quot;</i>, *&quot;also send the video walkthrough again and codes</p>
+<p>in case&quot;<i>, </i>&quot;I think address also is helpful&quot;*.</p>
+
+<p>What sends, to a watchlist-verified renter, in seconds:</p>
+
+<blockquote>Hi Julia,</blockquote>
+<p>&gt;</p>
+<blockquote>Your booking today is in Studio 509A, 3:00 PM – 6:00 PM — at 509 Bloor St West (2nd Floor).</blockquote>
+<p>&gt;</p>
+<blockquote>Here are your codes again just in case:</blockquote>
+<blockquote>🚪 Door: 5123 · 🚨 Alarm: 4271</blockquote>
+<p>&gt;</p>
+<blockquote>And here&#x27;s the walkthrough video for Studio 509A: https://youtu.be/kpuUbY8nZTc</blockquote>
+<p>&gt;</p>
+<blockquote>This is an automated message. If you still need help, reply here…</blockquote>
+
+<p><b>Three things worth keeping from the build:</b></p>
+
+<ol>
+<li>1. <b>Body variants (new general mechanism).</b> <code>fill_body</code> is all-or-nothing — one unfillable</li>
+</ol>
+<p>placeholder suppresses the whole reply. Folding codes into a single body would mean a</p>
+<p>renter whose alarm code is blank gets <b>silence about the room they asked about</b>. Cards may</p>
+<p>now declare <code>page_ids</code>, richest first; the first body that fills completely wins, and the</p>
+<p>queue row&#x27;s <code>Source HTR Row</code> follows the wording actually sent. A missing code now costs the</p>
+<p>codes, never the answer.</p>
+<ol>
+<li>2. <b>Per-studio walkthrough, not the index.</b> Sending the guides page makes the renter hunt</li>
+</ol>
+<p>through five videos for theirs. The five ids were read off danceannex.ca/guides via the</p>
+<p>rendered iframes (a Google Site — the server HTML carries none of them), each verified by</p>
+<p>oembed to resolve and carry its studio&#x27;s title, then <b>reconciled against canon</b>: the 🎦</p>
+<p>YouTube Videos DB on 📺 FBS Resources &amp; Videos. All five agreed.</p>
+<ol>
+<li>3. <b>The map is a declared stray copy.</b> Hardcoded so a renter&#x27;s reply never waits on a Notion</li>
+</ol>
+<p>read — which is exactly the hazard the re-record checklist names. <code>cards.py</code> is now listed</p>
+<p>on that checklist (page <code>3b975032-81c4-8107-9074-f1554eab528a</code>) as a fifth place to update,</p>
+<p>flagged as needing a <i>deploy</i> not an edit. Durable fix — read the DB behind the existing</p>
+<p>card cache — is <b>not</b> done; see Not yet specified.</p>
+
+<p>Guards: building questions still match the address card first (tested both directions); a</p>
+<p>booking naming two rooms holds rather than guessing; the presence gate suppresses it for a</p>
+<p>renter who has left; one send per renter per topic per 12h. 340 tests green.</p>
+
+<p><b>Live evidence still owed:</b> no real renter has triggered this card yet. Watch the first one.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#066</span><span class="emoji">🗂️</span><span class="done-title">Prove the poller fix held — one clean week, and a Run Error row that has actually fired</span><span class="done-date">2026-08-14</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>Prove the poller fix held — one clean week, and a Run Error row that has actually fired</b></p><h2>Question</h2>
 
 <p>Ticket 062 shipped the ident fix and the <code>Run Error</code> failure handler (<code>d1bea590</code>). Neither has</p>
 <p>been observed doing its job in production yet — 062 measured ~19h of green, and the handler has</p>
@@ -7232,5 +7302,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-16 02:30 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-16 03:06 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
