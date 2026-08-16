@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-15 18:36 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-15 21:24 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">20</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">39</div><div class="l">✅ Finished</div></div>
 </div>
@@ -971,7 +971,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
 <p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">20</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">22</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -2462,6 +2462,129 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- A row closed against reality carries the verification quote, exactly as the tick would write it.</li>
 <li>- The walk surfaces the soonest-deadline row first.</li>
+</ul>
+</div></details></details></div><div class="job"><div class="jnum">#078</div><div class="jhead"><span class="emoji">📥</span><h4>Clear the 37 unread booking emails piled up in the mailbox</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Every time someone books a studio, the booking system sends us an email — and 37 of them are sitting unread</li><li>Most are echoes of work Junyan already did himself: he books for someone, the system emails us about it</li><li>One work session goes through all 37: handle what needs handling, skip what doesn&#x27;t, and only then mark each one read</li><li>Anything that needs a real decision goes on the review list — nothing gets guessed</li><li>No messages sent and no money touched — that stays with Junyan</li><li>The session also writes down what kind each email was, which teaches us how to automate this next</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Clear the 37-message Sales - Skedda backlog — process, record, mark read</b></p><h2>Question</h2>
+
+<p>(AFK task.) 37 unread <code>Sales - Skedda</code> notification emails sit in the business mailbox</p>
+<p>(thedanceannex@gmail.com) as of 2026-08-16 00:10Z. Composition, read live while charting:</p>
+
+<ul>
+<li>- <b>Kyle FitzGerald ×13</b> — self-made bookings, tagged <b>AAP</b> (skip class).</li>
+<li>- <b>Vicky Yeung ×10</b> — 5 &quot;Junyan Boon made a booking&quot; + 5 &quot;Junyan Boon changed the booking&quot;</li>
+</ul>
+<p>(staff-made, skip class <i>if</i> downstream work was done in the same sitting — verify, don&#x27;t assume).</p>
+<ul>
+<li>- <b>Aakanksha Patel ×3</b> — Junyan-made bookings (Sep 13 / Sep 27 / Nov 1, Studio 901).</li>
+<li>- <b>Manuel Hernandez ×3</b> — 2 self-made + 1 Junyan-made.</li>
+<li>- Singles: Himanshi Mehta, Diana Leal, Kateryna Zozulia, Bella Zhou, David Diep (made + changed),</li>
+</ul>
+<p>Junyan&#x27;s own 7:00 am 509B test pair (&quot;made&quot; + &quot;Your booking&quot;).</p>
+
+<p>Process every thread to termination:</p>
+
+<ol>
+<li>1. For each notification, resolve the renter and booking against live Skedda (skedda-mcp) and the</li>
+</ol>
+<p>Notion board. Apply the <b>skip classes ruled 2026-08-16</b>: AAP/subscription renters, Dance Annex</p>
+<p>itself, staff-made bookings whose downstream work is verifiably done, FBS/monitored bookings</p>
+<p>(owned by their own pipeline).</p>
+<ol>
+<li>2. For non-skipped direct bookings, one-shot process per the existing SOPs</li>
+</ol>
+<p>(<code>process-studio-tickets</code> for ticket creation; check whether HTA/access needs queueing per</p>
+<p><code>queue-fbs-messages</code> rules). <b>Never send, never charge</b> — anything needing an outbound or</p>
+<p>money lands as a queue row / Next Action, not an action.</p>
+<ol>
+<li>3. Anything genuinely ambiguous goes to the Next Action queue as a proposal for review — do not</li>
+</ol>
+<p>guess, do not leave it unread-as-todo.</p>
+<ol>
+<li>4. Mark each processed thread read. <b>Marking read is the terminal act per thread, never the</li>
+</ol>
+<p>substitute for processing.</b></p>
+<ol>
+<li>5. Produce a per-thread record (asset in this effort: thread id → classification → action taken /</li>
+</ol>
+<p>skip reason) — this record is <b>079</b>&#x27;s ground evidence for</p>
+<p>the class frequencies and skip-rule shape.</p>
+
+<p>Gotcha banked while charting: the business Gmail connector&#x27;s <code>search_threads</code> returns <code>{}</code> for</p>
+<p><code>label:Label_…</code> queries (label-ID syntax silently fails) — query <code>from:mg.skedda.com</code> instead.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Zero unread threads under Sales - Skedda older than the session start.</li>
+<li>- Every thread has a line in the record; every non-skip action verifiable on the board/queue.</li>
+<li>- No outbound message sent, no money touched.</li>
+</ul>
+</div></details></details></div><div class="job"><div class="jnum">#079</div><div class="jhead"><span class="emoji">🎫</span><h4>Decide who handles new-booking emails from now on</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Simple bookings — someone books a studio directly — can be fully handled in one go, no back-and-forth needed</li><li>Right now nobody owns them, which is why 37 piled up unread</li><li>The question: should the new mail-sorting system handle these, or a separate helper, or should we skip the email entirely and read the booking calendar directly?</li><li>Some renters get skipped on purpose: members with standing arrangements, our own bookings, and bookings already covered by the daily message pipeline</li><li>The rule going forward: an email marked &#x27;read&#x27; means &#x27;handled&#x27; — never just swept under the rug</li><li>This ticket decides the shape; building it comes after</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Design the direct-booking one-shot lane — who processes Skedda notifications, parallel to the loop</b></p><h2>Question</h2>
+
+<p>Direct bookings — Skedda self-bookings, platform instant books, booking-request accepts — are</p>
+<p><b>one-shot processable</b>: no multi-turn human exchange, the whole procedure completes in a single</p>
+<p>pass (018&#x27;s ruling already fast-tracks them from day one). Today nothing owns the class: the</p>
+<p>notifications pile up unread under <code>Sales - Skedda</code> (37 deep when charted; <b>078</b></p>
+<p>clears the backlog manually). Design the standing lane.</p>
+
+<p><b>The core seam question, in Junyan&#x27;s own words while charting: &quot;I&#x27;m wondering if the email</p>
+<p>triager needs to be involved in this.&quot;</b> Three candidate shapes were deliberately left open:</p>
+
+<ol>
+<li>1. <b>A rule class on the 068 mail-rules router</b> — deterministic recognition of Skedda</li>
+</ol>
+<p>notification types on arrival; fast-track ones one-shot processed, marked read. The router is</p>
+<p>already the ruled owner of &quot;known mail is handled deterministically on arrival&quot;; a separate</p>
+<p>Skedda sweep might be building 068&#x27;s first rule as a one-off instead.</p>
+<ol>
+<li>2. <b>A dedicated scheduled agent</b> (The Loop pattern) sweeping the label on its own cadence.</li>
+<li>3. <b>A beat on the existing desk-loop tick</b>, proposals riding the Next Action queue as</li>
+</ol>
+<p>fast-track rows (053&#x27;s machinery, no new runtime).</p>
+
+<p>Weigh against: 068&#x27;s build order (router is ticketed but in shadow — does this lane wait, ride,</p>
+<p>or leapfrog?), 054&#x27;s residue-only Triager amendment, and 053&#x27;s fast-track ruling. A fourth</p>
+<p>option — mail is only the <i>signal</i> and the lane should read the Skedda board directly (the</p>
+<p>notification is an echo of a board event skedda-mcp can see) — deserves explicit consideration:</p>
+<p>it would make the lane immune to mail-shape changes and make mark-as-read pure hygiene.</p>
+
+<p><b>Skip classes ruled 2026-08-16 (seed rule, verify where each type lives —</p>
+<p>Skedda user tags like AAP, Artist DB, holder identity):</b></p>
+
+<ul>
+<li>- AAP / subscription renters</li>
+<li>- Dance Annex itself (holder = Junyan / info@danceannex.ca)</li>
+<li>- Staff-made bookings Junyan initiated whose downstream work was done in the same sitting</li>
+<li>- FBS / monitored bookings (owned by the FBS pipeline)</li>
+</ul>
+
+<p>Also settle:</p>
+
+<ul>
+<li>- What &quot;one-shot processing&quot; comprises per notification type (made / changed / cancelled /</li>
+</ul>
+<p>request-accept): ticket stub? HTA/access check? nothing-but-verify?</p>
+<ul>
+<li>- The executor-agnostic angle: most of the backlog was Junyan&#x27;s own writes echoing back — the</li>
+</ul>
+<p>lane must close on ground truth, not re-do his work ([053]&#x27;s VERIFY beat is the prior).</p>
+<ul>
+<li>- Mark-as-read semantics: read = processed is the contract; nothing else may mark this label read.</li>
+<li>- Failure visibility per the map&#x27;s standing lessons: the lane reports its own result each pass</li>
+</ul>
+<p>including zero, and silence past a window is a defect (001&#x27;s <code>produces</code>/<code>verify_within</code>).</p>
+
+<p><b>078</b>&#x27;s per-thread record supplies class frequencies and skip-rule</p>
+<p>evidence — prefer resolving after (or informed by) it, but do not hard-block on it.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A ruled shape (one of the four, or a hybrid) with the 068/054/053 seams named and consistent</li>
+</ul>
+<p>with the triage-redesign decisions of record.</p>
+<ul>
+<li>- The skip-rule&#x27;s authoritative source named and testable.</li>
+<li>- A build ticket cut (or an amendment to 068&#x27;s scope) — this ticket decides, it does not build.</li>
 </ul>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
@@ -7061,5 +7184,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-15 18:36 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-15 21:24 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
