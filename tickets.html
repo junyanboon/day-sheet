@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-15 21:52 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-16 02:20 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1888,8 +1888,18 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><code>ALARM_PANEL_TOKEN</code> are set; files a <code>Run Error</code> row (<code>Raised by = Alarm Watch</code>) after 15 blind reads,</p>
 <p>clears it on recovery — the 035 lesson honoured. Canon edited in the same commit: JOB 1 Step 3.5 is now</p>
 <p>enrichment + fallback only; orchestration item 1 no longer claims the alarm read. RUNTIMES + Plumbing Map</p>
-<p>updated. <b>Remaining before this lane closes: Junyan deploys event-gate (agent deploys classifier-blocked),</p>
-<p>sets the two env vars, and one live tick is observed with <code>alarm_watch: {ok: true}</code>.</b> Seam noted: alarm-mcp&#x27;s</p>
+<p>updated. <b>Deployed 2026-08-15 night; three defects found in the first hours, all fixed in <code>3d5c1a51</code>:</b></p>
+<p>(a) the env command used <code>--set-env-vars</code>, which replaces rather than adds — twelve variables including</p>
+<p><code>GATE_PATH_TOKEN</code> were wiped and <b>the whole gate 404&#x27;d for ~4.5 hours</b> (no emergency forwarding, no</p>
+<p>invariants, no loop); restored from a pre-deploy dump, window audited message-by-message, nothing</p>
+<p>emergency-shaped in it. (b) the <code>mcp-auth-token</code> secret carries a <b>trailing newline</b>, which Python</p>
+<p>rejects as a header value — 267 consecutive failed panel reads; <code>.strip()</code> on read now, and the identical</p>
+<p>latent bug in <code>presence.py</code> (newly reachable, since these vars had never been set before) fixed with it.</p>
+<p>(c) the lane&#x27;s own Run Error row could not file — <code>Alarm Watch</code> was not a <code>Raised by</code> option, so the</p>
+<p>self-report 400&#x27;d. <b>The lane failed AND its failure report failed</b> — the exact shape 035&#x27;s lesson warns</p>
+<p>about, found only because the outage forced a log read. Option added to the schema.</p>
+<p><b>Remaining before this lane closes: one more deploy, then one live tick observed with</p>
+<p><code>alarm_watch: {ok: true, partitions: 5}</code>, and a deliberate blind-read test proving the Run Error row now files.</b> Seam noted: alarm-mcp&#x27;s</p>
 <p><code>alarm-watchdog</code> (dry-run) manages the siren; this lane summons people — complementary, keep both.</p>
 <p>Lanes 2–4 (FAST-TRACK renderer, J31 mirror, JOB 1 remainder deletion) untouched.</p>
 
@@ -7201,5 +7211,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-15 21:52 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-16 02:20 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
