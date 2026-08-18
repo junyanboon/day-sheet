@@ -589,6 +589,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     </details>
     </li>
 
+    <li class="entry alert">
+      <details>
+      <summary><span class="when">2026-08-18 · 03:44Z</span>
+      <h3>The alarm panel can now text a human — but only for the one condition that will not fix itself<span class="kind">NEW</span></h3></summary>
+      <p>Revision <code>alarm-mcp-00025-rxb</code>. The watchdog reads the trouble feed every 60s and now SMSes the on-call phone on a <strong>panel low battery</strong>, via <code>alarm_monitor/escalate.py</code>. Junyan's rule, 2026-08-18: Studio 693 shows an <em>AC Power Failure</em> fairly often and it self-resolves (Maintenance row 2026-05-18 confirms), so that alone is deliberately <strong>never</strong> texted — escalation needs a battery condition. When both are present the message says so, because a battery warning during a power cut is a countdown, not a nag.</p>
+      <p><strong>It texts once.</strong> Trouble conditions persist until someone fixes them and this ticks every minute, so undeduped that is ~1,440 texts a day and the second one is already worse than useless. Alerts are keyed on the panel's own wording, re-sent only after 6h, forgotten when the condition clears so a recurrence alerts again, and the alert state rides in the same GCS object as the ledgers so a cold start does not re-text everything open.</p>
+      <p><strong>Runs on every tick regardless of <code>WATCHDOG_ARMED</code></strong>, deliberately. This is not the watchdog acting on a panel, it is telling a person something no automation can fix — gating it behind the arm switch would silence a dying panel exactly when the watchdog is paused.</p>
+      <p><strong>Why here and not on the Doorman:</strong> the Doorman already files the Urgent Issue row (it filed today's 693 pair at 03:07Z) but has no phone.com connector, so it cannot text; and its next pass can be up to 22 hours away. <em>Not yet proven end-to-end</em> — no low battery has occurred, so the SMS path itself is untested in production.</p>
+      <p>⚠️ <strong>Found while wiring this: <code>event-gate</code> holds its phone.com API token as a PLAINTEXT env var</strong>, despite a <code>phonecom-api-token</code> secret already existing. It reached a chat transcript. Rotate it and move it to a secret reference; alarm-mcp binds the secret properly.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-16 · 01:27Z</span>
