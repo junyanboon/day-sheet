@@ -2671,6 +2671,29 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>that BOTH carry working codes stay ambiguous — that is the real conflict (Sharon&#x27;s 8206/4547)</p>
 <p>and must still reach a human. Preferred home is <code>_verdict_of</code> inside <code>/provision</code>, so every</p>
 <p>caller — this job, the Doorman, the last-minute flow — gets it at once.</p>
+
+<p><b>Cleanup owner ruled 2026-08-18: the Doorman reports shells, a human deletes them.</b> The</p>
+<p>sweep job ignores shells so it is never blocked; the Doorman gains a duty to surface them so</p>
+<p>they do not accumulate invisibly. This is deliberately the same shape as its existing B(b3)</p>
+<p>retirement sweep — Human-confirmed gate, capped per pass, humans do the actual deleting</p>
+<p>(no delete tool exists on alarm-mcp, by design).</p>
+
+<p>Spec for that duty (a <b>Doorman prompt amendment</b>, in its own right — see below):</p>
+
+<ul>
+<li>- Sweep for users with no effective code AND <code>panels_covered == 0</code>.</li>
+<li>- Raise <b>ONE consolidated Access/PIN row per pass</b> listing them, not one row per shell.</li>
+</ul>
+<p>The Aug 16 hand-raised row is the format to copy: names + user ids + which id to KEEP.</p>
+<ul>
+<li>- Never include a user who holds a working code — that is a different, more urgent class.</li>
+<li>- Dedup against an open row from a previous pass; do not re-raise weekly.</li>
+</ul>
+
+<p>⚠️ <b>Not yet applied.</b> This is a live production-trigger prompt change (<code>trig_01XyrVCbCrSbFfWjxo9FZtxN</code>,</p>
+<p>currently prompt v5) and needs Junyan&#x27;s explicit go-ahead plus a <code>RUNTIMES.md</code> entry, the same</p>
+<p>way v3/v4/v5 were done. Cheap to apply — whole-prompt replace, verified by read-back — but it</p>
+<p>is its own task, not part of the sweep-service build.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
