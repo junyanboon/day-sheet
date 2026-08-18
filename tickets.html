@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-18 07:30 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-18 07:35 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">20</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">42</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">43</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">5</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -970,170 +970,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>must look the limit up in the CAPABILITIES <b>Limits register</b>; an UNTESTED cell bounces the</p>
 <p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
 <p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
-</div></details></details></div><div class="job"><div class="jnum">#081</div><div class="jhead"><span class="emoji">🤖</span><h4>Build the program that handles new bookings by itself</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>We decided: a plain program, not an AI, checks the booking calendar every half hour, day and night</li><li>For each new booking it sets up the renter&#x27;s profile, door code, phone contact and confirmation — the routine stuff a person shouldn&#x27;t have to do</li><li>It reads the calendar itself instead of the emails, because we learned the emails&#x27; &#x27;read&#x27; mark lies</li><li>Anything that needs actual judgment — two people with the same name, a weird access case — it writes on Junyan&#x27;s to-do list instead of guessing</li><li>The board card still goes up 2 days before the booking, same as Junyan does it now, so the board stays tidy</li><li>The daily 4am message robot keeps sending the texts — this program just makes sure everything it needs is ready</li><li>Only one program is ever allowed to set up door codes on its own — we learned that after two robots did the same job twice</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the deterministic booking-sweep job — code chain, Actions rows for the judgment residue</b></p><h2>Goal</h2>
-
-<p>Build the direct-booking one-shot lane as ruled in <b>079</b>:</p>
-<p>a <b>Cloud Scheduler job hitting a deterministic service</b> (event-gate/fbs-monitor style, or</p>
-<p>its own small service in <code>dc-canon/services/</code>), every 30 minutes, 24/7. No LLM in the hot</p>
-<p>path. The Host&#x27;s orbit owns it conceptually (one owner for the booking lifecycle), but the</p>
-<p>executor is code.</p>
-
-<h2>The chain, per pass</h2>
-
-<ol>
-<li>1. <b>Diff the Skedda board</b> (skedda-mcp reads, not mail — mail is pure echo; the</li>
-</ol>
-<p>read/unread bit is a corrupted signal and is not consumed). Track processed bookings in</p>
-<p>the service&#x27;s own state, not Gmail.</p>
-<ol>
-<li>2. <b>Skip-class test</b> — deterministic: AAP/subscription tags, holder = Dance Annex /</li>
-</ol>
-<p>info@danceannex.ca, staff-made, FBS/monitored. NOTE from 078: only 2 of 10 holders</p>
-<p>carried tags — the skip test must fall back to holder identity, not assume tags exist.</p>
-<ol>
-<li>3. <b>Artist record</b> — exact-match on email first. Fuzzy name-only match ⇒ <b>residue row</b>,</li>
-</ol>
-<p>never auto-merge (the &quot;Julie Marouze [Gmail]&quot; duplicate is the cautionary case).</p>
-<ol>
-<li>4. <b>Alarm access</b> — the 079 ladder via <code>POST /provision</code> on alarm-mcp: (a) match ⇒ pass;</li>
-</ol>
-<p>(b) dormant code on file ⇒ re-provision it; (c) no code ⇒ mint + write back; (d)</p>
-<p>ambiguous ⇒ residue row. Reuse codeless shells before creating (Hanano rule). This is</p>
-<p>the SINGLE WRITER for provisioning — nothing else provisions unattended.</p>
-<ol>
-<li>5. <b>Phone contact</b> — create-if-missing on phone.com.</li>
-<li>6. <b>Booking confirmation</b> — strictly templated, queued per the message-queue rules</li>
-</ol>
-<p>(Pending Review unless the class is an authorized auto-send).</p>
-<ol>
-<li>7. <b>FBS board row at T−2 days</b> — due-dated step: created on the pass where the booking</li>
-</ol>
-<p>crosses 2-days-out (Junyan&#x27;s existing convention; keeps the Host&#x27;s board clean).</p>
-<ol>
-<li>8. <b>Tier messages — NOT this job&#x27;s work.</b> The 04:00 Host batch keeps queueing HTA/AVA/EOB</li>
-</ol>
-<p>day-of/day-before. This job guarantees the prerequisites exist when the Host looks.</p>
-
-<p>Every judgment case raises an <b>Actions to Perform row</b> (deterministic escalation); the</p>
-<p>Host/human reads the residue. Every pass reports its own result including zero — silence</p>
-<p>past a window is a defect (001&#x27;s <code>produces</code>/<code>verify_within</code>).</p>
-
-<h2>Constraints carried from 079</h2>
-
-<ul>
-<li>- <b>Completeness-test semantics</b>: each pass asks &quot;what should exist by now and doesn&#x27;t&quot;,</li>
-</ul>
-<p>idempotently — a step can come due later and is done on the pass where it comes due.</p>
-<ul>
-<li>- <b>Single-writer per surface</b>: this job is the only unattended provisioner and the only</li>
-</ul>
-<p>unattended creator of FBS rows. The Codex collision is the incident of record.</p>
-<ul>
-<li>- Seam with the <b>last-minute flow</b> (today/tomorrow trigger, RUNTIMES.md): that flow is a</li>
-</ul>
-<p>prototype of this chain — decide whether this job absorbs it or defers to it inside the</p>
-<p>T−1 window. Do not run both against the same booking.</p>
-<ul>
-<li>- Kill switch env var, own its own 🚥 Run Monitor row, and a <code>RUNTIMES.md</code> entry on ship.</li>
-</ul>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- Service deployed + scheduled; a new direct booking is fully processed unattended within</li>
-</ul>
-<p>one pass, with residue rows for the judgment cases and a per-pass report.</p>
-<ul>
-<li>- Plumbing Map entry (<code>day-sheet/plumbing.html</code>) and <code>RUNTIMES.md</code> updated.</li>
-</ul>
-
-<h2>Reach — verified 2026-08-18, all three surfaces are plain HTTP (no MCP needed)</h2>
-
-<p>The question &quot;can a non-LLM job reach the alarm and phone connectors?&quot; has a better answer</p>
-<p>than yes: <b>it does not use the MCP connectors at all.</b> MCP is the <i>agent&#x27;s</i> transport.</p>
-<p>event-gate — a deterministic service with no LLM — already calls every surface this job</p>
-<p>needs directly, so the pattern is proven in production, not hypothesised:</p>
-
-<p>| Surface | How code reaches it | Proven by |</p>
-<p>|---|---|---|</p>
-<p>| Alarm | <code>POST /provision</code>, <code>/panel-states</code> on alarm-mcp — plain HTTP routes beside the MCP server, <code>Authorization: Bearer $ALARM_PANEL_TOKEN</code> | <code>alarm_watch.py</code> reads <code>/panel-states</code> every minute |</p>
-<p>| Phone | phone.com <b>REST API directly</b> (<code>api.phone.com/v4/...</code>), <code>Bearer $PHONECOM_API_TOKEN</code> — the phonecom-mcp connector is bypassed entirely | <code>poller.py</code>, <code>actuator.py</code> |</p>
-<p>| Skedda | venue session cookie, <code>SKEDDA_COOKIE</code> or Secret Manager | <code>skedda_read.py</code> |</p>
-<p>| Notion | REST, <code>Bearer $NOTION_TOKEN</code> | <code>alarm_watch.py</code> row-raising |</p>
-
-<p><b><code>/provision</code> already implements most of the 079 access ladder in code</b> — this is the single</p>
-<p>biggest reason the deterministic ruling is cheap to build:</p>
-
-<ul>
-<li>- <code>verify_only: true</code> — preflight: does this person already have working access? Returns</li>
-</ul>
-<p>verdict/action without writing. This is step (a), and it is what stops a second user being</p>
-<p>created for someone already provisioned.</p>
-<ul>
-<li>- Explicit <code>code</code> param ⇒ step (b), re-provisioning a dormant code read from the Artist DB.</li>
-<li>- Omitted <code>code</code> ⇒ step (c): generates a 4-digit code, avoiding both collisions with codes</li>
-</ul>
-<p>that name already holds and trivially-guessable repeats.</p>
-<ul>
-<li>- <code>ambiguous</code> / <code>match_count &gt; 1</code> ⇒ a verdict the caller must escalate — step (d), the</li>
-</ul>
-<p>residue row.</p>
-<ul>
-<li>- Handles the grant-sync wait internally (12 × 5s), the trap that makes naive callers write</li>
-</ul>
-<p>a window that vanishes.</p>
-<ul>
-<li>- Windows are <b>retired for renters</b> (canon <code>doorman-access-lifecycle.md</code>): omit both bounds</li>
-</ul>
-<p>and the user is permanent-until-removed; the Doorman&#x27;s retirement sweep does the</p>
-<p>time-bounding. So this job writes NO windows — matching what was done by hand for Julie</p>
-<p>and Vicky.</p>
-
-<p><b>Gap to close in the build — RULED 2026-08-18 by Junyan: create new users freely; do NOT</p>
-<p>build shell-reuse.</b> Codeless shells are visible in the Alarm.com UI and he clears them by</p>
-<p>hand, so the litter itself is accepted. But the leftover shells are not merely cosmetic and</p>
-<p>the build must still handle them, in a different way:</p>
-
-<p><code>/provision</code> resolves a name via <code>_verdict_of</code>, which returns <b><code>ambiguous</code> whenever the name</p>
-<p>matches more than one record</b> — and a codeless shell IS such a match. That is the (d) branch,</p>
-<p>the residue row. Left unhandled, a single stale shell makes every later pass escalate a renter</p>
-<p>whose access is fine, and <code>check_access_covers</code> returns <code>manual_multiple</code>, which <b>blocks the</p>
-<p>HTA alarm-code gate</b> for that person. This is exactly what happened to Hanano I. (five shells)</p>
-<p>and Hannah Cho (three).</p>
-
-<p><b>So the required fix is IGNORE, not REUSE:</b> when resolving matches for a name, discard</p>
-<p>records with no effective code and <code>panels_covered == 0</code> before counting. A codeless shell</p>
-<p>opens no door, so it is not a second identity and must not make anyone ambiguous. Two records</p>
-<p>that BOTH carry working codes stay ambiguous — that is the real conflict (Sharon&#x27;s 8206/4547)</p>
-<p>and must still reach a human. Preferred home is <code>_verdict_of</code> inside <code>/provision</code>, so every</p>
-<p>caller — this job, the Doorman, the last-minute flow — gets it at once.</p>
-
-<p><b>Cleanup owner ruled 2026-08-18: the Doorman reports shells, a human deletes them.</b> The</p>
-<p>sweep job ignores shells so it is never blocked; the Doorman gains a duty to surface them so</p>
-<p>they do not accumulate invisibly. This is deliberately the same shape as its existing B(b3)</p>
-<p>retirement sweep — Human-confirmed gate, capped per pass, humans do the actual deleting</p>
-<p>(no delete tool exists on alarm-mcp, by design).</p>
-
-<p>Spec for that duty (a <b>Doorman prompt amendment</b>, in its own right — see below):</p>
-
-<ul>
-<li>- Sweep for users with no effective code AND <code>panels_covered == 0</code>.</li>
-<li>- Raise <b>ONE consolidated Access/PIN row per pass</b> listing them, not one row per shell.</li>
-</ul>
-<p>The Aug 16 hand-raised row is the format to copy: names + user ids + which id to KEEP.</p>
-<ul>
-<li>- Never include a user who holds a working code — that is a different, more urgent class.</li>
-<li>- Dedup against an open row from a previous pass; do not re-raise weekly.</li>
-</ul>
-
-<p>✅ <b>APPLIED 2026-08-18 — Doorman prompt v6.</b> Junyan approved in-session; the amendment shipped</p>
-<p>as <b>B(b5)</b> on <code>trig_01XyrVCbCrSbFfWjxo9FZtxN</code> by whole-prompt replace, verified by read-back</p>
-<p>((b5) present; A1–A6 and B(a)/(a2)/(b)/(b2)/(b3)/(b4)/(c) intact; cron <code>0 8,10 <i> </i> *</code>, enabled</p>
-<p>state and all four connectors untouched). <code>RUNTIMES.md</code> carries the v6 entry. Scoped not to</p>
-<p>overlap (b4): <code>code_mirror</code> judges the Artist DB and sees only people with an Artist row; (b5)</p>
-<p>judges the panel&#x27;s user list and sees everyone. First run: the 2026-08-18 morning pass.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">20</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">22</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -2653,6 +2491,58 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- A row closed against reality carries the verification quote, exactly as the tick would write it.</li>
 <li>- The walk surfaces the soonest-deadline row first.</li>
 </ul>
+</div></details></details></div><div class="job"><div class="jnum">#082</div><div class="jhead"><span class="emoji">🚀</span><h4>Switch the new booking program on — carefully, in that order</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>First put it on the server with its off-switch held down, so it cannot do anything yet</li><li>Then run one practice pass that only reads and reports, and check the list it produces against the real calendar</li><li>Only then set it running every half hour and let go of the off-switch</li><li>Give it its own row on the run monitor, so if it ever goes quiet we find out</li><li>Watch the first day for the thing tests cannot prove: that the notes it leaves Junyan actually read like something a person can act on</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Ship the booking sweep — deploy, dry-run against the live board, then schedule it</b></p><h2>Question</h2>
+
+<p><b>081</b> built the lane and left it unshipped on purpose: it writes</p>
+<p>to Alarm.com, and flipping on a production trigger is Junyan&#x27;s call, never an agent&#x27;s. This</p>
+<p>ticket is that flip, done in the order that makes a bad pass visible before it is an unattended</p>
+<p>one.</p>
+
+<ol>
+<li>1. Deploy the event-gate revision carrying <code>booking_sweep.py</code> (the route is inert until then).</li>
+</ol>
+<p>Set <code>BOOKING_SWEEP_DISABLED=1</code> in the same deploy so the first live revision cannot act.</p>
+<ol>
+<li>2. Confirm the env it needs is present on the revision: <code>ALARM_PANEL_BASE</code>/<code>ALARM_PANEL_TOKEN</code></li>
+</ol>
+<p>(already there for the alarm watch), <code>SKEDDA_COOKIE</code> or the Secret Manager fallback,</p>
+<p><code>NOTION_TOKEN</code>.</p>
+<ol>
+<li>3. <code>POST /booking-sweep/&lt;token&gt;?dry_run=true</code> by hand. Read the <code>acted</code> list against the real</li>
+</ol>
+<p>Skedda board: the skip classes must be the staff bookings and nothing else, the <code>would-</code></p>
+<p>steps must name bookings that genuinely lack their prerequisites, and no booking starting</p>
+<p>today or tomorrow may show anything but <code>deferred</code>.</p>
+<ol>
+<li>4. Only then: Cloud Scheduler job every 30 min, 24/7, and flip <code>BOOKING_SWEEP_DISABLED</code> off.</li>
+<li>5. Give it its own 🚥 Run Monitor row (silence past a window is a defect — 001&#x27;s</li>
+</ol>
+<p><code>produces</code>/<code>verify_within</code>), a <code>RUNTIMES.md</code> entry, and a <code>day-sheet/plumbing.html</code> entry</p>
+<p>recording that a second writer now exists on the FBS board and on Alarm.com provisioning.</p>
+
+<p>Watch the first day for the one thing tests cannot prove: that the residue rows read as</p>
+<p>actionable to a human, and that their volume is a handful, not a wall.</p>
+</div></details></details></div><div class="job"><div class="jnum">#083</div><div class="jhead"><span class="emoji">👻</span><h4>Empty leftover door-code entries make the system think it has the wrong person</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When someone gets a door code, an empty placeholder entry is sometimes left behind under their name</li><li>The system then sees two entries with one name and stops, saying &#x27;I cannot tell which of these is you&#x27;</li><li>That blocks real renters whose code is perfectly fine — it happened to Hanano (five leftovers) and Hannah (three)</li><li>The fix: ignore anything with no code on it. An empty entry opens no door, so it is not a second person</li><li>Two entries that BOTH open doors still stop the system — that one is a genuine mix-up and a human should look</li><li>Fix it in one place so every robot that uses door codes gets it at once</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Make /provision ignore codeless shells instead of calling them ambiguous</b></p><h2>Question</h2>
+
+<p>Ruled 2026-08-18 (in <b>081</b>, where it was specified but not built —</p>
+<p>it is an alarm-mcp change, not a change to any one caller).</p>
+
+<p><code>/provision</code> resolves a name through <code>_verdict_of</code>, which returns <b><code>ambiguous</code> whenever more</p>
+<p>than one record matches</b> — and a codeless shell IS such a match. Left alone, one stale shell</p>
+<p>makes every later pass escalate a renter whose access is fine, and <code>check_access_covers</code> returns</p>
+<p><code>manual_multiple</code>, which <b>blocks the HTA alarm-code gate</b> for that person. Hanano I. (five</p>
+<p>shells) and Hannah Cho (three) are the cases of record.</p>
+
+<p>The fix is <b>ignore, not reuse</b> (Junyan ruled shell-reuse explicitly out — he clears the litter</p>
+<p>by hand, and the Doorman&#x27;s v6 (b5) duty now reports it): when counting matches for a name,</p>
+<p>discard records with no effective code and <code>panels_covered == 0</code>. A codeless shell opens no</p>
+<p>door, so it is not a second identity.</p>
+
+<p>Two records that BOTH carry working codes stay <code>ambiguous</code> — that is the real conflict</p>
+<p>(Sharon&#x27;s 8206/4547) and must still reach a human.</p>
+
+<p>Home it in <code>_verdict_of</code> inside <code>/provision</code>, so every caller — the booking sweep, the Doorman,</p>
+<p>the same-day lane — gets it at once.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -3354,6 +3244,239 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Noted, not actioned: <code>Diana [Junyan Phone]</code> and <code>Diana L. [Skedda]</code> are merge candidates under</li>
 </ul>
 <p>077&#x27;s identity-is-name ruling.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#081</span><span class="emoji">🤖</span><span class="done-title">The program that handles new bookings by itself — written and tested, waiting on Junyan to switch it on</span><span class="done-date">2026-08-18</span></summary><div class="done-body"><ul class="plain-bullets"><li>It is a plain program, not an AI. It reads the booking calendar itself — not the emails, because we learned the emails&#x27; &#x27;read&#x27; mark lies</li><li>For each new booking it sets up the renter&#x27;s profile, their door code, and a confirmation held for someone to read before it goes out</li><li>It never remembers which bookings it already did. Every half hour it just asks &#x27;what is missing?&#x27; and fills the gaps — so it cannot lose its place, and nothing gets done twice</li><li>Bookings happening today or tomorrow are left completely alone: a different robot already owns those and is faster. If that one fails, this one writes it on the list rather than barging in</li><li>Anything needing real judgment — two people with the same name, a door code that does not match our records — it refuses to guess and writes it on Junyan&#x27;s list</li><li>The board card still goes up 2 days before the booking, same as Junyan does it now</li><li>We taught it to say &#x27;I could not read the calendar&#x27; out loud, because a broken read used to look exactly like a quiet day</li><li>NOT switched on yet, on purpose — it writes real door codes, so Junyan turns it on himself after watching a practice run</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the deterministic booking-sweep job — code chain, Actions rows for the judgment residue</b></p><h2>Goal</h2>
+
+<p>Build the direct-booking one-shot lane as ruled in <b>079</b>:</p>
+<p>a <b>Cloud Scheduler job hitting a deterministic service</b> (event-gate/fbs-monitor style, or</p>
+<p>its own small service in <code>dc-canon/services/</code>), every 30 minutes, 24/7. No LLM in the hot</p>
+<p>path. The Host&#x27;s orbit owns it conceptually (one owner for the booking lifecycle), but the</p>
+<p>executor is code.</p>
+
+<h2>The chain, per pass</h2>
+
+<ol>
+<li>1. <b>Diff the Skedda board</b> (skedda-mcp reads, not mail — mail is pure echo; the</li>
+</ol>
+<p>read/unread bit is a corrupted signal and is not consumed). Track processed bookings in</p>
+<p>the service&#x27;s own state, not Gmail.</p>
+<ol>
+<li>2. <b>Skip-class test</b> — deterministic: AAP/subscription tags, holder = Dance Annex /</li>
+</ol>
+<p>info@danceannex.ca, staff-made, FBS/monitored. NOTE from 078: only 2 of 10 holders</p>
+<p>carried tags — the skip test must fall back to holder identity, not assume tags exist.</p>
+<ol>
+<li>3. <b>Artist record</b> — exact-match on email first. Fuzzy name-only match ⇒ <b>residue row</b>,</li>
+</ol>
+<p>never auto-merge (the &quot;Julie Marouze [Gmail]&quot; duplicate is the cautionary case).</p>
+<ol>
+<li>4. <b>Alarm access</b> — the 079 ladder via <code>POST /provision</code> on alarm-mcp: (a) match ⇒ pass;</li>
+</ol>
+<p>(b) dormant code on file ⇒ re-provision it; (c) no code ⇒ mint + write back; (d)</p>
+<p>ambiguous ⇒ residue row. Reuse codeless shells before creating (Hanano rule). This is</p>
+<p>the SINGLE WRITER for provisioning — nothing else provisions unattended.</p>
+<ol>
+<li>5. <b>Phone contact</b> — create-if-missing on phone.com.</li>
+<li>6. <b>Booking confirmation</b> — strictly templated, queued per the message-queue rules</li>
+</ol>
+<p>(Pending Review unless the class is an authorized auto-send).</p>
+<ol>
+<li>7. <b>FBS board row at T−2 days</b> — due-dated step: created on the pass where the booking</li>
+</ol>
+<p>crosses 2-days-out (Junyan&#x27;s existing convention; keeps the Host&#x27;s board clean).</p>
+<ol>
+<li>8. <b>Tier messages — NOT this job&#x27;s work.</b> The 04:00 Host batch keeps queueing HTA/AVA/EOB</li>
+</ol>
+<p>day-of/day-before. This job guarantees the prerequisites exist when the Host looks.</p>
+
+<p>Every judgment case raises an <b>Actions to Perform row</b> (deterministic escalation); the</p>
+<p>Host/human reads the residue. Every pass reports its own result including zero — silence</p>
+<p>past a window is a defect (001&#x27;s <code>produces</code>/<code>verify_within</code>).</p>
+
+<h2>Constraints carried from 079</h2>
+
+<ul>
+<li>- <b>Completeness-test semantics</b>: each pass asks &quot;what should exist by now and doesn&#x27;t&quot;,</li>
+</ul>
+<p>idempotently — a step can come due later and is done on the pass where it comes due.</p>
+<ul>
+<li>- <b>Single-writer per surface</b>: this job is the only unattended provisioner and the only</li>
+</ul>
+<p>unattended creator of FBS rows. The Codex collision is the incident of record.</p>
+<ul>
+<li>- Seam with the <b>last-minute flow</b> (today/tomorrow trigger, RUNTIMES.md): that flow is a</li>
+</ul>
+<p>prototype of this chain — decide whether this job absorbs it or defers to it inside the</p>
+<p>T−1 window. Do not run both against the same booking.</p>
+<ul>
+<li>- Kill switch env var, own its own 🚥 Run Monitor row, and a <code>RUNTIMES.md</code> entry on ship.</li>
+</ul>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Service deployed + scheduled; a new direct booking is fully processed unattended within</li>
+</ul>
+<p>one pass, with residue rows for the judgment cases and a per-pass report.</p>
+<ul>
+<li>- Plumbing Map entry (<code>day-sheet/plumbing.html</code>) and <code>RUNTIMES.md</code> updated.</li>
+</ul>
+
+<h2>Reach — verified 2026-08-18, all three surfaces are plain HTTP (no MCP needed)</h2>
+
+<p>The question &quot;can a non-LLM job reach the alarm and phone connectors?&quot; has a better answer</p>
+<p>than yes: <b>it does not use the MCP connectors at all.</b> MCP is the <i>agent&#x27;s</i> transport.</p>
+<p>event-gate — a deterministic service with no LLM — already calls every surface this job</p>
+<p>needs directly, so the pattern is proven in production, not hypothesised:</p>
+
+<p>| Surface | How code reaches it | Proven by |</p>
+<p>|---|---|---|</p>
+<p>| Alarm | <code>POST /provision</code>, <code>/panel-states</code> on alarm-mcp — plain HTTP routes beside the MCP server, <code>Authorization: Bearer $ALARM_PANEL_TOKEN</code> | <code>alarm_watch.py</code> reads <code>/panel-states</code> every minute |</p>
+<p>| Phone | phone.com <b>REST API directly</b> (<code>api.phone.com/v4/...</code>), <code>Bearer $PHONECOM_API_TOKEN</code> — the phonecom-mcp connector is bypassed entirely | <code>poller.py</code>, <code>actuator.py</code> |</p>
+<p>| Skedda | venue session cookie, <code>SKEDDA_COOKIE</code> or Secret Manager | <code>skedda_read.py</code> |</p>
+<p>| Notion | REST, <code>Bearer $NOTION_TOKEN</code> | <code>alarm_watch.py</code> row-raising |</p>
+
+<p><b><code>/provision</code> already implements most of the 079 access ladder in code</b> — this is the single</p>
+<p>biggest reason the deterministic ruling is cheap to build:</p>
+
+<ul>
+<li>- <code>verify_only: true</code> — preflight: does this person already have working access? Returns</li>
+</ul>
+<p>verdict/action without writing. This is step (a), and it is what stops a second user being</p>
+<p>created for someone already provisioned.</p>
+<ul>
+<li>- Explicit <code>code</code> param ⇒ step (b), re-provisioning a dormant code read from the Artist DB.</li>
+<li>- Omitted <code>code</code> ⇒ step (c): generates a 4-digit code, avoiding both collisions with codes</li>
+</ul>
+<p>that name already holds and trivially-guessable repeats.</p>
+<ul>
+<li>- <code>ambiguous</code> / <code>match_count &gt; 1</code> ⇒ a verdict the caller must escalate — step (d), the</li>
+</ul>
+<p>residue row.</p>
+<ul>
+<li>- Handles the grant-sync wait internally (12 × 5s), the trap that makes naive callers write</li>
+</ul>
+<p>a window that vanishes.</p>
+<ul>
+<li>- Windows are <b>retired for renters</b> (canon <code>doorman-access-lifecycle.md</code>): omit both bounds</li>
+</ul>
+<p>and the user is permanent-until-removed; the Doorman&#x27;s retirement sweep does the</p>
+<p>time-bounding. So this job writes NO windows — matching what was done by hand for Julie</p>
+<p>and Vicky.</p>
+
+<p><b>Gap to close in the build — RULED 2026-08-18 by Junyan: create new users freely; do NOT</p>
+<p>build shell-reuse.</b> Codeless shells are visible in the Alarm.com UI and he clears them by</p>
+<p>hand, so the litter itself is accepted. But the leftover shells are not merely cosmetic and</p>
+<p>the build must still handle them, in a different way:</p>
+
+<p><code>/provision</code> resolves a name via <code>_verdict_of</code>, which returns <b><code>ambiguous</code> whenever the name</p>
+<p>matches more than one record</b> — and a codeless shell IS such a match. That is the (d) branch,</p>
+<p>the residue row. Left unhandled, a single stale shell makes every later pass escalate a renter</p>
+<p>whose access is fine, and <code>check_access_covers</code> returns <code>manual_multiple</code>, which <b>blocks the</p>
+<p>HTA alarm-code gate</b> for that person. This is exactly what happened to Hanano I. (five shells)</p>
+<p>and Hannah Cho (three).</p>
+
+<p><b>So the required fix is IGNORE, not REUSE:</b> when resolving matches for a name, discard</p>
+<p>records with no effective code and <code>panels_covered == 0</code> before counting. A codeless shell</p>
+<p>opens no door, so it is not a second identity and must not make anyone ambiguous. Two records</p>
+<p>that BOTH carry working codes stay ambiguous — that is the real conflict (Sharon&#x27;s 8206/4547)</p>
+<p>and must still reach a human. Preferred home is <code>_verdict_of</code> inside <code>/provision</code>, so every</p>
+<p>caller — this job, the Doorman, the last-minute flow — gets it at once.</p>
+
+<p><b>Cleanup owner ruled 2026-08-18: the Doorman reports shells, a human deletes them.</b> The</p>
+<p>sweep job ignores shells so it is never blocked; the Doorman gains a duty to surface them so</p>
+<p>they do not accumulate invisibly. This is deliberately the same shape as its existing B(b3)</p>
+<p>retirement sweep — Human-confirmed gate, capped per pass, humans do the actual deleting</p>
+<p>(no delete tool exists on alarm-mcp, by design).</p>
+
+<p>Spec for that duty (a <b>Doorman prompt amendment</b>, in its own right — see below):</p>
+
+<ul>
+<li>- Sweep for users with no effective code AND <code>panels_covered == 0</code>.</li>
+<li>- Raise <b>ONE consolidated Access/PIN row per pass</b> listing them, not one row per shell.</li>
+</ul>
+<p>The Aug 16 hand-raised row is the format to copy: names + user ids + which id to KEEP.</p>
+<ul>
+<li>- Never include a user who holds a working code — that is a different, more urgent class.</li>
+<li>- Dedup against an open row from a previous pass; do not re-raise weekly.</li>
+</ul>
+
+<p>✅ <b>APPLIED 2026-08-18 — Doorman prompt v6.</b> Junyan approved in-session; the amendment shipped</p>
+<p>as <b>B(b5)</b> on <code>trig_01XyrVCbCrSbFfWjxo9FZtxN</code> by whole-prompt replace, verified by read-back</p>
+<p>((b5) present; A1–A6 and B(a)/(a2)/(b)/(b2)/(b3)/(b4)/(c) intact; cron <code>0 8,10 <i> </i> *</code>, enabled</p>
+<p>state and all four connectors untouched). <code>RUNTIMES.md</code> carries the v6 entry. Scoped not to</p>
+<p>overlap (b4): <code>code_mirror</code> judges the Artist DB and sees only people with an Artist row; (b5)</p>
+<p>judges the panel&#x27;s user list and sees everyone. First run: the 2026-08-18 morning pass.</p>
+
+<p>---</p>
+
+<h2>Resolution — 2026-08-18</h2>
+
+<p><b>Built.</b> The lane is <code>dc-canon/services/event-gate/booking_sweep.py</code>, wired at</p>
+<p><code>POST /booking-sweep/&lt;GATE_PATH_TOKEN&gt;</code> (<code>?dry_run=true</code> reads and reports without writing),</p>
+<p>with <code>test_booking_sweep.py</code> — 26 tests, and the service&#x27;s full suite green at 366. It rides</p>
+<p>event-gate rather than a new service: every surface the chain needs (alarm <code>/provision</code>,</p>
+<p>Skedda cookie read, Notion REST) is already wired there, and a second deployment would have</p>
+<p>duplicated the credentials for nothing.</p>
+
+<p><b>Three design rulings made in the build:</b></p>
+
+<ol>
+<li>1. <b>No processed-set — completeness by derivation.</b> This ticket&#x27;s step 1 asked the service</li>
+</ol>
+<p>to track which bookings it had handled. It does not. Every prerequisite is checked against</p>
+<p>the surface that owns it (Artist DB, panel, FBS board, queue), so the pass is idempotent,</p>
+<p>survives a cold start with no state to lose, and does the T−2 step on the pass where it</p>
+<p>comes due. This is the ticket&#x27;s own completeness-test constraint taken literally; the</p>
+<p>state-tracking line is superseded. A processed-set has to be right forever, a derived</p>
+<p>check is right on every pass by construction.</p>
+
+<ol>
+<li>2. <b>The same-day seam is DEFERENCE, not absorption.</b> <code>send-engine/SameDay.gs</code> already owns</li>
+</ol>
+<p>bookings starting today or tomorrow, mail-triggered within a minute — faster than a 30-min</p>
+<p>sweep can ever be, and it holds the only authorised unattended code auto-send. So the sweep</p>
+<p><b>writes nothing</b> for a booking inside that window. It still checks it, and raises a</p>
+<p><code>:sameday-gap</code> residue row when access is missing, so a SameDay outage reaches a human</p>
+<p>rather than being silently absorbed by a second writer. Single-writer-per-surface holds;</p>
+<p>the Codex collision does not repeat.</p>
+
+<ol>
+<li>3. <b>The confirmation is held, not sent.</b> No authorised auto-send class covers a T−2</li>
+</ol>
+<p>confirmation, so the queue row lands at <code>Pending Review</code>. The sweep provisions access but</p>
+<p>never releases a code unattended — that stays the same-day lane&#x27;s carve-out alone.</p>
+
+<p><b>Refusals pinned by test:</b> a name-only artist match is <code>ambiguous</code> and never merged (the</p>
+<p>Julie Marouze case); a panel/Artist-page code mismatch refuses rather than picking a side</p>
+<p>(Desiree Joy); two coded users matching one name stop the lane (Sharon); a code that opens no</p>
+<p>panel is a failure, not a success; a board row is matched on studio+date+start so the Host&#x27;s</p>
+<p>Calendar-keyed rows are found rather than duplicated (Manuel Hernandez); an open residue row is</p>
+<p>never re-raised; a failed board read files a <code>sweep-blind</code> Run Error and never reads as an</p>
+<p>empty calendar.</p>
+
+<p><b>Shells:</b> nothing extra was needed here — the ignore-not-reuse fix belongs in <code>/provision</code>&#x27;s</p>
+<p><code>_verdict_of</code> (still open, see below), and until it lands a stale shell will make this lane</p>
+<p>escalate rather than misfire. That is the safe direction.</p>
+
+<h2>NOT DONE — the ship half, and it needs Junyan</h2>
+
+<p>The code is written, tested and documented; <b>nothing is deployed or scheduled</b>, and that is</p>
+<p>deliberate: this lane writes to Alarm.com, and enabling a production trigger is not an agent&#x27;s</p>
+<p>call. What remains:</p>
+
+<ol>
+<li>1. Deploy the event-gate revision (the route is inert until then).</li>
+<li>2. Set <code>BOOKING_SWEEP_DISABLED=1</code>, run <code>?dry_run=true</code> against the live board, read the</li>
+</ol>
+<p>reported <code>acted</code> list.</p>
+<ol>
+<li>3. Create the Cloud Scheduler job, every 30 min, and flip the kill switch off.</li>
+<li>4. Its own 🚥 Run Monitor row.</li>
+</ol>
+
+<p>Also still open and carried out of this ticket: the <b><code>_verdict_of</code> shell-ignore fix</b> inside</p>
+<p><code>/provision</code> (specified above, ruled 2026-08-18) — it is an alarm-mcp change, not a change to</p>
+<p>this lane, and every caller wants it.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#079</span><span class="emoji">🎫</span><span class="done-title">Decide who handles new-booking emails from now on</span><span class="done-date">2026-08-17</span></summary><div class="done-body"><ul class="plain-bullets"><li>Simple bookings — someone books a studio directly — can be fully handled in one go, no back-and-forth needed</li><li>Right now nobody owns them, which is why 37 piled up unread</li><li>The question: should the new mail-sorting system handle these, or a separate helper, or should we skip the email entirely and read the booking calendar directly?</li><li>Some renters get skipped on purpose: members with standing arrangements, our own bookings, and bookings already covered by the daily message pipeline</li><li>The rule going forward: an email marked &#x27;read&#x27; means &#x27;handled&#x27; — never just swept under the rug</li><li>This ticket decides the shape; building it comes after</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Design the direct-booking one-shot lane — who processes Skedda notifications, parallel to the loop</b></p><h2>Question</h2>
 
 <p>Direct bookings — Skedda self-bookings, platform instant books, booking-request accepts — are</p>
@@ -7564,5 +7687,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-18 07:30 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-18 07:35 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
