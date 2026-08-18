@@ -642,6 +642,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     </details>
     </li>
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-18 · 15:00Z</span>
+      <h3>phone.com token rotated; phone config de-duplicated into shared secrets; the alert path finally proven<span class="kind">CHANGE</span></h3></summary>
+      <p><strong>Token rotation complete.</strong> The old token had reached a chat transcript and sat as a plaintext env var on <code>event-gate</code> since 2026-07-31. New version added to <code>phonecom-api-token</code> (Junyan), all three consumers (<code>alarm-mcp</code>, <code>phonecom-mcp</code>, <code>event-gate</code>) redeployed — <em>required</em>, since Cloud Run resolves <code>latest</code> only at instance start — and proven by two real sends. Old version: disable in Secret Manager, then revoke in the phone.com console (the revoke is what actually matters; the string should be treated as compromised, not merely superseded).</p>
+      <p><strong>Drift killed at the config layer.</strong> Junyan's ruling: alarm, phone and skedda MCPs each own their separate domain. A fleet sweep found the on-call number, sending number and account id copy-pasted as literals across <code>alarm-mcp</code> and <code>event-gate</code> — change your phone number, update one service, and the other texts a dead number <em>silently</em>. All three values now live once, in Secret Manager (<code>oncall-phone</code>, <code>phonecom-from</code>, <code>phonecom-account-id</code>, byte-verified no trailing newlines), referenced by both services. <code>skedda-mcp</code> was checked and is clean; <code>phonecom-mcp</code> carries its own defaults in its own domain.</p>
+      <p><strong>The alarm keeps its direct SMS path deliberately.</strong> It is the alert that fires when things are going wrong; routing it through phonecom-mcp would add a hop that can be down at exactly the wrong moment. The duplication that mattered was the config, not the ~25 lines of send code.</p>
+      <p><strong>New: <code>POST /escalate-test</code></strong> (bearer-guarded) fires the watchdog's own <code>send_sms</code> on demand. First run returned <code>{"sent":true,"status":201}</code> — the low-battery alert path is now proven end-to-end, on the new token, through the shared config. Until today it could only be tested by a panel battery actually dying.</p>
+    </details>
+    </li>
+
     <li class="entry alert">
       <details>
       <summary><span class="when">2026-08-18 · 14:00Z</span>
