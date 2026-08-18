@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-18 07:35 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-18 09:11 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">21</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">43</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">44</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -971,7 +971,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
 <p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">22</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">21</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1912,54 +1912,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Standing lesson applies (<b>035</b>):</b> a retirement is not done until</p>
 <p>every step of the retired job names its new owner — and naming an owner is not verifying the owner</p>
 <p>acts. Each lane reports its own result including zero, and files a <code>Run Error</code> row if it cannot run.</p>
-</div></details></details></div><div class="job"><div class="jnum">#058</div><div class="jhead"><span class="emoji">🔑</span><h4>Find a way for the robot to set door codes itself</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Right now only a person can make a code, so every code request waits on a human</li><li>Junyan&#x27;s view: making a code is low risk — a renter stuck outside is the real danger</li><li>This already bit us: Vicky couldn&#x27;t get into 509A even though the desk knew all day</li><li>The backup plan today is a master code that opens everything — we&#x27;d rather not need it</li><li>First step is finding out what the alarm company actually allows</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Find a write path for Alarm.com codes — a lockout is worse than the write risk</b></p><h2>Question</h2>
-
-<p>Graduated from <b>018</b>. PIN generation is human-only across every code SOP</p>
-<p>because <code>alarm-mcp</code> is read-only by design, which makes every access-code issue park on a staff</p>
-<p>gate. Junyan named the risk asymmetry plainly: *&quot;Alarm.com does not have a write API, but I want to</p>
-<p>find a solution around this as it&#x27;s not a high risk to write in the code. It&#x27;s high risk if someone</p>
-<p>is not able to get in.&quot;*</p>
-
-<p>The Vicky Yeung lockout (<b>035</b>) is the standing evidence: detection</p>
-<p>worked, and a renter still could not get in. <b>042</b>&#x27;s rung 4 —</p>
-<p>sending the Alarm.com Emergency Code — exists only because the safer per-renter, time-boxed user is</p>
-<p>impossible without a write path. <b>That code is a master key</b> (<code>All locations / At All Times /</p>
-<p>Existing + Future</code>), so a real write path is also the way to stop reaching for it.</p>
-
-<p>Investigate and report:</p>
-<ul>
-<li>- what Alarm.com actually exposes — documented API, partner/dealer API, or nothing</li>
-<li>- browser automation from <code>event-gate</code> as the fallback (the Codex in-app-browser precedent from</li>
-</ul>
-<p><b>013b</b> was ruled too fragile for unattended fires — say whether a</p>
-<p>server-side headless path is different in kind, or the same trap)</p>
-<ul>
-<li>- whether a per-renter, time-boxed user can be created at all, which is the outcome that matters</li>
-<li>- credential handling and blast radius — write access to the alarm system is the most dangerous</li>
-</ul>
-<p>capability on the desk; propose the containment before proposing the path</p>
-
-<p>Findings land as a linked asset. The build, if there is one, is a separate ticket.</p>
-
-<p><b>Opening step added 2026-08-07 by <b>063</b> — do this FIRST.</b></p>
-<p>This ticket is built on two claims that have never been probed at the wire: *&quot;Alarm.com has no</p>
-<p>write API&quot;<i> and </i>&quot;the PIN is not retrievable — Alarm.com masks it&quot;*. Both were read off tool</p>
-<p>descriptions, and 063 found that class of claim false or overstated 6 times out of 7. Canon now</p>
-<p>marks both <b>UNTESTED</b>. Probe them against the MFA-gated wire with the Mac alarm CLI before</p>
-<p>designing any workaround — the workaround may not be needed, and if it is, the probe is what</p>
-<p>proves it. Record the evidence either way; that closes two rows of <b>065</b>.</p>
-
-<p>---</p>
-
-<p><b>Note added 2026-08-18 (from <b>078</b>, still open for its own session).</b></p>
-<p>The premise above is false and the answer already exists at the wire. <code>alarm-mcp</code> carries</p>
-<p><code>create_user</code>, <code>set_user_code</code>, <code>grant_user_access</code> and <code>set_user_access_window</code>, all <code>confirm=True</code>-</p>
-<p>guarded and read-back verified. On 2026-08-16 this session-lineage used them to provision real</p>
-<p>per-renter codes with <b>time-boxed windows</b> (Hannah Cho 08:00 Aug 16 → 00:00 Aug 17; Sharon</p>
-<p>Rupnarain 08:00 Aug 17 → 00:00 Aug 18), and to repair a codeless shell in place rather than mint a</p>
-<p>duplicate user. What is genuinely missing is a <b>delete</b> path — duplicate/inert users are hand-work</p>
-<p>in the Alarm.com UI. Whoever takes this ticket closes it on that evidence and fixes the canon claim</p>
-<p>(ticket 035) and the Limits register.</p>
 </div></details></details></div><div class="job"><div class="jnum">#060</div><div class="jhead"><span class="emoji">🏓</span><h4>Messages nobody claims — make &#x27;not my job&#x27; leave a mark</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Three renters this week wrote to us and no robot picked it up — Junyan caught each one himself</li><li>Each robot looked, decided &#x27;not mine&#x27;, and wrote nothing down — so it looked like nothing was wrong</li><li>The rule going in: every message must end somewhere — handled, given a ticket, or a robot&#x27;s name on the &#x27;no&#x27;</li><li>A separate watcher, outside all the robots, rings when a message sits too long with no answer</li><li>It names the person waiting — &#x27;Himanshi, booking question, 4 hours&#x27; — not just a number</li><li>We tried fixing this with more instructions three times; it failed three times — this time it&#x27;s a watcher, not a rule</li><li>First step: read the robot&#x27;s actual work logs to find out whether it even looks at new messages</li><li>Case four, same day: Francisco texted about lost AirPods at 1pm — the collector delivered it 5 hours late, then no robot picked it up either</li><li>Lesson for the watcher: count from when the renter sent it, not from when our copy arrived</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Ping-pong — every inbound message gets a recorded disposition, checked from outside the passes</b></p><h2>Question</h2>
 
 <p>From <b>HANDOFF-concierge-ping-pong.md</b> (2026-08-06,</p>
@@ -3127,7 +3079,113 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#078</span><span class="emoji">📥</span><span class="done-title">Cleared the unread booking emails — and found seven people who couldn&#x27;t get in</span><span class="done-date">2026-08-18</span></summary><div class="done-body"><ul class="plain-bullets"><li>Every time someone books a studio, the booking system emails us. 37 sat unread, so we went through all of them. Done — the label is empty now</li><li>36 were already handled. One was not: Diana booked her daughter&#x27;s birthday party and PAID — ten hours after we opened a note asking her for those exact details. Our system was about to text her asking for what she&#x27;d already given us. Fixed, and a proper confirmation is waiting for Junyan to approve</li><li>Then Junyan pointed at the bigger thing: the emails already marked &#x27;read&#x27; included bookings nobody ever handled. So &#x27;read&#x27; never meant &#x27;done&#x27; — it just meant somebody glanced at it</li><li>Chasing that down found seven renters with paid bookings and no working door code, one of them arriving that same afternoon</li><li>The cause: when a renter stops coming, their code is remembered but switched off. Nobody switches it back on when they book again. So we switched them back on — codes set and checked on all four door panels, doors set to open only during each person&#x27;s booking</li><li>One mess to note: the backup robot was doing the same job at the same time, so Sharon ended up with two working codes. Junyan picked which one stays; deleting the spare is a by-hand job</li><li>Everything this taught goes into the new helper: don&#x27;t trust the read mark, read the booking calendar itself — and only one thing may hand out codes</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Clear the 37-message Sales - Skedda backlog — process, record, mark read</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#058</span><span class="emoji">🔑</span><span class="done-title">Can we hand out door codes ourselves? Yes — we already can</span><span class="done-date">2026-08-18</span></summary><div class="done-body"><ul class="plain-bullets"><li>The old belief: the alarm system only lets us LOOK, never change anything, so every door-code problem had to wait for a person</li><li>That was never true. We can create a person, give them a code, and switch it on across all four door panels — and every change is double-checked afterwards</li><li>Better still, we can set the code to work only during that person&#x27;s booking, instead of handing out the master code that opens everything, always</li><li>Checked again today: Hannah, Sharon and Hanano all have working codes on all four panels</li><li>The one thing we genuinely cannot do is DELETE someone. That stays a by-hand job in the Alarm.com website</li><li>So the trick is to never make a spare person in the first place — reuse an empty one that&#x27;s already there</li><li>The old wrong note has been corrected where the robots read it, so nobody parks a locked-out renter on this again</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Find a write path for Alarm.com codes — a lockout is worse than the write risk</b></p><h2>Question</h2>
+
+<p>Graduated from <b>018</b>. PIN generation is human-only across every code SOP</p>
+<p>because <code>alarm-mcp</code> is read-only by design, which makes every access-code issue park on a staff</p>
+<p>gate. Junyan named the risk asymmetry plainly: *&quot;Alarm.com does not have a write API, but I want to</p>
+<p>find a solution around this as it&#x27;s not a high risk to write in the code. It&#x27;s high risk if someone</p>
+<p>is not able to get in.&quot;*</p>
+
+<p>The Vicky Yeung lockout (<b>035</b>) is the standing evidence: detection</p>
+<p>worked, and a renter still could not get in. <b>042</b>&#x27;s rung 4 —</p>
+<p>sending the Alarm.com Emergency Code — exists only because the safer per-renter, time-boxed user is</p>
+<p>impossible without a write path. <b>That code is a master key</b> (<code>All locations / At All Times /</p>
+<p>Existing + Future</code>), so a real write path is also the way to stop reaching for it.</p>
+
+<p>Investigate and report:</p>
+<ul>
+<li>- what Alarm.com actually exposes — documented API, partner/dealer API, or nothing</li>
+<li>- browser automation from <code>event-gate</code> as the fallback (the Codex in-app-browser precedent from</li>
+</ul>
+<p><b>013b</b> was ruled too fragile for unattended fires — say whether a</p>
+<p>server-side headless path is different in kind, or the same trap)</p>
+<ul>
+<li>- whether a per-renter, time-boxed user can be created at all, which is the outcome that matters</li>
+<li>- credential handling and blast radius — write access to the alarm system is the most dangerous</li>
+</ul>
+<p>capability on the desk; propose the containment before proposing the path</p>
+
+<p>Findings land as a linked asset. The build, if there is one, is a separate ticket.</p>
+
+<p><b>Opening step added 2026-08-07 by <b>063</b> — do this FIRST.</b></p>
+<p>This ticket is built on two claims that have never been probed at the wire: *&quot;Alarm.com has no</p>
+<p>write API&quot;<i> and </i>&quot;the PIN is not retrievable — Alarm.com masks it&quot;*. Both were read off tool</p>
+<p>descriptions, and 063 found that class of claim false or overstated 6 times out of 7. Canon now</p>
+<p>marks both <b>UNTESTED</b>. Probe them against the MFA-gated wire with the Mac alarm CLI before</p>
+<p>designing any workaround — the workaround may not be needed, and if it is, the probe is what</p>
+<p>proves it. Record the evidence either way; that closes two rows of <b>065</b>.</p>
+
+<p>---</p>
+
+<h2>Answer</h2>
+
+<p><b>CLOSED 2026-08-18 (Junyan&#x27;s call: &quot;there is already a way to add the door codes&quot;).</b> No workaround</p>
+<p>was ever needed. Both founding claims are refuted, and the ticket&#x27;s real product is the <i>narrow</i> limit</p>
+<p>that survived.</p>
+
+<p><b>Probed at the wire this session (read-only, business alarm connector):</b></p>
+
+<ul>
+<li>- <code>find_user_codes(&quot;Rupnarain&quot;)</code> → user <code>247807666</code>, code <b>4547</b>, <code>panels_covered 4</code>,</li>
+</ul>
+<p><code>is_access_paused false</code>, <code>code_is_stale false</code>.</p>
+<ul>
+<li>- <code>find_user_codes(&quot;Hannah Cho&quot;)</code> → user <code>247807749</code>, code <b>6284</b>, 4 panels.</li>
+<li>- <code>find_user_codes(&quot;Hanano&quot;)</code> → user <code>247807667</code>, code <b>7318</b>, 4 panels.</li>
+</ul>
+
+<p><b>Answering the four investigation points:</b></p>
+
+<ol>
+<li>1. <b>What Alarm.com exposes</b> — <code>alarm-mcp</code> itself carries the writes: <code>create_user</code>, <code>set_user_code</code>,</li>
+</ol>
+<p><code>grant_user_access</code>, <code>set_user_access_window</code>, all <code>confirm=True</code>-gated and read-back verified.</p>
+<p>The premise <i>&quot;read-only by design&quot;</i> was wrong; canon corrected 2026-08-10 in</p>
+<p><b>the-loop.md</b>, Limits register corrected today.</p>
+<ol>
+<li>2. <b>Browser automation as fallback</b> — <b>moot, not attempted.</b> There is no fragile path to weigh</li>
+</ol>
+<p>because the guarded API path exists.</p>
+<ol>
+<li>3. <b>Can a per-renter, time-boxed user be created?</b> — <b>Yes, and it has been.</b> Hannah Cho: window</li>
+</ol>
+<p>08:00 Aug 16 → 00:00 Aug 17 for a 14:00–16:00 booking. Sharon Rupnarain: 08:00 Aug 17 → 00:00</p>
+<p>Aug 18 for 16:00–18:00. This is the outcome the ticket said mattered, so</p>
+<p><b>042</b>&#x27;s rung 4 no longer has to reach for the <b>master</b></p>
+<p>Emergency Code (<code>All locations / At All Times</code>) to solve an access gap.</p>
+<ol>
+<li>4. <b>Containment / blast radius</b> — already built into the surface: every write needs <code>confirm=True</code>,</li>
+</ol>
+<p>every write is verified by read-back, and the access window is scoped to one booking rather than</p>
+<p>permanent. The 2026-08-10 ruling classes the lane <code>Fast track</code> + <code>Auto-execute</code> with a</p>
+<p>notify-after SMS, and requires <b>two</b> verification reads (<code>find_user_codes</code> +</p>
+<p><code>check_access_covers</code>), re-read on a <b>later</b> pass — because an inline <code>pass</code> has been observed</p>
+<p>not to hold.</p>
+
+<p><b>The limit that is real, and now recorded:</b> there is <b>no delete</b>. Nothing removes a user or a</p>
+<p>code slot, so duplicates and inert shells are hand-work in the Alarm.com UI. The mitigation is at</p>
+<p>source — <b>re-use an existing codeless shell</b> (<code>set_user_code</code> + <code>grant_user_access</code>) instead of</p>
+<p>creating a new user, the pattern used on Hanano I. rather than minting her a sixth.</p>
+
+<p><b>Also verified this session: the duplicate cleanup is done.</b> Sharon now resolves to a <b>single</b></p>
+<p>user carrying her canonical <code>4547</code>; the second user <code>247807753</code> reads empty, and Hanano&#x27;s extra</p>
+<p>shells are gone. The hand-work row raised by <b>078</b> is satisfied on the</p>
+<p>panel — someone should mark it Processed against these reads.</p>
+
+<p><b>Canon fixed (the point of the ticket per 063&#x27;s pattern):</b></p>
+
+<ul>
+<li>- Limits register on <b>CAPABILITIES</b> — <i>&quot;alarm-mcp has no write tool&quot;</i> and *&quot;Alarm.com itself has no</li>
+</ul>
+<p>write API&quot;* both restated as <b>REFUTED</b> with today&#x27;s method; a new <b>confirmed</b> row added for the</p>
+<p>missing delete; the CAPABILITIES table row and the read-only prose in Notes updated.</p>
+<ul>
+<li>- Closes the alarm rows of <b>065</b>.</li>
+<li>- <b>035</b>&#x27;s body still carries the false claim; it is a <b>closed</b> ticket</li>
+</ul>
+<p>and stays as the historical record — the binding statement is the Limits register.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#078</span><span class="emoji">📥</span><span class="done-title">Cleared the unread booking emails — and found seven people who couldn&#x27;t get in</span><span class="done-date">2026-08-18</span></summary><div class="done-body"><ul class="plain-bullets"><li>Every time someone books a studio, the booking system emails us. 37 sat unread, so we went through all of them. Done — the label is empty now</li><li>36 were already handled. One was not: Diana booked her daughter&#x27;s birthday party and PAID — ten hours after we opened a note asking her for those exact details. Our system was about to text her asking for what she&#x27;d already given us. Fixed, and a proper confirmation is waiting for Junyan to approve</li><li>Then Junyan pointed at the bigger thing: the emails already marked &#x27;read&#x27; included bookings nobody ever handled. So &#x27;read&#x27; never meant &#x27;done&#x27; — it just meant somebody glanced at it</li><li>Chasing that down found seven renters with paid bookings and no working door code, one of them arriving that same afternoon</li><li>The cause: when a renter stops coming, their code is remembered but switched off. Nobody switches it back on when they book again. So we switched them back on — codes set and checked on all four door panels, doors set to open only during each person&#x27;s booking</li><li>One mess to note: the backup robot was doing the same job at the same time, so Sharon ended up with two working codes. Junyan picked which one stays; deleting the spare is a by-hand job</li><li>Everything this taught goes into the new helper: don&#x27;t trust the read mark, read the booking calendar itself — and only one thing may hand out codes</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Clear the 37-message Sales - Skedda backlog — process, record, mark read</b></p><h2>Question</h2>
 
 <p>(AFK task.) 37 unread <code>Sales - Skedda</code> notification emails sit in the business mailbox</p>
 <p>(thedanceannex@gmail.com) as of 2026-08-16 00:10Z. Composition, read live while charting:</p>
@@ -7687,5 +7745,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-18 07:35 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-18 09:11 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
