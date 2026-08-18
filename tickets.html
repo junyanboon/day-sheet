@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-17 23:09 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-17 23:15 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2653,11 +2653,24 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>time-bounding. So this job writes NO windows — matching what was done by hand for Julie</p>
 <p>and Vicky.</p>
 
-<p><b>Gap to close in the build (small, and it is the litter fix):</b> <code>/provision</code> always calls</p>
-<p><code>create_user</code>; it has no &quot;reuse an existing codeless shell&quot; path. That is exactly the</p>
-<p>Hanano-five-shells defect. Either add a shell-reuse branch to <code>/provision</code> (preferred — one</p>
-<p>writer, fixed at source for every caller) or have this job do</p>
-<p><code>set_user_code</code> + <code>grant_user_access</code> against a found shell before falling back to create.</p>
+<p><b>Gap to close in the build — RULED 2026-08-18 by Junyan: create new users freely; do NOT</p>
+<p>build shell-reuse.</b> Codeless shells are visible in the Alarm.com UI and he clears them by</p>
+<p>hand, so the litter itself is accepted. But the leftover shells are not merely cosmetic and</p>
+<p>the build must still handle them, in a different way:</p>
+
+<p><code>/provision</code> resolves a name via <code>_verdict_of</code>, which returns <b><code>ambiguous</code> whenever the name</p>
+<p>matches more than one record</b> — and a codeless shell IS such a match. That is the (d) branch,</p>
+<p>the residue row. Left unhandled, a single stale shell makes every later pass escalate a renter</p>
+<p>whose access is fine, and <code>check_access_covers</code> returns <code>manual_multiple</code>, which <b>blocks the</p>
+<p>HTA alarm-code gate</b> for that person. This is exactly what happened to Hanano I. (five shells)</p>
+<p>and Hannah Cho (three).</p>
+
+<p><b>So the required fix is IGNORE, not REUSE:</b> when resolving matches for a name, discard</p>
+<p>records with no effective code and <code>panels_covered == 0</code> before counting. A codeless shell</p>
+<p>opens no door, so it is not a second identity and must not make anyone ambiguous. Two records</p>
+<p>that BOTH carry working codes stay ambiguous — that is the real conflict (Sharon&#x27;s 8206/4547)</p>
+<p>and must still reach a human. Preferred home is <code>_verdict_of</code> inside <code>/provision</code>, so every</p>
+<p>caller — this job, the Doorman, the last-minute flow — gets it at once.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -7452,5 +7465,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-17 23:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-17 23:15 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
