@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-18 09:30 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-18 09:40 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3302,7 +3302,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Noted, not actioned: <code>Diana [Junyan Phone]</code> and <code>Diana L. [Skedda]</code> are merge candidates under</li>
 </ul>
 <p>077&#x27;s identity-is-name ruling.</p>
-</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#081</span><span class="emoji">🤖</span><span class="done-title">The program that handles new bookings by itself — written and tested, waiting on Junyan to switch it on</span><span class="done-date">2026-08-18</span></summary><div class="done-body"><ul class="plain-bullets"><li>It is a plain program, not an AI. It reads the booking calendar itself — not the emails, because we learned the emails&#x27; &#x27;read&#x27; mark lies</li><li>For each new booking it sets up the renter&#x27;s profile, their door code, and a confirmation held for someone to read before it goes out</li><li>It never remembers which bookings it already did. Every half hour it just asks &#x27;what is missing?&#x27; and fills the gaps — so it cannot lose its place, and nothing gets done twice</li><li>Bookings happening today or tomorrow are left completely alone: a different robot already owns those and is faster. If that one fails, this one writes it on the list rather than barging in</li><li>If our records and the door panel disagree about someone&#x27;s code, our records win — it puts our code back on the panel and checks the door actually opens. It never just trusts the paperwork and texts the code out; that is how someone got sent a code that did not work</li><li>If two door-panel entries share one name, it stops and tells you which one to keep (the one matching our records) and which to delete — it cannot pick between two people with the same name by itself</li><li>The board card still goes up 2 days before the booking, same as Junyan does it now</li><li>We taught it to say &#x27;I could not read the calendar&#x27; out loud, because a broken read used to look exactly like a quiet day</li><li>NOT switched on yet, on purpose — it writes real door codes, so Junyan turns it on himself after watching a practice run</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the deterministic booking-sweep job — code chain, Actions rows for the judgment residue</b></p><h2>Goal</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#081</span><span class="emoji">🤖</span><span class="done-title">The program that handles new bookings by itself — written and tested, waiting on Junyan to switch it on</span><span class="done-date">2026-08-18</span></summary><div class="done-body"><ul class="plain-bullets"><li>It is a plain program, not an AI. It reads the booking calendar itself — not the emails, because we learned the emails&#x27; &#x27;read&#x27; mark lies</li><li>Junyan&#x27;s rule: anyone who makes an instant booking gets the treatment. So it picks out real renter bookings by what the calendar itself says they are — not by guessing who is staff</li><li>We also found a trap while checking: if the program&#x27;s calendar login loses its powers, every booking looks blank and the old version would have quietly skipped them all. Now it shouts &#x27;I cannot see properly&#x27; instead</li><li>For each new booking it sets up the renter&#x27;s profile, their door code, and a confirmation held for someone to read before it goes out</li><li>It never remembers which bookings it already did. Every half hour it just asks &#x27;what is missing?&#x27; and fills the gaps — so it cannot lose its place, and nothing gets done twice</li><li>Bookings happening today or tomorrow are left completely alone: a different robot already owns those and is faster. If that one fails, this one writes it on the list rather than barging in</li><li>If our records and the door panel disagree about someone&#x27;s code, our records win — it puts our code back on the panel and checks the door actually opens. It never just trusts the paperwork and texts the code out; that is how someone got sent a code that did not work</li><li>If two door-panel entries share one name, it stops and tells you which one to keep (the one matching our records) and which to delete — it cannot pick between two people with the same name by itself</li><li>The board card still goes up 2 days before the booking, same as Junyan does it now</li><li>We taught it to say &#x27;I could not read the calendar&#x27; out loud, because a broken read used to look exactly like a quiet day</li><li>NOT switched on yet, on purpose — it writes real door codes, so Junyan turns it on himself after watching a practice run</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the deterministic booking-sweep job — code chain, Actions rows for the judgment residue</b></p><h2>Goal</h2>
 
 <p>Build the direct-booking one-shot lane as ruled in <b>079</b>:</p>
 <p>a <b>Cloud Scheduler job hitting a deterministic service</b> (event-gate/fbs-monitor style, or</p>
@@ -3558,6 +3558,36 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>unblocks it. Where the page carries no code, which user to keep stays a human&#x27;s call.</p>
 
 <p>Tests updated (27 now; service suite 367 green), README amended.</p>
+
+<h2>AMENDED 2026-08-18 (second) — positive selection, and a stripped-session guard</h2>
+
+<p>Junyan reviewed the skip logic and reframed it: <b>anyone who makes an instant booking gets</p>
+<p>processed</b> — select renter bookings positively, don&#x27;t blocklist staff. A raw-payload read</p>
+<p>of <code>/bookingslists</code> (live, this session) settled what that selection can stand on:</p>
+
+<ul>
+<li>- <b>Skedda records no &quot;created by&quot;.</b> The origin facts that DO exist: <code>type</code> (0 = internal</li>
+</ul>
+<p>venue use, 1 = a real user booking, 2 = unavailable block-out), <code>bookingRequestId</code></p>
+<p>(non-null = came through the request/approval flow), and the holder joined from the</p>
+<p><code>venueusers</code> list <b>with email and phone</b>. Selection now: type 1, non-recurring, holder</p>
+<p>present; staff markers and monitored/subscription titles still skip. A staff-made booking</p>
+<p><i>for a renter</i> is indistinguishable from the renter&#x27;s own and is processed — correctly, since</p>
+<p>that renter needs a code and confirmation the same. The fast-lane fallback ruled for the</p>
+<p>can&#x27;t-select case is therefore NOT needed.</p>
+<ul>
+<li>- <b>The holder&#x27;s email now feeds the exact artist match</b> — the fuzzy name-only case shrinks</li>
+</ul>
+<p>to renters whose email genuinely differs between Skedda and the Artist DB.</p>
+<ul>
+<li>- <b>Landmine found and defused:</b> the local (non-admin) cookie returns the same bookings with</li>
+</ul>
+<p>holder/title/price all stripped to null. Under the shipped rules that read as &quot;skip</p>
+<p>everything&quot; and a healthy pass. Now a read with bookings but zero holders fails loudly as</p>
+<p><code>sweep-blind</code> — a stripped session is a broken read, never a quiet day.</p>
+
+<p>Tests 32 (was 27); service suite 372 green. <code>skedda_read.py</code> extended (holder email/phone,</p>
+<p>type, bookingRequestId, recurring).</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#079</span><span class="emoji">🎫</span><span class="done-title">Decide who handles new-booking emails from now on</span><span class="done-date">2026-08-17</span></summary><div class="done-body"><ul class="plain-bullets"><li>Simple bookings — someone books a studio directly — can be fully handled in one go, no back-and-forth needed</li><li>Right now nobody owns them, which is why 37 piled up unread</li><li>The question: should the new mail-sorting system handle these, or a separate helper, or should we skip the email entirely and read the booking calendar directly?</li><li>Some renters get skipped on purpose: members with standing arrangements, our own bookings, and bookings already covered by the daily message pipeline</li><li>The rule going forward: an email marked &#x27;read&#x27; means &#x27;handled&#x27; — never just swept under the rug</li><li>This ticket decides the shape; building it comes after</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Design the direct-booking one-shot lane — who processes Skedda notifications, parallel to the loop</b></p><h2>Question</h2>
 
 <p>Direct bookings — Skedda self-bookings, platform instant books, booking-request accepts — are</p>
@@ -7768,5 +7798,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-18 09:30 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-18 09:40 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
