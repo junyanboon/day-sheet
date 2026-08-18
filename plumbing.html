@@ -640,6 +640,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     </details>
     </li>
 
+    <li class="entry alert">
+      <details>
+      <summary><span class="when">2026-08-18 · 14:00Z</span>
+      <h3>First live actions — and the trip ceiling failed again, in the opposite direction<span class="kind">FIX</span></h3></summary>
+      <p><strong>The watchdog took its first real actions.</strong> Studio 509B, 09:37–09:42 EDT: three disarm/re-arm cycles in six minutes on someone arriving, every one logging <code>acted=True ok=True</code>. The clearing worked. The stopping did not.</p>
+      <p><strong>Each cycle logged "Trip 1 of 2".</strong> The trip ceiling counts rising edges — the 08-14 fix for the opposite bug, where one five-minute siren counted as five trips. But an unbroken siren never produces a SECOND rising edge, so the count froze at 1, the ceiling became unreachable, and the watchdog would have cycled 509B indefinitely. <strong>Same twelve lines, same ceiling, failing both ways.</strong> Neither version was visible from the code: 08-14 needed a real long siren, 08-18 needed a real alarm that survived a re-arm.</p>
+      <p>Fixed with a second, separate ceiling: <strong>two clear attempts against the alarm currently sounding</strong>, then suppress and call a human. Resets when the partition falls quiet; persists across restarts so a cold start mid-alarm cannot hand back a fresh allowance. An alarm that survives a clean re-arm is not the late-arrival case this was built for — something is re-triggering it, and repeatedly disarming a partition at a person is the wrong answer.</p>
+      <p><strong>New: a Panel Wi-Fi Connectivity Error now files its own Maintenance ticket</strong> (<a href="https://app.notion.com/3c07503281c481778b85c0e62b2b9a37">first one, 14:00:07Z</a>). Deliberately a ticket and not a text — the link being down is real and worth fixing, but the panel keeps reporting over cellular, so coverage is not lost. Low battery remains the only condition that texts. Filed once per 24h against the same ledger the texts use; <code>Credentials In Conflict</code> and <code>Sensor Bypassed</code> are explicitly excluded, because ticketing constant noise is how a maintenance queue stops being read.</p>
+      <p>The first deploy of that path 404'd — the Notion REST API wants the <em>database</em> id and got the <em>data-source</em> id the SQL tools hand you. It logged the failure, did not record it as filed, retried, and did not disturb the tick. That is the only reason it cost a redeploy instead of a silent gap.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-18 · 03:57Z</span>
