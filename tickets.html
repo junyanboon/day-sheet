@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-16 03:06 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-17 23:00 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -102,7 +102,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">40</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">41</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -2534,111 +2534,81 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Every thread has a line in the record; every non-skip action verifiable on the board/queue.</li>
 <li>- No outbound message sent, no money touched.</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#079</div><div class="jhead"><span class="emoji">🎫</span><h4>Decide who handles new-booking emails from now on</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Simple bookings — someone books a studio directly — can be fully handled in one go, no back-and-forth needed</li><li>Right now nobody owns them, which is why 37 piled up unread</li><li>The question: should the new mail-sorting system handle these, or a separate helper, or should we skip the email entirely and read the booking calendar directly?</li><li>Some renters get skipped on purpose: members with standing arrangements, our own bookings, and bookings already covered by the daily message pipeline</li><li>The rule going forward: an email marked &#x27;read&#x27; means &#x27;handled&#x27; — never just swept under the rug</li><li>This ticket decides the shape; building it comes after</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Design the direct-booking one-shot lane — who processes Skedda notifications, parallel to the loop</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#081</div><div class="jhead"><span class="emoji">🤖</span><h4>Build the program that handles new bookings by itself</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>We decided: a plain program, not an AI, checks the booking calendar every half hour, day and night</li><li>For each new booking it sets up the renter&#x27;s profile, door code, phone contact and confirmation — the routine stuff a person shouldn&#x27;t have to do</li><li>It reads the calendar itself instead of the emails, because we learned the emails&#x27; &#x27;read&#x27; mark lies</li><li>Anything that needs actual judgment — two people with the same name, a weird access case — it writes on Junyan&#x27;s to-do list instead of guessing</li><li>The board card still goes up 2 days before the booking, same as Junyan does it now, so the board stays tidy</li><li>The daily 4am message robot keeps sending the texts — this program just makes sure everything it needs is ready</li><li>Only one program is ever allowed to set up door codes on its own — we learned that after two robots did the same job twice</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the deterministic booking-sweep job — code chain, Actions rows for the judgment residue</b></p><h2>Goal</h2>
 
-<p>Direct bookings — Skedda self-bookings, platform instant books, booking-request accepts — are</p>
-<p><b>one-shot processable</b>: no multi-turn human exchange, the whole procedure completes in a single</p>
-<p>pass (018&#x27;s ruling already fast-tracks them from day one). Today nothing owns the class: the</p>
-<p>notifications pile up unread under <code>Sales - Skedda</code> (37 deep when charted; <b>078</b></p>
-<p>clears the backlog manually). Design the standing lane.</p>
+<p>Build the direct-booking one-shot lane as ruled in <b>079</b>:</p>
+<p>a <b>Cloud Scheduler job hitting a deterministic service</b> (event-gate/fbs-monitor style, or</p>
+<p>its own small service in <code>dc-canon/services/</code>), every 30 minutes, 24/7. No LLM in the hot</p>
+<p>path. The Host&#x27;s orbit owns it conceptually (one owner for the booking lifecycle), but the</p>
+<p>executor is code.</p>
 
-<p><b>The core seam question, in Junyan&#x27;s own words while charting: &quot;I&#x27;m wondering if the email</p>
-<p>triager needs to be involved in this.&quot;</b> Three candidate shapes were deliberately left open:</p>
+<h2>The chain, per pass</h2>
 
 <ol>
-<li>1. <b>A rule class on the 068 mail-rules router</b> — deterministic recognition of Skedda</li>
+<li>1. <b>Diff the Skedda board</b> (skedda-mcp reads, not mail — mail is pure echo; the</li>
 </ol>
-<p>notification types on arrival; fast-track ones one-shot processed, marked read. The router is</p>
-<p>already the ruled owner of &quot;known mail is handled deterministically on arrival&quot;; a separate</p>
-<p>Skedda sweep might be building 068&#x27;s first rule as a one-off instead.</p>
+<p>read/unread bit is a corrupted signal and is not consumed). Track processed bookings in</p>
+<p>the service&#x27;s own state, not Gmail.</p>
 <ol>
-<li>2. <b>A dedicated scheduled agent</b> (The Loop pattern) sweeping the label on its own cadence.</li>
-<li>3. <b>A beat on the existing desk-loop tick</b>, proposals riding the Next Action queue as</li>
+<li>2. <b>Skip-class test</b> — deterministic: AAP/subscription tags, holder = Dance Annex /</li>
 </ol>
-<p>fast-track rows (053&#x27;s machinery, no new runtime).</p>
+<p>info@danceannex.ca, staff-made, FBS/monitored. NOTE from 078: only 2 of 10 holders</p>
+<p>carried tags — the skip test must fall back to holder identity, not assume tags exist.</p>
+<ol>
+<li>3. <b>Artist record</b> — exact-match on email first. Fuzzy name-only match ⇒ <b>residue row</b>,</li>
+</ol>
+<p>never auto-merge (the &quot;Julie Marouze [Gmail]&quot; duplicate is the cautionary case).</p>
+<ol>
+<li>4. <b>Alarm access</b> — the 079 ladder via <code>POST /provision</code> on alarm-mcp: (a) match ⇒ pass;</li>
+</ol>
+<p>(b) dormant code on file ⇒ re-provision it; (c) no code ⇒ mint + write back; (d)</p>
+<p>ambiguous ⇒ residue row. Reuse codeless shells before creating (Hanano rule). This is</p>
+<p>the SINGLE WRITER for provisioning — nothing else provisions unattended.</p>
+<ol>
+<li>5. <b>Phone contact</b> — create-if-missing on phone.com.</li>
+<li>6. <b>Booking confirmation</b> — strictly templated, queued per the message-queue rules</li>
+</ol>
+<p>(Pending Review unless the class is an authorized auto-send).</p>
+<ol>
+<li>7. <b>FBS board row at T−2 days</b> — due-dated step: created on the pass where the booking</li>
+</ol>
+<p>crosses 2-days-out (Junyan&#x27;s existing convention; keeps the Host&#x27;s board clean).</p>
+<ol>
+<li>8. <b>Tier messages — NOT this job&#x27;s work.</b> The 04:00 Host batch keeps queueing HTA/AVA/EOB</li>
+</ol>
+<p>day-of/day-before. This job guarantees the prerequisites exist when the Host looks.</p>
 
-<p>Weigh against: 068&#x27;s build order (router is ticketed but in shadow — does this lane wait, ride,</p>
-<p>or leapfrog?), 054&#x27;s residue-only Triager amendment, and 053&#x27;s fast-track ruling. A fourth</p>
-<p>option — mail is only the <i>signal</i> and the lane should read the Skedda board directly (the</p>
-<p>notification is an echo of a board event skedda-mcp can see) — deserves explicit consideration:</p>
-<p>it would make the lane immune to mail-shape changes and make mark-as-read pure hygiene.</p>
+<p>Every judgment case raises an <b>Actions to Perform row</b> (deterministic escalation); the</p>
+<p>Host/human reads the residue. Every pass reports its own result including zero — silence</p>
+<p>past a window is a defect (001&#x27;s <code>produces</code>/<code>verify_within</code>).</p>
 
-<p><b>Skip classes ruled 2026-08-16 (seed rule, verify where each type lives —</p>
-<p>Skedda user tags like AAP, Artist DB, holder identity):</b></p>
+<h2>Constraints carried from 079</h2>
 
 <ul>
-<li>- AAP / subscription renters</li>
-<li>- Dance Annex itself (holder = Junyan / info@danceannex.ca)</li>
-<li>- Staff-made bookings Junyan initiated whose downstream work was done in the same sitting</li>
-<li>- FBS / monitored bookings (owned by the FBS pipeline)</li>
+<li>- <b>Completeness-test semantics</b>: each pass asks &quot;what should exist by now and doesn&#x27;t&quot;,</li>
 </ul>
-
-<p>Also settle:</p>
-
+<p>idempotently — a step can come due later and is done on the pass where it comes due.</p>
 <ul>
-<li>- What &quot;one-shot processing&quot; comprises per notification type (made / changed / cancelled /</li>
+<li>- <b>Single-writer per surface</b>: this job is the only unattended provisioner and the only</li>
 </ul>
-<p>request-accept): ticket stub? HTA/access check? nothing-but-verify?</p>
+<p>unattended creator of FBS rows. The Codex collision is the incident of record.</p>
 <ul>
-<li>- The executor-agnostic angle: most of the backlog was Junyan&#x27;s own writes echoing back — the</li>
+<li>- Seam with the <b>last-minute flow</b> (today/tomorrow trigger, RUNTIMES.md): that flow is a</li>
 </ul>
-<p>lane must close on ground truth, not re-do his work ([053]&#x27;s VERIFY beat is the prior).</p>
+<p>prototype of this chain — decide whether this job absorbs it or defers to it inside the</p>
+<p>T−1 window. Do not run both against the same booking.</p>
 <ul>
-<li>- Mark-as-read semantics: read = processed is the contract; nothing else may mark this label read.</li>
-<li>- Failure visibility per the map&#x27;s standing lessons: the lane reports its own result each pass</li>
+<li>- Kill switch env var, own its own 🚥 Run Monitor row, and a <code>RUNTIMES.md</code> entry on ship.</li>
 </ul>
-<p>including zero, and silence past a window is a defect (001&#x27;s <code>produces</code>/<code>verify_within</code>).</p>
-
-<p><b>⚠️ Ground finding from <b>078</b>, 2026-08-16 — the read/unread bit is a</p>
-<p>corrupted signal.</b> The backlog sweep scoped itself to unread and judged &quot;processed&quot; as &quot;a record</p>
-<p>exists&quot;. Both were wrong: the label&#x27;s <b>already-read</b> messages contain genuinely unprocessed</p>
-<p>bookings (Emma Biron, Aris Wu, Hanano I. and Bella Zhou have paid bookings with <b>no FBS board row</p>
-<p>at all</b>; Sharon Rupnarain&#x27;s row is typed <code>Pending</code> with GTG/HTA/EOB null). Whatever marked those</p>
-<p>read did not process them, so the bit records <i>&quot;a pass looked at this&quot;</i>, not <i>&quot;this is handled&quot;</i> —</p>
-<p>the effort&#x27;s standing pathology (a step reporting completion without producing its output) with the</p>
-<p>read flag as the false report. <b>This is now the ticket&#x27;s central design constraint:</b> a lane that</p>
-<p>consumes read/unread as state is building on a lie. Either re-ground the bit (nothing marks this</p>
-<p>label read but the lane, only after its own verified completion) or drop it and read the Skedda</p>
-<p>board directly, treating mail as pure echo — which the same sweep independently supports, since the</p>
-<p>desk&#x27;s own <code>create_booking</code> calls arrive back as mail. Note also that the tag-based skip rule is</p>
-<p>weaker than assumed: only 2 of 10 holders carried any Skedda tag.</p>
-
-<p><b>⚠️ Second ground finding, 2026-08-16 — SINGLE-WRITER is a hard constraint, learned the hard way.</b></p>
-<p>While this session worked the gap list, the <b>Codex runtime was executing Junyan&#x27;s identical</p>
-<p>instruction in parallel</b>. Both provisioned alarm users for the same renters; Sharon Rupnarain ended</p>
-<p>with <b>two different working codes on all four panels</b>, and Hanano I. accumulated <b>five</b> inert</p>
-<p>codeless shells from failed Codex retries. 018&#x27;s executor-agnostic VERIFY closes a row no matter who</p>
-<p>acted — but it assumes <b>one actor at a time</b>: two agents on the same instruction produce duplicate</p>
-<p>side effects that <i>each verify as correct</i>, because each read-back confirms its own write. Nothing in</p>
-<p>the current design detects this. Whatever owns this lane must be the <b>only</b> thing provisioning, or</p>
-<p>must <b>claim each booking before acting</b>. Also corrected: canon&#x27;s <i>&quot;alarm-mcp is read-only by design&quot;</i></p>
-<p>(ticket 035) is <b>false</b> — <code>create_user</code> / <code>set_user_code</code> / <code>grant_user_access</code> /</p>
-<p><code>set_user_access_window</code> all exist and were used tonight; another 063-class stale claim, and the</p>
-<p>Limits register needs the correction.</p>
-
-<p><b>Third finding — the access gate is usually resolvable, not merely reportable.</b> A Notion code with</p>
-<p>no panel user is <code>code_mirror</code>&#x27;s <b>dormant</b> state: normal, ~530 of ~700 rows, kept so a returning</p>
-<p>renter gets their familiar number. The defect is that nobody <b>re-instates</b> it when they book again.</p>
-<p>So 079&#x27;s access step should <i>fix</i> rather than flag: (a) code matches ⇒ pass; (b) no panel user but a</p>
-<p>code on file ⇒ <b>re-provision that code</b> (deterministic, no judgment); (c) no code anywhere ⇒ mint</p>
-<p>one and write it back; (d) ambiguous ⇒ only then a human gate. Prefer reusing an existing codeless</p>
-<p>shell to creating a new user — that is what stopped Hanano&#x27;s litter at five instead of six.</p>
-
-<p>The <b>full record</b> carries the per-thread dispositions, the</p>
-<p>gap list, and the Diana Leal case — an inquiry ticket parked at <code>Gate: Artist</code> for three days while</p>
-<p>the artist had already self-booked <i>and paid</i>, primed to nudge her for answers she had given, with a</p>
-<p>second session having seen the booking and used it for something else. Prefer resolving 079 after</p>
-<p>reading it, but do not hard-block.</p>
 
 <h2>Acceptance</h2>
 
 <ul>
-<li>- A ruled shape (one of the four, or a hybrid) with the 068/054/053 seams named and consistent</li>
+<li>- Service deployed + scheduled; a new direct booking is fully processed unattended within</li>
 </ul>
-<p>with the triage-redesign decisions of record.</p>
+<p>one pass, with residue rows for the judgment cases and a per-pass report.</p>
 <ul>
-<li>- The skip-rule&#x27;s authoritative source named and testable.</li>
-<li>- A build ticket cut (or an amendment to 068&#x27;s scope) — this ticket decides, it does not build.</li>
+<li>- Plumbing Map entry (<code>day-sheet/plumbing.html</code>) and <code>RUNTIMES.md</code> updated.</li>
 </ul>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
@@ -3224,7 +3194,139 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#080</span><span class="emoji">🚪</span><span class="done-title">A renter asked which room she was in and nobody answered — now the desk answers itself</span><span class="done-date">2026-08-16</span></summary><div class="done-body"><ul class="plain-bullets"><li>Julia asked &#x27;Am I in studio A or B?&#x27; the night before her booking and got silence</li><li>Junyan answered by hand the next afternoon while driving, said sorry, and gave her 15 free minutes</li><li>The annoying part: the desk already knew. Her room was sitting right there in the day&#x27;s booking list</li><li>It keeps happening because Peerspace and Giggster only advertise the building — a renter genuinely cannot tell 509A from 509B</li><li>DONE Aug 16: ask which room you&#x27;re in and you get an answer in seconds — your room, the address, both codes, and the walkthrough video for YOUR studio</li><li>The video link goes straight to your own studio&#x27;s tour instead of a page with five videos to dig through</li><li>If your booking covers two rooms it stays quiet on purpose — &#x27;which of the two&#x27; is the one question you must never guess at</li><li>If your alarm code is missing you still get told the room; the missing code costs you the codes, not the answer</li><li>Still to watch: no real renter has set this off yet</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Quick-answer card for &quot;which studio am I in?&quot; — the Julia S. gap</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#079</span><span class="emoji">🎫</span><span class="done-title">Decide who handles new-booking emails from now on</span><span class="done-date">2026-08-17</span></summary><div class="done-body"><ul class="plain-bullets"><li>Simple bookings — someone books a studio directly — can be fully handled in one go, no back-and-forth needed</li><li>Right now nobody owns them, which is why 37 piled up unread</li><li>The question: should the new mail-sorting system handle these, or a separate helper, or should we skip the email entirely and read the booking calendar directly?</li><li>Some renters get skipped on purpose: members with standing arrangements, our own bookings, and bookings already covered by the daily message pipeline</li><li>The rule going forward: an email marked &#x27;read&#x27; means &#x27;handled&#x27; — never just swept under the rug</li><li>This ticket decides the shape; building it comes after</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Design the direct-booking one-shot lane — who processes Skedda notifications, parallel to the loop</b></p><h2>Question</h2>
+
+<p>Direct bookings — Skedda self-bookings, platform instant books, booking-request accepts — are</p>
+<p><b>one-shot processable</b>: no multi-turn human exchange, the whole procedure completes in a single</p>
+<p>pass (018&#x27;s ruling already fast-tracks them from day one). Today nothing owns the class: the</p>
+<p>notifications pile up unread under <code>Sales - Skedda</code> (37 deep when charted; <b>078</b></p>
+<p>clears the backlog manually). Design the standing lane.</p>
+
+<p><b>The core seam question, in Junyan&#x27;s own words while charting: &quot;I&#x27;m wondering if the email</p>
+<p>triager needs to be involved in this.&quot;</b> Three candidate shapes were deliberately left open:</p>
+
+<ol>
+<li>1. <b>A rule class on the 068 mail-rules router</b> — deterministic recognition of Skedda</li>
+</ol>
+<p>notification types on arrival; fast-track ones one-shot processed, marked read. The router is</p>
+<p>already the ruled owner of &quot;known mail is handled deterministically on arrival&quot;; a separate</p>
+<p>Skedda sweep might be building 068&#x27;s first rule as a one-off instead.</p>
+<ol>
+<li>2. <b>A dedicated scheduled agent</b> (The Loop pattern) sweeping the label on its own cadence.</li>
+<li>3. <b>A beat on the existing desk-loop tick</b>, proposals riding the Next Action queue as</li>
+</ol>
+<p>fast-track rows (053&#x27;s machinery, no new runtime).</p>
+
+<p>Weigh against: 068&#x27;s build order (router is ticketed but in shadow — does this lane wait, ride,</p>
+<p>or leapfrog?), 054&#x27;s residue-only Triager amendment, and 053&#x27;s fast-track ruling. A fourth</p>
+<p>option — mail is only the <i>signal</i> and the lane should read the Skedda board directly (the</p>
+<p>notification is an echo of a board event skedda-mcp can see) — deserves explicit consideration:</p>
+<p>it would make the lane immune to mail-shape changes and make mark-as-read pure hygiene.</p>
+
+<p><b>Skip classes ruled 2026-08-16 (seed rule, verify where each type lives —</p>
+<p>Skedda user tags like AAP, Artist DB, holder identity):</b></p>
+
+<ul>
+<li>- AAP / subscription renters</li>
+<li>- Dance Annex itself (holder = Junyan / info@danceannex.ca)</li>
+<li>- Staff-made bookings Junyan initiated whose downstream work was done in the same sitting</li>
+<li>- FBS / monitored bookings (owned by the FBS pipeline)</li>
+</ul>
+
+<p>Also settle:</p>
+
+<ul>
+<li>- What &quot;one-shot processing&quot; comprises per notification type (made / changed / cancelled /</li>
+</ul>
+<p>request-accept): ticket stub? HTA/access check? nothing-but-verify?</p>
+<ul>
+<li>- The executor-agnostic angle: most of the backlog was Junyan&#x27;s own writes echoing back — the</li>
+</ul>
+<p>lane must close on ground truth, not re-do his work ([053]&#x27;s VERIFY beat is the prior).</p>
+<ul>
+<li>- Mark-as-read semantics: read = processed is the contract; nothing else may mark this label read.</li>
+<li>- Failure visibility per the map&#x27;s standing lessons: the lane reports its own result each pass</li>
+</ul>
+<p>including zero, and silence past a window is a defect (001&#x27;s <code>produces</code>/<code>verify_within</code>).</p>
+
+<p><b>⚠️ Ground finding from <b>078</b>, 2026-08-16 — the read/unread bit is a</p>
+<p>corrupted signal.</b> The backlog sweep scoped itself to unread and judged &quot;processed&quot; as &quot;a record</p>
+<p>exists&quot;. Both were wrong: the label&#x27;s <b>already-read</b> messages contain genuinely unprocessed</p>
+<p>bookings (Emma Biron, Aris Wu, Hanano I. and Bella Zhou have paid bookings with <b>no FBS board row</p>
+<p>at all</b>; Sharon Rupnarain&#x27;s row is typed <code>Pending</code> with GTG/HTA/EOB null). Whatever marked those</p>
+<p>read did not process them, so the bit records <i>&quot;a pass looked at this&quot;</i>, not <i>&quot;this is handled&quot;</i> —</p>
+<p>the effort&#x27;s standing pathology (a step reporting completion without producing its output) with the</p>
+<p>read flag as the false report. <b>This is now the ticket&#x27;s central design constraint:</b> a lane that</p>
+<p>consumes read/unread as state is building on a lie. Either re-ground the bit (nothing marks this</p>
+<p>label read but the lane, only after its own verified completion) or drop it and read the Skedda</p>
+<p>board directly, treating mail as pure echo — which the same sweep independently supports, since the</p>
+<p>desk&#x27;s own <code>create_booking</code> calls arrive back as mail. Note also that the tag-based skip rule is</p>
+<p>weaker than assumed: only 2 of 10 holders carried any Skedda tag.</p>
+
+<p><b>⚠️ Second ground finding, 2026-08-16 — SINGLE-WRITER is a hard constraint, learned the hard way.</b></p>
+<p>While this session worked the gap list, the <b>Codex runtime was executing Junyan&#x27;s identical</p>
+<p>instruction in parallel</b>. Both provisioned alarm users for the same renters; Sharon Rupnarain ended</p>
+<p>with <b>two different working codes on all four panels</b>, and Hanano I. accumulated <b>five</b> inert</p>
+<p>codeless shells from failed Codex retries. 018&#x27;s executor-agnostic VERIFY closes a row no matter who</p>
+<p>acted — but it assumes <b>one actor at a time</b>: two agents on the same instruction produce duplicate</p>
+<p>side effects that <i>each verify as correct</i>, because each read-back confirms its own write. Nothing in</p>
+<p>the current design detects this. Whatever owns this lane must be the <b>only</b> thing provisioning, or</p>
+<p>must <b>claim each booking before acting</b>. Also corrected: canon&#x27;s <i>&quot;alarm-mcp is read-only by design&quot;</i></p>
+<p>(ticket 035) is <b>false</b> — <code>create_user</code> / <code>set_user_code</code> / <code>grant_user_access</code> /</p>
+<p><code>set_user_access_window</code> all exist and were used tonight; another 063-class stale claim, and the</p>
+<p>Limits register needs the correction.</p>
+
+<p><b>Third finding — the access gate is usually resolvable, not merely reportable.</b> A Notion code with</p>
+<p>no panel user is <code>code_mirror</code>&#x27;s <b>dormant</b> state: normal, ~530 of ~700 rows, kept so a returning</p>
+<p>renter gets their familiar number. The defect is that nobody <b>re-instates</b> it when they book again.</p>
+<p>So 079&#x27;s access step should <i>fix</i> rather than flag: (a) code matches ⇒ pass; (b) no panel user but a</p>
+<p>code on file ⇒ <b>re-provision that code</b> (deterministic, no judgment); (c) no code anywhere ⇒ mint</p>
+<p>one and write it back; (d) ambiguous ⇒ only then a human gate. Prefer reusing an existing codeless</p>
+<p>shell to creating a new user — that is what stopped Hanano&#x27;s litter at five instead of six.</p>
+
+<p>The <b>full record</b> carries the per-thread dispositions, the</p>
+<p>gap list, and the Diana Leal case — an inquiry ticket parked at <code>Gate: Artist</code> for three days while</p>
+<p>the artist had already self-booked <i>and paid</i>, primed to nudge her for answers she had given, with a</p>
+<p>second session having seen the booking and used it for something else. Prefer resolving 079 after</p>
+<p>reading it, but do not hard-block.</p>
+
+<h2>RESOLVED 2026-08-17 — ruled with Junyan, grilling session</h2>
+
+<p><b>Shape: none of the four candidates as written — a deterministic CODE JOB, under the Host&#x27;s</p>
+<p>orbit.</b> The sweep is a Cloud Scheduler job hitting a service (event-gate/fbs-monitor style),</p>
+<p>every 30 min, 24/7, reading the <b>Skedda board directly</b> (option 4&#x27;s insight: mail is pure</p>
+<p>echo; the corrupted read/unread bit is not consumed at all). No LLM in the hot path — every</p>
+<p>judgment case (fuzzy artist match, ambiguous access, missing platform phone) raises an</p>
+<p>Actions row deterministically, and the Host/human reads the residue. Junyan&#x27;s own framing</p>
+<p>sealed it: the goal is &quot;as deterministic as possible&quot;, the Host is already flagged a</p>
+<p>deterministic-lane candidate, and the chain audit showed ~90% of the steps are pure</p>
+<p>API-diff/template work with <code>/provision</code> already shipped as code.</p>
+
+<p><b>Why the Host&#x27;s orbit and not The Loop:</b> consolidation kills the two-writers-on-the-FBS-board</p>
+<p>seam — the Host&#x27;s world already owns the rows, the messages, and the last-minute-flow</p>
+<p>prototype of this exact chain. One owner for the booking lifecycle; the executor is code.</p>
+
+<p><b>Time-conditioned steps ruled due-dated, not immediate:</b> FBS row at T−2 days (Junyan&#x27;s</p>
+<p>existing convention, keeps the board clean); tier messages stay with the 04:00 Host batch</p>
+<p>entirely — this lane only guarantees prerequisites. The completeness test&#x27;s semantics carry</p>
+<p>the timing: &quot;what should exist <i>by now</i> and doesn&#x27;t&quot;, re-checked every pass.</p>
+
+<p><b>Email triager involvement (the seed question): none.</b> Mail is echo; the triager&#x27;s only</p>
+<p>duty is hygiene on a label nothing consumes.</p>
+
+<p>Build ticket cut: <b>081-booking-sweep-service</b>.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A ruled shape (one of the four, or a hybrid) with the 068/054/053 seams named and consistent</li>
+</ul>
+<p>with the triage-redesign decisions of record.</p>
+<ul>
+<li>- The skip-rule&#x27;s authoritative source named and testable.</li>
+<li>- A build ticket cut (or an amendment to 068&#x27;s scope) — this ticket decides, it does not build.</li>
+</ul>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#080</span><span class="emoji">🚪</span><span class="done-title">A renter asked which room she was in and nobody answered — now the desk answers itself</span><span class="done-date">2026-08-16</span></summary><div class="done-body"><ul class="plain-bullets"><li>Julia asked &#x27;Am I in studio A or B?&#x27; the night before her booking and got silence</li><li>Junyan answered by hand the next afternoon while driving, said sorry, and gave her 15 free minutes</li><li>The annoying part: the desk already knew. Her room was sitting right there in the day&#x27;s booking list</li><li>It keeps happening because Peerspace and Giggster only advertise the building — a renter genuinely cannot tell 509A from 509B</li><li>DONE Aug 16: ask which room you&#x27;re in and you get an answer in seconds — your room, the address, both codes, and the walkthrough video for YOUR studio</li><li>The video link goes straight to your own studio&#x27;s tour instead of a page with five videos to dig through</li><li>If your booking covers two rooms it stays quiet on purpose — &#x27;which of the two&#x27; is the one question you must never guess at</li><li>If your alarm code is missing you still get told the room; the missing code costs you the codes, not the answer</li><li>Still to watch: no real renter has set this off yet</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Quick-answer card for &quot;which studio am I in?&quot; — the Julia S. gap</b></p><h2>Question</h2>
 
 <p>A renter asked a question the desk already knew the answer to, and got silence.</p>
 
@@ -7302,5 +7404,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-16 03:06 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-17 23:00 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
