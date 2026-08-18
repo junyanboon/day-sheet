@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-17 23:00 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-17 23:09 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2610,6 +2610,54 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- Plumbing Map entry (<code>day-sheet/plumbing.html</code>) and <code>RUNTIMES.md</code> updated.</li>
 </ul>
+
+<h2>Reach — verified 2026-08-18, all three surfaces are plain HTTP (no MCP needed)</h2>
+
+<p>The question &quot;can a non-LLM job reach the alarm and phone connectors?&quot; has a better answer</p>
+<p>than yes: <b>it does not use the MCP connectors at all.</b> MCP is the <i>agent&#x27;s</i> transport.</p>
+<p>event-gate — a deterministic service with no LLM — already calls every surface this job</p>
+<p>needs directly, so the pattern is proven in production, not hypothesised:</p>
+
+<p>| Surface | How code reaches it | Proven by |</p>
+<p>|---|---|---|</p>
+<p>| Alarm | <code>POST /provision</code>, <code>/panel-states</code> on alarm-mcp — plain HTTP routes beside the MCP server, <code>Authorization: Bearer $ALARM_PANEL_TOKEN</code> | <code>alarm_watch.py</code> reads <code>/panel-states</code> every minute |</p>
+<p>| Phone | phone.com <b>REST API directly</b> (<code>api.phone.com/v4/...</code>), <code>Bearer $PHONECOM_API_TOKEN</code> — the phonecom-mcp connector is bypassed entirely | <code>poller.py</code>, <code>actuator.py</code> |</p>
+<p>| Skedda | venue session cookie, <code>SKEDDA_COOKIE</code> or Secret Manager | <code>skedda_read.py</code> |</p>
+<p>| Notion | REST, <code>Bearer $NOTION_TOKEN</code> | <code>alarm_watch.py</code> row-raising |</p>
+
+<p><b><code>/provision</code> already implements most of the 079 access ladder in code</b> — this is the single</p>
+<p>biggest reason the deterministic ruling is cheap to build:</p>
+
+<ul>
+<li>- <code>verify_only: true</code> — preflight: does this person already have working access? Returns</li>
+</ul>
+<p>verdict/action without writing. This is step (a), and it is what stops a second user being</p>
+<p>created for someone already provisioned.</p>
+<ul>
+<li>- Explicit <code>code</code> param ⇒ step (b), re-provisioning a dormant code read from the Artist DB.</li>
+<li>- Omitted <code>code</code> ⇒ step (c): generates a 4-digit code, avoiding both collisions with codes</li>
+</ul>
+<p>that name already holds and trivially-guessable repeats.</p>
+<ul>
+<li>- <code>ambiguous</code> / <code>match_count &gt; 1</code> ⇒ a verdict the caller must escalate — step (d), the</li>
+</ul>
+<p>residue row.</p>
+<ul>
+<li>- Handles the grant-sync wait internally (12 × 5s), the trap that makes naive callers write</li>
+</ul>
+<p>a window that vanishes.</p>
+<ul>
+<li>- Windows are <b>retired for renters</b> (canon <code>doorman-access-lifecycle.md</code>): omit both bounds</li>
+</ul>
+<p>and the user is permanent-until-removed; the Doorman&#x27;s retirement sweep does the</p>
+<p>time-bounding. So this job writes NO windows — matching what was done by hand for Julie</p>
+<p>and Vicky.</p>
+
+<p><b>Gap to close in the build (small, and it is the litter fix):</b> <code>/provision</code> always calls</p>
+<p><code>create_user</code>; it has no &quot;reuse an existing codeless shell&quot; path. That is exactly the</p>
+<p>Hanano-five-shells defect. Either add a shell-reuse branch to <code>/provision</code> (preferred — one</p>
+<p>writer, fixed at source for every caller) or have this job do</p>
+<p><code>set_user_code</code> + <code>grant_user_access</code> against a found shell before falling back to create.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -7404,5 +7452,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-17 23:00 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-17 23:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
