@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 16:26 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 16:30 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1960,7 +1960,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Sequencing: <b>052</b> pilots on tickets today&#x27;s JOB 2 already makes,</p>
 <p>so this is parallel work, not a blocker.</p>
-</div></details></details></div><div class="job"><div class="jnum">#055</div><div class="jhead"><span class="emoji">⚙️</span><h4>Turn three of the robot&#x27;s chores into small programs</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>DONE and LIVE (Aug 16): alarm watching is now a program that checks the panels every minute — it texts staff, files the call row and opens the ticket itself</li><li>We also made it go blind on purpose to check it would say so — it wrote &#x27;I can&#x27;t see the panels&#x27; on Junyan&#x27;s list, then cleared it once it could see again</li><li>Still to do: the other three chores below</li><li>The who&#x27;s-in-today list rebuilds itself all day instead of once every two hours</li><li>Copying claimed staff shifts to the calendar is just copying — no thinking needed</li><li>A fourth chore gets deleted outright: another robot already does it</li><li>Rule we learned the hard way: nothing retires until the new owner is seen actually doing it</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move J01&#x27;s deterministic lanes out of the LLM pass — alarm watch, fast-track list, shift mirror</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#055</div><div class="jhead"><span class="emoji">⚙️</span><h4>Take the busywork off the thinking robot — programs find the work, the robot only does it</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>DONE and LIVE (Aug 16): alarm watching is now a program that checks the panels every minute — it texts staff, files the call row and opens the ticket itself</li><li>We also made it go blind on purpose to check it would say so — it wrote &#x27;I can&#x27;t see the panels&#x27; on Junyan&#x27;s list, then cleared it once it could see again</li><li>Still to do: the other three chores below</li><li>The who&#x27;s-in-today list rebuilds itself all day instead of once every two hours</li><li>Copying claimed staff shifts to the calendar is just copying — no thinking needed</li><li>A fourth chore gets deleted outright: another robot already does it</li><li>Rule we learned the hard way: nothing retires until the new owner is seen actually doing it</li><li>GREW on Aug 15 after Junyan&#x27;s ruling: the four chores the robot keeps dropping all matter — none can be deleted. So more of them move here</li><li>We read each dropped chore closely: most of it is checking lists and ticking boxes — no thinking in it at all</li><li>The reconciling chore (closing the loop after messages send and charges land) becomes a program. Where it isn&#x27;t sure, it raises a hand instead of guessing</li><li>The staff-handback chore splits: a program NOTICES when staff finish something (ticked rows, new screenshots, channel posts) and the thinking robot only picks up what got flagged</li><li>That&#x27;s the big idea in one line: programs find the work, the robot only does flagged work. A robot can&#x27;t run out of time looking for jobs it was never asked to find</li><li>The evening review keeps the thinking robot — that one is real judgment — and it finally gets the time budget the busywork was eating</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move J01&#x27;s deterministic lanes out of the LLM pass — alarm watch, fast-track list, shift mirror</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>, which ruled each of these out of the LLM pass.</p>
 <p>Pure code, no judgment, parallel to everything else.</p>
@@ -2023,6 +2023,62 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Standing lesson applies (<b>035</b>):</b> a retirement is not done until</p>
 <p>every step of the retired job names its new owner — and naming an owner is not verifying the owner</p>
 <p>acts. Each lane reports its own result including zero, and files a <code>Run Error</code> row if it cannot run.</p>
+
+<h2>Re-scoped 2026-08-15 — Junyan&#x27;s capacity ruling widens this ticket to the whole dropped tail</h2>
+
+<p><b>The ruling:</b> walked through the four chronically-dropped jobs (JOB 3 reconcile, JOB 4 handback,</p>
+<p>JOB 31 shift mirror, HEAVY-PM&#x27;s JOB 33/0/5/7), Junyan ruled <b>all four essential</b> — *&quot;they all</p>
+<p>seem really important; when they are missed they each cause problems.&quot;* The right-size-by-deletion</p>
+<p>option is dead. This is a capacity problem, and the fix is the one this ticket already owns:</p>
+<p>take the mechanical work off the LLM pass.</p>
+
+<p><b>The sizing read (canon, this session):</b></p>
+
+<ul>
+<li>- <b>JOB 31 — fully mechanical</b>, as lane 3 already says. Query claimed rows, copy the row&#x27;s own</li>
+</ul>
+<p>window onto the calendar, midnight-lock check. Fold in <b>075</b>&#x27;s</p>
+<p>second half: the AVA re-evaluation is also deterministic (named block now covers the booking</p>
+<p>start → flip the unsent row&#x27;s variant). One lane, both halves.</p>
+<ul>
+<li>- <b>JOB 3 — mostly mechanical.</b> The message reconcile, strand backstop, money reconcile and</li>
+</ul>
+<p>collection detection are all view-reads + status branches + checkbox/Position writes. The HTR</p>
+<p>learning loop is already retired (the <code>Drafted Body</code> diff field was deleted 2026-07-29). The one</p>
+<p>prose-shaped step — the orphan-gate audit&#x27;s &quot;Current Block names a staff task&quot; — has a structured</p>
+<p>equivalent the tick already uses on the new board: <code>Position = Gate:*</code> with no open linked Action</p>
+<p>row and no Pending-Review queue row = orphan. Rule: <b>where the structured read is ambiguous, the</p>
+<p>code flags the row for an agent instead of deciding</b> — same contract as <code>unverifiable</code>.</p>
+<ul>
+<li>- <b>JOB 4 — split.</b> <i>Detection</i> is mechanical and is exactly the tick&#x27;s shape: Processed Action</li>
+</ul>
+<p>rows, new images on parked tickets, new #desk-drops messages past the cursor. <i>Resumption</i> —</p>
+<p>re-walk the SOP from the first unchecked step, branch on returned facts, read screenshots — is</p>
+<p>genuine judgment and <i>stays with an agent</i>, but fed from a flag queue instead of self-scanning.</p>
+<ul>
+<li>- <b>HEAVY-PM (JOB 33/0/5/7) — judgment, stays LLM.</b> Untouched here; the payoff is that the freed</li>
+</ul>
+<p>budget reaches it.</p>
+
+<p><b>The principle, stated once: code finds the work, the LLM only does flagged work.</b> Starvation</p>
+<p>exists because scanning competes with judging inside one budget. Move every scan to the tick and</p>
+<p>the LLM pass starts from a worklist — it cannot starve on finding, only on doing, and a growing</p>
+<p>flag queue is visible in a way a skipped scan never was.</p>
+
+<p><b>New lanes:</b></p>
+
+<ol>
+<li>5. <b>JOB 3 mechanical reconcile → the <code>event-gate</code> tick</b> (10-min cadence beside <code>/loop</code>).</li>
+</ol>
+<p>Ambiguity flags, never guesses. Reporting per the standing rule — a zero pass reports zero.</p>
+<ol>
+<li>6. <b>JOB 4 detection layer → the same tick.</b> Emits &quot;ready to resume&quot; flags (a view or field the</li>
+</ol>
+<p>agent pass consumes). Resumption stays agentic and comes off the Concierge&#x27;s self-scan.</p>
+
+<p>Lanes 2 (FAST-TRACK renderer) and 3 (J31 mirror + AVA re-eval, per above) unchanged. Lane 4</p>
+<p>(JOB 1 remainder deletion) unchanged. 035&#x27;s test binds every lane: the retirement is done when the</p>
+<p>new owner is <i>seen</i> acting, not when it is named.</p>
 </div></details></details></div><div class="job"><div class="jnum">#060</div><div class="jhead"><span class="emoji">🏓</span><h4>Messages nobody claims — make &#x27;not my job&#x27; leave a mark</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Three renters this week wrote to us and no robot picked it up — Junyan caught each one himself</li><li>Each robot looked, decided &#x27;not mine&#x27;, and wrote nothing down — so it looked like nothing was wrong</li><li>The rule going in: every message must end somewhere — handled, given a ticket, or a robot&#x27;s name on the &#x27;no&#x27;</li><li>A separate watcher, outside all the robots, rings when a message sits too long with no answer</li><li>It names the person waiting — &#x27;Himanshi, booking question, 4 hours&#x27; — not just a number</li><li>We tried fixing this with more instructions three times; it failed three times — this time it&#x27;s a watcher, not a rule</li><li>First step: read the robot&#x27;s actual work logs to find out whether it even looks at new messages</li><li>Case four, same day: Francisco texted about lost AirPods at 1pm — the collector delivered it 5 hours late, then no robot picked it up either</li><li>Lesson for the watcher: count from when the renter sent it, not from when our copy arrived</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Ping-pong — every inbound message gets a recorded disposition, checked from outside the passes</b></p><h2>Question</h2>
 
 <p>From <b>HANDOFF-concierge-ping-pong.md</b> (2026-08-06,</p>
@@ -8226,5 +8282,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 16:26 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 16:30 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
