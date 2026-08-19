@@ -315,6 +315,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-19 &middot; 14:30Z</span>
+      <h3>Skedda user lookup restored &mdash; the endpoint migration is finished and actually deployed<span class="kind">FIX</span></h3></summary>
+      <p><strong><code>find_user</code> on the skedda-mcp connector was 404ing</strong> (the &ldquo;tag lookup is broken&rdquo; report, and the same gap the 15:20Z entry flagged as blocking tag-based skipping). Root cause was two halves of one migration: Skedda killed <code>/venueuserslists</code>; the local repo&rsquo;s search fix (<code>6175281</code>, 08-18) <strong>was never deployed to the hosted MCP service</strong>, and a second caller &mdash; <code>get_venueuser</code>, the fetch under <code>update_user</code> and <code>set_user_tags</code> &mdash; still hit the dead endpoint even locally.</p>
+      <p><strong>Fixed:</strong> <code>get_venueuser</code> now uses <code>GET /venueusers/{id}</code>, the read twin of the PUT it already trusted &mdash; probed live before patching (skedda-cli <code>1d8bfea</code>). Shipped via <code>deploy.sh</code> (revision <code>skedda-mcp-00036-dq7</code>, service and refresh job on the same image), and the connector verified end to end: <code>find_user("maggie")</code> returns both Maggies with tags resolved.</p>
+      <p><strong>The lesson is the deploy gap, again:</strong> a committed fix on a laptop does nothing for a hosted connector. Any skedda-cli code fix is not done until <code>deploy.sh</code> has run and the live tool has been re-called.</p>
+    </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-19 &middot; 15:20Z</span>
       <h3>The booking sweep&rsquo;s first live pass filed four residue rows and all four were false<span class="kind">FIX</span></h3></summary>
       <p><strong>The sweep was asking the alarm panel for the wrong name.</strong> It resolved renters by the <strong>Skedda holder string</strong>, but the panel is keyed on the Artist row&rsquo;s <code>Alarm Display Name</code>, and the two differ routinely: &ldquo;Dee Brown&rdquo; vs &ldquo;Dee Adelubi Brown&rdquo;, &ldquo;Kelly-Ann Johnson (Private Classes)&rdquo; vs &ldquo;KellyAnn Johnson&rdquo;, married names, a suffix the desk added. A name the panel does not hold returns no match &mdash; which reads exactly like <em>this renter has no access</em> &mdash; so the pass raised an Access/PIN row about someone whose code had worked for months. <strong>Four of four residue rows in the first live dry run were this bug.</strong> Fixed: the Artist page is read before the access branch and the panel is asked under <code>Alarm Display Name</code>, falling back to the holder only for a renter whose row this pass is about to create. The Doorman resolves through the same field for the same reason.</p>
