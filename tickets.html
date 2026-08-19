@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 10:13 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 16:26 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">23</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">24</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">44</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">5</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -970,8 +970,119 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>must look the limit up in the CAPABILITIES <b>Limits register</b>; an UNTESTED cell bounces the</p>
 <p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
 <p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
+</div></details></details></div><div class="job"><div class="jnum">#085</div><div class="jhead"><span class="emoji">🔑</span><h4>Stop looking people up by name — use their ID numbers</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Every mix-up this week came from one hole: our three systems spell people&#x27;s names differently, and the robots match on names</li><li>&#x27;Dee Brown&#x27; on the booking site is &#x27;Dee Adelubi Brown&#x27; on the alarm panel — so the robot thought she had no door code when hers has worked for months</li><li>Even Claude made the same mistake by hand, one message after explaining the trap</li><li>The fix: both systems already give everyone a permanent ID number — we just never wrote it down</li><li>Two new boxes on each person&#x27;s card: their booking-site number and their alarm number. One cleanup session fills them in</li><li>After that, robots look people up by number. A name can be spelled ten ways and nothing breaks</li><li>Second half: only the alarm service does the finding — every robot asks it, instead of each doing its own lookup and failing differently</li><li>House rules kept: never erase a name or code already on a card, and the cleanup writes to our records only — it never touches the panel</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Join renters on stable IDs, not names — Artist row becomes the join table, alarm-mcp owns resolution</b></p><h2>Problem</h2>
+
+<p>The three systems share no key. Every join is a <b>human name</b>, and names are the least</p>
+<p>stable field we hold. One night&#x27;s harvest of this single defect (2026-08-18/19):</p>
+
+<ul>
+<li>- The sweep&#x27;s first live pass filed <b>4 residue rows, all false</b> — <code>Kelly-Ann Johnson</li>
+</ul>
+<p>(Private Classes)</code> vs panel <code>KellyAnn Johnson</code>, <code>Dee Brown</code> vs <code>Dee Adelubi Brown</code>.</p>
+<ul>
+<li>- The operator (Claude, attended) then made the SAME error by hand one message after</li>
+</ul>
+<p>describing it — searched the panel for &quot;Dee Brown&quot;, got nothing, reported a renter with a</p>
+<p>months-old working code as &quot;no code, easy setup&quot;. Careful operators fall in this hole.</p>
+<ul>
+<li>- The sweep&#x27;s write-back would have <b>overwritten</b> a correct <code>Alarm Display Name</code> with the</li>
+</ul>
+<p>Skedda holder string on first provision, silently corrupting the one bridge that works.</p>
+<ul>
+<li>- The <code>⚠️ DUPLICATE — Julie Marouze [Gmail]</code> Artist row exists because name-matching cannot</li>
+</ul>
+<p>tell one person with two spellings from two people.</p>
+
+<p>The stable keys already exist; we simply never stored them:</p>
+
+<p>| System | Stable id | Where we already see it |</p>
+<p>|---|---|---|</p>
+<p>| Skedda | <code>venueuser id</code> (e.g. Julie = <code>5704032</code>) | <code>find_user</code>, bookings&#x27; <code>user.id</code> |</p>
+<p>| Alarm.com | <code>user_id</code> (e.g. Julie = <code>247808040</code>) | <code>find_user_codes</code>, <code>/provision</code> result |</p>
+<p>| Notion Artist DB | page id | everywhere |</p>
+
+<h2>Ruled 2026-08-19 (Junyan): Options A + B together; C (name-audit patrol) discarded.</h2>
+
+<h3>A — the Artist row becomes the join table</h3>
+
+<ol>
+<li>1. Add two properties to the Artist DB (<code>collection://3cfb93cb-55f9-46a4-bde8-9b7023797d4b</code>):</li>
+</ol>
+<p><b><code>Skedda User ID</code></b> and <b><code>Alarm User ID</code></b> (rich_text or number — match house style).</p>
+<ol>
+<li>2. <b>Backfill session</b> (attended, one-time): enumerate live panel users</li>
+</ol>
+<p>(<code>find_access_window(name=&quot;&quot;)</code> + <code>find_user_codes</code>) and recent Skedda venueusers</p>
+<p>(<code>find_user</code> over the booking window), match to Artist rows email-first / display-name</p>
+<p>second, write ids. The ambiguous handful become ONE consolidated Review row for Junyan —</p>
+<p>once, ever. Names never resolved again after this.</p>
+<ul>
+<li>- Cross-check the count: ~170 live panel users; anything unmatched is either staff, a</li>
+</ul>
+<p>shell (081&#x27;s ignore class), or a genuine orphan worth a row.</p>
+<ol>
+<li>3. From then on every lookup is <b>id-first, name-fallback</b>; a fallback HIT writes the id</li>
+</ol>
+<p>back so the fallback path decays to zero over time. New renters get ids stamped at</p>
+<p>creation (the sweep&#x27;s <code>create_artist</code> + <code>/provision</code> both return them — store, don&#x27;t drop).</p>
+
+<h3>B — alarm-mcp owns identity resolution</h3>
+
+<p><code>/provision</code> and <code>check_access_covers</code> (and the MCP twins) accept <code>artist_page_id</code> and/or</p>
+<p><code>alarm_user_id</code>, resolving server-side: id → exact panel user; else the Artist row&#x27;s</p>
+<p><code>Alarm Display Name</code>; else the passed name — same trust ladder everywhere, implemented once,</p>
+<p>in the service that already holds the credential (the <code>code_mirror</code> pattern). Callers stop</p>
+<p>holding names at all:</p>
+
+<ul>
+<li>- <code>booking_sweep.py</code> passes <code>artist_page_id</code> (it has just resolved the row anyway).</li>
+<li>- The Doorman&#x27;s (b)/(b2)/(b4)/(b5) checks verify <b>ids</b>, not spellings — they are already</li>
+</ul>
+<p>shaped for this.</p>
+<ul>
+<li>- <code>SameDay.gs</code> and the attended skills migrate opportunistically; the name path stays as</li>
+</ul>
+<p>documented fallback, never removed abruptly.</p>
+
+<h2>Constraints carried from the effort</h2>
+
+<ul>
+<li>- <b>Never blank or overwrite a populated <code>Alarm Display Name</code> or <code>Alarm Code</code></b> — fill-only,</li>
+</ul>
+<p>the 081 rule.</p>
+<ul>
+<li>- Backfill is READ + Notion-write only; it provisions nothing and never touches the panel.</li>
+<li>- Single-writer: the backfill session is the only thing writing ids until it completes;</li>
+</ul>
+<p>announce in-session (the Codex collision rule).</p>
+<ul>
+<li>- An id that stops resolving (deleted panel user) is the <b>dormant</b> state, not an error —</li>
+</ul>
+<p>keep the id, the code, and the row; re-provisioning re-uses them (079&#x27;s ladder).</p>
+<ul>
+<li>- Test with the same discipline as 081: id-first hit, fallback hit + write-back, ambiguous</li>
+</ul>
+<p>→ one consolidated row, deleted-user dormancy.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Both properties exist and are ≥95% backfilled for renters with any booking in ±60 days;</li>
+</ul>
+<p>the remainder sits in one Review row.</p>
+<ul>
+<li>- alarm-mcp resolves by id when given one (verified by read-back on a renamed test user:</li>
+</ul>
+<p>change a display name in the Alarm.com UI, confirm lookups still succeed).</p>
+<ul>
+<li>- <code>booking_sweep.py</code> and the Doorman prompt pass ids; a live dry run shows zero</li>
+</ul>
+<p>name-mismatch residue.</p>
+<ul>
+<li>- RUNTIMES.md + Plumbing Map entries; 063-style note: capability claims dated and tested.</li>
+</ul>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">23</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">24</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -2443,7 +2554,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- A row closed against reality carries the verification quote, exactly as the tick would write it.</li>
 <li>- The walk surfaces the soonest-deadline row first.</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#082</div><div class="jhead"><span class="emoji">🚀</span><h4>Switch the new booking program on — carefully, in that order</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>PARTLY DONE: it has been put on the server and given one practice pass — and that practice pass earned its keep immediately</li><li>It found a real bug: the program was asking the door system for people by their calendar name, but the door system knows them by a different name. &#x27;Dee Brown&#x27; on the calendar, &#x27;Dee Adelubi Brown&#x27; on the panel</li><li>So it decided four renters had no door access when their codes had been working for months. All four notes it wrote were wrong. Fixed now — it looks up the door-system name first</li><li>Still to do: set it running every half hour, let go of the off-switch, and give it a row on the run monitor</li><li>First put it on the server with its off-switch held down, so it cannot do anything yet</li><li>Then run one practice pass that only reads and reports, and check the list it produces against the real calendar</li><li>Only then set it running every half hour and let go of the off-switch</li><li>Give it its own row on the run monitor, so if it ever goes quiet we find out</li><li>Watch the first day for the thing tests cannot prove: that the notes it leaves Junyan actually read like something a person can act on</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Ship the booking sweep — deploy, dry-run against the live board, then schedule it</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#082</div><div class="jhead"><span class="emoji">🚀</span><h4>Switch on The Registrar — carefully, in that order</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>PARTLY DONE: it has been put on the server and given one practice pass — and that practice pass earned its keep immediately</li><li>It found a real bug: the program was asking the door system for people by their calendar name, but the door system knows them by a different name. &#x27;Dee Brown&#x27; on the calendar, &#x27;Dee Adelubi Brown&#x27; on the panel</li><li>So it decided four renters had no door access when their codes had been working for months. All four notes it wrote were wrong. Fixed now — it looks up the door-system name first</li><li>Still to do: set it running every half hour, let go of the off-switch, and give it a row on the run monitor</li><li>First put it on the server with its off-switch held down, so it cannot do anything yet</li><li>Then run one practice pass that only reads and reports, and check the list it produces against the real calendar</li><li>Only then set it running every half hour and let go of the off-switch</li><li>Give it its own row on the run monitor, so if it ever goes quiet we find out</li><li>Watch the first day for the thing tests cannot prove: that the notes it leaves Junyan actually read like something a person can act on</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Ship The Registrar (the booking sweep) — deploy, dry-run against the live board, then schedule it</b></p><h2>Question</h2>
 
 <p><b>081</b> built the lane and left it unshipped on purpose: it writes</p>
 <p>to Alarm.com, and flipping on a production trigger is Junyan&#x27;s call, never an agent&#x27;s. This</p>
@@ -2500,6 +2611,19 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>This is exactly the value step 3 was for — a wall of false residue would have been the first</p>
 <p>day&#x27;s experience. <b>Still outstanding: steps 4 and 5</b> — the Cloud Scheduler job, the kill-switch</p>
 <p>release, the 🚥 Run Monitor row. Those remain Junyan&#x27;s.</p>
+
+
+<h2>Named 2026-08-19: <b>The Registrar</b></h2>
+
+<p>Junyan&#x27;s pick, house style (definite article + role). Everything it touches is a record being</p>
+<p>created — it enters a new renter in the book, issues their code, files the board card, queues</p>
+<p>the confirmation. It never speaks to a renter; it works entirely before they exist to the desk,</p>
+<p>then hands off to <b>The Doorman</b>, who does the letting-in. That handoff is the reason Porter</p>
+<p>and Usher were rejected: both flirt with the Doorman&#x27;s territory, and two agents whose names</p>
+<p>imply the same job is exactly how a seam gets blurred.</p>
+
+<p>Use this name in the 🚥 Run Monitor row, the <code>RUNTIMES.md</code> entry, the Plumbing Map entry, and</p>
+<p>its per-pass report line. <code>booking_sweep.py</code> stays the filename.</p>
 </div></details></details></div><div class="job"><div class="jnum">#083</div><div class="jhead"><span class="emoji">👻</span><h4>Empty leftover door-code entries make the system think it has the wrong person</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When someone gets a door code, an empty placeholder entry is sometimes left behind under their name</li><li>The system then sees two entries with one name and stops, saying &#x27;I cannot tell which of these is you&#x27;</li><li>That blocks real renters whose code is perfectly fine — it happened to Hanano (five leftovers) and Hannah (three)</li><li>The fix: ignore anything with no code on it. An empty entry opens no door, so it is not a second person</li><li>Two entries that BOTH open doors still stop the system — that one is a genuine mix-up and a human should look</li><li>Fix it in one place so every robot that uses door codes gets it at once</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Make /provision ignore codeless shells instead of calling them ambiguous</b></p><h2>Question</h2>
 
 <p>Ruled 2026-08-18 (in <b>081</b>, where it was specified but not built —</p>
@@ -2573,117 +2697,117 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>convention, and a mirror that may itself need creating. The same-day lane already solved most</p>
 <p>of this once; the decision is whether to reuse that code by widening its window or to</p>
 <p>re-implement in the sweep, and that is a design call, not a build detail.</p>
-</div></details></details></div><div class="job"><div class="jnum">#085</div><div class="jhead"><span class="emoji">🔑</span><h4>Stop looking people up by name — use their ID numbers</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Every mix-up this week came from one hole: our three systems spell people&#x27;s names differently, and the robots match on names</li><li>&#x27;Dee Brown&#x27; on the booking site is &#x27;Dee Adelubi Brown&#x27; on the alarm panel — so the robot thought she had no door code when hers has worked for months</li><li>Even Claude made the same mistake by hand, one message after explaining the trap</li><li>The fix: both systems already give everyone a permanent ID number — we just never wrote it down</li><li>Two new boxes on each person&#x27;s card: their booking-site number and their alarm number. One cleanup session fills them in</li><li>After that, robots look people up by number. A name can be spelled ten ways and nothing breaks</li><li>Second half: only the alarm service does the finding — every robot asks it, instead of each doing its own lookup and failing differently</li><li>House rules kept: never erase a name or code already on a card, and the cleanup writes to our records only — it never touches the panel</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Join renters on stable IDs, not names — Artist row becomes the join table, alarm-mcp owns resolution</b></p><h2>Problem</h2>
+</div></details></details></div><div class="job"><div class="jnum">#085</div><div class="jhead"><span class="emoji">🗂️</span><h4>One job, two triggers — the sweep becomes the sole owner of the booking lifecycle</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>One job, two triggers — the sweep becomes the sole owner of the booking lifecycle</b></p><h2>Ruling this implements (Junyan, 2026-08-19)</h2>
 
-<p>The three systems share no key. Every join is a <b>human name</b>, and names are the least</p>
-<p>stable field we hold. One night&#x27;s harvest of this single defect (2026-08-18/19):</p>
+<p>&quot;I would prefer one agent handle the whole thing from start to finish.&quot; The split ownership</p>
+<p>— SameDay.gs owns today/tomorrow, the sweep owns 2+ days out, handoff at an invisible</p>
+<p>midnight line — is the discomfort. Chosen shape: <b>one job, two triggers.</b></p>
 
 <ul>
-<li>- The sweep&#x27;s first live pass filed <b>4 residue rows, all false</b> — <code>Kelly-Ann Johnson</li>
+<li>- The <b>sweep chain owns the entire lifecycle</b>: detection, artist record, alarm access,</li>
 </ul>
-<p>(Private Classes)</code> vs panel <code>KellyAnn Johnson</code>, <code>Dee Brown</code> vs <code>Dee Adelubi Brown</code>.</p>
+<p>board row, confirmation, <b>and the same-day HTA</b> — the deference branch dies.</p>
 <ul>
-<li>- The operator (Claude, attended) then made the SAME error by hand one message after</li>
+<li>- It fires on the 30-minute clock <b>and</b> immediately when a booking-confirmation email</li>
 </ul>
-<p>describing it — searched the panel for &quot;Dee Brown&quot;, got nothing, reported a renter with a</p>
-<p>months-old working code as &quot;no code, easy setup&quot;. Careful operators fall in this hole.</p>
+<p>arrives: the mailer keeps ZERO logic, it just POSTs the sweep&#x27;s endpoint (<code>?poke=true</code></p>
+<p>or plain). Same code path on both triggers, so there is no seam to defend.</p>
 <ul>
-<li>- The sweep&#x27;s write-back would have <b>overwritten</b> a correct <code>Alarm Display Name</code> with the</li>
+<li>- <b>SameDay.gs retires</b> after a one-week parallel run, its dedup guards proven against the</li>
 </ul>
-<p>Skedda holder string on first provision, silently corrupting the one bridge that works.</p>
+<p>sweep&#x27;s (the Manuel Hernandez duplicate-HTA case is the regression to test).</p>
 <ul>
-<li>- The <code>⚠️ DUPLICATE — Julie Marouze [Gmail]</code> Artist row exists because name-matching cannot</li>
+<li>- SameDay&#x27;s <b>auto-send authorization moves with the work</b>, bounds unchanged: verified</li>
 </ul>
-<p>tell one person with two spellings from two people.</p>
+<p>panel access (<code>pass</code>/<code>allow_permanent</code> + panels_covered &gt; 0) or nothing sends; canonical</p>
+<p>HTR wording only; exactly-one-code-line check; placeholder check. The one-lane rule in</p>
+<p><code>library/autonomy.md</code> and <code>library/fast-track.md</code> must be REWRITTEN, not duplicated —</p>
+<p>after this, &quot;the same-day lane&quot; IS the sweep&#x27;s imminent branch.</p>
 
-<p>The stable keys already exist; we simply never stored them:</p>
+<h2>What moves into the sweep</h2>
 
-<p>| System | Stable id | Where we already see it |</p>
-<p>|---|---|---|</p>
-<p>| Skedda | <code>venueuser id</code> (e.g. Julie = <code>5704032</code>) | <code>find_user</code>, bookings&#x27; <code>user.id</code> |</p>
-<p>| Alarm.com | <code>user_id</code> (e.g. Julie = <code>247808040</code>) | <code>find_user_codes</code>, <code>/provision</code> result |</p>
-<p>| Notion Artist DB | page id | everywhere |</p>
-
-<h2>Ruled 2026-08-19 (Junyan): Options A + B together; C (name-audit patrol) discarded.</h2>
-
-<h3>A — the Artist row becomes the join table</h3>
+<p>From SameDay.gs, in build order:</p>
 
 <ol>
-<li>1. Add two properties to the Artist DB (<code>collection://3cfb93cb-55f9-46a4-bde8-9b7023797d4b</code>):</li>
+<li>1. <b>The imminent branch</b>: booking starts today/tomorrow AND lacks its HTA → provision</li>
 </ol>
-<p><b><code>Skedda User ID</code></b> and <b><code>Alarm User ID</code></b> (rich_text or number — match house style).</p>
+<p>(already built), pull the canonical fast-track HTA from the HTR DB, fill slots, verify</p>
+<p>(one code line, no placeholders), queue at Ready to Send. The 45-min-late rule and the</p>
+<p>staff/phone/identity refusals port as-is.</p>
 <ol>
-<li>2. <b>Backfill session</b> (attended, one-time): enumerate live panel users</li>
+<li>2. <b>The mail poke</b>: an Apps Script (or the existing send-engine project) forwards nothing</li>
 </ol>
-<p>(<code>find_access_window(name=&quot;&quot;)</code> + <code>find_user_codes</code>) and recent Skedda venueusers</p>
-<p>(<code>find_user</code> over the booking window), match to Artist rows email-first / display-name</p>
-<p>second, write ids. The ambiguous handful become ONE consolidated Review row for Junyan —</p>
-<p>once, ever. Names never resolved again after this.</p>
-<ul>
-<li>- Cross-check the count: ~170 live panel users; anything unmatched is either staff, a</li>
-</ul>
-<p>shell (081&#x27;s ignore class), or a genuine orphan worth a row.</p>
+<p>and parses nothing — it calls the endpoint on arrival of the Skedda confirmation mail.</p>
+<p>Poke failure is harmless: the 30-min clock is the guarantee, the poke is the speed.</p>
 <ol>
-<li>3. From then on every lookup is <b>id-first, name-fallback</b>; a fallback HIT writes the id</li>
+<li>3. <b>Platform mirror creation</b> (Giggster/Peerspace/Tagvenue → Skedda booking with</li>
 </ol>
-<p>back so the fallback path decays to zero over time. New renters get ids stamped at</p>
-<p>creation (the sweep&#x27;s <code>create_artist</code> + <code>/provision</code> both return them — store, don&#x27;t drop).</p>
+<p>read-back proof) — this makes ticket 084&#x27;s &quot;who owns them&quot; answer THIS job; 084&#x27;s open</p>
+<p>questions (title-convention identity, missing phone at T−10) still need their grilling.</p>
+<ol>
+<li>4. <b>The T−2 confirmation gap closes the same way</b>: the sweep&#x27;s Pending Review confirmation</li>
+</ol>
+<p>row currently carries no message body (caught 2026-08-19). With the HTR templating ported,</p>
+<p>fill it from canon like everything else. No new wording is ever invented in code.</p>
 
-<h3>B — alarm-mcp owns identity resolution</h3>
-
-<p><code>/provision</code> and <code>check_access_covers</code> (and the MCP twins) accept <code>artist_page_id</code> and/or</p>
-<p><code>alarm_user_id</code>, resolving server-side: id → exact panel user; else the Artist row&#x27;s</p>
-<p><code>Alarm Display Name</code>; else the passed name — same trust ladder everywhere, implemented once,</p>
-<p>in the service that already holds the credential (the <code>code_mirror</code> pattern). Callers stop</p>
-<p>holding names at all:</p>
-
-<ul>
-<li>- <code>booking_sweep.py</code> passes <code>artist_page_id</code> (it has just resolved the row anyway).</li>
-<li>- The Doorman&#x27;s (b)/(b2)/(b4)/(b5) checks verify <b>ids</b>, not spellings — they are already</li>
-</ul>
-<p>shaped for this.</p>
-<ul>
-<li>- <code>SameDay.gs</code> and the attended skills migrate opportunistically; the name path stays as</li>
-</ul>
-<p>documented fallback, never removed abruptly.</p>
-
-<h2>Constraints carried from the effort</h2>
+<h2>Order and safety</h2>
 
 <ul>
-<li>- <b>Never blank or overwrite a populated <code>Alarm Display Name</code> or <code>Alarm Code</code></b> — fill-only,</li>
+<li>- Blocked on <b>082</b>: the sweep must be live and boring on its</li>
 </ul>
-<p>the 081 rule.</p>
+<p>clock trigger before it takes over the riskiest window.</p>
 <ul>
-<li>- Backfill is READ + Notion-write only; it provisions nothing and never touches the panel.</li>
-<li>- Single-writer: the backfill session is the only thing writing ids until it completes;</li>
+<li>- Parallel week: both lanes run, sweep in shadow for today/tomorrow (log what it WOULD do,</li>
 </ul>
-<p>announce in-session (the Codex collision rule).</p>
+<p>SameDay still acts). Flip = sweep acts, SameDay disabled — one Script Property, reversible.</p>
 <ul>
-<li>- An id that stops resolving (deleted panel user) is the <b>dormant</b> state, not an error —</li>
+<li>- Junyan flips production. Update RUNTIMES.md, the Plumbing Map, autonomy.md, fast-track.md,</li>
 </ul>
-<p>keep the id, the code, and the row; re-provisioning re-uses them (079&#x27;s ladder).</p>
-<ul>
-<li>- Test with the same discipline as 081: id-first hit, fallback hit + write-back, ambiguous</li>
-</ul>
-<p>→ one consolidated row, deleted-user dormancy.</p>
+<p>and the Doorman/Host prompts that name the same-day lane.</p>
 
 <h2>Acceptance</h2>
 
-<ul>
-<li>- Both properties exist and are ≥95% backfilled for renters with any booking in ±60 days;</li>
-</ul>
-<p>the remainder sits in one Review row.</p>
-<ul>
-<li>- alarm-mcp resolves by id when given one (verified by read-back on a renamed test user:</li>
-</ul>
-<p>change a display name in the Alarm.com UI, confirm lookups still succeed).</p>
-<ul>
-<li>- <code>booking_sweep.py</code> and the Doorman prompt pass ids; a live dry run shows zero</li>
-</ul>
-<p>name-mismatch residue.</p>
-<ul>
-<li>- RUNTIMES.md + Plumbing Map entries; 063-style note: capability claims dated and tested.</li>
-</ul>
+<p>One owner: a booking made 30 days out and a booking made 40 minutes before start are handled</p>
+<p>by the same code, differing only in which steps are due. SameDay.gs disabled with a</p>
+<p>do-not-re-enable note. No renter receives two HTAs during the parallel week.</p>
+</div></details></details></div><div class="job"><div class="jnum">#086</div><div class="jhead"><span class="emoji">🗂️</span><h4>Arrival feed + 45-day horizon — see every booking as it comes in</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Arrival feed + 45-day horizon — see every booking as it comes in</b></p><h2>Ruling this implements (Junyan, 2026-08-19)</h2>
+
+<p>The Gmail label (18,404 mails of &quot;X made a booking…&quot;) is Junyan&#x27;s arrival view: every</p>
+<p>booking the moment it is made, regardless of start date. The sweep&#x27;s 14-day horizon means a</p>
+<p>far-out booking is first <i>seen</i> at day 14 — processed in time, but invisible at arrival.</p>
+<p>Ruled: <b>feed + wider horizon.</b></p>
+
+<ol>
+<li>1. <b>Range read, one call.</b> Refactor <code>skedda_read.bookings_on</code> (per-day) to a</li>
+</ol>
+<p><code>bookings_range(start, end)</code> — <code>/bookingslists</code> accepts an arbitrary window, so 45 days</p>
+<p>costs one request, not 45. (The MCP&#x27;s <code>list_bookings_range</code> already proves the shape.)</p>
+<ol>
+<li>2. <b>Horizon to 45 days</b> (<code>SWEEP_HORIZON_DAYS=45</code>). Chain steps are already due-dated, so</li>
+</ol>
+<p>the only behavioral change is that artist record + alarm access happen near arrival</p>
+<p>instead of at day 14. NOTE the recurrence trap still holds: series records arrive</p>
+<p>stamped with the SERIES start; the recurring skip stays (out of scope, map ruling</p>
+<p>2026-08-19) and the range read must not change that.</p>
+<ol>
+<li>3. <b>The arrival feed.</b> Every pass diffs on the <code>created</code> timestamp: bookings created</li>
+</ol>
+<p>since the last pass&#x27;s high-water mark = arrivals. Write them somewhere Junyan actually</p>
+<p>looks — a 📥 New Bookings tab on the Day Sheet (deterministic renderer, J29 pattern) with</p>
+<p>holder, studio, start, price, created-at, and what the sweep did about it. This is the</p>
+<p>Gmail label&#x27;s replacement, derived from the board instead of 18k echo mails.</p>
+<p>High-water mark is process-local + recomputable (max created seen) — a restart re-lists</p>
+<p>a few arrivals rather than losing any, same posture as the alarm watch.</p>
+<ol>
+<li>4. <b>Cancellations/changes are NOT this ticket</b> — the label shows &quot;Dance Annex cancelled…&quot;</li>
+</ol>
+<p>rows; the feed as specced only shows creations. Banked as fog: does the feed need</p>
+<p>change/cancel rows before it can fully replace the label?</p>
+
+<h2>Acceptance</h2>
+
+<p>A booking made 30 days out appears on the feed within one pass of being made, with its code</p>
+<p>already provisioned. The label becomes optional reading. RUNTIMES.md + Plumbing Map updated.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -3491,7 +3615,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Noted, not actioned: <code>Diana [Junyan Phone]</code> and <code>Diana L. [Skedda]</code> are merge candidates under</li>
 </ul>
 <p>077&#x27;s identity-is-name ruling.</p>
-</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#081</span><span class="emoji">🤖</span><span class="done-title">The program that handles new bookings by itself — written and tested, waiting on Junyan to switch it on</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>It is a plain program, not an AI. It reads the booking calendar itself — not the emails, because we learned the emails&#x27; &#x27;read&#x27; mark lies</li><li>Junyan&#x27;s rule: anyone who makes an instant booking gets the treatment. So it picks out real renter bookings by what the calendar itself says they are — not by guessing who is staff</li><li>We also found a trap while checking: if the program&#x27;s calendar login loses its powers, every booking looks blank and the old version would have quietly skipped them all. Now it shouts &#x27;I cannot see properly&#x27; instead</li><li>For each new booking it sets up the renter&#x27;s profile, their door code, and a confirmation held for someone to read before it goes out</li><li>It never remembers which bookings it already did. Every half hour it just asks &#x27;what is missing?&#x27; and fills the gaps — so it cannot lose its place, and nothing gets done twice</li><li>Bookings happening today or tomorrow are left completely alone: a different robot already owns those and is faster. If that one fails, this one writes it on the list rather than barging in</li><li>If our records and the door panel disagree about someone&#x27;s code, our records win — it puts our code back on the panel and checks the door actually opens. It never just trusts the paperwork and texts the code out; that is how someone got sent a code that did not work</li><li>If two door-panel entries share one name, it stops and tells you which one to keep (the one matching our records) and which to delete — it cannot pick between two people with the same name by itself</li><li>The board card still goes up 2 days before the booking, same as Junyan does it now</li><li>We taught it to say &#x27;I could not read the calendar&#x27; out loud, because a broken read used to look exactly like a quiet day</li><li>NOT switched on yet, on purpose — it writes real door codes, so Junyan turns it on himself after watching a practice run</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the deterministic booking-sweep job — code chain, Actions rows for the judgment residue</b></p><h2>Goal</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#081</span><span class="emoji">🤖</span><span class="done-title">Build The Registrar — the program that sets up new bookings by itself</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>It is a plain program, not an AI. It reads the booking calendar itself — not the emails, because we learned the emails&#x27; &#x27;read&#x27; mark lies</li><li>Junyan&#x27;s rule: anyone who makes an instant booking gets the treatment. So it picks out real renter bookings by what the calendar itself says they are — not by guessing who is staff</li><li>We also found a trap while checking: if the program&#x27;s calendar login loses its powers, every booking looks blank and the old version would have quietly skipped them all. Now it shouts &#x27;I cannot see properly&#x27; instead</li><li>For each new booking it sets up the renter&#x27;s profile, their door code, and a confirmation held for someone to read before it goes out</li><li>It never remembers which bookings it already did. Every half hour it just asks &#x27;what is missing?&#x27; and fills the gaps — so it cannot lose its place, and nothing gets done twice</li><li>Bookings happening today or tomorrow are left completely alone: a different robot already owns those and is faster. If that one fails, this one writes it on the list rather than barging in</li><li>If our records and the door panel disagree about someone&#x27;s code, our records win — it puts our code back on the panel and checks the door actually opens. It never just trusts the paperwork and texts the code out; that is how someone got sent a code that did not work</li><li>If two door-panel entries share one name, it stops and tells you which one to keep (the one matching our records) and which to delete — it cannot pick between two people with the same name by itself</li><li>The board card still goes up 2 days before the booking, same as Junyan does it now</li><li>We taught it to say &#x27;I could not read the calendar&#x27; out loud, because a broken read used to look exactly like a quiet day</li><li>NOT switched on yet, on purpose — it writes real door codes, so Junyan turns it on himself after watching a practice run</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build The Registrar (booking sweep) — code chain, Actions rows for the judgment residue</b></p><h2>Goal</h2>
 
 <p>Build the direct-booking one-shot lane as ruled in <b>079</b>:</p>
 <p>a <b>Cloud Scheduler job hitting a deterministic service</b> (event-gate/fbs-monitor style, or</p>
@@ -8102,5 +8226,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 10:13 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 16:26 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
