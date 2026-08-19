@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 10:06 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 10:13 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">23</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">44</div><div class="l">✅ Finished</div></div>
 </div>
@@ -971,7 +971,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
 <p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">22</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">23</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -2573,6 +2573,117 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>convention, and a mirror that may itself need creating. The same-day lane already solved most</p>
 <p>of this once; the decision is whether to reuse that code by widening its window or to</p>
 <p>re-implement in the sweep, and that is a design call, not a build detail.</p>
+</div></details></details></div><div class="job"><div class="jnum">#085</div><div class="jhead"><span class="emoji">🔑</span><h4>Stop looking people up by name — use their ID numbers</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Every mix-up this week came from one hole: our three systems spell people&#x27;s names differently, and the robots match on names</li><li>&#x27;Dee Brown&#x27; on the booking site is &#x27;Dee Adelubi Brown&#x27; on the alarm panel — so the robot thought she had no door code when hers has worked for months</li><li>Even Claude made the same mistake by hand, one message after explaining the trap</li><li>The fix: both systems already give everyone a permanent ID number — we just never wrote it down</li><li>Two new boxes on each person&#x27;s card: their booking-site number and their alarm number. One cleanup session fills them in</li><li>After that, robots look people up by number. A name can be spelled ten ways and nothing breaks</li><li>Second half: only the alarm service does the finding — every robot asks it, instead of each doing its own lookup and failing differently</li><li>House rules kept: never erase a name or code already on a card, and the cleanup writes to our records only — it never touches the panel</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Join renters on stable IDs, not names — Artist row becomes the join table, alarm-mcp owns resolution</b></p><h2>Problem</h2>
+
+<p>The three systems share no key. Every join is a <b>human name</b>, and names are the least</p>
+<p>stable field we hold. One night&#x27;s harvest of this single defect (2026-08-18/19):</p>
+
+<ul>
+<li>- The sweep&#x27;s first live pass filed <b>4 residue rows, all false</b> — <code>Kelly-Ann Johnson</li>
+</ul>
+<p>(Private Classes)</code> vs panel <code>KellyAnn Johnson</code>, <code>Dee Brown</code> vs <code>Dee Adelubi Brown</code>.</p>
+<ul>
+<li>- The operator (Claude, attended) then made the SAME error by hand one message after</li>
+</ul>
+<p>describing it — searched the panel for &quot;Dee Brown&quot;, got nothing, reported a renter with a</p>
+<p>months-old working code as &quot;no code, easy setup&quot;. Careful operators fall in this hole.</p>
+<ul>
+<li>- The sweep&#x27;s write-back would have <b>overwritten</b> a correct <code>Alarm Display Name</code> with the</li>
+</ul>
+<p>Skedda holder string on first provision, silently corrupting the one bridge that works.</p>
+<ul>
+<li>- The <code>⚠️ DUPLICATE — Julie Marouze [Gmail]</code> Artist row exists because name-matching cannot</li>
+</ul>
+<p>tell one person with two spellings from two people.</p>
+
+<p>The stable keys already exist; we simply never stored them:</p>
+
+<p>| System | Stable id | Where we already see it |</p>
+<p>|---|---|---|</p>
+<p>| Skedda | <code>venueuser id</code> (e.g. Julie = <code>5704032</code>) | <code>find_user</code>, bookings&#x27; <code>user.id</code> |</p>
+<p>| Alarm.com | <code>user_id</code> (e.g. Julie = <code>247808040</code>) | <code>find_user_codes</code>, <code>/provision</code> result |</p>
+<p>| Notion Artist DB | page id | everywhere |</p>
+
+<h2>Ruled 2026-08-19 (Junyan): Options A + B together; C (name-audit patrol) discarded.</h2>
+
+<h3>A — the Artist row becomes the join table</h3>
+
+<ol>
+<li>1. Add two properties to the Artist DB (<code>collection://3cfb93cb-55f9-46a4-bde8-9b7023797d4b</code>):</li>
+</ol>
+<p><b><code>Skedda User ID</code></b> and <b><code>Alarm User ID</code></b> (rich_text or number — match house style).</p>
+<ol>
+<li>2. <b>Backfill session</b> (attended, one-time): enumerate live panel users</li>
+</ol>
+<p>(<code>find_access_window(name=&quot;&quot;)</code> + <code>find_user_codes</code>) and recent Skedda venueusers</p>
+<p>(<code>find_user</code> over the booking window), match to Artist rows email-first / display-name</p>
+<p>second, write ids. The ambiguous handful become ONE consolidated Review row for Junyan —</p>
+<p>once, ever. Names never resolved again after this.</p>
+<ul>
+<li>- Cross-check the count: ~170 live panel users; anything unmatched is either staff, a</li>
+</ul>
+<p>shell (081&#x27;s ignore class), or a genuine orphan worth a row.</p>
+<ol>
+<li>3. From then on every lookup is <b>id-first, name-fallback</b>; a fallback HIT writes the id</li>
+</ol>
+<p>back so the fallback path decays to zero over time. New renters get ids stamped at</p>
+<p>creation (the sweep&#x27;s <code>create_artist</code> + <code>/provision</code> both return them — store, don&#x27;t drop).</p>
+
+<h3>B — alarm-mcp owns identity resolution</h3>
+
+<p><code>/provision</code> and <code>check_access_covers</code> (and the MCP twins) accept <code>artist_page_id</code> and/or</p>
+<p><code>alarm_user_id</code>, resolving server-side: id → exact panel user; else the Artist row&#x27;s</p>
+<p><code>Alarm Display Name</code>; else the passed name — same trust ladder everywhere, implemented once,</p>
+<p>in the service that already holds the credential (the <code>code_mirror</code> pattern). Callers stop</p>
+<p>holding names at all:</p>
+
+<ul>
+<li>- <code>booking_sweep.py</code> passes <code>artist_page_id</code> (it has just resolved the row anyway).</li>
+<li>- The Doorman&#x27;s (b)/(b2)/(b4)/(b5) checks verify <b>ids</b>, not spellings — they are already</li>
+</ul>
+<p>shaped for this.</p>
+<ul>
+<li>- <code>SameDay.gs</code> and the attended skills migrate opportunistically; the name path stays as</li>
+</ul>
+<p>documented fallback, never removed abruptly.</p>
+
+<h2>Constraints carried from the effort</h2>
+
+<ul>
+<li>- <b>Never blank or overwrite a populated <code>Alarm Display Name</code> or <code>Alarm Code</code></b> — fill-only,</li>
+</ul>
+<p>the 081 rule.</p>
+<ul>
+<li>- Backfill is READ + Notion-write only; it provisions nothing and never touches the panel.</li>
+<li>- Single-writer: the backfill session is the only thing writing ids until it completes;</li>
+</ul>
+<p>announce in-session (the Codex collision rule).</p>
+<ul>
+<li>- An id that stops resolving (deleted panel user) is the <b>dormant</b> state, not an error —</li>
+</ul>
+<p>keep the id, the code, and the row; re-provisioning re-uses them (079&#x27;s ladder).</p>
+<ul>
+<li>- Test with the same discipline as 081: id-first hit, fallback hit + write-back, ambiguous</li>
+</ul>
+<p>→ one consolidated row, deleted-user dormancy.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Both properties exist and are ≥95% backfilled for renters with any booking in ±60 days;</li>
+</ul>
+<p>the remainder sits in one Review row.</p>
+<ul>
+<li>- alarm-mcp resolves by id when given one (verified by read-back on a renamed test user:</li>
+</ul>
+<p>change a display name in the Alarm.com UI, confirm lookups still succeed).</p>
+<ul>
+<li>- <code>booking_sweep.py</code> and the Doorman prompt pass ids; a live dry run shows zero</li>
+</ul>
+<p>name-mismatch residue.</p>
+<ul>
+<li>- RUNTIMES.md + Plumbing Map entries; 063-style note: capability claims dated and tested.</li>
+</ul>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -7991,5 +8102,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 10:06 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 10:13 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
