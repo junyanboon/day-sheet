@@ -313,6 +313,19 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-20 &middot; 18:09Z</span>
+      <h3>watchlist-refresh gets a heartbeat: a stopped ticker is now detectable, because no error channel can see one<span class="kind">GUARD</span></h3></summary>
+      <p>On 2026-08-20 <code>watchlist-refresh</code> went dark for <strong>9h15m</strong> (02:45Z&rarr;12:00Z) when its cron-job.org dispatcher stopped, and nothing noticed. Nothing <em>could</em>: a workflow that never starts produces no run, no failure and no email &mdash; <strong>silence and health look identical.</strong> Removing the GitHub <code>schedule:</code> crons on 08-18 (to stop double-billing) had made that single ticker the only thing standing between the desk and a silent stop.</p>
+      <p><strong>What was added:</strong> <code>scripts/run_heartbeat.py</code>, the workflow&rsquo;s LAST step under <code>if: success()</code>. It keeps one rolling daily 📊 Workflow Report (appending the <code>🕒 HH:MM</code> body lines The Sentinel&rsquo;s &sect;3a cross-check reads) and stamps <code>Self-heartbeat</code> on a new 🚥 Run Monitor row &mdash; Cadence <strong>15-min</strong>, Stale after <strong>45</strong>, window <strong>08&ndash;23</strong> Toronto. No new watchdog was built: The Sentinel already handles 15-min rows, including the <code>max(hb, today&rsquo;s Window start)</code> rule that stops the overnight gap reading as staleness.</p>
+      <p><strong>Two design points that carry the weight.</strong> The step sits <em>after</em> the deferred Phone.com re-raise, so <code>success()</code> is false whenever anything failed &mdash; one signal covers both &ldquo;the ticker stopped&rdquo; and &ldquo;every run is failing&rdquo;. And the heartbeat could NOT be inferred from the job&rsquo;s own output: <code>watchlist_build.py</code> is idempotent and writes nothing when nothing changed, so a healthy quiet run leaves no trace. Freshness of output is only a heartbeat when the writer is unconditional.</p>
+      <p><strong>Bug found and fixed during the build:</strong> the first live run failed with a bare <code>HTTP Error 400</code> &mdash; the script pinned <code>Notion-Version: 2022-06-28</code>, on which the <code>/data_sources/…</code> endpoints do not exist. It is diagnosable only because the step is non-fatal and logged; the catch-all was then rewritten to read Notion&rsquo;s response body into the message and to stop retrying 4xx, since a malformed request is our bug. Verified end to end: 3 local runs produced ONE report with 3 timestamped lines, then a real CI run wrote <code>🕒 14:09 — ok</code>. Row flipped Live only after that.</p>
+      <p><em>Still blind:</em> <code>qa-review</code> rides the same ticker with the same gap. <code>run_heartbeat.py</code> takes the run name and roster id as arguments so adopting it is one step plus one roster row.</p>
+      <p><em>Paper trail:</em> desk-correspondence <code>scripts/run_heartbeat.py</code> + <code>.github/workflows/watchlist.yml</code>, RUNTIMES.md ticker section, 🚥 Run Monitor row <code>3c275032-81c4-8100-b634-f318e3158cfe</code>.</p>
+    </details>
+    </li>
+
     <li class="entry llm">
       <details>
       <summary><span class="when">2026-08-20 &middot; 14:20Z</span>
