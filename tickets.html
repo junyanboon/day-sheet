@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-20 17:18 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-20 17:23 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">30</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">31</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">56</div><div class="l">✅ Finished</div></div>
 </div>
@@ -1229,7 +1229,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
 <p>Ops Lead&#x27;s use of it here.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">30</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">31</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -3263,6 +3263,63 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Whether the same-day lane, which owns its own sends, follows the same rule or is</li>
 </ul>
 <p>explicitly exempt until <b>089</b> dissolves that seam.</p>
+</div></details></details></div><div class="job"><div class="jnum">#106</div><div class="jhead"><span class="emoji">🗂️</span><h4>Provisioning a renter by hand mints a second card — nothing says one already exists</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Provisioning a renter by hand mints a second card — nothing says one already exists</b></p><h2>Question</h2>
+
+<p><code>alice hamman</code> had two Artist cards on 2026-08-20. The cause, read directly rather than</p>
+<p>assumed:</p>
+
+<p>| card | created | by | carried |</p>
+<p>|---|---|---|---|</p>
+<p>| <code>3c275032…d208c</code> | 03:02Z | Dance Annex Desk CLI (bot) | <code>Company</code>, <code>Product</code> |</p>
+<p>| <code>3c275032…51b98</code> | 14:25Z | <b>Junyan, by hand</b> | alarm code + user id, <code>Permanent Codes</code>, Activity note, the FBS board row, the queued How-to-Access |</p>
+
+<p>Same email, same phone, same <code>Skedda User ID</code>. <b>No lane wrote twice.</b> The desk created</p>
+<p>her card at 3am; a human created a second one eleven hours later while setting up her door</p>
+<p>code, because nothing in that path surfaces the card that already exists.</p>
+
+<p>So: what stops the next one?</p>
+
+<h2>Why it matters more than one merged card</h2>
+
+<p>It cost a real thing. Until the merge, every 30-minute sweep hit her and returned</p>
+<p><code>artist:ambiguous</code> — the sweep correctly refuses to guess between two cards — so <b>her</p>
+<p>booking could not complete on any pass</b>, for eleven hours. A hand-made duplicate is not a</p>
+<p>cosmetic tidiness problem; it stops the deterministic lane dead for that renter.</p>
+
+<p>It is also the class <b>098</b> could not see. That grill</p>
+<p>measured the <i>relay</i> duplicate class (unbounded, platform-driven) and the private-vs-group</p>
+<p>class (bounded). This is a third: <b>human-driven, and invisible to every count we took</b>,</p>
+<p>because both cards look native and share every identifier.</p>
+
+<h2>What has to be decided</h2>
+
+<ul>
+<li>- Where the check belongs. Alarm provisioning is the moment the duplicate got made, but</li>
+</ul>
+<p>the general shape is &quot;a human is about to create an Artist row&quot; — that may be one place</p>
+<p>or several.</p>
+<ul>
+<li>- What it shows. <code>find_artist</code> already answers this exactly (id → contact point → name),</li>
+</ul>
+<p>and would have returned her existing card from the email alone. The question is what</p>
+<p>surface puts that answer in front of a person mid-task without slowing the job — the</p>
+<p><b>077</b> lesson applies: a check nobody reads is not a check.</p>
+<ul>
+<li>- Whether the desk should instead <i>detect</i> the pair after the fact, on a cadence, and</li>
+</ul>
+<p>raise it — cheaper to build, but it means the sweep stays blocked for that renter until</p>
+<p>someone clears it, which is what happened here.</p>
+<ul>
+<li>- Whether this changes the <code>create_artist</code> path at all. The bot behaved correctly</li>
+</ul>
+<p>throughout; nothing about it needs fixing, and a fix aimed at the robot would miss.</p>
+
+<h2>Known count</h2>
+
+<p>Unknown, and worth measuring before designing: how many of the <b>25 duplicate-name sets</b></p>
+<p>are this class (both cards native, shared stable identifiers) rather than the relay class?</p>
+<p><b>104</b> will surface the evidence per pair — this ticket wants</p>
+<p>the split.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -5092,6 +5149,33 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Env was not touched</b> — </code>SWEEP_CONTACT_DS<code> has a hard-coded default, so no variable was</p>
 <p>added and the README&#x27;s </code>--set-env-vars<code> foot-gun never came into play. All 18 variables</p>
 <p>recorded before the read are intact.</p>
+
+<h2>CORRECTION + follow-up — 2026-08-20 (later)</h2>
+
+<p><b>The </code>alice hamman<code> duplicate was NOT the relay class, and not a robot fault.</b> This</p>
+<p>ticket&#x27;s resolution above calls it &quot;a real duplicate awaiting 104&quot;. Read directly, the two</p>
+<p>cards were:</p>
+
+<p>| card | created | by | carried |</p>
+<p>|---|---|---|---|</p>
+<p>| </code>3c275032…d208c<code> | 03:02Z | <b>Dance Annex Desk CLI</b> (bot) | </code>Company<code>, </code>Product<code> |</p>
+<p>| </code>3c275032…51b98<code> | 14:25Z | <b>Junyan</b>, by hand | alarm code + user id, </code>Permanent Codes<code>, the Activity note, the FBS board row, the queued How-to-Access |</p>
+
+<p>Same email, same phone, same </code>Skedda User ID<code> on both. The desk made her card at 3am; a</p>
+<p>human made a second one eleven hours later while provisioning her door code, <b>with</p>
+<p>nothing in that workflow saying a card already existed</b>. No lane wrote twice.</p>
+
+<p><b>Merged 2026-08-20 on Junyan&#x27;s instruction in session.</b> Survivor is Junyan&#x27;s card — it</p>
+<p>holds the alarm credentials and every inbound relation. </code>Company<code> and </code>Product<code> were</p>
+<p>copied across fill-only; the bot card&#x27;s two Contact Points rows were redundant exact</p>
+<p>copies of the survivor&#x27;s and were archived with it (Notion archive = trash, recoverable).</p>
+
+<p><b>Live dry-run immediately after: </code>162 scanned · residue 0 · errors 0<code>, </code>artist:found<code> 40,</p>
+<p>nothing flagged.</b> The lane is clean end to end.</p>
+
+<p><b>What this leaves behind</b> — the gap is in the <i>human</i> path, not the robot one: manual</p>
+<p>alarm provisioning has no &quot;does this person already have a card?&quot; step. Graduated as</p>
+<p><b>106</b>.</p>
 
 <h2>Question</h2>
 
@@ -10601,5 +10685,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-20 17:18 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-20 17:23 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
