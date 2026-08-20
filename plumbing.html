@@ -313,6 +313,20 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-20 &middot; 17:58Z</span>
+      <h3>Doorman prompt updated for the dead ADT feed &mdash; b3 suspended, canary retired, Gmail connector detached<span class="kind">PROMPT</span></h3></summary>
+      <p>Completes the &ldquo;prompt edit queued as its own task&rdquo; item from the feed-retirement entry below. Cloud Doorman <code>trig_01XyrVCbCrSbFfWjxo9FZtxN</code> updated by whole-prompt replace (recorded as <strong>prompt v8</strong> in <code>RUNTIMES.md</code> &mdash; Junyan&rsquo;s instruction said v7, but v7 was taken earlier today by the A3-routing change). Three edits, bringing the prompt to match canon (<code>house-rules.md</code> + the Job C banner in <code>doorman-access-lifecycle.md</code>):</p>
+      <ul>
+      <li><strong>B(b3)</strong> is now a suspension note: no retirement sweep until the Alarm.com Past Events relay restores named presence evidence, and the <strong>feed canary is retired outright</strong> &mdash; a permanently dead feed must never raise &ldquo;feed silent&rdquo; Review rows (known condition, not news). One-time cleanup closes any open <code>ADT notification feed silent</code> Review row.</li>
+      <li><strong>Header:</strong> Gmail connector marked no longer needed, and <strong>detached from the trigger&rsquo;s mcp_connections</strong> (it existed solely for b3&rsquo;s evidence searches) &mdash; the Doorman now carries 3 connectors: Notion, Google-Calendar, alarm-mcp. The <code>label:</code>-trap paragraph went with it; only the general zero-results-need-a-second-query lesson survives.</li>
+      <li><strong>Report lines:</strong> the feed-canary slot in the heartbeat and chat summary now reads <code>b3 suspended &mdash; feed retired 2026-08-20</code>.</li>
+      </ul>
+      <p>Verified by read-back: A1&ndash;A6 and B(a)/(a2)/(b)/(b2)/(b4)/(c) byte-identical; cron <code>0 8,10 * * *</code> and enabled untouched. Side finding for a separate look: the live pre-edit prompt had <strong>no B(b5)</strong> section although <code>RUNTIMES.md</code>&rsquo;s v6 entry says one was added 2026-08-18 &mdash; the dead-shell sweep appears to have never landed or been reverted.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-20 &middot; 18:55Z</span>
