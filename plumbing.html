@@ -315,6 +315,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-20 · 14:0xZ</span>
+      <h3>The 🚪 Alarm Activity Log is retired — it had been a dead importer wearing a live schema for five weeks<span class="kind">RETIRE</span></h3></summary>
+      <p>Asked whether the Notion alarm log still matched the new arm-state ledger, and whether it was still used. It matched — and it was barely used. Every point where both had something to say about 509A agreed (Aug 19 08:04Z disarmed, Aug 20 08:03Z armed away). But over the same two days the ledger recorded <strong>24 transitions across five studios</strong> and the Notion log recorded <strong>four rows, all 509A</strong>, all Doorman morning arm-checks.</p>
+      <p>The row counts told the story: <strong>109 rows from source <code>Alarm.com History</code> between 2026-07-11 and 07-13, and never one again.</strong> That importer died on its first run — the Alarm.com <code>activity/historyEvents</code> API is scoped to a single <code>identity.unitId</code> (901) and cannot be switched, which is the same dead end probed exhaustively on 2026-08-18. Since then: 31 rows in five weeks, all <code>Panel Snapshot</code>, <code>Actor</code> and <code>Event Type</code> null on every one. <code>Imported At</code> frozen at 2026-07-13. The third source option, <code>Alarm.com Live</code>, was never used at all.</p>
+      <p>Renamed to <b>🚪 Doorman Arm-Check Log (retired as alarm record)</b> with a description pointing at the ledger. Historical rows and the <code>Alarm.com History</code> option kept deliberately — deleting the option would erase how those 109 rows got there. Canon <code>the-doorman.md</code> rewritten: the hourly-sync procedure is marked retired with the API dead end documented so nobody re-investigates, and <strong>the Concierge&rsquo;s Missed Booking rule now reads the ledger, not the log</strong> — that rule had been pointing at a near-empty table, which is the exact shape of the Aug 18 failure that started all this.</p>
+      <p><em>What the ledger cannot do:</em> it has no actor attribution — it knows a studio was disarmed, not by whom. Names come from the TELUS/ADT emails as enrichment only. The Doorman&rsquo;s daily arm-check keeps running and keeps writing to the retired log: one cheap independent witness a day, useful for exactly the cross-check performed here.</p>
+    </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-20 · 02:55Z</span>
       <h3>The presence gate could not recognise its own renters — and a no-op source is indistinguishable from a working one<span class="kind">FIX</span></h3></summary>
       <p>Chasing why a door card reached Anita an hour after her booking ended, the state files turned out to be fresh and the gate healthy. The failure was the name. Source 3 — the Skedda schedule backstop, the <em>only</em> presence source covering a renter the FBS board does not track — matched the watchlist name to the booking holder with <code>mine &lt;= theirs</code>. The Artist DB decorates names with a product tag; Skedda does not. <code>"Anita Pandey [Fixed Option]"</code> tokenises to <code>{anita, pandey, fixed, option}</code>, which is not a subset of Skedda&rsquo;s <code>{anita, pandey}</code>. No match, no scheduled end, verdict <code>None</code> — and <strong>unknown means send</strong>.</p>
