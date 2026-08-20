@@ -315,6 +315,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-20 &middot; 18:30Z</span>
+      <h3>Send Engine v19: Invariant K &mdash; proof of dispatch. Every send stamps a provider message id into the new Dispatch Receipt column<span class="kind">GUARD</span></h3></summary>
+      <p>The Samara (Jul 28) and Tess/David (Jul 21) incidents shared one shape: a row claiming <code>Sent</code> with no message actually delivered, invisible until a renter complained. v19 closes the class at the source instead of auditing after the fact: both send paths now return the provider&rsquo;s message id (<code>gmail:&lt;id&gt;</code> / <code>phonecom:&lt;id&gt;</code>) and the engine stamps it into the Message Queue&rsquo;s new <strong>Dispatch Receipt</strong> property immediately after dispatch. Fresh emails move from <code>GmailApp.sendEmail</code> (returns nothing) to the Gmail API + <code>buildMime_</code> path the reply branch has used since v12.</p>
+      <p><strong>Failure semantics:</strong> Gmail API resolving without an id &rarr; throws &rarr; row flips to Error (loud). Receipt <em>stamp</em> failing after a real send &rarr; row STAYS Sent with a row comment + alert email &mdash; flipping to Error post-dispatch invites a re-release and a double send. Phone.com 2xx with unparseable body &rarr; marker receipt <code>phonecom:http-2xx</code>, never an Error flip.</p>
+      <p><strong>Watcher:</strong> The Mechanic&rsquo;s hourly sweep (J13 lane A) gained a receipt check: Status=Sent, Sent At &gt;15 min old, empty receipt, SMS/Email lanes only &rarr; claimed-but-not-dispatched, filed to Actions to Perform. Self-calibrating: zero receipts in the window = v19 not yet deployed, noted instead of alarmed. Same sweep also gained three silence checks (inbox backlog age, intake stall, queue stall) after the Concierge quiet-failure post-mortem.</p>
+      <p><em>Paper trail:</em> send-engine/Code.gs v19 (local, deploy = clipboard paste), Message Queue schema (Dispatch Receipt, rich_text), error-sweeper SKILL.md &sect;1c.</p>
+    </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-20 &middot; 14:20Z</span>
       <h3>Overtime goes automatic: the Timekeeper writes the Skedda booking itself, and the notice rides the PBF &mdash; the T1 retires<span class="kind">REROUTE</span></h3></summary>
       <p>Junyan ruling: overtime charges are processed the same way every time, automatically &mdash; <em>a waiver is a policy exception granted after the fact, never a hold</em>. Until today the Timekeeper&rsquo;s 04:00 run computed the overage, queued a held charge, and queued a standalone T1 heads-up &mdash; but could not create the extra-time booking (no Skedda connector on the trigger), which is how two T1s came to claim bookings that did not exist.</p>
