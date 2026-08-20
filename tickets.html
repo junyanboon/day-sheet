@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-20 17:06 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-20 17:08 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">32</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">31</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">54</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">55</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1271,7 +1271,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ol>
 <p>dc-canon root. Awaiting approval.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">32</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">31</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -3230,32 +3230,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>101 mints nothing for transactional notices (they lack the <code>(Giggster) &lt;Name&gt;:</code> prefix),</p>
 <p>but that is a consequence of the shape check, not an explicit blocklist.</p>
 
-</div></details></details></div><div class="job"><div class="jnum">#103</div><div class="jhead"><span class="emoji">🗂️</span><h4>Ship the Contact Points lookup — redeploy event-gate, then dry-run before it runs unattended</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Ship the Contact Points lookup — redeploy event-gate, then dry-run before it runs unattended</b></p><h2>Question</h2>
-
-<p><b>101</b> built the table, back-filled 1,709 rows and moved</p>
-<p><code>find_artist</code> onto it — and <b>the cloud service still runs the old code</b>, so the live</p>
-<p>30-minute sweep is still matching on <code>Email</code> alone. This ticket is the flip.</p>
-
-<p>The order is <b>082</b>&#x27;s, which caught two faults no test found:</p>
-
-<ol>
-<li>1. <b>Deploy</b> <code>event-gate</code> from <code>dc-canon</code> at <code>22b20096</code> or later.</li>
-<li>2. <b>Dry-run read</b> against the live board (<code>POST /booking-sweep/&lt;token&gt;?dry_run=true</code>)</li>
-</ol>
-<p>and read the pass before leaving it unattended. The bar is the one 101 already cleared</p>
-<p>from a laptop: every booking resolves <code>artist:found</code> except the genuinely ambiguous</p>
-<p>cards, and <b>no residue row is new</b>.</p>
-<ol>
-<li>3. Only then let the scheduled <code>booking-sweep</code> job run on the new revision.</li>
-</ol>
-
-<p>Nothing here needs a decision — 101 settled the shape, the normalization and the fallback</p>
-<p>behaviour. If the dry-run disagrees with 101&#x27;s, that disagreement is the finding.</p>
-
-<h2>Why it is its own ticket</h2>
-
-<p>Deploying is a production flip and Junyan confirms those. It is also the only step between</p>
-<p>a table that is right and a desk that actually uses it.</p>
 </div></details></details></div><div class="job"><div class="jnum">#104</div><div class="jhead"><span class="emoji">🗂️</span><h4>Propose the card merges, with evidence, now that Contact Points can show it</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Propose the card merges, with evidence, now that Contact Points can show it</b></p><h2>Question</h2>
 
 <p><b>098</b> deferred the migration until the table existed so</p>
@@ -5031,6 +5005,70 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- A dry-run sweep pass over the live board shows no new residue attributable to the change.</li>
 <li>- <code>Known Emails</code> is documented as retired — no lane reads it, and no habit writes to it.</li>
 </ul>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#103</span><span class="emoji">🗂️</span><span class="done-title">Ship the Contact Points lookup — redeploy event-gate, then dry-run before it runs unattended</span><span class="done-date">2026-08-20</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>Ship the Contact Points lookup — redeploy event-gate, then dry-run before it runs unattended</b></p><h2>RESOLUTION — 2026-08-20</h2>
+
+<p><b>Live and verified. The desk is now matching renters on every contact point, unattended.</b></p>
+
+<p><b>The deploy had already happened</b> — <code>event-gate-00061-mjn</code>, created 19:30Z from</p>
+<p><code>0d06d97f</code>, which carries <code>22b20096</code>. A concurrent session shipped it about ninety minutes</p>
+<p>before this ticket was worked, so what this session actually did was the part that makes a</p>
+<p>deploy trustworthy: <b>read the pass</b>. Worth recording plainly, because a deploy nobody</p>
+<p>verified and a deploy nobody made look identical from the outside.</p>
+
+<p><b>Live dry-run against the deployed revision</b> (<code>POST /booking-sweep/&lt;token&gt;?dry_run=true</code>):</p>
+
+<p>``<code></p>
+<p>scanned 162 · skipped 122 · deferred 7 · residue 1 · errors 0</p>
+<p>artist:found 39 · artist:ambiguous 1</p>
+<p>NEW RESIDUE: none</p>
+<p></code>`<code></p>
+
+<p>The single ambiguous row is </code>alice hamman<code> — two live cards sharing one email, already</p>
+<p>carrying </code>residue: existing<code>. That is the merge class (<b>104</b>),</p>
+<p>human-only by 098, and the sweep refusing it is the behaviour we want. <b>Cleaner than</p>
+<p>101&#x27;s laptop run</b>, which showed </code>access:check-failed<code> on same-day bookings purely because</p>
+<p>the alarm panel is unreachable from a laptop; from the cloud those checks pass.</p>
+
+<p><b>Two real unattended passes have since run on the new code</b> (20:00Z and 20:30Z, the</p>
+<p></code>booking-sweep<code> scheduler job, </code><i>/30 </i> <i> </i> *<code> UTC, ENABLED, no error): both</p>
+<p></code>162 · 122 · 7 · residue 3 · errors 0<code>. Residue is <b>steady across passes, not growing</b> —</p>
+<p>the fault shape that would matter here is a lookup that stops finding people and starts</p>
+<p>raising a row per booking, and that is not happening.</p>
+
+<p><b>The acceptance check that actually proves it:</b> the 🎨 Artist Database holds <b>1,051</p>
+<p>rows, zero created since the deploy</b>. The old lookup minted a fresh card whenever a</p>
+<p>renter arrived on a new relay address; four live passes later it has minted none.</p>
+
+<p><b>Env was not touched</b> — </code>SWEEP_CONTACT_DS<code> has a hard-coded default, so no variable was</p>
+<p>added and the README&#x27;s </code>--set-env-vars<code> foot-gun never came into play. All 18 variables</p>
+<p>recorded before the read are intact.</p>
+
+<h2>Question</h2>
+
+<p><b>101</b> built the table, back-filled 1,709 rows and moved</p>
+<p></code>find_artist<code> onto it — and <b>the cloud service still runs the old code</b>, so the live</p>
+<p>30-minute sweep is still matching on </code>Email<code> alone. This ticket is the flip.</p>
+
+<p>The order is <b>082</b>&#x27;s, which caught two faults no test found:</p>
+
+<ol>
+<li>1. <b>Deploy</b> </code>event-gate<code> from </code>dc-canon<code> at </code>22b20096<code> or later.</li>
+<li>2. <b>Dry-run read</b> against the live board (</code>POST /booking-sweep/&lt;token&gt;?dry_run=true<code>)</li>
+</ol>
+<p>and read the pass before leaving it unattended. The bar is the one 101 already cleared</p>
+<p>from a laptop: every booking resolves </code>artist:found<code> except the genuinely ambiguous</p>
+<p>cards, and <b>no residue row is new</b>.</p>
+<ol>
+<li>3. Only then let the scheduled </code>booking-sweep` job run on the new revision.</li>
+</ol>
+
+<p>Nothing here needs a decision — 101 settled the shape, the normalization and the fallback</p>
+<p>behaviour. If the dry-run disagrees with 101&#x27;s, that disagreement is the finding.</p>
+
+<h2>Why it is its own ticket</h2>
+
+<p>Deploying is a production flip and Junyan confirms those. It is also the only step between</p>
+<p>a table that is right and a desk that actually uses it.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#015</span><span class="emoji">✂️</span><span class="done-title">Read every message we ever sent — and found some customers got the same text twice</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE. Two leftover jobs on this ticket, and neither one turned out to be what we thought</li><li>First job: a tool that compared a robot&#x27;s rough draft with the final message, to teach it to write better</li><li>That tool was scrapped back in July, because robots filled in the draft box and left the real box empty — so some messages went out blank</li><li>Junyan ruled: leave it dead. The new suggest-and-rewrite way of working already teaches the robots the same lesson, in a better place</li><li>Second job: a checkup hunting for messages accidentally recorded twice</li><li>We read all 9,465 messages the studio has ever sent or received — every single one, not a sample</li><li>The old plan for that checkup was junk: it just asked &#x27;same words?&#x27;, so every weekly reminder looked like a mistake. About 500 false alarms</li><li>Good news: our record book is clean. Nothing was written down twice</li><li>Bad news, and this is the real find: some customers actually got the same text twice</li><li>On June 21, three renters each got the same long message twice at 12:01, then twice again at 13:00 — four copies each in one hour</li><li>Two more people got doubled texts in May, and one person&#x27;s reply got recorded twice in August</li><li>Nothing is watching for this. The outbox shows one row per message, so a double send looks perfectly normal from there</li><li>So we&#x27;re building a checkup that hunts for double sends instead (087), and a separate job to find out what caused June 21 (088)</li><li>One more lesson, learned twice the hard way this session: a search that doesn&#x27;t say how much it actually looked at is worthless</li><li>Our first search read only 346 of the 9,465 messages — 4% — and cheerfully reported everything was fine</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cut correspondence canon over from the Notion Correspondence Log to J28</b></p><h2>Question</h2>
 
 <p>Junyan&#x27;s direction (2026-07-15): stop using the <b>Notion Correspondence Log</b> as the desk&#x27;s</p>
@@ -10513,5 +10551,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-20 17:06 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-20 17:08 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
