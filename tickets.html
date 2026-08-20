@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 16:31 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 20:48 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">23</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">24</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">45</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">46</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1082,7 +1082,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- RUNTIMES.md + Plumbing Map entries; 063-style note: capability claims dated and tested.</li>
 </ul>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">23</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">24</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -2785,86 +2785,60 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>A booking made 30 days out appears on the feed within one pass of being made, with its code</p>
 <p>already provisioned. The label becomes optional reading. RUNTIMES.md + Plumbing Map updated.</p>
+</div></details></details></div><div class="job"><div class="jnum">#088</div><div class="jhead"><span class="emoji">🔎</span><h4>Find out why three renters each got the same message four times</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>June 21: three renters each got the same long message twice at 12:01, then twice again at 13:00</li><li>Two bursts, both doubled, all three people together — that looks like one job running twice, not three separate slips</li><li>The message-sending machine was rebuilt in July, so the cause may already be gone</li><li>But &#x27;probably already fixed&#x27; is a guess, and guesses like that have cost us real time before — so go and check</li><li>Finding the cause is a different job from spotting it happening again (087). We need both</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Diagnose the 2026-06-21 duplicate-send incident — three renters, four copies each</b></p><h2>Question</h2>
+
+<p>On <b>2026-06-21</b>, three renters — <code>+14166702726</code>, <code>+12265007353</code>, <code>+19053796624</code> — each</p>
+<p>received the same 2,261-character staff-availability message <b>twice at 12:01:43 UTC and</p>
+<p>twice again at 13:00:22 UTC</b>. Four copies each, inside one hour, identical to the second.</p>
+<p>Nobody noticed at the time; it surfaced only in <b>015</b>&#x27;s ledger scan</p>
+<p>2026-08-19 (<b>evidence</b>).</p>
+
+<p>Two smaller instances of the same shape sit either side of it: <code>+16479802922</code> ×2 on</p>
+<p>2026-05-28 20:51:33 (EOB &quot;booking will end soon&quot;) and <code>+14164752823</code> ×2 on 2026-05-30</p>
+<p>18:06:20 (&quot;upcoming booking&quot;). One inbound instance too — <code>+16475199699</code> &quot;great thanks&quot;</p>
+<p>captured twice at 2026-08-08 15:33:34 under two distinct Phone.com ids, which may be a</p>
+<p>carrier artifact rather than a send fault.</p>
+
+<p><b>Find what fired twice, and whether it still can.</b></p>
+
+<ul>
+<li>- Two bursts an hour apart, each burst doubled, all three renters together, is a <i>batch</i></li>
+</ul>
+<p>signature — a pass that ran twice, or a queue drained twice — not three independent slips.</p>
+<ul>
+<li>- The 12:01 and 13:00 timings sit on the hourly Concierge cadence of that era (before the</li>
+</ul>
+<p>004 cut to 2-hourly), which is the first place to look.</p>
+<ul>
+<li>- Reads: the 📤 Message Queue rows for that day (were there 2 rows or 1 row sent twice?),</li>
+</ul>
+<p>the rolling report / run history for 2026-06-21, and what owned these sends in June.</p>
+<ul>
+<li>- <b>Do not assume it is already fixed.</b> The send engine was rebuilt in July</li>
+</ul>
+<p>(<b>029</b>) and the Zapier send lane retired, so the June</p>
+<p>mechanism may be gone — but &quot;probably fixed by unrelated work&quot; is a guess, and this map has</p>
+<p>a specific, expensive record of unverified claims about what a component can or cannot do</p>
+<p>(<b>063</b>: three for three false). Establish it or say it</p>
+<p>is untested.</p>
+
+<p>Relationship to <b>087</b>: that ticket builds the <b>detector</b>; this</p>
+<p>one finds the <b>cause</b>. Detection is not repair — the Vicky lockout was detected correctly</p>
+<p>and still ended with a renter at a locked door. Neither ticket substitutes for the other.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- The mechanism named, or explicitly recorded as untested with what would falsify it.</li>
+<li>- A statement on whether the June path still exists post-029.</li>
+<li>- If a live fault remains, the repair or a graduated ticket for it.</li>
+<li>- Any customer-facing follow-up (three renters got four copies each) put to Junyan — not</li>
+</ul>
+<p>actioned unattended.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
 <p>Build the crude-but-real J26 cost ledger on the Jobs registry spine: per job, runs × pass length (proxy for token spend) plus a self-reported supervision-minutes line, tallied weekly. Framing: <b>subscription headroom + exposure if the subsidy changes</b>, not cash bleed (~$240/mo Claude + $140/mo ChatGPT actual). It also populates the sibling map&#x27;s GO criterion (c). Decide the tally mechanism (likely a weekly scheduled job writing registry rows) and stand it up.</p>
-</div></details></details></div><div class="job"><div class="jnum">#015</div><div class="jhead"><span class="emoji">✂️</span><h4>Stop keeping two copies of messages</h4></div><span class="pill p-wait">needs 006 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Today messages get saved in two places</li><li>Switch fully to our own record</li><li>Freeze the old copy</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cut correspondence canon over from the Notion Correspondence Log to J28</b></p><h2>Question</h2>
-
-<p>Junyan&#x27;s direction (2026-07-15): stop using the <b>Notion Correspondence Log</b> as the desk&#x27;s</p>
-<p>record of what&#x27;s been said to each renter — J28 (the owned-store ledger: Gmail + SMS, both</p>
-<p>directions, deterministic, history-readable) is now that record. Plan and execute the cutover.</p>
-
-<p>This is a <b>repoint, not a deletion</b>: J11 the reconciliation <i>job</i> stays (&quot;keep — future</p>
-<p>scorer&quot;); only its data <i>source</i> changes (Notion log DB → J28). Decide with Junyan:</p>
-
-<ul>
-<li>- <b>Consumer inventory</b> — what reads the Notion Correspondence Log today? Concierge heavy-pass</li>
-</ul>
-<p>JOB 2, ticket procedures, the drafted-vs-sent diff, Day Sheet / reports, anything else. Each</p>
-<p>gets repointed to J28. This inventory is the core of the ticket.</p>
-<ul>
-<li>- <b>The drafted-vs-sent diff</b> (the desk&#x27;s one true closed loop today) — recompute as</li>
-</ul>
-<p><i>queue-drafted body</i> vs <i>J28 actual-sent text</i>, i.e. against real ground truth instead of the</p>
-<p>Message-Queue <code>Status=Sent</code> proxy. Cleaner; confirm the mechanics.</p>
-<ul>
-<li>- <b>Historical data</b> — backfill J28 from history so J11&#x27;s Notion log is fully redundant (SMS:</li>
-</ul>
-<p><code>sms_pull.py --since</code>, 34k msgs available; Gmail: search backfill), OR freeze the Notion log</p>
-<p>as a read-only archive for pre-cutover context. Decide which.</p>
-<ul>
-<li>- <b>Write-path cutover</b> — stop the Concierge writing the Notion Correspondence Log. This removes</li>
-</ul>
-<p>a top 429-throttled sub-step → <b>supersedes ticket 013</b> (013&#x27;s tactical relief was explicitly</p>
-<p>&quot;until the transition&quot; — this is the transition).</p>
-<ul>
-<li>- <b>Sequencing / hard dependency</b> — cloud runtimes read J28 via the GitHub mirror, but the</li>
-</ul>
-<p>mirror is currently <b>incomplete for SMS</b> (poller writes SMS files to local <code>inbox/</code> only, not</p>
-<p>the repo). That open item (banked on ticket 006) MUST be resolved first, or repointing a cloud</p>
-<p>Concierge pass to J28 silently loses SMS.</p>
-
-<p><b>Absorbed by <b>025</b> (2026-07-17):</b> the consumer repoint</p>
-<p>happens inside the library port (edit once during migration); this ticket closes when</p>
-<p>025&#x27;s step 2 beds in and the Notion log freezes read-only.</p>
-
-<p><b>Premise downgraded by <b>023</b> (2026-07-17):</b> the git write-race</p>
-<p>that motivated &quot;move the ledger off git&quot; was Zap concurrency; post-024 the poller is the</p>
-<p>single (retry-rebase) writer, so git stays the transport. This ticket&#x27;s remaining content is</p>
-<p>the consumer repoint, the drafted-vs-sent diff recompute, and the backfill decision.</p>
-
-<p>Blocked by <b>006</b> (J28 must be complete, scheduled, reliable, mirror-complete). Coordinates with</p>
-<p><b>data-sovereignty-wayfinder</b> (correspondence canon leaving Notion is a data-sovereignty</p>
-<p>instance). Resolution records: the consumer inventory + repoint plan, the historical-data</p>
-<p>decision, the diff recompute, and confirmation the Notion-log write is retired.</p>
-
-<h2>Acceptance criterion added 2026-07-21 (from ticket 013)</h2>
-
-<p>The Custodian/Fixer &quot;deep per-artist dedup&quot; check — currently skipped every pass under</p>
-<p>&quot;throttle discipline&quot; — must run against the J28 ledger post-cutover. 015 isn&#x27;t done while</p>
-<p>that check is silently skipped.</p>
-
-
-<h2>Scope amendment (2026-07-23, from 025&#x27;s close)</h2>
-
-<p>025 closed WITHOUT the Correspondence-Log freeze — Junyan ruled the freeze VOID: the</p>
-<p>Notion log is a permanent two-way-synced projection (07-18 design), never frozen.</p>
-<p>This ticket no longer &quot;closes when 025 beds in&quot;; it stands on its own remaining</p>
-<p>content:</p>
-
-<ol>
-<li>1. <b>Drafted-vs-sent diff recompute</b> — queue-drafted body vs J28 actual-sent text</li>
-</ol>
-<p>(ground truth), replacing the Message-Queue <code>Status=Sent</code> proxy.</p>
-<ol>
-<li>2. <b>Deep per-artist dedup check</b> (acceptance criterion from 013) — the</li>
-</ol>
-<p>Custodian/Fixer check must run against the J28 ledger, not stay silently skipped.</p>
-
-<p>Already-moot parts: consumer repoint (done inside 025&#x27;s port), write-path cutover</p>
-<p>(done — pollers/log_drop own all writes), backfill decision (done in 006: 90-day</p>
-<p>backfill executed), the freeze (void).</p>
 </div></details></details></div><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>A live board for the studio manager</h4></div><span class="pill p-wait">needs 021 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>One screen for the studio manager</li><li>Shows today&#x27;s renters and problems live</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
@@ -3366,10 +3340,232 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- Sampling check live and logged on the digest page.</li>
 </ul>
+</div></details></details></div><div class="job"><div class="jnum">#087</div><div class="jhead"><span class="emoji">👯</span><h4>Build a checkup that catches the same text going out twice</h4></div><span class="pill p-wait">needs 046 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Watches for one person getting the identical message twice in the same moment</li><li>Nothing watches for this today — the outbox shows one row, so a double send looks fine from there</li><li>Has to look for messages sent at the very same second — anything looser and every weekly reminder looks like a mistake</li><li>Starts in trial mode: a person marks each finding real-or-noise before it&#x27;s allowed to bug anyone</li><li>Must say out loud how many messages it read — a checkup that quietly looks at half of them reads exactly like a clean bill of health</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Duplicate-send check — catch the same message going to one person twice</b></p><h2>Question</h2>
+
+<p>Build the check that catches a <b>duplicate send</b> — the same message dispatched to the same</p>
+<p>person twice in the same moment. Graduated from <b>015</b>, whose</p>
+<p>scan (<b>evidence</b>) found the class live and unwatched:</p>
+<p>three renters received four copies each of a 2,261-character message inside one hour on</p>
+<p>2026-06-21, plus doubled sends on 2026-05-28 and 2026-05-30.</p>
+
+<p>Ruled by Junyan 2026-08-19, choosing this over two alternatives that were on the table:</p>
+<p>a ledger-integrity check (rejected — the scan shows the store is sound: 0 cross-source</p>
+<p>groups in 9,465 records, idempotency-by-<code>msg_id</code> verified on the wire) and folding all</p>
+<p>duplicate work into <b>061</b> (rejected — 061 watches the</p>
+<p>Notion projection, and <b>no queue-side or projection-side check can see this class</b>: the</p>
+<p>📤 Message Queue holds one row per send, so a doubled dispatch reads as correct from there).</p>
+
+<h3>The key — tight, or it is noise</h3>
+
+<p><code>counterparty + direction + normalized body + identical timestamp to the second</code>, <b>outbound</p>
+<p>first</b>. The unbounded body-match the original ticket specified produces <b>511 hits, almost</p>
+<p>all legitimate recurring sends</b> — invariant G&#x27;s disease (<b>045</b>)</p>
+<p>repeated. Measured false-positive behaviour by window is in the asset; the same-second key</p>
+<p>yields 23 groups across the entire ledger, of which the outbound customer-facing set is 8.</p>
+
+<ul>
+<li>- <b>Exclusions:</b> the non-correspondence senders already configured in</li>
+</ul>
+<p><code>config/ledger_exclude.json</code> (Toronto Hydro, Paperform et al. account for 11 of 12 inbound</p>
+<p>hits — genuine vendor re-sends, correctly recorded). Junyan&#x27;s own test traffic to</p>
+<p>+16477733887 was excluded by inspection in the scan; decide whether it needs a rule.</p>
+<ul>
+<li>- <b>Widening the window past one second is a deliberate later call</b>, made on live data, not</li>
+</ul>
+<p>at build time — a minute-wide window admits the recurring-template families.</p>
+
+<h3>Coverage is a build requirement, not a nicety</h3>
+
+<p>The check <b>must report the record count and time span it actually read</b>, and fail loudly</p>
+<p>rather than pass when it cannot read the whole window. This is not defensive habit: the 015</p>
+<p>scan produced <i>two</i> clean-looking results over partial stores before the real one — a sparse</p>
+<p>checkout hiding 96% of the ledger, then a parser that <code>break</code>ed on <code>git cat-file</code>&#x27;s <code>missing</code></p>
+<p>lines and reported &quot;0 unparsed&quot; over 91% of it. A scan that does not assert coverage is</p>
+<p>indistinguishable from a scan that found nothing, which is this map&#x27;s recurring pathology</p>
+<p>(the dead invariants checker serving a five-day-old snapshot; the PBF sweep truthfully</p>
+<p>reporting <code>found · deduped</code> forever).</p>
+
+<h3>Lane</h3>
+
+<p>Ships <b><code>Provisional</code></b> on <b>046</b>&#x27;s probation lane — writes to</p>
+<p>the Provisional block, files no Actions row, feeds no escalation counter, reviewed at the</p>
+<p>Custodian&#x27;s 09:35 pass. Per 044&#x27;s standing rule it is tested against a day of live data before</p>
+<p>it may escalate to a human, and it never counts its own output as desk state.</p>
+
+<p>Venue follows the other invariants — <code>event-gate</code> on Cloud Run. Note the open constraint: the</p>
+<p>J28 ledger is <b>unreachable from Cloud Run</b> today (the &quot;ledger is unreachable&quot; fog on the map;</p>
+<p><code>INV_LEDGER_URL</code> is the seam already built for it). This check reads the ledger, so it either</p>
+<p>resolves that seam or states its dependency explicitly.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Runs against the full ledger window and <b>prints its coverage</b> (records read, span).</li>
+<li>- Reproduces the 2026-06-21, 05-28 and 05-30 groups from history.</li>
+<li>- A day of live data with zero noise marks before it may escalate.</li>
+<li>- Findings carry enough detail to act: counterparty, timestamp, copy count, message ids.</li>
+</ul>
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#058</span><span class="emoji">🔑</span><span class="done-title">Can we hand out door codes ourselves? Yes — we already can</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>The old belief: the alarm system only lets us LOOK, never change anything, so every door-code problem had to wait for a person</li><li>That was never true. We can create a person, give them a code, and switch it on across all four door panels — and every change is double-checked afterwards</li><li>Better still, we can set the code to work only during that person&#x27;s booking, instead of handing out the master code that opens everything, always</li><li>Checked again today: Hannah, Sharon and Hanano all have working codes on all four panels</li><li>The one thing we genuinely cannot do is DELETE someone. That stays a by-hand job in the Alarm.com website</li><li>So the trick is to never make a spare person in the first place — reuse an empty one that&#x27;s already there</li><li>The old wrong note has been corrected where the robots read it, so nobody parks a locked-out renter on this again</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Find a write path for Alarm.com codes — a lockout is worse than the write risk</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#015</span><span class="emoji">✂️</span><span class="done-title">Read every message we ever sent — and found some customers got the same text twice</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE. Two leftover jobs on this ticket, and neither one turned out to be what we thought</li><li>First job: a tool that compared a robot&#x27;s rough draft with the final message, to teach it to write better</li><li>That tool was scrapped back in July, because robots filled in the draft box and left the real box empty — so some messages went out blank</li><li>Junyan ruled: leave it dead. The new suggest-and-rewrite way of working already teaches the robots the same lesson, in a better place</li><li>Second job: a checkup hunting for messages accidentally recorded twice</li><li>We read all 9,465 messages the studio has ever sent or received — every single one, not a sample</li><li>The old plan for that checkup was junk: it just asked &#x27;same words?&#x27;, so every weekly reminder looked like a mistake. About 500 false alarms</li><li>Good news: our record book is clean. Nothing was written down twice</li><li>Bad news, and this is the real find: some customers actually got the same text twice</li><li>On June 21, three renters each got the same long message twice at 12:01, then twice again at 13:00 — four copies each in one hour</li><li>Two more people got doubled texts in May, and one person&#x27;s reply got recorded twice in August</li><li>Nothing is watching for this. The outbox shows one row per message, so a double send looks perfectly normal from there</li><li>So we&#x27;re building a checkup that hunts for double sends instead (087), and a separate job to find out what caused June 21 (088)</li><li>One more lesson, learned twice the hard way this session: a search that doesn&#x27;t say how much it actually looked at is worthless</li><li>Our first search read only 346 of the 9,465 messages — 4% — and cheerfully reported everything was fine</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cut correspondence canon over from the Notion Correspondence Log to J28</b></p><h2>Question</h2>
+
+<p>Junyan&#x27;s direction (2026-07-15): stop using the <b>Notion Correspondence Log</b> as the desk&#x27;s</p>
+<p>record of what&#x27;s been said to each renter — J28 (the owned-store ledger: Gmail + SMS, both</p>
+<p>directions, deterministic, history-readable) is now that record. Plan and execute the cutover.</p>
+
+<p>This is a <b>repoint, not a deletion</b>: J11 the reconciliation <i>job</i> stays (&quot;keep — future</p>
+<p>scorer&quot;); only its data <i>source</i> changes (Notion log DB → J28). Decide with Junyan:</p>
+
+<ul>
+<li>- <b>Consumer inventory</b> — what reads the Notion Correspondence Log today? Concierge heavy-pass</li>
+</ul>
+<p>JOB 2, ticket procedures, the drafted-vs-sent diff, Day Sheet / reports, anything else. Each</p>
+<p>gets repointed to J28. This inventory is the core of the ticket.</p>
+<ul>
+<li>- <b>The drafted-vs-sent diff</b> (the desk&#x27;s one true closed loop today) — recompute as</li>
+</ul>
+<p><i>queue-drafted body</i> vs <i>J28 actual-sent text</i>, i.e. against real ground truth instead of the</p>
+<p>Message-Queue <code>Status=Sent</code> proxy. Cleaner; confirm the mechanics.</p>
+<ul>
+<li>- <b>Historical data</b> — backfill J28 from history so J11&#x27;s Notion log is fully redundant (SMS:</li>
+</ul>
+<p><code>sms_pull.py --since</code>, 34k msgs available; Gmail: search backfill), OR freeze the Notion log</p>
+<p>as a read-only archive for pre-cutover context. Decide which.</p>
+<ul>
+<li>- <b>Write-path cutover</b> — stop the Concierge writing the Notion Correspondence Log. This removes</li>
+</ul>
+<p>a top 429-throttled sub-step → <b>supersedes ticket 013</b> (013&#x27;s tactical relief was explicitly</p>
+<p>&quot;until the transition&quot; — this is the transition).</p>
+<ul>
+<li>- <b>Sequencing / hard dependency</b> — cloud runtimes read J28 via the GitHub mirror, but the</li>
+</ul>
+<p>mirror is currently <b>incomplete for SMS</b> (poller writes SMS files to local <code>inbox/</code> only, not</p>
+<p>the repo). That open item (banked on ticket 006) MUST be resolved first, or repointing a cloud</p>
+<p>Concierge pass to J28 silently loses SMS.</p>
+
+<p><b>Absorbed by <b>025</b> (2026-07-17):</b> the consumer repoint</p>
+<p>happens inside the library port (edit once during migration); this ticket closes when</p>
+<p>025&#x27;s step 2 beds in and the Notion log freezes read-only.</p>
+
+<p><b>Premise downgraded by <b>023</b> (2026-07-17):</b> the git write-race</p>
+<p>that motivated &quot;move the ledger off git&quot; was Zap concurrency; post-024 the poller is the</p>
+<p>single (retry-rebase) writer, so git stays the transport. This ticket&#x27;s remaining content is</p>
+<p>the consumer repoint, the drafted-vs-sent diff recompute, and the backfill decision.</p>
+
+<p>Blocked by <b>006</b> (J28 must be complete, scheduled, reliable, mirror-complete). Coordinates with</p>
+<p><b>data-sovereignty-wayfinder</b> (correspondence canon leaving Notion is a data-sovereignty</p>
+<p>instance). Resolution records: the consumer inventory + repoint plan, the historical-data</p>
+<p>decision, the diff recompute, and confirmation the Notion-log write is retired.</p>
+
+<h2>Acceptance criterion added 2026-07-21 (from ticket 013)</h2>
+
+<p>The Custodian/Fixer &quot;deep per-artist dedup&quot; check — currently skipped every pass under</p>
+<p>&quot;throttle discipline&quot; — must run against the J28 ledger post-cutover. 015 isn&#x27;t done while</p>
+<p>that check is silently skipped.</p>
+
+
+<h2>Scope amendment (2026-07-23, from 025&#x27;s close)</h2>
+
+<p>025 closed WITHOUT the Correspondence-Log freeze — Junyan ruled the freeze VOID: the</p>
+<p>Notion log is a permanent two-way-synced projection (07-18 design), never frozen.</p>
+<p>This ticket no longer &quot;closes when 025 beds in&quot;; it stands on its own remaining</p>
+<p>content:</p>
+
+<ol>
+<li>1. <b>Drafted-vs-sent diff recompute</b> — queue-drafted body vs J28 actual-sent text</li>
+</ol>
+<p>(ground truth), replacing the Message-Queue <code>Status=Sent</code> proxy.</p>
+<ol>
+<li>2. <b>Deep per-artist dedup check</b> (acceptance criterion from 013) — the</li>
+</ol>
+<p>Custodian/Fixer check must run against the J28 ledger, not stay silently skipped.</p>
+
+<p>Already-moot parts: consumer repoint (done inside 025&#x27;s port), write-path cutover</p>
+<p>(done — pollers/log_drop own all writes), backfill decision (done in 006: 90-day</p>
+<p>backfill executed), the freeze (void).</p>
+
+<h2>Resolution (2026-08-19)</h2>
+
+<p>Both remaining items resolved — <b>one retired by ruling, one graduated with its premise</p>
+<p>corrected by evidence.</b> Neither was built as specified, and in both cases the ticket&#x27;s own</p>
+<p>framing turned out to be the thing that needed fixing.</p>
+
+<h3>Item 1 — drafted-vs-sent diff: RETIRED (Junyan&#x27;s ruling)</h3>
+
+<p>Not rebuilt. Two independent reasons, the first already settled in canon before this session:</p>
+
+<ol>
+<li>1. <b>The mechanism was deleted for cause on 2026-07-29.</b> <code>Drafted Body</code> was removed because</li>
+</ol>
+<p>agents filled it and left <code>Message Body</code> — the field that actually sends — empty, so those</p>
+<p>rows sent nothing. HOUSE-RULES states the consequence plainly: the wording-diff is *retired,</p>
+<p>not broken*. A learning field that silently blanks customer messages is not worth keeping.</p>
+<ol>
+<li>2. <b><b>018</b>&#x27;s loop already carries the signal, better placed.</b></li>
+</ol>
+<p>PROPOSE → REVIEW → EXECUTE → VERIFY makes the reviewer&#x27;s rewrite the feedback: the diff</p>
+<p>between proposed and rewritten text files the SOP fix <i>and</i> resets the class&#x27;s promotion</p>
+<p>counter. Rebuilding a second wording-diff now would duplicate the loop&#x27;s core mechanism</p>
+<p>weeks before <b>053</b> lands.</p>
+
+<p>Junyan ruled retire (2026-08-19). Recorded so no later pass re-reports its absence as a gap:</p>
+<p><b>a human noticing a wording problem remains the only path to an HTR change</b>, filed as an</p>
+<p>ordinary Sweep Feedback row. The banked &quot;snapshot at send time in the send engine&quot; option</p>
+<p>stays available if the loop&#x27;s rewrite capture proves insufficient — it is not owed by this</p>
+<p>ticket.</p>
+
+<h3>Item 2 — the deep per-artist dedup check: premise inverted, graduated as <b>087</b></h3>
+
+<p>Ticket 013 handed this over as &quot;the skipped check must run against the J28 ledger post-cutover.&quot;</p>
+<p>Running it revealed the check was aimed at the wrong thing. Full scan, 9,465 records, 100%</p>
+<p>coverage — <b>evidence</b>:</p>
+
+<ul>
+<li>- <b>As specified it is noise.</b> Body-match with no time bound: <b>511 hits, almost all</li>
+</ul>
+<p>legitimate</b> recurring notices and weekly booking templates. Same body ≠ same message. This</p>
+<p>is invariant G&#x27;s disease exactly (<b>045</b>).</p>
+<ul>
+<li>- <b>The ledger is sound.</b> Zero duplicate groups span more than one source at any window</li>
+</ul>
+<p>(15 min / 1 h / 24 h), across 7 capture sources. Idempotency-by-<code>msg_id</code> verified <b>on the</p>
+<p>wire</b>, per <b>064</b>&#x27;s rule — not assumed from the design note.</p>
+<ul>
+<li>- <b>The real defect is duplicate SENDS, and nothing watches for them.</b> Same-second identical</li>
+</ul>
+<p>outbound: three renters received <b>four copies each</b> of a 2,261-character message inside one</p>
+<p>hour on <b>2026-06-21</b>, plus doubled sends 2026-05-28 and 2026-05-30. <b>No queue-side or</p>
+<p>projection-side check can see this</b> — the 📤 queue holds one row per send, so a doubled</p>
+<p>dispatch reads as correct from there. This is why it cannot fold into</p>
+<p><b>061</b>, which watches the projection.</p>
+
+<p>Junyan ruled: build the duplicate-<b>send</b> check → <b>087</b></p>
+<p>(Provisional on <b>046</b>&#x27;s lane), and diagnose the incident</p>
+<p>separately → <b>088</b>. Detection is not repair; the Vicky</p>
+<p>lockout is the precedent.</p>
+
+<h3>The finding that outlived both items</h3>
+
+<p><b>A scan that does not assert its own coverage is indistinguishable from a scan that found</p>
+<p>nothing</b> — and this session produced <i>two</i> clean-looking results over partial stores before</p>
+<p>the real one. First the local <code>dc-canon</code> clone is <b>sparse</b> (<code>messages/</code> limited to four days)</p>
+<p><i>and</i> a <b>partial clone</b> (<code>blob:none</code>), so the first pass read <b>346 files — 3.7% of the</p>
+<p>store — and reported zero duplicates</b>. Then the corrected scanner <b>truncated silently</b>:</p>
+<p><code>git cat-file --batch</code> emits <code>&lt;oid&gt; missing</code> for unfetched blobs, a two-field line the parser</p>
+<p><code>break</code>ed on, yielding &quot;8,644 parsed, 0 unparsed&quot; over 91% of the store with the shortfall</p>
+<p>invisible. Both caught only by checking the record count against <code>git ls-tree</code>.</p>
+
+<p>That is this map&#x27;s recurring pathology reproduced inside its own diagnostic — the dead</p>
+<p>invariants checker serving a five-day-old snapshot as health, the PBF sweep reporting</p>
+<p><code>found · deduped</code> truthfully and forever. Carried into 087 as a <b>build requirement</b>: the</p>
+<p>check reports records read and span covered, and fails loudly rather than passing when it</p>
+<p>cannot read the whole window.</p>
+
+<p><b>Already moot / recorded elsewhere:</b> consumer repoint (done inside 025&#x27;s port), write-path</p>
+<p>cutover (pollers + <code>log_drop</code> own all writes), backfill (executed in 006), the</p>
+<p>Correspondence-Log freeze (ruled VOID 2026-07-23).</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#058</span><span class="emoji">🔑</span><span class="done-title">Can we hand out door codes ourselves? Yes — we already can</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>The old belief: the alarm system only lets us LOOK, never change anything, so every door-code problem had to wait for a person</li><li>That was never true. We can create a person, give them a code, and switch it on across all four door panels — and every change is double-checked afterwards</li><li>Better still, we can set the code to work only during that person&#x27;s booking, instead of handing out the master code that opens everything, always</li><li>Checked again today: Hannah, Sharon and Hanano all have working codes on all four panels</li><li>The one thing we genuinely cannot do is DELETE someone. That stays a by-hand job in the Alarm.com website</li><li>So the trick is to never make a spare person in the first place — reuse an empty one that&#x27;s already there</li><li>The old wrong note has been corrected where the robots read it, so nobody parks a locked-out renter on this again</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Find a write path for Alarm.com codes — a lockout is worse than the write risk</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>. PIN generation is human-only across every code SOP</p>
 <p>because <code>alarm-mcp</code> is read-only by design, which makes every access-code issue park on a staff</p>
@@ -8294,5 +8490,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 16:31 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 20:48 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
