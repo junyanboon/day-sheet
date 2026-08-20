@@ -312,6 +312,19 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-18 &middot; 21:0xZ</span>
+      <h3>The Phone.com rotation runbook&rsquo;s cold-start command was a no-op, so every rotation updated the stores and left the connector serving the dead secret<span class="kind">FIX</span></h3></summary>
+      <p><strong>Symptom:</strong> <code>phonecom-mcp</code> tools returned <code>Phone.com API 401: token invalid/revoked</code> while the token in <code>~/.env</code> authenticated against <code>api.phone.com/v4/accounts</code> with <strong>HTTP 200</strong>. The credential was healthy the entire time. A rotation had already been done that afternoon &mdash; Secret Manager version 2 was created 14:17Z and an SMS at 14:22Z confirmed the new token worked &mdash; yet the connector was still 401ing at 20:00Z.</p>
+      <p><strong>Cause:</strong> canon&rsquo;s §3 runbook ended with a bare <code>gcloud run services update phonecom-mcp --region &hellip;</code> with no flags. That exits <code>ERROR: (gcloud.run.services.update) No configuration change requested</code> and <strong>mints no revision</strong>. The secret is bound as <code>secretKeyRef: key: latest</code>, so a new version is only picked up by a new revision &mdash; the service went on serving version 1, which had been disabled. Three of the four stores were current and the one that serves traffic was not.</p>
+      <p><strong>Fix:</strong> the command now carries a churn value &mdash; <code>--update-env-vars COLD_START=$(date +%Y-%m-%dT%H%M)</code> &mdash; which forces a revision without changing behaviour. Rotation completed across all four stores: <code>~/.env</code>, GitHub Actions secret, Secret Manager version 3, and Cloud Run revision <code>phonecom-mcp-00007-5n7</code>. <code>list_sms</code> verified live afterwards. Canon patched at <code>CREDENTIALS.md</code> §3, commit <code>f18020d3</code>.</p>
+      <p><strong>The second rule added to canon: verify before rotating.</strong> The instinct on a 401 is to mint a new token, and it is usually wrong &mdash; curl the API with the existing one first. Rotating a working credential turns a one-place problem into a four-place problem, and the panel&rsquo;s <em>regenerate</em> button issues short-lived tokens that expire within hours (the cause of the 2026-07-17 SMS outage), so a reflex rotation can also seed the next failure.</p>
+      <p><strong>Also found, unfixed:</strong> <code>list_sms</code> accepts <code>direction: &quot;in&quot;</code> and returns outbound messages anyway &mdash; the filter is not applied server-side. Anything relying on it is reading the wrong set. Not blocking, but it silently widens every caller&rsquo;s result.</p>
+      <p><strong>Why this class of failure hides:</strong> each store reports success on its own write, and nothing compares what the running revision is actually serving against what the stores hold. The 401 is loud, but it points at the credential &mdash; the last place worth looking.</p>
+    </details>
+    </li>
 <li class="pipe-alerts"><b>2026-08-19 &mdash; the ledger was dead for 29 hours; GitHub blocked the jobs on billing.</b>
 <code>watchlist-refresh</code> failed <b>81 consecutive runs</b>, 2026-08-18 21:00Z &rarr; 2026-08-20 01:45Z, and
 <code>qa-review</code> was down the same window. Not a code fault &mdash; every run carries the annotation
