@@ -313,6 +313,21 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-20 &middot; 19:00Z</span>
+      <h3>The person lookup moves off one exact address and onto every contact point we hold<span class="kind">LOOKUP ROUTE</span></h3></summary>
+      <p><strong>What moved.</strong> <code>booking_sweep.find_artist</code>&rsquo;s email rung was <code>Email</code> exact-match on the 🎨 Artist Database. It is now <em>&ldquo;any row in the new ☎️ Contact Points table whose <code>Value</code> matches&rdquo;</em>. The <code>Skedda User ID</code> rung is unchanged and still first; the name rung is unchanged, still last, and still deliberately ambiguous. The old <code>Email</code> query survives as a fallback for a card created between the back-fill and its first contact-point write, and decays on its own because every card the sweep now creates writes its contact points at creation.</p>
+      <p><strong>Why.</strong> Tagvenue, Peerspace and Giggster mint a fresh reply-relay per enquiry, and it lands in the card&rsquo;s <code>Email</code> field &mdash; so every repeat booking from the same human minted a NEW card. Unbounded, unlike the bounded private-vs-group duplicate class. 42 cards had a relay as their primary address; 25 names held more than one card.</p>
+      <p><strong>New data source:</strong> <code>cbf5b8aa-f836-4fee-aa1f-d0da48c4fda2</code> (☎️ Contact Points), one row per address or number, related to the Artist. Back-filled to <strong>1,709 rows over 1,051 cards</strong> by <code>dc-canon/scripts/contact_points_backfill.py</code> &mdash; additive only, re-runnable, and it reports what it cannot normalize rather than guessing. Coverage verified twice (own re-read + an independent Notion aggregate), per this workspace&rsquo;s standing warning that one query is never proof.</p>
+      <p><strong>New failure mode to know about: normalization is now load-bearing.</strong> The <code>Value</code> is the key, so emails are stored and looked up lowercased and phones in E.164. A case or format mismatch between writer and reader silently reintroduces the exact duplicate-card class this replaced &mdash; it would look like &ldquo;person not found&rdquo;, which the sweep answers by creating a card. Any new writer into this table must normalize the same way.</p>
+      <p><strong>New side effect on the SMS lane.</strong> A Giggster guest-chat text now files its own Contact Points row from <code>app.parse_giggster_relay</code> &mdash; proxy number as the value, <em>conversation uuid</em> as the durable key, and <strong>no Artist attached</strong>, because a display name like &ldquo;Hanano I.&rdquo; is not an identity. Best-effort: an inbound SMS is never failed because Notion was slow. Transactional Giggster notices mint nothing. Feeds wayfinder ticket 102 (proxy recycling).</p>
+      <p><strong>Retired:</strong> <code>Known Emails</code>. Nothing ever searched it, so the standing habit of parking a second address there recorded a fact and fixed nothing. Renamed on the card to <code>Known Emails (retired &rarr; Contact Points)</code>.</p>
+      <p><strong>NOT yet live.</strong> The lookup is committed (<code>dc-canon 22b20096</code>, suite green at 463) but <code>event-gate</code> has not been redeployed, so the scheduled <code>booking-sweep</code> is still matching on <code>Email</code> alone. A local dry-run against the live board on the new code was clean &mdash; 162 scanned, 0 errors, no new residue, one correctly-ambiguous card &mdash; so what remains is the deploy, in ticket 082&rsquo;s order: deploy &rarr; dry-run read &rarr; unattended.</p>
+      <p><em>Paper trail:</em> wayfinder <code>concierge-repair</code> tickets 098 (shape), 101 (build), 103 (deploy).</p>
+    </details>
+    </li>
+
     <li class="entry llm">
       <details>
       <summary><span class="when">2026-08-20 &middot; 17:2xZ</span>
