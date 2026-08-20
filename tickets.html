@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-20 17:08 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-20 17:18 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">31</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">30</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">55</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">56</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1104,174 +1104,132 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- RUNTIMES.md + Plumbing Map entries.</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#099</div><div class="jhead"><span class="emoji">🗂️</span><h4>The Registrar queues bodyless confirmations — and the confirmation is not actually templatable</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar queues bodyless confirmations — and the confirmation is not actually templatable</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#106</div><div class="jhead"><span class="emoji">🔔</span><h4>Put the names back on who unlocked each studio</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Since Aug 20 the alarm page shows every unlock with a blank where the person&#x27;s name used to be</li><li>The old alarm emails were the only thing that ever said who — and those are gone for good</li><li>The replacement is already written and tested: it reads the alarm company&#x27;s live feed and gets the name, the door opening, and the exact second</li><li>It just needs to be switched on, which means starting a small always-on service — a real cost, so Junyan decides</li><li>One catch worth knowing: arming the alarm isn&#x27;t leaving. People arm, then open the door to walk out — so the door event is the true leaving time</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Deploy alarm-events and give the boards back the name on every arm/disarm</b></p><h2>Question</h2>
 
-<p><code>queue_confirmation()</code> in <code>dc-canon/services/event-gate/booking_sweep.py:490</code> writes Message</p>
-<p>Code, Channel, Status, Ticket Type, Studio, Artist and Reasoning — <b>and no Message Body</b>.</p>
-<p><b>081</b> specified the confirmation as &quot;strictly templated&quot;; the</p>
-<p>template never reached the code.</p>
+<p>Since 2026-08-20 every arm/disarm on the FBS Monitor&#x27;s Alarms tab renders without an</p>
+<p>actor. That is not a rendering fault — today&#x27;s edition reports <code>armFeed: panel ok</code></p>
+<p>with six of eight events carrying <code>name: &quot;&quot;</code> straight from the source. The ADT/TELUS</p>
+<p>email feed was the only thing that ever named a person, and Junyan retired it</p>
+<p>permanently the same day. The panel ledger behind <code>GET /arm-history</code> records <b>when</b>,</p>
+<p>never <b>who</b>; only remote arms made through alarm-mcp still carry a name.</p>
 
-<p>Today that is harmless — the rows sit at Pending Review and the send engine ignores them.</p>
-<p>Tomorrow it is a trap: a reviewer flips one to Ready to Send and the engine fails it with</p>
-<p>&quot;Message Body is empty&quot;, and a bodyless review row makes review meaningless — there is</p>
-<p>nothing to approve. Four live rows are already in this state (Aug 21 19:00 Amandeep;</p>
-<p>Aug 22 08:00 + 10:00 Tufan; Aug 22 12:00 Emma; Aug 22 16:30 Aris).</p>
+<p><b>The replacement is already built and is not deployed.</b> alarm-mcp commit <code>a800fcc</code></p>
+<p>(&quot;Studio activity from the websocket&quot;) added <code>alarm_monitor/door_events.py</code> +</p>
+<p><code>event_listener.py</code>, exposed as the <code>studio_activity</code> MCP tool and</p>
+<p><code>GET /door-history</code>. It carries more than the ADT emails ever did: actor name <b>and</b></p>
+<p>a stable <code>ew_contact_id</code>, plus door open/close and motion, at second precision. Proven</p>
+<p>on live frames — a keypad arm reads <code>ew=Anneka+K&amp;ew_contact_id=247640077</code>.</p>
 
-<p><b>The template does exist in canon</b> — two rows, not one, in the How to Respond DB</p>
-<p>(<code>collection://b0c59a82-0a2b-4e96-9467-89bbd954d8b4</code>):</p>
+<p>So this ticket is only the flip, and one consumer change.</p>
 
-<ul>
-<li>- <a href="https://app.notion.com/3887503281c48165b860cf074ede439a" target="_blank" rel="noopener">Booking confirmation — Skedda booking accepted + paid (T2)</a> — first-time renters, full onboarding boilerplate.</li>
-<li>- <a href="https://app.notion.com/3897503281c4817bb951c4e12e2f6689" target="_blank" rel="noopener">Booking confirmation — returning renter (short)</a> — returning renters; body is</li>
-</ul>
-<p><code>Hi [Name], you&#x27;re all set for [Day, Date] — Studio [###], [start–end] 🙏</code> + a conditional</p>
-<p>terms paragraph + <code>Looking forward to having you back!</code></p>
-
-<p><b>So the real question is not &quot;what does it say&quot; but &quot;can code say it at all&quot;.</b> Reading the</p>
-<p>returning-renter row&#x27;s Notes, composing this message correctly requires three judgments the</p>
-<p>Registrar deliberately has no LLM to make:</p>
+<h2>The order</h2>
 
 <ol>
-<li>1. <b>First-time vs returning</b> — which of the two cards applies (renter history).</li>
-<li>2. <b>Gate 1, account type</b> (Junyan, 2026-08-05) — agreement renters (Time Slot / Fixed</li>
+<li>1. <b>Create the <code>alarm-events</code> service — once, by hand.</b> The exact command is in</li>
 </ol>
-<p>Option, AAP / 1AP / Private Class, Credit hours, Platform) must get *&quot;Please refer to your</p>
-<p>agreement for exact terms &amp; conditions…&quot;* instead of the stored no-refund/24h paragraph,</p>
-<p>which is simply wrong for them. Requires reading Product / Account Status on the Artist DB.</p>
+<p><code>deploy.sh</code>, which deliberately <i>skips</i> this service until it exists. Three flags</p>
+<p>are load-bearing and none is a cost knob:</p>
+<p><code>--no-cpu-throttling</code> (Cloud Run throttles CPU between requests and this container</p>
+<p>is nothing but between-requests work — without it the socket stalls and dies),</p>
+<p><code>--min-instances=1</code> (nothing ever calls this service; at min 0 it never runs),</p>
+<p><code>--max-instances=1</code> (two instances = two websockets racing on one GCS object).</p>
+<p>It cannot live inside alarm-mcp: that service is min-0, CPU-throttled and maxScale 20.</p>
 <ol>
-<li>3. <b>Gate 2, recency</b> (one-off renters only) — include the terms paragraph only if they have</li>
+<li>2. <b>Verify.</b> <code>/healthz</code> returns 503 while the socket is down, so a green healthz is</li>
 </ol>
-<p>not had it in ~30 days. Requires reading <code>threads/&lt;person&gt;.md</code>.</p>
-
-<p>Plus variants the card carries: same-day-additional block, and multi-date (one greeting, one</p>
-<p>closer, one line per booking) — the multi-date case is live right now, Tufan has two blocks</p>
-<p>on Aug 22.</p>
-
-<p>Decide, then implement:</p>
-
-<ul>
-<li>- <b>(a) Deterministic subset.</b> Code emits only the safe core — greeting + booking line(s),</li>
-</ul>
-<p>no terms paragraph ever — and the reviewer adds terms when they apply. Cheapest; makes the</p>
-<p>review row real; risks the terms silently never being sent.</p>
-<ul>
-<li>- <b>(b) Deterministic + mechanical gates.</b> Gate 1 is a property read (Product / Account</li>
-</ul>
-<p>Status) and Gate 2 is a date scan of a thread file — both are arguably rails, not judgment.</p>
-<p>Code could do all three branches. More work, and it moves policy wording into the service,</p>
-<p>which fights the one-copy rule (canon owns the words, not the code).</p>
-<ul>
-<li>- <b>(c) Hand the composition off.</b> The Registrar queues the row with a body-shaped</li>
-</ul>
-<p>placeholder plus the card link, and a judgment lane (Responder / Concierge) fills it.</p>
-<p>Keeps the Registrar LLM-free and canon single-copy; adds a second actor to the chain.</p>
-<ul>
-<li>- <b>(d) Don&#x27;t queue confirmations at all</b> — the Registrar stops at prerequisites and the</li>
-</ul>
-<p>existing message lane handles the confirmation. Narrows 081&#x27;s scope.</p>
-
-<p>Note the same function also omits <b><code>Raised by: AI (automation)</code></b>, which <code>cards.py</code></p>
-<p><code>write_queue_row</code> does set, and sets no <code>Email Subject</code> (harmless while Channel is hard-coded</p>
-<p>SMS — but the hard-code is itself unexamined for renters with no mobile).</p>
-
-<p>Whatever is decided: the code fix ships as an event-gate redeploy</p>
-<p>(<code>gcloud run deploy event-gate --source services/event-gate</code> from the dc-canon root — see</p>
-<p><code>RUNTIMES.md</code> for the path gotcha), and the four existing rows need backfilling before anyone</p>
-<p>reviews them. Both touch customer-message content, so drafts go to Junyan before anything</p>
-<p>flips.</p>
-
-<p>---</p>
-
-<h2>Rulings (Junyan, 2026-08-20) — option (b), the gates are rails</h2>
-
-<p><b>The terms line is one line for everyone this lane confirms.</b> The branch is on the</p>
-<p>BOOKING, not the renter:</p>
-
-<ul>
-<li>- A <b>standing/recurring slot</b> is never confirmed. No new code was needed — <code>selection_of</code></li>
-</ul>
-<p>already drops recurring series (&quot;recurring series — out of scope, one-shot lane only&quot;),</p>
-<p>and that skip is <i>why</i> agreement renters&#x27; slots were never confirmed.</p>
-<ul>
-<li>- Everything else is a one-off, <b>including an agreement renter&#x27;s EXTRA bookings</b>, which</li>
-</ul>
-<p>follow the one-off rules. So they get the standard line, not the refer-to-your-agreement</p>
-<p>pointer — that pointer belongs to bookings the agreement actually governs, which this</p>
-<p>lane never sends.</p>
-
-<p><b>The wording says what the renter CAN do</b>, which the stored no-refund paragraph did not:</p>
-
-<blockquote>Just a reminder that you can rebook with at least 24 hours&#x27; notice, and a booking can be</blockquote>
-<blockquote>moved up to one month out.</blockquote>
-
-<p><b>Gated at 90 days</b> (Junyan raised it from the cards&#x27; 30). The check is a Message Queue</p>
-<p>read, not a <code>threads/&lt;person&gt;.md</code> read — the queue is the record of what the desk actually</p>
-<p>sent and it is reachable from the cloud. Fails closed: an unreadable queue suppresses the</p>
-<p>reminder rather than repeating it. First-time confirmations always carry the line; a</p>
-<p>first-timer has by definition never been told.</p>
-
-<p><code>AGREEMENT_PRODUCTS</code> = 1AP, <b>2AP</b>, AAP, <b>Flex Option</b>, Fixed Option, Private Class</p>
-<p>Add-on — 2AP and Flex Option are retired products whose holders are still on signed</p>
-<p>agreements. It no longer decides wording, but the set is recorded because it is the honest</p>
-<p>answer to &quot;who is on an agreement&quot;.</p>
-
-<h2>THE BIGGER DEFECT — found while checking the gate against live data</h2>
-
-<p><b>All four rows were duplicates.</b> Every one of those bookings had already been confirmed</p>
-<p>by hand, days before the sweep queued anything:</p>
-
-<p>| Booking | Already sent | |</p>
-<p>|---|---|---|</p>
-<p>| Amandeep Kaur, Aug 21 | Aug 18 — &quot;Booking confirmation (returning, short)&quot; | Sent |</p>
-<p>| Aris Wu, Aug 22 | Aug 19 — one text covering Aug 22 <b>and</b> Sep 11 | Sent |</p>
-<p>| Emma Biron, Aug 22 | Aug 19 — <b>first-time T2</b> | Sent |</p>
-<p>| Tufan Bhattarai, Aug 22 | Aug 7 — inside a booking-move acknowledgement | Sent |</p>
-
-<p><code>confirmation_queued()</code> matched only its own <code>BC-sweep-</code> Message Code, so it could not see</p>
-<p>a confirmation any other lane had sent. <b>Backfilling bodies would have made four duplicate</p>
-<p>confirmations releasable</b> — the missing body was hiding the worse bug, not causing it.</p>
-
-<p>Note Emma: she was a genuine first-timer (the Aug 19 send was the full T2), but her Artist</p>
-<p>record already existed, so the approved &quot;record created this pass ⇒ first-time&quot; rule would</p>
-<p>have read her as returning. The rule stands, but this is its known failure mode.</p>
-
-<h2>Done in code (unshipped)</h2>
-
-<ul>
-<li>- <code>compose_confirmation()</code> renders both canon cards; no row can be queued without a body.</li>
-<li>- <code>terms_sent_recently()</code> — the 90-day gate, fails closed.</li>
-<li>- <code>confirmation_queued()</code> widened to a second rung: any non-declined queue row for this</li>
-</ul>
-<p>renter within 45 days naming the booking&#x27;s date in either month spelling (&quot;August 22&quot; /</p>
-<p>&quot;Aug 22&quot;) and reading like a confirmation. Deliberately biased toward suppressing —</p>
-<p>a false hit costs a confirmation the booking probably already had, a miss costs the</p>
-<p>renter a duplicate text.</p>
-<ul>
-<li>- <code>merge_contiguous()</code> — touching blocks in one studio on one day are ONE session and one</li>
-</ul>
-<p>text. Tufan&#x27;s 08:00–10:00 + 10:00–12:00 was about to send two.</p>
-<ul>
-<li>- <code>Raised by: AI (automation)</code> now set, matching <code>cards.py</code>.</li>
-<li>- 372 tests green across event-gate.</li>
-</ul>
-
-<h2>Still open</h2>
-
+<p>the proof the listener is actually connected — not that the container started.</p>
 <ol>
-<li>1. <b>Both HTR cards contradict the code.</b> They describe the old always-send / 30-day rule</li>
+<li>3. <b>Prove it on a real event</b> before anything consumes it: one keypad arm should come</li>
 </ol>
-<p>and the no-refund wording. Humans compose from those cards, so unpatched they keep</p>
-<p>sending superseded terms. Robots do not edit that DB — Junyan&#x27;s, or a suggestion row.</p>
+<p>back with both the actor name and the contact id. A remote arm carries no name and is</p>
+<p>resolved by joining <code>lid=</code> to the login frame; those are marked <code>remote_login</code> and are</p>
+<p><b>excluded from renter attribution</b> — pressing a button in the app is not being in</p>
+<p>the building.</p>
 <ol>
-<li>2. <b>The five live rows</b> (four bookings, five rows — Tufan has two) should be <b>Will Not</li>
+<li>4. <b>Point fbs-monitor at it.</b> The alarms tab joins the name back on; <code>build.py</code>&#x27;s</li>
 </ol>
-<p>Send</b>, not backfilled. Awaiting approval.</p>
+<p><code>enrich_arm_names()</code> already exists for exactly this shape and currently has nothing</p>
+<p>to attach. <code>/arm-history</code> <b>stays on</b> as the polling backstop — a websocket has no</p>
+<p>replay, and it is immune to socket gaps in a way the socket is not.</p>
 <ol>
-<li>3. <b>Deploy</b> — <code>gcloud run deploy event-gate --source services/event-gate</code> from the</li>
+<li>5. <b>Correct the paper trail.</b> The Plumbing Map entry of 2026-08-20 18:55Z and</li>
 </ol>
-<p>dc-canon root. Awaiting approval.</p>
+<p>fbs-monitor&#x27;s own Alarms-tab note both still say the way back is capturing the</p>
+<p>browser&#x27;s network call. That was superseded the same day.</p>
+
+<h2>Paste-ready runbook (assembled 2026-08-20, from repo config — not live gcloud reads)</h2>
+
+<p>All values verified against <code>hosting/README-gcp.md</code>, <code>deploy.sh</code>, <code>server_events.py</code>,</p>
+<p>and RUNTIMES.md. Session gcloud is blocked for the agent, so Junyan runs these.</p>
+
+<p><b>Step 1 — build the image from <code>a800fcc</code> and deploy alarm-mcp on it</b> (the listener</p>
+<p>ships in the same image; this also gets alarm-mcp the new <code>/door-history</code> route):</p>
+
+<p>``<code>bash</p>
+<p>cd ~/DanceAnnex-AlarmMonitor/alarm-monitor &amp;&amp; ./deploy.sh</p>
+<p></code>`<code></p>
+
+<p>Note the tag it prints (</code>alarm:&lt;MMDD&gt;-a800fcc<code>). It will end by saying alarm-events</p>
+<p>does not exist yet — expected.</p>
+
+<p><b>Step 2 — create alarm-events, once</b> (substitute the tag from step 1):</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud run deploy alarm-events   --image us-central1-docker.pkg.dev/danceannex-skedda/skedda/alarm:&lt;TAG&gt;   --region us-central1 --project danceannex-skedda   --command python --args hosting/server_events.py   --min-instances=1 --max-instances=1 --no-cpu-throttling   --no-allow-unauthenticated   --service-account 249118612005-compute@developer.gserviceaccount.com   --set-env-vars WATCHDOG_LEDGER_BUCKET=danceannex-alarm-watchdog   --set-secrets ALARMDOTCOM_USERNAME=alarm-username:latest,ALARMDOTCOM_PASSWORD=alarm-password:latest,ALARMDOTCOM_MFA_TOKEN=alarm-mfa-token:latest</p>
+<p></code>`<code></p>
+
+<p>The service refuses to start without the bucket or the credentials (fails loud by</p>
+<p>design), so a mis-binding shows up immediately in the revision logs, not as silence.</p>
+
+<p><b>Step 3 — verify the socket, not the container:</b></p>
+
+<p></code>`<code>bash</p>
+<p>curl -s -o /dev/null -w &quot;%{http_code}\n&quot; -H &quot;Authorization: Bearer $(gcloud auth print-identity-token)&quot;   https://$(gcloud run services describe alarm-events --region us-central1 --project danceannex-skedda --format=&#x27;value(status.url)&#x27; | sed &#x27;s|https://||&#x27;)/healthz</p>
+<p></code>`<code></p>
+
+<p>200 = listening; 503 = socket down (the initial login retries with backoff — give it</p>
+<p>up to ~5 minutes before digging). Then arm/disarm one studio from a keypad and confirm</p>
+<p>the event lands with a name via the </code>studio_activity<code> MCP tool or </code>GET /door-history<code></p>
+<p>on alarm-mcp.</p>
+
+<p><b>Step 4 — hand back to the agent:</b> fbs-monitor wiring (alarms tab joins names from</p>
+<p></code>/door-history<code>; </code>/arm-history<code> stays as backstop) is agent work, ~1h, after step 3</p>
+<p>proves a named keypad event.</p>
+
+<h2>Constraints that are already ruled — do not re-open</h2>
+
+<ul>
+<li>- <b>No browser, and no </code>selectSystem<code>.</b> The Aug-18 &quot;history is locked to one system&quot;</li>
+</ul>
+<p>finding stands, but it only ever applied to the </code>activity/historyEvents<code> REST API;</p>
+<p>the websocket takes no unit parameter. Junyan ruled the capture goes through the MCP</p>
+<p>path, and it did.</p>
+<ul>
+<li>- <b>Arming is not leaving.</b> Anneka armed 509A at 19:30:37 and opened the door at</li>
+</ul>
+<p>19:30:49 — the exit door event is the departure time, not the arm. Anything computing</p>
+<p>occupancy from this feed inherits that correction.</p>
+<ul>
+<li>- <b>Never bill off a socket.</b> No replay means a gap is invisible from inside; </code>covered`</li>
+</ul>
+<p>must be checked before any overtime is computed, and an uncovered window goes to a</p>
+<p>Review row, never to a charge.</p>
+
+<h2>Why it is its own ticket</h2>
+
+<p>Creating an always-on Cloud Run service is a production flip with a standing cost, and</p>
+<p>Junyan confirms those. It is also the only step between a relay that works and four</p>
+<p>consumers still reading blanks: the Alarms tab, the Doorman&#x27;s suspended Job C retirement</p>
+<p>sweep (its 30-day presence evidence has no source), the Timekeeper&#x27;s identity</p>
+<p>ambiguities, and Junyan&#x27;s departure rule.</p>
+
+<h2>Seam</h2>
+
+<p>The night-ops rebuild map owns the evidence-source design and already logs this build;</p>
+<p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
+<p>Ops Lead&#x27;s use of it here.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">31</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">30</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -3305,91 +3263,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Whether the same-day lane, which owns its own sends, follows the same rule or is</li>
 </ul>
 <p>explicitly exempt until <b>089</b> dissolves that seam.</p>
-</div></details></details></div><div class="job"><div class="jnum">#106</div><div class="jhead"><span class="emoji">🔔</span><h4>Put the names back on who unlocked each studio</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Since Aug 20 the alarm page shows every unlock with a blank where the person&#x27;s name used to be</li><li>The old alarm emails were the only thing that ever said who — and those are gone for good</li><li>The replacement is already written and tested: it reads the alarm company&#x27;s live feed and gets the name, the door opening, and the exact second</li><li>It just needs to be switched on, which means starting a small always-on service — a real cost, so Junyan decides</li><li>One catch worth knowing: arming the alarm isn&#x27;t leaving. People arm, then open the door to walk out — so the door event is the true leaving time</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Deploy alarm-events and give the boards back the name on every arm/disarm</b></p><h2>Question</h2>
-
-<p>Since 2026-08-20 every arm/disarm on the FBS Monitor&#x27;s Alarms tab renders without an</p>
-<p>actor. That is not a rendering fault — today&#x27;s edition reports <code>armFeed: panel ok</code></p>
-<p>with six of eight events carrying <code>name: &quot;&quot;</code> straight from the source. The ADT/TELUS</p>
-<p>email feed was the only thing that ever named a person, and Junyan retired it</p>
-<p>permanently the same day. The panel ledger behind <code>GET /arm-history</code> records <b>when</b>,</p>
-<p>never <b>who</b>; only remote arms made through alarm-mcp still carry a name.</p>
-
-<p><b>The replacement is already built and is not deployed.</b> alarm-mcp commit <code>a800fcc</code></p>
-<p>(&quot;Studio activity from the websocket&quot;) added <code>alarm_monitor/door_events.py</code> +</p>
-<p><code>event_listener.py</code>, exposed as the <code>studio_activity</code> MCP tool and</p>
-<p><code>GET /door-history</code>. It carries more than the ADT emails ever did: actor name <b>and</b></p>
-<p>a stable <code>ew_contact_id</code>, plus door open/close and motion, at second precision. Proven</p>
-<p>on live frames — a keypad arm reads <code>ew=Anneka+K&amp;ew_contact_id=247640077</code>.</p>
-
-<p>So this ticket is only the flip, and one consumer change.</p>
-
-<h2>The order</h2>
-
-<ol>
-<li>1. <b>Create the <code>alarm-events</code> service — once, by hand.</b> The exact command is in</li>
-</ol>
-<p><code>deploy.sh</code>, which deliberately <i>skips</i> this service until it exists. Three flags</p>
-<p>are load-bearing and none is a cost knob:</p>
-<p><code>--no-cpu-throttling</code> (Cloud Run throttles CPU between requests and this container</p>
-<p>is nothing but between-requests work — without it the socket stalls and dies),</p>
-<p><code>--min-instances=1</code> (nothing ever calls this service; at min 0 it never runs),</p>
-<p><code>--max-instances=1</code> (two instances = two websockets racing on one GCS object).</p>
-<p>It cannot live inside alarm-mcp: that service is min-0, CPU-throttled and maxScale 20.</p>
-<ol>
-<li>2. <b>Verify.</b> <code>/healthz</code> returns 503 while the socket is down, so a green healthz is</li>
-</ol>
-<p>the proof the listener is actually connected — not that the container started.</p>
-<ol>
-<li>3. <b>Prove it on a real event</b> before anything consumes it: one keypad arm should come</li>
-</ol>
-<p>back with both the actor name and the contact id. A remote arm carries no name and is</p>
-<p>resolved by joining <code>lid=</code> to the login frame; those are marked <code>remote_login</code> and are</p>
-<p><b>excluded from renter attribution</b> — pressing a button in the app is not being in</p>
-<p>the building.</p>
-<ol>
-<li>4. <b>Point fbs-monitor at it.</b> The alarms tab joins the name back on; <code>build.py</code>&#x27;s</li>
-</ol>
-<p><code>enrich_arm_names()</code> already exists for exactly this shape and currently has nothing</p>
-<p>to attach. <code>/arm-history</code> <b>stays on</b> as the polling backstop — a websocket has no</p>
-<p>replay, and it is immune to socket gaps in a way the socket is not.</p>
-<ol>
-<li>5. <b>Correct the paper trail.</b> The Plumbing Map entry of 2026-08-20 18:55Z and</li>
-</ol>
-<p>fbs-monitor&#x27;s own Alarms-tab note both still say the way back is capturing the</p>
-<p>browser&#x27;s network call. That was superseded the same day.</p>
-
-<h2>Constraints that are already ruled — do not re-open</h2>
-
-<ul>
-<li>- <b>No browser, and no <code>selectSystem</code>.</b> The Aug-18 &quot;history is locked to one system&quot;</li>
-</ul>
-<p>finding stands, but it only ever applied to the <code>activity/historyEvents</code> REST API;</p>
-<p>the websocket takes no unit parameter. Junyan ruled the capture goes through the MCP</p>
-<p>path, and it did.</p>
-<ul>
-<li>- <b>Arming is not leaving.</b> Anneka armed 509A at 19:30:37 and opened the door at</li>
-</ul>
-<p>19:30:49 — the exit door event is the departure time, not the arm. Anything computing</p>
-<p>occupancy from this feed inherits that correction.</p>
-<ul>
-<li>- <b>Never bill off a socket.</b> No replay means a gap is invisible from inside; <code>covered</code></li>
-</ul>
-<p>must be checked before any overtime is computed, and an uncovered window goes to a</p>
-<p>Review row, never to a charge.</p>
-
-<h2>Why it is its own ticket</h2>
-
-<p>Creating an always-on Cloud Run service is a production flip with a standing cost, and</p>
-<p>Junyan confirms those. It is also the only step between a relay that works and four</p>
-<p>consumers still reading blanks: the Alarms tab, the Doorman&#x27;s suspended Job C retirement</p>
-<p>sweep (its 30-day presence evidence has no source), the Timekeeper&#x27;s identity</p>
-<p>ambiguities, and Junyan&#x27;s departure rule.</p>
-
-<h2>Seam</h2>
-
-<p>The night-ops rebuild map owns the evidence-source design and already logs this build;</p>
-<p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
-<p>Ops Lead&#x27;s use of it here.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -4584,6 +4457,183 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- </code>Known Emails`&#x27; status is settled: promoted to a real key, or retired into the new shape.</li>
 </ul>
 <p>It must not remain a field people believe is searched when it is not.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#099</span><span class="emoji">🗂️</span><span class="done-title">The Registrar queues bodyless confirmations — and the confirmation is not actually templatable</span><span class="done-date">2026-08-20</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar queues bodyless confirmations — and the confirmation is not actually templatable</b></p><h2>Question</h2>
+
+<p><code>queue_confirmation()</code> in <code>dc-canon/services/event-gate/booking_sweep.py:490</code> writes Message</p>
+<p>Code, Channel, Status, Ticket Type, Studio, Artist and Reasoning — <b>and no Message Body</b>.</p>
+<p><b>081</b> specified the confirmation as &quot;strictly templated&quot;; the</p>
+<p>template never reached the code.</p>
+
+<p>Today that is harmless — the rows sit at Pending Review and the send engine ignores them.</p>
+<p>Tomorrow it is a trap: a reviewer flips one to Ready to Send and the engine fails it with</p>
+<p>&quot;Message Body is empty&quot;, and a bodyless review row makes review meaningless — there is</p>
+<p>nothing to approve. Four live rows are already in this state (Aug 21 19:00 Amandeep;</p>
+<p>Aug 22 08:00 + 10:00 Tufan; Aug 22 12:00 Emma; Aug 22 16:30 Aris).</p>
+
+<p><b>The template does exist in canon</b> — two rows, not one, in the How to Respond DB</p>
+<p>(<code>collection://b0c59a82-0a2b-4e96-9467-89bbd954d8b4</code>):</p>
+
+<ul>
+<li>- <a href="https://app.notion.com/3887503281c48165b860cf074ede439a" target="_blank" rel="noopener">Booking confirmation — Skedda booking accepted + paid (T2)</a> — first-time renters, full onboarding boilerplate.</li>
+<li>- <a href="https://app.notion.com/3897503281c4817bb951c4e12e2f6689" target="_blank" rel="noopener">Booking confirmation — returning renter (short)</a> — returning renters; body is</li>
+</ul>
+<p><code>Hi [Name], you&#x27;re all set for [Day, Date] — Studio [###], [start–end] 🙏</code> + a conditional</p>
+<p>terms paragraph + <code>Looking forward to having you back!</code></p>
+
+<p><b>So the real question is not &quot;what does it say&quot; but &quot;can code say it at all&quot;.</b> Reading the</p>
+<p>returning-renter row&#x27;s Notes, composing this message correctly requires three judgments the</p>
+<p>Registrar deliberately has no LLM to make:</p>
+
+<ol>
+<li>1. <b>First-time vs returning</b> — which of the two cards applies (renter history).</li>
+<li>2. <b>Gate 1, account type</b> (Junyan, 2026-08-05) — agreement renters (Time Slot / Fixed</li>
+</ol>
+<p>Option, AAP / 1AP / Private Class, Credit hours, Platform) must get *&quot;Please refer to your</p>
+<p>agreement for exact terms &amp; conditions…&quot;* instead of the stored no-refund/24h paragraph,</p>
+<p>which is simply wrong for them. Requires reading Product / Account Status on the Artist DB.</p>
+<ol>
+<li>3. <b>Gate 2, recency</b> (one-off renters only) — include the terms paragraph only if they have</li>
+</ol>
+<p>not had it in ~30 days. Requires reading <code>threads/&lt;person&gt;.md</code>.</p>
+
+<p>Plus variants the card carries: same-day-additional block, and multi-date (one greeting, one</p>
+<p>closer, one line per booking) — the multi-date case is live right now, Tufan has two blocks</p>
+<p>on Aug 22.</p>
+
+<p>Decide, then implement:</p>
+
+<ul>
+<li>- <b>(a) Deterministic subset.</b> Code emits only the safe core — greeting + booking line(s),</li>
+</ul>
+<p>no terms paragraph ever — and the reviewer adds terms when they apply. Cheapest; makes the</p>
+<p>review row real; risks the terms silently never being sent.</p>
+<ul>
+<li>- <b>(b) Deterministic + mechanical gates.</b> Gate 1 is a property read (Product / Account</li>
+</ul>
+<p>Status) and Gate 2 is a date scan of a thread file — both are arguably rails, not judgment.</p>
+<p>Code could do all three branches. More work, and it moves policy wording into the service,</p>
+<p>which fights the one-copy rule (canon owns the words, not the code).</p>
+<ul>
+<li>- <b>(c) Hand the composition off.</b> The Registrar queues the row with a body-shaped</li>
+</ul>
+<p>placeholder plus the card link, and a judgment lane (Responder / Concierge) fills it.</p>
+<p>Keeps the Registrar LLM-free and canon single-copy; adds a second actor to the chain.</p>
+<ul>
+<li>- <b>(d) Don&#x27;t queue confirmations at all</b> — the Registrar stops at prerequisites and the</li>
+</ul>
+<p>existing message lane handles the confirmation. Narrows 081&#x27;s scope.</p>
+
+<p>Note the same function also omits <b><code>Raised by: AI (automation)</code></b>, which <code>cards.py</code></p>
+<p><code>write_queue_row</code> does set, and sets no <code>Email Subject</code> (harmless while Channel is hard-coded</p>
+<p>SMS — but the hard-code is itself unexamined for renters with no mobile).</p>
+
+<p>Whatever is decided: the code fix ships as an event-gate redeploy</p>
+<p>(<code>gcloud run deploy event-gate --source services/event-gate</code> from the dc-canon root — see</p>
+<p><code>RUNTIMES.md</code> for the path gotcha), and the four existing rows need backfilling before anyone</p>
+<p>reviews them. Both touch customer-message content, so drafts go to Junyan before anything</p>
+<p>flips.</p>
+
+<p>---</p>
+
+<h2>Rulings (Junyan, 2026-08-20) — option (b), the gates are rails</h2>
+
+<p><b>The terms line is one line for everyone this lane confirms.</b> The branch is on the</p>
+<p>BOOKING, not the renter:</p>
+
+<ul>
+<li>- A <b>standing/recurring slot</b> is never confirmed. No new code was needed — <code>selection_of</code></li>
+</ul>
+<p>already drops recurring series (&quot;recurring series — out of scope, one-shot lane only&quot;),</p>
+<p>and that skip is <i>why</i> agreement renters&#x27; slots were never confirmed.</p>
+<ul>
+<li>- Everything else is a one-off, <b>including an agreement renter&#x27;s EXTRA bookings</b>, which</li>
+</ul>
+<p>follow the one-off rules. So they get the standard line, not the refer-to-your-agreement</p>
+<p>pointer — that pointer belongs to bookings the agreement actually governs, which this</p>
+<p>lane never sends.</p>
+
+<p><b>The wording says what the renter CAN do</b>, which the stored no-refund paragraph did not:</p>
+
+<blockquote>Just a reminder that you can rebook with at least 24 hours&#x27; notice, and a booking can be</blockquote>
+<blockquote>moved up to one month out.</blockquote>
+
+<p><b>Gated at 90 days</b> (Junyan raised it from the cards&#x27; 30). The check is a Message Queue</p>
+<p>read, not a <code>threads/&lt;person&gt;.md</code> read — the queue is the record of what the desk actually</p>
+<p>sent and it is reachable from the cloud. Fails closed: an unreadable queue suppresses the</p>
+<p>reminder rather than repeating it. First-time confirmations always carry the line; a</p>
+<p>first-timer has by definition never been told.</p>
+
+<p><code>AGREEMENT_PRODUCTS</code> = 1AP, <b>2AP</b>, AAP, <b>Flex Option</b>, Fixed Option, Private Class</p>
+<p>Add-on — 2AP and Flex Option are retired products whose holders are still on signed</p>
+<p>agreements. It no longer decides wording, but the set is recorded because it is the honest</p>
+<p>answer to &quot;who is on an agreement&quot;.</p>
+
+<h2>THE BIGGER DEFECT — found while checking the gate against live data</h2>
+
+<p><b>All four rows were duplicates.</b> Every one of those bookings had already been confirmed</p>
+<p>by hand, days before the sweep queued anything:</p>
+
+<p>| Booking | Already sent | |</p>
+<p>|---|---|---|</p>
+<p>| Amandeep Kaur, Aug 21 | Aug 18 — &quot;Booking confirmation (returning, short)&quot; | Sent |</p>
+<p>| Aris Wu, Aug 22 | Aug 19 — one text covering Aug 22 <b>and</b> Sep 11 | Sent |</p>
+<p>| Emma Biron, Aug 22 | Aug 19 — <b>first-time T2</b> | Sent |</p>
+<p>| Tufan Bhattarai, Aug 22 | Aug 7 — inside a booking-move acknowledgement | Sent |</p>
+
+<p><code>confirmation_queued()</code> matched only its own <code>BC-sweep-</code> Message Code, so it could not see</p>
+<p>a confirmation any other lane had sent. <b>Backfilling bodies would have made four duplicate</p>
+<p>confirmations releasable</b> — the missing body was hiding the worse bug, not causing it.</p>
+
+<p>Note Emma: she was a genuine first-timer (the Aug 19 send was the full T2), but her Artist</p>
+<p>record already existed, so the approved &quot;record created this pass ⇒ first-time&quot; rule would</p>
+<p>have read her as returning. The rule stands, but this is its known failure mode.</p>
+
+<h2>Done in code (unshipped)</h2>
+
+<ul>
+<li>- <code>compose_confirmation()</code> renders both canon cards; no row can be queued without a body.</li>
+<li>- <code>terms_sent_recently()</code> — the 90-day gate, fails closed.</li>
+<li>- <code>confirmation_queued()</code> widened to a second rung: any non-declined queue row for this</li>
+</ul>
+<p>renter within 45 days naming the booking&#x27;s date in either month spelling (&quot;August 22&quot; /</p>
+<p>&quot;Aug 22&quot;) and reading like a confirmation. Deliberately biased toward suppressing —</p>
+<p>a false hit costs a confirmation the booking probably already had, a miss costs the</p>
+<p>renter a duplicate text.</p>
+<ul>
+<li>- <code>merge_contiguous()</code> — touching blocks in one studio on one day are ONE session and one</li>
+</ul>
+<p>text. Tufan&#x27;s 08:00–10:00 + 10:00–12:00 was about to send two.</p>
+<ul>
+<li>- <code>Raised by: AI (automation)</code> now set, matching <code>cards.py</code>.</li>
+<li>- 372 tests green across event-gate.</li>
+</ul>
+
+<h2>Resolution — 2026-08-20, all three approved by Junyan</h2>
+
+<ol>
+<li>1. <b>Deployed.</b> <code>event-gate-00062-24j</code>. Verified properly rather than assumed: <code>/health</code></li>
+</ol>
+<p>reports <code>code_fingerprint d33cc28c198e</code>, byte-identical to local, so the running code is</p>
+<p>this code. Env block intact — 18 vars on both the new and prior revision, nothing</p>
+<p>dropped, <code>BOOKING_SWEEP_DISABLED=0</code>. (Note: RUNTIMES.md says to expect <b>19</b> env vars</p>
+<p>after a deploy; the true count is 18 on both sides of this deploy, so that number is</p>
+<p>stale and worth correcting there.)</p>
+<ol>
+<li>2. <b>All five live rows set to Will Not Send</b>, each carrying its own reason on the row.</li>
+</ol>
+<p>Not backfilled — every one of those bookings was already confirmed by hand.</p>
+<ol>
+<li>3. <b>Both HTR cards</b> filed as suggestions in 🔧 Sweep Feedback for Junyan to apply</li>
+</ol>
+<p>(robots do not edit the How to Respond DB):</p>
+<ul>
+<li>- <a href="https://app.notion.com/p/3c27503281c4817cb600fb2e73f4ad03" target="_blank" rel="noopener">returning-renter card — 3 edits</a></li>
+<li>- <a href="https://app.notion.com/p/3c27503281c48188a2adf7a24da04439" target="_blank" rel="noopener">first-time T2 card — wording + the branch collapses</a></li>
+</ul>
+
+<p><b>Until those two cards are applied, the code and the humans disagree</b> — the Registrar</p>
+<p>sends the new line, a person composing by hand reads the old card. That gap is tracked in</p>
+<p>Sweep Feedback, not here.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#100</span><span class="emoji">📞</span><span class="done-title">Found out how long each booking site&#x27;s throwaway contact lines stay alive</span><span class="done-date">2026-08-20</span></summary><div class="done-body"><ul class="plain-bullets"><li>Done on August 20, and we did it by reading four months of our own message history — nobody had to send a test message to anyone</li><li>We thought each throwaway line belonged to one booking and died with it. Both email sites turned out to work differently</li><li>Peerspace hands out a new address more often than once per booking — one guest got two seventeen minutes apart — and then those addresses keep working for a MONTH after the booking is over. One is still live 33 days on</li><li>Tagvenue makes a new address every time someone asks about a space, even if they never book. One guest has three, another has four</li><li>Good news: neither email site can ever hand an old address to a different person. Peerspace stamps the time into the address and Tagvenue stamps a number that is never used twice, so an old one always points back at the right human</li><li>That leaves the worry on Giggster alone. Its text-message numbers say nothing about who is on the other end, and they come from a small pool</li><li>The sharpest thing we learned: Giggster texts come from TWO kinds of number, and they look alike. One kind is a real guest. The other is Giggster&#x27;s own robot sending booking notices, cancellations, and even our own login code — about different guests, all from one number. Save that as somebody&#x27;s phone number and you have stapled Giggster the company onto a dancer&#x27;s card</li><li>And a quiet trap: if we ever text a line that has gone dead, nothing bounces. Not one bounce in four months. The message simply vanishes and it looks exactly like the guest ignoring us — so the rules we wrote go by age, never by waiting for an error</li><li>One thing we deliberately did NOT do: text an old Giggster number to see what happens. Texting a number that may already belong to a stranger IS the accident we are trying to prevent. Instead we cut a new job (ticket 102) that just watches and tells us the day it happens</li><li>Also spotted on the way: Tagvenue warns that forwarding one of its emails can let the reader into our account. So we save the address, and we never forward the mail</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Platform relay lifecycle — when does each platform&#x27;s relay actually die?</b></p><h2>RESOLUTION — 2026-08-20 (ledger evidence, no test sends)</h2>
 
 <p><b>Answered from the correspondence ledger alone — no controlled test-reply was needed or</p>
@@ -10551,5 +10601,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-20 17:08 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-20 17:18 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
