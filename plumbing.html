@@ -315,6 +315,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-20 &middot; 01:45Z</span>
+      <h3>The Actions budget was a $0 hard cap, not a failed card &mdash; and the workflow&rsquo;s own cost comment was fiction<span class="kind">FIX</span></h3></summary>
+      <p><strong>&ldquo;Recent account payments have failed or your spending limit needs to be increased&rdquo; reads like a dead credit card.</strong> It was not. All five account budgets sit at <strong>$0 with Stop usage: Yes</strong> &mdash; a hard cap that halts billable Actions the moment the free tier is gone. Only <code>desk-correspondence</code> notices, because it is the fleet&rsquo;s <strong>only private repo with workflows</strong> and therefore the only one drawing paid minutes; <code>fbs-monitor</code>, <code>day-sheet</code> and <code>night-watch</code> are public, run on free minutes, and stayed green throughout &mdash; which is precisely why the repo looked alive while its jobs were being refused.</p>
+      <p><strong>The cadence in the file was fiction.</strong> <code>watchlist.yml</code> claimed &ldquo;every 30 min &asymp; 30 runs/day &asymp; 900 min/month, comfortably inside the free tier&rdquo; since 08-18. Counted from the API: cron-job.org fires it <strong>every 15 minutes, 60 runs/day</strong> &mdash; the intent to halve the tick never reached the ticker, and nothing in git could have contradicted it, because <code>watchlist.yml</code> carries only <code>workflow_dispatch</code> and <strong>cadence is not readable from the repo at all</strong>. Measured: watchlist ~1,824 + qa-review ~730 = <strong>~2,554 min/month against a 2,000 quota (128%)</strong>.</p>
+      <p><strong>The counter-intuitive bit, worth remembering:</strong> GitHub rounds every job UP to a whole minute, and the medians are 56s and 9s &mdash; so <em>both</em> bill a full minute and <strong>run count is the only lever</strong>. Speeding a run up saves exactly zero. A 9-second qa-review costs the same as a 55-second one.</p>
+      <p><strong>Junyan&rsquo;s call: keep 15-min freshness, raise the budget</strong> &mdash; ~554 overage min &times; $0.008/min &asymp; <strong>$4.43/mo</strong>, which is cheaper than the freshness it buys. No cadence or ticker change was made. The wrong arithmetic is corrected in the workflow header (<code>1ac4dea4</code>), and <code>RUNTIMES.md</code> gained the ticker row it never had &mdash; that missing row is how the drift went unseen for two days.</p>
+    </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-20 &middot; 01:34Z</span>
       <h3>The Registrar is live &mdash; direct bookings now set themselves up every 30 minutes<span class="kind">NEW</span></h3></summary>
       <p><strong>Nothing owned direct bookings.</strong> Skedda self-bookings, platform instant-books and request-accepts piled up unread under <code>Sales - Skedda</code> &mdash; 37 deep when it was charted &mdash; and the backlog sweep that cleared them found paid bookings with <em>no FBS row at all</em>. Ruled in wayfinder concierge-repair <strong>079</strong>, built in <strong>081</strong>, shipped in <strong>082</strong>. Named <strong>The Registrar</strong>: it writes the records before a renter arrives, and the Doorman does the letting-in.</p>
