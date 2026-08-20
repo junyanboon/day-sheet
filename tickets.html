@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 22:15 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 22:17 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,8 +100,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">26</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">14</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">27</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">51</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
@@ -1105,7 +1105,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- RUNTIMES.md + Plumbing Map entries.</li>
 </ul>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">26</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">27</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -2931,8 +2931,88 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- <b>035</b>&#x27;s test: the agent pass is <b>seen</b> consuming the queue.</li>
 <li>- Plumbing Map entry.</li>
 </ul>
+</div></details></details></div><div class="job"><div class="jnum">#096</div><div class="jhead"><span class="emoji">🗂️</span><h4>Gmail files some mail away before anyone sees it, and nobody reads those piles</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The robot that sorts email looks in the inbox. But Gmail&#x27;s own filters grab some mail first and file it straight into a folder — it never lands in the inbox at all</li><li>So the sorter never sees it. Not a bug in the sorter: it is looking where the mail is not</li><li>We have quietly known this twice and patched it twice, one folder at a time. Once in July for signed agreements, once in August for booking notices — that second folder had 18,000 messages nobody had ever read</li><li>Those two are the only folders the sorter checks. Every other filter that skips the inbox is still a blind spot</li><li>We measured it instead of guessing: 262 recent messages across seven folders, and not one of them ever passed through the inbox</li><li>The clearest cases are insurance (3 messages nobody has opened) and accounting (8). Unread proves it — the sorter marks things read when it handles them</li><li>Good news: the messages ARE in our records. This is not about losing them. It is that nothing acts on them</li><li>What needs deciding: for each folder, either name what should handle it, or write down &#x27;this is noise and here is why&#x27;. Both answers close the hole. Having no answer is the problem</li><li>And a rule so the next filter someone adds cannot quietly make a new blind spot</li><li>One folder is its own question: the alarm folder holds 45,000 messages, and the alarm panels are now read directly. That mail may not matter at all any more</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Auto-filed mail is invisible to the inbox sweep — the hole has been patched one label at a time</b></p><h2>Question</h2>
+
+<p>Junyan, 2026-08-20, pointing at <code>Artist Care - Insurance</code>: *&quot;There are actually multiple holes.</p>
+<p>We have emails that get autofiltered by gmail.&quot;* He is right, and canon already says so twice —</p>
+<p>reactively, one label at a time.</p>
+
+<p><code>library/job-2-triage.md</code> line 16 states the class outright: *&quot;some notices auto-file straight to</p>
+<p>a Gmail label and never carry INBOX, so the in:inbox scan is structurally blind to them.&quot;* The</p>
+<p>response each time has been to bolt a per-label scan onto JOB 2:</p>
+
+<ul>
+<li>- <b>Dropbox Sign</b> (<code>Sales - Agreements</code>) — added 2026-07-21</li>
+<li>- <b>Sales - Skedda</b> — added 2026-08-13, after 18k threads had never once been read by the sweep</li>
+</ul>
+
+<p>Those are the <b>only two</b> auto-filed sources JOB 2 scans. Every other filter that skips the inbox</p>
+<p>is still a hole, and each was found by accident rather than by looking.</p>
+
+<h3>Measured, not assumed (2026-08-20)</h3>
+
+<p>262 messages sampled from the last 90 days, straight off the Gmail API:</p>
+
+<p>| Label | Total | Unread | Sampled | Ever carried INBOX | Consumer |</p>
+<p>|---|---|---|---|---|---|</p>
+<p>| Artist Care - ADT | 45,419 | 1 | 40 | <b>0</b> | named in canon, no per-pass scan |</p>
+<p>| Sales - Skedda | 18,865 | 2 | — | — | ✅ scanned since 2026-08-13 |</p>
+<p>| Sales - Agreements | 4,480 | 0 | — | — | ✅ <code>agreements_pull.py</code> + Dropbox Sign scan |</p>
+<p>| Artist Care - Tickets | 2,372 | 0 | — | — | ✅ process-studio-tickets |</p>
+<p>| Sales - Booking Request | 2,290 | 0 | — | — | ✅ process-studio-tickets |</p>
+<p>| Junyan - Accounting | 1,044 | <b>8</b> | 40 | <b>0</b> | — none — |</p>
+<p>| Junyan - Procurement | 359 | 0 | 40 | <b>0</b> | — none — |</p>
+<p>| Artist Care - Reviews | 342 | 0 | 40 | <b>0</b> | — none — |</p>
+<p>| Junyan - Vendor Comms | 281 | 0 | 40 | <b>0</b> | — none — |</p>
+<p>| Artist Care - Booking Coming Up | 233 | <b>2</b> | 40 | <b>0</b> | — none — |</p>
+<p>| Artist Care - Insurance | 58 | <b>3</b> | 22 | <b>0</b> | — none — |</p>
+
+<p><b>Zero of 262 carried INBOX.</b> The unread ones settle the ambiguity: JOB 2 marks what it handles as</p>
+<p>read, so an unread message that never touched the inbox was never seen by anything. Insurance and</p>
+<p>Accounting are the clearest — 3 and 8 messages nobody and nothing has ever read.</p>
+
+<p>Note this is a <b>processing</b> hole, not a capture hole: <code>gmail_pull.py</code> queries <code>after:</code> with no</p>
+<p><code>in:inbox</code>, so all of this mail <i>is</i> in the ledger. Canon has it; nobody acts on it.</p>
+
+<h3>Decide</h3>
+
+<ol>
+<li>1. <b>Per label, what should happen to this mail?</b> Three plausible dispositions — a real downstream</li>
+</ol>
+<p>(Insurance → a compliance artifact with an expiry date; Accounting → the Bookkeeper), the digest</p>
+<p>class (<b>071</b> — needs eyes, never action), or an explicit written drop</p>
+<p>(&quot;this is noise, and here is why&quot;). A label with no written disposition is the defect; <b>an</p>
+<p>explicit drop is a valid answer and closes the hole just as well as a consumer does.</b></p>
+<ol>
+<li>2. <b>The general rule, so the next filter does not mint the next hole.</b> Something has to make a</li>
+</ol>
+<p>new auto-filing label impossible to create without naming its consumer. Candidates: a canon rule</p>
+<p>at filter-creation time, or a periodic reconciliation that lists labels with no consumer and no</p>
+<p>drop reason and raises a row. Prefer the one that cannot be forgotten.</p>
+<ol>
+<li>3. <b><code>Artist Care - ADT</code> deserves its own answer.</b> 45,419 messages is the largest surface on the</li>
+</ol>
+<p>desk by an order of magnitude, and the alarm watch now reads panels live</p>
+<p>(<b>055</b>) — so decide whether the mail matters at all any more, or</p>
+<p>whether it is now pure echo like the Skedda label (<b>090</b>).</p>
+
+<h3>Seam — read before building anything</h3>
+
+<p>The rules-router lane (<b>068</b>–<b>074</b>) will</p>
+<p>eventually own labelling and routing. It does <b>not</b> decide the dispositions above; it implements</p>
+<p>them. This ticket produces the per-label disposition table that <b>069</b></p>
+<p>step 2&#x27;s consumer audit needs anyway — do that work once, here, rather than twice. Nothing here</p>
+<p>should wait on 068: the mail is unread now, and 068 is unbuilt.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Every user label carries a written disposition — a named consumer, digest-class, or a drop reason.</li>
+<li>- The general rule is decided and written into canon, not left as an intention.</li>
+<li>- The ADT question answered on its own terms.</li>
+</ul>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">14</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
 <p>Build the crude-but-real J26 cost ledger on the Jobs registry spine: per job, runs × pass length (proxy for token spend) plus a self-reported supervision-minutes line, tallied weekly. Framing: <b>subscription headroom + exposure if the subsidy changes</b>, not cash bleed (~$240/mo Claude + $140/mo ChatGPT actual). It also populates the sibling map&#x27;s GO criterion (c). Decide the tally mechanism (likely a weekly scheduled job writing registry rows) and stand it up.</p>
 </div></details></details></div><div class="job"><div class="jnum">#039</div><div class="jhead"><span class="emoji">🕵️</span><h4>Always know WHO sent every customer message</h4></div><span class="pill p-wait">needs 038 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>On Jul 30, eleven held messages went out in one hour — and no record said who did it</li><li>It was Ela doing her job, but a runaway program would have looked exactly the same</li><li>The sending robot stamps its own name over the person who pressed go</li><li>Fix: the robot notes who handed it each message BEFORE stamping, and AI helpers announce a send before making it</li><li>Then a checker matches every real sent message to a known sender — anything unmatched raises a flag</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Send attribution — every outbound must match one authorised origin</b></p><h2>Question</h2>
@@ -3484,6 +3564,53 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- A day of live data with zero noise marks before it may escalate.</li>
 <li>- Findings carry enough detail to act: counterparty, timestamp, copy count, message ids.</li>
 </ul>
+</div></details></details></div><div class="job"><div class="jnum">#097</div><div class="jhead"><span class="emoji">🛡️</span><h4>Nobody is watching whether renters&#x27; insurance is still valid</h4></div><span class="pill p-wait">needs 096 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>The insurance folder has 58 messages, 3 of them never opened by anyone, and nothing in the whole system looks at it</li><li>The unread mail is not really the risk. Insurance papers come with an expiry date</li><li>So the real risk is a renter dancing in the studio next month on a policy that ran out last week, and nobody here knowing</li><li>What needs deciding: do we track the expiry date somewhere a program can read it, or is this just mail? A date nobody reads is not tracking</li><li>Then, what checks it and when — the mail arrives once, the deadline matters months later. We already have a nagging-about-deadlines mechanism; check if it fits before building another</li><li>And what happens when one lapses: a note for Junyan with enough warning to fix it, not an alarm on the day</li><li>First step is cheap: read the 3 unread messages. They may answer everything — or one of them may be a live problem sitting unopened</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Nothing watches renter insurance — certificates arrive, get filed by a filter, and expire unseen</b></p><h2>Question</h2>
+
+<p>The label Junyan named first, cut separately because it is not a routing question — it is a</p>
+<p>compliance one, and it is the one hole with a <b>deadline</b> attached.</p>
+
+<p><code>Artist Care - Insurance</code> holds 58 messages, <b>3 of them never read by anyone</b>, and no code, skill</p>
+<p>or job references it (<b>096</b>). Certificates of insurance are not</p>
+<p>correspondence you handle once: they carry an <b>expiry date</b>, and the risk is not the unread mail —</p>
+<p>it is the renter who is on the floor next month with a policy that lapsed last week, which nothing</p>
+<p>on the desk would know.</p>
+
+<p>Decide:</p>
+
+<ol>
+<li>1. <b>Is a COI a tracked artifact or just mail?</b> If tracked: where does the expiry live — an Artist</li>
+</ol>
+<p>row property (the join table <b>085</b> established), or its own</p>
+<p>record? A date nothing reads is not tracking.</p>
+<ol>
+<li>2. <b>What reads it, and when?</b> An expiry is a scheduled read, not an inbound event: the mail</li>
+</ol>
+<p>arrives once, the deadline matters months later. That is the shape <b>042</b>&#x27;s</p>
+<p>ladder already handles — check whether it fits before building a second one.</p>
+<ol>
+<li>3. <b>What happens on a lapse?</b> Nothing outward without Junyan (hard rule), so the realistic output</li>
+</ol>
+<p>is a Next Action row (<b>053</b>) with enough lead time to be</p>
+<p>actable, not an alert on the day.</p>
+<ol>
+<li>4. <b>Read the 3 unread first.</b> They may answer 1–3 by showing what actually arrives; they may also</li>
+</ol>
+<p>be a live problem sitting unopened, which would make this urgent rather than structural.</p>
+
+<p>Blocked by 096 only for the routing half — if 096 rules Insurance has a real consumer, this ticket</p>
+<p>designs it. The certificate/expiry question stands either way.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- The 3 unread messages read and their content reported — including whether any names a policy</li>
+</ul>
+<p>already lapsed.</p>
+<ul>
+<li>- A ruling on tracked-artifact vs mail, with the storage location named if tracked.</li>
+<li>- If tracked: one COI observed going in, and one deliberately-expiring date observed raising a row</li>
+</ul>
+<p>ahead of the lapse, not on it.</p>
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
@@ -9295,5 +9422,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 22:15 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 22:17 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
