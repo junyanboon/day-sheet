@@ -315,6 +315,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-20 &middot; 01:47Z</span>
+      <h3>Both loose ends from the Registrar release, closed the same night<span class="kind">FIX</span></h3></summary>
+      <p><strong>1. The kill switch is now visible.</strong> <code>BOOKING_SWEEP_DISABLED</code> was never set on event-gate. It defaults to off, so the lane worked &mdash; but an operator reading the service config saw <em>no switch at all</em> and would reach for the scheduler job without knowing one existed. Set explicitly to <code>0</code> (<code>event-gate-00048-nw2</code>). A control nobody can find is not a control. Done with <code>--update-env-vars</code>, and verified afterwards: 19 variables, including all five that <code>--set-env-vars</code> would have silently dropped &mdash; the foot-gun that cost skedda-mcp a live outage on 08-07.</p>
+      <p><strong>2. alarm-mcp redeployed</strong> &mdash; <code>alarm-mcp-00037-9wb</code>, image <code>0820-eae8f33</code>. It had been sitting on its 08-18 revision, so ticket 085&rsquo;s server-side identity resolution had never actually run. <code>deploy.sh</code> confirmed the live tag matches the tag it just built, which is the entire reason that script exists.</p>
+      <p><strong>Proven on the case that started the ticket:</strong> <code>check_access_covers("Dee Brown")</code> returns <code>manual_no_match</code>; the same call with <code>artist_page_id</code> returns <code>resolved_by: artist_alarm_user_id</code> and the panel user <strong>Dee Adelubi Brown</strong>, 4 panels. That is the exact miss that produced four false residue rows &mdash; and that an attended operator then repeated by hand one message after describing it. End-to-end dry pass with both services on the 085 code: <strong>166 scanned &middot; 0 residue &middot; 0 errors</strong>.</p>
+      <p><strong>Filed, not fixed:</strong> Dee is still on a <em>temporary</em> access window (14 Jul &rarr; 14 Sep) rather than permanent. Windows were retired for renters (canon <code>doorman-access-lifecycle.md</code>) &mdash; this is the legacy-window migration class the Doorman already sweeps for, not a Registrar defect.</p>
+      <p><strong>Still open:</strong> the Registrar has no heartbeat, so a stall is invisible (ticket 086). It writes on failure and on findings, never on a healthy pass.</p>
+    </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-20 &middot; 01:45Z</span>
       <h3>The Actions budget was a $0 hard cap, not a failed card &mdash; and the workflow&rsquo;s own cost comment was fiction<span class="kind">FIX</span></h3></summary>
       <p><strong>&ldquo;Recent account payments have failed or your spending limit needs to be increased&rdquo; reads like a dead credit card.</strong> It was not. All five account budgets sit at <strong>$0 with Stop usage: Yes</strong> &mdash; a hard cap that halts billable Actions the moment the free tier is gone. Only <code>desk-correspondence</code> notices, because it is the fleet&rsquo;s <strong>only private repo with workflows</strong> and therefore the only one drawing paid minutes; <code>fbs-monitor</code>, <code>day-sheet</code> and <code>night-watch</code> are public, run on free minutes, and stayed green throughout &mdash; which is precisely why the repo looked alive while its jobs were being refused.</p>

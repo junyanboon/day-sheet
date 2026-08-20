@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 21:52 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 21:53 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3601,22 +3601,42 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>reads as fully shipped while the lane&#x27;s own silence-detection is missing, which is the exact</p>
 <p>failure class this effort exists to kill.</p>
 
+<h3>Both loose ends closed the same night (Junyan: &quot;let&#x27;s also fix them now&quot;)</h3>
+
+<p><b>1. The kill switch is explicit.</b> <code>BOOKING_SWEEP_DISABLED=0</code> set on <code>event-gate-00048-nw2</code> via</p>
+<p><code>--update-env-vars</code> (verified afterwards: 19 variables, all five of the ones <code>--set-env-vars</code> would have</p>
+<p>dropped still present). Behaviour is identical — unset and <code>0</code> both mean &quot;off&quot; — but it is now <i>visible</i>.</p>
+<p>An operator reading the service config previously saw no switch at all and would reach for the scheduler</p>
+<p>job without knowing a switch existed. A control nobody can find is not a control.</p>
+
+<p><b>2. alarm-mcp redeployed</b> — <code>alarm-mcp-00037-9wb</code>, image <code>0820-eae8f33</code>, 01:47Z. <code>deploy.sh</code> verified the</p>
+<p>live tag matches the tag it just built, which is the whole reason that script exists. <b>085&#x27;s server-side</p>
+<p>resolution proven on the case that started the ticket:</b></p>
+
+<p>``<code></p>
+<p>check_access_covers(&quot;Dee Brown&quot;)                      → manual_no_match</p>
+<p>check_access_covers(&quot;Dee Brown&quot;, artist_page_id=…)    → resolved_by: artist_alarm_user_id</p>
+<p>→ &quot;Dee Adelubi Brown&quot;, 4 panels</p>
+<p></code>`<code></p>
+
+<p>That is the exact miss that produced four false residue rows and that I then repeated by hand. It no</p>
+<p>longer happens. End-to-end dry pass with both services on the 085 code: <b>166 scanned · 125 skipped ·</p>
+<p>11 deferred · 0 residue · 0 errors</b>.</p>
+
+<p>Noticed while probing, filed here rather than fixed: <b>Dee is on a temporary access window (14 Jul →</p>
+<p>14 Sep), not permanent.</b> Windows were retired for renters (canon </code>doorman-access-lifecycle.md<code>); this is</p>
+<p>the legacy-window migration class the Doorman already sweeps for. Not a Registrar defect, and not mine to</p>
+<p>fix tonight.</p>
+
 <h3>Left open, deliberately</h3>
 
-<ul>
-<li>- <b>alarm-mcp is still on <code>alarm-mcp-00036-qjh</code> (2026-08-18)</b>, so ticket 085&#x27;s server-side resolution is</li>
-</ul>
-<p>not live there. Checked before shipping rather than assumed: <code>/provision</code> reads its payload with</p>
-<p><code>payload.get(...)</code> — a plain dict, no strict model — so the extra <code>artist_page_id</code> is <b>ignored, not</p>
-<p>rejected</b>, and it falls back to name resolution. Harmless, and not a ship blocker. Close it with</p>
-<p><code>./deploy.sh</code> in <code>~/DanceAnnex-AlarmMonitor/alarm-monitor</code>.</p>
 <ul>
 <li>- <b>The first day is the real test, and it is not a test code can run:</b> whether residue rows read as</li>
 </ul>
 <p>actionable to a human, and whether there is a handful or a wall.</p>
 
-<p>RUNTIMES.md (lane section rewritten + a <code>booking-sweep</code> Scheduler row) and the Plumbing Map</p>
-<p>(<code>day-sheet/plumbing.html</code>, two entries) updated — the definition of done for a plumbing change.</p>
+<p>RUNTIMES.md (lane section rewritten + a </code>booking-sweep<code> Scheduler row) and the Plumbing Map</p>
+<p>(</code>day-sheet/plumbing.html`, two entries) updated — the definition of done for a plumbing change.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#015</span><span class="emoji">✂️</span><span class="done-title">Read every message we ever sent — and found some customers got the same text twice</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE. Two leftover jobs on this ticket, and neither one turned out to be what we thought</li><li>First job: a tool that compared a robot&#x27;s rough draft with the final message, to teach it to write better</li><li>That tool was scrapped back in July, because robots filled in the draft box and left the real box empty — so some messages went out blank</li><li>Junyan ruled: leave it dead. The new suggest-and-rewrite way of working already teaches the robots the same lesson, in a better place</li><li>Second job: a checkup hunting for messages accidentally recorded twice</li><li>We read all 9,465 messages the studio has ever sent or received — every single one, not a sample</li><li>The old plan for that checkup was junk: it just asked &#x27;same words?&#x27;, so every weekly reminder looked like a mistake. About 500 false alarms</li><li>Good news: our record book is clean. Nothing was written down twice</li><li>Bad news, and this is the real find: some customers actually got the same text twice</li><li>On June 21, three renters each got the same long message twice at 12:01, then twice again at 13:00 — four copies each in one hour</li><li>Two more people got doubled texts in May, and one person&#x27;s reply got recorded twice in August</li><li>Nothing is watching for this. The outbox shows one row per message, so a double send looks perfectly normal from there</li><li>So we&#x27;re building a checkup that hunts for double sends instead (087), and a separate job to find out what caused June 21 (088)</li><li>One more lesson, learned twice the hard way this session: a search that doesn&#x27;t say how much it actually looked at is worthless</li><li>Our first search read only 346 of the 9,465 messages — 4% — and cheerfully reported everything was fine</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cut correspondence canon over from the Notion Correspondence Log to J28</b></p><h2>Question</h2>
 
 <p>Junyan&#x27;s direction (2026-07-15): stop using the <b>Notion Correspondence Log</b> as the desk&#x27;s</p>
@@ -9089,5 +9109,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 21:52 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 21:53 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
