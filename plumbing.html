@@ -313,6 +313,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-20 &middot; 17:45Z</span>
+      <h3>FBS Monitor: the &ldquo;also in 509B &mdash; moved? verify&rdquo; warning is gone &mdash; it fired off the calendar, where it could never mean anything<span class="kind">FAILURE MODE</span></h3></summary>
+      <p>The board flagged any renter whose bookings overlapped in two studios as a possible ghost of a moved booking. But two overlapping rows for one renter is a normal, legal booking &mdash; Vanessa Zavatti held <strong>both halves of 509</strong> for a 13:00 viewing today and got warned about it at 12:48, twelve minutes before anyone could be in either room. The warning was derived purely from calendar shape, so it carried no evidence of anything and trained the reader to scroll past a &ldquo;wrong&rdquo; line.</p>
+      <p><strong>What changed:</strong> <code>dup_studios</code> keeps its real job &mdash; suppressing the red <code>no arrival</code> on the second calendar row, since a sibling booking is not evidence of a no-show &mdash; but now renders nothing on desktop, mobile, or the day grid. The <code>.dupe</code> row styling is removed with it.</p>
+      <p><strong>What still fires:</strong> <code>wrong_studio</code>, which is the check that actually matches the intent &mdash; a renter who <em>disarmed</em> a studio inside their window that is not the one they booked. That is derived from real arm/disarm events (alarm-mcp <code>/arm-history</code>), so it means someone is physically in a room they should not be, and it takes precedence over everything else on the line.</p>
+      <p><em>Paper trail:</em> fbs-monitor <code>f5738aa2</code>, template.html + template-mobile.html. <code>index.html</code>/<code>mobile.html</code> pick it up on the next ~15-min rebuild tick; the build-side marking in <code>build.py</code> is unchanged.</p>
+    </details>
+    </li>
+
     <li class="entry alert">
       <details>
       <summary><span class="when">2026-08-20 · 17:10Z</span>
