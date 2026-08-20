@@ -313,6 +313,22 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry alert">
+      <details>
+      <summary><span class="when">2026-08-20 &middot; 20:10Z</span>
+      <h3>Same-day lane sent codes off a stale email &mdash; now verifies the live calendar, assesses the renter, and waits at a human gate<span class="kind">INCIDENT + REROUTE</span></h3></summary>
+      <p><strong>What happened.</strong> First live run of the same-day access lane (12h catch-up window). Two HTAs auto-sent. <strong>Charlie Vernon James Foster</strong> was texted door + alarm codes for a booking Junyan had cancelled four minutes after creating it &mdash; the lane read the 12:44 &ldquo;made a booking&rdquo; email at 16:22 and never asked the calendar whether the booking still existed. <strong>Angus Dirnbeck</strong> (weekly renter since January) got first-timer onboarding with a wrong start time (10:15 vs the moved 10:00) and a <em>freshly provisioned</em> code 9951 &mdash; his holder-name variant matched no Artist record, so the lane treated him as new. Junyan sent both renters corrections by hand.</p>
+      <p><strong>Root cause, plainly:</strong> the lane treated the notification email as fact. The email is a claim about the past; the calendar is the present &mdash; the workspace&rsquo;s own &ldquo;verify against the live source before acting&rdquo; rule, not applied to the very trigger of the lane.</p>
+      <p><strong>Three changes (SameDay.gs v7 + skedda-mcp <code>verify-0820</code>, revision <code>skedda-mcp-00039-5lt</code>):</strong></p>
+      <ul>
+      <li><strong>Gate 0 &mdash; live verification.</strong> New read-only <code>/find-booking</code> route on the Skedda server (commit <code>46b5dae</code>). Before provisioning anything, the lane requires the booking on the calendar NOW: cancelled &rarr; quiet skip + SMS, moved &rarr; the live time wins. Matcher is three-pass, strongest identity first (holder+time, holder, time-on-anonymous-row) &mdash; a bare time-match on a named row is refused, because Charlie&rsquo;s cancelled 10:00 PM slot was reoccupied by Angus&rsquo;s real 10:00 PM booking and a naive time-match would have verified the wrong renter. All four shapes replay-tested against the live payload.</li>
+      <li><strong>Renter assessment.</strong> The queue row and SMS now state whether the Artist record matched (with prior-HTA count) or not &mdash; &ldquo;NEW to our records&rdquo; explicitly flags the Angus shape: possibly a regular under a name variant we do not hold.</li>
+      <li><strong>Human gate.</strong> Rows now land at <code>Pending Review</code>, not <code>Ready to Send</code>; the send engine never touches them until a person flips the status. <code>SAMEDAY_AUTOSEND=true</code> restores auto-send when the lane has earned it back. Board HTA is only flipped on actual auto-send.</li>
+      </ul>
+      <p><strong>Open residue:</strong> alarm codes 9700 (Charlie &mdash; no booking tonight) and 9951 (Angus &mdash; possible duplicate panel user next to his real record) are live and need an audit pass; the Angus duplicate Artist page wants a merge.</p>
+    </details>
+    </li>
+
     <li class="entry llm">
       <details>
       <summary><span class="when">2026-08-20 &middot; 18:30Z</span>
