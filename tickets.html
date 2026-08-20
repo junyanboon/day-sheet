@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 21:15 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 21:20 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">25</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">28</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">14</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">48</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">49</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -980,7 +980,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
 <p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">25</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">28</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1920,129 +1920,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Sequencing: <b>052</b> pilots on tickets today&#x27;s JOB 2 already makes,</p>
 <p>so this is parallel work, not a blocker.</p>
-</div></details></details></div><div class="job"><div class="jnum">#055</div><div class="jhead"><span class="emoji">⚙️</span><h4>Take the busywork off the thinking robot — programs find the work, the robot only does it</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>DONE and LIVE (Aug 16): alarm watching is now a program that checks the panels every minute — it texts staff, files the call row and opens the ticket itself</li><li>We also made it go blind on purpose to check it would say so — it wrote &#x27;I can&#x27;t see the panels&#x27; on Junyan&#x27;s list, then cleared it once it could see again</li><li>Still to do: the other three chores below</li><li>The who&#x27;s-in-today list rebuilds itself all day instead of once every two hours</li><li>Copying claimed staff shifts to the calendar is just copying — no thinking needed</li><li>A fourth chore gets deleted outright: another robot already does it</li><li>Rule we learned the hard way: nothing retires until the new owner is seen actually doing it</li><li>GREW on Aug 15 after Junyan&#x27;s ruling: the four chores the robot keeps dropping all matter — none can be deleted. So more of them move here</li><li>We read each dropped chore closely: most of it is checking lists and ticking boxes — no thinking in it at all</li><li>The reconciling chore (closing the loop after messages send and charges land) becomes a program. Where it isn&#x27;t sure, it raises a hand instead of guessing</li><li>The staff-handback chore splits: a program NOTICES when staff finish something (ticked rows, new screenshots, channel posts) and the thinking robot only picks up what got flagged</li><li>That&#x27;s the big idea in one line: programs find the work, the robot only does flagged work. A robot can&#x27;t run out of time looking for jobs it was never asked to find</li><li>The evening review keeps the thinking robot — that one is real judgment — and it finally gets the time budget the busywork was eating</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move J01&#x27;s deterministic lanes out of the LLM pass — alarm watch, fast-track list, shift mirror</b></p><h2>Question</h2>
-
-<p>Graduated from <b>018</b>, which ruled each of these out of the LLM pass.</p>
-<p>Pure code, no judgment, parallel to everything else.</p>
-
-<ol>
-<li>1. <b>Alarm PENDING→ALARM watch → <code>event-gate</code>.</b> Junyan: *&quot;if there is an alarm it needs to be</li>
-</ol>
-<p>addressed immediately by contacting staff, not by the Concierge 2 hours later.&quot;* The pair check</p>
-<p>is a code diff; it belongs on the minute tick beside the live panel reads already there</p>
-<p>(invariants :25, the Doorman&#x27;s 04:00 pass), paging staff directly. The Concierge exits the alarm</p>
-<p>business — remove JOB 1&#x27;s mandatory half from canon in the same change, and keep the ticket-</p>
-<p>raising behaviour (an alarm-trigger ticket on a real pair) wherever the check lands.</p>
-<ol>
-<li>2. <b>FAST-TRACK list → deterministic renderer.</b> Junyan: *&quot;needs to be kept up to date throughout</li>
-</ol>
-<p>the day depending on who&#x27;s in the studio.&quot;* Today&#x27;s occupants + first-timers derive from the FBS</p>
-<p>board and the studio calendars (019 pattern). The list is data; only <i>acting</i> on someone who</p>
-<p>writes in needs judgment, and that is intake&#x27;s job.</p>
-<ol>
-<li>3. <b>JOB 31 claimed-shift mirror → plain code.</b> Calendar mirror with the two dedup guards. Zero</li>
-</ol>
-<p>judgment. The Planner&#x27;s 19:30 backstop can retire once it runs clean.</p>
-<ol>
-<li>4. <b>JOB 1 remainder — delete, do not rehome.</b> PBF reconcile is redundant (the Responder queues,</li>
-</ol>
-<p>JOB 3&#x27;s successor flips <code>Sent</code>, invariant U catches unresolved); straggler sweep and board</p>
-<p>reconciliation fold into the invariants roster (<b>044</b> family).</p>
-
-<h2>Progress</h2>
-
-<p><b>Lane 1 (alarm watch) BUILT 2026-08-15 — awaiting Junyan&#x27;s deploy.</b> <code>services/event-gate/alarm_watch.py</code></p>
-<p>(dc-canon <code>b9faedec</code>): the PENDING→ALARM email pair becomes an <code>in_alarm</code> false→true edge on alarm-mcp&#x27;s</p>
-<p>live <code>/panel-states</code>, checked on the existing <code>event-gate-poll</code> minute tick. On an edge: on-call summons</p>
-<p>SMS + Staff Call Queue row + deduped <code>Alarm trigger Studio &lt;NNN&gt;</code> CC ticket at <code>Position = Gate: Staff</code>.</p>
-<p>Kill switch <code>ALARM_WATCH_DISABLED</code> (independent of <code>GATE_DISABLED</code>); inert until <code>ALARM_PANEL_URL</code> +</p>
-<p><code>ALARM_PANEL_TOKEN</code> are set; files a <code>Run Error</code> row (<code>Raised by = Alarm Watch</code>) after 15 blind reads,</p>
-<p>clears it on recovery — the 035 lesson honoured. Canon edited in the same commit: JOB 1 Step 3.5 is now</p>
-<p>enrichment + fallback only; orchestration item 1 no longer claims the alarm read. RUNTIMES + Plumbing Map</p>
-<p>updated. <b>Deployed 2026-08-15 night; three defects found in the first hours, all fixed in <code>3d5c1a51</code>:</b></p>
-<p>(a) the env command used <code>--set-env-vars</code>, which replaces rather than adds — twelve variables including</p>
-<p><code>GATE_PATH_TOKEN</code> were wiped and <b>the whole gate 404&#x27;d for ~4.5 hours</b> (no emergency forwarding, no</p>
-<p>invariants, no loop); restored from a pre-deploy dump, window audited message-by-message, nothing</p>
-<p>emergency-shaped in it. (b) the <code>mcp-auth-token</code> secret carries a <b>trailing newline</b>, which Python</p>
-<p>rejects as a header value — 267 consecutive failed panel reads; <code>.strip()</code> on read now, and the identical</p>
-<p>latent bug in <code>presence.py</code> (newly reachable, since these vars had never been set before) fixed with it.</p>
-<p>(c) the lane&#x27;s own Run Error row could not file — <code>Alarm Watch</code> was not a <code>Raised by</code> option, so the</p>
-<p>self-report 400&#x27;d. <b>The lane failed AND its failure report failed</b> — the exact shape 035&#x27;s lesson warns</p>
-<p>about, found only because the outage forced a log read. Option added to the schema.</p>
-<p><b>LANE 1 IS DONE — LIVE 2026-08-16, revision <code>event-gate-00038-ql4</code>.</b> A live tick reads all five</p>
-<p>partitions (<code>alarm_watch: {ok: true, partitions: 5, alarms: []}</code>), and the blind-read path was</p>
-<p>tested end to end against the real board: 15 forced failures filed the <code>Alarm watch is BLIND</code> row,</p>
-<p>a good read cleared it, zero rows left open. The Concierge no longer detects alarm triggers.</p>
-
-<p><b>Lanes 2–4 remain open and are what keeps this ticket open:</b> the FAST-TRACK who&#x27;s-in-today</p>
-<p>renderer, JOB 31&#x27;s claimed-shift mirror, and JOB 1&#x27;s remainder (delete, don&#x27;t rehome). Each still</p>
-<p>needs 035&#x27;s test applied — a retirement is not done until the new owner is seen acting. Seam noted: alarm-mcp&#x27;s</p>
-<p><code>alarm-watchdog</code> (dry-run) manages the siren; this lane summons people — complementary, keep both.</p>
-<p>Lanes 2–4 (FAST-TRACK renderer, J31 mirror, JOB 1 remainder deletion) untouched.</p>
-
-<p><b>Standing lesson applies (<b>035</b>):</b> a retirement is not done until</p>
-<p>every step of the retired job names its new owner — and naming an owner is not verifying the owner</p>
-<p>acts. Each lane reports its own result including zero, and files a <code>Run Error</code> row if it cannot run.</p>
-
-<h2>Re-scoped 2026-08-15 — Junyan&#x27;s capacity ruling widens this ticket to the whole dropped tail</h2>
-
-<p><b>The ruling:</b> walked through the four chronically-dropped jobs (JOB 3 reconcile, JOB 4 handback,</p>
-<p>JOB 31 shift mirror, HEAVY-PM&#x27;s JOB 33/0/5/7), Junyan ruled <b>all four essential</b> — *&quot;they all</p>
-<p>seem really important; when they are missed they each cause problems.&quot;* The right-size-by-deletion</p>
-<p>option is dead. This is a capacity problem, and the fix is the one this ticket already owns:</p>
-<p>take the mechanical work off the LLM pass.</p>
-
-<p><b>The sizing read (canon, this session):</b></p>
-
-<ul>
-<li>- <b>JOB 31 — fully mechanical</b>, as lane 3 already says. Query claimed rows, copy the row&#x27;s own</li>
-</ul>
-<p>window onto the calendar, midnight-lock check. Fold in <b>075</b>&#x27;s</p>
-<p>second half: the AVA re-evaluation is also deterministic (named block now covers the booking</p>
-<p>start → flip the unsent row&#x27;s variant). One lane, both halves.</p>
-<ul>
-<li>- <b>JOB 3 — mostly mechanical.</b> The message reconcile, strand backstop, money reconcile and</li>
-</ul>
-<p>collection detection are all view-reads + status branches + checkbox/Position writes. The HTR</p>
-<p>learning loop is already retired (the <code>Drafted Body</code> diff field was deleted 2026-07-29). The one</p>
-<p>prose-shaped step — the orphan-gate audit&#x27;s &quot;Current Block names a staff task&quot; — has a structured</p>
-<p>equivalent the tick already uses on the new board: <code>Position = Gate:*</code> with no open linked Action</p>
-<p>row and no Pending-Review queue row = orphan. Rule: <b>where the structured read is ambiguous, the</p>
-<p>code flags the row for an agent instead of deciding</b> — same contract as <code>unverifiable</code>.</p>
-<ul>
-<li>- <b>JOB 4 — split.</b> <i>Detection</i> is mechanical and is exactly the tick&#x27;s shape: Processed Action</li>
-</ul>
-<p>rows, new images on parked tickets, new #desk-drops messages past the cursor. <i>Resumption</i> —</p>
-<p>re-walk the SOP from the first unchecked step, branch on returned facts, read screenshots — is</p>
-<p>genuine judgment and <i>stays with an agent</i>, but fed from a flag queue instead of self-scanning.</p>
-<ul>
-<li>- <b>HEAVY-PM (JOB 33/0/5/7) — judgment, stays LLM.</b> Untouched here; the payoff is that the freed</li>
-</ul>
-<p>budget reaches it.</p>
-
-<p><b>The principle, stated once: code finds the work, the LLM only does flagged work.</b> Starvation</p>
-<p>exists because scanning competes with judging inside one budget. Move every scan to the tick and</p>
-<p>the LLM pass starts from a worklist — it cannot starve on finding, only on doing, and a growing</p>
-<p>flag queue is visible in a way a skipped scan never was.</p>
-
-<p><b>New lanes:</b></p>
-
-<ol>
-<li>5. <b>JOB 3 mechanical reconcile → the <code>event-gate</code> tick</b> (10-min cadence beside <code>/loop</code>).</li>
-</ol>
-<p>Ambiguity flags, never guesses. Reporting per the standing rule — a zero pass reports zero.</p>
-<ol>
-<li>6. <b>JOB 4 detection layer → the same tick.</b> Emits &quot;ready to resume&quot; flags (a view or field the</li>
-</ol>
-<p>agent pass consumes). Resumption stays agentic and comes off the Concierge&#x27;s self-scan.</p>
-
-<p>Lanes 2 (FAST-TRACK renderer) unchanged. **Lane 3 upgraded 2026-08-15 (Junyan): claim → calendar</p>
-<p>→ FBS Monitor must be <i>immediate</i>** — the mirror moves to event-gate&#x27;s minute tick (≤ ~60s to the</p>
-<p>calendar; the monitor already reads that calendar&#x27;s ICS, so one write feeds both surfaces — but</p>
-<p>measure the ICS feed lag first, it is an untested wire). Detail + acceptance on</p>
-<p><b>075</b>. Lane 4</p>
-<p>(JOB 1 remainder deletion) unchanged. 035&#x27;s test binds every lane: the retirement is done when the</p>
-<p>new owner is <i>seen</i> acting, not when it is named.</p>
 </div></details></details></div><div class="job"><div class="jnum">#060</div><div class="jhead"><span class="emoji">🏓</span><h4>Messages nobody claims — make &#x27;not my job&#x27; leave a mark</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Three renters this week wrote to us and no robot picked it up — Junyan caught each one himself</li><li>Each robot looked, decided &#x27;not mine&#x27;, and wrote nothing down — so it looked like nothing was wrong</li><li>The rule going in: every message must end somewhere — handled, given a ticket, or a robot&#x27;s name on the &#x27;no&#x27;</li><li>A separate watcher, outside all the robots, rings when a message sits too long with no answer</li><li>It names the person waiting — &#x27;Himanshi, booking question, 4 hours&#x27; — not just a number</li><li>We tried fixing this with more instructions three times; it failed three times — this time it&#x27;s a watcher, not a rule</li><li>First step: read the robot&#x27;s actual work logs to find out whether it even looks at new messages</li><li>Case four, same day: Francisco texted about lost AirPods at 1pm — the collector delivered it 5 hours late, then no robot picked it up either</li><li>Lesson for the watcher: count from when the renter sent it, not from when our copy arrived</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Ping-pong — every inbound message gets a recorded disposition, checked from outside the passes</b></p><h2>Question</h2>
 
 <p>From <b>HANDOFF-concierge-ping-pong.md</b> (2026-08-06,</p>
@@ -2926,6 +2803,124 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Depends on:</b> the alarm-mcp redeploy 085 is waiting on (Junyan&#x27;s flip) — the code changes can</p>
 <p>be written before it, but nothing is verifiable until the service carries <code>identity.py</code>.</p>
+</div></details></details></div><div class="job"><div class="jnum">#092</div><div class="jhead"><span class="emoji">📋</span><h4>The who&#x27;s-in-today list rebuilds itself all day</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Split off Aug 19 from the big busywork ticket</li><li>Junyan: it needs to stay right through the day, depending on who is actually in the studio</li><li>Today&#x27;s renters and first-timers can be worked out from the booking board and the studio calendars — that&#x27;s just looking things up, no thinking</li><li>The only part that needs thinking is what to DO when one of them writes in, and a different robot already owns that</li><li>Not done until the new list is seen doing the job — naming a new owner isn&#x27;t the same as watching it work</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FAST-TRACK who&#x27;s-in-today list becomes a deterministic renderer</b></p><h2>Question</h2>
+
+<p>Split out of <b>055</b> (lane 2) 2026-08-19, which delivered its</p>
+<p>alarm-watch lane and was closed to its actual scope.</p>
+
+<p>Junyan: <i>&quot;needs to be kept up to date throughout the day depending on who&#x27;s in the studio.&quot;</i></p>
+<p>Today&#x27;s occupants + first-timers derive from the FBS board and the studio calendars — the</p>
+<p><b>019</b> renderer pattern. The list is <b>data</b>; only <i>acting</i> on someone</p>
+<p>who writes in needs judgment, and that is intake&#x27;s job.</p>
+
+<p>Build the renderer, retire the Concierge&#x27;s FAST-TRACK step in canon in the same change.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- The list is rebuilt deterministically through the day, no LLM in the path.</li>
+<li>- Canon&#x27;s FAST-TRACK step names the renderer as its new owner.</li>
+<li>- <b>035</b>&#x27;s test applied: the new owner is <b>seen</b> acting before</li>
+</ul>
+<p>the retirement counts as done — not merely named.</p>
+<ul>
+<li>- The lane reports its own result including zero, and files a <code>Run Error</code> row if it cannot run.</li>
+<li>- Plumbing Map entry.</li>
+</ul>
+</div></details></details></div><div class="job"><div class="jnum">#093</div><div class="jhead"><span class="emoji">🗑️</span><h4>The last leftover chore gets deleted, not moved</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Split off Aug 19 from the big busywork ticket</li><li>Nothing here gets a new home — every piece is already covered somewhere else</li><li>Chasing up sent messages is doubled work: the message robot queues them, another chore marks them sent, and a standing check catches anything stuck</li><li>The two leftover sweeps fold into the list of standing checks</li><li>With alarms already gone and the who&#x27;s-in list leaving, this closes the chore out entirely</li><li>Rule: no step gets orphaned. Each one either has a proven replacement we can name, or it moves to the standing checks</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete, do not rehome</b></p><h2>Question</h2>
+
+<p>Split out of <b>055</b> (lane 4) 2026-08-19.</p>
+
+<p>Nothing here gets a new home — the remainder of JOB 1 is redundant and gets deleted:</p>
+
+<ul>
+<li>- <b>PBF reconcile</b> is redundant: the Responder queues, JOB 3&#x27;s successor flips <code>Sent</code>, and</li>
+</ul>
+<p>invariant U catches unresolved.</p>
+<ul>
+<li>- <b>Straggler sweep</b> and <b>board reconciliation</b> fold into the invariants roster</li>
+</ul>
+<p>(<b>044</b> family).</p>
+
+<p>With the alarm watch already gone to <code>event-gate</code> (055 lane 1, live 2026-08-16) and the</p>
+<p>FAST-TRACK list leaving via <b>092</b>, this closes JOB 1 out entirely.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- JOB 1 is removed from canon and from the Concierge orchestration, not left as a stub.</li>
+<li>- Every deleted step is either provably redundant (name the covering mechanism) or lands on</li>
+</ul>
+<p>the invariants roster — <b>035</b>&#x27;s standing lesson: no orphaned steps.</p>
+<ul>
+<li>- Invariant U and the invariants roster are <b>observed</b> covering the deleted work.</li>
+<li>- Plumbing Map entry.</li>
+</ul>
+</div></details></details></div><div class="job"><div class="jnum">#094</div><div class="jhead"><span class="emoji">✅</span><h4>The reconciling chore becomes a program that runs every ten minutes</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Split off Aug 19 from the big busywork ticket — the biggest of the pieces</li><li>Junyan ruled Aug 15 that all four dropped chores matter: when they get missed, each one causes real problems. So none can be deleted</li><li>We read it closely: closing the loop after messages send and charges land is all looking at lists and ticking boxes. No thinking in it</li><li>The one wordy step has a tidy replacement — a ticket sitting at a gate with no open task and nothing waiting for review is a stuck ticket, and that&#x27;s checkable</li><li>Where it isn&#x27;t sure, it raises a hand instead of guessing. That rule is written down and tested</li><li>It reports every run, including the quiet ones. A chore that only speaks up when something&#x27;s wrong is how a real problem reaches nobody</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 3&#x27;s mechanical reconcile moves to the event-gate tick</b></p><h2>Question</h2>
+
+<p>Split out of <b>055</b> (lane 5) 2026-08-19, where it arrived via</p>
+<p>Junyan&#x27;s 2026-08-15 capacity ruling: walked through the four chronically-dropped jobs, he ruled</p>
+<p><b>all four essential</b> — *&quot;they all seem really important; when they are missed they each cause</p>
+<p>problems.&quot;* Right-sizing by deletion is dead; the fix is to take the mechanical work off the</p>
+<p>LLM pass.</p>
+
+<p><b>The principle: code finds the work, the LLM only does flagged work.</b> Starvation exists because</p>
+<p>scanning competes with judging inside one budget. Move every scan to the tick and the LLM pass</p>
+<p>starts from a worklist — it cannot starve on finding, only on doing, and a growing flag queue is</p>
+<p>visible in a way a skipped scan never was.</p>
+
+<p><b>The sizing read (canon, 2026-08-15): JOB 3 is mostly mechanical.</b> Message reconcile, strand</p>
+<p>backstop, money reconcile and collection detection are all view-reads + status branches +</p>
+<p>checkbox/<code>Position</code> writes. The HTR learning loop is already retired (the <code>Drafted Body</code> diff</p>
+<p>field was deleted 2026-07-29). The one prose-shaped step — the orphan-gate audit&#x27;s *&quot;Current Block</p>
+<p>names a staff task&quot;* — has a structured equivalent the tick already uses on the new board:</p>
+<p><code>Position = Gate:*</code> with no open linked Action row and no Pending-Review queue row = orphan.</p>
+
+<p><b>Rule: where the structured read is ambiguous, the code flags the row for an agent instead of</p>
+<p>deciding</b> — same contract as <code>unverifiable</code>. Never guesses.</p>
+
+<p>Lands on the <code>event-gate</code> tick at a 10-minute cadence, beside <code>/loop</code>.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- The mechanical steps run on the tick; canon&#x27;s JOB 3 names the tick as their owner.</li>
+<li>- Ambiguity produces a flag for the agent pass, never a guess — pinned by test.</li>
+<li>- Reporting per the standing rule: <b>a zero pass reports zero</b>; a <code>Run Error</code> row files if the</li>
+</ul>
+<p>lane cannot run.</p>
+<ul>
+<li>- <b>035</b>&#x27;s test: the new owner is <b>seen</b> acting before the</li>
+</ul>
+<p>retirement counts as done.</p>
+<ul>
+<li>- Plumbing Map entry.</li>
+</ul>
+</div></details></details></div><div class="job"><div class="jnum">#095</div><div class="jhead"><span class="emoji">👀</span><h4>A program notices when staff finish something; the robot only picks up what got flagged</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Split off Aug 19 from the big busywork ticket</li><li>This chore splits in two. NOTICING is mechanical — ticked rows, new screenshots, new posts in the channel</li><li>PICKING IT BACK UP is real thinking — finding where you left off, reading photos, deciding what changed — and stays with the thinking robot</li><li>The difference is where the work comes from: the robot gets handed a list instead of going looking for one</li><li>The evening review keeps the thinking robot too — and it finally gets the time budget the busywork was eating</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 4&#x27;s detection layer moves to the tick; resumption stays agentic</b></p><h2>Question</h2>
+
+<p>Split out of <b>055</b> (lane 6) 2026-08-19, from the same capacity</p>
+<p>ruling as <b>094</b>.</p>
+
+<p><b>JOB 4 splits.</b> <i>Detection</i> is mechanical and is exactly the tick&#x27;s shape: Processed Action</p>
+<p>rows, new images on parked tickets, new <code>#desk-drops</code> messages past the cursor. <i>Resumption</i> —</p>
+<p>re-walk the SOP from the first unchecked step, branch on returned facts, read screenshots — is</p>
+<p>genuine judgment and <b>stays with an agent</b>, but fed from a flag queue instead of self-scanning.</p>
+
+<p>The detection layer emits &quot;ready to resume&quot; flags (a view or field the agent pass consumes),</p>
+<p>and the Concierge&#x27;s self-scan comes off the LLM pass.</p>
+
+<p><b>HEAVY-PM (JOB 33/0/5/7) is judgment and stays LLM</b> — untouched; the payoff of this lane and</p>
+<p>094 is that the freed budget reaches it.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Detection runs on the tick and emits a consumable flag queue; canon&#x27;s JOB 4 names it.</li>
+<li>- Resumption is fed <b>only</b> from the queue — the agent no longer self-scans.</li>
+<li>- A zero pass reports zero; a <code>Run Error</code> row files if the lane cannot run.</li>
+<li>- <b>035</b>&#x27;s test: the agent pass is <b>seen</b> consuming the queue.</li>
+<li>- Plumbing Map entry.</li>
+</ul>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">14</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -3639,6 +3634,170 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Already moot / recorded elsewhere:</b> consumer repoint (done inside 025&#x27;s port), write-path</p>
 <p>cutover (pollers + <code>log_drop</code> own all writes), backfill (executed in 006), the</p>
 <p>Correspondence-Log freeze (ruled VOID 2026-07-23).</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#055</span><span class="emoji">⚙️</span><span class="done-title">Take the busywork off the thinking robot — the alarm half is done, the rest got its own tickets</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE and LIVE (Aug 16): alarm watching is now a program that checks the panels every minute — it texts staff, files the call row and opens the ticket itself</li><li>We made it go blind on purpose to check it would say so — it wrote &#x27;I can&#x27;t see the panels&#x27; on Junyan&#x27;s list, then cleared it once it could see again</li><li>The thinking robot is out of the alarm business completely. It no longer looks for alarms at all</li><li>Switching it on went badly for one night and taught us three things worth remembering</li><li>One wrong word in the deploy command wiped twelve settings and took the whole system down for four and a half hours. Nothing urgent came in during that window — we checked every message one by one</li><li>A saved password had an invisible extra line-break on the end, which the program refused. That silently broke 267 panel checks in a row</li><li>And when the alarm program tried to report its own failure, the report itself failed — &#x27;Alarm Watch&#x27; wasn&#x27;t on the list of things allowed to complain. The chore broke AND its cry for help broke</li><li>CLOSED Aug 19: this ticket had quietly swallowed five more chores and grown too big to finish. Junyan ruled we split it up</li><li>Each remaining chore is now its own ticket you can follow separately: the who&#x27;s-in-today list, the claimed-shifts calendar copy, deleting the leftover chore, the reconciling chore, and the staff-handback noticing</li><li>The one idea they all share, in a line: programs find the work, the thinking robot only does work that got flagged. A robot can&#x27;t run out of time hunting for jobs nobody asked it to find</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move J01&#x27;s deterministic lanes out of the LLM pass — alarm watch, fast-track list, shift mirror</b></p><h2>Question</h2>
+
+<p>Graduated from <b>018</b>, which ruled each of these out of the LLM pass.</p>
+<p>Pure code, no judgment, parallel to everything else.</p>
+
+<ol>
+<li>1. <b>Alarm PENDING→ALARM watch → <code>event-gate</code>.</b> Junyan: *&quot;if there is an alarm it needs to be</li>
+</ol>
+<p>addressed immediately by contacting staff, not by the Concierge 2 hours later.&quot;* The pair check</p>
+<p>is a code diff; it belongs on the minute tick beside the live panel reads already there</p>
+<p>(invariants :25, the Doorman&#x27;s 04:00 pass), paging staff directly. The Concierge exits the alarm</p>
+<p>business — remove JOB 1&#x27;s mandatory half from canon in the same change, and keep the ticket-</p>
+<p>raising behaviour (an alarm-trigger ticket on a real pair) wherever the check lands.</p>
+<ol>
+<li>2. <b>FAST-TRACK list → deterministic renderer.</b> Junyan: *&quot;needs to be kept up to date throughout</li>
+</ol>
+<p>the day depending on who&#x27;s in the studio.&quot;* Today&#x27;s occupants + first-timers derive from the FBS</p>
+<p>board and the studio calendars (019 pattern). The list is data; only <i>acting</i> on someone who</p>
+<p>writes in needs judgment, and that is intake&#x27;s job.</p>
+<ol>
+<li>3. <b>JOB 31 claimed-shift mirror → plain code.</b> Calendar mirror with the two dedup guards. Zero</li>
+</ol>
+<p>judgment. The Planner&#x27;s 19:30 backstop can retire once it runs clean.</p>
+<ol>
+<li>4. <b>JOB 1 remainder — delete, do not rehome.</b> PBF reconcile is redundant (the Responder queues,</li>
+</ol>
+<p>JOB 3&#x27;s successor flips <code>Sent</code>, invariant U catches unresolved); straggler sweep and board</p>
+<p>reconciliation fold into the invariants roster (<b>044</b> family).</p>
+
+<h2>Progress</h2>
+
+<p><b>Lane 1 (alarm watch) BUILT 2026-08-15 — awaiting Junyan&#x27;s deploy.</b> <code>services/event-gate/alarm_watch.py</code></p>
+<p>(dc-canon <code>b9faedec</code>): the PENDING→ALARM email pair becomes an <code>in_alarm</code> false→true edge on alarm-mcp&#x27;s</p>
+<p>live <code>/panel-states</code>, checked on the existing <code>event-gate-poll</code> minute tick. On an edge: on-call summons</p>
+<p>SMS + Staff Call Queue row + deduped <code>Alarm trigger Studio &lt;NNN&gt;</code> CC ticket at <code>Position = Gate: Staff</code>.</p>
+<p>Kill switch <code>ALARM_WATCH_DISABLED</code> (independent of <code>GATE_DISABLED</code>); inert until <code>ALARM_PANEL_URL</code> +</p>
+<p><code>ALARM_PANEL_TOKEN</code> are set; files a <code>Run Error</code> row (<code>Raised by = Alarm Watch</code>) after 15 blind reads,</p>
+<p>clears it on recovery — the 035 lesson honoured. Canon edited in the same commit: JOB 1 Step 3.5 is now</p>
+<p>enrichment + fallback only; orchestration item 1 no longer claims the alarm read. RUNTIMES + Plumbing Map</p>
+<p>updated. <b>Deployed 2026-08-15 night; three defects found in the first hours, all fixed in <code>3d5c1a51</code>:</b></p>
+<p>(a) the env command used <code>--set-env-vars</code>, which replaces rather than adds — twelve variables including</p>
+<p><code>GATE_PATH_TOKEN</code> were wiped and <b>the whole gate 404&#x27;d for ~4.5 hours</b> (no emergency forwarding, no</p>
+<p>invariants, no loop); restored from a pre-deploy dump, window audited message-by-message, nothing</p>
+<p>emergency-shaped in it. (b) the <code>mcp-auth-token</code> secret carries a <b>trailing newline</b>, which Python</p>
+<p>rejects as a header value — 267 consecutive failed panel reads; <code>.strip()</code> on read now, and the identical</p>
+<p>latent bug in <code>presence.py</code> (newly reachable, since these vars had never been set before) fixed with it.</p>
+<p>(c) the lane&#x27;s own Run Error row could not file — <code>Alarm Watch</code> was not a <code>Raised by</code> option, so the</p>
+<p>self-report 400&#x27;d. <b>The lane failed AND its failure report failed</b> — the exact shape 035&#x27;s lesson warns</p>
+<p>about, found only because the outage forced a log read. Option added to the schema.</p>
+<p><b>LANE 1 IS DONE — LIVE 2026-08-16, revision <code>event-gate-00038-ql4</code>.</b> A live tick reads all five</p>
+<p>partitions (<code>alarm_watch: {ok: true, partitions: 5, alarms: []}</code>), and the blind-read path was</p>
+<p>tested end to end against the real board: 15 forced failures filed the <code>Alarm watch is BLIND</code> row,</p>
+<p>a good read cleared it, zero rows left open. The Concierge no longer detects alarm triggers.</p>
+
+<p><b>Lanes 2–4 remain open and are what keeps this ticket open:</b> the FAST-TRACK who&#x27;s-in-today</p>
+<p>renderer, JOB 31&#x27;s claimed-shift mirror, and JOB 1&#x27;s remainder (delete, don&#x27;t rehome). Each still</p>
+<p>needs 035&#x27;s test applied — a retirement is not done until the new owner is seen acting. Seam noted: alarm-mcp&#x27;s</p>
+<p><code>alarm-watchdog</code> (dry-run) manages the siren; this lane summons people — complementary, keep both.</p>
+<p>Lanes 2–4 (FAST-TRACK renderer, J31 mirror, JOB 1 remainder deletion) untouched.</p>
+
+<p><b>Standing lesson applies (<b>035</b>):</b> a retirement is not done until</p>
+<p>every step of the retired job names its new owner — and naming an owner is not verifying the owner</p>
+<p>acts. Each lane reports its own result including zero, and files a <code>Run Error</code> row if it cannot run.</p>
+
+<h2>Re-scoped 2026-08-15 — Junyan&#x27;s capacity ruling widens this ticket to the whole dropped tail</h2>
+
+<p><b>The ruling:</b> walked through the four chronically-dropped jobs (JOB 3 reconcile, JOB 4 handback,</p>
+<p>JOB 31 shift mirror, HEAVY-PM&#x27;s JOB 33/0/5/7), Junyan ruled <b>all four essential</b> — *&quot;they all</p>
+<p>seem really important; when they are missed they each cause problems.&quot;* The right-size-by-deletion</p>
+<p>option is dead. This is a capacity problem, and the fix is the one this ticket already owns:</p>
+<p>take the mechanical work off the LLM pass.</p>
+
+<p><b>The sizing read (canon, this session):</b></p>
+
+<ul>
+<li>- <b>JOB 31 — fully mechanical</b>, as lane 3 already says. Query claimed rows, copy the row&#x27;s own</li>
+</ul>
+<p>window onto the calendar, midnight-lock check. Fold in <b>075</b>&#x27;s</p>
+<p>second half: the AVA re-evaluation is also deterministic (named block now covers the booking</p>
+<p>start → flip the unsent row&#x27;s variant). One lane, both halves.</p>
+<ul>
+<li>- <b>JOB 3 — mostly mechanical.</b> The message reconcile, strand backstop, money reconcile and</li>
+</ul>
+<p>collection detection are all view-reads + status branches + checkbox/Position writes. The HTR</p>
+<p>learning loop is already retired (the <code>Drafted Body</code> diff field was deleted 2026-07-29). The one</p>
+<p>prose-shaped step — the orphan-gate audit&#x27;s &quot;Current Block names a staff task&quot; — has a structured</p>
+<p>equivalent the tick already uses on the new board: <code>Position = Gate:*</code> with no open linked Action</p>
+<p>row and no Pending-Review queue row = orphan. Rule: <b>where the structured read is ambiguous, the</p>
+<p>code flags the row for an agent instead of deciding</b> — same contract as <code>unverifiable</code>.</p>
+<ul>
+<li>- <b>JOB 4 — split.</b> <i>Detection</i> is mechanical and is exactly the tick&#x27;s shape: Processed Action</li>
+</ul>
+<p>rows, new images on parked tickets, new #desk-drops messages past the cursor. <i>Resumption</i> —</p>
+<p>re-walk the SOP from the first unchecked step, branch on returned facts, read screenshots — is</p>
+<p>genuine judgment and <i>stays with an agent</i>, but fed from a flag queue instead of self-scanning.</p>
+<ul>
+<li>- <b>HEAVY-PM (JOB 33/0/5/7) — judgment, stays LLM.</b> Untouched here; the payoff is that the freed</li>
+</ul>
+<p>budget reaches it.</p>
+
+<p><b>The principle, stated once: code finds the work, the LLM only does flagged work.</b> Starvation</p>
+<p>exists because scanning competes with judging inside one budget. Move every scan to the tick and</p>
+<p>the LLM pass starts from a worklist — it cannot starve on finding, only on doing, and a growing</p>
+<p>flag queue is visible in a way a skipped scan never was.</p>
+
+<p><b>New lanes:</b></p>
+
+<ol>
+<li>5. <b>JOB 3 mechanical reconcile → the <code>event-gate</code> tick</b> (10-min cadence beside <code>/loop</code>).</li>
+</ol>
+<p>Ambiguity flags, never guesses. Reporting per the standing rule — a zero pass reports zero.</p>
+<ol>
+<li>6. <b>JOB 4 detection layer → the same tick.</b> Emits &quot;ready to resume&quot; flags (a view or field the</li>
+</ol>
+<p>agent pass consumes). Resumption stays agentic and comes off the Concierge&#x27;s self-scan.</p>
+
+<p>Lanes 2 (FAST-TRACK renderer) unchanged. **Lane 3 upgraded 2026-08-15 (Junyan): claim → calendar</p>
+<p>→ FBS Monitor must be <i>immediate</i>** — the mirror moves to event-gate&#x27;s minute tick (≤ ~60s to the</p>
+<p>calendar; the monitor already reads that calendar&#x27;s ICS, so one write feeds both surfaces — but</p>
+<p>measure the ICS feed lag first, it is an untested wire). Detail + acceptance on</p>
+<p><b>075</b>. Lane 4</p>
+<p>(JOB 1 remainder deletion) unchanged. 035&#x27;s test binds every lane: the retirement is done when the</p>
+<p>new owner is <i>seen</i> acting, not when it is named.</p>
+
+<h2>Answer — RESOLVED 2026-08-19</h2>
+
+<p><b>Delivered: lane 1, the alarm watch.</b> The PENDING→ALARM pair check left the Concierge for</p>
+<p><code>event-gate</code>&#x27;s minute tick and went live 2026-08-16 (revision <code>event-gate-00038-ql4</code>), reading</p>
+<p><code>in_alarm</code> false→true edges off alarm-mcp&#x27;s live <code>/panel-states</code> and paging staff directly —</p>
+<p>on-call SMS + Staff Call Queue row + deduped CC ticket at <code>Position = Gate: Staff</code>. Canon edited</p>
+<p>in the same change: JOB 1 Step 3.5 is enrichment + fallback only, orchestration item 1 no longer</p>
+<p>claims the alarm read. The Concierge is out of the alarm business. <b>035</b>&#x27;s</p>
+<p>test was met the hard way — the blind-read path was exercised end to end against the real board</p>
+<p>(15 forced failures filed the <code>Alarm watch is BLIND</code> row, a good read cleared it, zero rows left open).</p>
+
+<p><b>Three deploy defects, all fixed in <code>3d5c1a51</code>, worth carrying forward as standing lessons:</b></p>
+<p>(a) <code>--set-env-vars</code> <b>replaces</b> rather than adds — twelve variables including <code>GATE_PATH_TOKEN</code></p>
+<p>were wiped and the whole gate 404&#x27;d for ~4.5 hours; use <code>--update-env-vars</code>, and dump the env</p>
+<p>before any deploy. (b) The <code>mcp-auth-token</code> secret carries a <b>trailing newline</b>, which Python</p>
+<p>rejects as a header value — <code>.strip()</code> every secret on read. (c) The lane&#x27;s own <code>Run Error</code> row</p>
+<p>could not file, because <code>Alarm Watch</code> was not a <code>Raised by</code> option — <b>the lane failed AND its</p>
+<p>failure report failed</b>, the exact shape 035 warns about. A new lane&#x27;s self-report path must be</p>
+<p>tested before the lane is trusted.</p>
+
+<p><b>Re-scoped, not abandoned: the other five lanes are now their own tickets.</b> This ticket had</p>
+<p>grown past one session — it absorbed lanes 2–4 at charting and then lanes 5–6 from Junyan&#x27;s</p>
+<p>2026-08-15 capacity ruling. Junyan ruled the split 2026-08-19. It closes to the scope it actually</p>
+<p>delivered; the remainder carries its full context forward:</p>
+
+<ul>
+<li>- Lane 2 → <b>FAST-TRACK who&#x27;s-in-today list becomes a deterministic renderer</b></li>
+<li>- Lane 3 → folded into <b>J31 starves at the tail of the pass</b>,</li>
+</ul>
+<p>which already holds the upgraded shape (event-gate minute tick) and the tightened acceptance</p>
+<ul>
+<li>- Lane 4 → <b>JOB 1 remainder — delete, do not rehome</b></li>
+<li>- Lane 5 → <b>JOB 3&#x27;s mechanical reconcile moves to the event-gate tick</b></li>
+<li>- Lane 6 → <b>JOB 4&#x27;s detection layer moves to the tick; resumption stays agentic</b></li>
+</ul>
+
+<p><b>The principle the split preserves, stated once: code finds the work, the LLM only does flagged</p>
+<p>work.</b> Starvation exists because scanning competes with judging inside one budget. Every lane</p>
+<p>above moves a scan to the tick so the LLM pass starts from a worklist — it cannot starve on</p>
+<p>finding, only on doing, and a growing flag queue is visible in a way a skipped scan never was.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#058</span><span class="emoji">🔑</span><span class="done-title">Can we hand out door codes ourselves? Yes — we already can</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>The old belief: the alarm system only lets us LOOK, never change anything, so every door-code problem had to wait for a person</li><li>That was never true. We can create a person, give them a code, and switch it on across all four door panels — and every change is double-checked afterwards</li><li>Better still, we can set the code to work only during that person&#x27;s booking, instead of handing out the master code that opens everything, always</li><li>Checked again today: Hannah, Sharon and Hanano all have working codes on all four panels</li><li>The one thing we genuinely cannot do is DELETE someone. That stays a by-hand job in the Alarm.com website</li><li>So the trick is to never make a spare person in the first place — reuse an empty one that&#x27;s already there</li><li>The old wrong note has been corrected where the robots read it, so nobody parks a locked-out renter on this again</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Find a write path for Alarm.com codes — a lockout is worse than the write risk</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>. PIN generation is human-only across every code SOP</p>
@@ -8790,5 +8949,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 21:15 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 21:20 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
