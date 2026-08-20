@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 21:20 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 21:38 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">28</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">27</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">14</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">49</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">50</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -980,7 +980,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
 <p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">28</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">27</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -2395,76 +2395,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Whatever is chosen, the <code>unverifiable</code> guard survives intact — a failed read must still never</li>
 </ul>
 <p>close or flag a row.</p>
-</div></details></details></div><div class="job"><div class="jnum">#082</div><div class="jhead"><span class="emoji">🚀</span><h4>Switch on The Registrar — carefully, in that order</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>PARTLY DONE: it has been put on the server and given one practice pass — and that practice pass earned its keep immediately</li><li>It found a real bug: the program was asking the door system for people by their calendar name, but the door system knows them by a different name. &#x27;Dee Brown&#x27; on the calendar, &#x27;Dee Adelubi Brown&#x27; on the panel</li><li>So it decided four renters had no door access when their codes had been working for months. All four notes it wrote were wrong. Fixed now — it looks up the door-system name first</li><li>Still to do: set it running every half hour, let go of the off-switch, and give it a row on the run monitor</li><li>First put it on the server with its off-switch held down, so it cannot do anything yet</li><li>Then run one practice pass that only reads and reports, and check the list it produces against the real calendar</li><li>Only then set it running every half hour and let go of the off-switch</li><li>Give it its own row on the run monitor, so if it ever goes quiet we find out</li><li>Watch the first day for the thing tests cannot prove: that the notes it leaves Junyan actually read like something a person can act on</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Ship The Registrar (the booking sweep) — deploy, dry-run against the live board, then schedule it</b></p><h2>Question</h2>
-
-<p><b>081</b> built the lane and left it unshipped on purpose: it writes</p>
-<p>to Alarm.com, and flipping on a production trigger is Junyan&#x27;s call, never an agent&#x27;s. This</p>
-<p>ticket is that flip, done in the order that makes a bad pass visible before it is an unattended</p>
-<p>one.</p>
-
-<ol>
-<li>1. Deploy the event-gate revision carrying <code>booking_sweep.py</code> (the route is inert until then).</li>
-</ol>
-<p>Set <code>BOOKING_SWEEP_DISABLED=1</code> in the same deploy so the first live revision cannot act.</p>
-<ol>
-<li>2. Confirm the env it needs is present on the revision: <code>ALARM_PANEL_BASE</code>/<code>ALARM_PANEL_TOKEN</code></li>
-</ol>
-<p>(already there for the alarm watch), <code>SKEDDA_COOKIE</code> or the Secret Manager fallback,</p>
-<p><code>NOTION_TOKEN</code>.</p>
-<ol>
-<li>3. <code>POST /booking-sweep/&lt;token&gt;?dry_run=true</code> by hand. Read the <code>acted</code> list against the real</li>
-</ol>
-<p>Skedda board: the skip classes must be the staff bookings and nothing else, the <code>would-</code></p>
-<p>steps must name bookings that genuinely lack their prerequisites, and no booking starting</p>
-<p>today or tomorrow may show anything but <code>deferred</code>.</p>
-<ol>
-<li>4. Only then: Cloud Scheduler job every 30 min, 24/7, and flip <code>BOOKING_SWEEP_DISABLED</code> off.</li>
-<li>5. Give it its own 🚥 Run Monitor row (silence past a window is a defect — 001&#x27;s</li>
-</ol>
-<p><code>produces</code>/<code>verify_within</code>), a <code>RUNTIMES.md</code> entry, and a <code>day-sheet/plumbing.html</code> entry</p>
-<p>recording that a second writer now exists on the FBS board and on Alarm.com provisioning.</p>
-
-<p>Watch the first day for the one thing tests cannot prove: that the residue rows read as</p>
-<p>actionable to a human, and that their volume is a handful, not a wall.</p>
-
-<p>---</p>
-
-<h2>Progress — steps 1–3 DONE (recorded 2026-08-19, from another session&#x27;s live work)</h2>
-
-<p>Found already done in the working tree, unrecorded on this ticket:</p>
-
-<ul>
-<li>- <b>Deployed and dry-run against the live board.</b> The pass ran for real.</li>
-<li>- <b>It found a bug that only a live pass could find.</b> The sweep asked the panel using the</li>
-</ul>
-<p><b>Skedda holder string</b>, but the panel is keyed on the Artist row&#x27;s <b><code>Alarm Display Name</code></b></p>
-<p>— the two differ routinely (&quot;Dee Brown&quot; vs &quot;Dee Adelubi Brown&quot;, &quot;Kelly-Ann Johnson (Private</p>
-<p>Classes)&quot; vs &quot;KellyAnn Johnson&quot;, married names). Asking for the holder returns no match,</p>
-<p>which reads exactly like &quot;no access&quot; and mints a residue row about a renter whose code has</p>
-<p>worked for months. <b>Four of four residue rows in the first live pass were this bug.</b></p>
-<ul>
-<li>- <b>Fixed and covered by tests</b>: the artist page is now read <i>before</i> the access branch and</li>
-</ul>
-<p>the panel is asked under <code>Alarm Display Name</code>, falling back to the holder only when the</p>
-<p>Artist row has none (a new renter this pass is about to create). The Doorman resolves</p>
-<p>through the same field for the same reason.</p>
-
-<p>This is exactly the value step 3 was for — a wall of false residue would have been the first</p>
-<p>day&#x27;s experience. <b>Still outstanding: steps 4 and 5</b> — the Cloud Scheduler job, the kill-switch</p>
-<p>release, the 🚥 Run Monitor row. Those remain Junyan&#x27;s.</p>
-
-
-<h2>Named 2026-08-19: <b>The Registrar</b></h2>
-
-<p>Junyan&#x27;s pick, house style (definite article + role). Everything it touches is a record being</p>
-<p>created — it enters a new renter in the book, issues their code, files the board card, queues</p>
-<p>the confirmation. It never speaks to a renter; it works entirely before they exist to the desk,</p>
-<p>then hands off to <b>The Doorman</b>, who does the letting-in. That handoff is the reason Porter</p>
-<p>and Usher were rejected: both flirt with the Doorman&#x27;s territory, and two agents whose names</p>
-<p>imply the same job is exactly how a seam gets blurred.</p>
-
-<p>Use this name in the 🚥 Run Monitor row, the <code>RUNTIMES.md</code> entry, the Plumbing Map entry, and</p>
-<p>its per-pass report line. <code>booking_sweep.py</code> stays the filename.</p>
 </div></details></details></div><div class="job"><div class="jnum">#083</div><div class="jhead"><span class="emoji">👻</span><h4>Empty leftover door-code entries make the system think it has the wrong person</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When someone gets a door code, an empty placeholder entry is sometimes left behind under their name</li><li>The system then sees two entries with one name and stops, saying &#x27;I cannot tell which of these is you&#x27;</li><li>That blocks real renters whose code is perfectly fine — it happened to Hanano (five leftovers) and Hannah (three)</li><li>The fix: ignore anything with no code on it. An empty entry opens no door, so it is not a second person</li><li>Two entries that BOTH open doors still stop the system — that one is a genuine mix-up and a human should look</li><li>Fix it in one place so every robot that uses door codes gets it at once</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Make /provision ignore codeless shells instead of calling them ambiguous</b></p><h2>Question</h2>
 
 <p>Ruled 2026-08-18 (in <b>081</b>, where it was specified but not built —</p>
@@ -3477,7 +3407,148 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#015</span><span class="emoji">✂️</span><span class="done-title">Read every message we ever sent — and found some customers got the same text twice</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE. Two leftover jobs on this ticket, and neither one turned out to be what we thought</li><li>First job: a tool that compared a robot&#x27;s rough draft with the final message, to teach it to write better</li><li>That tool was scrapped back in July, because robots filled in the draft box and left the real box empty — so some messages went out blank</li><li>Junyan ruled: leave it dead. The new suggest-and-rewrite way of working already teaches the robots the same lesson, in a better place</li><li>Second job: a checkup hunting for messages accidentally recorded twice</li><li>We read all 9,465 messages the studio has ever sent or received — every single one, not a sample</li><li>The old plan for that checkup was junk: it just asked &#x27;same words?&#x27;, so every weekly reminder looked like a mistake. About 500 false alarms</li><li>Good news: our record book is clean. Nothing was written down twice</li><li>Bad news, and this is the real find: some customers actually got the same text twice</li><li>On June 21, three renters each got the same long message twice at 12:01, then twice again at 13:00 — four copies each in one hour</li><li>Two more people got doubled texts in May, and one person&#x27;s reply got recorded twice in August</li><li>Nothing is watching for this. The outbox shows one row per message, so a double send looks perfectly normal from there</li><li>So we&#x27;re building a checkup that hunts for double sends instead (087), and a separate job to find out what caused June 21 (088)</li><li>One more lesson, learned twice the hard way this session: a search that doesn&#x27;t say how much it actually looked at is worthless</li><li>Our first search read only 346 of the 9,465 messages — 4% — and cheerfully reported everything was fine</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cut correspondence canon over from the Notion Correspondence Log to J28</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#082</span><span class="emoji">🚀</span><span class="done-title">The Registrar is switched on</span><span class="done-date">2026-08-20</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE. It runs by itself every half hour now, around the clock, starting tonight</li><li>What it does: it reads the booking calendar and, for every new direct booking, sets up whatever is missing — the renter&#x27;s record, a working door code, the board row two days before, the confirmation message waiting for approval</li><li>It never sends anything and never touches money. Confirmations sit in the queue until a person releases them</li><li>It has no memory of what it already did, and that is on purpose. Every half hour it just looks at what should exist by now and makes it so. Skip a pass, nothing is lost. Run it twice, nothing happens twice</li><li>It does not read email at all. The &#x27;has this been dealt with&#x27; mark on those emails turned out to be untrustworthy, so it reads the calendar directly instead</li><li>The last practice pass before switching on was clean: 165 bookings looked at, nothing left needing a person, no errors</li><li>That same pass on the older version had left one note about a renter it could not find. The name fix from the other ticket resolved her. Good proof the names really were the problem</li><li>To stop it, pause the half-hourly job. That is the fast, reversible way</li><li>Still worth watching this first day: whether the notes it leaves for Junyan read like something a person can act on, and whether there are a few or a wall of them. No test can answer that</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Ship The Registrar (the booking sweep) — deploy, dry-run against the live board, then schedule it</b></p><h2>Question</h2>
+
+<p><b>081</b> built the lane and left it unshipped on purpose: it writes</p>
+<p>to Alarm.com, and flipping on a production trigger is Junyan&#x27;s call, never an agent&#x27;s. This</p>
+<p>ticket is that flip, done in the order that makes a bad pass visible before it is an unattended</p>
+<p>one.</p>
+
+<ol>
+<li>1. Deploy the event-gate revision carrying <code>booking_sweep.py</code> (the route is inert until then).</li>
+</ol>
+<p>Set <code>BOOKING_SWEEP_DISABLED=1</code> in the same deploy so the first live revision cannot act.</p>
+<ol>
+<li>2. Confirm the env it needs is present on the revision: <code>ALARM_PANEL_BASE</code>/<code>ALARM_PANEL_TOKEN</code></li>
+</ol>
+<p>(already there for the alarm watch), <code>SKEDDA_COOKIE</code> or the Secret Manager fallback,</p>
+<p><code>NOTION_TOKEN</code>.</p>
+<ol>
+<li>3. <code>POST /booking-sweep/&lt;token&gt;?dry_run=true</code> by hand. Read the <code>acted</code> list against the real</li>
+</ol>
+<p>Skedda board: the skip classes must be the staff bookings and nothing else, the <code>would-</code></p>
+<p>steps must name bookings that genuinely lack their prerequisites, and no booking starting</p>
+<p>today or tomorrow may show anything but <code>deferred</code>.</p>
+<ol>
+<li>4. Only then: Cloud Scheduler job every 30 min, 24/7, and flip <code>BOOKING_SWEEP_DISABLED</code> off.</li>
+<li>5. Give it its own 🚥 Run Monitor row (silence past a window is a defect — 001&#x27;s</li>
+</ol>
+<p><code>produces</code>/<code>verify_within</code>), a <code>RUNTIMES.md</code> entry, and a <code>day-sheet/plumbing.html</code> entry</p>
+<p>recording that a second writer now exists on the FBS board and on Alarm.com provisioning.</p>
+
+<p>Watch the first day for the one thing tests cannot prove: that the residue rows read as</p>
+<p>actionable to a human, and that their volume is a handful, not a wall.</p>
+
+<p>---</p>
+
+<h2>Progress — steps 1–3 DONE (recorded 2026-08-19, from another session&#x27;s live work)</h2>
+
+<p>Found already done in the working tree, unrecorded on this ticket:</p>
+
+<ul>
+<li>- <b>Deployed and dry-run against the live board.</b> The pass ran for real.</li>
+<li>- <b>It found a bug that only a live pass could find.</b> The sweep asked the panel using the</li>
+</ul>
+<p><b>Skedda holder string</b>, but the panel is keyed on the Artist row&#x27;s <b><code>Alarm Display Name</code></b></p>
+<p>— the two differ routinely (&quot;Dee Brown&quot; vs &quot;Dee Adelubi Brown&quot;, &quot;Kelly-Ann Johnson (Private</p>
+<p>Classes)&quot; vs &quot;KellyAnn Johnson&quot;, married names). Asking for the holder returns no match,</p>
+<p>which reads exactly like &quot;no access&quot; and mints a residue row about a renter whose code has</p>
+<p>worked for months. <b>Four of four residue rows in the first live pass were this bug.</b></p>
+<ul>
+<li>- <b>Fixed and covered by tests</b>: the artist page is now read <i>before</i> the access branch and</li>
+</ul>
+<p>the panel is asked under <code>Alarm Display Name</code>, falling back to the holder only when the</p>
+<p>Artist row has none (a new renter this pass is about to create). The Doorman resolves</p>
+<p>through the same field for the same reason.</p>
+
+<p>This is exactly the value step 3 was for — a wall of false residue would have been the first</p>
+<p>day&#x27;s experience. <b>Still outstanding: steps 4 and 5</b> — the Cloud Scheduler job, the kill-switch</p>
+<p>release, the 🚥 Run Monitor row. Those remain Junyan&#x27;s.</p>
+
+
+<h2>Named 2026-08-19: <b>The Registrar</b></h2>
+
+<p>Junyan&#x27;s pick, house style (definite article + role). Everything it touches is a record being</p>
+<p>created — it enters a new renter in the book, issues their code, files the board card, queues</p>
+<p>the confirmation. It never speaks to a renter; it works entirely before they exist to the desk,</p>
+<p>then hands off to <b>The Doorman</b>, who does the letting-in. That handoff is the reason Porter</p>
+<p>and Usher were rejected: both flirt with the Doorman&#x27;s territory, and two agents whose names</p>
+<p>imply the same job is exactly how a seam gets blurred.</p>
+
+<p>Use this name in the 🚥 Run Monitor row, the <code>RUNTIMES.md</code> entry, the Plumbing Map entry, and</p>
+<p>its per-pass report line. <code>booking_sweep.py</code> stays the filename.</p>
+
+
+<h2>SHIPPED — 2026-08-20 01:34Z</h2>
+
+<p><b>The Registrar is live.</b> Junyan ran both commands (the classifier blocks agent deploys; that is</p>
+<p>the standing convention for this lane, not a workaround). Order held exactly as specified: deploy →</p>
+<p>dry-run against the live board → schedule.</p>
+
+<p>| | |</p>
+<p>|---|---|</p>
+<p>| Revision | <code>event-gate-00047-rvm</code> |</p>
+<p>| Scheduler job | <code>booking-sweep</code>, us-central1, <code><i>/30 </i> <i> </i> *</code> Etc/UTC, deadline 300s, ENABLED |</p>
+<p>| First fire | 2026-08-20 02:00Z |</p>
+<p>| Release dry pass | <b>165 scanned · 125 skipped · 10 deferred · 0 residue · 0 errors</b> |</p>
+<p>| Suite | 397 |</p>
+
+<p><b>Two things carried in on the same revision</b>, neither of which had ever run in production:</p>
+
+<ol>
+<li>1. <b>Ticket 085&#x27;s identity code.</b> The dry pass on the PREVIOUS revision filed one residue row</li>
+</ol>
+<p>(Vanessa Zavatti, 509A, no Artist row and no panel user); the same pass on <code>00047</code> filed zero.</p>
+<p>The id-first lookup resolved what the name join could not — the cleanest evidence yet that the</p>
+<p>defect was the join and not the renter.</p>
+<ol>
+<li>2. <b>The Skedda session fix</b> (see below).</li>
+</ol>
+
+<p><b>The kill switch is NOT set</b>, and this is worth knowing rather than discovering: <code>BOOKING_SWEEP_DISABLED</code></p>
+<p>defaults to off, so there was no switch to flip — the lane went live the moment the scheduler job existed.</p>
+<p>Creating the job WAS the release. To stop it, pause the scheduler job (fast, reversible) or set the</p>
+<p>variable with <code>--update-env-vars</code>; <code>--set-env-vars</code> would drop the other 14 and cripple the service.</p>
+
+<h3>The defect, fixed on the way out the door</h3>
+
+<p><code>skedda_read.py</code> cached the anti-forgery token in a bare process global. The token is minted <b>for a</p>
+<p>session</b>, so a warm instance holding one across a cookie rotation read anonymously forever — HTTP 200,</p>
+<p>holders stripped, nothing raised. Same signature as the 08-11 outage, different door.</p>
+
+<ul>
+<li>- The cache is keyed on a sha256 fingerprint of the cookie that produced the token (a rotation</li>
+</ul>
+<p>self-invalidates), with a 15-minute TTL (<code>SKEDDA_TOKEN_TTL</code>). The fingerprint is deliberately not the</p>
+<p>cookie: that value ends up in comparisons and, one careless log line later, in Cloud Logging.</p>
+<ul>
+<li>- <code>reset_session_cache()</code> drops token and space names together; the 401/403 path calls it.</li>
+<li>- <b>The stripped read self-heals</b> — reset, read once more, and only then fail. A second stripped read</li>
+</ul>
+<p>still fails loudly and files <code>sweep-blind</code>. The retry must not paper over a genuinely non-admin cookie,</p>
+<p>which is a different fault with a different fix.</p>
+<ul>
+<li>- Six tests: rotation re-scrapes, a stable cookie does not, TTL expiry, the retry, the retry not hiding a</li>
+</ul>
+<p>real failure, and the fingerprint never leaking the cookie.</p>
+
+<h3>Left open, deliberately</h3>
+
+<ul>
+<li>- <b>alarm-mcp is still on <code>alarm-mcp-00036-qjh</code> (2026-08-18)</b>, so ticket 085&#x27;s server-side resolution is</li>
+</ul>
+<p>not live there. Checked before shipping rather than assumed: <code>/provision</code> reads its payload with</p>
+<p><code>payload.get(...)</code> — a plain dict, no strict model — so the extra <code>artist_page_id</code> is <b>ignored, not</p>
+<p>rejected</b>, and it falls back to name resolution. Harmless, and not a ship blocker. Close it with</p>
+<p><code>./deploy.sh</code> in <code>~/DanceAnnex-AlarmMonitor/alarm-monitor</code>.</p>
+<ul>
+<li>- <b>The first day is the real test, and it is not a test code can run:</b> whether residue rows read as</li>
+</ul>
+<p>actionable to a human, and whether there is a handful or a wall.</p>
+
+<p>RUNTIMES.md (lane section rewritten + a <code>booking-sweep</code> Scheduler row) and the Plumbing Map</p>
+<p>(<code>day-sheet/plumbing.html</code>, two entries) updated — the definition of done for a plumbing change.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#015</span><span class="emoji">✂️</span><span class="done-title">Read every message we ever sent — and found some customers got the same text twice</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE. Two leftover jobs on this ticket, and neither one turned out to be what we thought</li><li>First job: a tool that compared a robot&#x27;s rough draft with the final message, to teach it to write better</li><li>That tool was scrapped back in July, because robots filled in the draft box and left the real box empty — so some messages went out blank</li><li>Junyan ruled: leave it dead. The new suggest-and-rewrite way of working already teaches the robots the same lesson, in a better place</li><li>Second job: a checkup hunting for messages accidentally recorded twice</li><li>We read all 9,465 messages the studio has ever sent or received — every single one, not a sample</li><li>The old plan for that checkup was junk: it just asked &#x27;same words?&#x27;, so every weekly reminder looked like a mistake. About 500 false alarms</li><li>Good news: our record book is clean. Nothing was written down twice</li><li>Bad news, and this is the real find: some customers actually got the same text twice</li><li>On June 21, three renters each got the same long message twice at 12:01, then twice again at 13:00 — four copies each in one hour</li><li>Two more people got doubled texts in May, and one person&#x27;s reply got recorded twice in August</li><li>Nothing is watching for this. The outbox shows one row per message, so a double send looks perfectly normal from there</li><li>So we&#x27;re building a checkup that hunts for double sends instead (087), and a separate job to find out what caused June 21 (088)</li><li>One more lesson, learned twice the hard way this session: a search that doesn&#x27;t say how much it actually looked at is worthless</li><li>Our first search read only 346 of the 9,465 messages — 4% — and cheerfully reported everything was fine</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Cut correspondence canon over from the Notion Correspondence Log to J28</b></p><h2>Question</h2>
 
 <p>Junyan&#x27;s direction (2026-07-15): stop using the <b>Notion Correspondence Log</b> as the desk&#x27;s</p>
 <p>record of what&#x27;s been said to each renter — J28 (the owned-store ledger: Gmail + SMS, both</p>
@@ -8949,5 +9020,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 21:20 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 21:38 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
