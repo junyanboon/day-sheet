@@ -315,6 +315,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry llm">
       <details>
+      <summary><span class="when">2026-08-20 · 18:05Z</span>
+      <h3>Held QA replies get a surface — a content hold now files an Actions row the fixer walk reads<span class="kind">NEW ROUTE</span></h3></summary>
+      <p>Closes the open item from the entry below. When the hourly <code>qa-review</code> sweep holds a <code>QA-</code> row because a <em>review check</em> failed — wrong card, name mismatch, unfilled placeholder, emergency language, codes outside the codes card — it now also files one row in the ✅ Actions to Perform DB: <code>Held QA reply — &lt;renter&gt; — &lt;topic&gt;</code>, Type <code>Other</code>, For <code>Ops Lead</code>, with the failed check, the inbound text and the queue row id in <code>Basis</code>. The daily fixer walk reads that board, so a hold reaches a human the next morning with the reasoning attached, instead of living in a Notion comment nothing surfaces.</p>
+      <p><strong>Content holds only, by design.</strong> An infrastructure failure — API error, race lost, token trouble — files nothing: those self-clear on the next tick and already have the workflow&rsquo;s Run Error path. Filing them would bury the real holds in noise, which is the disease this route treats. Dedup: one open row per renter per held reply; a repeat hold appends to <code>Basis</code> rather than duplicating.</p>
+      <p>Prompt-only change (<code>scripts/qa_review_prompt.md</code>, dc-canon <code>e7ac4f7d</code>); the workflow reads it from checkout, so the next hourly tick carries it — no deploy. Row shape proven live by <code>cards.file_actions_row</code> against the same data source. Had this existed on Aug 14, the Anita hold would have been on the Aug 14 fixer list with &ldquo;she said 901, booked at 509A — confirm before sending&rdquo; attached, instead of surfacing six days later by accident.</p>
+    </details>
+    </li>
+
+    <li class="entry llm">
+      <details>
       <summary><span class="when">2026-08-20 &middot; 17:37Z</span>
       <h3>The Mechanic leaves the Mac: J13 lane A becomes a cloud trigger, gains a heartbeat, loses the rerun button<span class="kind">REROUTE</span></h3></summary>
       <p>The hourly infrastructure sweep ran on the local scheduler, which skips fires whenever the Mac sleeps &mdash; the same defect that already moved the Concierge, Custodian, day-sheet, fbs-monitor, day-hub and still-day to cloud. It matters more here than anywhere else: <strong>a watcher that sleeps is precisely the failure this lane exists to catch.</strong> Local task <code>error-sweeper</code> DISABLED; RemoteTrigger <code>trig_01A2iWdZaRpqV4H5StkLKWoK</code> created (hourly at :54, env <code>env_01BjzY9e8uFhWz3ZEUAcAe2c</code>, connectors Notion + Gmail, prompt <code>mechanic-cloud-v1-2026-08-20</code>). Created disabled, local disabled, then cloud enabled &mdash; no double-run window.</p>
