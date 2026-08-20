@@ -315,6 +315,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry llm">
       <details>
+      <summary><span class="when">2026-08-20 &middot; 21:05Z</span>
+      <h3>Dead-shell sweep restored &mdash; Doorman prompt v9 puts the clobbered B(b5) back<span class="kind">PROMPT</span></h3></summary>
+      <p>Junyan&rsquo;s go (&ldquo;put it back in&rdquo;). B(b5) &mdash; the duplicate &amp; dead-shell sweep clobbered 36 minutes after it first landed on Aug 18 (see the trace in the v8 entry below) &mdash; is back on the cloud Doorman as <strong>prompt v9</strong>, recovered <strong>byte-for-byte</strong> from the applying session&rsquo;s own transcript on disk, unchanged except a provenance note in its heading. The heartbeat and chat-summary lines now report b5&rsquo;s result each pass, so a future silent disappearance would be visible as a missing line rather than invisible. Verified by read-back: every other section byte-identical to v8; cron, enabled, and the 3 connectors untouched. First live run: the Aug 21 ~06:00 morning pass.</p>
+      <p><strong>The clobber, fully understood:</strong> the 03:27Z b5 apply had itself been built on a stale base &mdash; its b3 still carried the label-scoped Gmail searches the 2026-08-17 fix had replaced. So the 04:03Z write that wiped b5 was most likely someone restoring the sender-scope fix from a pre-b5 copy: <em>two editors, two stale bases, each wiping the other&rsquo;s change, both verifying only their own edit.</em> v9 carries both changes. Standing rule reaffirmed with a second data point: whole-prompt replaces must start from a fresh <code>get</code> of the live trigger, never from a copy opened earlier &mdash; and the UI editor has no such discipline, so prompt edits belong in the API flow.</p>
+    </details>
+    </li>
+
+    <li class="entry llm">
+      <details>
       <summary><span class="when">2026-08-20 &middot; 20:45Z</span>
       <h3>Same-day lane narrowed to renter-initiated bookings only<span class="kind">QUALIFICATION</span></h3></summary>
       <p>Junyan&rsquo;s ruling after the incident below: the lane runs ONLY when the renter books directly through Skedda. A booking <em>made by staff</em> (&ldquo;Dance Annex made a booking&hellip;&rdquo;, &ldquo;Junyan Boon made a booking&hellip;&rdquo;) is staff&rsquo;s own workflow &mdash; they are already talking to the renter and decide what to send. Charlie&rsquo;s phantom send came off exactly such an email. <code>sdParse_</code> now captures the MAKER from the subject line and <code>sdQualifies_</code> skips staff makers; the &ldquo;approved&rdquo; kind stays in because the renter initiated that request. Verified against all five of today&rsquo;s real subject shapes: staff-made skip, renter-made and approved run.</p>
