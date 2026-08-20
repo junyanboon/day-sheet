@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 20:48 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 20:51 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2076,7 +2076,11 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ol>
 <p>agent pass consumes). Resumption stays agentic and comes off the Concierge&#x27;s self-scan.</p>
 
-<p>Lanes 2 (FAST-TRACK renderer) and 3 (J31 mirror + AVA re-eval, per above) unchanged. Lane 4</p>
+<p>Lanes 2 (FAST-TRACK renderer) unchanged. **Lane 3 upgraded 2026-08-15 (Junyan): claim → calendar</p>
+<p>→ FBS Monitor must be <i>immediate</i>** — the mirror moves to event-gate&#x27;s minute tick (≤ ~60s to the</p>
+<p>calendar; the monitor already reads that calendar&#x27;s ICS, so one write feeds both surfaces — but</p>
+<p>measure the ICS feed lag first, it is an untested wire). Detail + acceptance on</p>
+<p><b>075</b>. Lane 4</p>
 <p>(JOB 1 remainder deletion) unchanged. 035&#x27;s test binds every lane: the retirement is done when the</p>
 <p>new owner is <i>seen</i> acting, not when it is named.</p>
 </div></details></details></div><div class="job"><div class="jnum">#060</div><div class="jhead"><span class="emoji">🏓</span><h4>Messages nobody claims — make &#x27;not my job&#x27; leave a mark</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Three renters this week wrote to us and no robot picked it up — Junyan caught each one himself</li><li>Each robot looked, decided &#x27;not mine&#x27;, and wrote nothing down — so it looked like nothing was wrong</li><li>The rule going in: every message must end somewhere — handled, given a ticket, or a robot&#x27;s name on the &#x27;no&#x27;</li><li>A separate watcher, outside all the robots, rings when a message sits too long with no answer</li><li>It names the person waiting — &#x27;Himanshi, booking question, 4 hours&#x27; — not just a number</li><li>We tried fixing this with more instructions three times; it failed three times — this time it&#x27;s a watcher, not a rule</li><li>First step: read the robot&#x27;s actual work logs to find out whether it even looks at new messages</li><li>Case four, same day: Francisco texted about lost AirPods at 1pm — the collector delivered it 5 hours late, then no robot picked it up either</li><li>Lesson for the watcher: count from when the renter sent it, not from when our copy arrived</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Ping-pong — every inbound message gets a recorded disposition, checked from outside the passes</b></p><h2>Question</h2>
@@ -2308,7 +2312,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Kill switch verified: one tick with <code>MAIL_DISABLED=1</code> does nothing and says so.</li>
 <li>- RUNTIMES.md updated (new route + scheduler job).</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#075</div><div class="jhead"><span class="emoji">🗓️</span><h4>Claimed shifts never reached the calendar — and renters were told nobody was coming</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When staff claim a shift, it is supposed to appear on the staff calendar within the hour</li><li>That step sits last in a long list, so the robot kept running out of room and dropping it</li><li>Worse: the morning &#x27;is someone on shift?&#x27; text is worked out once at 4:45am and never checked again</li><li>So on Aug 14 three renters were told no staff were coming, when Ela had already claimed those shifts</li><li>Fix: give the calendar step its own small helper that also re-checks those texts after every claim</li><li>And make it speak up every run, even a quiet one — silence is how this went unnoticed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>J31 starves at the tail of the pass, and nothing re-reads an AVA after the Host builds it</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#075</div><div class="jhead"><span class="emoji">🗓️</span><h4>Claimed shifts never reached the calendar — and renters were told nobody was coming</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When staff claim a shift, it is supposed to appear on the staff calendar within the hour</li><li>That step sits last in a long list, so the robot kept running out of room and dropping it</li><li>Worse: the morning &#x27;is someone on shift?&#x27; text is worked out once at 4:45am and never checked again</li><li>So on Aug 14 three renters were told no staff were coming, when Ela had already claimed those shifts</li><li>Fix: give the calendar step its own small helper that also re-checks those texts after every claim</li><li>UPGRADED Aug 15 (Junyan): a claimed shift should appear on the calendar and the studio monitor page IMMEDIATELY — so the copier moves to the every-minute program, not an hourly robot</li><li>Good news found checking: the monitor page already reads that same calendar — one write feeds both. One thing to measure first: how fast Google actually serves calendar updates to the page</li><li>And make it speak up every run, even a quiet one — silence is how this went unnoticed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>J31 starves at the tail of the pass, and nothing re-reads an AVA after the Host builds it</b></p><h2>Question</h2>
 
 <p>Two defects that share one victim. On 2026-08-14 they combined to text three renters</p>
 <p>&quot;we will not have any staff available for support&quot; for bookings Ela Krystin had already</p>
@@ -2423,6 +2427,29 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Plumbing Map entries for: the new runtime, the AVA re-evaluation route, and the</li>
 </ul>
 <p><code>Claimed On</code> stamp if that lands in the same session.</p>
+
+<h2>Requirement added 2026-08-15 (Junyan): claim → both surfaces, immediately</h2>
+
+<p>*&quot;As soon as a shift is claimed it gets put into the calendar and onto the FBS Monitor</p>
+<p>immediately.&quot;* This upgrades the proposed shape from an hourly micro-agent to <b>plain code on</p>
+<p>event-gate&#x27;s minute tick</b> (the alarm-watch precedent — 055 lane 1). Two hops, different physics:</p>
+
+<ol>
+<li>1. <b>Claim → Staff Scheduling calendar: ≤ ~60s.</b> Poll the Open Shifts view on the minute tick</li>
+</ol>
+<p>(cheap short-circuit intact: zero claimed rows → exit). The mirror write is J31 as written.</p>
+<ol>
+<li>2. <b>Calendar → FBS Monitor: bounded by the monitor&#x27;s rebuild cadence AND Google ICS feed lag.</b></li>
+</ol>
+<p>Verified 2026-08-15: <code>fbs-monitor/build.py</code> reads <code>ICS_URL_STAFF</code>, so the calendar write IS the</p>
+<p>monitor feed — no second write needed. But secret-ICS caching is an <b>UNTESTED wire</b> (064):</p>
+<p>measure claim→ICS-visibility before designing around it. If the lag is bad, options are the tick</p>
+<p>poking a monitor rebuild, or <code>build.py</code> reading Open Shifts directly. Do not guess; time it.</p>
+
+<p>The AVA re-evaluation half rides the same tick read: coverage changed → re-check today&#x27;s unsent</p>
+<p><code>ava_staff_unavailable</code> rows. Fold the build into 055 lane 3; this ticket keeps the acceptance</p>
+<p>criteria, now tightened: <b>a claim appears on the calendar within a minute and on the FBS Monitor</p>
+<p>within one rebuild cycle</b>, observed live on a real claim.</p>
 </div></details></details></div><div class="job"><div class="jnum">#076</div><div class="jhead"><span class="emoji">🗂️</span><h4>A missing MIRRORS row takes the whole ledger pipeline down — the canon check is a full-run gate</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A missing MIRRORS row takes the whole ledger pipeline down — the canon check is a full-run gate</b></p><h2>Question</h2>
 
 <p>Graduated from <b>066</b>. Twice now, a <b>content gap in canon has</p>
@@ -8490,5 +8517,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 20:48 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 20:51 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
