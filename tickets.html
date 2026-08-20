@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 21:13 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 21:15 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -102,7 +102,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">25</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">14</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">47</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">48</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1090,6 +1090,12 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>that boundary is right, each page should link the other and neither grows the other&#x27;s features.</p>
 <p>Also feeds it: 075&#x27;s upgraded requirement (claimed shifts on the monitor within a minute) makes</p>
 <p>the monitor the <i>write target</i> of desk automation for the first time, not just a read-out.</p>
+
+<p><b>RULED same day (Junyan): &quot;Day Sheet is no longer the main surface. FBS Monitor now is.&quot;</b> The</p>
+<p>boundary question above is answered — this ticket now builds <i>the</i> main surface, not a sibling</p>
+<p>board. The 004/019 single-act-on-surface designation transfers here. Design question folded in:</p>
+<p>which act-on content (Waiting-on-You digest, Actions view) migrates onto the Monitor, and what the</p>
+<p>Day Sheet tabs keep as reading-only.</p>
 </div></details></details></div><div class="job"><div class="jnum">#026</div><div class="jhead"><span class="emoji">🧠</span><h4>Write down big decisions as they happen</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Save big choices the moment they&#x27;re made</li><li>So future robots don&#x27;t undo them</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Design the Sweep-Feedback decision-capture loop</b></p><h2>Question</h2>
 
 <p>The 🔧 Sweep Feedback inbox accumulated ~27 unactioned <code>New</code> rows over three weeks because</p>
@@ -2663,56 +2669,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>owner, and platform-mirror creation moves into it (089 §What moves, item 3). Questions 2–4</p>
 <p>(title-convention identity, the missing phone at T−10, repeat-renter short-circuit) remain</p>
 <p>this ticket&#x27;s grilling.</p>
-</div></details></details></div><div class="job"><div class="jnum">#088</div><div class="jhead"><span class="emoji">🔎</span><h4>Find out why three renters each got the same message four times</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>June 21: three renters each got the same long message twice at 12:01, then twice again at 13:00</li><li>Two bursts, both doubled, all three people together — that looks like one job running twice, not three separate slips</li><li>The message-sending machine was rebuilt in July, so the cause may already be gone</li><li>But &#x27;probably already fixed&#x27; is a guess, and guesses like that have cost us real time before — so go and check</li><li>Finding the cause is a different job from spotting it happening again (087). We need both</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Diagnose the 2026-06-21 duplicate-send incident — three renters, four copies each</b></p><h2>Question</h2>
-
-<p>On <b>2026-06-21</b>, three renters — <code>+14166702726</code>, <code>+12265007353</code>, <code>+19053796624</code> — each</p>
-<p>received the same 2,261-character staff-availability message <b>twice at 12:01:43 UTC and</p>
-<p>twice again at 13:00:22 UTC</b>. Four copies each, inside one hour, identical to the second.</p>
-<p>Nobody noticed at the time; it surfaced only in <b>015</b>&#x27;s ledger scan</p>
-<p>2026-08-19 (<b>evidence</b>).</p>
-
-<p>Two smaller instances of the same shape sit either side of it: <code>+16479802922</code> ×2 on</p>
-<p>2026-05-28 20:51:33 (EOB &quot;booking will end soon&quot;) and <code>+14164752823</code> ×2 on 2026-05-30</p>
-<p>18:06:20 (&quot;upcoming booking&quot;). One inbound instance too — <code>+16475199699</code> &quot;great thanks&quot;</p>
-<p>captured twice at 2026-08-08 15:33:34 under two distinct Phone.com ids, which may be a</p>
-<p>carrier artifact rather than a send fault.</p>
-
-<p><b>Find what fired twice, and whether it still can.</b></p>
-
-<ul>
-<li>- Two bursts an hour apart, each burst doubled, all three renters together, is a <i>batch</i></li>
-</ul>
-<p>signature — a pass that ran twice, or a queue drained twice — not three independent slips.</p>
-<ul>
-<li>- The 12:01 and 13:00 timings sit on the hourly Concierge cadence of that era (before the</li>
-</ul>
-<p>004 cut to 2-hourly), which is the first place to look.</p>
-<ul>
-<li>- Reads: the 📤 Message Queue rows for that day (were there 2 rows or 1 row sent twice?),</li>
-</ul>
-<p>the rolling report / run history for 2026-06-21, and what owned these sends in June.</p>
-<ul>
-<li>- <b>Do not assume it is already fixed.</b> The send engine was rebuilt in July</li>
-</ul>
-<p>(<b>029</b>) and the Zapier send lane retired, so the June</p>
-<p>mechanism may be gone — but &quot;probably fixed by unrelated work&quot; is a guess, and this map has</p>
-<p>a specific, expensive record of unverified claims about what a component can or cannot do</p>
-<p>(<b>063</b>: three for three false). Establish it or say it</p>
-<p>is untested.</p>
-
-<p>Relationship to <b>087</b>: that ticket builds the <b>detector</b>; this</p>
-<p>one finds the <b>cause</b>. Detection is not repair — the Vicky lockout was detected correctly</p>
-<p>and still ended with a renter at a locked door. Neither ticket substitutes for the other.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- The mechanism named, or explicitly recorded as untested with what would falsify it.</li>
-<li>- A statement on whether the June path still exists post-029.</li>
-<li>- If a live fault remains, the repair or a graduated ticket for it.</li>
-<li>- Any customer-facing follow-up (three renters got four copies each) put to Junyan — not</li>
-</ul>
-<p>actioned unattended.</p>
 </div></details></details></div><div class="job"><div class="jnum">#089</div><div class="jhead"><span class="emoji">🧵</span><h4>One program will own a booking start to finish — Junyan&#x27;s call</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Today two programs share the work: a fast one for bookings starting today or tomorrow, and the new sweep for everything further out. The handoff line between them is invisible from outside</li><li>Junyan ruled: one program owns the whole thing. It runs every half hour AND gets nudged the moment a booking email arrives, so it is both thorough and fast</li><li>The fast program retires after a week of both running side by side to prove nothing gets double-sent</li><li>The risky permission — texting a door code with no human check — moves with the work. We discussed the danger of putting that inside a bigger program, and Junyan accepted it: the real protection is the checks, not the small box</li><li>One new problem the build must solve first: with two ways to wake up, the program can wake up twice at once and do the same thing twice. It needs a simple lock</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>One job, two triggers — the sweep becomes the sole owner of the booking lifecycle</b></p><h2>Ruling this implements (Junyan, 2026-08-19)</h2>
 
 <p>&quot;I would prefer one agent handle the whole thing from start to finish.&quot; The split ownership</p>
@@ -2868,6 +2824,108 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>A booking made 30 days out appears on the feed within one pass of being made, with its code</p>
 <p>already provisioned. The label becomes optional reading. RUNTIMES.md + Plumbing Map updated.</p>
+</div></details></details></div><div class="job"><div class="jnum">#091</div><div class="jhead"><span class="emoji">🧩</span><h4>Three more robots still look people up by name — finish the job</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>We switched the two busiest robots over to ID numbers. Three others never got the memo and still go by name</li><li>The important one is the nightly code checker: it reads EVERY person&#x27;s card and writes corrections into our records</li><li>If a card has no alarm name on it, that checker quietly falls back to the card&#x27;s title — which never matches the panel. That is how you get hundreds of wrong &#x27;this is broken&#x27; notes in one night</li><li>So: give it ID numbers first, and make it say &#x27;I could not find this person&#x27; out loud instead of guessing from a title</li><li>While it is at it, it can fill in the missing ID numbers itself — it already reads every card once a day, so the gap closes on its own instead of needing another cleanup session</li><li>Also asked and answered here: can we delete the old alarm-name box? Not yet, and the reason is worth knowing</li><li>529 people have a remembered door code but no entry on the panel any more. When one of them comes back, that old name box is what tells us how the panel spelled them</li><li>Delete it and they come back as &#x27;Quynh Quinn QTrang Tran [Peerspace]&#x27; instead of &#x27;Quynh Tran&#x27; — the exact mess we just cleaned up, all over again</li><li>So the last piece is deciding what to do about those 529 dormant cards. Once that is settled, the old name box can finally go</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Finish the id migration — job D, morning prep and the attended skills still resolve by name</b></p><h2>Question</h2>
+
+<p><b>085</b> moved the joins onto stable ids and built the one</p>
+<p>trust ladder in <code>alarm_monitor/identity.py</code> — but it only migrated <b>two</b> consumers:</p>
+<p><code>booking_sweep.py</code> and the Doorman&#x27;s job A. The rest of the fleet still asks the panel</p>
+<p>for a <b>name</b>. Which of them move to the ladder, and what has to be true before</p>
+<p><code>Alarm Display Name</code> can actually be deleted?</p>
+
+<h2>What the audit found (2026-08-19, after the backfill)</h2>
+
+<p>Still name-keyed, not migrated:</p>
+
+<p>| Consumer | What it does | Why it matters |</p>
+<p>|---|---|---|</p>
+<p>| <code>alarm_monitor/code_mirror.py</code> (<b>job D</b>) | daily, whole Artist table, <b>WRITES Notion</b> | keys on <code>_plain(page, &quot;Alarm Display Name&quot;) or _plain(page, &quot;Name&quot;)</code> — the <code>or</code> is the danger: with no display name it silently falls back to the decorated Notion title, which never matches the panel |</p>
+<p>| <code>deploy/morning_prep.py</code> | FBS/Monitor pre-flight | same <code>display or title</code> pattern |</p>
+<p>| <code>process-studio-tickets</code> (canon, attended) | staff ticket handling | canon still names <code>Alarm Display Name</code> the <b>required</b> lookup key (2026-07-27 rule) |</p>
+<p>| <code>send-engine/SameDay.gs</code> | same-day access lane | 085 ruled this migrates opportunistically — confirm it is on the list, not forgotten |</p>
+
+<p>The Artist DB as it stands (1,040 rows):</p>
+
+<ul>
+<li>- <b>702</b> carry an <code>Alarm Code</code> (job D&#x27;s scope) — only <b>167</b> carry an <code>Alarm User ID</code>. <b>24% coverage.</b></li>
+<li>- Of the <b>535</b> coded rows with no id, <b>529 have no live panel user at all</b> — the dormant</li>
+</ul>
+<p>remembered codes. They can never acquire an id from a live lookup, because there is nothing</p>
+<p>live to resolve. <b>This tail does not drain on its own.</b></p>
+<ul>
+<li>- Only <b>6</b> of the 535 have a live panel user; the display name resolved all six, the bare</li>
+</ul>
+<p>title resolved none. Five of the six are already on 085&#x27;s Review row (Manuel Hernandez ×2,</p>
+<p>Jai Smith ×3); the sixth is Junyan&#x27;s staff row.</p>
+<ul>
+<li>- <b>67</b> rows carry a display name that DIFFERS from the title — the field holds information</li>
+</ul>
+<p>nothing else does (<code>Jose Luis Saldamando Salas [Authorized User]</code> → panel <code>Manuel Hernandez</code>;</p>
+<p><code>Quynh Quinn QTrang Tran [Peerspace]</code> → <code>Quynh Tran</code>).</p>
+
+<h2>Why <code>Alarm Display Name</code> is NOT deletable yet (assessed 2026-08-19 — do not re-litigate)</h2>
+
+<p>Two independent reasons, either one sufficient:</p>
+
+<ol>
+<li>1. <b>The return path for 529 dormant renters.</b> 079&#x27;s ladder re-provisions a returning renter</li>
+</ol>
+<p>with their <i>remembered</i> code. The display name is what carries the PANEL&#x27;s spelling of their</p>
+<p>name. Delete it and the only string left is the decorated title, so a returning renter is</p>
+<p>recreated on the panel as <code>Quynh Quinn QTrang Tran [Peerspace]</code> — the original defect,</p>
+<p>reintroduced through the back door, on 529 people.</p>
+<ol>
+<li>2. <b>Job D would not fail, it would lie.</b> Dropping the property makes its <code>or</code> fall through to</li>
+</ol>
+<p>titles table-wide and report <code>differs</code>/<code>unknown</code> on hundreds of rows — the several-hundred-</p>
+<p>false-alarm disease this effort has already fought twice (the June alarm noise, the sweep&#x27;s</p>
+<p>four false residue rows).</p>
+
+<h2>Scope</h2>
+
+<ol>
+<li>1. Move job D / <code>code_mirror.py</code> to the ladder: resolve by the row&#x27;s <code>Alarm User ID</code> first, fall</li>
+</ol>
+<p>back to <code>Alarm Display Name</code>, and <b>stamp the id back on a unique hit</b> (fill-only) so its</p>
+<p>daily whole-table pass becomes the thing that drains the coverage gap for anyone still live.</p>
+<p>Kill the bare <code>or title</code> fallback — a row with neither an id nor a display name must be</p>
+<p>reported as <i>unresolvable</i>, never silently matched on a decorated title.</p>
+<ol>
+<li>2. Same for <code>deploy/morning_prep.py</code>.</li>
+<li>3. Re-point the <code>process-studio-tickets</code> canon (and <code>gates.md</code> where it names the lookup key) at</li>
+</ol>
+<p>the id, with the display name demoted to fallback — matching what</p>
+<p><code>doorman-access-lifecycle.md</code> now says.</p>
+<ol>
+<li>4. Confirm <code>SameDay.gs</code>&#x27;s position: migrate or explicitly defer with a reason.</li>
+<li>5. <b>Decide the dormant tail</b> — the thing that actually unblocks deleting the field. Two</li>
+</ol>
+<p>candidates, pick one: (a) retire the dormant rows outright (they are remembered codes for</p>
+<p>people with no panel user and no bookings), or (b) have retirement/dormancy record the</p>
+<p>last-known panel user id, so a returning renter is resolved by id and the name stops being</p>
+<p>the only bridge back.</p>
+
+<h2>Retirement condition for <code>Alarm Display Name</code> (write it down, then hold to it)</h2>
+
+<p>The field goes when <b>both</b> are true: every consumer resolves through <code>identity.py</code>, <b>and</b></p>
+<p>the dormant tail is handled per step 5. Until then it stays, demoted — the second rung, never</p>
+<p>the primary key. Neither is true as of 2026-08-19.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- No consumer reads <code>Alarm Display Name</code> as a <i>primary</i> key; every one of them tries an id first.</li>
+<li>- No <code>display or title</code> fallback survives anywhere — unresolvable reports as unresolvable.</li>
+<li>- Job D&#x27;s daily pass write-backs are visible: <code>Alarm User ID</code> coverage climbs from 167 without a</li>
+</ul>
+<p>second attended backfill.</p>
+<ul>
+<li>- A dormant-tail decision is recorded (retire, or store the last-known id) — not deferred again.</li>
+<li>- Canon updated in the same pass (<code>process-studio-tickets</code>, <code>gates.md</code>); RUNTIMES + Plumbing Map</li>
+</ul>
+<p>entries; the retirement condition above lands somewhere durable.</p>
+
+<p><b>Depends on:</b> the alarm-mcp redeploy 085 is waiting on (Junyan&#x27;s flip) — the code changes can</p>
+<p>be written before it, but nothing is verifiable until the service carries <code>identity.py</code>.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">14</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -4349,6 +4407,88 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ol>
 
 <p>RUNTIMES.md + Plumbing Map updated (2026-08-20 01:00Z entry).</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#088</span><span class="emoji">🔎</span><span class="done-title">Why three renters each got the same message four times — closed, Junyan had already fixed it</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>June 21: three renters each got the same long message twice at 12:01, then twice again at 13:00</li><li>Two bursts, both doubled, all three people together — that looked like one job running twice, not three separate slips</li><li>CLOSED the same day it was opened: Junyan says June 21 is old news and was already dealt with</li><li>Writing down honestly that nobody went and checked — this rests on Junyan remembering the fix, not on us reading the records</li><li>That is a fair trade here, because the new checkup (087) catches it within minutes if it ever happens again</li><li>The evidence stays saved, so if it does come back we are not starting from nothing</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Diagnose the 2026-06-21 duplicate-send incident — three renters, four copies each</b></p><h2>Question</h2>
+
+<p>On <b>2026-06-21</b>, three renters — <code>+14166702726</code>, <code>+12265007353</code>, <code>+19053796624</code> — each</p>
+<p>received the same 2,261-character staff-availability message <b>twice at 12:01:43 UTC and</p>
+<p>twice again at 13:00:22 UTC</b>. Four copies each, inside one hour, identical to the second.</p>
+<p>Nobody noticed at the time; it surfaced only in <b>015</b>&#x27;s ledger scan</p>
+<p>2026-08-19 (<b>evidence</b>).</p>
+
+<p>Two smaller instances of the same shape sit either side of it: <code>+16479802922</code> ×2 on</p>
+<p>2026-05-28 20:51:33 (EOB &quot;booking will end soon&quot;) and <code>+14164752823</code> ×2 on 2026-05-30</p>
+<p>18:06:20 (&quot;upcoming booking&quot;). One inbound instance too — <code>+16475199699</code> &quot;great thanks&quot;</p>
+<p>captured twice at 2026-08-08 15:33:34 under two distinct Phone.com ids, which may be a</p>
+<p>carrier artifact rather than a send fault.</p>
+
+<p><b>Find what fired twice, and whether it still can.</b></p>
+
+<ul>
+<li>- Two bursts an hour apart, each burst doubled, all three renters together, is a <i>batch</i></li>
+</ul>
+<p>signature — a pass that ran twice, or a queue drained twice — not three independent slips.</p>
+<ul>
+<li>- The 12:01 and 13:00 timings sit on the hourly Concierge cadence of that era (before the</li>
+</ul>
+<p>004 cut to 2-hourly), which is the first place to look.</p>
+<ul>
+<li>- Reads: the 📤 Message Queue rows for that day (were there 2 rows or 1 row sent twice?),</li>
+</ul>
+<p>the rolling report / run history for 2026-06-21, and what owned these sends in June.</p>
+<ul>
+<li>- <b>Do not assume it is already fixed.</b> The send engine was rebuilt in July</li>
+</ul>
+<p>(<b>029</b>) and the Zapier send lane retired, so the June</p>
+<p>mechanism may be gone — but &quot;probably fixed by unrelated work&quot; is a guess, and this map has</p>
+<p>a specific, expensive record of unverified claims about what a component can or cannot do</p>
+<p>(<b>063</b>: three for three false). Establish it or say it</p>
+<p>is untested.</p>
+
+<p>Relationship to <b>087</b>: that ticket builds the <b>detector</b>; this</p>
+<p>one finds the <b>cause</b>. Detection is not repair — the Vicky lockout was detected correctly</p>
+<p>and still ended with a renter at a locked door. Neither ticket substitutes for the other.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- The mechanism named, or explicitly recorded as untested with what would falsify it.</li>
+<li>- A statement on whether the June path still exists post-029.</li>
+<li>- If a live fault remains, the repair or a graduated ticket for it.</li>
+<li>- Any customer-facing follow-up (three renters got four copies each) put to Junyan — not</li>
+</ul>
+<p>actioned unattended.</p>
+
+<h2>Resolution (2026-08-19) — closed by owner ruling</h2>
+
+<p><b>Junyan: June 21 was a long time ago and was already resolved.</b> Closed on that basis the</p>
+<p>same day it was cut; no diagnosis performed.</p>
+
+<p>What that does and does not establish, stated plainly so a later reader does not mistake this</p>
+<p>for a verified mechanism:</p>
+
+<ul>
+<li>- <b>The basis is the owner&#x27;s own knowledge of what he fixed</b>, not a run-log or queue read.</li>
+</ul>
+<p>The incident is ~8 weeks old and predates the send-engine rebuild</p>
+<p>(<b>029</b>) and the Zapier send-lane retirement</p>
+<p>(<b>034</b>), either of which plausibly removed the June path — this</p>
+<p>ticket&#x27;s own text named that as the likely answer.</p>
+<ul>
+<li>- <b>The mechanism is not named and was not probed.</b> Under</li>
+</ul>
+<p><b>064</b>&#x27;s ceremony that makes this a claim carried on</p>
+<p>authority rather than a wire test. Recorded as such rather than written up as a diagnosis.</p>
+<ul>
+<li>- <b>The exposure is covered by construction, which is why closing is cheap.</b></li>
+</ul>
+<p><b>087</b> is the detector for this exact class and does not depend</p>
+<p>on knowing the June cause: if the path still exists, the next occurrence is caught and named</p>
+<p>within a pass, with counterparty, timestamp and copy count. Closing a cold incident whose</p>
+<p>recurrence is instrumented is a different risk from closing one that is not.</p>
+
+<p>The scan evidence stays on the record (<b>asset</b>) — three</p>
+<p>renters, four copies each, 2026-06-21 12:01:43 and 13:00:22 — so that if 087 ever fires on the</p>
+<p>same shape, the prior instance is one link away instead of being rediscovered from scratch.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#079</span><span class="emoji">🎫</span><span class="done-title">Decide who handles new-booking emails from now on</span><span class="done-date">2026-08-17</span></summary><div class="done-body"><ul class="plain-bullets"><li>Simple bookings — someone books a studio directly — can be fully handled in one go, no back-and-forth needed</li><li>Right now nobody owns them, which is why 37 piled up unread</li><li>The question: should the new mail-sorting system handle these, or a separate helper, or should we skip the email entirely and read the booking calendar directly?</li><li>Some renters get skipped on purpose: members with standing arrangements, our own bookings, and bookings already covered by the daily message pipeline</li><li>The rule going forward: an email marked &#x27;read&#x27; means &#x27;handled&#x27; — never just swept under the rug</li><li>This ticket decides the shape; building it comes after</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Design the direct-booking one-shot lane — who processes Skedda notifications, parallel to the loop</b></p><h2>Question</h2>
 
 <p>Direct bookings — Skedda self-bookings, platform instant books, booking-request accepts — are</p>
@@ -8650,5 +8790,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 21:13 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 21:15 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
