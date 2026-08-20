@@ -345,6 +345,10 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     </details>
     </li>
 
+<li class="pipe-alerts"><b>2026-08-20 &mdash; two routing fixes from the 509A post-mortem (Junyan&rsquo;s rulings, applied same day).</b>
+(1) <b>Doorman prompt v7:</b> the 04:00 arm-check&rsquo;s unarmed-studio finding now files to the <b>Actions board</b>, not the Maintenance DB &mdash; Maintenance is the on-site crew&rsquo;s job list, and admin-security rows filed there died unseen three times. Hardware faults (B(a)) deliberately still go to Maintenance: those are crew jobs. Whole-prompt replace, verified by read-back.
+(2) <b>New trigger <code>&#128223; Morning Text</code></b> (<code>trig_01FCnF3Urd5zcSr1j1aaq26x</code>, 07:00 Toronto, cron <code>0 11 * * *</code> UTC &mdash; DST caveat in RUNTIMES): one SMS to Junyan digesting the overnight reports + new review rows, security items first, ALWAYS sends so silence is never ambiguous between all-clear and a dead lane. Connectors Notion + Phone_com only; read-only except its own heartbeat; a failed send files a Review row. This is the push half; the 08:40 Night Watch console stays the full picture. <b>Declined by owner ruling:</b> the overnight standing-disarm pager (&ldquo;we don&rsquo;t need to worry about anything during the night&rdquo;) &mdash; so the 20:07&rarr;04:00 window remains console-and-morning-text only, by choice.</li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-20 &middot; 14:0xZ</span>
