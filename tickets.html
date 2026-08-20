@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 21:02 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 21:13 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2655,7 +2655,65 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>convention, and a mirror that may itself need creating. The same-day lane already solved most</p>
 <p>of this once; the decision is whether to reuse that code by widening its window or to</p>
 <p>re-implement in the sweep, and that is a design call, not a build detail.</p>
-</div></details></details></div><div class="job"><div class="jnum">#085</div><div class="jhead"><span class="emoji">🗂️</span><h4>One job, two triggers — the sweep becomes the sole owner of the booking lifecycle</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>One job, two triggers — the sweep becomes the sole owner of the booking lifecycle</b></p><h2>Ruling this implements (Junyan, 2026-08-19)</h2>
+
+<p>---</p>
+
+<p><b>2026-08-19, after the one-owner ruling:</b> question 1 (who owns them) is now answered in</p>
+<p>principle — <b>089 one job, two triggers</b> makes the sweep the sole</p>
+<p>owner, and platform-mirror creation moves into it (089 §What moves, item 3). Questions 2–4</p>
+<p>(title-convention identity, the missing phone at T−10, repeat-renter short-circuit) remain</p>
+<p>this ticket&#x27;s grilling.</p>
+</div></details></details></div><div class="job"><div class="jnum">#088</div><div class="jhead"><span class="emoji">🔎</span><h4>Find out why three renters each got the same message four times</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>June 21: three renters each got the same long message twice at 12:01, then twice again at 13:00</li><li>Two bursts, both doubled, all three people together — that looks like one job running twice, not three separate slips</li><li>The message-sending machine was rebuilt in July, so the cause may already be gone</li><li>But &#x27;probably already fixed&#x27; is a guess, and guesses like that have cost us real time before — so go and check</li><li>Finding the cause is a different job from spotting it happening again (087). We need both</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Diagnose the 2026-06-21 duplicate-send incident — three renters, four copies each</b></p><h2>Question</h2>
+
+<p>On <b>2026-06-21</b>, three renters — <code>+14166702726</code>, <code>+12265007353</code>, <code>+19053796624</code> — each</p>
+<p>received the same 2,261-character staff-availability message <b>twice at 12:01:43 UTC and</p>
+<p>twice again at 13:00:22 UTC</b>. Four copies each, inside one hour, identical to the second.</p>
+<p>Nobody noticed at the time; it surfaced only in <b>015</b>&#x27;s ledger scan</p>
+<p>2026-08-19 (<b>evidence</b>).</p>
+
+<p>Two smaller instances of the same shape sit either side of it: <code>+16479802922</code> ×2 on</p>
+<p>2026-05-28 20:51:33 (EOB &quot;booking will end soon&quot;) and <code>+14164752823</code> ×2 on 2026-05-30</p>
+<p>18:06:20 (&quot;upcoming booking&quot;). One inbound instance too — <code>+16475199699</code> &quot;great thanks&quot;</p>
+<p>captured twice at 2026-08-08 15:33:34 under two distinct Phone.com ids, which may be a</p>
+<p>carrier artifact rather than a send fault.</p>
+
+<p><b>Find what fired twice, and whether it still can.</b></p>
+
+<ul>
+<li>- Two bursts an hour apart, each burst doubled, all three renters together, is a <i>batch</i></li>
+</ul>
+<p>signature — a pass that ran twice, or a queue drained twice — not three independent slips.</p>
+<ul>
+<li>- The 12:01 and 13:00 timings sit on the hourly Concierge cadence of that era (before the</li>
+</ul>
+<p>004 cut to 2-hourly), which is the first place to look.</p>
+<ul>
+<li>- Reads: the 📤 Message Queue rows for that day (were there 2 rows or 1 row sent twice?),</li>
+</ul>
+<p>the rolling report / run history for 2026-06-21, and what owned these sends in June.</p>
+<ul>
+<li>- <b>Do not assume it is already fixed.</b> The send engine was rebuilt in July</li>
+</ul>
+<p>(<b>029</b>) and the Zapier send lane retired, so the June</p>
+<p>mechanism may be gone — but &quot;probably fixed by unrelated work&quot; is a guess, and this map has</p>
+<p>a specific, expensive record of unverified claims about what a component can or cannot do</p>
+<p>(<b>063</b>: three for three false). Establish it or say it</p>
+<p>is untested.</p>
+
+<p>Relationship to <b>087</b>: that ticket builds the <b>detector</b>; this</p>
+<p>one finds the <b>cause</b>. Detection is not repair — the Vicky lockout was detected correctly</p>
+<p>and still ended with a renter at a locked door. Neither ticket substitutes for the other.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- The mechanism named, or explicitly recorded as untested with what would falsify it.</li>
+<li>- A statement on whether the June path still exists post-029.</li>
+<li>- If a live fault remains, the repair or a graduated ticket for it.</li>
+<li>- Any customer-facing follow-up (three renters got four copies each) put to Junyan — not</li>
+</ul>
+<p>actioned unattended.</p>
+</div></details></details></div><div class="job"><div class="jnum">#089</div><div class="jhead"><span class="emoji">🧵</span><h4>One program will own a booking start to finish — Junyan&#x27;s call</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Today two programs share the work: a fast one for bookings starting today or tomorrow, and the new sweep for everything further out. The handoff line between them is invisible from outside</li><li>Junyan ruled: one program owns the whole thing. It runs every half hour AND gets nudged the moment a booking email arrives, so it is both thorough and fast</li><li>The fast program retires after a week of both running side by side to prove nothing gets double-sent</li><li>The risky permission — texting a door code with no human check — moves with the work. We discussed the danger of putting that inside a bigger program, and Junyan accepted it: the real protection is the checks, not the small box</li><li>One new problem the build must solve first: with two ways to wake up, the program can wake up twice at once and do the same thing twice. It needs a simple lock</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>One job, two triggers — the sweep becomes the sole owner of the booking lifecycle</b></p><h2>Ruling this implements (Junyan, 2026-08-19)</h2>
 
 <p>&quot;I would prefer one agent handle the whole thing from start to finish.&quot; The split ownership</p>
 <p>— SameDay.gs owns today/tomorrow, the sweep owns 2+ days out, handoff at an invisible</p>
@@ -2728,12 +2786,42 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>One owner: a booking made 30 days out and a booking made 40 minutes before start are handled</p>
 <p>by the same code, differing only in which steps are due. SameDay.gs disabled with a</p>
 <p>do-not-re-enable note. No renter receives two HTAs during the parallel week.</p>
-</div></details></details></div><div class="job"><div class="jnum">#086</div><div class="jhead"><span class="emoji">🗂️</span><h4>Arrival feed + 45-day horizon — see every booking as it comes in</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Arrival feed + 45-day horizon — see every booking as it comes in</b></p><h2>Ruling this implements (Junyan, 2026-08-19)</h2>
 
-<p>The Gmail label (18,404 mails of &quot;X made a booking…&quot;) is Junyan&#x27;s arrival view: every</p>
-<p>booking the moment it is made, regardless of start date. The sweep&#x27;s 14-day horizon means a</p>
-<p>far-out booking is first <i>seen</i> at day 14 — processed in time, but invisible at arrival.</p>
-<p>Ruled: <b>feed + wider horizon.</b></p>
+<h2>Implications discussed and accepted (Junyan, 2026-08-19)</h2>
+
+<p>Grilled before finalizing; Junyan accepted all three costs with eyes open:</p>
+
+<ol>
+<li>1. <b>Auto-send blast radius</b>: the only unattended code-release grant moves from a small</li>
+</ol>
+<p>sealed file into the desk&#x27;s largest booking job. Accepted — the protection is the bounds</p>
+<p>(verified access or nothing sends, canonical wording, one-code-line + placeholder checks),</p>
+<p>which travel with the work. The middle position (one implementation, SameDay kept as a</p>
+<p>thin second entry point) was offered and declined.</p>
+<ol>
+<li>2. <b>One job down = everything down</b>: same-day access, future provisioning and confirmations</li>
+</ol>
+<p>now share one failure domain. Accepted; the compensation is that a single job fails LOUD</p>
+<p>(own 🚥 Run Monitor row) where the split failed silent at the seam.</p>
+<ol>
+<li>3. <b>Two triggers racing</b>: the mail poke and the clock can fire concurrently; &quot;check then</li>
+</ol>
+<p>create&quot; has a race window the single-trigger SameDay never had. The build MUST close it —</p>
+<p>per-booking lock or Cloud Run max-instances=1 — before the poke ships.</p>
+</div></details></details></div><div class="job"><div class="jnum">#090</div><div class="jhead"><span class="emoji">📥</span><h4>The Day Sheet gets a bookings tab so Junyan can stop reading 18,000 emails</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Every booking today lands as an email in a Gmail folder — made, changed, cancelled. That folder has 18,404 messages and Junyan reads it by hand</li><li>Ruled: build the same view into the Day Sheet instead, straight from the calendar — one interface for everything</li><li>It must show all three kinds of event, not just new bookings. A cancellation you don&#x27;t see is a renter you text about a booking they no longer have</li><li>So a cancellation inside the 2-day window also flags the board card and any queued message for cleanup</li><li>To spot changes and cancellations the program keeps a photo of the calendar between passes — a deliberate exception to its keep-no-notes design, and losing the photo loses nothing for good</li><li>Junyan stops reading the folder only after the tab has been right for a while, including through at least one real cancellation</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The booking feed replaces the Gmail label — made, changed, and cancelled, on the Day Sheet</b></p><h2>Ruling this implements (Junyan, 2026-08-19)</h2>
+
+<p>The Gmail label (18,404 mails of &quot;AllBooked by Skedda&quot;) is Junyan&#x27;s arrival view. Ruled:</p>
+<p>the feed is a <b>REPLACEMENT, not a supplement</b> — &quot;if I can replace reading gmail … I can</p>
+<p>finally consolidate all of my communications into one interface.&quot; That raises the bar: the</p>
+<p>label shows three event types — <b>made, changed, cancelled</b> — and the feed must cover all</p>
+<p>three before Junyan can stop reading it. A creation-only feed would hide every cancellation.</p>
+
+<p>Consequence accepted in the discussion: change/cancel detection requires comparing against</p>
+<p>the previous pass&#x27;s board, so the sweep keeps a <b>snapshot between passes</b> — a deliberate,</p>
+<p>narrow exception to its no-stored-state design. The snapshot is a cache of reality, not a</p>
+<p>processed-set: losing it re-lists a window of arrivals and misses nothing permanently</p>
+<p>(changes/cancels against a lost snapshot re-derive on the next diff). Same posture as the</p>
+<p>alarm watch&#x27;s baseline.</p>
 
 <ol>
 <li>1. <b>Range read, one call.</b> Refactor <code>skedda_read.bookings_on</code> (per-day) to a</li>
@@ -2748,74 +2836,38 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>stamped with the SERIES start; the recurring skip stays (out of scope, map ruling</p>
 <p>2026-08-19) and the range read must not change that.</p>
 <ol>
-<li>3. <b>The arrival feed.</b> Every pass diffs on the <code>created</code> timestamp: bookings created</li>
+<li>3. <b>The feed, three event types.</b> Every pass diffs the current board read against the</li>
 </ol>
-<p>since the last pass&#x27;s high-water mark = arrivals. Write them somewhere Junyan actually</p>
-<p>looks — a 📥 New Bookings tab on the Day Sheet (deterministic renderer, J29 pattern) with</p>
-<p>holder, studio, start, price, created-at, and what the sweep did about it. This is the</p>
-<p>Gmail label&#x27;s replacement, derived from the board instead of 18k echo mails.</p>
-<p>High-water mark is process-local + recomputable (max created seen) — a restart re-lists</p>
-<p>a few arrivals rather than losing any, same posture as the alarm watch.</p>
+<p>previous pass&#x27;s snapshot:</p>
+<ul>
+<li>- <b>Made</b> — id present now, absent before (also caught by <code>created</code> &gt; high-water mark).</li>
+<li>- <b>Changed</b> — id present in both, but start/end/spaces/price/holder differ. Show</li>
+</ul>
+<p>old → new, the way the label&#x27;s &quot;changed the booking&quot; mail does.</p>
+<ul>
+<li>- <b>Cancelled</b> — id present before, absent now, and the booking had not already ended.</li>
+</ul>
+<p>THE CASE THAT MATTERS: a cancellation inside T−2 must also flag the already-created</p>
+<p>FBS row and any queued confirmation for cleanup — a cancelled renter must not get a</p>
+<p>confirmation text. Surface as a residue row, not just a feed line.</p>
+<p>Render as a 📥 Bookings tab on the Day Sheet (deterministic renderer, J29 pattern):</p>
+<p>holder, studio, start, price, event type, created-at, and what the sweep did about it.</p>
 <ol>
-<li>4. <b>Cancellations/changes are NOT this ticket</b> — the label shows &quot;Dance Annex cancelled…&quot;</li>
+<li>4. <b>Snapshot storage</b>: the previous pass&#x27;s normalized board, written where the sweep</li>
 </ol>
-<p>rows; the feed as specced only shows creations. Banked as fog: does the feed need</p>
-<p>change/cancel rows before it can fully replace the label?</p>
+<p>already writes (a <code>desk-state</code>-style JSON in the repo, or GCS). Recomputable, small,</p>
+<p>never consulted for whether to PROCESS a booking — processing stays derived from the</p>
+<p>surfaces. Only the feed diff reads it.</p>
+<ol>
+<li>5. <b>Retiring the label is Junyan&#x27;s call, later</b>: after the feed has run visibly correct</li>
+</ol>
+<p>for a stretch (including at least one real cancellation), he stops reading the label —</p>
+<p>the mail keeps arriving as a backstop archive, nothing unsubscribes.</p>
 
 <h2>Acceptance</h2>
 
 <p>A booking made 30 days out appears on the feed within one pass of being made, with its code</p>
 <p>already provisioned. The label becomes optional reading. RUNTIMES.md + Plumbing Map updated.</p>
-</div></details></details></div><div class="job"><div class="jnum">#088</div><div class="jhead"><span class="emoji">🔎</span><h4>Find out why three renters each got the same message four times</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>June 21: three renters each got the same long message twice at 12:01, then twice again at 13:00</li><li>Two bursts, both doubled, all three people together — that looks like one job running twice, not three separate slips</li><li>The message-sending machine was rebuilt in July, so the cause may already be gone</li><li>But &#x27;probably already fixed&#x27; is a guess, and guesses like that have cost us real time before — so go and check</li><li>Finding the cause is a different job from spotting it happening again (087). We need both</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Diagnose the 2026-06-21 duplicate-send incident — three renters, four copies each</b></p><h2>Question</h2>
-
-<p>On <b>2026-06-21</b>, three renters — <code>+14166702726</code>, <code>+12265007353</code>, <code>+19053796624</code> — each</p>
-<p>received the same 2,261-character staff-availability message <b>twice at 12:01:43 UTC and</p>
-<p>twice again at 13:00:22 UTC</b>. Four copies each, inside one hour, identical to the second.</p>
-<p>Nobody noticed at the time; it surfaced only in <b>015</b>&#x27;s ledger scan</p>
-<p>2026-08-19 (<b>evidence</b>).</p>
-
-<p>Two smaller instances of the same shape sit either side of it: <code>+16479802922</code> ×2 on</p>
-<p>2026-05-28 20:51:33 (EOB &quot;booking will end soon&quot;) and <code>+14164752823</code> ×2 on 2026-05-30</p>
-<p>18:06:20 (&quot;upcoming booking&quot;). One inbound instance too — <code>+16475199699</code> &quot;great thanks&quot;</p>
-<p>captured twice at 2026-08-08 15:33:34 under two distinct Phone.com ids, which may be a</p>
-<p>carrier artifact rather than a send fault.</p>
-
-<p><b>Find what fired twice, and whether it still can.</b></p>
-
-<ul>
-<li>- Two bursts an hour apart, each burst doubled, all three renters together, is a <i>batch</i></li>
-</ul>
-<p>signature — a pass that ran twice, or a queue drained twice — not three independent slips.</p>
-<ul>
-<li>- The 12:01 and 13:00 timings sit on the hourly Concierge cadence of that era (before the</li>
-</ul>
-<p>004 cut to 2-hourly), which is the first place to look.</p>
-<ul>
-<li>- Reads: the 📤 Message Queue rows for that day (were there 2 rows or 1 row sent twice?),</li>
-</ul>
-<p>the rolling report / run history for 2026-06-21, and what owned these sends in June.</p>
-<ul>
-<li>- <b>Do not assume it is already fixed.</b> The send engine was rebuilt in July</li>
-</ul>
-<p>(<b>029</b>) and the Zapier send lane retired, so the June</p>
-<p>mechanism may be gone — but &quot;probably fixed by unrelated work&quot; is a guess, and this map has</p>
-<p>a specific, expensive record of unverified claims about what a component can or cannot do</p>
-<p>(<b>063</b>: three for three false). Establish it or say it</p>
-<p>is untested.</p>
-
-<p>Relationship to <b>087</b>: that ticket builds the <b>detector</b>; this</p>
-<p>one finds the <b>cause</b>. Detection is not repair — the Vicky lockout was detected correctly</p>
-<p>and still ended with a renter at a locked door. Neither ticket substitutes for the other.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- The mechanism named, or explicitly recorded as untested with what would falsify it.</li>
-<li>- A statement on whether the June path still exists post-029.</li>
-<li>- If a live fault remains, the repair or a graduated ticket for it.</li>
-<li>- Any customer-facing follow-up (three renters got four copies each) put to Junyan — not</li>
-</ul>
-<p>actioned unattended.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">14</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -8598,5 +8650,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 21:02 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 21:13 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
