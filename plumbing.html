@@ -328,6 +328,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     </details>
     </li>
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-20 &middot; 18:05Z</span>
+      <h3>Today&rsquo;s Board: cards that collide now sit side by side, instead of one drawing over the other<span class="kind">DISPLAY</span></h3></summary>
+      <p>A 15-minute studio viewing is 13px of real slot at the board&rsquo;s 52px/hour scale, floored to a 42px readable minimum &mdash; so its card reached about 35 minutes past its own end and painted over whatever came next. On 509A today, Vanessa Zavatti&rsquo;s 13:00&ndash;13:15 viewing sat on top of Anneka&rsquo;s 13:30 booking: two rooms genuinely holding one booking each, looking like a double-booking.</p>
+      <p><strong>Fix:</strong> <code>bookingLayout()</code> measures the rendered boxes per studio and splits any run that actually collides into side-by-side lanes &mdash; the same trick the Staff column has used for concurrent shifts. Every card&rsquo;s top edge is still its real start time, so the grid stays readable as a clock; only cards that would have overlapped give up width, and only while the collision lasts.</p>
+      <p><strong>Also:</strong> short cards carrying chips gained a <code>.tight</code> variant (smaller type) after Dee Brown&rsquo;s 75-minute 527 booking was clipping its <code>No GTG</code> chip through the middle. Shrink the type, never drop the signal.</p>
+      <p><em>Paper trail:</em> fbs-monitor <code>ad6e682a</code>, template.html. Desktop board only; the mobile card list was never affected.</p>
+    </details>
+    </li>
     <li class="entry llm">
       <details>
       <summary><span class="when">2026-08-20 &middot; 17:2xZ</span>
