@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 22:25 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-20 10:37 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">28</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">27</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">51</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">6</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">7</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -1104,8 +1104,199 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- RUNTIMES.md + Plumbing Map entries.</li>
 </ul>
+</div></details></details></div><div class="job"><div class="jnum">#098</div><div class="jhead"><span class="emoji">🪪</span><h4>One card per person — holding all their emails, phones and products</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Booking sites like Tagvenue and Peerspace give us a NEW throwaway email address every single time someone enquires</li><li>We save that address on the person&#x27;s card. So the next time they book, the desk sees a new address and makes a WHOLE NEW CARD for the same human</li><li>It never stops. Right now 42 cards are built on one of these throwaway addresses, and 25 people have more than one card — one poor woman has four</li><li>Junyan already decided the answer back on Aug 15: one card per person, with all their emails and all their phone numbers attached to it. It was never built. Products should work the same way</li><li>Tonight we found the catch. There is a box called Known Emails where we have been writing people&#x27;s spare addresses — 19 cards use it — and NOTHING actually searches it</li><li>So writing an address in there tells a human reader, and tells the robots nothing at all. It looks like a fix and is not one</li><li>The good news: the ID-number work already fixed part of this, because the robots now match on the booking-site ID before the email</li><li>What is left to decide is the shape — where do the extra addresses and numbers actually live so a robot can search them, and which one do we use when we send a message</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>One card per human — multiple emails, phones and products on a single Artist card</b></p><h2>Question</h2>
+
+<p>Junyan ruled this on 2026-08-15 and it was never built. What SHAPE do multi-valued</p>
+<p>contact points take in the Artist DB, and how do 1,040 live rows migrate onto it</p>
+<p>without breaking the lanes that read them?</p>
+
+<h2>The ruling (already made — do not re-litigate the principle)</h2>
+
+<p>Next Action row <a href="https://app.notion.com/3b97503281c48167a742c189836aa19d" target="_blank" rel="noopener">3b97503281c48167a742c189836aa19d</a>,</p>
+<p>status <b>Ready</b>, rewritten by Junyan in the 2026-08-15 review walk:</p>
+
+<blockquote>One Artist card per human: the <b>NAME is the identity</b>. Each card carries multiple</blockquote>
+<blockquote>connected emails and multiple connected phone numbers; the platform relay addresses and</blockquote>
+<blockquote>any new numbers attach to the existing card rather than minting a new one. Current send</blockquote>
+<blockquote>address = the most recent working contact (latest relay wins).</blockquote>
+
+<p>Its own note says: *&quot;Execution is a schema + migration project: plan it before touching</p>
+<p>live records.&quot;* That is what this ticket is.</p>
+
+<p><b>Extended 2026-08-19 (Junyan, in session): PRODUCTS are multi-valued too</b> — one card</p>
+<p>should hold more than one product rather than splitting a person across cards. <code>Product</code></p>
+<p>is already a <code>multi_select</code>, so this half may be mostly a data/usage question rather than</p>
+<p>a schema one — confirm before assuming work is owed.</p>
+
+<h2>Why it matters (the mechanism, measured 2026-08-20)</h2>
+
+<p>Tagvenue, Peerspace and Giggster mint a <b>fresh reply-relay email per enquiry</b>. The desk</p>
+<p>must use the current relay to reach the renter through the platform, so it cannot be</p>
+<p>discarded — but it lands in the card&#x27;s <code>Email</code> field, so <b>every repeat booking from the</p>
+<p>same human mints a new card</b>. The Aug-15 note calls this class <b>unbounded</b>, and unlike</p>
+<p>the private-vs-group duplicate class (bounded at one extra card per person) it grows</p>
+<p>forever.</p>
+
+<p>Live counts against the Artist DB (1,040 rows) on 2026-08-20:</p>
+
+<p>| Measure | Count |</p>
+<p>|---|---|</p>
+<p>| Live cards whose <b>primary</b> email is a platform relay address | <b>42</b> |</p>
+<p>| Names holding more than one live card | <b>25</b> |</p>
+<p>| ...of which at least one card is a relay address | 9 |</p>
+<p>| Cards with a second email parked in <code>Known Emails</code> | 19 |</p>
+
+<p>Worst offenders: <code>prajakta dravid</code> <b>4 cards</b>, <code>devanshi mishra</code> <b>3</b>,</p>
+<p><code>angelica gil aguilar</code> <b>3</b>. Jai Smith was 3 and was merged to 1 on 2026-08-20; that</p>
+<p>merge is a symptom being treated by hand, not the fix.</p>
+
+<h2>The finding that makes the current workaround a lie</h2>
+
+<p><b><code>Known Emails</code> is not a lookup key. Nothing searches it.</b> <code>booking_sweep.find_artist</code></p>
+<p>queries exactly three things — <code>Skedda User ID</code>, then <code>Email</code> (exact), then <code>Name</code> (exact</p>
+<p>title). Verified in source 2026-08-20.</p>
+
+<p>So the standing habit of &quot;add the second address to <code>Known Emails</code>&quot; records the fact for a</p>
+<p>human reader and changes <b>nothing</b> about whether any lane can find that person by it.</p>
+<p>19 cards currently rely on that field. Three more were added on 2026-08-20 during the 085</p>
+<p>review (Nicole Drury, Quynh Tran, Alison Murray) <b>knowing this</b> — they are notes, not</p>
+<p>fixes, and this ticket is what makes them real.</p>
+
+<h2>What ticket 085 already de-risked</h2>
+
+<p>Id-first matching is live: the sweep matches <code>Skedda User ID</code> <b>before</b> email. So for a</p>
+<p>person who keeps ONE Skedda account, the relay-email churn no longer breaks the join —</p>
+<p>the id carries it. That shrinks this problem but does not remove it, because:</p>
+
+<ul>
+<li>- the id is only present once someone has been stamped (167 of 702 coded rows), and</li>
+<li>- a person who books through two platforms can still surface as two Skedda venueusers,</li>
+<li>- and the <b>alarm</b> side still has no equivalent for a card that was never matched.</li>
+</ul>
+
+<h2>The phone axis — same disease, measured 2026-08-20</h2>
+
+<p>Everything above is written about relay <b>email</b> addresses. Giggster does the identical</p>
+<p>thing to <b>phone numbers</b>, and that was not known when this ticket was drafted.</p>
+
+<p>On 2026-08-14 Junyan pointed the Giggster host account&#x27;s chat notifications at the desk</p>
+<p>line (+1 647-932-1050) so the SMS poller would capture platform correspondence. Six days</p>
+<p>of real traffic show Giggster does not have a sender number — it has a <b>pool</b>:</p>
+
+<p>| Number | Carries |</p>
+<p>|---|---|</p>
+<p>| +1 365-645-5150 · +1 289-804-8305 | transactional (verification, booking confirmed/cancelled, review request) |</p>
+<p>| +1 249-700-0058 | new-inquiry notices |</p>
+<p>| <b>+1 226-773-9040</b> | <b>Hanano I.&#x27;s chat thread</b> |</p>
+<p>| <b>+1 226-773-9212</b> | <b>Dhan P.&#x27;s chat thread</b> |</p>
+
+<p>The 226-773-xxxx numbers are <b>per-conversation proxies</b>, one per guest thread — the</p>
+<p>phone-side twin of &quot;a fresh reply-relay email per enquiry&quot;. Same unbounded growth, same</p>
+<p>&quot;which address do we use now?&quot; question, and the same trap: a proxy that gets recycled</p>
+<p>after a booking closes will reach a <i>different</i> guest, so a stored number without a</p>
+<p>last-seen timestamp is not merely stale, it is a mis-delivery risk.</p>
+
+<p>Two things this changes:</p>
+
+<p><b>It settles the shape argument.</b> A <code>Giggster SMS</code> field (or <code>Known Phones</code>, option 1)</p>
+<p>was proposed in session on 2026-08-20 and is <b>withdrawn</b> — it is option 1, and option 1</p>
+<p>cannot evaluate &quot;latest relay wins&quot; because it stores no ordering. With churn now proven</p>
+<p>on both the email and phone axes, option 3&#x27;s <code>type | source | is_current | last_seen</code></p>
+<p>row is doing real work on two axes rather than one.</p>
+
+<p><b>The raw material is already parseable.</b> Every Giggster relay text has a fixed shape:</p>
+
+<p>``<code></p>
+<p>(Giggster) Hanano I.:</p>
+<p>Hi ! You guys have a speaker ??</p>
+<p>Reply via text or at https://giggster.com/messages/bd56c05f-...-4ffa929c44ff?channel=sms</p>
+<p></code>`<code></p>
+
+<p>That is a guest <b>name</b>, a <b>conversation UUID</b>, and the <b>current proxy number</b> in one</p>
+<p>message — i.e. a complete Contact Points row, already arriving on a line we poll. The</p>
+<p>conversation UUID is the durable key; the proxy number is only the current door to it.</p>
+<p>Whatever shape wins should store both, and prefer the UUID as identity.</p>
+
+<p>Reply-by-text is confirmed working, so once a person is resolvable, outbound platform</p>
+<p>correspondence is captured by the existing SMS poller with no scraper.</p>
+
+<p><b>Shipped meanwhile, and deliberately narrow</b> (</code>dc-canon 0eec2249<code>): event-gate now drops</p>
+<p>platform relay SMS before actuation, matching the platform-owned prefix rather than a</p>
+<p>number list — a static list could never cover a per-guest pool, and the seeded list had</p>
+<p>guarded only the harmless transactional numbers while leaving every guest-word channel</p>
+<p>open. That closes a live hazard (a guest typing &quot;there&#x27;s water everywhere&quot; into a chat</p>
+<p>about a booking weeks out classified as </code>forward/water<code> and would have summoned on-call,</p>
+<p>since </code>actuator.actuate<code> summons regardless of watchlist). It does <b>not</b> touch identity:</p>
+<p>the correspondence still lands attributed to a proxy number, which is this ticket&#x27;s job.</p>
+
+<h2>Shape options to grill (none chosen)</h2>
+
+<ol>
+<li>1. <b>Sibling text field</b> — add </code>Known Phones<code> to mirror </code>Known Emails<code>, and teach every</li>
+</ol>
+<p>lane to query both. Cheapest; keeps the &quot;one wide row&quot; model; parsing free text as a</p>
+<p>lookup key is exactly the fragility this effort has been removing.</p>
+<ol>
+<li>2. <b>Multi-select / rich_text list with a parse contract</b> — structured-ish, still one row,</li>
+</ol>
+<p>still string parsing, but a documented separator makes queries honest.</p>
+<ol>
+<li>3. <b>A related </code>Contact Points<code> data source</b> — one row per email/phone, typed</li>
+</ol>
+<p>(</code>email|phone<code>), with </code>is_current<code>, </code>source<code> (skedda/tagvenue/peerspace/direct) and</p>
+<p></code>last_seen<code>. Properly relational, makes &quot;latest relay wins&quot; a query rather than a</p>
+<p>convention, and gives the send lanes one place to ask &quot;how do I reach this person now?&quot;.</p>
+<p>Most work, most durable.</p>
+
+<p>Whatever wins must answer: <b>which address does an outbound message use?</b> — for</p>
+<p><b>phones as well as emails</b>, per the phone-axis section above. The ruling says</p>
+<p><i>latest working contact, latest relay wins</i> — that is a rule about ordering, so the shape</p>
+<p>has to store enough to evaluate it (a timestamp or an ordering), which option 1 does not.</p>
+
+<h2>Constraints</h2>
+
+<ul>
+<li>- <b>Fill-only still holds</b> — never blank a populated </code>Alarm Display Name<code> or </code>Alarm Code<code></li>
+</ul>
+<p>(the 081 rule).</p>
+<ul>
+<li>- Merging two cards is irreversible and stays a human&#x27;s call; the migration proposes, it</li>
+</ul>
+<p>does not auto-merge. The </code>Same Person<code> relation already exists and is unused — consider it.</p>
+<ul>
+<li>- 19 known duplicate-code pairs were measured 2026-08-10; reconcile that count with the 25</li>
+</ul>
+<p>duplicate names above before migrating, they are probably overlapping views of one set.</p>
+<ul>
+<li>- Coordinate with <b>091</b>: both touch identity resolution,</li>
+</ul>
+<p>and 091&#x27;s </code>code_mirror<code> work will be reading these same rows.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A shape is chosen and written down with its reasons, including how &quot;latest relay wins&quot; is</li>
+</ul>
+<p>evaluated — and it covers relay PHONE numbers as well as relay emails.</p>
+<ul>
+<li>- Every lane that resolves a person is updated to query it — at minimum </code>booking_sweep<code>,</li>
+</ul>
+<p>and whatever 091 leaves name-keyed.</p>
+<ul>
+<li>- The 42 relay-primary cards and 25 duplicate names have a migration plan; execution may be</li>
+</ul>
+<p>staged, but no card is auto-merged without a human.</p>
+<ul>
+<li>- Giggster chat relays are parsed into whatever the shape is (guest name + conversation</li>
+</ul>
+<p>UUID + current proxy number), so platform correspondence attaches to the human rather</p>
+<p>than to a proxy number.</p>
+<ul>
+<li>- </code>Known Emails`&#x27; status is settled: promoted to a real key, or retired into the new shape.</li>
+</ul>
+<p>It must not remain a field people believe is searched when it is not.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">28</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">27</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -3011,136 +3202,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- The general rule is decided and written into canon, not left as an intention.</li>
 <li>- The ADT question answered on its own terms.</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#098</div><div class="jhead"><span class="emoji">🪪</span><h4>One card per person — holding all their emails, phones and products</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Booking sites like Tagvenue and Peerspace give us a NEW throwaway email address every single time someone enquires</li><li>We save that address on the person&#x27;s card. So the next time they book, the desk sees a new address and makes a WHOLE NEW CARD for the same human</li><li>It never stops. Right now 42 cards are built on one of these throwaway addresses, and 25 people have more than one card — one poor woman has four</li><li>Junyan already decided the answer back on Aug 15: one card per person, with all their emails and all their phone numbers attached to it. It was never built. Products should work the same way</li><li>Tonight we found the catch. There is a box called Known Emails where we have been writing people&#x27;s spare addresses — 19 cards use it — and NOTHING actually searches it</li><li>So writing an address in there tells a human reader, and tells the robots nothing at all. It looks like a fix and is not one</li><li>The good news: the ID-number work already fixed part of this, because the robots now match on the booking-site ID before the email</li><li>What is left to decide is the shape — where do the extra addresses and numbers actually live so a robot can search them, and which one do we use when we send a message</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>One card per human — multiple emails, phones and products on a single Artist card</b></p><h2>Question</h2>
-
-<p>Junyan ruled this on 2026-08-15 and it was never built. What SHAPE do multi-valued</p>
-<p>contact points take in the Artist DB, and how do 1,040 live rows migrate onto it</p>
-<p>without breaking the lanes that read them?</p>
-
-<h2>The ruling (already made — do not re-litigate the principle)</h2>
-
-<p>Next Action row <a href="https://app.notion.com/3b97503281c48167a742c189836aa19d" target="_blank" rel="noopener">3b97503281c48167a742c189836aa19d</a>,</p>
-<p>status <b>Ready</b>, rewritten by Junyan in the 2026-08-15 review walk:</p>
-
-<blockquote>One Artist card per human: the <b>NAME is the identity</b>. Each card carries multiple</blockquote>
-<blockquote>connected emails and multiple connected phone numbers; the platform relay addresses and</blockquote>
-<blockquote>any new numbers attach to the existing card rather than minting a new one. Current send</blockquote>
-<blockquote>address = the most recent working contact (latest relay wins).</blockquote>
-
-<p>Its own note says: *&quot;Execution is a schema + migration project: plan it before touching</p>
-<p>live records.&quot;* That is what this ticket is.</p>
-
-<p><b>Extended 2026-08-19 (Junyan, in session): PRODUCTS are multi-valued too</b> — one card</p>
-<p>should hold more than one product rather than splitting a person across cards. <code>Product</code></p>
-<p>is already a <code>multi_select</code>, so this half may be mostly a data/usage question rather than</p>
-<p>a schema one — confirm before assuming work is owed.</p>
-
-<h2>Why it matters (the mechanism, measured 2026-08-20)</h2>
-
-<p>Tagvenue, Peerspace and Giggster mint a <b>fresh reply-relay email per enquiry</b>. The desk</p>
-<p>must use the current relay to reach the renter through the platform, so it cannot be</p>
-<p>discarded — but it lands in the card&#x27;s <code>Email</code> field, so <b>every repeat booking from the</p>
-<p>same human mints a new card</b>. The Aug-15 note calls this class <b>unbounded</b>, and unlike</p>
-<p>the private-vs-group duplicate class (bounded at one extra card per person) it grows</p>
-<p>forever.</p>
-
-<p>Live counts against the Artist DB (1,040 rows) on 2026-08-20:</p>
-
-<p>| Measure | Count |</p>
-<p>|---|---|</p>
-<p>| Live cards whose <b>primary</b> email is a platform relay address | <b>42</b> |</p>
-<p>| Names holding more than one live card | <b>25</b> |</p>
-<p>| ...of which at least one card is a relay address | 9 |</p>
-<p>| Cards with a second email parked in <code>Known Emails</code> | 19 |</p>
-
-<p>Worst offenders: <code>prajakta dravid</code> <b>4 cards</b>, <code>devanshi mishra</code> <b>3</b>,</p>
-<p><code>angelica gil aguilar</code> <b>3</b>. Jai Smith was 3 and was merged to 1 on 2026-08-20; that</p>
-<p>merge is a symptom being treated by hand, not the fix.</p>
-
-<h2>The finding that makes the current workaround a lie</h2>
-
-<p><b><code>Known Emails</code> is not a lookup key. Nothing searches it.</b> <code>booking_sweep.find_artist</code></p>
-<p>queries exactly three things — <code>Skedda User ID</code>, then <code>Email</code> (exact), then <code>Name</code> (exact</p>
-<p>title). Verified in source 2026-08-20.</p>
-
-<p>So the standing habit of &quot;add the second address to <code>Known Emails</code>&quot; records the fact for a</p>
-<p>human reader and changes <b>nothing</b> about whether any lane can find that person by it.</p>
-<p>19 cards currently rely on that field. Three more were added on 2026-08-20 during the 085</p>
-<p>review (Nicole Drury, Quynh Tran, Alison Murray) <b>knowing this</b> — they are notes, not</p>
-<p>fixes, and this ticket is what makes them real.</p>
-
-<h2>What ticket 085 already de-risked</h2>
-
-<p>Id-first matching is live: the sweep matches <code>Skedda User ID</code> <b>before</b> email. So for a</p>
-<p>person who keeps ONE Skedda account, the relay-email churn no longer breaks the join —</p>
-<p>the id carries it. That shrinks this problem but does not remove it, because:</p>
-
-<ul>
-<li>- the id is only present once someone has been stamped (167 of 702 coded rows), and</li>
-<li>- a person who books through two platforms can still surface as two Skedda venueusers,</li>
-<li>- and the <b>alarm</b> side still has no equivalent for a card that was never matched.</li>
-</ul>
-
-<h2>Shape options to grill (none chosen)</h2>
-
-<ol>
-<li>1. <b>Sibling text field</b> — add <code>Known Phones</code> to mirror <code>Known Emails</code>, and teach every</li>
-</ol>
-<p>lane to query both. Cheapest; keeps the &quot;one wide row&quot; model; parsing free text as a</p>
-<p>lookup key is exactly the fragility this effort has been removing.</p>
-<ol>
-<li>2. <b>Multi-select / rich_text list with a parse contract</b> — structured-ish, still one row,</li>
-</ol>
-<p>still string parsing, but a documented separator makes queries honest.</p>
-<ol>
-<li>3. <b>A related <code>Contact Points</code> data source</b> — one row per email/phone, typed</li>
-</ol>
-<p>(<code>email|phone</code>), with <code>is_current</code>, <code>source</code> (skedda/tagvenue/peerspace/direct) and</p>
-<p><code>last_seen</code>. Properly relational, makes &quot;latest relay wins&quot; a query rather than a</p>
-<p>convention, and gives the send lanes one place to ask &quot;how do I reach this person now?&quot;.</p>
-<p>Most work, most durable.</p>
-
-<p>Whatever wins must answer: <b>which address does an outbound message use?</b> The ruling says</p>
-<p><i>latest working contact, latest relay wins</i> — that is a rule about ordering, so the shape</p>
-<p>has to store enough to evaluate it (a timestamp or an ordering), which option 1 does not.</p>
-
-<h2>Constraints</h2>
-
-<ul>
-<li>- <b>Fill-only still holds</b> — never blank a populated <code>Alarm Display Name</code> or <code>Alarm Code</code></li>
-</ul>
-<p>(the 081 rule).</p>
-<ul>
-<li>- Merging two cards is irreversible and stays a human&#x27;s call; the migration proposes, it</li>
-</ul>
-<p>does not auto-merge. The <code>Same Person</code> relation already exists and is unused — consider it.</p>
-<ul>
-<li>- 19 known duplicate-code pairs were measured 2026-08-10; reconcile that count with the 25</li>
-</ul>
-<p>duplicate names above before migrating, they are probably overlapping views of one set.</p>
-<ul>
-<li>- Coordinate with <b>091</b>: both touch identity resolution,</li>
-</ul>
-<p>and 091&#x27;s <code>code_mirror</code> work will be reading these same rows.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- A shape is chosen and written down with its reasons, including how &quot;latest relay wins&quot; is</li>
-</ul>
-<p>evaluated.</p>
-<ul>
-<li>- Every lane that resolves a person is updated to query it — at minimum <code>booking_sweep</code>,</li>
-</ul>
-<p>and whatever 091 leaves name-keyed.</p>
-<ul>
-<li>- The 42 relay-primary cards and 25 duplicate names have a migration plan; execution may be</li>
-</ul>
-<p>staged, but no card is auto-merged without a human.</p>
-<ul>
-<li>- <code>Known Emails</code>&#x27; status is settled: promoted to a real key, or retired into the new shape.</li>
-</ul>
-<p>It must not remain a field people believe is searched when it is not.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -9552,5 +9613,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 22:25 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-20 10:37 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
