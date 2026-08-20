@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-20 14:14 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-20 17:06 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">31</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">32</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">54</div><div class="l">✅ Finished</div></div>
 </div>
@@ -1271,7 +1271,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ol>
 <p>dc-canon root. Awaiting approval.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">31</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">32</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -3331,6 +3331,91 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Whether the same-day lane, which owns its own sends, follows the same rule or is</li>
 </ul>
 <p>explicitly exempt until <b>089</b> dissolves that seam.</p>
+</div></details></details></div><div class="job"><div class="jnum">#106</div><div class="jhead"><span class="emoji">🔔</span><h4>Put the names back on who unlocked each studio</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Since Aug 20 the alarm page shows every unlock with a blank where the person&#x27;s name used to be</li><li>The old alarm emails were the only thing that ever said who — and those are gone for good</li><li>The replacement is already written and tested: it reads the alarm company&#x27;s live feed and gets the name, the door opening, and the exact second</li><li>It just needs to be switched on, which means starting a small always-on service — a real cost, so Junyan decides</li><li>One catch worth knowing: arming the alarm isn&#x27;t leaving. People arm, then open the door to walk out — so the door event is the true leaving time</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Deploy alarm-events and give the boards back the name on every arm/disarm</b></p><h2>Question</h2>
+
+<p>Since 2026-08-20 every arm/disarm on the FBS Monitor&#x27;s Alarms tab renders without an</p>
+<p>actor. That is not a rendering fault — today&#x27;s edition reports <code>armFeed: panel ok</code></p>
+<p>with six of eight events carrying <code>name: &quot;&quot;</code> straight from the source. The ADT/TELUS</p>
+<p>email feed was the only thing that ever named a person, and Junyan retired it</p>
+<p>permanently the same day. The panel ledger behind <code>GET /arm-history</code> records <b>when</b>,</p>
+<p>never <b>who</b>; only remote arms made through alarm-mcp still carry a name.</p>
+
+<p><b>The replacement is already built and is not deployed.</b> alarm-mcp commit <code>a800fcc</code></p>
+<p>(&quot;Studio activity from the websocket&quot;) added <code>alarm_monitor/door_events.py</code> +</p>
+<p><code>event_listener.py</code>, exposed as the <code>studio_activity</code> MCP tool and</p>
+<p><code>GET /door-history</code>. It carries more than the ADT emails ever did: actor name <b>and</b></p>
+<p>a stable <code>ew_contact_id</code>, plus door open/close and motion, at second precision. Proven</p>
+<p>on live frames — a keypad arm reads <code>ew=Anneka+K&amp;ew_contact_id=247640077</code>.</p>
+
+<p>So this ticket is only the flip, and one consumer change.</p>
+
+<h2>The order</h2>
+
+<ol>
+<li>1. <b>Create the <code>alarm-events</code> service — once, by hand.</b> The exact command is in</li>
+</ol>
+<p><code>deploy.sh</code>, which deliberately <i>skips</i> this service until it exists. Three flags</p>
+<p>are load-bearing and none is a cost knob:</p>
+<p><code>--no-cpu-throttling</code> (Cloud Run throttles CPU between requests and this container</p>
+<p>is nothing but between-requests work — without it the socket stalls and dies),</p>
+<p><code>--min-instances=1</code> (nothing ever calls this service; at min 0 it never runs),</p>
+<p><code>--max-instances=1</code> (two instances = two websockets racing on one GCS object).</p>
+<p>It cannot live inside alarm-mcp: that service is min-0, CPU-throttled and maxScale 20.</p>
+<ol>
+<li>2. <b>Verify.</b> <code>/healthz</code> returns 503 while the socket is down, so a green healthz is</li>
+</ol>
+<p>the proof the listener is actually connected — not that the container started.</p>
+<ol>
+<li>3. <b>Prove it on a real event</b> before anything consumes it: one keypad arm should come</li>
+</ol>
+<p>back with both the actor name and the contact id. A remote arm carries no name and is</p>
+<p>resolved by joining <code>lid=</code> to the login frame; those are marked <code>remote_login</code> and are</p>
+<p><b>excluded from renter attribution</b> — pressing a button in the app is not being in</p>
+<p>the building.</p>
+<ol>
+<li>4. <b>Point fbs-monitor at it.</b> The alarms tab joins the name back on; <code>build.py</code>&#x27;s</li>
+</ol>
+<p><code>enrich_arm_names()</code> already exists for exactly this shape and currently has nothing</p>
+<p>to attach. <code>/arm-history</code> <b>stays on</b> as the polling backstop — a websocket has no</p>
+<p>replay, and it is immune to socket gaps in a way the socket is not.</p>
+<ol>
+<li>5. <b>Correct the paper trail.</b> The Plumbing Map entry of 2026-08-20 18:55Z and</li>
+</ol>
+<p>fbs-monitor&#x27;s own Alarms-tab note both still say the way back is capturing the</p>
+<p>browser&#x27;s network call. That was superseded the same day.</p>
+
+<h2>Constraints that are already ruled — do not re-open</h2>
+
+<ul>
+<li>- <b>No browser, and no <code>selectSystem</code>.</b> The Aug-18 &quot;history is locked to one system&quot;</li>
+</ul>
+<p>finding stands, but it only ever applied to the <code>activity/historyEvents</code> REST API;</p>
+<p>the websocket takes no unit parameter. Junyan ruled the capture goes through the MCP</p>
+<p>path, and it did.</p>
+<ul>
+<li>- <b>Arming is not leaving.</b> Anneka armed 509A at 19:30:37 and opened the door at</li>
+</ul>
+<p>19:30:49 — the exit door event is the departure time, not the arm. Anything computing</p>
+<p>occupancy from this feed inherits that correction.</p>
+<ul>
+<li>- <b>Never bill off a socket.</b> No replay means a gap is invisible from inside; <code>covered</code></li>
+</ul>
+<p>must be checked before any overtime is computed, and an uncovered window goes to a</p>
+<p>Review row, never to a charge.</p>
+
+<h2>Why it is its own ticket</h2>
+
+<p>Creating an always-on Cloud Run service is a production flip with a standing cost, and</p>
+<p>Junyan confirms those. It is also the only step between a relay that works and four</p>
+<p>consumers still reading blanks: the Alarms tab, the Doorman&#x27;s suspended Job C retirement</p>
+<p>sweep (its 30-day presence evidence has no source), the Timekeeper&#x27;s identity</p>
+<p>ambiguities, and Junyan&#x27;s departure rule.</p>
+
+<h2>Seam</h2>
+
+<p>The night-ops rebuild map owns the evidence-source design and already logs this build;</p>
+<p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
+<p>Ops Lead&#x27;s use of it here.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -10428,5 +10513,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-20 14:14 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-20 17:06 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
