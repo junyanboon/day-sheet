@@ -312,6 +312,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+<li class="pipe-alerts"><b>2026-08-19 &mdash; the last mile: alerts now reach a phone, not just a channel.</b>
+The 29-hour ledger outage was detected correctly and sat unread for 25 hours, so the open gap was
+delivery-to-a-human, not detection. Fixed the cheap way &mdash; <code>#desk-status</code> set to
+<i>All new messages</i> on mobile, verified with <code>/selftest</code>. No code, no deploy, no new
+credential. <b>Known limit, accepted:</b> Do Not Disturb holds these until morning. Correct for a
+stalled collector; deliberately NOT the path for anything urgent &mdash; the alarm panel texts Junyan
+directly via alarm-mcp <code>escalate.py</code> and never touches Slack. Considered and deferred: a
+bearer-guarded <code>/notify</code> route on alarm-mcp so <code>fbs-watch</code> could send real SMS
+through the phone.com credentials already in Secret Manager (rather than copying them into Cloudflare).
+Build it if Slack push ever proves unreliable.</li>
+
 
     <li class="entry det">
       <details>
