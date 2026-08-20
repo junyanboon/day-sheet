@@ -313,6 +313,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-20 &middot; 17:2xZ</span>
+      <h3>901&rsquo;s &gt;23&deg;C SMS to Junyan is retired &mdash; a bare threshold cannot tell a heat load from a fault<span class="kind">ALERT ROUTE</span></h3></summary>
+      <p>IFTTT applet <code>NwGPLrm9</code> (&ldquo;Studio 901 &mdash; text alert above 23&deg;C&rdquo;, Nest 901 Yonge &rarr; SMS) is <strong>DISABLED</strong> on Junyan&rsquo;s instruction. It had no filter code, so it re-fired on every crossing &mdash; <strong>three identical texts at 13:12 Toronto on 2026-08-20</strong>, which is what prompted the change.</p>
+      <p><strong>Why it was noise, not signal.</strong> Climate-controller canon step 5 already says a warm 901 inside Liz&rsquo;s Pink Lemon window (11:00&ndash;19:00 Toronto) is <em>customer heat load, not a malfunction</em> &mdash; log an observation, do not alert. The 13:12 texts land squarely inside that window. The applet was alerting a human about precisely the condition the desk&rsquo;s own procedure classifies as normal, and it had no way not to: a raw threshold sees a number, never occupancy.</p>
+      <p><strong>Where 901 alerting lives now &mdash; the Weatherman alone.</strong> Canon step 5 judges 901 from its hourly SDM rows: outside Liz&rsquo;s window, ambient &gt;23&deg;C across <em>2+ consecutive readings with cooling armed</em> = not keeping up &rarr; ALERT. That alert takes step 8&rsquo;s route &mdash; 🔧 Sweep Feedback for the durable record plus a live ping to <strong>#desk-status</strong>, and an ✅ Actions to Perform row when a human hand is needed. Net effect Junyan asked for: <em>he hears about 901 only when something is actually broken.</em></p>
+      <p><strong>Deliberately NOT done:</strong> the applet was not repointed to a Notion crossing page (the 509 pattern). The IFTTT crossing ladder was retired 2026-07-30 in favour of SDM-only telemetry, and 901 emitting no crossing is load-bearing &mdash; canon states their absence is never evidence. Also unchanged: 901 stays <strong>monitor-only inside 11:00&ndash;19:00</strong>, so on a hot afternoon nothing auto-adjusts. That is an existing deliberate rule (Liz may be setting it by hand) and Junyan re-affirmed it in this session &mdash; but it means the one window where 901 gets warmest is the window the desk will not act in. Worth revisiting on its own merits, not as a side effect of killing an SMS.</p>
+      <p><em>Paper trail:</em> dc-canon <code>library/climate-controller.md</code> steps 5 + telemetry preamble; IFTTT applet <code>NwGPLrm9</code> (disabled, config intact, re-enablable).</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-20 &middot; 18:09Z</span>
