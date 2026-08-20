@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-20 13:22 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-20 13:27 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">29</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">30</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">52</div><div class="l">✅ Finished</div></div>
 </div>
@@ -1105,7 +1105,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- RUNTIMES.md + Plumbing Map entries.</li>
 </ul>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">29</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">30</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -3138,6 +3138,109 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>ready to encode.</p>
 <ul>
 <li>- Any recycling risk found is flagged loudly (a recycled proxy reaches the WRONG person).</li>
+</ul>
+</div></details></details></div><div class="job"><div class="jnum">#101</div><div class="jhead"><span class="emoji">🔌</span><h4>Build the contact list table and teach the robots to search it</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>This is the building job for the decision made on August 20: one card per person, with a list of ways to reach them</li><li>Three steps. Make the new table in Notion. Copy in every email and phone we already have on all 1,040 cards, including the 19 spare addresses sitting in the box nothing ever searched</li><li>Then change how the booking robot finds people: today it looks for one exact email address, and after this it looks for ANY address or number we have ever seen for that person</li><li>That one change is what stops the duplicate cards — an old throwaway address from a past booking now points at the person who used it instead of looking like a stranger</li><li>It also teaches us to read Giggster&#x27;s chat texts properly: each one already contains the guest&#x27;s name, a permanent conversation number, and the temporary phone line, which is everything a contact entry needs</li><li>Nothing gets merged in this job and nothing gets deleted — it only adds. Joining duplicate cards together is a separate job, and a person does every single one</li><li>The robot change goes out the careful way that worked last time: put it up, run one practice pass, read what it says it would do, and only then let it run on its own</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Contact Points table and move the person lookup onto it</b></p><h2>Question</h2>
+
+<p><b>098</b> chose the shape and the send rule. This ticket</p>
+<p>builds it: create the <code>Contact Points</code> data source in Notion, back-fill it from the 1,040</p>
+<p>live Artist rows, and make <code>booking_sweep.find_artist</code> resolve a person through it instead</p>
+<p>of through a single <code>Email</code> exact match.</p>
+
+<p>The shape and the rules are <b>settled — do not re-litigate them here.</b> Read 098&#x27;s</p>
+<p>resolution block first; this ticket only executes it.</p>
+
+<h2>The shape (from 098, for reference while building)</h2>
+
+<p>One row per contact point, related to an Artist row:</p>
+
+<p>| Property | Type | Notes |</p>
+<p>|---|---|---|</p>
+<p>| <code>Artist</code> | relation → Artist DB (<code>3cfb93cb-55f9-46a4-bde8-9b7023797d4b</code>) | the human this reaches |</p>
+<p>| <code>Type</code> | select: <code>email</code> \| <code>phone</code> | |</p>
+<p>| <code>Value</code> | rich_text (normalized) | the address or number itself — <b>the lookup key</b> |</p>
+<p>| <code>Source</code> | select: <code>skedda</code> \| <code>peerspace</code> \| <code>giggster</code> \| <code>tagvenue</code> \| <code>direct</code> | |</p>
+<p>| <code>Booking Ref</code> | rich_text | relays only: booking id, or Giggster&#x27;s conversation UUID (the durable key — the proxy number is only the current door) |</p>
+<p>| <code>First Seen</code> / <code>Last Seen</code> | date | |</p>
+<p>| <code>Status</code> | select: <code>usable</code> \| <code>recognition-only</code> | flip rule per platform comes from <b>100</b>; until it reports, <b>nothing auto-flips</b> |</p>
+
+<p>Stable rows (<code>skedda</code>, <code>direct</code>) carry no <code>Booking Ref</code> and never expire.</p>
+
+<h2>Build order</h2>
+
+<p><b>1. Create the data source and its views.</b> One row per contact point; a view grouped by</p>
+<p>Artist is the human-readable &quot;switchboard&quot; surface. Normalization must be decided once and</p>
+<p>written down here (lowercase emails; phone numbers to E.164) — the lookup is only as good</p>
+<p>as the normalization, and a mismatch here silently reintroduces duplicate cards.</p>
+
+<p><b>2. Back-fill from the 1,040 live rows.</b> Every existing <code>Email</code> becomes a row; every</p>
+<p>existing phone becomes a row; the <b>19 <code>Known Emails</code> cards</b> are promoted (source <code>direct</code></p>
+<p>unless the address is provably a platform relay). Classification is mechanical — a relay</p>
+<p>address matches the platform&#x27;s own sending domain — and anything the classifier cannot</p>
+<p>place goes <code>direct</code> and is listed for a human rather than guessed at. Back-fill is</p>
+<p><b>additive only</b>: it writes new Contact Points rows and does not blank, rewrite, or</p>
+<p>consolidate anything on the Artist rows (the 081 fill-only rule, applied to this lane).</p>
+
+<p><b>3. Move the lookup.</b> <code>find_artist</code> in</p>
+<p><code>dc-canon/services/event-gate/booking_sweep.py:226</code> currently tries <code>Skedda User ID</code> →</p>
+<p><code>Email</code> (exact) → <code>Name</code> (always ambiguous). The email rung becomes <b>&quot;any Contact Points</p>
+<p>row whose <code>Value</code> matches&quot;</b>, which is what makes an old relay do its recognition job. The</p>
+<p>id rung stays first and unchanged. The name rung stays last and stays ambiguous-by-design.</p>
+
+<p><b>4. Parse Giggster relay SMS into rows.</b> The messages have a fixed shape (guest name +</p>
+<p>conversation UUID + proxy number — see 098&#x27;s phone-axis section), and they already arrive</p>
+<p>on a line the SMS poller reads, so this writes a complete row with no scraper.</p>
+
+<h2>Out of scope — deliberately</h2>
+
+<ul>
+<li>- <b>The merge pass.</b> Proposing merges for the 42 relay-primary cards and 25 duplicate</li>
+</ul>
+<p>names is follow-on work once the table exists and can show evidence for each proposal.</p>
+<p>Merges stay human-only and irreversible; <b>nothing in this ticket merges a card.</b></p>
+<ul>
+<li>- <b>The expiry flip.</b> <code>Status</code> is written at creation and left alone until</li>
+</ul>
+<p><b>100</b> establishes each platform&#x27;s lifecycle.</p>
+<ul>
+<li>- <b>Send-lane changes.</b> This ticket makes the desk able to <i>find</i> a person by any of</li>
+</ul>
+<p>their contact points. Teaching the send lanes to pick a door (stable-first, reply on the</p>
+<p>thread&#x27;s own relay) is a separate change against the message queue.</p>
+
+<h2>Constraints</h2>
+
+<ul>
+<li>- Fill-only holds — never blank a populated <code>Alarm Display Name</code> or <code>Alarm Code</code> (081).</li>
+<li>- No card is auto-merged (098).</li>
+<li>- Coordinate with <b>091</b>: <code>code_mirror</code> reads these same</li>
+</ul>
+<p>Artist rows daily and writes to them; land the back-fill when it is not mid-pass, and</p>
+<p>confirm the new relation does not change what job D reads.</p>
+<ul>
+<li>- <code>booking_sweep</code> runs live every 30 min. The lookup change ships as an event-gate</li>
+</ul>
+<p>redeploy and gets a <b>dry-run pass read before it goes unattended</b> — the same order</p>
+<p><b>082</b> used, which caught two faults no test found.</p>
+<ul>
+<li>- Notion <code>query-data-sources</code> SQL can transiently omit rows — never treat a single query</li>
+</ul>
+<p>as proof the back-fill covered everything; cross-check with a second signal.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- The data source exists, with normalization rules written down.</li>
+<li>- Every live Artist row&#x27;s existing email(s) and phone(s) are represented, including the 19</li>
+</ul>
+<p><code>Known Emails</code> addresses; the back-fill&#x27;s own coverage count is verified twice, not once.</p>
+<ul>
+<li>- <code>find_artist</code> resolves a person from <b>any</b> of their contact points — proven by a real</li>
+</ul>
+<p>case: a card whose primary email is an old relay is found by that relay, and the same</p>
+<p>human is found by their Skedda email, with no second card minted.</p>
+<ul>
+<li>- A dry-run sweep pass over the live board shows no new residue attributable to the change.</li>
+<li>- <code>Known Emails</code> is documented as retired — no lane reads it, and no habit writes to it.</li>
 </ul>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
@@ -9815,5 +9918,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-20 13:22 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-20 13:27 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
