@@ -315,6 +315,21 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry llm">
       <details>
+      <summary><span class="when">2026-08-20 &middot; 14:20Z</span>
+      <h3>Same-day access lane: a two-room booking now names both rooms &mdash; and refuses to send if either walkthrough is missing<span class="kind">FAILURE MODE</span></h3></summary>
+      <p>Found pre-flight, before the lane was ever enabled. <code>sdNormalizeStudio_</code> in <code>send-engine/SameDay.gs</code> took the <em>first</em> studio it matched in a Skedda <code>Spaces</code> line, so a booking held in two rooms &mdash; <code>Studio 509A, Studio 509B</code>, as Vanessa Zavatti&rsquo;s 2026-08-20 1:00 PM booking was &mdash; collapsed to <code>509A</code>. The renter would have been texted one room number for a booking covering two, and pointed at one walkthrough video when they needed both.</p>
+      <ul>
+      <li>New <code>sdAllStudios_</code> returns every room in the line, de-duplicated and in order; <code>booking.studios</code> carries it, <code>booking.studio</code> stays the first room. The single-select Studio properties on the FBS board and the Message Queue still get that first room &mdash; a select holds one value &mdash; so <strong>nothing downstream changed shape</strong>. Only the renter-facing message and the operator alerts gained the full list.</li>
+      <li><code>[Booking lines]</code> renders one line per room; <code>[Walkthrough lines]</code> one link per room, de-duplicated so two rooms sharing a video yield one link.</li>
+      <li><strong>New failure mode, fail-closed:</strong> if <em>any</em> room has no walkthrough link in any previously-sent HTA, the whole message is refused and the booking escalates to an Actions row + SMS. Verified before shipping that all five studios have sent HTAs carrying a <code>youtu</code> link (509A 8, 509B 9, 527 7, 693 4, 901 6) and that 509A/509B use different videos, so this guard will not fire spuriously.</li>
+      <li><code>[plural if needed]</code> is tied to the number of walkthrough <em>links</em>, not the number of rooms. The canonical wording pluralises &ldquo;video&rdquo; (<code>walkthrough[plural if needed]</code>, <code>watched the video[plural if needed]</code>) &mdash; keying it to room count would say &ldquo;videos&rdquo; above a single link.</li>
+      </ul>
+      <p>Platform bookings are unaffected: a Giggster/Peerspace/Tagvenue listing maps to exactly one studio, and <code>sdStudioList_</code> falls back to <code>[booking.studio]</code> when no list is present. Confirmation SMS and escalation headlines now read <code>Studios 509A + 509B</code>.</p>
+    </details>
+    </li>
+
+    <li class="entry llm">
+      <details>
       <summary><span class="when">2026-08-20 &middot; 17:58Z</span>
       <h3>Doorman prompt updated for the dead ADT feed &mdash; b3 suspended, canary retired, Gmail connector detached<span class="kind">PROMPT</span></h3></summary>
       <p>Completes the &ldquo;prompt edit queued as its own task&rdquo; item from the feed-retirement entry below. Cloud Doorman <code>trig_01XyrVCbCrSbFfWjxo9FZtxN</code> updated by whole-prompt replace (recorded as <strong>prompt v8</strong> in <code>RUNTIMES.md</code> &mdash; Junyan&rsquo;s instruction said v7, but v7 was taken earlier today by the A3-routing change). Three edits, bringing the prompt to match canon (<code>house-rules.md</code> + the Job C banner in <code>doorman-access-lifecycle.md</code>):</p>
