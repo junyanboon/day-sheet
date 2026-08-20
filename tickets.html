@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 20:53 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 20:54 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3397,7 +3397,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- Sampling check live and logged on the digest page.</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#087</div><div class="jhead"><span class="emoji">👯</span><h4>Build a checkup that catches the same text going out twice</h4></div><span class="pill p-wait">needs 046 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Watches for one person getting the identical message twice in the same moment</li><li>Nothing watches for this today — the outbox shows one row, so a double send looks fine from there</li><li>Has to look for messages sent at the very same second — anything looser and every weekly reminder looks like a mistake</li><li>Starts in trial mode: a person marks each finding real-or-noise before it&#x27;s allowed to bug anyone</li><li>Must say out loud how many messages it read — a checkup that quietly looks at half of them reads exactly like a clean bill of health</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Duplicate-send check — catch the same message going to one person twice</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#087</div><div class="jhead"><span class="emoji">👯</span><h4>Build a checkup that catches the same text going out twice</h4></div><span class="pill p-wait">needs 046 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Watches for one person getting the identical message twice in the same moment</li><li>Nothing watches for this today — the outbox shows one row, so a double send looks fine from there</li><li>Has to look for messages sent at the very same second — anything looser and every weekly reminder looks like a mistake</li><li>Starts in trial mode: a person marks each finding real-or-noise before it&#x27;s allowed to bug anyone</li><li>Must say out loud how many messages it read — a checkup that quietly looks at half of them reads exactly like a clean bill of health</li><li>Junyan&#x27;s own phone stays included, even though he tests on it — it is also where every alarm page lands, and alerts outnumber tests about 7 to 1</li><li>A doubled test text is harmless noise someone clears in one click; a doubled alarm page is not</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Duplicate-send check — catch the same message going to one person twice</b></p><h2>Question</h2>
 
 <p>Build the check that catches a <b>duplicate send</b> — the same message dispatched to the same</p>
 <p>person twice in the same moment. Graduated from <b>015</b>, whose</p>
@@ -3424,12 +3424,30 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- <b>Exclusions:</b> the non-correspondence senders already configured in</li>
 </ul>
 <p><code>config/ledger_exclude.json</code> (Toronto Hydro, Paperform et al. account for 11 of 12 inbound</p>
-<p>hits — genuine vendor re-sends, correctly recorded). Junyan&#x27;s own test traffic to</p>
-<p>+16477733887 was excluded by inspection in the scan; decide whether it needs a rule.</p>
+<p>hits — genuine vendor re-sends, correctly recorded).</p>
+<ul>
+<li>- <b>Do NOT exclude +16477733887.</b> The 015 scan set its test traffic aside by inspection and</li>
+</ul>
+<p>flagged &quot;should this be a rule?&quot; — <b>ruled no, 2026-08-19.</b> Junyan: *&quot;it&#x27;s my personal</p>
+<p>number I use to test stuff&quot;* — and that is exactly why it stays in. The number does double</p>
+<p>duty: it is the test line <b>and</b> the estate&#x27;s on-call destination, roughly 7 alert records</p>
+<p>for every test one. 274 records (198 outbound, 2026-05-13 → 08-18) carrying</p>
+<p>🚨 alarm pages (509B, 693, 527 sounding), panel low-battery-with-power-failure, Sentinel</p>
+<p>missing/retracted alerts, and fast-track notify-afters. <b>Only 36 of 274 are test traffic</p>
+<p>(13%)</b> — excluding the number to suppress those would blind the check to the other 87%, the</p>
+<p>most safety-critical stream on the desk. A duplicate-send storm <i>to the on-call phone</i> is</p>
+<p>among the most valuable things this check could catch (alert fatigue burying a real page, or</p>
+<p>a runaway loop paging repeatedly). Test traffic is identifiable by <b>content, not by number</b>,</p>
+<p>and probably needs no filter at all: a doubled test send is noise a reviewer clears in one</p>
+<p>mark on the probation lane, which is what the lane is for.</p>
 <ul>
 <li>- <b>Widening the window past one second is a deliberate later call</b>, made on live data, not</li>
 </ul>
-<p>at build time — a minute-wide window admits the recurring-template families.</p>
+<p>at build time — a minute-wide window admits the recurring-template families. One live example</p>
+<p>of what a wider window would catch, found in the 015 scan: <b>2026-08-15 15:58 and 15:59</b>, two</p>
+<p>near-identical &quot;Hi Himanshi! …Studio 527&quot; messages a minute apart, one carrying a door code and</p>
+<p>one not — a preview or redraft rather than a fault, but exactly the shape the second-wide key</p>
+<p>misses. Evidence for widening later; not a reason to widen now.</p>
 
 <h3>Coverage is a build requirement, not a nicety</h3>
 
@@ -8547,5 +8565,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 20:53 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 20:54 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
