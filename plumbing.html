@@ -313,6 +313,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-20 &middot; 17:37Z</span>
+      <h3>The Mechanic leaves the Mac: J13 lane A becomes a cloud trigger, gains a heartbeat, loses the rerun button<span class="kind">REROUTE</span></h3></summary>
+      <p>The hourly infrastructure sweep ran on the local scheduler, which skips fires whenever the Mac sleeps &mdash; the same defect that already moved the Concierge, Custodian, day-sheet, fbs-monitor, day-hub and still-day to cloud. It matters more here than anywhere else: <strong>a watcher that sleeps is precisely the failure this lane exists to catch.</strong> Local task <code>error-sweeper</code> DISABLED; RemoteTrigger <code>trig_01A2iWdZaRpqV4H5StkLKWoK</code> created (hourly at :54, env <code>env_01BjzY9e8uFhWz3ZEUAcAe2c</code>, connectors Notion + Gmail, prompt <code>mechanic-cloud-v1-2026-08-20</code>). Created disabled, local disabled, then cloud enabled &mdash; no double-run window.</p>
+      <p><strong>Accepted regression, stated plainly:</strong> cloud runners have no <code>gh</code> and no GitHub token, so the cloud edition reads Actions failures from notification emails only and <em>cannot press rerun</em> &mdash; a transient failure now becomes an Actions row recommending one. The prompt forbids it from ever writing &ldquo;all workflows green&rdquo;; it may only say &ldquo;no failure emails&rdquo;, because a failure that emails nothing is invisible to it. Claiming coverage you do not have is the worse bug. The disabled local task is kept as the manual fallback that still can rerun.</p>
+      <p><strong>New: a heartbeat.</strong> Every pass now writes a Workflow Reports row, clean or not. If The Mechanic dies, the only evidence is those rows stopping &mdash; a silent pass and a dead lane must never look the same. Also carried over from the 07-31 post-mortem: four silence checks (inbox backlog age, intake stall, queue stall, and the v19 receipt check), none of which are ever auto-fixed, because you cannot safely guess why a job went quiet.</p>
+      <p><strong>Correction to the record:</strong> J13 lane B was listed as &ldquo;not built yet&rdquo;. It was not. Ticket 008 closed 2026-07-17 as a library edit, landing lane B inside the Concierge&rsquo;s HEAVY-PM pass as JOB 7, and it has filed <code>Attributed defect</code> rows daily ever since &mdash; including the 08-19 22:10 pass that caught the BC-sweep empty-Message-Body defect unaided. Separately: the &ldquo;Loop rewrite&rdquo; defect-row flood that inflated 08-16/17/18 to ~90 rows/day <strong>stopped 08-18 21:50Z</strong> and has not resumed; baseline is 7&ndash;16/day.</p>
+      <p><em>Paper trail:</em> RUNTIMES.md trigger table, day-sheet <code>board-full.html</code> J13 card, local task <code>error-sweeper</code> description (migration note).</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-20 &middot; 17:45Z</span>
