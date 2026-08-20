@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 20:51 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 20:53 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,8 +100,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">24</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">25</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">14</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">46</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
@@ -203,6 +203,15 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Resolved when live alarm events appear as Activity Log rows. Unblocks: 020 (Ops-lead monitor)</p>
 <p>and the J06-residual cadence re-cut (needs a few days of rows — see 004 resolution).</p>
+
+<h2>2026-08-15 — premise check: this ticket cannot be built as written</h2>
+
+<p>This is &quot;Build the J06 alarm-capture <b>Zap</b>&quot; — and Zapier was cancelled 2026-07-23 (ticket 034</p>
+<p>retired the last Zaps and ended the subscription). The data it was meant to capture</p>
+<p>(arrivals/departures/panel states) now flows from <code>alarm-mcp /panel-states</code>, read every minute by</p>
+<p>the 055 lane-1 alarm watch. 020&#x27;s blocked-by on this ticket was removed today. Left open for</p>
+<p>Junyan&#x27;s call: re-scope this as &quot;persist panel-state history for the monitor&quot; (if the monitor</p>
+<p>needs history, not just live state) or close it as superseded.</p>
 </div></details></details></div><div class="job"><div class="jnum">#026</div><div class="jhead"><span class="emoji">🧪</span><h4>Test the emergency line end to end</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Send test emergency texts</li><li>Watch staff actually get paged</li><li>Then retire the old backup check</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Verify the Emergency Call Line Zap end-to-end, then retire the Receptionist 15-min poll</b></p><h2>Question</h2>
 
 <p>Execute ticket 011&#x27;s banked flip checklist (HITL — Junyan texts, Claude verifies + flips):</p>
@@ -1082,7 +1091,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- RUNTIMES.md + Plumbing Map entries; 063-style note: capability claims dated and tested.</li>
 </ul>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">24</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">25</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -1136,6 +1145,62 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Resolution records: the arrival/departure source (a/b), the LLM-side field contract, the retired</p>
 <p>step, wording source, and the day-one parity check.</p>
+</div></details></details></div><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>A live board for the studio manager</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>One screen for the studio manager</li><li>Shows today&#x27;s renters and problems live</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+
+<p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
+<p>Junyan&#x27;s Main Focus window today):</p>
+
+<ol>
+<li>1. <b>Night-watch report must be updated properly</b> — current output isn&#x27;t usable as her brief.</li>
+<li>2. <b>Ela needs Claude set up</b> — she has done nothing with Claude yet; onboarding/access first.</li>
+</ol>
+
+<h2>Question</h2>
+
+<p>https://junyanboon.github.io/fbs-monitor/ becomes the at-a-glance &quot;what is happening in the</p>
+<p>studios right now&quot; board for Ops leads (Junyan direction 2026-07-16):</p>
+
+<ul>
+<li>- <b>Feed:</b> the 🚪 Alarm Activity Log (<code>815836641dd442d5871568e7ccb05f27</code>) once the capture Zap</li>
+</ul>
+<p>(021) populates it — arrivals/departures/panel states per studio.</p>
+<ul>
+<li>- <b>Emergencies surfaced:</b> Staff Call Queue events (DS <code>56e9863c-3e7c-4208-a704-2ffe2548be0b</code>)</li>
+</ul>
+<p>from the live Emergency Call Line lane show on the board.</p>
+<ul>
+<li>- <b>Plumbing:</b> same deterministic 15-min render pattern as 019/J29 — shares the renderer</li>
+</ul>
+<p>infrastructure; ties into ticket 016&#x27;s two-layer FBS flow (LLM curates, script executes).</p>
+
+<p>Resolved when an Ops lead can see current studio activity + any active emergency at a glance,</p>
+<p>with no Notion reading and no LLM on the render path.</p>
+
+<p><b>Scope sharpened by the <b>day walkthrough</b> (2026-07-16):</b></p>
+<p>the monitor&#x27;s audience is the <b>duty manager</b>; it must show (a) queued/waiting outbound</p>
+<p>messages (responses must be fast), (b) arrivals/departures, (c) an <b>issues-to-clear list</b> —</p>
+<p>it is the coordination surface between the future FBS day-assistant agent and the human.</p>
+
+
+<h2>Re-scoped 2026-08-15 — the monitor is becoming the main interaction interface (Junyan)</h2>
+
+<p>Junyan&#x27;s observation, verbatim intent: the FBS Monitor is *&quot;seemingly becoming the main</p>
+<p>interaction interface&quot;* — the surface he and the duty manager actually look at. That promotes this</p>
+<p>ticket from a nice-to-have board to interface work on the map&#x27;s critical path.</p>
+
+<p><b>Blocker removed as dead-premised.</b> This sat <code>blocked-by: 021</code> (the J06 alarm-capture Zap).</p>
+<p>Zapier was cancelled 2026-07-23 (ticket 034 retired the last Zaps) — 021 will never be built as</p>
+<p>written. And its data already exists by another route: <code>alarm-mcp /panel-states</code> is read every</p>
+<p>minute by 055 lane 1&#x27;s alarm watch on event-gate. The feed section of this ticket should be</p>
+<p>rewritten against that source, not the Alarm Activity Log Zap.</p>
+
+<p><b>New question this raises — needs Junyan&#x27;s ruling, do not drift into it:</b> 004/019 ruled the</p>
+<p>tabbed Day Sheet the <b>single act-on surface</b>. A monitor that is &quot;the main interaction interface&quot;</p>
+<p>is a second main-surface claim. Candidate boundary: Day Sheet = act on the desk (queues, gates,</p>
+<p>runs); Monitor = live studio state (who is in, arrivals, alarms, coverage, today&#x27;s messages). If</p>
+<p>that boundary is right, each page should link the other and neither grows the other&#x27;s features.</p>
+<p>Also feeds it: 075&#x27;s upgraded requirement (claimed shifts on the monitor within a minute) makes</p>
+<p>the monitor the <i>write target</i> of desk automation for the first time, not just a read-out.</p>
 </div></details></details></div><div class="job"><div class="jnum">#026</div><div class="jhead"><span class="emoji">🧠</span><h4>Write down big decisions as they happen</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Save big choices the moment they&#x27;re made</li><li>So future robots don&#x27;t undo them</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Design the Sweep-Feedback decision-capture loop</b></p><h2>Question</h2>
 
 <p>The 🔧 Sweep Feedback inbox accumulated ~27 unactioned <code>New</code> rows over three weeks because</p>
@@ -2863,44 +2928,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p>actioned unattended.</p>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">14</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
 <p>Build the crude-but-real J26 cost ledger on the Jobs registry spine: per job, runs × pass length (proxy for token spend) plus a self-reported supervision-minutes line, tallied weekly. Framing: <b>subscription headroom + exposure if the subsidy changes</b>, not cash bleed (~$240/mo Claude + $140/mo ChatGPT actual). It also populates the sibling map&#x27;s GO criterion (c). Decide the tally mechanism (likely a weekly scheduled job writing registry rows) and stand it up.</p>
-</div></details></details></div><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>A live board for the studio manager</h4></div><span class="pill p-wait">needs 021 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>One screen for the studio manager</li><li>Shows today&#x27;s renters and problems live</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
-
-<p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
-<p>Junyan&#x27;s Main Focus window today):</p>
-
-<ol>
-<li>1. <b>Night-watch report must be updated properly</b> — current output isn&#x27;t usable as her brief.</li>
-<li>2. <b>Ela needs Claude set up</b> — she has done nothing with Claude yet; onboarding/access first.</li>
-</ol>
-
-<h2>Question</h2>
-
-<p>https://junyanboon.github.io/fbs-monitor/ becomes the at-a-glance &quot;what is happening in the</p>
-<p>studios right now&quot; board for Ops leads (Junyan direction 2026-07-16):</p>
-
-<ul>
-<li>- <b>Feed:</b> the 🚪 Alarm Activity Log (<code>815836641dd442d5871568e7ccb05f27</code>) once the capture Zap</li>
-</ul>
-<p>(021) populates it — arrivals/departures/panel states per studio.</p>
-<ul>
-<li>- <b>Emergencies surfaced:</b> Staff Call Queue events (DS <code>56e9863c-3e7c-4208-a704-2ffe2548be0b</code>)</li>
-</ul>
-<p>from the live Emergency Call Line lane show on the board.</p>
-<ul>
-<li>- <b>Plumbing:</b> same deterministic 15-min render pattern as 019/J29 — shares the renderer</li>
-</ul>
-<p>infrastructure; ties into ticket 016&#x27;s two-layer FBS flow (LLM curates, script executes).</p>
-
-<p>Resolved when an Ops lead can see current studio activity + any active emergency at a glance,</p>
-<p>with no Notion reading and no LLM on the render path.</p>
-
-<p><b>Scope sharpened by the <b>day walkthrough</b> (2026-07-16):</b></p>
-<p>the monitor&#x27;s audience is the <b>duty manager</b>; it must show (a) queued/waiting outbound</p>
-<p>messages (responses must be fast), (b) arrivals/departures, (c) an <b>issues-to-clear list</b> —</p>
-<p>it is the coordination surface between the future FBS day-assistant agent and the human.</p>
 </div></details></details></div><div class="job"><div class="jnum">#039</div><div class="jhead"><span class="emoji">🕵️</span><h4>Always know WHO sent every customer message</h4></div><span class="pill p-wait">needs 038 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>On Jul 30, eleven held messages went out in one hour — and no record said who did it</li><li>It was Ela doing her job, but a runaway program would have looked exactly the same</li><li>The sending robot stamps its own name over the person who pressed go</li><li>Fix: the robot notes who handed it each message BEFORE stamping, and AI helpers announce a send before making it</li><li>Then a checker matches every real sent message to a known sender — anything unmatched raises a flag</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Send attribution — every outbound must match one authorised origin</b></p><h2>Question</h2>
 
 <p>Raised on the 2026-07-31 fixer run, from two live incidents:</p>
@@ -8517,5 +8547,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 20:51 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 20:53 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
