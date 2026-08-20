@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 22:06 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 22:09 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -4693,7 +4693,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>measured window. Cut as <b>084</b>.</p>
 
 <p>Suite green at 387.</p>
-</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#085</span><span class="emoji">🔑</span><span class="done-title">People are now looked up by ID number, not by name</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE, except the final switch-flip. Every mix-up that week came from one hole: our three systems spell people&#x27;s names differently, and the robots matched on names</li><li>&#x27;Dee Brown&#x27; on the booking site is &#x27;Dee Adelubi Brown&#x27; on the alarm panel — so a robot decided she had no door code when hers had worked for months</li><li>Both systems already give everyone a permanent ID number — we had just never written it down</li><li>The cleanup session ran: two new boxes on each person&#x27;s card, filled in for 328 cards — 97% of everyone with a booking within two months</li><li>The 13 cards a robot could not settle are on ONE review note for Junyan — which of two accounts is the real one, that sort of call</li><li>The alarm service now does all the finding: every robot hands it an ID and it answers — no more each robot doing its own lookup and failing differently</li><li>House rules held: nothing already written on a card was erased, and the cleanup never touched the alarm panel</li><li>Left for Junyan: work the review note, then push the two updated programs to the server — until that push, the robots keep using the old name lookup</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Join renters on stable IDs, not names — Artist row becomes the join table, alarm-mcp owns resolution</b></p><h2>Problem</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#085</span><span class="emoji">🔑</span><span class="done-title">People are now looked up by ID number, not by name</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE, except the final switch-flip. Every mix-up that week came from one hole: our three systems spell people&#x27;s names differently, and the robots matched on names</li><li>&#x27;Dee Brown&#x27; on the booking site is &#x27;Dee Adelubi Brown&#x27; on the alarm panel — so a robot decided she had no door code when hers had worked for months</li><li>Both systems already give everyone a permanent ID number — we had just never written it down</li><li>The cleanup session ran: two new boxes on each person&#x27;s card, filled in for 328 cards — 97% of everyone with a booking within two months</li><li>The 13 cards a robot could not settle are on ONE review note for Junyan — which of two accounts is the real one, that sort of call</li><li>The alarm service now does all the finding: every robot hands it an ID and it answers — no more each robot doing its own lookup and failing differently</li><li>House rules held: nothing already written on a card was erased, and the cleanup never touched the alarm panel</li><li>The two programs went live the same night and were checked properly: we asked the alarm service to find someone using ONLY their ID number, no name at all, and it found the right person — then a practice run over 166 bookings gave zero false complaints</li><li>Left for Junyan: 9 cards on the review note. Four of the original 13 were settled from the booking records — where one person had two booking accounts, the one with 39 bookings and future dates wins over the one with 6 and none</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Join renters on stable IDs, not names — Artist row becomes the join table, alarm-mcp owns resolution</b></p><h2>Problem</h2>
 
 <p>The three systems share no key. Every join is a <b>human name</b>, and names are the least</p>
 <p>stable field we hold. One night&#x27;s harvest of this single defect (2026-08-18/19):</p>
@@ -4808,7 +4808,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <h2>Resolution — 2026-08-19</h2>
 
-<p><b>Both halves built and tested; the backfill is DONE; the service changes await Junyan&#x27;s redeploy</b> (the 082 convention — and the plumbing map&#x27;s own newest lesson: a committed fix on a laptop does nothing for a hosted service).</p>
+<p><b>Both halves built, tested, DEPLOYED and acceptance-passed.</b> (An earlier draft of this line said the service changes awaited Junyan&#x27;s redeploy — he deployed them the same night; see the Deployed section below.)</p>
 
 <h3>A — the Artist row is the join table (LIVE)</h3>
 
@@ -4819,7 +4819,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- The 13 leftovers (5 ambiguous incl. three people with two upstream accounts each; 8 unmatched) sit on ONE consolidated Review row: &quot;Review — Ticket 085 ID backfill&quot; (Next Action DB, For = Junyan). Names are never resolved in bulk again.</li>
 </ul>
 
-<h3>B — alarm-mcp owns identity resolution (BUILT, NOT DEPLOYED)</h3>
+<h3>B — alarm-mcp owns identity resolution (BUILT AND <b>DEPLOYED</b> — verified live 2026-08-20)</h3>
 
 <ul>
 <li>- <code>alarm_monitor/identity.py</code>: the one trust ladder — explicit <code>alarm_user_id</code> → the page&#x27;s stored id → <code>Alarm Display Name</code> → bare name; unique fallback hit computes a fill-only write-back; an id that stops resolving is DORMANT (079), never re-matched by name.</li>
@@ -4829,12 +4829,22 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Tests, 081 discipline: <code>tests/test_identity.py</code> (id-first hit, dormancy-not-name-fallback, write-back, fill-only, ambiguous stays ambiguous) — alarm-monitor suite <b>141 passed</b>; event-gate suite <b>391 passed</b> (4 new ticket-085 tests).</li>
 </ul>
 
-<h3>Remaining (Junyan)</h3>
+<h3>Deployed + acceptance PASSED (2026-08-20, corrected same session)</h3>
 
-<ol>
-<li>1. Process the consolidated Review row (13 calls).</li>
-<li>2. Redeploy alarm-mcp + event-gate; then the acceptance probes: rename a test user in the Alarm.com UI and confirm id lookups still resolve; live <code>?dry_run=true</code> sweep pass showing zero name-mismatch residue.</li>
-</ol>
+<p>An earlier draft of this resolution said &quot;awaits Junyan&#x27;s redeploy&quot;. That was true when written and is now <b>wrong</b>: both services were deployed while this session ran — alarm-mcp <code>alarm-mcp-00037-9wb</code> (image <code>alarm:0820-eae8f33</code>, this ticket&#x27;s commit) at 01:48Z, event-gate <code>event-gate-00048-nw2</code> at 01:41Z (commit <code>e8ef9b2f</code> landed 01:03Z, so it is included).</p>
+
+<p>Both acceptance probes then PASSED against the live services:</p>
+
+<ul>
+<li>- <b>Resolves by id:</b> <code>POST /provision {&quot;verify_only&quot;:true,&quot;alarm_user_id&quot;:&quot;247808040&quot;}</code> — <b>no name supplied at all</b> — returned the right person with <code>&quot;resolved_by&quot;:&quot;alarm_user_id&quot;</code>, a field only the new code emits. Stronger than the planned rename probe in the way that matters: the name was never consulted, so no spelling of it could have changed the answer.</li>
+<li>- <b>Zero name-mismatch residue:</b> live <code>?dry_run=true</code> sweep, <b>166 scanned, residue 0, errors 0</b> — including <code>Kelly-Ann Johnson (Private Classes)</code> and <code>Caryl CUIZON (Private Classes)</code>, two of the exact names that produced false residue rows on the first live pass.</li>
+</ul>
+
+<h3>Remaining (Junyan) — 9 calls, down from 13</h3>
+
+<p>4 of the 13 review items were settled from evidence and stamped this session (fill-only, read-back verified): <b>Kateryna Zozulia</b> → Skedda <code>4809105</code> (39 bookings to Oct 17, email matches the row exactly; the rival 4955749 carries the MERGED row&#x27;s old address), <b>Ifreestyle/Angus Dirnbeck</b> → Skedda <code>1788970</code> (96 bookings to Oct 15, exact email match), <b>Manuel Hernandez [Skedda]</b> → Alarm <code>247636460</code>, <b>Jaicyea (Jai) Smith [Skedda]</b> → Alarm <code>247283567</code> (both candidate sets share one code, so the panel user was never in doubt — only which card is canonical).</p>
+
+<p>The 9 left are genuine judgment calls, detailed on the Review row.</p>
 
 <p>RUNTIMES.md + Plumbing Map updated (2026-08-20 01:00Z entry).</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#088</span><span class="emoji">🔎</span><span class="done-title">Why three renters each got the same message four times — closed, Junyan had already fixed it</span><span class="done-date">2026-08-19</span></summary><div class="done-body"><ul class="plain-bullets"><li>June 21: three renters each got the same long message twice at 12:01, then twice again at 13:00</li><li>Two bursts, both doubled, all three people together — that looked like one job running twice, not three separate slips</li><li>CLOSED the same day it was opened: Junyan says June 21 is old news and was already dealt with</li><li>Writing down honestly that nobody went and checked — this rests on Junyan remembering the fix, not on us reading the records</li><li>That is a fair trade here, because the new checkup (087) catches it within minutes if it ever happens again</li><li>The evidence stays saved, so if it does come back we are not starting from nothing</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Diagnose the 2026-06-21 duplicate-send incident — three renters, four copies each</b></p><h2>Question</h2>
@@ -9220,5 +9230,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 22:06 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 22:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
