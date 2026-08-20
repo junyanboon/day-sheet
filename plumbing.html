@@ -312,6 +312,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-20 · 02:55Z</span>
+      <h3>The presence gate could not recognise its own renters — and a no-op source is indistinguishable from a working one<span class="kind">FIX</span></h3></summary>
+      <p>Chasing why a door card reached Anita an hour after her booking ended, the state files turned out to be fresh and the gate healthy. The failure was the name. Source 3 — the Skedda schedule backstop, the <em>only</em> presence source covering a renter the FBS board does not track — matched the watchlist name to the booking holder with <code>mine &lt;= theirs</code>. The Artist DB decorates names with a product tag; Skedda does not. <code>"Anita Pandey [Fixed Option]"</code> tokenises to <code>{anita, pandey, fixed, option}</code>, which is not a subset of Skedda&rsquo;s <code>{anita, pandey}</code>. No match, no scheduled end, verdict <code>None</code> — and <strong>unknown means send</strong>.</p>
+      <p><strong>39 active artists carry such a tag</strong> — <code>[Fixed Option]</code>, <code>[Skedda]</code>, <code>[AAP]</code>, <code>[1AP]</code>, <code>[Peerspace]</code>, <code>[Contractor]</code>, <code>[Staff]</code> — and two more carry a company after a comma. So the backstop had been a silent no-op for essentially every named renter since it shipped on 2026-08-11, while reading as fully operational the entire time: a no-op source returns <code>None</code>, <code>None</code> is unknown, unknown sends, and a card sent to someone who went home looks in every log exactly like a card sent to someone still dancing.</p>
+      <p><code>c28af9df</code> compares the person part only — bracketed tags and anything after a comma stripped — and accepts containment in either direction, since one side may legitimately carry more of the name (<code>Anita Pandey Music Academy</code>). Two tokens required on both sides, so a lone first name still matches nobody. 13 tests including her case end to end and the 20-minute grace window (10 minutes past the end is still unknown, still sends); 414 pass. Live as <code>event-gate-00052-clt</code>.</p>
+      <p><strong>Third defect this week that reported itself as normal.</strong> The card reviewer&rsquo;s empty API response logged as an outage; <code>door-509A</code> silently served nobody in 509B; a dead presence source answered &ldquo;unknown&rdquo; exactly as a live one would. None was visible on any board — all three surfaced because a human asked about one specific text message.</p>
+    </details>
+    </li>
 <li class="pipe-alerts"><b>2026-08-19 &mdash; the last mile: alerts now reach a phone, not just a channel.</b>
 The 29-hour ledger outage was detected correctly and sat unread for 25 hours, so the open gap was
 delivery-to-a-human, not detection. Fixed the cheap way &mdash; <code>#desk-status</code> set to
