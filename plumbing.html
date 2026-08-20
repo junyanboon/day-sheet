@@ -315,6 +315,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-20 &middot; 14:20Z</span>
+      <h3>Overtime goes automatic: the Timekeeper writes the Skedda booking itself, and the notice rides the PBF &mdash; the T1 retires<span class="kind">REROUTE</span></h3></summary>
+      <p>Junyan ruling: overtime charges are processed the same way every time, automatically &mdash; <em>a waiver is a policy exception granted after the fact, never a hold</em>. Until today the Timekeeper&rsquo;s 04:00 run computed the overage, queued a held charge, and queued a standalone T1 heads-up &mdash; but could not create the extra-time booking (no Skedda connector on the trigger), which is how two T1s came to claim bookings that did not exist.</p>
+      <p><strong>New route:</strong> skedda-mcp is now attached to <code>trig_01F7W6a3kmQD6zq9C7G7piUt</code>. The run creates the &ldquo;Additional Time Charges&rdquo; booking itself (dry-run &rarr; confirm &rarr; verified exact re-read &mdash; the ONE unattended Skedda write, recorded in canon <code>autonomy.md</code>), queues the held charge with waive-lean signals named, and delivers the renter notice through the <strong>post-booking follow-up</strong>: it cancels the Responder&rsquo;s held plain PBF (<code>Pending Review &rarr; Will Not Send</code>, never a body edit) and queues the new <em>&ldquo;PBF &mdash; overtime variant&rdquo;</em> How to Respond row fresh. Plain PBF already sent &rarr; the overtime paragraph goes alone; no PBF yet &rarr; the Timekeeper&rsquo;s row pre-empts via the Responder&rsquo;s cross-status dedup. The standalone <strong>T1 is retired</strong> for internally-identified overtime.</p>
+      <p><strong>What survives:</strong> PBFs stay held at Pending Review (human release); the charge row stays held with <code>Process on/after</code> = next calendar day after the notice&rsquo;s <code>Sent At</code>, clean Correspondence Log read required; charging, repricing, mark-paid, and waive execution stay human. The Responder&rsquo;s 1-day PBF expiry is compatible &mdash; 04:00 is inside the window &mdash; and a Timekeeper supersession is not an expiry.</p>
+      <p><em>Paper trail:</em> canon <code>process-studio-tickets.md</code> / <code>the-responder.md</code> / <code>autonomy.md</code> (committed), Skill: Generate Overtime Report Step 9, &#x1F553; Studio Overtime SOP change log, RUNTIMES.md Timekeeper row, HTR row <code>3c27503281c4811c8482f088e3f072eb</code> (wording pending Junyan&rsquo;s sign-off).</p>
+    </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-20 &middot; 13:45Z</span>
       <h3>Two overtime T1s queued before their Skedda blocks existed &mdash; a false claim reached both renters<span class="kind">FIX</span></h3></summary>
       <p>Two held overtime T1s (David Garzon 509A Aug 17, Kelly-Ann Johnson 527 Aug 19) both carried the line <em>&ldquo;We&rsquo;ve added in the extra time as a new booking in Skedda for you&rdquo;</em> while live Skedda reads showed <strong>no such block for either renter</strong>. Both messages were released by Junyan on the morning of Aug 20 (09:43 and 09:45 EDT) and the false claim reached both renters.</p>
