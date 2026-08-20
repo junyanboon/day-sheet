@@ -313,6 +313,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-20 &middot; 21:35Z</span>
+      <h3>Invariant K &mdash; the Custodian now checks the Doorman&rsquo;s report skeleton, so a clobbered section can&rsquo;t hide<span class="kind">NEW CHECK</span></h3></summary>
+      <p>Junyan&rsquo;s go, closing the loop on the b5 clobber (entries below): the fleet&rsquo;s pulse checks see a dead robot, but nothing saw a robot that ran while silently missing a section &mdash; b5 was absent for two days behind green heartbeats. New <strong>invariant K</strong> in the Job 10 spec (<code>dc-canon library/job-10-desk-invariants.md</code>, commit <code>7457f132</code>): on the Custodian&rsquo;s <strong>09:35 pass</strong>, fetch today&rsquo;s Doorman report and check the <em>literal presence</em> of each required result line &mdash; (a) live status, the (b) pre-flight table, (b2), the (b3) suspension line, the (b4) code-mirror summary, the (b5) dead-shells line. Missing line &rarr; one deduped Review row for Junyan: the section silently did not run.</p>
+      <p><strong>Deliberately dumb:</strong> presence only, never content judgment &mdash; every judging watcher here has eventually cried wolf (invariant G&rsquo;s false stuck-sends; the Sentinel&rsquo;s two rounds of false-MISS fixes). Missing report entirely &rarr; K skips; that is the Sentinel&rsquo;s finding, no double-filing. 02:35 pass skips K (report not yet written). <strong>Coupling to know:</strong> the marker list is keyed to Doorman prompt v9 &mdash; every future Doorman prompt bump must update K&rsquo;s list in the same change, or K becomes the next wolf-crier. Spec-only for now (Custodian runs it; <code>event-gate invariants.py</code> does not &mdash; recorded in the parity note). First live K check: the Aug 21 09:35 pass, one pass after b5&rsquo;s first run.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-20 &middot; 21:10Z</span>
