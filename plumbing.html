@@ -312,6 +312,31 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+<li class="pipe-alerts"><b>2026-08-19 &mdash; the ledger was dead for 29 hours; GitHub blocked the jobs on billing.</b>
+<code>watchlist-refresh</code> failed <b>81 consecutive runs</b>, 2026-08-18 21:00Z &rarr; 2026-08-20 01:45Z, and
+<code>qa-review</code> was down the same window. Not a code fault &mdash; every run carries the annotation
+<i>&ldquo;The job was not started because recent account payments have failed or your spending limit needs to be
+increased.&rdquo;</i> The $20 stop-at-limit Actions budget set on 08-18 (or a failed payment method) blocked
+job start entirely; jobs died in ~2s having done nothing. Recovered on its own at ~01:49Z. Gmail + SMS
+backfilled on the catch-up run (cursor-based pullers, so the gap closed rather than being lost) &mdash;
+<code>days/2026-08-19.md</code> +20 lines, two threads updated.
+<b>The alarm worked.</b> The ledger watch fired correctly at 08-18 21:45 local and posted recovery at
+08-19 23:00. Nobody acted for 25 hours &mdash; the gap here is response, not detection.
+Renters were still answered throughout: the event-gate inline reviewer runs on Cloud Run, not GitHub,
+so the quick-answer lane never depended on the blocked workflows. <b>OPEN: confirm with GitHub billing
+whether this was the budget ceiling or a declined card &mdash; it will recur either way.</b></li>
+
+<li class="pipe-alerts"><b>2026-08-19 &mdash; <code>fbs-watch</code> gained <code>GET /selftest</code>: proof of the Slack
+DELIVERY path.</b> Detection and delivery fail separately. Every watch could judge correctly while
+<code>postSlack()</code> throws into the catch that stops one watch killing another &mdash; and that silence
+looks exactly like health. Nothing exercised the webhook on demand, since a real drill has to break a real
+watch. The route posts one fixed <code>[TEST &mdash; ignore]</code> line, writes no watch state and touches no
+alert flag. Unauthenticated on purpose &mdash; the worker holds no token a human could present, and minting one
+would put a credential in a chat log every test; rate-limited in KV to one post per 30 min instead, so an
+unwanted caller gets two lines an hour in an internal channel. Verified live 22:28 Toronto: landed in
+<code>#desk-status</code>, repeat returned <code>429 cooldown</code>, <code>/</code> health output unchanged.
+Commit <code>17ba513</code>.</li>
+
 
     <li class="entry det">
       <details>
