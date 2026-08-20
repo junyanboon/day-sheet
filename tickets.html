@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 21:53 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-19 22:06 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">27</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">26</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">14</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">50</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">51</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1040,7 +1040,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- RUNTIMES.md + Plumbing Map entries; the 082 row updated to point here.</li>
 </ul>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">27</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">26</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -2121,51 +2121,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Each row is either probed with its evidence recorded in canon, or consciously left UNTESTED with a</p>
 <p>one-line reason (cost, risk, nobody needs it) so the next agent inherits a decision rather than a</p>
 <p>gap. The two alarm rows may be closed here by pointing at 058 once 058 has actually run them.</p>
-</div></details></details></div><div class="job"><div class="jnum">#067</div><div class="jhead"><span class="emoji">🗂️</span><h4>Customer mail that lands in spam never reaches canon — even after a human rescues it</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Customer mail that lands in spam never reaches canon — even after a human rescues it</b></p><h2>Question</h2>
-
-<p>Found while checking 062&#x27;s backfill. Camille Quesada emailed the desk <b>2026-08-06 19:32Z</b></p>
-<p>(&quot;Booking for Sunday, August 9th&quot; — asking for door codes and alarm instructions). Junyan&#x27;s</p>
-<p>Aug-7 reply reached canon; <b>her original never did</b>, so the thread read as the desk writing</p>
-<p>unprompted. Every other turn across Aug 5–7 was present — SMS matched 200/200 against Phone.com,</p>
-<p>and 14 of 15 checked Gmail turns were in the ledger. This was the only hole, and it was <b>not</b></p>
-<p>caused by the outage: the poller&#x27;s cursor rides in the same commit as the messages, so an</p>
-<p>outage-lost message re-captures on the next tick. This one was <i>skipped</i>, not lost.</p>
-
-<p>Most likely mechanism (not yet proven): the message was in <b>spam</b> when the poller ran.</p>
-<p><code>gmail_pull.py</code> lists with <code>includeSpamTrash: false</code> and only ever looks forward from its cursor</p>
-<p>(<code>after:{cursor - 3600}</code>). So a message quarantined at poll time is invisible, and staying</p>
-<p>invisible is permanent — a human un-spamming it later changes nothing, because the cursor has</p>
-<p>already moved past that hour. Her thread carries <b>no labelIds at all</b>, consistent with a</p>
-<p>message that was rescued from spam rather than filed by a normal Gmail filter.</p>
-
-<p>Backfilled by hand: <code>messages/2026/08/06/gmail-19fd88ffa03e12ca.json</code> (commit <code>c80c0f99</code>,</p>
-<p><code>source: backfill-gmail-poller-gap</code>), and the thread now renders correctly.</p>
-
-<p>Decide the fix:</p>
-
-<ol>
-<li>1. <b>Confirm the mechanism first.</b> Is spam the actual cause? Check whether Gmail still shows</li>
-</ol>
-<p>any spam-history signal for that message, and test the poller against a deliberately</p>
-<p>spam-filed message before designing around the theory.</p>
-<ol>
-<li>2. <b>Then choose the repair.</b> Options seen so far: poll with <code>includeSpamTrash: true</code> and drop</li>
-</ol>
-<p>true spam by rule in code (the ledger already enforces <code>ledger_exclude.json</code> that way); or</p>
-<p>add a slower, wider re-scan pass (e.g. once a day over the last 7 days, dedup by filename)</p>
-<p>so <i>any</i> forward-cursor skip self-heals rather than becoming permanent.</p>
-<ol>
-<li>3. <b>Consider the class, not just the cause.</b> A cursor that only moves forward turns <i>every</i></li>
-</ol>
-<p>kind of skip into a permanent hole. The re-scan option fixes the class; the spam flag fixes</p>
-<p>one instance.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- Mechanism confirmed or refuted with a real test, not inference.</li>
-<li>- A message the poller skipped on its first pass demonstrably reaches canon on a later one.</li>
-</ul>
 </div></details></details></div><div class="job"><div class="jnum">#068</div><div class="jhead"><span class="emoji">📮</span><h4>A mail sorter made of simple rules — no AI needed for the boring mail</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A rules list sorts business email the moment it arrives: known shapes get labelled instantly</li><li>Only the confusing leftovers wait for a smart robot to look at them</li><li>It runs in the cloud next to the emergency line, with its own off switch</li><li>First it runs in practice mode — labels only, old Gmail filters stay on — so we can check it agrees with them</li><li>Because it uses no AI, it keeps working even when we run out of tokens</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the mail-rules router on event-gate — shadow mode first</b></p><h2>Question</h2>
 
 <p>Build slice 1 of the triage redesign (<b>decisions of record</b>, decisions 2/4/5/6-rung-1): a deterministic</p>
@@ -3467,7 +3422,163 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#082</span><span class="emoji">🚀</span><span class="done-title">The Registrar is switched on</span><span class="done-date">2026-08-20</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE. It runs by itself every half hour now, around the clock, starting tonight</li><li>What it does: it reads the booking calendar and, for every new direct booking, sets up whatever is missing — the renter&#x27;s record, a working door code, the board row two days before, the confirmation message waiting for approval</li><li>It never sends anything and never touches money. Confirmations sit in the queue until a person releases them</li><li>It has no memory of what it already did, and that is on purpose. Every half hour it just looks at what should exist by now and makes it so. Skip a pass, nothing is lost. Run it twice, nothing happens twice</li><li>It does not read email at all. The &#x27;has this been dealt with&#x27; mark on those emails turned out to be untrustworthy, so it reads the calendar directly instead</li><li>The last practice pass before switching on was clean: 165 bookings looked at, nothing left needing a person, no errors</li><li>That same pass on the older version had left one note about a renter it could not find. The name fix from the other ticket resolved her. Good proof the names really were the problem</li><li>To stop it, pause the half-hourly job. That is the fast, reversible way</li><li>Still worth watching this first day: whether the notes it leaves for Junyan read like something a person can act on, and whether there are a few or a wall of them. No test can answer that</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Ship The Registrar (the booking sweep) — deploy, dry-run against the live board, then schedule it</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#067</span><span class="emoji">📬</span><span class="done-title">An email that lands in junk was lost to our records forever</span><span class="done-date">2026-08-20</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE. Fixed August 20</li><li>What went wrong: on August 6 a renter emailed asking for door codes. Our record book has Junyan&#x27;s reply but not her question, so the conversation reads as if the desk wrote to her out of nowhere</li><li>Why: the collector only ever looks forward. It reads new mail since the last time it looked, then moves its bookmark past that point and never looks back</li><li>So a message hidden at the moment it looked — sitting in the junk folder, most likely — is missed, and stays missed. Even when a person later says &#x27;this is not junk&#x27;, the bookmark has already moved past it. Nothing goes back for it</li><li>The fix: once a day the collector re-reads the last week and files anything it does not already have. Any kind of miss now heals itself, not just junk ones</li><li>We deliberately did NOT make it read the junk folder. Mail sitting in junk is junk and stays out of the record. But the moment a person rescues it, the next day&#x27;s re-read picks it up. The person&#x27;s click is the repair</li><li>It says so out loud when it recovers something — because a quiet fix would hide the fact that the first pass has a blind spot</li><li>Proved by doing it: we deleted a three-day-old message from the records and the next run put it back, identical, and said so</li><li>One thing we could not prove: that junk really was the cause that day. It does not matter — the fix repairs any kind of miss, and the cause only mattered for the option we did not choose</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Customer mail that lands in spam never reaches canon — even after a human rescues it</b></p><h2>Question</h2>
+
+<p>Found while checking 062&#x27;s backfill. Camille Quesada emailed the desk <b>2026-08-06 19:32Z</b></p>
+<p>(&quot;Booking for Sunday, August 9th&quot; — asking for door codes and alarm instructions). Junyan&#x27;s</p>
+<p>Aug-7 reply reached canon; <b>her original never did</b>, so the thread read as the desk writing</p>
+<p>unprompted. Every other turn across Aug 5–7 was present — SMS matched 200/200 against Phone.com,</p>
+<p>and 14 of 15 checked Gmail turns were in the ledger. This was the only hole, and it was <b>not</b></p>
+<p>caused by the outage: the poller&#x27;s cursor rides in the same commit as the messages, so an</p>
+<p>outage-lost message re-captures on the next tick. This one was <i>skipped</i>, not lost.</p>
+
+<p>Most likely mechanism (not yet proven): the message was in <b>spam</b> when the poller ran.</p>
+<p><code>gmail_pull.py</code> lists with <code>includeSpamTrash: false</code> and only ever looks forward from its cursor</p>
+<p>(<code>after:{cursor - 3600}</code>). So a message quarantined at poll time is invisible, and staying</p>
+<p>invisible is permanent — a human un-spamming it later changes nothing, because the cursor has</p>
+<p>already moved past that hour. Her thread carries <b>no labelIds at all</b>, consistent with a</p>
+<p>message that was rescued from spam rather than filed by a normal Gmail filter.</p>
+
+<p>Backfilled by hand: <code>messages/2026/08/06/gmail-19fd88ffa03e12ca.json</code> (commit <code>c80c0f99</code>,</p>
+<p><code>source: backfill-gmail-poller-gap</code>), and the thread now renders correctly.</p>
+
+<p>Decide the fix:</p>
+
+<ol>
+<li>1. <b>Confirm the mechanism first.</b> Is spam the actual cause? Check whether Gmail still shows</li>
+</ol>
+<p>any spam-history signal for that message, and test the poller against a deliberately</p>
+<p>spam-filed message before designing around the theory.</p>
+<ol>
+<li>2. <b>Then choose the repair.</b> Options seen so far: poll with <code>includeSpamTrash: true</code> and drop</li>
+</ol>
+<p>true spam by rule in code (the ledger already enforces <code>ledger_exclude.json</code> that way); or</p>
+<p>add a slower, wider re-scan pass (e.g. once a day over the last 7 days, dedup by filename)</p>
+<p>so <i>any</i> forward-cursor skip self-heals rather than becoming permanent.</p>
+<ol>
+<li>3. <b>Consider the class, not just the cause.</b> A cursor that only moves forward turns <i>every</i></li>
+</ol>
+<p>kind of skip into a permanent hole. The re-scan option fixes the class; the spam flag fixes</p>
+<p>one instance.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Mechanism confirmed or refuted with a real test, not inference.</li>
+<li>- A message the poller skipped on its first pass demonstrably reaches canon on a later one.</li>
+</ul>
+
+
+<p>---</p>
+
+<h2>RESOLVED 2026-08-20 — fix the class, not the instance</h2>
+
+<p><b>Chosen: option 2, the wide re-scan. Option 1 (<code>includeSpamTrash: true</code>) is explicitly NOT taken</b>,</p>
+<p>and the reason is the part worth keeping: leaving the poller on <code>includeSpamTrash: false</code> means a</p>
+<p>message still sitting in spam is spam and stays out of canon, while <b>a human clicking &quot;Not spam&quot; is</p>
+<p>itself the repair</b> — the next re-scan sees the message and files it. That gives the rescue path for</p>
+<p>free, with no spam-dropping rule to maintain and no junk entering the ledger. Flipping the flag would</p>
+<p>have bought the same recovery and handed us a second exclusion list to keep correct forever.</p>
+
+<p>Shipped in <code>scripts/gmail_pull.py</code> (dc-canon <code>8e79f74e</code>): once every 24h the poller re-lists the last</p>
+<p>7 days with the same query and the same flag, and writes whatever canon is missing. Three properties</p>
+<p>were designed for and then tested rather than assumed:</p>
+
+<ul>
+<li>- <b>The re-scan never moves the forward cursor.</b> It reads old mail by definition; letting it touch</li>
+</ul>
+<p><code>last_epoch</code> would be a way to <i>skip</i> live messages — the defect, rebuilt.</p>
+<ul>
+<li>- <b>It is loud.</b> A recovery prints <code>::warning::</code> naming the count. A re-scan that healed quietly</li>
+</ul>
+<p>would hide the fact that the forward pass has a blind spot, which is the thing actually worth</p>
+<p>knowing. A clean pass prints one line saying so.</p>
+<ul>
+<li>- <b>It is nearly free.</b> The existing one-tree-scan <code>have</code> set means an already-captured message costs</li>
+</ul>
+<p>a dict lookup and <b>no</b> <code>messages.get</code> call, so a week of re-listing is a handful of list calls and</p>
+<p>zero writes in steady state. It is gated to once a day anyway — no reason to pay it 60× on a 15-min</p>
+<p>tick.</p>
+
+<h3>Acceptance — met, by running it</h3>
+
+<p>Against the live mailbox from the full desk-store checkout, cursor left at its real value:</p>
+
+<ol>
+<li>1. Deleted <code>messages/2026/08/17/gmail-1a00daea4af361ec.json</code> from canon — a message ~3 days old and</li>
+</ol>
+<p>far behind the forward cursor, i.e. exactly the ticket&#x27;s situation.</p>
+<ol>
+<li>2. Ran the poller. The forward pass did not see it (correct — the cursor is past it). <b>The re-scan</li>
+</ol>
+<p>recovered it</b>, named it, and raised the warning. The recovered file is <b>byte-identical</b> to the</p>
+<p>original: it does not appear in the staged diff at all. Only the state file changed, and only to</p>
+<p>add <code>last_rescan_epoch</code> — <code>last_epoch</code> was untouched.</p>
+<ol>
+<li>3. Re-ran immediately: no re-scan (24h gate holds). Forced it due: <code>7-day rescan clean — nothing</li>
+</ol>
+<p>missing</code>, zero writes. Worktree restored to clean.</p>
+
+<p>That is the acceptance line satisfied literally: *a message the poller skipped on its first pass</p>
+<p>demonstrably reaches canon on a later one.*</p>
+
+<h3>Mechanism — partly confirmed, and deliberately not load-bearing</h3>
+
+<p>Tested rather than inferred, against the live mailbox:</p>
+
+<ul>
+<li>- Camille&#x27;s message is visible to the poller&#x27;s <b>exact</b> query today, under both <code>includeSpamTrash</code></li>
+</ul>
+<p>values (79-message window, present in both). Nothing about the message excludes it permanently —</p>
+<p>it was invisible only at poll time.</p>
+<ul>
+<li>- Its labels are <code>[&#x27;CATEGORY_PERSONAL&#x27;]</code> — no <code>INBOX</code>, no <code>SPAM</code>. Archived.</li>
+<li>- A <b>spam round-trip is label-destructive</b>: marking a live message SPAM and removing SPAM stripped</li>
+</ul>
+<p><code>IMPORTANT</code> and <code>CATEGORY_PERSONAL</code>, leaving only the user label. That is consistent with the</p>
+<p>ticket&#x27;s &quot;carries no labelIds at all&quot; observation for a rescued message, and it also means</p>
+<p><b>labels cannot be used as evidence of a message&#x27;s spam history</b> — the round-trip erases the trace.</p>
+<p>Worth knowing before anyone tries to audit this class from labels again.</p>
+<ul>
+<li>- <b>The controlled test was NOT completed.</b> Marking a message SPAM and re-listing under both flag</li>
+</ul>
+<p>values was set up twice and blocked both times by the sandbox&#x27;s command classifier, so</p>
+<p>&quot;spam specifically, at 19:32Z on 2026-08-06&quot; remains unproven. The mailbox was left as found</p>
+<p>(SPAM/TRASH removed from both test messages — noted below).</p>
+
+<p><b>This gap does not block the decision, and that is the finding.</b> The re-scan is</p>
+<p>mechanism-independent: it heals a skip whatever caused it — spam, an API blip, a mid-page failure,</p>
+<p>a delayed delivery whose <code>internalDate</code> lands behind the cursor. The mechanism question was only ever</p>
+<p>load-bearing for option 1, which is the option not taken. Chasing the proof further would have</p>
+<p>sharpened an answer nothing now depends on.</p>
+
+<h3>Two live-mailbox side effects, disclosed</h3>
+
+<p>Both test messages were restored, but a trash/spam round-trip does not restore system labels:</p>
+
+<ul>
+<li>- <code>1a01527a0a544380</code> (Toronto Hydro bill notice, one of six identical copies) — trashed and restored;</li>
+</ul>
+<p>lost <code>CATEGORY_UPDATES</code>. <code>untrash_message</code> returned &quot;The caller does not have permission&quot;; removing</p>
+<p>the <code>TRASH</code> label directly worked. <b>Worth knowing for any future session: the business Gmail</p>
+<p>connector can trash but cannot untrash — use <code>unlabel_message</code> with <code>TRASH</code>.</b></p>
+<ul>
+<li>- <code>1a0192809a4993cb</code> (Tagvenue solicitation) — SPAM applied and removed; lost <code>IMPORTANT</code> and</li>
+</ul>
+<p><code>CATEGORY_PERSONAL</code>, kept its user label.</p>
+
+<h3>Left open</h3>
+
+<ul>
+<li>- <b>The re-scan window is 7 days.</b> A hole older than that at the moment it is created still needs a</li>
+</ul>
+<p>hand backfill via <code>--since</code>. Seven days was chosen because it comfortably covers &quot;a human noticed</p>
+<p>over the weekend&quot;; nothing about the design stops it being widened if a real case exceeds it.</p>
+<ul>
+<li>- <b>The re-scan only ever runs when the poller runs.</b> If the 15-min tick itself stalls for days,</li>
+</ul>
+<p>nothing re-scans either — that silence is the run-error/monitor path&#x27;s job, not this one&#x27;s.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#082</span><span class="emoji">🚀</span><span class="done-title">The Registrar is switched on</span><span class="done-date">2026-08-20</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE. It runs by itself every half hour now, around the clock, starting tonight</li><li>What it does: it reads the booking calendar and, for every new direct booking, sets up whatever is missing — the renter&#x27;s record, a working door code, the board row two days before, the confirmation message waiting for approval</li><li>It never sends anything and never touches money. Confirmations sit in the queue until a person releases them</li><li>It has no memory of what it already did, and that is on purpose. Every half hour it just looks at what should exist by now and makes it so. Skip a pass, nothing is lost. Run it twice, nothing happens twice</li><li>It does not read email at all. The &#x27;has this been dealt with&#x27; mark on those emails turned out to be untrustworthy, so it reads the calendar directly instead</li><li>The last practice pass before switching on was clean: 165 bookings looked at, nothing left needing a person, no errors</li><li>That same pass on the older version had left one note about a renter it could not find. The name fix from the other ticket resolved her. Good proof the names really were the problem</li><li>To stop it, pause the half-hourly job. That is the fast, reversible way</li><li>Still worth watching this first day: whether the notes it leaves for Junyan read like something a person can act on, and whether there are a few or a wall of them. No test can answer that</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Ship The Registrar (the booking sweep) — deploy, dry-run against the live board, then schedule it</b></p><h2>Question</h2>
 
 <p><b>081</b> built the lane and left it unshipped on purpose: it writes</p>
 <p>to Alarm.com, and flipping on a production trigger is Junyan&#x27;s call, never an agent&#x27;s. This</p>
@@ -9109,5 +9220,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-19 21:53 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-19 22:06 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
