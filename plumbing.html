@@ -315,6 +315,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry llm">
       <details>
+      <summary><span class="when">2026-08-21 &middot; night</span>
+      <h3>Defects file ONCE &mdash; the Actions mirror lane is dead, and detection no longer counts as repair<span class="kind">ROUTE CHANGE</span></h3></summary>
+      <p><strong>Two Junyan rulings, one fixer run.</strong> (1) An agent that files an Attributed-defect row in &#128295;&nbsp;Sweep Feedback may not also file an &#9989;&nbsp;Actions row <code>For&nbsp;=&nbsp;Junyan</code> about the same incident &mdash; 22 of the 44 rows on the human queue were exactly such mirrors, all closed. <code>For&nbsp;=&nbsp;Junyan</code> is now reserved for money, customer decisions, physical/UI work, and direct owner questions. Canon <code>51a12d71</code>. (2) <em>Detection is not repair:</em> a detector repairs in-pass or hands to ONE named repair item with a done-condition; a detection row never satisfies any gate or invariant; board fields (PBF/HTA/holds/Current&nbsp;Block) are reconciled on read, not reported on. One ruling over four defect classes; 41 Sweep rows closed under it. Canon <code>845c93f3</code>. Backlog 208&nbsp;&rarr;&nbsp;167.</p>
+      <p><strong>Also written, awaiting deploy:</strong> <code>send-engine/SameDay.gs</code> returning-renter gate &mdash; <code>priorHtas&nbsp;&gt;&nbsp;0</code> skips the first-timer HTA entirely (record-only per the Support Ladder), and a failed prior-HTA count forces Pending&nbsp;Review even under AUTOSEND. Closes the Angus Dirnbeck send (2026-08-20, staff apologised in-thread). Junyan pastes into Apps Script.</p>
+    </details>
+    </li>
+
+    <li class="entry llm">
+      <details>
       <summary><span class="when">2026-08-21 &middot; 13:05Z</span>
       <h3>Platform bookings: ticket ALWAYS, relay self-serve &mdash; the staff-ask fallback is retired<span class="kind">ROUTE CHANGE</span></h3></summary>
       <p><strong>Junyan directive.</strong> Every Peerspace / Tagvenue / Giggster enquiry or booking now mints a CC/Sales ticket through Process Studio Tickets, with the relay filed in &#9742;&#65039; Contact Points. A platform booking without a ticket is a defect. Canon: <code>dc-canon library/job-2-triage.md</code> (rewritten section &ldquo;Platform bookings &mdash; ticket ALWAYS, relay SELF-SERVE&rdquo;), <code>response-resolver.md</code> step&nbsp;7, <code>the-loop.md</code>, <code>concierge-orchestration.md</code>, <code>relay-addresses.md</code>. Commit <code>98e0a48d</code>.</p>
