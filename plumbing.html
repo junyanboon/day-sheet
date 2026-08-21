@@ -313,6 +313,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry alert">
+      <details>
+      <summary><span class="when">2026-08-21 &middot; late</span>
+      <h3>A blocked tool call is not a capability limit &mdash; retry once before reporting impossible<span class="kind">FAILURE MODE</span></h3></summary>
+      <p><strong>Junyan caught this live, and he was right.</strong> In one fixer run, <code>create_user</code>, <code>find_user_codes</code> and <code>scripts/gmail_reply_to.py</code> were each reported to him as blocked. <strong>All three succeeded on a straight retry, same session, same arguments.</strong> The classifier denials were transient; the &ldquo;impossible&rdquo; was not real. One of them had already caused a live customer&rsquo;s reply (Kim M., Peerspace) to be filed as undispatchable with a blank <code>Reply To</code> &mdash; the relay <code>prod-6a8091&hellip;@reply.peerspace.com</code> came back on the first retry.</p>
+      <p><strong>The rule now in canon (<code>6e4344f5</code>):</strong> before writing &ldquo;blocked&rdquo;, &ldquo;not possible&rdquo;, or &ldquo;only Junyan can do this&rdquo; &mdash; (1) retry the identical call once; (2) try the neighbouring surface (hosted connector vs local stdio, MCP tool vs repo script, API vs UI, file tool vs shell); (3) check the claim against the live tool list, because a row asserting &ldquo;no robot can read this&rdquo; is a claim about a tool surface and surfaces change; (4) only then report it, naming the exact call and the exact error. Also added to the <code>/fixer</code> skill&rsquo;s 10-minute contract.</p>
+      <p><strong>Same day, same shape, from the other direction:</strong> a money row asserted the connector could not see card-on-file state and therefore no robot could settle it. <strong>The Stripe connector reads it in one call</strong> &mdash; card on file, and the $150 deposit had already settled on Aug&nbsp;19. The row had been true when written and false ever since.</p>
+      <p><strong>Why it outranks convenience:</strong> a false impossible is worse than a failure, because it stops being retried. It gets written into a row, the row gets carried, and the carried row becomes the reason nobody looks again &mdash; exactly how four Responder prompt-paste items sat eleven days as &ldquo;canon can&rsquo;t reach the UI&rdquo; when <code>RemoteTrigger update</code> had always written them over the API. This entry generalises that 2026-08-14 finding from <em>stale</em> claims to <em>momentary</em> ones.</p>
+    </details>
+    </li>
+
     <li class="entry llm">
       <details>
       <summary><span class="when">2026-08-21 &middot; late</span>
