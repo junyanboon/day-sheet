@@ -315,6 +315,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry llm">
       <details>
+      <summary><span class="when">2026-08-21 &middot; late</span>
+      <h3>Drafts land in the Message Queue &mdash; a mailbox draft is a mechanism, never the record<span class="kind">ROUTE CHANGE</span></h3></summary>
+      <p><strong>Junyan directive.</strong> Any message an agent composes for human approval gets a &#128228;&nbsp;Message Queue row at <code>Pending Review</code> — <em>always</em>, including replies composed inside a mailbox. A Gmail draft is a fine way to <em>address</em> a platform relay without knowing the relay address, but it is invisible to the board, carries no Reasoning, no Artist link and no audit trail. The row is where he looks; nothing waits for approval anywhere else. Canon <code>dd6d8299</code>.</p>
+      <p><strong>The row must carry its dispatch path.</strong> Not dispatchable by the Send Engine (blank <code>Reply To</code> on a relay, unreachable channel)? Say so in <code>Reasoning</code> and name what will actually send it. <strong>Two artefacts, one message &mdash; name the double-send risk out loud:</strong> send the mailbox draft &rarr; mark the row <code>Sent</code>; dispatch the row &rarr; delete the draft first. Never invent a recipient to make a row dispatchable.</p>
+      <p><strong>The case that forced it:</strong> Kim M. (Peerspace, 693, Thu Aug 27) booked on Aug&nbsp;15 and went <strong>six days unanswered</strong>. Her reply was drafted correctly in Gmail because <code>scripts/gmail_reply_to.py</code> — the only reader of the relay address — was classifier-blocked, and Junyan could not see the draft anywhere. Row <code>3c37&hellip;4af9</code> now carries it. Her codes are deliberately NOT in that body: HOUSE-RULES &#127758; point&nbsp;3 forbids codes through a platform relay (open defect <code>3b27&hellip;4e76</code> is the last breach) — they go by direct SMS once she supplies a number.</p>
+    </details>
+    </li>
+
+    <li class="entry llm">
+      <details>
       <summary><span class="when">2026-08-21 &middot; 10:15Z</span>
       <h3>Platform-ticket rule narrowed: bookings always, enquiries only while live<span class="kind">CORRECTION</span></h3></summary>
       <p><strong>This morning&rsquo;s rule was too broad, and a real case proved it within hours.</strong> Kiah&nbsp;F. booked 509A directly on Skedda on Aug&nbsp;17, then her Giggster enquiry for the <em>identical slot</em> landed four hours later. The desk had handled it perfectly &mdash; one queued Giggster reply, &ldquo;duplicate-slot inquiry, already booked&rdquo;, no ticket &mdash; but the morning rule as written (&ldquo;every enquiry or booking gets a ticket&rdquo;) would have branded that correct behaviour a defect, and a verification pass judging by ticket-existence would have reported a false failure.</p>
