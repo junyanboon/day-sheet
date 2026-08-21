@@ -313,6 +313,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-21 &middot; 22:55Z</span>
+      <h3>Email-field ruling corrected: the card&rsquo;s Email IS the send door &mdash; relay belongs there when no direct address<span class="kind">CORRECTION</span></h3></summary>
+      <p><strong>Junyan&rsquo;s ruling, reversing yesterday&rsquo;s &ldquo;never in Email&rdquo;.</strong> The Message Queue&rsquo;s <code>Email</code> is a rollup off the Artist card, so a platform guest with a blank <code>Email</code> field can never receive an outbound email &mdash; the rule as written re-created the blank-card failure it was meant to end. First live case under the new pipeline, Kim&nbsp;M. [Peerspace] (card 10:03Z, relay fetched self-serve and filed in both places), was flagged as a violation and was in fact correct.</p>
+      <p><strong>Precedence now in canon</strong> (dc-canon commit <code>d4064cb7</code>, five pages): a real direct address always wins; otherwise the newest relay for the active enquiry sits in <code>Email</code>; never blank a populated field. Every relay is STILL a &#9742;&#65039; Contact Points row &mdash; and since <code>find_artist</code> resolves people from Contact Points, a relay in <code>Email</code> can no longer mint duplicate cards, which was the fear behind the old rule.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-21 &middot; 22:35Z</span>
