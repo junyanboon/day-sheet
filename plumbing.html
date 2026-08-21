@@ -315,6 +315,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry llm">
       <details>
+      <summary><span class="when">2026-08-21 &middot; 10:15Z</span>
+      <h3>Platform-ticket rule narrowed: bookings always, enquiries only while live<span class="kind">CORRECTION</span></h3></summary>
+      <p><strong>This morning&rsquo;s rule was too broad, and a real case proved it within hours.</strong> Kiah&nbsp;F. booked 509A directly on Skedda on Aug&nbsp;17, then her Giggster enquiry for the <em>identical slot</em> landed four hours later. The desk had handled it perfectly &mdash; one queued Giggster reply, &ldquo;duplicate-slot inquiry, already booked&rdquo;, no ticket &mdash; but the morning rule as written (&ldquo;every enquiry or booking gets a ticket&rdquo;) would have branded that correct behaviour a defect, and a verification pass judging by ticket-existence would have reported a false failure.</p>
+      <p><strong>The narrowed rule</strong> (dc-canon <code>job-2-triage.md</code>, <code>relay-addresses.md</code>, <code>concierge-orchestration.md</code>, commit <code>a4304be7</code>*): a platform <em>booking</em> always mints a ticket; an <em>enquiry</em> only while still live &mdash; check Skedda and the boards for the same person or slot first, and an already-satisfied enquiry gets a platform reply plus its relay filed, never a ticket. The relay contact point is owed on every platform contact either way. Proof of handling is the outcome surfaces (guest answered, card resolves from every contact point, no relay in <code>Email</code>, no duplicate card) &mdash; not ticket existence.</p>
+      <p class="meta">*The edits ride a concurrent session&rsquo;s commit &mdash; its <code>git add -A</code> swept this session&rsquo;s in-progress files, third occurrence of that pattern. Content verified intact at origin/main.</p>
+    </details>
+    </li>
+
+    <li class="entry llm">
+      <details>
       <summary><span class="when">2026-08-21 &middot; night</span>
       <h3>Defects file ONCE &mdash; the Actions mirror lane is dead, and detection no longer counts as repair<span class="kind">ROUTE CHANGE</span></h3></summary>
       <p><strong>Two Junyan rulings, one fixer run.</strong> (1) An agent that files an Attributed-defect row in &#128295;&nbsp;Sweep Feedback may not also file an &#9989;&nbsp;Actions row <code>For&nbsp;=&nbsp;Junyan</code> about the same incident &mdash; 22 of the 44 rows on the human queue were exactly such mirrors, all closed. <code>For&nbsp;=&nbsp;Junyan</code> is now reserved for money, customer decisions, physical/UI work, and direct owner questions. Canon <code>51a12d71</code>. (2) <em>Detection is not repair:</em> a detector repairs in-pass or hands to ONE named repair item with a done-condition; a detection row never satisfies any gate or invariant; board fields (PBF/HTA/holds/Current&nbsp;Block) are reconciled on read, not reported on. One ruling over four defect classes; 41 Sweep rows closed under it. Canon <code>845c93f3</code>. Backlog 208&nbsp;&rarr;&nbsp;167.</p>
