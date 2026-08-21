@@ -313,6 +313,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-21 &middot; 22:40Z</span>
+      <h3>Arrival names are back: board reads the websocket event stream; keep-alive no longer killed its own socket<span class="kind">ROUTE + FIX</span></h3></summary>
+      <p><strong>fbs-monitor now reads alarm-mcp&rsquo;s <code>/door-history</code> (the <code>alarm-events</code> websocket ledger, canon <code>studio-activity.md</code>) as its primary arm/disarm source</strong> &mdash; named keypad events at second precision, with the polling <code>/arm-history</code> ledger demoted to backstop (a panel event survives the merge only when no door event sits within 8 min, i.e. exactly the socket-gap windows the poll is immune to). URL derived from <code>ALARM_HISTORY_URL</code>, same bearer, no new secret. Board copy no longer claims names died with the ADT feed.</p>
+      <p><strong>Two defects fixed on the way.</strong> (1) The vendored pyalarmdotcomajax keep-alive re-minted the websocket token every ~6 min on a live socket; Alarm.com then closed that socket (1008), punching a ~10s hole on a timer &mdash; measured 265 gaps/24h, median spacing 335.9s, which kept <code>covered:false</code> for every real booking window and blocked all billing under the one rule. <code>_reload_session_context()</code> no longer calls <code>_authenticate()</code>; the reader still authenticates before every (re)connect. Verified by 13-min local soak across two refresh intervals: zero gaps. Committed to both the fork and <code>alarm-monitor/vendor</code>; <em>redeploy of alarm-events/alarm-mcp pending (Junyan)</em>. (2) build.py&rsquo;s nameless-event matcher spent one event on every in-window booking &mdash; Anneka K&rsquo;s 13:26 disarm rendered as her arrival AND as Vanessa Zavatti&rsquo;s phantom &ldquo;in 13:29&rdquo; (whose 2m24s viewing fell inside one poll tick, invisible). Pass 2 is now event-centric, claims each event, assigns by distance to the booking&rsquo;s own interval; regression tests added.</p>
+      </details>
+    </li>
+
     <li class="entry llm">
       <details>
       <summary><span class="when">2026-08-21 &middot; 23:30Z</span>
