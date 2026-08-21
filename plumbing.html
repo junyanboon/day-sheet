@@ -313,6 +313,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry alert">
+      <details>
+      <summary><span class="when">2026-08-21 &middot; 23:20Z</span>
+      <h3>Instant booking opened a deference gap: new renter, no card, no codes, no messages &mdash; forever<span class="kind">DEFECT + UNSTICK</span></h3></summary>
+      <p><strong>Sara Aljabery booked 509B for the next day (instant direct, 21:59Z) and nothing happened.</strong> Instant booking (approval off, new today) makes every direct booking arrive as &ldquo;X made a booking&rdquo; &mdash; the self-serve class. <code>SameDay.gs</code> doesn&rsquo;t fire on that class, and the Registrar defers every today/tomorrow booking to it: <code>deferred: "same-day lane owns this booking"</code>, every 30 minutes, to a lane that is not coming. JOB&nbsp;2 additionally calls the class &ldquo;calendar noise &mdash; mark read only&rdquo;. Three owners, all pointing at each other. Same root cause as the Desiree&nbsp;Joy miss (removing an approval step abolishes a notification class something else depended on).</p>
+      <p><strong>Unstuck attended, ~23:05Z:</strong> her existing Tagvenue card linked (returning renter converting to direct &mdash; NOT a new mint; her two duplicate cards are already on ticket&nbsp;104), Skedda User ID + direct email filled, alarm code verified live on all four panels, board row seeded with the sweep&rsquo;s own dedup key, and the booking confirmation + Returning Access SMS <strong>both delivered</strong> (phonecom receipts <code>258508808</code> / <code>258508796</code>). Sales ticket at Review. Dry-run after: <code>artist:found</code>, no errors.</p>
+      <p><strong>The pipeline fix is wayfinder ticket 107</strong> (concierge-repair): teach SameDay.gs the class, or &mdash; better &mdash; make the Registrar&rsquo;s deference expire when the lane has produced nothing after N minutes. Not fixed tonight; production config needs its own pass.</p>
+    </details>
+    </li>
+
     <li class="entry llm">
       <details>
       <summary><span class="when">2026-08-21 &middot; 22:55Z</span>
