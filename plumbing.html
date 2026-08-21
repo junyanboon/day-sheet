@@ -313,6 +313,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-21 &middot; 13:40Z</span>
+      <h3>Desk Messages board: queue query could silently drop pending drafts &mdash; same LIMIT bug as The Deck<span class="kind">FAILURE MODE</span></h3></summary>
+      <p><strong>The Desk Messages artifact&rsquo;s Message Queue query had no <code>ORDER BY</code> with a <code>LIMIT 200</code>, while the queue lands ~330 Sent rows per 14 days &mdash; so the limit filled with send history and <code>Pending Review</code>/<code>Error</code>/<code>Ready to Send</code> rows could silently fall off the board.</strong> Same query family as the bug confirmed 2026-08-14 in the sibling &ldquo;The Deck&rdquo; artifact, fixed the same way: <code>ORDER BY CASE WHEN Status is actionable THEN 0 ELSE 1 END, datetime("Created") DESC</code> (keeping <code>Ready to Send</code> in the priority tier since this board shows releasing rows), sent-history window cut 14&nbsp;&rarr;&nbsp;7 days, <code>LIMIT 250</code>. Republished 2026-08-21 to the same artifact URL (<code>4ccd5dad&hellip;</code>).</p>
+      <p><strong>Why it matters:</strong> a draft dropped by this query is invisible on the one surface where drafts get reviewed and released &mdash; the failure reads as &ldquo;nothing waiting&rdquo; while a customer waits. Any future board querying the &#128228;&nbsp;Message Queue must order actionable statuses ahead of the LIMIT; never rely on a bare LIMIT over a mixed live/history query.</p>
+    </details>
+    </li>
+
     <li class="entry alert">
       <details>
       <summary><span class="when">2026-08-21 &middot; late</span>
