@@ -313,6 +313,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-21 &middot; 13:05Z</span>
+      <h3>Platform bookings: ticket ALWAYS, relay self-serve &mdash; the staff-ask fallback is retired<span class="kind">ROUTE CHANGE</span></h3></summary>
+      <p><strong>Junyan directive.</strong> Every Peerspace / Tagvenue / Giggster enquiry or booking now mints a CC/Sales ticket through Process Studio Tickets, with the relay filed in &#9742;&#65039; Contact Points. A platform booking without a ticket is a defect. Canon: <code>dc-canon library/job-2-triage.md</code> (rewritten section &ldquo;Platform bookings &mdash; ticket ALWAYS, relay SELF-SERVE&rdquo;), <code>response-resolver.md</code> step&nbsp;7, <code>the-loop.md</code>, <code>concierge-orchestration.md</code>, <code>relay-addresses.md</code>. Commit <code>98e0a48d</code>.</p>
+      <p><strong>What died:</strong> the &ldquo;park the ticket with a staff task to add the relay (open view-original in a browser)&rdquo; branch, in JOB&nbsp;2 and the Response Resolver both. It rested on the belief that <code>Reply-To</code> was unreachable unattended; <code>scripts/gmail_reply_to.py</code> reads it in one command, no browser. The fallback survives only where a runtime provably lacks <code>GMAIL_*</code> credentials &mdash; and then the Action row asks staff to run that command, not drive Gmail.</p>
+      <p><strong>Failure mode this closes:</strong> platform cards minted with no contact point at all (Cara&nbsp;B, 2026-08-20) &mdash; findable only by the ambiguous-by-design name rung, so every later message minted a duplicate. Giggster&rsquo;s relay is the SMS proxy number + conversation uuid, same filing rule.</p>
+      <p><strong>Also:</strong> <code>library/studio-activity.md</code> finally got its MIRRORS row (page <code>3c37&hellip;7b53</code>) &mdash; its edits, including the 5.5-minute flap ruling, had never been projecting to Notion. Canon check green, 33 mirrored.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-20 &middot; 22:22Z</span>
