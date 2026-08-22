@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-20 17:23 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-22 10:57 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">31</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">32</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">56</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">57</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1229,7 +1229,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
 <p>Ops Lead&#x27;s use of it here.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">31</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">32</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -2740,9 +2740,17 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p>clock trigger before it takes over the riskiest window.</p>
 <ul>
-<li>- Parallel week: both lanes run, sweep in shadow for today/tomorrow (log what it WOULD do,</li>
+<li>- <b>Amended 2026-08-21 by <b>107</b>: the parallel week is VOID.</b></li>
 </ul>
-<p>SameDay still acts). Flip = sweep acts, SameDay disabled — one Script Property, reversible.</p>
+<p><code>SameDay.gs</code> was never installed, so there is no running lane to shadow or compare against;</p>
+<p>its dedup guards cannot be &quot;proven in parallel&quot; because they have never executed. Retirement</p>
+<p>becomes a <b>do-not-install</b> note on the file, and <b>108</b></p>
+<p>ships the record-only half of the takeover first. What 089 still owns is the SEND half: the</p>
+<p>canonical HTA templating and the auto-send bounds moving into the sweep.</p>
+<ul>
+<li>- ~~Parallel week: both lanes run, sweep in shadow for today/tomorrow (log what it WOULD do,</li>
+</ul>
+<p>SameDay still acts). Flip = sweep acts, SameDay disabled — one Script Property, reversible.~~</p>
 <ul>
 <li>- Junyan flips production. Update RUNTIMES.md, the Plumbing Map, autonomy.md, fast-track.md,</li>
 </ul>
@@ -3320,6 +3328,61 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>are this class (both cards native, shared stable identifiers) rather than the relay class?</p>
 <p><b>104</b> will surface the evidence per pair — this ticket wants</p>
 <p>the split.</p>
+</div></details></details></div><div class="job"><div class="jnum">#108</div><div class="jhead"><span class="emoji">🏠</span><h4>Let the booking robot look after last-minute bookings itself</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Right now the booking robot skips anything starting today or tomorrow</li><li>It was told a second helper would handle those — that helper was never switched on</li><li>So it will stop skipping: it sets up the person, checks their door code, makes the board row, and writes the confirmation</li><li>The one thing it still won&#x27;t do is text the door code by itself — it raises a note asking a person to send it</li><li>Junyan has to say yes before this goes live, because it changes a running system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The sweep takes the same-day window, record-only — delete the deference branch</b></p><h2>Ruling this implements</h2>
+
+<p><b>107 — Instant bookings fall into the Registrar/same-day-lane deference gap</b>:</p>
+<p>the Registrar defers today/tomorrow bookings to <code>send-engine/SameDay.gs</code>, which has</p>
+<p><b>never been installed</b>. Every same-day booking since the sweep went live</p>
+<p>(2026-08-20) has been deferred to nothing, silently and forever. Stage A closes the</p>
+<p>hole <b>without moving any send authority</b> — that half stays with</p>
+<p><b>089</b>.</p>
+
+<h2>The change</h2>
+
+<p>In <code>dc-canon/services/event-gate/booking_sweep.py</code>:</p>
+
+<ul>
+<li>- <b>Delete the deference branch</b> (~line 1101, <code>result[&quot;deferred&quot;] = &quot;same-day lane</li>
+</ul>
+<p>owns this booking&quot;</code>) and <code>in_sameday_window</code>&#x27;s gating role. Inside the window the</p>
+<p>sweep runs the same steps it runs outside it: artist record, verified alarm access,</p>
+<p>board row, confirmation queued at Pending Review.</p>
+<ul>
+<li>- <b>The one step that stays out is the same-day HTA.</b> In its place, file an Actions</li>
+</ul>
+<p>row + Ops Lead SMS naming the booking, the verified code, and what is owed:</p>
+<p>&quot;same-day booking, HTA not sent, human sends.&quot; Loud, attended, never silent.</p>
+<ul>
+<li>- Keep the sweep stateless and idempotent — the row is re-derived per pass, so a</li>
+</ul>
+<p>repeat pass must not file a second Actions row for the same booking.</p>
+
+<h2>Canon that ships with it (part of done, not follow-up)</h2>
+
+<ol>
+<li>1. <code>booking_sweep.py</code> lines 25–29 — the docstring asserting SameDay.gs owns the</li>
+</ol>
+<p>window. Rewrite: the sweep owns it, record-only, HTA pending 089.</p>
+<ol>
+<li>2. <code>RUNTIMES.md</code> lines 69–70 and the <code>booking-sweep</code> row — same false seam.</li>
+<li>3. JOB 2&#x27;s Skedda-label branch: &quot;self-serve calendar noise — mark read only&quot; applies</li>
+</ol>
+<p><b>only when the holder is a known artist</b>; unknown holder → last-minute path.</p>
+<ol>
+<li>4. <code>day-sheet/plumbing.html</code> change-log entry (route + failure mode changed).</li>
+</ol>
+
+<h2>Approval</h2>
+
+<p>Production behaviour change on a live service — Junyan approves before deploy. Ask at</p>
+<p>the same time: SameDay.gs stays <b>uninstalled</b> through 089 (do not switch it on as a</p>
+<p>stopgap; it carries the unattended code-send grant).</p>
+
+<h2>Acceptance</h2>
+
+<p>Replay the Sara Aljabery case (booked 21:59Z for 13:15 next day, 509B): one pass</p>
+<p>produces an artist record, a verified code, a board row, a queued confirmation, and</p>
+<p>one Actions row saying the HTA is owed. <code>deferred</code> appears in no result.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -3923,7 +3986,146 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#067</span><span class="emoji">📬</span><span class="done-title">An email that lands in junk was lost to our records forever</span><span class="done-date">2026-08-20</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE. Fixed August 20</li><li>What went wrong: on August 6 a renter emailed asking for door codes. Our record book has Junyan&#x27;s reply but not her question, so the conversation reads as if the desk wrote to her out of nowhere</li><li>Why: the collector only ever looks forward. It reads new mail since the last time it looked, then moves its bookmark past that point and never looks back</li><li>So a message hidden at the moment it looked — sitting in the junk folder, most likely — is missed, and stays missed. Even when a person later says &#x27;this is not junk&#x27;, the bookmark has already moved past it. Nothing goes back for it</li><li>The fix: once a day the collector re-reads the last week and files anything it does not already have. Any kind of miss now heals itself, not just junk ones</li><li>We deliberately did NOT make it read the junk folder. Mail sitting in junk is junk and stays out of the record. But the moment a person rescues it, the next day&#x27;s re-read picks it up. The person&#x27;s click is the repair</li><li>It says so out loud when it recovers something — because a quiet fix would hide the fact that the first pass has a blind spot</li><li>Proved by doing it: we deleted a three-day-old message from the records and the next run put it back, identical, and said so</li><li>One thing we could not prove: that junk really was the cause that day. It does not matter — the fix repairs any kind of miss, and the cause only mattered for the option we did not choose</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Customer mail that lands in spam never reaches canon — even after a human rescues it</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#107</span><span class="emoji">🕳️</span><span class="done-title">Found the hole that made a last-minute booking vanish</span><span class="done-date">2026-08-21</span></summary><div class="done-body"><ul class="plain-bullets"><li>Sara booked studio 509B the night before and got nothing back — no code, no board row, no message</li><li>The booking robot saw it and stepped aside for a helper it thought owned last-minute bookings</li><li>That helper was written back in August but never actually turned on, so nothing ever picked the booking up</li><li>Every last-minute booking since Aug 20 was handed to nobody, quietly</li><li>The answer: stop stepping aside at all, rather than waiting a while and then stepping in</li><li>We are NOT switching the old helper on — it is allowed to text door codes on its own, and it is being removed anyway</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Instant bookings fall into the Registrar/same-day-lane deference gap</b></p><h2>The defect</h2>
+
+<p>Skedda instant booking (approval off, enabled by Junyan 2026-08-21) produces the</p>
+<p>self-serve notification class — &quot;X made a booking&quot; — for EVERY direct booking,</p>
+<p>new renters included. Two consumers each assume the other owns it:</p>
+
+<ul>
+<li>- <b>SameDay.gs</b> (send-engine) does not fire on that class — it watched the</li>
+</ul>
+<p>confirmation/approval classes that instant booking just abolished for direct</p>
+<p>bookings. (Same root cause as the Desiree Joy miss: &quot;the booking-request</p>
+<p>approval requirement was removed, ending the notification class that fed</p>
+<p>Sales - Booking Request.&quot;)</p>
+<ul>
+<li>- <b>The Registrar</b> (booking_sweep) sees the booking but defers anything in the</li>
+</ul>
+<p>today/tomorrow window: <code>deferred: &quot;same-day lane owns this booking&quot;</code> — to a</p>
+<p>lane that is not coming. The deferral never expires.</p>
+
+<p>Result: a new-renter instant booking inside the window gets NO card, NO board</p>
+<p>row, NO confirmation, NO HTA, NO code check — silently, forever.</p>
+
+<h2>Proven case</h2>
+
+<p>Sara Aljabery, booked 2026-08-21 21:59Z for Aug 22 13:15 (509B). Dry-run showed</p>
+<p><code>artist:would-create, access:check-failed:SweepError, deferred</code> on every pass</p>
+<p>for ~1h. Unstuck attended 2026-08-21 ~23:05Z (card linked, code verified,</p>
+<p>confirmation + Returning Access sent, receipts phonecom:258508808/258508796,</p>
+<p>Sales ticket at Review). JOB 2&#x27;s Skedda-label branch also calls this class</p>
+<p>&quot;self-serve calendar noise — mark read only&quot;, so no LLM pass catches it either.</p>
+
+<h2>The fix to design (pick one, or both)</h2>
+
+<ol>
+<li>1. Teach SameDay.gs the &quot;made a booking&quot; class (it already handles the platform</li>
+</ol>
+<p>accept class), OR</p>
+<ol>
+<li>2. Make the Registrar&#x27;s deference expire: if the booking is inside the window</li>
+</ol>
+<p>AND the lane has produced nothing (no board row / no HTA-sameday queue row)</p>
+<p>after N minutes, the sweep takes ownership instead of deferring again.</p>
+<p>Expiring deference is the more robust shape — it also covers the lane being</p>
+<p>down, not just blind.</p>
+
+<p>Also update JOB 2&#x27;s &quot;self-serve calendar noise&quot; line: noise only when the</p>
+<p>holder is a KNOWN artist; unknown holder → last-minute path. (The 2026-08-21</p>
+<p>canon narrowing covered platform enquiries; this is the Skedda-direct twin.)</p>
+
+<h2>Constraints</h2>
+
+<ul>
+<li>- One writer per booking stays the rule — the fix must not create double-sends.</li>
+<li>- Production trigger/config changes need Junyan&#x27;s explicit approval.</li>
+</ul>
+
+<p>---</p>
+
+<h2>Resolution (2026-08-21)</h2>
+
+<p><b>The stated cause #1 is wrong, and the correction changes the fix.</b></p>
+
+<p><code>send-engine/SameDay.gs</code> already handles this exact class. Line 152:</p>
+<p><code>subject.match(/^(.+?) made a booking for /)</code> → <code>kind = &#x27;direct&#x27;</code>, and RUNTIMES.md&#x27;s</p>
+<p>lane table lists &quot;<code>X made a booking</code>&quot; as a detected class. Sara Aljabery&#x27;s mail</p>
+<p>(thread <code>1a02656427786670</code>, 2026-08-21 21:59:36Z, subject &quot;Sara Aljabery made a</p>
+<p>booking for Saturday, August 22, 2026, 1:15 p.m. (Studio 509B)&quot;) parses, is not</p>
+<p>staff, is not staff-made, and starts tomorrow — it <b>qualifies</b> under</p>
+<p><code>sdQualifies_</code>. Teaching SameDay.gs this class would have been a no-op.</p>
+
+<p><b>The actual cause: the lane SameDay.gs is deferred to has never been installed.</b></p>
+<p>RUNTIMES.md, ⚠️ block under &quot;Apps Script — Same-Day Access Lane&quot;: *&quot;The Apps Script</p>
+<p>half (<code>SameDay.gs</code>) is not installed yet — paste, properties, DB sharing, timezone,</p>
+<p>dry run, triggers. The lane cannot fire until <code>SAMEDAY_ENABLED=true</code>.&quot;* Restated</p>
+<p>2026-08-21 under DocIntake: *&quot;two uninstalled lanes now sit in this project</p>
+<p>(<code>SameDay.gs</code> is also pending).&quot;* Built 2026-08-12, never turned on.</p>
+
+<p>So the Registrar (live 2026-08-20) shipped a deference branch pointing at a lane</p>
+<p>that has never run. <code>deferred: &quot;same-day lane owns this booking&quot;</code> has been false</p>
+<p>for every same-day booking since the sweep went live. Instant booking did not</p>
+<p>create this hole — it removed the last accidental cover for it (the approval class</p>
+<p>that fed <code>Sales - Booking Request</code>, which a human worked by hand).</p>
+
+<p><b>Decision: option 2, in its strongest form — delete the deference, do not expire it.</b></p>
+
+<p>Expiring deference is a hedge against a lane being <i>down</i>. A lane that was never</p>
+<p>installed is down 100% of the time, so a timer only buys N minutes of guaranteed</p>
+<p>nothing on every same-day booking — the worst window to spend latency in. The sweep</p>
+<p>takes the window unconditionally.</p>
+
+<p>Option 1 is <b>rejected</b>: installing SameDay.gs now means standing up the desk&#x27;s only</p>
+<p>unattended auto-send-a-code-to-an-unverified-first-timer grant, a week before</p>
+<p><b>089 — one job, two triggers</b> retires it. Never install</p>
+<p>a lane you are about to remove.</p>
+
+<p><b>Shipped in two stages, so the hole closes without moving the send grant:</b></p>
+
+<ul>
+<li>- <b>Stage A — record-only takeover, no new send authority.</b> Cut as</li>
+</ul>
+<p><b>108</b>. Inside the window the sweep does</p>
+<p>exactly what it already does outside it — artist record, verified alarm access,</p>
+<p>board row, confirmation queued at Pending Review — and instead of the same-day HTA</p>
+<p>files a loud Actions row + Ops Lead SMS: &quot;same-day booking, HTA owed, human sends.&quot;</p>
+<p>Nothing new is authorized to send; the silent-forever failure becomes a visible,</p>
+<p>attended one. This is the Sara case handled by the machine up to the point a human</p>
+<p>is genuinely needed.</p>
+<ul>
+<li>- <b>Stage B — 089 as already ruled.</b> The imminent branch, canonical HTA templating,</li>
+</ul>
+<p>and SameDay&#x27;s auto-send bounds move into the sweep; SameDay.gs is marked</p>
+<p>do-not-install rather than retired-after-parallel-week (there is no lane to run in</p>
+<p>parallel with — 089&#x27;s &quot;parallel week&quot; precondition is void, and 089 should say so).</p>
+
+<p><b>One-writer safety.</b> The rule holds trivially at Stage A: with SameDay.gs</p>
+<p>uninstalled there is no second writer. If it is ever installed, the guard is the</p>
+<p>sweep&#x27;s existing per-booking dedup (board row / queue row re-derived each pass), not</p>
+<p>a deference rule — which is exactly 089&#x27;s &quot;same code path on both triggers, no seam</p>
+<p>to defend.&quot;</p>
+
+<p><b>Canon defects this exposes, fixed with Stage A (not optional — they are what made</p>
+<p>the gap invisible):</b></p>
+
+<ol>
+<li>1. <code>dc-canon/services/event-gate/booking_sweep.py</code> lines 25–29 assert SameDay.gs</li>
+</ol>
+<p>&quot;already owns bookings that start today or tomorrow, mail-triggered and acting</p>
+<p>within a minute.&quot; False since the sweep shipped. The docstring is the reason no</p>
+<p>one looked.</p>
+<ol>
+<li>2. RUNTIMES.md lines 69–70 and the <code>booking-sweep</code> row repeat the same claim.</li>
+<li>3. JOB 2&#x27;s Skedda-label branch: &quot;self-serve calendar noise — mark read only&quot; is</li>
+</ol>
+<p>noise <b>only when the holder is a known artist</b>; unknown holder → last-minute</p>
+<p>path. (Twin of the 2026-08-21 platform-enquiry narrowing.)</p>
+
+<p><b>Junyan&#x27;s call needed before anything ships</b> (production trigger/config): approve</p>
+<p>Stage A, and confirm SameDay.gs stays uninstalled through 089 rather than being</p>
+<p>switched on as a stopgap.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#067</span><span class="emoji">📬</span><span class="done-title">An email that lands in junk was lost to our records forever</span><span class="done-date">2026-08-20</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE. Fixed August 20</li><li>What went wrong: on August 6 a renter emailed asking for door codes. Our record book has Junyan&#x27;s reply but not her question, so the conversation reads as if the desk wrote to her out of nowhere</li><li>Why: the collector only ever looks forward. It reads new mail since the last time it looked, then moves its bookmark past that point and never looks back</li><li>So a message hidden at the moment it looked — sitting in the junk folder, most likely — is missed, and stays missed. Even when a person later says &#x27;this is not junk&#x27;, the bookmark has already moved past it. Nothing goes back for it</li><li>The fix: once a day the collector re-reads the last week and files anything it does not already have. Any kind of miss now heals itself, not just junk ones</li><li>We deliberately did NOT make it read the junk folder. Mail sitting in junk is junk and stays out of the record. But the moment a person rescues it, the next day&#x27;s re-read picks it up. The person&#x27;s click is the repair</li><li>It says so out loud when it recovers something — because a quiet fix would hide the fact that the first pass has a blind spot</li><li>Proved by doing it: we deleted a three-day-old message from the records and the next run put it back, identical, and said so</li><li>One thing we could not prove: that junk really was the cause that day. It does not matter — the fix repairs any kind of miss, and the cause only mattered for the option we did not choose</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Customer mail that lands in spam never reaches canon — even after a human rescues it</b></p><h2>Question</h2>
 
 <p>Found while checking 062&#x27;s backfill. Camille Quesada emailed the desk <b>2026-08-06 19:32Z</b></p>
 <p>(&quot;Booking for Sunday, August 9th&quot; — asking for door codes and alarm instructions). Junyan&#x27;s</p>
@@ -10685,5 +10887,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-20 17:23 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-22 10:57 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
