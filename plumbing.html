@@ -315,6 +315,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry alert">
       <details>
+      <summary><span class="when">2026-08-22 &middot; 18:00Z</span>
+      <h3>The watchdog armed a studio on a person &mdash; occupancy guard added, watchdog re-armed<span class="kind">DEFECT + FIX</span></h3></summary>
+      <p><strong>Studio 693, 12:20&ndash;12:25 Toronto. Hanano was inside.</strong> An alarm fired, she disarmed the panel at 12:20, and the watchdog disarmed and <strong>armed away</strong> on her at 12:22 and again at 12:24. She had to disarm three times in five minutes.</p>
+      <p><strong>Root cause: <code>in_alarm</code> stays LATCHED TRUE after a human disarm.</strong> <code>executor.py</code>&rsquo;s pre-command recheck read <code>in_alarm</code> and nothing else, so her dealing with the alarm read as &ldquo;siren still going, nobody has dealt with this&rdquo;. It never asked whether the partition was still armed. The <code>max_clears_per_alarm=2</code> cap added 08-18 is the only reason it stopped at two cycles &mdash; a cap meant for panel stubbornness ended up as the last thing standing between the system and a customer.</p>
+      <p><strong>Fix &mdash; <code>_safe_to_cycle()</code>, every check before the first command:</strong> (1) partition still in an armed state, checked FIRST and independently of <code>in_alarm</code> &mdash; a partition no longer armed was disarmed by somebody, the clearest presence signal this system can get; (2) still <code>in_alarm</code>; (3) no occupancy signs on that panel &mdash; any sensor open, or a motion detector reading anything but <code>idle</code>, scoped by panel-id prefix. Nothing runs between the disarm and the arm, because a refusal there leaves the studio open. Applies to <strong>bypass restores too</strong> &mdash; they also disarm/re-arm and could have done the same thing.</p>
+      <p><strong>Known limit:</strong> motion goes idle when a person stands still, so occupancy signs are a strong signal, not proof. The arm-state check is the reliable one.</p>
+      <p>6 regression tests incl. <code>test_a_human_disarm_stops_the_cycle_dead</code> (with <code>in_alarm</code> deliberately still True) and <code>test_every_check_happens_before_the_disarm</code>; 211 pass. Image <code>alarm:occupancy-0822</code>. Watchdog switched OFF at 17:30Z during diagnosis, <strong>re-armed 18:00Z on Junyan&rsquo;s approval</strong> (rev <code>alarm-mcp-00047-vqd</code>, <code>armed=True</code> confirmed in the tick log). Fourth time in eight days that production caught something recorded as settled &mdash; the pattern each time was treating a returned call as a changed world.</p>
+    </details>
+    </li>
+
+    <li class="entry alert">
+      <details>
       <summary><span class="when">2026-08-21 &middot; 23:20Z</span>
       <h3>Instant booking opened a deference gap: new renter, no card, no codes, no messages &mdash; forever<span class="kind">DEFECT + UNSTICK</span></h3></summary>
       <p><strong>Sara Aljabery booked 509B for the next day (instant direct, 21:59Z) and nothing happened.</strong> Instant booking (approval off, new today) makes every direct booking arrive as &ldquo;X made a booking&rdquo; &mdash; the self-serve class. <code>SameDay.gs</code> doesn&rsquo;t fire on that class, and the Registrar defers every today/tomorrow booking to it: <code>deferred: "same-day lane owns this booking"</code>, every 30 minutes, to a lane that is not coming. JOB&nbsp;2 additionally calls the class &ldquo;calendar noise &mdash; mark read only&rdquo;. Three owners, all pointing at each other. Same root cause as the Desiree&nbsp;Joy miss (removing an approval step abolishes a notification class something else depended on).</p>
