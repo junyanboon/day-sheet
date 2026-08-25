@@ -315,6 +315,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-25 &middot; 23:26Z</span>
+      <h3>FBS board: <code>No GTG</code> clears on an inbound text<span class="kind">NEW ROUTE</span></h3></summary>
+      <p><strong>Ruled by Junyan 2026-08-25</strong> looking at tonight&rsquo;s 901 row: Raquel K. had texted the desk seven times and the board still warned <code>No GTG</code>, because GTG is a Notion field a human flips and nobody had. The chip now disappears the moment the renter has texted us.</p>
+      <p><strong>New read.</strong> <code>fbs-monitor/build.py</code> gains a fourth Notion source: the &#128236;&nbsp;Correspondence Log (<code>defec0fd&hellip;</code>), filtered to <em>Direction = &rarr; Us</em>, <em>Medium &isin; SMS / WhatsApp / RCS</em>, dated on-or-after the board&rsquo;s own 05:00 day start. It returns a <strong>set of Artist page-ids and nothing else</strong> &mdash; <code>Content</code> is verbatim customer text and is never read; the page is public. Matching to the booking is by Artist page-id (both the FBS row and the ledger row relate to the same Artist page), never by name. One new boolean, <code>heard</code>, crosses into the payload; <code>gtg</code> itself stays the truthful Notion value.</p>
+      <p><strong>Failure mode.</strong> Soft, and deliberately one-directional: if the Correspondence read fails, the edition carries a fallback note and the chip behaves exactly as before (shown). A broken read can never <em>hide</em> a warning.</p>
+      <p><em>Watch for:</em> a renter who texts about something unrelated also clears the chip &mdash; that is the rule as asked for, scoped to today only so yesterday&rsquo;s chatter does not suppress it. Inbound <em>email</em> deliberately does not clear it.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-25 &middot; 23:21Z</span>
       <h3>Platform gate 1 now drafts the relay phone-number ask itself<span class="kind">ROUTE CHANGE</span></h3></summary>
       <p><strong>Refined the same night:</strong> Junyan ruled gate&nbsp;1 clears the moment he accepts the booking, and the Registrar&rsquo;s job at that gate is to file the booking <em>and</em> send the phone-number request to the renter through the platform relay email &mdash; not just text the on-call phone. Shipped as dc-canon <code>7738af8f</code>, deployed 23:21Z as <code>event-gate-00078-mhz</code> (fingerprint <code>0b5cb377ac52</code> verified byte-identical); hold intact.</p>
