@@ -315,6 +315,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-25 &middot; 22:38Z</span>
+      <h3>Registrar grows a platform two-gate lane and a standing same-day ops text<span class="kind">NEW ROUTE</span></h3></summary>
+      <p><strong>Ruled by Junyan after tonight&rsquo;s Raquel K. Peerspace booking</strong> (accepted 4:57&nbsp;PM for a 7:00&nbsp;PM start), which exposed that the sweep <em>skipped</em> title-only platform mirrors entirely (&ldquo;no holder on the booking&rdquo;) &mdash; the desk learned about the booking from the renter, and the whole access chain ran by hand. Shipped as dc-canon <code>72b081bd</code>, deployed 22:36Z (fingerprint <code>4077f13e4e04</code> verified byte-identical); hold <code>SWEEP_SAMEDAY_HOLD=1</code> confirmed intact.</p>
+      <p><strong>Platform gates.</strong> A holderless booking whose title names Peerspace/Giggster/Tagvenue/Splacer is now the platform lane&rsquo;s work. <strong>Gate&nbsp;1</strong> (accepted, no phone): one keyed Actions row + one SMS to the on-call phone &mdash; &ldquo;get the number in the platform chat&rdquo;; the chain does not run, so no junk Artist card is minted and nothing can leak through the relay (HOUSE-RULES &#127757;&nbsp;3). <strong>Gate&nbsp;2</strong> (an Artist card matching the title-name carries a Phone &mdash; what the desk writes after the chat): the next pass runs the full chain on that identity. Zero or several phone-bearing matches both read as gate&nbsp;1 &mdash; a reminder is cheaper than a wrong send.</p>
+      <p><strong>Standing ops text.</strong> <code>_ops_report()</code> ports SameDay.gs&rsquo;s contract, which had not survived the takeover: every same-day booking that gets REAL work this pass (queued / provisioned / board row / newly filed residue) produces one text to the on-call phone, success or failure; settled passes stay silent, so a 30-min cadence cannot repeat itself. <code>send_ops_text</code> lives in <code>actuator.py</code> beside the emergency summons, without the siren. 546 tests pass.</p>
+      <p><em>Watch for:</em> the next platform booking should produce a gate-1 text within 30 minutes of acceptance; adding the phone to the card should complete the chain on the following pass.</p>
+    </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-25 &middot; ~21:00Z (recorded later)</span>
       <h3>Line P is LIVE, proven on its first real booking &mdash; Raquel K. held two minutes after Peerspace confirmed<span class="kind">PLATFORM MIRROR</span></h3></summary>
       <p><strong>The proof this map was holding out for.</strong> Junyan installed the 5-minute <code>platformMirrorTick</code> trigger; the first live booking through the lane was <strong>Raquel K.</strong> &mdash; Peerspace &ldquo;Your booking is confirmed&rdquo; landed <strong>20:57:02Z</strong> (thread <code>1a03ab6631edbe44</code>, listing &ldquo;Sunny Dance Studio by Yonge and Bloor&rdquo;), and Skedda booking <strong>119728204</strong> &ldquo;Raquel K. Peerspace&rdquo; exists on <strong>Studio 901 (Elements)</strong>, 19:00&ndash;20:30 EDT, price 60, <strong>null holder</strong>, created <strong>20:59:10Z</strong>. Two minutes, mail to calendar, no human in the chain. Verified by a separate <code>list_bookings</code> read of the calendar &mdash; not by the trigger screen.</p>
