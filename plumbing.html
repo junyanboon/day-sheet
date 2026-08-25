@@ -313,6 +313,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-25 &middot; 15:10Z</span>
+      <h3>A positive PBF reply now TRIGGERS the review ask &mdash; matching was never going to be enough<span class="kind">ROUTE CHANGE</span></h3></summary>
+      <p><strong>Junyan:</strong> &ldquo;Why didn&rsquo;t the review asks get autoqueued? Can we fix that?&rdquo; The morning&rsquo;s fix (<code>25045c6d</code>) forced the lane to query the How to Respond DB before composing &mdash; which converts a missed review ask into a <em>matching</em> problem. <strong>A match can be missed; a trigger cannot.</strong></p>
+      <p><strong>The PBF asks &ldquo;How did everything go?&rdquo;</strong> A good answer is a closed loop with a known reply shape, not a situation needing recognition &mdash; and it is the studio&rsquo;s single most reliable review moment. It now fires the same deterministic way the PBF sweep itself does.</p>
+      <p><strong>The deeper cause was the scope bullet</strong>, which filed <em>every</em> PBF-adjacent reply as courtesy &mdash; so a glowing answer was ack material by the rulebook before the composed-courtesy exemption ever saw it. Corrected in place.</p>
+      <p><strong>Two rules learned from the send itself.</strong> The ask <strong>replaces</strong> the courtesy ack rather than following it &mdash; the review row already opens by thanking them, so an ack in front says it twice, which is exactly why Junyan deleted the opening line from both rows (&ldquo;the PBF got sent out already so I can&rsquo;t resend the same thing&rdquo;). And a <strong>cadence guard</strong>: a regular gets a PBF after every booking, so skip anyone asked within 90 days &mdash; that figure is Claude&rsquo;s default for want of a stated one, and is flagged in canon as a judgement call rather than a measurement.</p>
+      <p>Still queues held at <code>Pending Review</code>. The trigger is about never missing the moment, not about sending unattended. Canon <code>f3d403cc</code>.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-25 &middot; 05:30Z</span>
