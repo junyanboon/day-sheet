@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-24 21:16 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-24 21:44 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2739,6 +2739,52 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Kim M., Thu 27 Aug 18:30–21:30, Studio 693, 30 attendees.</b> Mirrored (so the room is held)</p>
 <p>but holder <code>null</code> and no phone — invisible to every robot. Junyan asked her for a number on</p>
 <p>21 Aug; <b>no reply on the thread as of 24 Aug.</b> Three days out.</p>
+
+<h2>Correction, same day — most of the downstream IS handled</h2>
+
+<p>The section above claimed Kim M. was &quot;invisible to every robot&quot; and that Julia got nothing.</p>
+<p><b>Both wrong</b>, checked against live records 2026-08-24:</p>
+
+<ul>
+<li>- <b>Kim M.</b> has an Artist card keyed on her relay, <b>alarm code 6205</b> verified live on 4 panels</li>
+</ul>
+<p>(<code>code_is_stale: false</code>), and an <b>FBS board row</b> for 27 Aug 18:30 in 693. HTA/EOB unset is</p>
+<p>correct at T−3. She needs nothing.</p>
+<ul>
+<li>- <b>Julia S.</b> has a board row with <b>HTA <code>Sent</code> and EOB <code>Sent</code></b> — she was messaged and let in</li>
+</ul>
+<p>normally.</p>
+<ul>
+<li>- ~20 Peerspace guests hold cards on their relay address, each with a code and an</li>
+</ul>
+<p><code>Alarm Display Name</code>. This route has been working for months.</p>
+
+<p><b>Why:</b> the FBS board is built from the Skedda calendar by <b>booking title</b>, not by holder</p>
+<p>record. So a blank-holder mirror is legible to the desk. The sweep&#x27;s holder-based lookup is the</p>
+<p>only thing that skips them, and the board row is what actually drives EOB/PBF.</p>
+
+<p><b>So the ticket narrows sharply.</b> The failure is <i>one step</i>: nothing puts the booking on the</p>
+<p>calendar. Everything after that already works. Q1 (who owns them) and Q4 (repeat-renter</p>
+<p>short-circuit) are effectively answered by observation — the existing path handles both.</p>
+
+<p><b>Junyan&#x27;s ruling, 2026-08-24:</b> platform bookings stay <b>casual bookings with no Skedda user</b>.</p>
+<p>Do not create Skedda accounts for platform guests — confirmed against prior bookings, which are</p>
+<p>all <code>type: 1, user: null</code>. This is now settled, not open. Note the practical reason found while</p>
+<p>testing: <code>create_user</code> <b>emails the person a Skedda registration invite</b> on commit, which no</p>
+<p>platform guest should receive.</p>
+
+<p><b>Q2 (title-convention identity) is therefore load-bearing and still open</b> — the title is the</p>
+<p><i>only</i> link from a calendar booking to a person, and three variants exist in the wild</p>
+<p>(<code>Kim M. Peerspace</code>, <code>Julia S. Peerspace FBS</code>, <code>Peerspace Booking, Julia S.</code>). Standardise it.</p>
+
+<p><b>Q3 (the missing phone) is a platform ceiling, not a defect</b> — booking sites mask numbers</p>
+<p>permanently. Reply on the platform thread. Not worth further design.</p>
+
+<p><b>New, real, and not previously on this ticket: one card per guest.</b> Peerspace issues a fresh</p>
+<p>relay per booking, so every booking mints a new Artist card. <b>Julia S. has two</b> (relays</p>
+<p><code>prod-6a5753e7…</code> and <code>prod-6a8088af…</code>, same phone, same code 9312). The contact-points table</p>
+<p>(<b>101</b>/<b>103</b>) exists for</p>
+<p>exactly this and should absorb platform relays.</p>
 </div></details></details></div><div class="job"><div class="jnum">#089</div><div class="jhead"><span class="emoji">🧵</span><h4>One program will own a booking start to finish — Junyan&#x27;s call</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Today two programs share the work: a fast one for bookings starting today or tomorrow, and the new sweep for everything further out. The handoff line between them is invisible from outside</li><li>Junyan ruled: one program owns the whole thing. It runs every half hour AND gets nudged the moment a booking email arrives, so it is both thorough and fast</li><li>The fast program retires after a week of both running side by side to prove nothing gets double-sent</li><li>The risky permission — texting a door code with no human check — moves with the work. We discussed the danger of putting that inside a bigger program, and Junyan accepted it: the real protection is the checks, not the small box</li><li>One new problem the build must solve first: with two ways to wake up, the program can wake up twice at once and do the same thing twice. It needs a simple lock</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>One job, two triggers — the sweep becomes the sole owner of the booking lifecycle</b></p><h2>Ruling this implements (Junyan, 2026-08-19)</h2>
 
 <p>&quot;I would prefer one agent handle the whole thing from start to finish.&quot; The split ownership</p>
@@ -3442,7 +3488,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Replay the Sara Aljabery case (booked 21:59Z for 13:15 next day, 509B): one pass</p>
 <p>produces an artist record, a verified code, a board row, a queued confirmation, and</p>
 <p>one Actions row saying the HTA is owed. <code>deferred</code> appears in no result.</p>
-</div></details></details></div><div class="job"><div class="jnum">#109</div><div class="jhead"><span class="emoji">🏢</span><h4>Put booking-site bookings on our calendar the moment they come in</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When somebody books through Peerspace, Giggster or Tagvenue, it does NOT appear on our calendar</li><li>Junyan has been putting them on by hand — which works fine, when he is awake</li><li>Julia booked for Sunday evening and the email came in at 1:50 in the morning; her room only went on the calendar the day AFTER she had already danced</li><li>So all evening, studio 509A looked free and somebody else could have booked right over her</li><li>The fix is small: the part that creates the booking already exists and was tested — nothing is calling it</li><li>This job only holds the room. Door codes, cards and messages are not part of it</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Hold the room — a caller that mirrors platform bookings into Skedda on arrival</b></p><h2>The defect</h2>
+</div></details></details></div><div class="job"><div class="jnum">#109</div><div class="jhead"><span class="emoji">🏢</span><h4>Put booking-site bookings on our calendar the moment they come in</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When somebody books through Peerspace, Giggster or Tagvenue, it does NOT appear on our calendar</li><li>Junyan has been putting them on by hand — which works fine, when he is awake</li><li>Julia booked for Sunday evening and the email came in at 1:50 in the morning; her room only went on the calendar the day AFTER she had already danced</li><li>So all evening, studio 509A looked free and somebody else could have booked right over her</li><li>Everything AFTER that step already works — the desk finds these guests by the booking title, and about twenty of them have cards and working door codes</li><li>So this job is only about holding the room. Door codes, cards and messages are all fine already</li><li>The part that creates the booking exists and was tested back in August — nothing is calling it</li><li>We do NOT make Skedda accounts for booking-site guests (Junyan, Aug 24) — that would email them a sign-up invite they never asked for</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Hold the room — a caller that mirrors platform bookings into Skedda on arrival</b></p><h2>The defect</h2>
 
 <p>A Giggster/Peerspace/Tagvenue booking is not on the Skedda calendar until a human puts it</p>
 <p>there. The mirroring logic exists only inside <code>send-engine/SameDay.gs</code>, which has <b>never been</p>
@@ -3459,6 +3505,18 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>and <b>089</b> both read the <b>Skedda board</b>; a booking that was never</p>
 <p>mirrored is invisible to both. Neither ticket helps Julia.</p>
 
+<blockquote><b>Corrected 2026-08-24.</b> An earlier draft of this ticket implied platform bookings reach no</blockquote>
+<blockquote>automation. They do: cards, verified alarm codes and FBS board rows all exist for ~20 Peerspace</blockquote>
+<blockquote>guests, because the board is built from the Skedda calendar <b>by booking title</b>, not by holder.</blockquote>
+<blockquote>Kim M. has code 6205 live on 4 panels and a board row for 27 Aug; Julia&#x27;s HTA and EOB both read</blockquote>
+<blockquote><code>Sent</code>. That makes this ticket <b>narrower and more clearly correct</b>: holding the room is the</blockquote>
+<blockquote>single broken step, and it is the whole job.</blockquote>
+<p>&gt;</p>
+<blockquote><b>Junyan ruled 2026-08-24:</b> platform bookings stay <b>casual, with no Skedda user</b> — never</blockquote>
+<blockquote>create Skedda accounts for platform guests. <code>create_user</code> emails them a registration invite,</blockquote>
+<blockquote>which settles it independently. So the holder stays <code>null</code> by design and the <b>title is the</blockquote>
+<blockquote>identity link</b> — see 084 Q2, now load-bearing.</blockquote>
+
 <h2>Scope — the room, and only the room</h2>
 
 <p>Hold the room automatically. Everything downstream (artist card, alarm code, board row,</p>
@@ -3466,8 +3524,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>084</b>, which is still ungrilled.</p>
 
 <p><b>Do:</b> parse the platform confirmation mail, map listing → studio, call the mirror, verify.</p>
-<p><b>Do not:</b> provision access, create Artist cards, queue or send anything, or decide how the</p>
-<p>holder is attached.</p>
+<p><b>Do not:</b> provision access, create Artist cards, queue or send anything, attach a Skedda</p>
+<p>holder, or create a Skedda user (it emails the guest an invite — ruled out 2026-08-24).</p>
 
 <p>This deliberately does NOT install <code>SameDay.gs</code>. That file carries the unattended</p>
 <p>send-a-code-to-a-stranger grant; this is a separate lane with no send authority, no alarm</p>
@@ -3503,11 +3561,12 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <h2>Two discrepancies to settle in the build</h2>
 
 <ol>
-<li>1. <b>The title convention does not match itself.</b> Hand-made mirrors read <code>Kim M. Peerspace</code> and</li>
+<li>1. <b>The title convention does not match itself — and it is the ONLY identity link.</b> In the wild:</li>
 </ol>
-<p><code>Julia S. Peerspace FBS</code>; <code>sdMirrorSkeddaBooking_</code> writes <code>&lt;name&gt; (&lt;Platform&gt;)</code>. 084 treats the</p>
-<p>title as the identity source, so shipping a third variant would break the thing 084 is trying</p>
-<p>to reason about. Pick one, write it down, and use it.</p>
+<p><code>Kim M. Peerspace</code>, <code>Julia S. Peerspace FBS</code>, <code>Peerspace Booking, Julia S.</code>; and</p>
+<p><code>sdMirrorSkeddaBooking_</code> would write a fourth, <code>&lt;name&gt; (&lt;Platform&gt;)</code>. Since the holder is</p>
+<p>deliberately <code>null</code>, the board and every downstream lookup key on this string. <b>Standardise it</p>
+<p>before shipping</b> — this is the highest-risk detail in the ticket, not a tidiness point.</p>
 <ol>
 <li>2. <b>Price parsing.</b> <code>sdParsePeerspace_</code> reads <code>Space rental</code>; Julia&#x27;s mail shows <b>Payout</li>
 </ol>
@@ -11029,5 +11088,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-24 21:16 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-24 21:44 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
