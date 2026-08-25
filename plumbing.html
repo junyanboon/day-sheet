@@ -313,6 +313,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-25 &middot; 02:40Z</span>
+      <h3>The board&rsquo;s own missing-code check is DELETED &mdash; it never fired once; the Doorman&rsquo;s protests now render by deadline instead of being buried<span class="kind">FAILURE MODE + ROUTE CHANGE</span></h3></summary>
+      <p><strong>Two changes, one Junyan session.</strong> First: fbs-monitor&rsquo;s missing-alarm-code chip (added 08-07) is removed, not repaired. Its own all-codeless suppression guard fired on <strong>1,924 consecutive rebuilds</strong> &mdash; 17 days, every single run &mdash; so the chip never rendered once and every rebuild commit carried the &ldquo;Alarm-code check suppressed&rdquo; warning, training everyone to ignore rebuild notes. The codes were there throughout (656 of 855 non-closed artists hold one); the builder could not see them through the <code>Alarm Code</code> rollup, most likely an integration-permissions gap on the Artist DB (unverified &mdash; deliberately left undiagnosed, because the check was the WEAKER of two: it read Notion&rsquo;s record of a code while the Doorman verifies the live panel, 7 days ahead. Junyan&rsquo;s 08-15 &ldquo;no duplicates, all under the Doorman&rdquo; ruling settles which survives). <code>parse_notion()</code> no longer reads the <code>Alarm Code</code> rollup at all &mdash; nothing on a public page needs a PIN-shaped read.</p>
+      <p><strong>Second, the route change (Junyan: &ldquo;the Doorman&rsquo;s protests get completely buried&rdquo;):</strong> the Issues tab&rsquo;s today+tomorrow horizon (08-15 ruling) was hiding exactly the rows the Doorman raises early &mdash; the 08-24 board rendered five &ldquo;Retire alarm code&rdquo; housekeeping rows while filtering out Akira Huang (NO Alarm.com user, 509B Aug 28, raised with 5 days of lead) and Megan Cartwright&rsquo;s compromised-code rotation, BECAUSE their titles carried dates. Dateless housekeeping defaulted to near-term; deadlined gaps hid until T-1, spending the lead the Doorman bought. Inverted for Access / PIN rows only: a dated gap always shows with a countdown (&ldquo;Fri Aug 28 &middot; 4d&rdquo;), soonest fuse first, crit from T-1 and while OVERDUE; retire/recheck housekeeping collapses to one line that sorts last and is the first thing the 12-row limit trims. Undated access rows, &#128680; urgents and Run Errors keep their old behavior; the horizon still governs everything that is not a dated gap.</p>
+      <p><em>Paper trail:</em> fbs-monitor <code>da859563</code> (removal) + <code>60775680</code> (Issues tab), build.py + both templates; <code>test_issues.py</code> pins the burial itself &mdash; the Akira row replayed through a mocked query is the first test case. Boards pick both up on the next ~15-min rebuild. The Booking-Status-sync fix this session started from was already shipped (<code>8ce8c4fe</code> + <code>dc715f58</code>, Aug 22) and verified flipping live rows.</p>
+    </details>
+    </li>
+
     <li class="entry llm">
       <details>
       <summary><span class="when">2026-08-25 &middot; 01:55Z</span>
