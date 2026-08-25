@@ -315,6 +315,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-25 &middot; 23:55Z</span>
+      <h3>The Avante Error was a STALE-POLL STOMP over a delivered SMS &mdash; and the morning &ldquo;mis-click&rdquo; theory was wrong<span class="kind">SEND ENGINE</span></h3></summary>
+      <p><strong>Corrected record:</strong> both Avante Errors were the engine, not a hand &mdash; alert emails sat in the business mailbox all along (<code>[Send Engine] Error &hellip; DNS error: api.phone.com</code>, 15:29Z and 17:11Z). The 17:11Z one is the nasty case: an earlier run had already SENT the SMS (receipt <code>phonecom:258741151</code>, Claudia replied) but a later run&rsquo;s <em>Notion poll was stale</em>, saw Ready to Send, retried, hit the DNS error, and <code>failRow_</code> stomped Error + cleared Sent At over a delivered message. The engine&rsquo;s existing script lock can&rsquo;t fix a stale read.</p>
+      <p><strong>v20 additions (local <code>send-engine/Code.gs</code>, paste-deploy still pending):</strong> pre-claim LIVE single-page re-read &mdash; anything but a receipt-less Ready to Send row is skipped (kills both the stomp and the worse twin, a stale-poll DOUBLE-SEND); <code>failRow_</code> re-reads before flipping and never Errors a row that carries a receipt. Deck-side: an Error card now checks the receipt first and, when one exists, says &ldquo;this already went out &mdash; do NOT send again&rdquo;; the no-stamp fallback now points at the <code>[Send Engine]</code> alert mail instead of guessing a mis-click. Row restored to Sent with its real receipt.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-25 &middot; 23:05Z</span>
       <h3>Deck card header redesigned &mdash; fused channel chips, plain-language context, links dropped<span class="kind">REVIEW SURFACE</span></h3></summary>
       <p>Mobbin-referenced redesign (Plain&rsquo;s inline envelope, Featurebase&rsquo;s name+subtitle, Lemni&rsquo;s subject-with-body), approved by Junyan against a four-channel mock. Header is now: <strong>name</strong> (itself the quiet link to the Notion row &mdash; the only link left) &rarr; <strong>identity line</strong> of fused chips (<code>SMS (647) 828-2479</code> &middot; <code>code 2149</code> &middot; state chips: errored / window) &rarr; <strong>context sentence</strong> &rarr; faint byline (agent &middot; studio). Removed outright: the Notion/ticket link row, the &ldquo;why this was drafted&rdquo; reasoning toggle, the boxed context strip, and the always-on dispatch checklist (a box now appears ONLY when a check fails). Email cards show <code>Subject:</code> with the draft, not in the header. Same treatment applied to Deck&nbsp;2 suggestion cards.</p>
