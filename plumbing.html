@@ -315,6 +315,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-25 &middot; 23:21Z</span>
+      <h3>Platform gate 1 now drafts the relay phone-number ask itself<span class="kind">ROUTE CHANGE</span></h3></summary>
+      <p><strong>Refined the same night:</strong> Junyan ruled gate&nbsp;1 clears the moment he accepts the booking, and the Registrar&rsquo;s job at that gate is to file the booking <em>and</em> send the phone-number request to the renter through the platform relay email &mdash; not just text the on-call phone. Shipped as dc-canon <code>7738af8f</code>, deployed 23:21Z as <code>event-gate-00078-mhz</code> (fingerprint <code>0b5cb377ac52</code> verified byte-identical); hold intact.</p>
+      <p><strong>The new gate-1 shape:</strong> keyed Actions row + a <strong>Message Queue row</strong> <code>PHONE-{platform}-{stamp}</code>, Channel <em>Platform Relay</em>, always <strong>Pending Review</strong> (outbound customer mail never auto-sends, and the Cloud Run service has no email path &mdash; the sender replies to the platform&rsquo;s booking-notification email in <code>thedanceannex@gmail.com</code>, whose reply-to is the per-booking relay address) + the ops SMS, now pointing at the drafted ask. The ask itself carries no code, so the relay is a legal channel for it; the CODE still never rides the relay (HOUSE-RULES &#127757;&nbsp;3). Queues exactly once per booking &mdash; it rides the residue&rsquo;s &ldquo;created&rdquo;. 548 tests pass.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-25 &middot; 22:38Z</span>
       <h3>Registrar grows a platform two-gate lane and a standing same-day ops text<span class="kind">NEW ROUTE</span></h3></summary>
       <p><strong>Ruled by Junyan after tonight&rsquo;s Raquel K. Peerspace booking</strong> (accepted 4:57&nbsp;PM for a 7:00&nbsp;PM start), which exposed that the sweep <em>skipped</em> title-only platform mirrors entirely (&ldquo;no holder on the booking&rdquo;) &mdash; the desk learned about the booking from the renter, and the whole access chain ran by hand. Shipped as dc-canon <code>72b081bd</code>, deployed 22:36Z (fingerprint <code>4077f13e4e04</code> verified byte-identical); hold <code>SWEEP_SAMEDAY_HOLD=1</code> confirmed intact.</p>
