@@ -313,6 +313,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry alert">
+      <details>
+      <summary><span class="when">2026-08-25 &middot; 21:08Z</span>
+      <h3>Same-day auto-send sent 9 unwanted code texts on its first afternoon &mdash; HELD at 20:47Z, three gates shipped at 21:05Z<span class="kind">INCIDENT + FIX</span></h3></summary>
+      <p><strong>The incident.</strong> The fully-robotic same-day window (<code>12289d34</code>, live 16:49Z) texted door codes to nine renters by 20:31Z. No wrong codes, no security exposure &mdash; every code was panel-verified the same pass and went by direct SMS to the renter&rsquo;s own number. But three regulars (Chelly, Tamina, Sharon) received <strong>the same code twice in one day</strong> (the Host had sent it at 08:21), four renters got first-timer onboarding they did not need, and &mdash; the sharpest edge &mdash; <strong>two sends walked past a human&rsquo;s explicit Will&nbsp;Not&nbsp;Send</strong> (Caryl&rsquo;s and Anita&rsquo;s confirmations, WNS&rsquo;d by hand Aug&nbsp;24). Junyan held the lane: <code>SWEEP_SAMEDAY_HOLD=1</code>, revision <code>event-gate-00072-ddm</code>, 20:47Z.</p>
+      <p><strong>Two root causes, both gate defects.</strong> (1) &ldquo;Same-day&rdquo; tested when a booking <em>starts</em>, not when it was <em>booked</em> &mdash; so every regular whose weekly slot came around fell into the emergency lane. (2) The returning-renter gate matched <code>Template&nbsp;=&nbsp;hta_studio_access</code>, a field only the sweep fills in: the Host&rsquo;s 141 access rows carried it 6 times, so the gate could see ~5% of real history and nearly every renter read as a first-timer. <code>hta_queued()</code> used the identical filter &mdash; two guards, one blind spot (the 845c93f3 disease: a gate reading only its own lane&rsquo;s bookkeeping).</p>
+      <p><strong>The fix (dc-canon <code>6725b236</code>, deployed 21:05Z, fingerprint <code>474134dedb13</code> verified byte-identical).</strong> One auto decision computed once per booking, three gates each independently sufficient to hold, and held always means Pending&nbsp;Review &mdash; never a silent skip: <strong>booked_late</strong> (last-minute = new in the between-pass snapshot&rsquo;s made-list; Skedda carries no created-at; no snapshot = everything held), <strong>human_said_no</strong> (any WNS row for this renter+date holds the pair, matched by date stamp and written date forms, fails closed), and the master hold switch. <code>prior_htas()</code>/<code>hta_queued()</code> now match access texts by shape (<code>_HTA_SHAPED</code>: template OR title Access/HTA OR body &ldquo;Door Code&rdquo;), bringing all 427 queue rows into view. 7 new tests, 539 pass.</p>
+      <p><em>State:</em> the hold REMAINS ON &mdash; the gates are live but re-enabling auto-send is Junyan&rsquo;s call, not a side effect of the deploy. This deploy also shipped two committed-but-undeployed changes from a sibling session: <code>2ee0c3a9</code> (/provision 409 is a retry) and <code>3b1c3563</code> (per-pass duration reporting, 087). <em>Watch for:</em> the first genuinely last-minute booking after re-enable &mdash; it should auto-send; a regular&rsquo;s slot should not.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-25 &middot; late</span>
