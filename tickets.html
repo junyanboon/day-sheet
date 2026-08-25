@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-24 23:05 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-24 23:13 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3402,7 +3402,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>are this class (both cards native, shared stable identifiers) rather than the relay class?</p>
 <p><b>104</b> will surface the evidence per pair — this ticket wants</p>
 <p>the split.</p>
-</div></details></details></div><div class="job"><div class="jnum">#108</div><div class="jhead"><span class="emoji">🏠</span><h4>Let the booking robot look after last-minute bookings itself</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Right now the booking robot skips anything starting today or tomorrow</li><li>It was told a second helper would handle those — that helper was never switched on</li><li>So it will stop skipping: it sets up the person, checks their door code, makes the board row, and writes the confirmation</li><li>The one thing it still won&#x27;t do is text the door code by itself — it raises a note asking a person to send it</li><li>Junyan has to say yes before this goes live, because it changes a running system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The sweep takes the same-day window, record-only — delete the deference branch</b></p><h2>Ruling this implements</h2>
+</div></details></details></div><div class="job"><div class="jnum">#108</div><div class="jhead"><span class="emoji">🏠</span><h4>Let the booking robot look after last-minute bookings itself</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>BUILT (Aug 25, Junyan said go) — waiting only for the deploy button</li><li>Right now the booking robot skips anything starting today or tomorrow</li><li>It was told a second helper would handle those — that helper was never switched on</li><li>So it will stop skipping: it sets up the person, checks their door code, makes the board row, and writes the confirmation</li><li>The one thing it still won&#x27;t do is text the door code by itself — it raises a note asking a person to send it</li><li>Junyan has to say yes before this goes live, because it changes a running system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The sweep takes the same-day window, record-only — delete the deference branch</b></p><h2>Ruling this implements</h2>
 
 <p><b>107 — Instant bookings fall into the Registrar/same-day-lane deference gap</b>:</p>
 <p>the Registrar defers today/tomorrow bookings to <code>send-engine/SameDay.gs</code>, which has</p>
@@ -3457,7 +3457,36 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Replay the Sara Aljabery case (booked 21:59Z for 13:15 next day, 509B): one pass</p>
 <p>produces an artist record, a verified code, a board row, a queued confirmation, and</p>
 <p>one Actions row saying the HTA is owed. <code>deferred</code> appears in no result.</p>
-</div></details></details></div><div class="job"><div class="jnum">#109</div><div class="jhead"><span class="emoji">🏢</span><h4>Put booking-site bookings on our calendar the moment they come in</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When somebody books through Peerspace, Giggster or Tagvenue, it does NOT appear on our calendar</li><li>Junyan has been putting them on by hand — which works fine, when he is awake</li><li>Julia booked for Sunday evening and the email came in at 1:50 in the morning; her room only went on the calendar the day AFTER she had already danced</li><li>So all evening, studio 509A looked free and somebody else could have booked right over her</li><li>Everything AFTER that step already works — the desk finds these guests by the booking title, and about twenty of them have cards and working door codes</li><li>So this job is only about holding the room. Door codes, cards and messages are all fine already</li><li>The part that creates the booking exists and was tested back in August — nothing is calling it</li><li>Junyan&#x27;s ruling (Aug 25): saying YES to a request on the booking site IS the decision — that one tap should set everything up, within minutes, with nothing else asked of him</li><li>We do NOT make Skedda accounts for booking-site guests (Junyan, Aug 24) — that would email them a sign-up invite they never asked for</li><li>Because of that, the booking&#x27;s TITLE is the only thing saying who the guest is — so it now has one fixed form: the name, then the site. &quot;Kim M. Peerspace&quot;</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Hold the room — a caller that mirrors platform bookings into Skedda on arrival</b></p><h2>The defect</h2>
+
+
+<p>---</p>
+
+<h2>Implemented 2026-08-25 — dc-canon <code>8e792d34</code>, NOT deployed</h2>
+
+<p>Junyan approved (&quot;Implement it… Let&#x27;s implement this now&quot;). Built exactly as scoped, plus one</p>
+<p>addition from review: <b>its own kill switch</b> — <code>SWEEP_SAMEDAY_DISABLED=1</code> restores the skip</p>
+<p>without touching the rest of the sweep, so reverting 108 no longer means <code>BOOKING_SWEEP_DISABLED</code>.</p>
+
+<ul>
+<li>- Deference branch deleted; <code>:sameday-gap</code> residue (which pointed readers at SameDay.gs) gone</li>
+</ul>
+<p>with it. In-window bookings run the full chain — artist record, access (first-sight under</p>
+<p><b>110</b>), board row, queued confirmation.</p>
+<ul>
+<li>- The same-day HTA becomes a keyed <code>hta-owed</code> Actions row (<code>Access / PIN</code>), raised once per</li>
+</ul>
+<p>booking, telling the human to check for prior HTAs before texting first-timer onboarding.</p>
+<p><b>No send authority moved.</b></p>
+<ul>
+<li>- Canon shipped with it: <code>booking_sweep.py</code> docstring rewritten, RUNTIMES.md both seam texts,</li>
+</ul>
+<p>JOB 2&#x27;s &quot;self-serve calendar noise&quot; line narrowed to known-artist-only.</p>
+<ul>
+<li>- Tests rewritten from the deference world; 420 passing.</li>
+</ul>
+
+<p>Remaining: Junyan deploys event-gate. Acceptance replay (the Sara case) happens on the first</p>
+<p>live same-day booking after deploy.</p></div></details></details></div><div class="job"><div class="jnum">#109</div><div class="jhead"><span class="emoji">🏢</span><h4>Put booking-site bookings on our calendar the moment they come in</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When somebody books through Peerspace, Giggster or Tagvenue, it does NOT appear on our calendar</li><li>Junyan has been putting them on by hand — which works fine, when he is awake</li><li>Julia booked for Sunday evening and the email came in at 1:50 in the morning; her room only went on the calendar the day AFTER she had already danced</li><li>So all evening, studio 509A looked free and somebody else could have booked right over her</li><li>Everything AFTER that step already works — the desk finds these guests by the booking title, and about twenty of them have cards and working door codes</li><li>So this job is only about holding the room. Door codes, cards and messages are all fine already</li><li>The part that creates the booking exists and was tested back in August — nothing is calling it</li><li>Junyan&#x27;s ruling (Aug 25): saying YES to a request on the booking site IS the decision — that one tap should set everything up, within minutes, with nothing else asked of him</li><li>We do NOT make Skedda accounts for booking-site guests (Junyan, Aug 24) — that would email them a sign-up invite they never asked for</li><li>Because of that, the booking&#x27;s TITLE is the only thing saying who the guest is — so it now has one fixed form: the name, then the site. &quot;Kim M. Peerspace&quot;</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Hold the room — a caller that mirrors platform bookings into Skedda on arrival</b></p><h2>The defect</h2>
 
 <p>A Giggster/Peerspace/Tagvenue booking is not on the Skedda calendar until a human puts it</p>
 <p>there. The mirroring logic exists only inside <code>send-engine/SameDay.gs</code>, which has <b>never been</p>
@@ -3596,7 +3625,24 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>New trigger on a live project — Junyan enables it. It writes to the Skedda calendar, so it wants</p>
 <p>one supervised dry run and one watched real booking before it runs unattended.</p>
-</div></details></details></div><div class="job"><div class="jnum">#110</div><div class="jhead"><span class="emoji">🔑</span><h4>Give people their door code the moment they book</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Right now you get your code when the robot&#x27;s window reaches your booking — about two weeks before</li><li>That was never a decision; it just fell out of how far ahead the robot looks</li><li>Junyan&#x27;s call (Aug 24): the code should be set up the moment somebody books, however far off the booking is</li><li>Codes do not expire any more, so a code made six months early is simply that person&#x27;s code</li><li>The catch: the robot must set it up ONCE and then leave it alone, or it would be re-checking thousands of old bookings every half hour forever</li><li>The alarm check a week before the booking stays, and that is what catches anything that has gone wrong since</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Door access is due when someone books, not when the horizon reaches them</b></p><h2>Ruling (Junyan, 2026-08-24)</h2>
+
+
+<p>---</p>
+
+<h2>Implemented 2026-08-25 — <code>send-engine/PlatformMirror.gs</code>, awaiting install</h2>
+
+<p>Junyan approved; ruling &quot;no human touches this — all robot driven&quot; (setup cascade only; renter</p>
+<p>messages keep their standing rules). Built by the parallel session as <code>PlatformMirror.gs</code>:</p>
+<p><code>platformMirrorTick</code> every 5 min, own kill switch <code>PLATFORM_MIRROR_ENABLED</code>, own seen-marks,</p>
+<p>parsers <b>pinned against the real mail bodies</b> (the SameDay parsers were written against the</p>
+<p>Gmail API&#x27;s rendering and match nothing on <code>GmailApp.getPlainBody()</code> — Julia&#x27;s mail has no</p>
+<p>&quot;Space&quot; label at all, so reusing them would have held nothing). Title per ruling:</p>
+<p><code>&lt;Name&gt; &lt;Platform&gt;</code>. Fail-closed on unmappable listings. <code>sdMirrorSkeddaBooking_</code>&#x27;s title line</p>
+<p>in SameDay.gs aligned to the same convention.</p>
+
+<p>Remaining, the one human step: paste into the Apps Script project, set Script Properties</p>
+<p>(<code>PLATFORM_MIRROR_ENABLED=true</code>, <code>SKEDDA_HTTP_URL</code>, <code>SKEDDA_HTTP_TOKEN</code>), run <code>pmDryRun()</code></p>
+<p>against recent mail, install the 5-min trigger. Then Julia&#x27;s replay is the acceptance test.</p></div></details></details></div><div class="job"><div class="jnum">#110</div><div class="jhead"><span class="emoji">🔑</span><h4>Give people their door code the moment they book</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Right now you get your code when the robot&#x27;s window reaches your booking — about two weeks before</li><li>That was never a decision; it just fell out of how far ahead the robot looks</li><li>Junyan&#x27;s call (Aug 24): the code should be set up the moment somebody books, however far off the booking is</li><li>Codes do not expire any more, so a code made six months early is simply that person&#x27;s code</li><li>The catch: the robot must set it up ONCE and then leave it alone, or it would be re-checking thousands of old bookings every half hour forever</li><li>The alarm check a week before the booking stays, and that is what catches anything that has gone wrong since</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Door access is due when someone books, not when the horizon reaches them</b></p><h2>Ruling (Junyan, 2026-08-24)</h2>
 
 <p>&quot;I want to provision door access the moment someone makes a booking (it&#x27;s not based on the</p>
 <p>horizon).&quot;</p>
@@ -11360,5 +11406,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-24 23:05 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-24 23:13 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
