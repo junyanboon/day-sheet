@@ -315,6 +315,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-25 &middot; 21:40Z</span>
+      <h3>Chikako Error diagnosed: Invariant J fired correctly; its reason lived in a channel the Deck can&rsquo;t see<span class="kind">SEND ENGINE</span></h3></summary>
+      <p><strong>Chain:</strong> The Responder queued her reply with <code>Email Subject: "Re: &hellip;"</code> and <code>Source Email</code> BLANK &mdash; while citing the thread id in its own Reasoning. At release the engine&rsquo;s Invariant J (v18) correctly refused it (a Re:-row with no Source Email dispatches as a NEW thread) and wrote why as a page comment + alert email &mdash; the Deck reads Reasoning, so the reviewer saw &ldquo;errored draft&rdquo; with nothing to fix. Third recurrence of the omission class (7 rows Jul 25&ndash;Aug 4, Diana L. Aug 12). The Responder&rsquo;s stated dispatch worry (blank Artist &rArr; empty rollup) was the WRONG failure &mdash; The Concierge had created her Artist record hours earlier.</p>
+      <p><strong>Fixes:</strong> canon <code>800f0b72</code> makes the pairing hard (&ldquo;Re:&rdquo; subject REQUIRES Source Email in the same write, recurrences named); defect row <code>3c77503281c481eebaccec3b41d0ad26</code> filed; <strong>engine v20 drafted in <code>send-engine/Code.gs</code></strong> &mdash; <code>failRow_</code> now also appends the <code>[Error &mdash; reason &mdash; ts]</code> stamp to Reasoning (chunked, never truncating agent provenance) so the Deck shows the cause. <em>&#9888; v20 is paste-deploy pending &mdash; local file only until Junyan updates the Apps Script project.</em></p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-25 &middot; 21:05Z</span>
       <h3>The Deck grows a second deck, a context strip, and an honest Error state<span class="kind">REVIEW SURFACE</span></h3></summary>
       <p><strong>Deck 2 &mdash; desk improvements.</strong> When every reply is decided, the Deck no longer stops at &ldquo;clear&rdquo;: Sweep Feedback rows of Type <code>HTR suggestion</code> / <code>HTR proposal</code> at Status <code>New</code> surface as their own card stack. Verbs are about the ROW &mdash; <em>Mark applied</em> (after the human makes the HTR edit) and <em>Decline with a reason</em>; both set Status <code>Applied</code> with a Deck stamp in &ldquo;What the sweep did&rdquo;, so declined ideas stop resurfacing and the no-agent-edits-HTR rule is untouched.</p>
