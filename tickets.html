@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-25 17:52 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-25 17:57 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">33</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">60</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">6</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">7</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -1163,6 +1163,70 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>The night-ops rebuild map owns the evidence-source design and already logs this build;</p>
 <p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
 <p>Ops Lead&#x27;s use of it here.</p>
+</div></details></details></div><div class="job"><div class="jnum">#112</div><div class="jhead"><span class="emoji">🧩</span><h4>The room-holder and the booking robot do not talk to each other</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Raquel booked through Peerspace on Aug 25 and asked for a room two hours later</li><li>You accepted at 4:57pm, and the room-holder put it on the calendar by itself at 4:59pm — two minutes, nobody awake needed. That half is proven now, for the first time</li><li>Then the booking robot looked straight past her, twice, and said nothing</li><li>Why: booking-site guests deliberately get NO account on our calendar (making one would email them a sign-up they never asked for), and the robot&#x27;s very first rule is to skip any booking with nobody attached</li><li>So both halves were built to the same decision and they do not join up</li><li>Everything she actually received was done by hand: her phone asked for in the chat, her code made, her access text sent at 5:53pm — 67 minutes before she danced</li><li>It worked because somebody was awake. That is the same sentence as Julia and Gabrielle, one step further along</li><li>The genuinely hard part is the phone number: booking sites hide it on purpose, and we never send codes through their chat. So the most this can do is everything EXCEPT the text, plus a loud note saying &#x27;ask this guest for a number&#x27;</li><li>The cheap version, if nothing else: make the skip leave a note instead of leaving silence</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A mirrored platform booking is invisible to the Registrar — &quot;no holder on the booking&quot; drops it silently</b></p><h2>Found by the first real one, 2026-08-25 (Raquel K.)</h2>
+
+<p>Peerspace <b>request</b> 16:56 EDT → Junyan accepted 16:57 → <b>the mirror created Skedda booking</p>
+<p><code>119728204</code> at 16:59:06 EDT</b> (<code>POST /mirror-booking</code> 200; booking stamped 20:59:10Z), titled</p>
+<p>&quot;Raquel K. Peerspace&quot;, Studio 901, 19:00–20:30, $60. <b>That half worked, unattended, two minutes</p>
+<p>after the tap — 109&#x27;s acceptance is met.</b></p>
+
+<p>Then nothing. The 17:00 and 17:30 sweep passes both <b>skipped her</b>, and skipped her <i>silently</i>:</p>
+
+<p>``<code>python</p>
+<p>holder = (booking.get(&quot;holder&quot;) or &quot;&quot;).strip().lower()</p>
+<p>if not holder:</p>
+<p>return &quot;no holder on the booking&quot;</p>
+<p></code>`<code></p>
+
+<p>The mirror deliberately creates a booking with <b>no linked Skedda user</b> — Junyan&#x27;s 2026-08-24</p>
+<p>ruling, because creating one emails the guest a sign-up invite they never asked for. The</p>
+<p>Registrar&#x27;s first gate drops exactly that shape. The two lanes were built to the same ruling and</p>
+<p>do not join.</p>
+
+<p>Everything a renter actually receives was then done <b>by hand</b>: phone asked for in the Peerspace</p>
+<p>chat (17:41), panel user </code>248361767<code> + code </code>7368<code> created and verified (17:47), HTA sent by</p>
+<p>direct SMS (17:53, phone.com </code>258793424<code>) — <b>67 minutes before her booking</b>. It worked because</p>
+<p>somebody was awake. That is the Julia sentence and the Gabrielle sentence, one lane further along.</p>
+
+<p><b>Note what this is NOT.</b> It is not the same-day send hold: the Registrar never held her at all,</p>
+<p>so there was no queued pair to release. Clearing </code>SWEEP_SAMEDAY_HOLD<code> would not have sent her</p>
+<p>anything.</p>
+
+<h2>Why the skip is defensible and still wrong</h2>
+
+<p>Per booking, &quot;no holder&quot; genuinely means the holder is absent. Across a WHOLE read it means a</p>
+<p>stripped session, and </code>run()<code> correctly fails closed on that. The bug is that a mirrored booking</p>
+<p>is a <b>known, expected, titled</b> shape — the title convention exists precisely so downstream lanes</p>
+<p>can identify the guest without an account — and the sweep treats it as an anonymous nobody.</p>
+
+<p>Worse: a skip files no residue. The lane&#x27;s whole design principle is that failures are late and</p>
+<p>noisy rather than silent and permanent, and this one is silent.</p>
+
+<h2>Shape (not ruled)</h2>
+
+<ul>
+<li>- Recognise the mirror&#x27;s title convention (</code>Name Platform`, e.g. &quot;Raquel K. Peerspace&quot;) and treat</li>
+</ul>
+<p>the parsed name as the holder for artist matching, instead of skipping. The convention was fixed</p>
+<p>for exactly this purpose (084).</p>
+<ul>
+<li>- The phone is the genuinely missing fact — platforms mask it permanently, and the code must never</li>
+</ul>
+<p>go through a platform relay (HOUSE-RULES 🌍 3). So the honest ceiling is: card + code + board row</p>
+<p>automatically, and a <b>loud residue</b> naming &quot;ask this guest for a phone number in the platform</p>
+<p>chat&quot; — not silence.</p>
+<ul>
+<li>- Cheapest interim, if the above is not built: make the holder-less skip file a residue when the</li>
+</ul>
+<p>title matches the mirror convention. One row, and nobody arrives uncontacted.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A mirrored booking produces either a completed chain or a visible row. Never a silent skip.</li>
+<li>- Replay Raquel: same board, same result, no human in the loop up to the phone request.</li>
+<li>- RUNTIMES.md + Plumbing Map entries.</li>
+</ul>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">33</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -11812,5 +11876,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-25 17:52 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-25 17:57 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
