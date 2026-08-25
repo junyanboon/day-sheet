@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-25 16:52 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-25 17:08 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">34</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">33</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">59</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">60</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1164,7 +1164,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
 <p>Ops Lead&#x27;s use of it here.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">34</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">33</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -3205,6 +3205,27 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>101 mints nothing for transactional notices (they lack the <code>(Giggster) &lt;Name&gt;:</code> prefix),</p>
 <p>but that is a consequence of the shape check, not an explicit blocklist.</p>
 
+
+<p>---</p>
+
+<h2>2026-08-25 — this ticket now blocks a concrete backfill, not just a theory</h2>
+
+<p>The Contact Points backfill of that day cleared all <b>10</b> Peerspace/Tagvenue guests who had</p>
+<p>no contact point of any kind, and deliberately stopped at the <b>11 Giggster ones</b>:</p>
+
+<p>Dhan P., Sinéad B., Blessing, Dashanique J., Ghazal, CHEUK KI KEVIN L., Hailey D.,</p>
+<p>abisha i., Shenay B., Sissy Maxwell &quot;Isaura&quot;, Ramla.</p>
+
+<p>Giggster hands over an SMS proxy number, never an address. Both email platforms are</p>
+<p>recycle-proof by construction (Peerspace&#x27;s mint epoch, Tagvenue&#x27;s monotonic id), so an old</p>
+<p>address is always safe to keep for recognition. <b>A Giggster number carries no identity at</p>
+<p>all</b>, so a stale one filed as a contact point could attach a stranger to a customer&#x27;s card</p>
+<p>on the next inbound — worse than the gap it closes. That is this ticket&#x27;s question, and</p>
+<p>until it is answered the 11 stay unfilled.</p>
+
+<p>So the acceptance test grows a second half: once recycling is characterised, either backfill</p>
+<p>these 11 as <code>recognition-only</code> keyed on the conversation UUID (never the number alone, per</p>
+<p>100), or record that they can never be filed and close the gap by ruling rather than by data.</p>
 </div></details></details></div><div class="job"><div class="jnum">#104</div><div class="jhead"><span class="emoji">🗂️</span><h4>Propose the card merges, with evidence, now that Contact Points can show it</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Propose the card merges, with evidence, now that Contact Points can show it</b></p><h2>Question</h2>
 
 <p><b>098</b> deferred the migration until the table existed so</p>
@@ -3685,67 +3706,33 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Still unproven until the first real platform booking: <code>SKEDDA_HTTP_URL</code>/<code>SKEDDA_HTTP_TOKEN</code></p>
 <p>(the dry run never calls the mirror) and the 5-min trigger being present. Acceptance = the</p>
-<p>next real confirmation appearing on Skedda within minutes, untouched by hands.</p></div></details></details></div><div class="job"><div class="jnum">#110</div><div class="jhead"><span class="emoji">🔑</span><h4>Give people their door code the moment they book</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Right now you get your code when the robot&#x27;s window reaches your booking — about two weeks before</li><li>That was never a decision; it just fell out of how far ahead the robot looks</li><li>Junyan&#x27;s call (Aug 24): the code should be set up the moment somebody books, however far off the booking is</li><li>Codes do not expire any more, so a code made six months early is simply that person&#x27;s code</li><li>The catch: the robot must set it up ONCE and then leave it alone, or it would be re-checking thousands of old bookings every half hour forever</li><li>The alarm check a week before the booking stays, and that is what catches anything that has gone wrong since</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Door access is due when someone books, not when the horizon reaches them</b></p><h2>Ruling (Junyan, 2026-08-24)</h2>
+<p>next real confirmation appearing on Skedda within minutes, untouched by hands.</p>
+<h2>Preflight PASSED 2026-08-25 17:00 EDT — the lane is fully proven bar a real booking</h2>
 
-<p>&quot;I want to provision door access the moment someone makes a booking (it&#x27;s not based on the</p>
-<p>horizon).&quot;</p>
+<p><code>platformMirrorPreflight</code> run from the Send Engine project:</p>
 
-<p>Today access is due <i>implicitly</i>, as a side effect of the read window: <code>ensure_access</code> runs on</p>
-<p>every booking the sweep can see, so a renter gets their code when the horizon reaches them —</p>
-<p>14 days out now, 45 if <code>SWEEP_HORIZON_DAYS</code> is raised, and never until then. That is an</p>
-<p>accident of how the board is read, not a decision anybody made.</p>
+<p>``<code></p>
+<p>SKEDDA_HTTP_URL   : https://skedda-mcp-249118612005.us-central1.run.app</p>
+<p>SKEDDA_HTTP_TOKEN : set, 64 chars</p>
+<p>PLATFORM_MIRROR_ENABLED : true</p>
+<p>OPS_LEAD_PHONE    : +16477733887</p>
+<p>/mirror-booking  : HTTP 400 — PASS (auth accepted, refused an empty booking)</p>
+<p>/release-booking : HTTP 400 — PASS (auth accepted, refused an empty booking)</p>
+<p>TRIGGER: 1 installed for platformMirrorTick</p>
+<p></code>`<code></p>
 
-<p><b>New rule: access is due on booking. Everything else stays due relative to the session</b> —</p>
-<p>board row at T−2, confirmation at T−2. Access is the one step whose clock starts at creation.</p>
+<p>Both routes answered from Apps Script&#x27;s own network with the project&#x27;s own token, so the</p>
+<p>URL, the credential and the reachability are all proven — not assumed. Exactly one trigger,</p>
+<p>which matters: two would mean two writers racing on the same mail. Independently confirmed</p>
+<p>from the workspace the same afternoon that </code>POST /mirror-booking<code> on </code>skedda-mcp` returns</p>
+<p>401 unauthenticated and 400 authenticated, i.e. the server enforces the token rather than</p>
+<p>ignoring it.</p>
 
-<p>Harmless by construction: codes have been permanent since windows were retired</p>
-<p>(<code>doorman-access-lifecycle.md</code>), so a code minted six months early is simply that renter&#x27;s code.</p>
-<p>For a returning renter <code>ensure_access</code> returns <code>already</code> and writes nothing. The change only</p>
-<p>bites for genuinely new renters, and in their favour — they can be told their code the day they</p>
-<p>book instead of a fortnight before they arrive.</p>
+<p>The trigger check was added to the preflight this session — properties can be perfect and</p>
+<p>the lane still dead if nothing calls the tick, and that failure is SILENT (it looks exactly</p>
+<p>like &quot;no platform bookings came in&quot;), which is the Julia failure mode all over again.</p>
 
-<h2>Why this is NOT just &quot;widen the horizon&quot;</h2>
-
-<p>Widening the read is free — one request, whatever the span (090 step 1, landed). <b>Processing</p>
-<p>is not.</b> Per booking per pass the sweep currently costs roughly a Notion artist query, a Notion</p>
-<p>page GET, and an <code>_alarm_call({verify_only})</code>. At a 14-day horizon that is a few hundred calls</p>
-<p>every 30 minutes. At a year it is thousands, forever, re-checking bookings that were settled</p>
-<p>months ago.</p>
-
-<p>So &quot;provision on booking&quot; has to mean <b>provision on FIRST SIGHT, then stop re-checking</b> — not</p>
-<p>&quot;read further and check everything every pass.&quot;</p>
-
-<h2>The build</h2>
-
-<ol>
-<li>1. <b>Widen the read</b> — cheap, already possible.</li>
-<li>2. <b>Provision on first sight of a booking id.</b> Which requires knowing what is new, which is</li>
-</ol>
-<p>exactly the snapshot / <code>created</code> high-water mark that <b>090</b></p>
-<p>step 3 builds. Hence the block: this ticket cannot be done honestly without it.</p>
-<ol>
-<li>3. <b>Stop re-checking settled bookings every pass.</b> A booking whose access step has completed</li>
-</ol>
-<p>is not re-verified by the sweep. The safety net already exists and is the right one: the</p>
-<p><b>Doorman preflights access 7 days out</b>, so a code that rots between booking and session is</p>
-<p>caught near the session, by the job that owns arrival — not by the sweep grinding the panel</p>
-<p>every 30 minutes for a year.</p>
-
-<h2>Watch for</h2>
-
-<ul>
-<li>- <b>The recurrence trap.</b> Series records arrive stamped with the SERIES start, so &quot;first sight&quot;</li>
-</ul>
-<p>on a recurring booking is not a real arrival. The recurring skip stays (map ruling 2026-08-19).</p>
-<ul>
-<li>- <b>Losing the snapshot must not mean re-provisioning everybody.</b> It should read as &quot;seen</li>
-</ul>
-<p>before&quot; by default — <code>ensure_access</code> returning <code>already</code> makes that safe, but the pass should</p>
-<p>not treat a lost snapshot as &quot;everything is new&quot; and stampede the panel.</p>
-<ul>
-<li>- A booking <b>moved</b> after provisioning does not need a new code (codes are permanent), so</li>
-</ul>
-<p>change detection does not have to re-trigger access — only the board row and confirmation.</p>
+<p>Remaining, and unprovable without one: the first real platform booking mirroring end to end.</p>
 </div></details></details></div><div class="job"><div class="jnum">#111</div><div class="jhead"><span class="emoji">🗂️</span><h4>A mirrored room is held once and never given back — cancellations and changes</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A mirrored room is held once and never given back — cancellations and changes</b></p><h2>Why this is not ticket 084</h2>
 
 <p>Junyan asked for this as &quot;084, it&#x27;s a huge gap.&quot; <b>084 is closed and correctly so</b> — its</p>
@@ -4560,6 +4547,103 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>his call.</p>
 
 <p>Status: <b>closed.</b> Remaining: deploy </code>3b1c3563` (blocked on approval at time of writing).</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#110</span><span class="emoji">🔑</span><span class="done-title">Give people their door code the moment they book</span><span class="done-date">2026-08-25</span></summary><div class="done-body"><ul class="plain-bullets"><li>Right now you get your code when the robot&#x27;s window reaches your booking — about two weeks before</li><li>That was never a decision; it just fell out of how far ahead the robot looks</li><li>Junyan&#x27;s call (Aug 24): the code should be set up the moment somebody books, however far off the booking is</li><li>Codes do not expire any more, so a code made six months early is simply that person&#x27;s code</li><li>The catch: the robot must set it up ONCE and then leave it alone, or it would be re-checking thousands of old bookings every half hour forever</li><li>The alarm check a week before the booking stays, and that is what catches anything that has gone wrong since</li><li>DECIDED (Aug 25): looking further ahead than two weeks was considered and turned down — Junyan: the code being ready early is an internal detail, not something a renter ever notices</li><li>It would have handed a live door code to 17 more people today, for bookings up to six weeks away, some of whom will cancel and never come — and codes do not expire</li><li>The real win landed anyway: a code is now worked out ONCE and never re-checked, so how far ahead we look is a free choice rather than a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Door access is due when someone books, not when the horizon reaches them</b></p><h2>Ruling (Junyan, 2026-08-24)</h2>
+
+<p>&quot;I want to provision door access the moment someone makes a booking (it&#x27;s not based on the</p>
+<p>horizon).&quot;</p>
+
+<p>Today access is due <i>implicitly</i>, as a side effect of the read window: <code>ensure_access</code> runs on</p>
+<p>every booking the sweep can see, so a renter gets their code when the horizon reaches them —</p>
+<p>14 days out now, 45 if <code>SWEEP_HORIZON_DAYS</code> is raised, and never until then. That is an</p>
+<p>accident of how the board is read, not a decision anybody made.</p>
+
+<p><b>New rule: access is due on booking. Everything else stays due relative to the session</b> —</p>
+<p>board row at T−2, confirmation at T−2. Access is the one step whose clock starts at creation.</p>
+
+<p>Harmless by construction: codes have been permanent since windows were retired</p>
+<p>(<code>doorman-access-lifecycle.md</code>), so a code minted six months early is simply that renter&#x27;s code.</p>
+<p>For a returning renter <code>ensure_access</code> returns <code>already</code> and writes nothing. The change only</p>
+<p>bites for genuinely new renters, and in their favour — they can be told their code the day they</p>
+<p>book instead of a fortnight before they arrive.</p>
+
+<h2>Why this is NOT just &quot;widen the horizon&quot;</h2>
+
+<p>Widening the read is free — one request, whatever the span (090 step 1, landed). <b>Processing</p>
+<p>is not.</b> Per booking per pass the sweep currently costs roughly a Notion artist query, a Notion</p>
+<p>page GET, and an <code>_alarm_call({verify_only})</code>. At a 14-day horizon that is a few hundred calls</p>
+<p>every 30 minutes. At a year it is thousands, forever, re-checking bookings that were settled</p>
+<p>months ago.</p>
+
+<p>So &quot;provision on booking&quot; has to mean <b>provision on FIRST SIGHT, then stop re-checking</b> — not</p>
+<p>&quot;read further and check everything every pass.&quot;</p>
+
+<h2>The build</h2>
+
+<ol>
+<li>1. <b>Widen the read</b> — cheap, already possible.</li>
+<li>2. <b>Provision on first sight of a booking id.</b> Which requires knowing what is new, which is</li>
+</ol>
+<p>exactly the snapshot / <code>created</code> high-water mark that <b>090</b></p>
+<p>step 3 builds. Hence the block: this ticket cannot be done honestly without it.</p>
+<ol>
+<li>3. <b>Stop re-checking settled bookings every pass.</b> A booking whose access step has completed</li>
+</ol>
+<p>is not re-verified by the sweep. The safety net already exists and is the right one: the</p>
+<p><b>Doorman preflights access 7 days out</b>, so a code that rots between booking and session is</p>
+<p>caught near the session, by the job that owns arrival — not by the sweep grinding the panel</p>
+<p>every 30 minutes for a year.</p>
+
+<h2>Watch for</h2>
+
+<ul>
+<li>- <b>The recurrence trap.</b> Series records arrive stamped with the SERIES start, so &quot;first sight&quot;</li>
+</ul>
+<p>on a recurring booking is not a real arrival. The recurring skip stays (map ruling 2026-08-19).</p>
+<ul>
+<li>- <b>Losing the snapshot must not mean re-provisioning everybody.</b> It should read as &quot;seen</li>
+</ul>
+<p>before&quot; by default — <code>ensure_access</code> returning <code>already</code> makes that safe, but the pass should</p>
+<p>not treat a lost snapshot as &quot;everything is new&quot; and stampede the panel.</p>
+<ul>
+<li>- A booking <b>moved</b> after provisioning does not need a new code (codes are permanent), so</li>
+</ul>
+<p>change detection does not have to re-trigger access — only the board row and confirmation.</p>
+
+<h2>Ruling 2026-08-25 — the horizon STAYS at 14. This ticket is complete as shipped.</h2>
+
+<p>Junyan, asked whether to widen <code>SWEEP_HORIZON_DAYS</code>: *&quot;Code is ready the moment people book is</p>
+<p>not actually important it&#x27;s just an internal process. Let&#x27;s leave it at 14 then.&quot;*</p>
+
+<p><b>Decided, not deferred.</b> Do not re-open this as an unfinished switch.</p>
+
+<p>The reasoning it rests on, so a later session does not re-litigate it from scratch:</p>
+
+<ul>
+<li>- <b>The renter experiences nothing either way.</b> The code reaches them inside the HTA at T−24</li>
+</ul>
+<p>regardless of horizon. Provisioning at T−45 versus T−14 changes no message and no timing —</p>
+<p>it is bookkeeping, which is exactly what Junyan called it.</p>
+<ul>
+<li>- <b>Codes are permanent.</b> This service&#x27;s own cancellation path says so (&quot;the alarm code is</li>
+</ul>
+<p>left alone — codes are permanent and this renter may return&quot;). Widening to 45 would have</p>
+<p>provisioned <b>17 additional people</b> who appear nowhere in the next two weeks (counted on</p>
+<p>the live board 2026-08-25: the 15–45 day stretch holds 39 non-recurring bookings from 24</p>
+<p>holders, 17 of them not seen inside 14 days). More live door codes, longer exposure, higher</p>
+<p>cancel-and-never-return rate, for no renter-visible gain.</p>
+<ul>
+<li>- <b>Cost was never the blocker.</b> The one-request range read landed 2026-08-24 (087), so a</li>
+</ul>
+<p>45-day pass would have cost ~1.7× a 14-day one, not 3×. Widening was affordable and was</p>
+<p>declined on policy, not budget. Record it that way.</p>
+
+<p><b>What this ticket actually delivered, and it is the whole win:</b> access no longer depends on</p>
+<p>the horizon <i>arriving</i>. <code>access:settled</code> carries a completed access step forward in the</p>
+<p>snapshot, so a booking&#x27;s code is minted once and never re-checked — the per-pass alarm call</p>
+<p>per booking, forever, that made any wide horizon impossible. The horizon is now a free policy</p>
+<p>dial. Junyan has set it to 14.</p>
+
+<p>Status: <b>closed.</b></p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#084</span><span class="emoji">🏷️</span><span class="done-title">Bookings from Giggster and Peerspace made more than 2 days ahead reach nobody</span><span class="done-date">2026-08-24</span></summary><div class="done-body"><ul class="plain-bullets"><li>When someone books through Giggster or Peerspace, the booking appears on our calendar with no person attached — the name is only in the booking&#x27;s title, like &#x27;Chris Giggster&#x27;</li><li>The fast robot that handles these only wakes up for bookings happening today or tomorrow. Chris booked ten days ahead, so it never fired</li><li>And the new booking program skips them, because to it they look like a booking with nobody on it</li><li>So nobody automated touches them at all — 5 out of 31 bookings in the four days we checked</li><li>What needs deciding: who owns them, whether reading the name out of the title is safe enough, and what to do about the missing phone number</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Platform bookings made more than 2 days out reach no automation at all</b></p><h2>Question</h2>
 
 <p>Found 2026-08-19 while probing the Skedda admin read for <b>081</b>.</p>
@@ -11660,5 +11744,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-25 16:52 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-25 17:08 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
