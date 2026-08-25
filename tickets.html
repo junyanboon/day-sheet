@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-25 12:52 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-25 16:52 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">34</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">58</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">59</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">7</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">6</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -1038,71 +1038,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Silence past the window raises exactly one row, and it names the Registrar.</li>
 <li>- <code>disabled</code> is visibly distinct from <code>healthy</code> on whatever surface the monitor reads.</li>
 <li>- RUNTIMES.md + Plumbing Map entries; the 082 row updated to point here.</li>
-</ul>
-</div></details></details></div><div class="job"><div class="jnum">#087</div><div class="jhead"><span class="emoji">🐌</span><h4>The Registrar is too slow, and it ran out of time on its very first night</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>It was switched on at 10pm and its first unattended run was cut off after exactly five minutes, having not finished</li><li>Two separate time limits were both set to five minutes, so there was no slack anywhere — the first limit it hit was also the last</li><li>Both raised to fifteen minutes, which fixes tonight. It is not the real fix</li><li>The real reason it is slow: it asks the booking calendar for one day at a time, so a two-week look-ahead is fifteen separate requests before it even starts work</li><li>Asking for the whole fortnight in one request would do nearly all of it. The calendar already supports that</li><li>This matters because the run happens every half hour. If a run ever took longer than that, two would overlap — and two copies working at once is exactly what caused the duplicate door codes back in August</li><li>Deliberately NOT fixed by looking at fewer days ahead. That would just mean bookings a week or two out get set up late</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar reads the Skedda board one day at a time — 15 round-trips per pass, and it already hit a wall</b></p><h2>Problem</h2>
-
-<p><b>The Registrar&#x27;s first unattended pass timed out</b>, 2026-08-20 02:00Z, five minutes after it was</p>
-<p>switched on. HTTP 504, Cloud Scheduler <code>DEADLINE_EXCEEDED</code> at <b>299.97s</b> against a 300s ceiling.</p>
-
-<p>The ceiling had no margin in it: Cloud Run&#x27;s request timeout and the Scheduler attempt deadline were</p>
-<p><b>both 300s</b>, so the first limit hit was also the last. Raised to <b>900s</b> on both (Junyan&#x27;s call,</p>
-<p>same night — <code>event-gate-00049-dc4</code>), which unblocks tonight and buys roughly 3× headroom. That is a</p>
-<p>tuning fix, not a repair.</p>
-
-<p><b>The actual cost is structural.</b> <code>run()</code> walks the horizon a day at a time:</p>
-
-<p>``<code>python</p>
-<p>for offset in range(horizon + 1):</p>
-<p>bookings.extend(skedda_read.bookings_on((now + timedelta(days=offset)).date()))</p>
-<p></code>`<code></p>
-
-<p>With </code>HORIZON_DAYS_DEFAULT = 14<code> that is <b>15 sequential HTTP round-trips</b> before a single booking is</p>
-<p>processed, and every one of them pays the full latency. Per-booking Notion and alarm calls then run on</p>
-<p>top, also serially. Observed pass durations the night it shipped: <b>146s dry → 239s dry → over 300s</p>
-<p>live</b>. A live pass is slower than a dry one because it writes.</p>
-
-<p><b>Why 900s does not close this.</b> Pass duration scales with the board, and the board grows. The lane</p>
-<p>runs every 30 minutes, so the real ceiling is 1800s no matter what the timeout says — past that, passes</p>
-<p>overlap, and <b>overlap breaks the single-writer constraint</b> that 079 learned the hard way from the</p>
-<p>Codex collision (two actors on the same instruction each verify their own write as correct, and nothing</p>
-<p>detects it). This ticket exists so the next wall is seen coming rather than discovered in production.</p>
-
-<h2>Shape (not ruled)</h2>
-
-<ul>
-<li>- <b>The obvious one: read a date RANGE, not a day.</b> skedda-mcp already exposes </code>list_bookings_range<code>,</li>
-</ul>
-<p>and </code>/bookingslists<code> itself takes </code>start<code>/</code>end<code> — </code>bookings_on()<code> builds a one-day window out of a</p>
-<p>two-sided parameter it already has. One request instead of 15 is most of the win for very little code.</p>
-<p>Confirm the response shape and paging behaviour over a 14-day span before assuming it is a drop-in;</p>
-<p>the </code>venueusers<code> side-list must still arrive whole, or holder resolution silently degrades to the</p>
-<p>stripped-read signature.</p>
-<ul>
-<li>- Concurrency on the per-booking calls, if the range read alone is not enough. Bounded — the alarm panel</li>
-</ul>
-<p>is not something to hammer.</p>
-<ul>
-<li>- <b>Whatever is done, keep the stripped-session guard intact.</b> It judges holders across the WHOLE read;</li>
-</ul>
-<p>a change that splits or streams the read must not let it judge a fragment.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- A live pass over the full 14-day horizon completes with wide margin (target: well under 300s, so the</li>
-</ul>
-<p>original ceiling would not have been hit).</p>
-<ul>
-<li>- </code>SWEEP_HORIZON_DAYS` stays at 14 — the fix is speed, not seeing less. Shrinking the horizon was</li>
-</ul>
-<p>explicitly considered and declined on 2026-08-20, because bookings 8–14 days out would get no</p>
-<p>prerequisites until they drifted closer.</p>
-<ul>
-<li>- Pass duration is reported per pass, so the next approach to the wall is visible before it arrives —</li>
-</ul>
-<p>this pairs with <b>086</b>, which is where a duration would be recorded.</p>
-<ul>
-<li>- RUNTIMES.md + Plumbing Map entries.</li>
 </ul>
 </div></details></details></div><div class="job"><div class="jnum">#106</div><div class="jhead"><span class="emoji">🔔</span><h4>Put the names back on who unlocked each studio</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Since Aug 20 the alarm page shows every unlock with a blank where the person&#x27;s name used to be</li><li>The old alarm emails were the only thing that ever said who — and those are gone for good</li><li>The replacement is already written and tested: it reads the alarm company&#x27;s live feed and gets the name, the door opening, and the exact second</li><li>It just needs to be switched on, which means starting a small always-on service — a real cost, so Junyan decides</li><li>One catch worth knowing: arming the alarm isn&#x27;t leaving. People arm, then open the door to walk out — so the door event is the true leaving time</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Deploy alarm-events and give the boards back the name on every arm/disarm</b></p><h2>Question</h2>
 
@@ -4523,7 +4458,109 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#084</span><span class="emoji">🏷️</span><span class="done-title">Bookings from Giggster and Peerspace made more than 2 days ahead reach nobody</span><span class="done-date">2026-08-24</span></summary><div class="done-body"><ul class="plain-bullets"><li>When someone books through Giggster or Peerspace, the booking appears on our calendar with no person attached — the name is only in the booking&#x27;s title, like &#x27;Chris Giggster&#x27;</li><li>The fast robot that handles these only wakes up for bookings happening today or tomorrow. Chris booked ten days ahead, so it never fired</li><li>And the new booking program skips them, because to it they look like a booking with nobody on it</li><li>So nobody automated touches them at all — 5 out of 31 bookings in the four days we checked</li><li>What needs deciding: who owns them, whether reading the name out of the title is safe enough, and what to do about the missing phone number</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Platform bookings made more than 2 days out reach no automation at all</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#087</span><span class="emoji">🐌</span><span class="done-title">The Registrar is too slow, and it ran out of time on its very first night</span><span class="done-date">2026-08-25</span></summary><div class="done-body"><ul class="plain-bullets"><li>It was switched on at 10pm and its first unattended run was cut off after exactly five minutes, having not finished</li><li>Two separate time limits were both set to five minutes, so there was no slack anywhere — the first limit it hit was also the last</li><li>Both raised to fifteen minutes, which fixes tonight. It is not the real fix</li><li>The real reason it is slow: it asks the booking calendar for one day at a time, so a two-week look-ahead is fifteen separate requests before it even starts work</li><li>Asking for the whole fortnight in one request would do nearly all of it. The calendar already supports that</li><li>This matters because the run happens every half hour. If a run ever took longer than that, two would overlap — and two copies working at once is exactly what caused the duplicate door codes back in August</li><li>Deliberately NOT fixed by looking at fewer days ahead. That would just mean bookings a week or two out get set up late</li><li>DONE (Aug 25): the one-request fix already went in on Aug 24, and runs now take about 85 seconds against a 15-minute limit</li><li>The last missing piece was simply reporting how long each run took — added, along with a warning if a run ever creeps past ten minutes</li><li>Because of that, looking further ahead is now cheap: 45 days holds 100 bookings against 59 for two weeks, not three times as many</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar reads the Skedda board one day at a time — 15 round-trips per pass, and it already hit a wall</b></p><h2>Problem</h2>
+
+<p><b>The Registrar&#x27;s first unattended pass timed out</b>, 2026-08-20 02:00Z, five minutes after it was</p>
+<p>switched on. HTTP 504, Cloud Scheduler <code>DEADLINE_EXCEEDED</code> at <b>299.97s</b> against a 300s ceiling.</p>
+
+<p>The ceiling had no margin in it: Cloud Run&#x27;s request timeout and the Scheduler attempt deadline were</p>
+<p><b>both 300s</b>, so the first limit hit was also the last. Raised to <b>900s</b> on both (Junyan&#x27;s call,</p>
+<p>same night — <code>event-gate-00049-dc4</code>), which unblocks tonight and buys roughly 3× headroom. That is a</p>
+<p>tuning fix, not a repair.</p>
+
+<p><b>The actual cost is structural.</b> <code>run()</code> walks the horizon a day at a time:</p>
+
+<p>``<code>python</p>
+<p>for offset in range(horizon + 1):</p>
+<p>bookings.extend(skedda_read.bookings_on((now + timedelta(days=offset)).date()))</p>
+<p></code>`<code></p>
+
+<p>With </code>HORIZON_DAYS_DEFAULT = 14<code> that is <b>15 sequential HTTP round-trips</b> before a single booking is</p>
+<p>processed, and every one of them pays the full latency. Per-booking Notion and alarm calls then run on</p>
+<p>top, also serially. Observed pass durations the night it shipped: <b>146s dry → 239s dry → over 300s</p>
+<p>live</b>. A live pass is slower than a dry one because it writes.</p>
+
+<p><b>Why 900s does not close this.</b> Pass duration scales with the board, and the board grows. The lane</p>
+<p>runs every 30 minutes, so the real ceiling is 1800s no matter what the timeout says — past that, passes</p>
+<p>overlap, and <b>overlap breaks the single-writer constraint</b> that 079 learned the hard way from the</p>
+<p>Codex collision (two actors on the same instruction each verify their own write as correct, and nothing</p>
+<p>detects it). This ticket exists so the next wall is seen coming rather than discovered in production.</p>
+
+<h2>Shape (not ruled)</h2>
+
+<ul>
+<li>- <b>The obvious one: read a date RANGE, not a day.</b> skedda-mcp already exposes </code>list_bookings_range<code>,</li>
+</ul>
+<p>and </code>/bookingslists<code> itself takes </code>start<code>/</code>end<code> — </code>bookings_on()<code> builds a one-day window out of a</p>
+<p>two-sided parameter it already has. One request instead of 15 is most of the win for very little code.</p>
+<p>Confirm the response shape and paging behaviour over a 14-day span before assuming it is a drop-in;</p>
+<p>the </code>venueusers<code> side-list must still arrive whole, or holder resolution silently degrades to the</p>
+<p>stripped-read signature.</p>
+<ul>
+<li>- Concurrency on the per-booking calls, if the range read alone is not enough. Bounded — the alarm panel</li>
+</ul>
+<p>is not something to hammer.</p>
+<ul>
+<li>- <b>Whatever is done, keep the stripped-session guard intact.</b> It judges holders across the WHOLE read;</li>
+</ul>
+<p>a change that splits or streams the read must not let it judge a fragment.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A live pass over the full 14-day horizon completes with wide margin (target: well under 300s, so the</li>
+</ul>
+<p>original ceiling would not have been hit).</p>
+<ul>
+<li>- </code>SWEEP_HORIZON_DAYS<code> stays at 14 — the fix is speed, not seeing less. Shrinking the horizon was</li>
+</ul>
+<p>explicitly considered and declined on 2026-08-20, because bookings 8–14 days out would get no</p>
+<p>prerequisites until they drifted closer.</p>
+<ul>
+<li>- Pass duration is reported per pass, so the next approach to the wall is visible before it arrives —</li>
+</ul>
+<p>this pairs with <b>086</b>, which is where a duration would be recorded.</p>
+<ul>
+<li>- RUNTIMES.md + Plumbing Map entries.</li>
+</ul>
+
+<h2>Resolution 2026-08-25 — the structural fix already landed; the missing half was the number</h2>
+
+<p><b>The range read is done.</b> </code>bookings_range(first, last)<code> exists in </code>skedda_read.py<code> and</p>
+<p></code>booking_sweep.run()<code> has called it since <b>2026-08-24</b>, shipped alongside ticket 090:</p>
+
+<p></code>`<code>python</p>
+<p>return skedda_read.bookings_range(now.date(), (now + timedelta(days=horizon)).date())</p>
+<p></code>`<code></p>
+
+<p>One </code>/bookingslists<code> request for the whole window, whatever the span. The 15 sequential</p>
+<p>round-trips this ticket was written about no longer happen, and the horizon stopped being a</p>
+<p>budget question. Measured on 2026-08-25, ten consecutive live passes ran <b>68–96s</b> against a</p>
+<p>900s ceiling — the acceptance target (&quot;well under 300s&quot;) is met with 3× margin, and</p>
+<p></code>SWEEP_HORIZON_DAYS<code> stayed at 14 exactly as required.</p>
+
+<p><b>What was still missing: the duration itself.</b> The acceptance asked for pass duration to be</p>
+<p>reported per pass, and it was not. Without it the next wall gets discovered the way the first</p>
+<p>one was — a 504 at 02:00. Shipped in </code>3b1c3563<code>:</p>
+
+<ul>
+<li>- every summary now carries </code>duration_s<code> and </code>horizon_days<code> (duration is meaningless without</li>
+</ul>
+<p>knowing how far the pass was looking);</p>
+<ul>
+<li>- a pass over </code>SLOW_PASS_S = 600<code> logs </code>SLOW PASS<code> explicitly. 600s is a third of the <b>real</b></li>
+</ul>
+<p>ceiling, which is the 1800s cadence rather than the 900s timeout: past 1800s two passes</p>
+<p>overlap and the single-writer constraint breaks (079, the Codex collision).</p>
+
+<p><b>Consequence for the horizon.</b> Cost now scales with bookings in the window, not days in it.</p>
+<p>Counted 2026-08-25: 14 days holds <b>59 non-recurring</b> bookings, 45 days holds <b>100</b> — 1.7×,</p>
+<p>not 3.2×. A 45-day pass should land near 150s, well inside every ceiling. </code>SWEEP_HORIZON_DAYS=45<code></p>
+<p>is affordable whenever Junyan wants it; that is 110&#x27;s promise, not this ticket&#x27;s, and it stays</p>
+<p>his call.</p>
+
+<p>Status: <b>closed.</b> Remaining: deploy </code>3b1c3563` (blocked on approval at time of writing).</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#084</span><span class="emoji">🏷️</span><span class="done-title">Bookings from Giggster and Peerspace made more than 2 days ahead reach nobody</span><span class="done-date">2026-08-24</span></summary><div class="done-body"><ul class="plain-bullets"><li>When someone books through Giggster or Peerspace, the booking appears on our calendar with no person attached — the name is only in the booking&#x27;s title, like &#x27;Chris Giggster&#x27;</li><li>The fast robot that handles these only wakes up for bookings happening today or tomorrow. Chris booked ten days ahead, so it never fired</li><li>And the new booking program skips them, because to it they look like a booking with nobody on it</li><li>So nobody automated touches them at all — 5 out of 31 bookings in the four days we checked</li><li>What needs deciding: who owns them, whether reading the name out of the title is safe enough, and what to do about the missing phone number</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Platform bookings made more than 2 days out reach no automation at all</b></p><h2>Question</h2>
 
 <p>Found 2026-08-19 while probing the Skedda admin read for <b>081</b>.</p>
 
@@ -11623,5 +11660,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-25 12:52 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-25 16:52 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
