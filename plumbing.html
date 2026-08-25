@@ -313,6 +313,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry alert">
+      <details>
+      <summary><span class="when">2026-08-25 &middot; 03:05Z</span>
+      <h3>The trouble classifier is inverted &mdash; an unnamed panel condition now files a ticket instead of vanishing<span class="kind">DEFECT CLASS CLOSED</span></h3></summary>
+      <p><strong>The root cause behind the six-day tamper, fixed at the class level rather than one condition at a time.</strong> <code>escalating_troubles</code> and <code>ticketable_troubles</code> were pure <em>allowlists</em>. A panel condition on neither list, and not on the ignore list either, reached the end of the function and was discarded &mdash; no error, no log line, no row. That is not an alert that failed; it is an alert that could not exist. 509B reported <code>Panel Tamper</code> from 2026-08-18 to 2026-08-24 and nothing reported it, because nobody had ever typed the words &ldquo;Panel Tamper&rdquo; into a tuple.</p>
+      <p><strong>One <code>classify()</code> now owns the policy</strong>, and its DEFAULT is <code>unknown</code> &rarr; <strong>file a ticket</strong>. Buckets in order: <code>ignored</code> (checked first, so silencing something actually silences it) &rarr; <code>critical</code> (SMS) &rarr; <code>handled</code> (another module owns it, e.g. <code>tamper.py</code>) &rarr; <code>ticket</code> &rarr; <code>unknown</code>. Both original selectors were rewritten to route through it, so there is exactly one place the policy lives.</p>
+      <p><strong>A ticket and never a text, deliberately.</strong> A condition we cannot classify is by definition one we cannot call urgent, and an SMS for something that turns out to be routine is how a person learns to ignore the next SMS. The row is quiet, deduped to once per 24h while the condition stays open, and <strong>its body says how to close it out permanently</strong> &mdash; add the phrase to <code>IGNORED_PHRASES</code> / <code>TICKET_PHRASES</code> / <code>CRITICAL_PHRASES</code>, or give it its own module. A junk row costs one decision instead of recurring forever.</p>
+      <p><strong>Two consequences worth knowing.</strong> (1) <code>IGNORED_PHRASES</code> is now <em>load-bearing</em>: it used to be a courtesy, since unrecognised conditions were dropped anyway &mdash; it is now the ONLY thing that silences a condition, so adding to it is a real decision. (2) <code>TAMPER_PHRASES</code> moved to <code>escalate.py</code> and <code>tamper.py</code> imports it; two copies would drift and the first symptom would be every tamper filing two tickets (pinned by <code>test_tamper_is_not_double_filed</code>).</p>
+      <p>Checked against the live panel before shipping: the four <code>Credentials In Conflict</code> open since 2026-07-10 classify as <code>ignored</code>, so this deployed with <strong>zero new rows</strong>. 15 tests; <strong>243 pass</strong>. Image <code>alarm:classifier-0825</code>, revision <code>alarm-mcp-00053-2rk</code>, verified quiet across the 03:00Z bypass sweep. Expect a few junk rows over the coming weeks as the panels emit things nobody has named &mdash; that is the mechanism working, and each one is one decision away from never appearing again.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-25 &middot; 03:30Z</span>
