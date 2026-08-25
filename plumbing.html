@@ -313,6 +313,30 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-25 &middot; 02:50Z</span>
+      <h3>Praise stopped reaching the review ask &mdash; the courtesy exemption was overriding canonical rows<span class="kind">FAILURE MODE</span></h3></summary>
+      <p><strong>Junyan, in session:</strong> &ldquo;There were also two responses queued up when people gave us glowing responses.. we really should have asked them for a review.&rdquo; On 2026-08-24 two 509B renters sent glowing feedback within two hours. Both drew a composed <em>&ldquo;So happy to hear that!&rdquo;</em> and <strong>neither was asked for a Google review.</strong></p>
+      <p><strong>This was a MATCHING failure, not a gap.</strong> Five review-request rows already exist, one per studio, each carrying that studio&rsquo;s own review link, plus a studio-agnostic SMS variant. The words were there and were correct. Nothing looked.</p>
+      <p><strong>Root cause, and it was self-inflicted four days earlier.</strong> The composed-courtesy exemption (<code>1be9019a</code>, 21 Aug) freed warm messages from the HTR-verbatim rule. Unprompted praise carries no question and needs no fact back &mdash; so it lands squarely in the courtesy class, and the exemption let the lane compose <strong>without querying the How to Respond DB at all</strong>. Praise is the one situation where that costs the most: it is exactly when the desk wants a specific ask made.</p>
+      <p><strong>The tell was already on the record.</strong> The reviewer hand-edited one draft to read &ldquo;we will share it with our staff&rdquo; &mdash; <em>the review row&rsquo;s own opening line, verbatim</em> &mdash; without its ask. He was quoting that row from memory while the lane had never looked for it. The edit had already produced an HTR suggestion reading it as a closing-line style note; that reading was incomplete.</p>
+      <p><strong>Fixed</strong> (canon <code>25045c6d</code>): the exemption now applies <strong>only where the DB has no wording</strong> &mdash; the lookup runs first every time and a live row wins verbatim. Praise is named as the trap in both files, with a Recognition-list entry carrying all five row ids, the rule that the studio-agnostic variant&rsquo;s placeholder link is resolved from the booking&rsquo;s studio (never another studio&rsquo;s), and the already-left-a-review row to check before asking twice. Held review asks queued for both renters; defect row filed.</p>
+    </details>
+    </li>
+
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-25 &middot; 02:45Z</span>
+      <h3>The Custodian now reads the REVIEWER&rsquo;s verdicts, not just the robots&rsquo; ledgers<span class="kind">ROUTE CHANGE</span></h3></summary>
+      <p><strong>Junyan: &ldquo;Yes wire them in.&rdquo;</strong> Clearing a draft in the Deck leaves a verdict on the row &mdash; a rejection reason the reviewer typed, or (as of today) an edit stamp carrying the original drafted body. <strong>Nothing read either one.</strong></p>
+      <p><strong>Fifteen rejections sat unread between 18 and 24 August &mdash; and eight of the fifteen said the same thing:</strong> the desk had already answered by hand and queued a second reply anyway. Eight instances of one defect, diagnosed in plain English by the owner, invisible to every lane. Filed now as an <code>Attributed defect</code> with all eight quoted.</p>
+      <p><strong>New JOB 9 check</strong> (canon <code>96379f3a</code>) mines both stamp kinds and <strong>routes by what the verdict says</strong>, never by the fact of rejection: already-answered &rarr; defect against the queuing lane&rsquo;s dedup; renter never needed it &rarr; scoping defect against the producing sweep; too late to send &rarr; expiry defect; wrong recipient &rarr; recipient-resolution defect plus an Action row if a customer is still owed; wording, <em>including every release-with-edit</em> &rarr; HTR suggestion. A genuine one-off gets a QA line and no row. Two of a class in a window files. <strong>The reviewer&rsquo;s own words are quoted, never paraphrased</strong> &mdash; the paraphrase loses the diagnosis.</p>
+      <p><strong>The Deck was changed to make the other half possible:</strong> releasing an edited draft used to overwrite <code>Message Body</code> and stamp nothing, destroying the only quality signal this desk has on composed wording at the moment it was created. It now appends <code>[Edited in the Deck]</code> plus the original <code>Drafted:</code> body, the way Reject already stamps its reason.</p>
+      <p><strong>Prime directive unchanged:</strong> the Custodian reports these. It never re-queues a rejected message, rewrites a body, or touches a How to Respond row.</p>
+    </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-25 &middot; 02:35Z</span>
