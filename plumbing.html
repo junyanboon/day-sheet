@@ -315,6 +315,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-25 &middot; 15:18Z</span>
+      <h3>The same-day &ldquo;HTA owed&rdquo; ping is REMOVED &mdash; ruled moot the day it shipped; confirmation + HTA are the one human step<span class="kind">ROUTE SIMPLIFIED</span></h3></summary>
+      <p><strong>Junyan&rsquo;s ruling, three parts:</strong> a person sends the customer confirmation in EVERY scenario; a today/tomorrow booking gets confirmation + HTA together; and the door code rides inside the HTA &mdash; so a separate &ldquo;door-code text&rdquo; step and a separate &ldquo;code owed&rdquo; Actions row are both fake precision. The <code>hta-owed</code> row (shipped 14:39Z in 108) duplicated a signal that already exists: the board row the sweep creates carries <code>HTA: Unsent</code>, which is what the desk&rsquo;s HTA lane composes from (with its mandatory fresh panel check), and the sweep queues the confirmation alongside.</p>
+      <p><strong>Removed at dc-canon <code>6d3fea2c</code>, deployed 15:17Z</strong> (revision fingerprint <code>bc9a6f003d40</code> verified against local; 425 tests pass). Net behaviour for a same-day booking now: artist card, panel-verified code, board row, queued confirmation &mdash; and the confirmation + HTA pair waits for a human send. No Actions-row noise. No send authority moved.</p>
+      <p><em>Also this pass:</em> the sweep&rsquo;s first between-pass snapshot landed at 15:13Z (<code>gs://danceannex-sweep/booking-sweep/snapshot.json</code>, 95 board rows, 49 access-complete ids) &mdash; the 090 memory and 110 first-sight gate are confirmed working live, not just deployed.</p>
+    </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-25 &middot; 15:10Z</span>
       <h3>Line P is one step short &mdash; switched on and proven, but it has no timer, so it never fires<span class="kind">LANE ENABLED (NOT SCHEDULED)</span></h3></summary>
       <p><strong>Corrected within the hour:</strong> this entry first read &ldquo;Line P is LIVE&rdquo;. It is not. <code>PLATFORM_MIRROR_ENABLED=true</code> and both routes answer PASS from inside the Send Engine &mdash; but the Triggers list holds only <code>main</code> and <code>notifyInbound</code>, so <strong>nothing calls <code>platformMirrorTick</code> on a schedule and the lane never runs.</strong> <em>The lesson worth keeping: an enabled lane with no trigger is indistinguishable from a working one on every screen except the trigger list.</em> Verify the timer, never infer it from the kill switch. Once a 5-minute trigger exists, A Peerspace / Giggster / Tagvenue confirmation now puts the booking on the Skedda calendar without anyone at the desk &mdash; titled <code>&lt;Name&gt; &lt;Platform&gt;</code>, priced at the payout, holder null. Julia S.&rsquo;s booking would have landed at 01:50 Toronto instead of a day after she had already danced.</p>
