@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-24 22:09 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-24 22:20 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">32</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">33</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">58</div><div class="l">✅ Finished</div></div>
 </div>
@@ -1229,7 +1229,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
 <p>Ops Lead&#x27;s use of it here.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">32</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">33</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -2882,6 +2882,41 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>and degrade cleanly when unset — <i>made</i> still works off <code>created</code>, <i>changed</i>/<i>cancelled</i> report</p>
 <p>&quot;no snapshot&quot; rather than silently reporting nothing. Ships today, completes when the bucket</p>
 <p>exists.</p>
+
+
+<p>---</p>
+
+<h2>Re-scoped 2026-08-24 — the reading justification is gone, the mechanism matters more</h2>
+
+<p>Junyan, 2026-08-24: *&quot;I don&#x27;t have to read any emails anymore as it all goes through the desk</p>
+<p>and works pretty well.&quot;*</p>
+
+<p>This ticket was justified as a <b>replacement for reading the Gmail label</b> — &quot;if I can replace</p>
+<p>reading gmail … I can finally consolidate all of my communications into one interface.&quot; That</p>
+<p>need has been met by other means. So the 📥 Bookings tab on the Day Sheet is <b>no longer the</p>
+<p>deliverable</b>; build it only if it earns its own place later.</p>
+
+<p><b>What survives is more load-bearing than the tab ever was:</b></p>
+
+<ol>
+<li>1. <b>Cancel detection is a correctness guard, not a convenience.</b> A booking cancelled inside</li>
+</ol>
+<p>T−2 leaves an FBS row and a queued confirmation behind. Without detection the desk texts a</p>
+<p>confirmation to somebody who cancelled. That was always in this ticket; it is now the</p>
+<p>headline.</p>
+<ol>
+<li>2. <b>Change detection</b> keeps a moved booking from leaving a stale board row and a confirmation</li>
+</ol>
+<p>naming the wrong time.</p>
+<ol>
+<li>3. <b>First sight is now a dependency of another ruling.</b> <b>110</b></li>
+</ol>
+<p>makes access due on booking rather than on the horizon, and &quot;which bookings are new&quot; is</p>
+<p>precisely the snapshot / <code>created</code> high-water mark this ticket builds. 090 stopped being a</p>
+<p>reading feature the moment access provisioning started depending on it.</p>
+
+<p>Net: keep steps 1–3, drop the tab, and treat the diff engine as infrastructure two other</p>
+<p>tickets stand on rather than as a page for Junyan to read.</p>
 </div></details></details></div><div class="job"><div class="jnum">#091</div><div class="jhead"><span class="emoji">🧩</span><h4>Three more robots still look people up by name — finish the job</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>We switched the two busiest robots over to ID numbers. Three others never got the memo and still go by name</li><li>The important one is the nightly code checker: it reads EVERY person&#x27;s card and writes corrections into our records</li><li>If a card has no alarm name on it, that checker quietly falls back to the card&#x27;s title — which never matches the panel. That is how you get hundreds of wrong &#x27;this is broken&#x27; notes in one night</li><li>So: give it ID numbers first, and make it say &#x27;I could not find this person&#x27; out loud instead of guessing from a title</li><li>While it is at it, it can fill in the missing ID numbers itself — it already reads every card once a day, so the gap closes on its own instead of needing another cleanup session</li><li>Also asked and answered here: can we delete the old alarm-name box? Not yet, and the reason is worth knowing</li><li>529 people have a remembered door code but no entry on the panel any more. When one of them comes back, that old name box is what tells us how the panel spelled them</li><li>Delete it and they come back as &#x27;Quynh Quinn QTrang Tran [Peerspace]&#x27; instead of &#x27;Quynh Tran&#x27; — the exact mess we just cleaned up, all over again</li><li>So the last piece is deciding what to do about those 529 dormant cards. Once that is settled, the old name box can finally go</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Finish the id migration — job D, morning prep and the attended skills still resolve by name</b></p><h2>Question</h2>
 
 <p><b>085</b> moved the joins onto stable ids and built the one</p>
@@ -3472,7 +3507,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- <b>The route is live and idempotent.</b> <code>POST /mirror-booking</code> on skedda-mcp</li>
 </ul>
-<p>(<code>skedda-mcp:mirror-0812b</code>, revision <code>skedda-mcp-00020-bxk</code>) creates the booking and then</p>
+<p>(revision <code>skedda-mcp-00043-6j4</code> as of 2026-08-24 — the ticket previously named</p>
+<p><code>skedda-mcp-00020-bxk</code>, long superseded) creates the booking and then</p>
 <p><b>re-reads the calendar</b>, answering 200 only when it finds it; a repeat call on the same slot</p>
 <p>returned <code>created:false</code> rather than double-booking. Verified live 2026-08-12.</p>
 <ul>
@@ -3480,6 +3516,18 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p><code>sdParseTagvenue_</code>, plus <code>sdStudioForListing_</code> which resolves listing → studio through the</p>
 <p>🏢 Studio Reference DB (ds <code>0d774bae-1b5a-4c0f-9b22-068ba13ba18e</code>) rather than keyword-guessing.</p>
+<ul>
+<li>- <b>The credential is settled (2026-08-24).</b> The bearer is the SAME shared secret the</li>
+</ul>
+<p>alarm side already uses: Secret Manager <code>mcp-auth-token</code>, project <code>danceannex-skedda</code>,</p>
+<p>64 chars. Verified live against <code>/mirror-booking</code> — unauthenticated 401, authenticated</p>
+<p>400 <code>missing required field(s)</code> (a deliberately empty body, so the probe wrote nothing).</p>
+<p>There is no new secret to mint; the only open step is mounting it wherever the caller runs.</p>
+<ul>
+<li>- <b><code>confirm: true</code> is not a human gate.</b> Ruled by Junyan 2026-08-24 and recorded in</li>
+</ul>
+<p><code>dc-canon/library/skedda-session.md</code>: it is a machine interlock against accidental</p>
+<p>writes. This lane sets it itself. Nothing here waits on a person to confirm a mirror.</p>
 <ul>
 <li>- <b>What is missing is a caller.</b> Proposed shape: a new minimal lane in the existing Message</li>
 </ul>
@@ -3519,6 +3567,67 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>New trigger on a live project — Junyan enables it. It writes to the Skedda calendar, so it wants</p>
 <p>one supervised dry run and one watched real booking before it runs unattended.</p>
+</div></details></details></div><div class="job"><div class="jnum">#110</div><div class="jhead"><span class="emoji">🔑</span><h4>Give people their door code the moment they book</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Right now you get your code when the robot&#x27;s window reaches your booking — about two weeks before</li><li>That was never a decision; it just fell out of how far ahead the robot looks</li><li>Junyan&#x27;s call (Aug 24): the code should be set up the moment somebody books, however far off the booking is</li><li>Codes do not expire any more, so a code made six months early is simply that person&#x27;s code</li><li>The catch: the robot must set it up ONCE and then leave it alone, or it would be re-checking thousands of old bookings every half hour forever</li><li>The alarm check a week before the booking stays, and that is what catches anything that has gone wrong since</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Door access is due when someone books, not when the horizon reaches them</b></p><h2>Ruling (Junyan, 2026-08-24)</h2>
+
+<p>&quot;I want to provision door access the moment someone makes a booking (it&#x27;s not based on the</p>
+<p>horizon).&quot;</p>
+
+<p>Today access is due <i>implicitly</i>, as a side effect of the read window: <code>ensure_access</code> runs on</p>
+<p>every booking the sweep can see, so a renter gets their code when the horizon reaches them —</p>
+<p>14 days out now, 45 if <code>SWEEP_HORIZON_DAYS</code> is raised, and never until then. That is an</p>
+<p>accident of how the board is read, not a decision anybody made.</p>
+
+<p><b>New rule: access is due on booking. Everything else stays due relative to the session</b> —</p>
+<p>board row at T−2, confirmation at T−2. Access is the one step whose clock starts at creation.</p>
+
+<p>Harmless by construction: codes have been permanent since windows were retired</p>
+<p>(<code>doorman-access-lifecycle.md</code>), so a code minted six months early is simply that renter&#x27;s code.</p>
+<p>For a returning renter <code>ensure_access</code> returns <code>already</code> and writes nothing. The change only</p>
+<p>bites for genuinely new renters, and in their favour — they can be told their code the day they</p>
+<p>book instead of a fortnight before they arrive.</p>
+
+<h2>Why this is NOT just &quot;widen the horizon&quot;</h2>
+
+<p>Widening the read is free — one request, whatever the span (090 step 1, landed). <b>Processing</p>
+<p>is not.</b> Per booking per pass the sweep currently costs roughly a Notion artist query, a Notion</p>
+<p>page GET, and an <code>_alarm_call({verify_only})</code>. At a 14-day horizon that is a few hundred calls</p>
+<p>every 30 minutes. At a year it is thousands, forever, re-checking bookings that were settled</p>
+<p>months ago.</p>
+
+<p>So &quot;provision on booking&quot; has to mean <b>provision on FIRST SIGHT, then stop re-checking</b> — not</p>
+<p>&quot;read further and check everything every pass.&quot;</p>
+
+<h2>The build</h2>
+
+<ol>
+<li>1. <b>Widen the read</b> — cheap, already possible.</li>
+<li>2. <b>Provision on first sight of a booking id.</b> Which requires knowing what is new, which is</li>
+</ol>
+<p>exactly the snapshot / <code>created</code> high-water mark that <b>090</b></p>
+<p>step 3 builds. Hence the block: this ticket cannot be done honestly without it.</p>
+<ol>
+<li>3. <b>Stop re-checking settled bookings every pass.</b> A booking whose access step has completed</li>
+</ol>
+<p>is not re-verified by the sweep. The safety net already exists and is the right one: the</p>
+<p><b>Doorman preflights access 7 days out</b>, so a code that rots between booking and session is</p>
+<p>caught near the session, by the job that owns arrival — not by the sweep grinding the panel</p>
+<p>every 30 minutes for a year.</p>
+
+<h2>Watch for</h2>
+
+<ul>
+<li>- <b>The recurrence trap.</b> Series records arrive stamped with the SERIES start, so &quot;first sight&quot;</li>
+</ul>
+<p>on a recurring booking is not a real arrival. The recurring skip stays (map ruling 2026-08-19).</p>
+<ul>
+<li>- <b>Losing the snapshot must not mean re-provisioning everybody.</b> It should read as &quot;seen</li>
+</ul>
+<p>before&quot; by default — <code>ensure_access</code> returning <code>already</code> makes that safe, but the pass should</p>
+<p>not treat a lost snapshot as &quot;everything is new&quot; and stampede the panel.</p>
+<ul>
+<li>- A booking <b>moved</b> after provisioning does not need a new code (codes are permanent), so</li>
+</ul>
+<p>change detection does not have to re-trigger access — only the board row and confirmation.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -11222,5 +11331,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-24 22:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-24 22:20 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
