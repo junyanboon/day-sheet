@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-24 21:44 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-24 21:48 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2773,9 +2773,13 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>testing: <code>create_user</code> <b>emails the person a Skedda registration invite</b> on commit, which no</p>
 <p>platform guest should receive.</p>
 
-<p><b>Q2 (title-convention identity) is therefore load-bearing and still open</b> — the title is the</p>
-<p><i>only</i> link from a calendar booking to a person, and three variants exist in the wild</p>
-<p>(<code>Kim M. Peerspace</code>, <code>Julia S. Peerspace FBS</code>, <code>Peerspace Booking, Julia S.</code>). Standardise it.</p>
+<p><b>Q2 (title-convention identity) — RULED (Junyan, 2026-08-24): the title is <code>&lt;Name&gt; &lt;Platform&gt;</code>.</b></p>
+<p>e.g. <code>Kim M. Peerspace</code>. It is load-bearing precisely because the holder is <code>null</code> by design, so</p>
+<p>this string is the only link from a calendar booking to a person. Variants still in the wild</p>
+<p>(<code>Julia S. Peerspace FBS</code>, <code>Peerspace Booking, Julia S.</code>) normalise on touch. <b>All four of this</p>
+<p>ticket&#x27;s questions are now answered</b> — Q1 and Q4 by observation, Q2 and the casual-booking rule</p>
+<p>by Junyan, Q3 as a platform ceiling rather than a defect. What remains is the one-card-per-guest</p>
+<p>problem below, which is a different ticket&#x27;s shape.</p>
 
 <p><b>Q3 (the missing phone) is a platform ceiling, not a defect</b> — booking sites mask numbers</p>
 <p>permanently. Reply on the platform thread. Not worth further design.</p>
@@ -2948,6 +2952,42 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>A booking made 30 days out appears on the feed within one pass of being made, with its code</p>
 <p>already provisioned. The label becomes optional reading. RUNTIMES.md + Plumbing Map updated.</p>
+
+
+<p>---</p>
+
+<h2>Rider added 2026-08-24 — the FBS board should ride this same read</h2>
+
+<p>Found while tracing platform bookings: <b>the desk has two independent readers of the same</p>
+<p>bookings.</b> The 🛎️ FBS board is built from the <b>Google Calendar</b> feed — <code>Source Event ID</code></p>
+<p>holds calendar event ids (<code>ptqd052iie4ctr9p5oi3ipska4</code>), not Skedda&#x27;s numeric booking ids</p>
+<p>(<code>119143355</code>) — while the sweep reads the Skedda API directly. Skedda → Calendar → board is</p>
+<p>three hops for the surface that actually drives HTA/EOB/PBF.</p>
+
+<p>Consequences already visible:</p>
+
+<ul>
+<li>- <b>118 of 602 board rows (~20%) have no <code>Source Event ID</code></b>, and it is not purely legacy —</li>
+</ul>
+<p>Chelly Li&#x27;s 26 Aug row was created 23 Aug with the key null while her 27 Aug row, created</p>
+<p>24 Aug, has one. Rows are being written in two different shapes.</p>
+<ul>
+<li>- A booking that fails to reach Google Calendar is invisible to the board, and the component</li>
+</ul>
+<p>that would notice reads the other pipe. Same shape as the SameDay hand-off gap (<b>107</b>).</p>
+<ul>
+<li>- Under <b>089</b>&#x27;s one-owner rule, a board that derives itself</li>
+</ul>
+<p>independently of the sweep is a second writer.</p>
+
+<p><b>Do NOT redesign the board row.</b> Its event-keyed, holder-agnostic shape is exactly why</p>
+<p>platform bookings work at all — keying it on the renter record would break that whole class</p>
+<p>(see <b>084</b>). The change is the <b>feed, not the shape</b>:</p>
+<p>board rows come from the sweep&#x27;s Skedda read, Google Calendar demoted to a display mirror.</p>
+
+<p><b>Why here and not its own ticket:</b> this ticket already builds the 45-day Skedda range read plus</p>
+<p>the between-pass snapshot — precisely the read the board needs. Doing it first would build the</p>
+<p>range read twice.</p>
 </div></details></details></div><div class="job"><div class="jnum">#091</div><div class="jhead"><span class="emoji">🧩</span><h4>Three more robots still look people up by name — finish the job</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>We switched the two busiest robots over to ID numbers. Three others never got the memo and still go by name</li><li>The important one is the nightly code checker: it reads EVERY person&#x27;s card and writes corrections into our records</li><li>If a card has no alarm name on it, that checker quietly falls back to the card&#x27;s title — which never matches the panel. That is how you get hundreds of wrong &#x27;this is broken&#x27; notes in one night</li><li>So: give it ID numbers first, and make it say &#x27;I could not find this person&#x27; out loud instead of guessing from a title</li><li>While it is at it, it can fill in the missing ID numbers itself — it already reads every card once a day, so the gap closes on its own instead of needing another cleanup session</li><li>Also asked and answered here: can we delete the old alarm-name box? Not yet, and the reason is worth knowing</li><li>529 people have a remembered door code but no entry on the panel any more. When one of them comes back, that old name box is what tells us how the panel spelled them</li><li>Delete it and they come back as &#x27;Quynh Quinn QTrang Tran [Peerspace]&#x27; instead of &#x27;Quynh Tran&#x27; — the exact mess we just cleaned up, all over again</li><li>So the last piece is deciding what to do about those 529 dormant cards. Once that is settled, the old name box can finally go</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Finish the id migration — job D, morning prep and the attended skills still resolve by name</b></p><h2>Question</h2>
 
 <p><b>085</b> moved the joins onto stable ids and built the one</p>
@@ -3488,7 +3528,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Replay the Sara Aljabery case (booked 21:59Z for 13:15 next day, 509B): one pass</p>
 <p>produces an artist record, a verified code, a board row, a queued confirmation, and</p>
 <p>one Actions row saying the HTA is owed. <code>deferred</code> appears in no result.</p>
-</div></details></details></div><div class="job"><div class="jnum">#109</div><div class="jhead"><span class="emoji">🏢</span><h4>Put booking-site bookings on our calendar the moment they come in</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When somebody books through Peerspace, Giggster or Tagvenue, it does NOT appear on our calendar</li><li>Junyan has been putting them on by hand — which works fine, when he is awake</li><li>Julia booked for Sunday evening and the email came in at 1:50 in the morning; her room only went on the calendar the day AFTER she had already danced</li><li>So all evening, studio 509A looked free and somebody else could have booked right over her</li><li>Everything AFTER that step already works — the desk finds these guests by the booking title, and about twenty of them have cards and working door codes</li><li>So this job is only about holding the room. Door codes, cards and messages are all fine already</li><li>The part that creates the booking exists and was tested back in August — nothing is calling it</li><li>We do NOT make Skedda accounts for booking-site guests (Junyan, Aug 24) — that would email them a sign-up invite they never asked for</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Hold the room — a caller that mirrors platform bookings into Skedda on arrival</b></p><h2>The defect</h2>
+</div></details></details></div><div class="job"><div class="jnum">#109</div><div class="jhead"><span class="emoji">🏢</span><h4>Put booking-site bookings on our calendar the moment they come in</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When somebody books through Peerspace, Giggster or Tagvenue, it does NOT appear on our calendar</li><li>Junyan has been putting them on by hand — which works fine, when he is awake</li><li>Julia booked for Sunday evening and the email came in at 1:50 in the morning; her room only went on the calendar the day AFTER she had already danced</li><li>So all evening, studio 509A looked free and somebody else could have booked right over her</li><li>Everything AFTER that step already works — the desk finds these guests by the booking title, and about twenty of them have cards and working door codes</li><li>So this job is only about holding the room. Door codes, cards and messages are all fine already</li><li>The part that creates the booking exists and was tested back in August — nothing is calling it</li><li>We do NOT make Skedda accounts for booking-site guests (Junyan, Aug 24) — that would email them a sign-up invite they never asked for</li><li>Because of that, the booking&#x27;s TITLE is the only thing saying who the guest is — so it now has one fixed form: the name, then the site. &quot;Kim M. Peerspace&quot;</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Hold the room — a caller that mirrors platform bookings into Skedda on arrival</b></p><h2>The defect</h2>
 
 <p>A Giggster/Peerspace/Tagvenue booking is not on the Skedda calendar until a human puts it</p>
 <p>there. The mirroring logic exists only inside <code>send-engine/SameDay.gs</code>, which has <b>never been</p>
@@ -3561,12 +3601,13 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <h2>Two discrepancies to settle in the build</h2>
 
 <ol>
-<li>1. <b>The title convention does not match itself — and it is the ONLY identity link.</b> In the wild:</li>
+<li>1. <b>Title convention — RULED (Junyan, 2026-08-24): <code>&lt;Name&gt; &lt;Platform&gt;</code>.</b> e.g. <code>Kim M. Peerspace</code>.</li>
 </ol>
-<p><code>Kim M. Peerspace</code>, <code>Julia S. Peerspace FBS</code>, <code>Peerspace Booking, Julia S.</code>; and</p>
-<p><code>sdMirrorSkeddaBooking_</code> would write a fourth, <code>&lt;name&gt; (&lt;Platform&gt;)</code>. Since the holder is</p>
-<p>deliberately <code>null</code>, the board and every downstream lookup key on this string. <b>Standardise it</p>
-<p>before shipping</b> — this is the highest-risk detail in the ticket, not a tidiness point.</p>
+<p>No brackets, no &quot;FBS&quot; suffix, no &quot;Peerspace Booking,&quot; prefix, and NOT the</p>
+<p><code>&lt;name&gt; (&lt;Platform&gt;)</code> form <code>sdMirrorSkeddaBooking_</code> currently writes — <b>that line must be</p>
+<p>changed before this ships.</b> Since the holder is deliberately <code>null</code>, this string is the only</p>
+<p>identity link a calendar booking has. Existing variants in the wild (<code>Julia S. Peerspace FBS</code>,</p>
+<p><code>Peerspace Booking, Julia S.</code>) should be normalised as they are touched, not in a bulk rewrite.</p>
 <ol>
 <li>2. <b>Price parsing.</b> <code>sdParsePeerspace_</code> reads <code>Space rental</code>; Julia&#x27;s mail shows <b>Payout</li>
 </ol>
@@ -11088,5 +11129,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-24 21:44 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-24 21:48 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
