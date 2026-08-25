@@ -315,6 +315,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-25 &middot; 17:50Z</span>
+      <h3>Board Staff tab becomes SHIFTS &mdash; open (claimable) placeholders now advertised, display-only<span class="kind">DISPLAY</span></h3></summary>
+      <p>The fbs-monitor board (desktop + mobile) renames Staff &rarr; <strong>Shifts</strong> and adds a new payload field <code>openShifts</code>: the unassigned &ldquo;Need FBS / Need Monitoring / Studio Viewing / Open-Close&rdquo; placeholders from the Staff Scheduling calendar, fetched with a <strong>3-day lookahead</strong> (its own ICS fetch &mdash; the board window is today-only, but The Planner posts shifts days ahead; a failed lookahead costs the Open list, never the board). Mobile gets Studios-style filter chips (All / Open <em>n</em> / one per person). <strong>Claiming stays where it lives:</strong> the &#9745;&#65039; Open Shifts Notion board + JOB 31&rsquo;s hourly mirror &mdash; the page only advertises the gaps, no button (Junyan ruled the claim function off the public app, 2026-08-25).</p>
+      <p><em>Guards:</em> placeholders are parsed into a separate list so they can never count as monitored-booking coverage on the desktop panel; only the studio number may be read out of an event description (they carry renter names + [Paid] markers) &mdash; both locked by <code>test_open_shifts.py</code>, wired into the rebuild workflow. Also fixed in passing: the desktop tab-switch loop still iterated the removed <code>reports</code> section, throwing on every tab click and silently killing the Calendar tab&rsquo;s scroll-to-now.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-25 &middot; 22:10Z</span>
       <h3>The Deck runs the engine&rsquo;s preflight before offering Send &mdash; missing dispatch fields are fixable on the card<span class="kind">REVIEW SURFACE</span></h3></summary>
       <p>Every card now carries a <strong>Dispatch strip</strong> mirroring the Send Engine&rsquo;s <code>validate_()</code>: SMS needs a valid phone, Email needs an address + subject + (for &ldquo;Re:&rdquo; subjects) Source Email. A failing check shows &#10007; with an inline input; <strong>Save writes to where the engine actually reads</strong> &mdash; phone/email to the ARTIST page (the engine backfills from it; the queue&rsquo;s <code>Reply To</code> is never read by the engine at all &mdash; confirmed in Code.gs, worth knowing since the Responder populates it), subject/Source Email to the queue row. Send is disabled and reads &ldquo;Fix dispatch first&rdquo; until the strip is green. Alarm codes display read-only from the Artist page &mdash; codes change via the panel, not a text field. No linked Artist = an honest &ldquo;link one in Notion&rdquo; message, since a fix typed there would have nowhere to live.</p>
