@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-24 22:20 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-24 23:05 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3457,7 +3457,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Replay the Sara Aljabery case (booked 21:59Z for 13:15 next day, 509B): one pass</p>
 <p>produces an artist record, a verified code, a board row, a queued confirmation, and</p>
 <p>one Actions row saying the HTA is owed. <code>deferred</code> appears in no result.</p>
-</div></details></details></div><div class="job"><div class="jnum">#109</div><div class="jhead"><span class="emoji">🏢</span><h4>Put booking-site bookings on our calendar the moment they come in</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When somebody books through Peerspace, Giggster or Tagvenue, it does NOT appear on our calendar</li><li>Junyan has been putting them on by hand — which works fine, when he is awake</li><li>Julia booked for Sunday evening and the email came in at 1:50 in the morning; her room only went on the calendar the day AFTER she had already danced</li><li>So all evening, studio 509A looked free and somebody else could have booked right over her</li><li>Everything AFTER that step already works — the desk finds these guests by the booking title, and about twenty of them have cards and working door codes</li><li>So this job is only about holding the room. Door codes, cards and messages are all fine already</li><li>The part that creates the booking exists and was tested back in August — nothing is calling it</li><li>We do NOT make Skedda accounts for booking-site guests (Junyan, Aug 24) — that would email them a sign-up invite they never asked for</li><li>Because of that, the booking&#x27;s TITLE is the only thing saying who the guest is — so it now has one fixed form: the name, then the site. &quot;Kim M. Peerspace&quot;</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Hold the room — a caller that mirrors platform bookings into Skedda on arrival</b></p><h2>The defect</h2>
+</div></details></details></div><div class="job"><div class="jnum">#109</div><div class="jhead"><span class="emoji">🏢</span><h4>Put booking-site bookings on our calendar the moment they come in</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When somebody books through Peerspace, Giggster or Tagvenue, it does NOT appear on our calendar</li><li>Junyan has been putting them on by hand — which works fine, when he is awake</li><li>Julia booked for Sunday evening and the email came in at 1:50 in the morning; her room only went on the calendar the day AFTER she had already danced</li><li>So all evening, studio 509A looked free and somebody else could have booked right over her</li><li>Everything AFTER that step already works — the desk finds these guests by the booking title, and about twenty of them have cards and working door codes</li><li>So this job is only about holding the room. Door codes, cards and messages are all fine already</li><li>The part that creates the booking exists and was tested back in August — nothing is calling it</li><li>Junyan&#x27;s ruling (Aug 25): saying YES to a request on the booking site IS the decision — that one tap should set everything up, within minutes, with nothing else asked of him</li><li>We do NOT make Skedda accounts for booking-site guests (Junyan, Aug 24) — that would email them a sign-up invite they never asked for</li><li>Because of that, the booking&#x27;s TITLE is the only thing saying who the guest is — so it now has one fixed form: the name, then the site. &quot;Kim M. Peerspace&quot;</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Hold the room — a caller that mirrors platform bookings into Skedda on arrival</b></p><h2>The defect</h2>
 
 <p>A Giggster/Peerspace/Tagvenue booking is not on the Skedda calendar until a human puts it</p>
 <p>there. The mirroring logic exists only inside <code>send-engine/SameDay.gs</code>, which has <b>never been</p>
@@ -3499,6 +3499,35 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>This deliberately does NOT install <code>SameDay.gs</code>. That file carries the unattended</p>
 <p>send-a-code-to-a-stranger grant; this is a separate lane with no send authority, no alarm</p>
 <p>access, and its own kill switch.</p>
+
+<h2>The trigger is the ACCEPTANCE (Junyan, 2026-08-25)</h2>
+
+<p>*&quot;The issue with this one was because I accepted the booking through Peerspace. This</p>
+<p>acceptance should have automatically set everything up immediately.&quot;*</p>
+
+<p>This sharpens the Julia story and the design. The &quot;Your booking is confirmed&quot; mail exists</p>
+<p><b>because the host accepted the request</b> — Julia&#x27;s request landed 04:26Z and Junyan accepted</p>
+<p>at 05:50Z (1:50am Toronto, from his phone). So the human decision was already made, at night,</p>
+<p>in one tap. What failed is that the desk gave that acceptance no effect: holding the room</p>
+<p>required a SECOND manual step that merely duplicates the yes already given.</p>
+
+<p>Consequences for the build:</p>
+
+<ul>
+<li>- <b>Mail-triggered IS acceptance-triggered.</b> The confirmation email is the acceptance&#x27;s</li>
+</ul>
+<p>receipt, so a caller that fires on that mail fires on the acceptance itself. No new</p>
+<p>Peerspace integration is needed — the event already reaches us.</p>
+<ul>
+<li>- <b>Latency target is minutes, not a half-hour clock.</b> The acceptance is the go signal;</li>
+</ul>
+<p>the lane should live where the 1-minute tick already runs (the send-engine Apps Script</p>
+<p>project), not wait for the sweep&#x27;s 30-minute pass.</p>
+<ul>
+<li>- <b>Acceptance cascades with no further human step.</b> Mirror → the sweep&#x27;s next pass finds</li>
+</ul>
+<p>the booking → card, code (110: due on first sight), board row. One tap at 1:50am should</p>
+<p>leave nothing owed by morning except the messages humans send by rule.</p>
 
 <h2>The build</h2>
 
@@ -11331,5 +11360,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-24 22:20 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-24 23:05 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
