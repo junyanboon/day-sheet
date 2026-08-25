@@ -315,6 +315,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-25 &middot; 22:10Z</span>
+      <h3>The Deck runs the engine&rsquo;s preflight before offering Send &mdash; missing dispatch fields are fixable on the card<span class="kind">REVIEW SURFACE</span></h3></summary>
+      <p>Every card now carries a <strong>Dispatch strip</strong> mirroring the Send Engine&rsquo;s <code>validate_()</code>: SMS needs a valid phone, Email needs an address + subject + (for &ldquo;Re:&rdquo; subjects) Source Email. A failing check shows &#10007; with an inline input; <strong>Save writes to where the engine actually reads</strong> &mdash; phone/email to the ARTIST page (the engine backfills from it; the queue&rsquo;s <code>Reply To</code> is never read by the engine at all &mdash; confirmed in Code.gs, worth knowing since the Responder populates it), subject/Source Email to the queue row. Send is disabled and reads &ldquo;Fix dispatch first&rdquo; until the strip is green. Alarm codes display read-only from the Artist page &mdash; codes change via the panel, not a text field. No linked Artist = an honest &ldquo;link one in Notion&rdquo; message, since a fix typed there would have nowhere to live.</p>
+      <p><em>Why:</em> tickets get processed by different lanes and sessions, and any of them can queue a row a field short (Chikako: Source Email; earlier: blank Artists). The boundary check in the engine protects the renter but costs hours; this puts the same check where the human is already looking, with the fix one input away.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-25 &middot; 16:49Z</span>
       <h3>The same-day window goes FULLY ROBOTIC &mdash; confirmation + HTA auto-send, and pure time-moves settle themselves<span class="kind">SEND AUTHORITY MOVED</span></h3></summary>
       <p><strong>Junyan&rsquo;s ruling:</strong> &ldquo;bypass all human gates for any same day bookings (or bookings the next day) along with any last minute changes that are just moves.&rdquo; Shipped in dc-canon <code>12289d34</code>, deployed 16:49Z (fingerprint <code>bc94f9f61430</code> verified; 434 tests). Found while tracing real short-notice bookings: <strong>the same-day HTA was never composed at all</strong> &mdash; the Host writes the T&minus;24 batch once daily at 04:00, a mid-morning booking misses it, and nothing re-runs it (Gabrielle Curate 2026-08-11 reached the door with a provisioned code nobody had sent her). The scale: 40 of 454 bookings in two months were made under two hours out, 112 more inside 24h.</p>
