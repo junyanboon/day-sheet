@@ -313,6 +313,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-25 &middot; 14:41Z</span>
+      <h3>Lane B is LIVE &mdash; event-gate deployed with 108 + the sweep memory, snapshot bucket created<span class="kind">DEPLOY</span></h3></summary>
+      <p><strong>Deployed on Junyan&rsquo;s go</strong> (&ldquo;Deploy event gate&rdquo;). <code>services/event-gate/deploy.sh</code> at dc-canon <code>9d58a629</code> &rarr; revision <code>event-gate-00068-m92</code>; <code>/health</code> fingerprint <code>0e552cf9dbe3</code> matches local, so byte-identical sources are live. This ships three tickets at once: <strong>108</strong> (deference branch deleted &mdash; the sweep now runs its full chain on today/tomorrow bookings, files an <code>hta-owed</code> Actions row instead of going silent; revert switch <code>SWEEP_SAMEDAY_DISABLED=1</code>), <strong>090 steps 1&ndash;3</strong> (one-request 45-day-capable Skedda read, between-pass GCS snapshot, made/changed/cancelled diff with the queued-confirmation cancellation guard), and <strong>110</strong> (access provisioned on first sight of a booking, remembered only on completion &mdash; a failed grant retries next pass).</p>
+      <p><strong>The memory is armed, not just shipped:</strong> bucket <code>gs://danceannex-sweep</code> created (us-central1, uniform access), runtime SA granted <code>roles/storage.objectAdmin</code> on the bucket directly (the Secret Manager lesson generalised: don&rsquo;t lean on project <code>roles/editor</code>), and <code>SWEEP_SNAPSHOT_BUCKET=danceannex-sweep</code> set (revision <code>00069-68q</code>). First pass stores the board; diffs and first-sight access start on the second. A lost or unreachable snapshot reads as &ldquo;stand down&rdquo;, never &ldquo;everything is new&rdquo; &mdash; no panel stampede.</p>
+      <p><em>Still not live:</em> lane P &mdash; <code>PlatformMirror.gs</code> remains a paste + Script Properties + 5-min trigger, all Junyan&rsquo;s. <em>Acceptance replays owed:</em> the Sara case (first live same-day booking) for lane B; Julia&rsquo;s for lane P once installed.</p>
+    </details>
+    </li>
+
     <li class="entry alert">
       <details>
       <summary><span class="when">2026-08-25 &middot; 14:23Z</span>

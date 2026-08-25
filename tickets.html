@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-24 23:13 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-25 10:42 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2825,7 +2825,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <h2>Progress 2026-08-24 — steps 1 and 2 landed</h2>
 
-<p><code>dc-canon</code> commit <code>438d57ca</code>, tested, not deployed.</p>
+<p><code>dc-canon</code> commit <code>438d57ca</code>, tested. Deployed 2026-08-25 14:39Z with 108 (bucket <code>danceannex-sweep</code> live, <code>SWEEP_SNAPSHOT_BUCKET</code> set) — first pass stores the board, diffs start on the second.</p>
 
 <ul>
 <li>- <b><code>skedda_read.bookings_range(first_day, last_day)</code></b> — both ends inclusive, ONE request</li>
@@ -3402,7 +3402,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>are this class (both cards native, shared stable identifiers) rather than the relay class?</p>
 <p><b>104</b> will surface the evidence per pair — this ticket wants</p>
 <p>the split.</p>
-</div></details></details></div><div class="job"><div class="jnum">#108</div><div class="jhead"><span class="emoji">🏠</span><h4>Let the booking robot look after last-minute bookings itself</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>BUILT (Aug 25, Junyan said go) — waiting only for the deploy button</li><li>Right now the booking robot skips anything starting today or tomorrow</li><li>It was told a second helper would handle those — that helper was never switched on</li><li>So it will stop skipping: it sets up the person, checks their door code, makes the board row, and writes the confirmation</li><li>The one thing it still won&#x27;t do is text the door code by itself — it raises a note asking a person to send it</li><li>Junyan has to say yes before this goes live, because it changes a running system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The sweep takes the same-day window, record-only — delete the deference branch</b></p><h2>Ruling this implements</h2>
+</div></details></details></div><div class="job"><div class="jnum">#108</div><div class="jhead"><span class="emoji">🏠</span><h4>Let the booking robot look after last-minute bookings itself</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>LIVE (deployed Aug 25) — the robot now handles last-minute bookings itself</li><li>Right now the booking robot skips anything starting today or tomorrow</li><li>It was told a second helper would handle those — that helper was never switched on</li><li>So it will stop skipping: it sets up the person, checks their door code, makes the board row, and writes the confirmation</li><li>The one thing it still won&#x27;t do is text the door code by itself — it raises a note asking a person to send it</li><li>Junyan said yes and it is deployed — a switch exists to put the old skip back if anything looks wrong</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The sweep takes the same-day window, record-only — delete the deference branch</b></p><h2>Ruling this implements</h2>
 
 <p><b>107 — Instant bookings fall into the Registrar/same-day-lane deference gap</b>:</p>
 <p>the Registrar defers today/tomorrow bookings to <code>send-engine/SameDay.gs</code>, which has</p>
@@ -3461,7 +3461,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>---</p>
 
-<h2>Implemented 2026-08-25 — dc-canon <code>8e792d34</code>, NOT deployed</h2>
+<h2>Implemented 2026-08-25 — dc-canon <code>8e792d34</code>, DEPLOYED 2026-08-25 14:39Z</h2>
 
 <p>Junyan approved (&quot;Implement it… Let&#x27;s implement this now&quot;). Built exactly as scoped, plus one</p>
 <p>addition from review: <b>its own kill switch</b> — <code>SWEEP_SAMEDAY_DISABLED=1</code> restores the skip</p>
@@ -3485,8 +3485,11 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Tests rewritten from the deference world; 420 passing.</li>
 </ul>
 
-<p>Remaining: Junyan deploys event-gate. Acceptance replay (the Sara case) happens on the first</p>
-<p>live same-day booking after deploy.</p></div></details></details></div><div class="job"><div class="jnum">#109</div><div class="jhead"><span class="emoji">🏢</span><h4>Put booking-site bookings on our calendar the moment they come in</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When somebody books through Peerspace, Giggster or Tagvenue, it does NOT appear on our calendar</li><li>Junyan has been putting them on by hand — which works fine, when he is awake</li><li>Julia booked for Sunday evening and the email came in at 1:50 in the morning; her room only went on the calendar the day AFTER she had already danced</li><li>So all evening, studio 509A looked free and somebody else could have booked right over her</li><li>Everything AFTER that step already works — the desk finds these guests by the booking title, and about twenty of them have cards and working door codes</li><li>So this job is only about holding the room. Door codes, cards and messages are all fine already</li><li>The part that creates the booking exists and was tested back in August — nothing is calling it</li><li>Junyan&#x27;s ruling (Aug 25): saying YES to a request on the booking site IS the decision — that one tap should set everything up, within minutes, with nothing else asked of him</li><li>We do NOT make Skedda accounts for booking-site guests (Junyan, Aug 24) — that would email them a sign-up invite they never asked for</li><li>Because of that, the booking&#x27;s TITLE is the only thing saying who the guest is — so it now has one fixed form: the name, then the site. &quot;Kim M. Peerspace&quot;</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Hold the room — a caller that mirrors platform bookings into Skedda on arrival</b></p><h2>The defect</h2>
+<p>Deployed 2026-08-25 14:39Z at <code>9d58a629</code> (revision <code>event-gate-00068-m92</code>; fingerprint</p>
+<p><code>0e552cf9dbe3</code> matches local — byte-identical sources live). Bucket <code>danceannex-sweep</code></p>
+<p>created + <code>SWEEP_SNAPSHOT_BUCKET</code> set (revision <code>00069-68q</code>), so 090&#x27;s memory and 110&#x27;s</p>
+<p>first-sight access are armed too. Acceptance replay (the Sara case) happens on the first</p>
+<p>live same-day booking.</p></div></details></details></div><div class="job"><div class="jnum">#109</div><div class="jhead"><span class="emoji">🏢</span><h4>Put booking-site bookings on our calendar the moment they come in</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When somebody books through Peerspace, Giggster or Tagvenue, it does NOT appear on our calendar</li><li>Junyan has been putting them on by hand — which works fine, when he is awake</li><li>Julia booked for Sunday evening and the email came in at 1:50 in the morning; her room only went on the calendar the day AFTER she had already danced</li><li>So all evening, studio 509A looked free and somebody else could have booked right over her</li><li>Everything AFTER that step already works — the desk finds these guests by the booking title, and about twenty of them have cards and working door codes</li><li>So this job is only about holding the room. Door codes, cards and messages are all fine already</li><li>The part that creates the booking exists and was tested back in August — nothing is calling it</li><li>Junyan&#x27;s ruling (Aug 25): saying YES to a request on the booking site IS the decision — that one tap should set everything up, within minutes, with nothing else asked of him</li><li>We do NOT make Skedda accounts for booking-site guests (Junyan, Aug 24) — that would email them a sign-up invite they never asked for</li><li>Because of that, the booking&#x27;s TITLE is the only thing saying who the guest is — so it now has one fixed form: the name, then the site. &quot;Kim M. Peerspace&quot;</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Hold the room — a caller that mirrors platform bookings into Skedda on arrival</b></p><h2>The defect</h2>
 
 <p>A Giggster/Peerspace/Tagvenue booking is not on the Skedda calendar until a human puts it</p>
 <p>there. The mirroring logic exists only inside <code>send-engine/SameDay.gs</code>, which has <b>never been</p>
@@ -3620,6 +3623,57 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>in dry-run: it resolves the &quot;Sunny Dance &amp; Yoga Studio with Ombré Curtains&quot; listing to <b>509A</b>,</p>
 <p>Sun 23 Aug <b>19:00–21:00</b>, and would create exactly that booking — then a second pass creates</p>
 <p>nothing. Live: a platform confirmation arriving overnight has its room held before morning.</p>
+
+<h2>Built 2026-08-24 — <code>send-engine/PlatformMirror.gs</code></h2>
+
+<p>The lane is written, standalone (no dependency on <code>SameDay.gs</code>, which can now go),</p>
+<p>and covered by <code>test_platform_mirror.js</code> — <b>28 tests, all passing</b>, run with</p>
+<p><code>node test_platform_mirror.js</code>. Setup and operation: <code>send-engine/PLATFORM-MIRROR.md</code>.</p>
+
+<p><b>The parsers are pinned to REAL mail bodies, and that caught three live bugs</b></p>
+<p>that would each have meant a silently unheld room — the old parsers were written</p>
+<p>against the Gmail API&#x27;s pipe rendering, not <code>GmailApp.getPlainBody()</code>:</p>
+
+<ol>
+<li>1. Julia&#x27;s mail has <b>no &quot;Space&quot; label</b>; the listing is the line after &quot;Booking details&quot;.</li>
+<li>2. Peerspace separates date and time with a literal <b><code>&lt;br/&gt;</code></b>, not a newline.</li>
+<li>3. Peerspace <b>indents</b> its labels, so a <code>^Payout</code> anchor never matched.</li>
+</ol>
+
+<p><b>Both discrepancies in the section above are now settled:</b></p>
+
+<ol>
+<li>1. <i>Title</i> — <code>&lt;Name&gt; &lt;Platform&gt;</code>, implemented in <code>pmTitle_</code>. Confirmed as what</li>
+</ol>
+<p>Junyan already does: the live bookings read <code>Chris Giggster</code> and <code>Kim M. Peerspace</code>.</p>
+<ol>
+<li>2. <i>Price</i> — <b>the PAYOUT, not the gross</b>, settled against four hand-made</li>
+</ol>
+<p>mirrors rather than by preference: Julia 64 (payout 64), Kim 117.60 (payout</p>
+<p>117.60, gross 147.00), Chris 145.80 (payout 145.80, headline 180), Jessica T.</p>
+<p>48 / Angelica B. 80. Both parsers changed accordingly. <b>Tagvenue remains</p>
+<p>UNVERIFIED</b> — no hand-made Tagvenue mirror existed to check — and is flagged</p>
+<p>in code and in the setup doc.</p>
+
+<p><b>Two live findings surfaced while building this:</b></p>
+
+<ul>
+<li>- <b>Leah&#x27;s Giggster booking (509A, 24 Aug 11:00–12:00, confirmed 18 Aug) was</li>
+</ul>
+<p>never mirrored.</b> The slot is empty on our calendar and the session has now</p>
+<p>passed. A second Julia, three days later — the defect is ongoing, not historic.</p>
+<ul>
+<li>- <b>The 🏢 Studio Reference row for 693 was stale</b>: it said &quot;Contemporary</li>
+</ul>
+<p>Downtown <i>Fitness</i> &amp; Event Studio with Bar Lounge&quot; while Peerspace&#x27;s own mail</p>
+<p>says &quot;<i>Dance</i>&quot;. Kim M.&#x27;s booking would have escalated instead of mapping.</p>
+<p>Corrected in Notion 2026-08-24 and verified by read-back; a test pins that a</p>
+<p>one-word drift must escalate rather than fuzzy-match.</p>
+
+<p><b>Deliberately out of scope, now recorded:</b> Giggster &quot;Booking update has been</p>
+<p>approved&quot; (a renter moving or extending a booking) is ignored, so a moved booking</p>
+<p>drifts from the calendar until someone notices. That needs an update path rather</p>
+<p>than a create path — it belongs with <b>084</b>.</p>
 
 <h2>Approval</h2>
 
@@ -11406,5 +11460,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-24 23:13 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-25 10:42 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
