@@ -315,6 +315,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-25 &middot; 21:05Z</span>
+      <h3>The Deck grows a second deck, a context strip, and an honest Error state<span class="kind">REVIEW SURFACE</span></h3></summary>
+      <p><strong>Deck 2 &mdash; desk improvements.</strong> When every reply is decided, the Deck no longer stops at &ldquo;clear&rdquo;: Sweep Feedback rows of Type <code>HTR suggestion</code> / <code>HTR proposal</code> at Status <code>New</code> surface as their own card stack. Verbs are about the ROW &mdash; <em>Mark applied</em> (after the human makes the HTR edit) and <em>Decline with a reason</em>; both set Status <code>Applied</code> with a Deck stamp in &ldquo;What the sweep did&rdquo;, so declined ideas stop resurfacing and the no-agent-edits-HTR rule is untouched.</p>
+      <p><strong>Card legibility.</strong> The metadata line is replaced by a plain-language context strip (&ldquo;They stayed past their booked end. This tells them we added the extra time.&rdquo;) keyed off Message Code, with the raw agent Reasoning demoted behind a &ldquo;why this was drafted&rdquo; toggle. A draft longer than its pane now shows a lit border, an edge fade, and a live <code>&darr; N more lines</code> pill BELOW the box &mdash; two billing sentences hid under a friendly opener on the Avante card because the pane looked complete.</p>
+      <p><strong>Error means something now.</strong> Canon <code>2a655869</code> (response-resolver): setting Message Queue Status <code>Error</code> REQUIRES an <code>[Error &mdash; why &mdash; ts]</code> append to Reasoning in the same write; no stamp, no Error. The Deck renders the stamp, and on a stampless Error says plainly that no send was attempted and the status was likely set by hand. Prompted by the Avante row (1 Error in 2,718 rows ever, no receipt, no cause &mdash; consistent with a mis-click beside Pending Review) and confirmed same-day by the Chikako row, a REAL dispatch failure (blank Artist relation &rArr; empty Email rollup &rArr; no recipient) that also arrived uncaptioned. Chikako&rsquo;s Deck-approved reply was sent manually from the business mailbox (<code>gmail:1a039cf1ec8ea31a</code>) and the row closed Sent.</p>
+      <p><em>Open question for the dispatcher:</em> an Email row with a blank Artist but a verbatim <code>Reply To</code> address had everything it needed to send; it errored instead of using it. Worth a defect row if it recurs.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-25 &middot; 15:18Z</span>
       <h3>The same-day &ldquo;HTA owed&rdquo; ping is REMOVED &mdash; ruled moot the day it shipped; confirmation + HTA are the one human step<span class="kind">ROUTE SIMPLIFIED</span></h3></summary>
       <p><strong>Junyan&rsquo;s ruling, three parts:</strong> a person sends the customer confirmation in EVERY scenario; a today/tomorrow booking gets confirmation + HTA together; and the door code rides inside the HTA &mdash; so a separate &ldquo;door-code text&rdquo; step and a separate &ldquo;code owed&rdquo; Actions row are both fake precision. The <code>hta-owed</code> row (shipped 14:39Z in 108) duplicated a signal that already exists: the board row the sweep creates carries <code>HTA: Unsent</code>, which is what the desk&rsquo;s HTA lane composes from (with its mandatory fresh panel check), and the sweep queues the confirmation alongside.</p>
