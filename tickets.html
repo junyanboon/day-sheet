@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-24 21:48 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-24 22:09 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">33</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">32</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">57</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">58</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1229,7 +1229,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
 <p>Ops Lead&#x27;s use of it here.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">33</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">32</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -2620,175 +2620,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Home it in <code>_verdict_of</code> inside <code>/provision</code>, so every caller — the booking sweep, the Doorman,</p>
 <p>the same-day lane — gets it at once.</p>
-</div></details></details></div><div class="job"><div class="jnum">#084</div><div class="jhead"><span class="emoji">🏷️</span><h4>Bookings from Giggster and Peerspace made more than 2 days ahead reach nobody</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When someone books through Giggster or Peerspace, the booking appears on our calendar with no person attached — the name is only in the booking&#x27;s title, like &#x27;Chris Giggster&#x27;</li><li>The fast robot that handles these only wakes up for bookings happening today or tomorrow. Chris booked ten days ahead, so it never fired</li><li>And the new booking program skips them, because to it they look like a booking with nobody on it</li><li>So nobody automated touches them at all — 5 out of 31 bookings in the four days we checked</li><li>What needs deciding: who owns them, whether reading the name out of the title is safe enough, and what to do about the missing phone number</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Platform bookings made more than 2 days out reach no automation at all</b></p><h2>Question</h2>
-
-<p>Found 2026-08-19 while probing the Skedda admin read for <b>081</b>.</p>
-
-<p>A Giggster/Peerspace/Tagvenue booking is mirrored into Skedda as a <b>casual</b> booking with</p>
-<p><b>no holder</b> — <code>user: {id: null, name: null, email: null, phone: null}</code>. The renter&#x27;s identity</p>
-<p>lives in the booking <b>title</b>, by convention: <code>Chris Giggster</code>, <code>Hanano I. Giggster</code>,</p>
-<p><code>Jessica T. Peerspace</code>, <code>Angelica B. Peerspace</code>, <code>Anneka K. Peerspace</code>.</p>
-
-<p><b>Nobody automated handles these unless they start today or tomorrow.</b></p>
-
-<ul>
-<li>- <code>send-engine/SameDay.gs</code> has full platform logic — it mirrors the booking, creates the Artist</li>
-</ul>
-<p>page, provisions and verifies the code, seeds the board row — but it is <b>mail-triggered at</p>
-<p>arrival and only acts when the booking starts today or tomorrow</b>. <code>Chris Giggster</code> was booked</p>
-<p>Aug 11 for Aug 21: ten days out, so the lane never fired.</p>
-<ul>
-<li>- The booking sweep skips them, correctly under its current rules, as &quot;no holder on the booking&quot;.</li>
-</ul>
-
-<p>Measured: <b>5 of 31 bookings</b> in the Aug 20–23 window were platform mirrors.</p>
-
-<h2>What has to be decided</h2>
-
-<ol>
-<li>1. <b>Who owns them</b> — the sweep (parse the holder out of the title), a widened same-day lane</li>
-</ol>
-<p>(drop its today/tomorrow gate for platform entries only), or a third lane. Note the</p>
-<p>single-writer rule from 079: exactly one unattended provisioner.</p>
-<ol>
-<li>2. <b>The title convention as an identity source.</b> <code>&quot;&lt;First&gt; &lt;LastInitial&gt;. &lt;Platform&gt;&quot;</code> is a</li>
-</ol>
-<p>human habit, not a schema. What happens when someone types it differently — refuse, or</p>
-<p>fuzzy-match and raise residue? (081&#x27;s rule is: never merge on a name alone.)</p>
-<ol>
-<li>3. <b>The missing phone number.</b> Platform renters have no phone on the Skedda side; Giggster</li>
-</ol>
-<p>gives a first name and Peerspace masks the surname. SameDay&#x27;s existing answer is to do</p>
-<p>everything except the send and escalate asking for a mobile number on the platform thread —</p>
-<p>is that still right at T−10 rather than T−1, where there is time to ask?</p>
-<ol>
-<li>4. <b>Whether repeat platform renters short-circuit</b> — SameDay already completes fully and</li>
-</ol>
-<p>automatically for a platform renter already in the Artist DB with a phone. Same here?</p>
-
-<h2>Why it is not just &quot;fold it into the sweep&quot;</h2>
-
-<p>The entry shape is genuinely different — no holder record, no phone, identity by title</p>
-<p>convention, and a mirror that may itself need creating. The same-day lane already solved most</p>
-<p>of this once; the decision is whether to reuse that code by widening its window or to</p>
-<p>re-implement in the sweep, and that is a design call, not a build detail.</p>
-
-<p>---</p>
-
-<p><b>2026-08-19, after the one-owner ruling:</b> question 1 (who owns them) is now answered in</p>
-<p>principle — <b>089 one job, two triggers</b> makes the sweep the sole</p>
-<p>owner, and platform-mirror creation moves into it (089 §What moves, item 3). Questions 2–4</p>
-<p>(title-convention identity, the missing phone at T−10, repeat-renter short-circuit) remain</p>
-<p>this ticket&#x27;s grilling.</p>
-
-<p>---</p>
-
-<h2>New evidence, 2026-08-24 — the mirror itself is manual, and it can be a day late</h2>
-
-<p>This ticket assumed a platform booking <i>is</i> mirrored into Skedda (&quot;mirrored as a casual</p>
-<p>booking with no holder&quot;) and that the open question was who handles it afterwards. Julia S.</p>
-<p>shows the mirror is not happening on its own either — <b>Junyan does it by hand, and when he</p>
-<p>isn&#x27;t watching, the room is not held at all.</b></p>
-
-<p><b>Julia S., Peerspace, Sun 23 Aug 19:00–21:00, 509A, $64, &quot;Me again! Just practice.&quot;</b></p>
-
-<p>| When (UTC) | What arrived / happened |</p>
-<p>|---|---|</p>
-<p>| 23 Aug 04:26 | &quot;Julia S. sent you a booking request&quot; |</p>
-<p>| 23 Aug 05:50 | <b>&quot;Your booking is confirmed with Julia S.&quot;</b> — the class <code>sdParsePeerspace_</code> matches. 01:50 Toronto, ~17h before the session |</p>
-<p>| 23 Aug 22:29 | &quot;starts soon&quot; reminder, 31 min before start — labelled <code>Artist Care - Booking Coming Up</code>. A label, not an action |</p>
-<p>| 24 Aug 01:04 | &quot;booking is complete&quot; |</p>
-<p>| <b>24 Aug 15:40</b> | <b>Skedda booking <code>119616803</code> &quot;Julia S. Peerspace FBS&quot; created — a day after the session ended</b> |</p>
-
-<p>So for the whole session the room was <b>not on our calendar</b>. Not &quot;no board row&quot; — no</p>
-<p>booking. Anyone could have booked 509A over her. She is also a returning Peerspace renter</p>
-<p>(previous booking 15 Aug), and Peerspace masks her number, so nothing could have texted her</p>
-<p>anyway.</p>
-
-<p>Compare <b>Kim M.</b> (Peerspace, mail 15 Aug 16:17Z → mirror <code>119143355</code> created 16:24Z, seven</p>
-<p>minutes later, by hand). Same path, and it worked — because Junyan happened to be at the desk.</p>
-<p>Julia&#x27;s landed at 01:50 Toronto. <b>That is the whole difference between the two outcomes.</b></p>
-
-<h3>What this fixes in the ticket&#x27;s framing</h3>
-
-<ul>
-<li>- Question 1 (&quot;who owns them&quot;) had been answered in principle by <b>089</b>.</li>
-</ul>
-<p>But 089 and <b>108</b> both work off <b>the Skedda board</b>,</p>
-<p>and a platform booking is not on it until something mirrors it. <b>Neither ticket helps Julia.</b></p>
-<p>The mirror is upstream of everything this map has built.</p>
-<ul>
-<li>- The route already exists and was proven live 2026-08-12: <code>POST /mirror-booking</code> on skedda-mcp</li>
-</ul>
-<p>(<code>skedda-mcp-00020-bxk</code>), create + read-back verified, idempotent on a repeat call. <b>What is</p>
-<p>missing is the thing that calls it</b> — that logic lives only in the uninstalled <code>SameDay.gs</code>.</p>
-<ul>
-<li>- So the cheapest real fix is a small deterministic caller on the platform confirmation mail:</li>
-</ul>
-<p>no LLM, no send authority, one job — hold the room and attach the holder. It would have</p>
-<p>created Julia&#x27;s booking at 01:50.</p>
-
-<h3>Still open (unchanged, and now sharper)</h3>
-
-<p>Q2 title-convention identity, Q3 the missing phone, Q4 repeat-renter short-circuit. Julia</p>
-<p>bears on Q4 directly: she is a repeat renter whose number we still do not have, because</p>
-<p>Peerspace masks it on every booking, not just the first.</p>
-
-<h3>Live and unhandled right now</h3>
-
-<p><b>Kim M., Thu 27 Aug 18:30–21:30, Studio 693, 30 attendees.</b> Mirrored (so the room is held)</p>
-<p>but holder <code>null</code> and no phone — invisible to every robot. Junyan asked her for a number on</p>
-<p>21 Aug; <b>no reply on the thread as of 24 Aug.</b> Three days out.</p>
-
-<h2>Correction, same day — most of the downstream IS handled</h2>
-
-<p>The section above claimed Kim M. was &quot;invisible to every robot&quot; and that Julia got nothing.</p>
-<p><b>Both wrong</b>, checked against live records 2026-08-24:</p>
-
-<ul>
-<li>- <b>Kim M.</b> has an Artist card keyed on her relay, <b>alarm code 6205</b> verified live on 4 panels</li>
-</ul>
-<p>(<code>code_is_stale: false</code>), and an <b>FBS board row</b> for 27 Aug 18:30 in 693. HTA/EOB unset is</p>
-<p>correct at T−3. She needs nothing.</p>
-<ul>
-<li>- <b>Julia S.</b> has a board row with <b>HTA <code>Sent</code> and EOB <code>Sent</code></b> — she was messaged and let in</li>
-</ul>
-<p>normally.</p>
-<ul>
-<li>- ~20 Peerspace guests hold cards on their relay address, each with a code and an</li>
-</ul>
-<p><code>Alarm Display Name</code>. This route has been working for months.</p>
-
-<p><b>Why:</b> the FBS board is built from the Skedda calendar by <b>booking title</b>, not by holder</p>
-<p>record. So a blank-holder mirror is legible to the desk. The sweep&#x27;s holder-based lookup is the</p>
-<p>only thing that skips them, and the board row is what actually drives EOB/PBF.</p>
-
-<p><b>So the ticket narrows sharply.</b> The failure is <i>one step</i>: nothing puts the booking on the</p>
-<p>calendar. Everything after that already works. Q1 (who owns them) and Q4 (repeat-renter</p>
-<p>short-circuit) are effectively answered by observation — the existing path handles both.</p>
-
-<p><b>Junyan&#x27;s ruling, 2026-08-24:</b> platform bookings stay <b>casual bookings with no Skedda user</b>.</p>
-<p>Do not create Skedda accounts for platform guests — confirmed against prior bookings, which are</p>
-<p>all <code>type: 1, user: null</code>. This is now settled, not open. Note the practical reason found while</p>
-<p>testing: <code>create_user</code> <b>emails the person a Skedda registration invite</b> on commit, which no</p>
-<p>platform guest should receive.</p>
-
-<p><b>Q2 (title-convention identity) — RULED (Junyan, 2026-08-24): the title is <code>&lt;Name&gt; &lt;Platform&gt;</code>.</b></p>
-<p>e.g. <code>Kim M. Peerspace</code>. It is load-bearing precisely because the holder is <code>null</code> by design, so</p>
-<p>this string is the only link from a calendar booking to a person. Variants still in the wild</p>
-<p>(<code>Julia S. Peerspace FBS</code>, <code>Peerspace Booking, Julia S.</code>) normalise on touch. <b>All four of this</p>
-<p>ticket&#x27;s questions are now answered</b> — Q1 and Q4 by observation, Q2 and the casual-booking rule</p>
-<p>by Junyan, Q3 as a platform ceiling rather than a defect. What remains is the one-card-per-guest</p>
-<p>problem below, which is a different ticket&#x27;s shape.</p>
-
-<p><b>Q3 (the missing phone) is a platform ceiling, not a defect</b> — booking sites mask numbers</p>
-<p>permanently. Reply on the platform thread. Not worth further design.</p>
-
-<p><b>New, real, and not previously on this ticket: one card per guest.</b> Peerspace issues a fresh</p>
-<p>relay per booking, so every booking mints a new Artist card. <b>Julia S. has two</b> (relays</p>
-<p><code>prod-6a5753e7…</code> and <code>prod-6a8088af…</code>, same phone, same code 9312). The contact-points table</p>
-<p>(<b>101</b>/<b>103</b>) exists for</p>
-<p>exactly this and should absorb platform relays.</p>
 </div></details></details></div><div class="job"><div class="jnum">#089</div><div class="jhead"><span class="emoji">🧵</span><h4>One program will own a booking start to finish — Junyan&#x27;s call</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Today two programs share the work: a fast one for bookings starting today or tomorrow, and the new sweep for everything further out. The handoff line between them is invisible from outside</li><li>Junyan ruled: one program owns the whole thing. It runs every half hour AND gets nudged the moment a booking email arrives, so it is both thorough and fast</li><li>The fast program retires after a week of both running side by side to prove nothing gets double-sent</li><li>The risky permission — texting a door code with no human check — moves with the work. We discussed the danger of putting that inside a bigger program, and Junyan accepted it: the real protection is the checks, not the small box</li><li>One new problem the build must solve first: with two ways to wake up, the program can wake up twice at once and do the same thing twice. It needs a simple lock</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>One job, two triggers — the sweep becomes the sole owner of the booking lifecycle</b></p><h2>Ruling this implements (Junyan, 2026-08-19)</h2>
 
 <p>&quot;I would prefer one agent handle the whole thing from start to finish.&quot; The split ownership</p>
@@ -2988,6 +2819,69 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Why here and not its own ticket:</b> this ticket already builds the 45-day Skedda range read plus</p>
 <p>the between-pass snapshot — precisely the read the board needs. Doing it first would build the</p>
 <p>range read twice.</p>
+
+
+<p>---</p>
+
+<h2>Progress 2026-08-24 — steps 1 and 2 landed</h2>
+
+<p><code>dc-canon</code> commit <code>438d57ca</code>, tested, not deployed.</p>
+
+<ul>
+<li>- <b><code>skedda_read.bookings_range(first_day, last_day)</code></b> — both ends inclusive, ONE request</li>
+</ul>
+<p>however wide the span. <code>bookings_on(day)</code> is now a thin wrapper over it and keeps working</p>
+<p>for <code>presence</code> and <code>loop</code>, which only ever ask about today.</p>
+<ul>
+<li>- <b><code>booking_sweep.read_board()</code></b> is a single call instead of a per-day loop. A 14-day</li>
+</ul>
+<p>horizon was 14 round trips; the span is now free, so the horizon becomes a policy choice</p>
+<p>rather than a budget.</p>
+<ul>
+<li>- <b>Horizon default deliberately left at 14.</b> The 45-day flip is <code>SWEEP_HORIZON_DAYS=45</code></li>
+</ul>
+<p>on the service — a config change Junyan makes, reversible in seconds, not a code deploy.</p>
+<p>Provisioning access 45 days out rather than 14 is the real behavioural change and it</p>
+<p>should be switched on deliberately.</p>
+<ul>
+<li>- <b>Four new tests</b> on the read itself: one-request-however-wide, both-ends-inclusive</li>
+</ul>
+<p>(an exclusive last day would silently drop the furthest day and nothing would say so),</p>
+<p>single-day equivalence, and a backwards range refused rather than read. <b>393 pass</b></p>
+<p>(<code>test_app_relay</code>/<code>test_classifier</code>/<code>test_poller</code> need <code>fastapi</code>, absent locally —</p>
+<p>pre-existing, untouched by this change).</p>
+<ul>
+<li>- The 13 sweep tests that monkeypatched <code>bookings_on</code> now patch <code>bookings_range</code>. This</li>
+</ul>
+<p>mattered: left alone they would have stopped intercepting and attempted real HTTP —</p>
+<p>a silent hole in the suite rather than a failure.</p>
+
+<h3>Step 3 is blocked on one decision: where the snapshot lives</h3>
+
+<p>Change and cancel detection needs the previous pass&#x27;s board. The sweep runs every 30 minutes</p>
+<p>on Cloud Run, so <b>in-memory state will not survive</b> — <code>alarm_watch</code>&#x27;s in-process baseline</p>
+<p>works only because it ticks every minute on a warm instance. event-gate today has <b>no bucket</p>
+<p>and no storage dependency</b> (<code>requirements.txt</code> is fastapi/uvicorn/pytest; <code>deploy.sh</code> sets no</p>
+<p>bucket env).</p>
+
+<ul>
+<li>- <b>GCS bucket</b> — matches the watchdog-ledger precedent (<code>gs://danceannex-alarm-watchdog</code>).</li>
+</ul>
+<p>Needs a bucket, an IAM binding, and a dependency. Recommended.</p>
+<ul>
+<li>- <b>Notion</b> — no new infra, but a 45-day board is ~300 bookings and <code>rich_text</code> caps at 2000</li>
+</ul>
+<p>characters per block, so it would need chunking. Ugly enough to reject.</p>
+<ul>
+<li>- <b><code>created</code> high-water mark only</b> — tiny state, fits anywhere, and this ticket already names</li>
+</ul>
+<p><code>created</code> as a second signal for <i>made</i>. But it cannot see changes or cancellations, and this</p>
+<p>ticket&#x27;s own ruling is that a creation-only feed does NOT let Junyan stop reading Gmail.</p>
+
+<p>Proposed build shape that unblocks now: read the snapshot from <code>SWEEP_SNAPSHOT_BUCKET</code> if set,</p>
+<p>and degrade cleanly when unset — <i>made</i> still works off <code>created</code>, <i>changed</i>/<i>cancelled</i> report</p>
+<p>&quot;no snapshot&quot; rather than silently reporting nothing. Ships today, completes when the bucket</p>
+<p>exists.</p>
 </div></details></details></div><div class="job"><div class="jnum">#091</div><div class="jhead"><span class="emoji">🧩</span><h4>Three more robots still look people up by name — finish the job</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>We switched the two busiest robots over to ID numbers. Three others never got the memo and still go by name</li><li>The important one is the nightly code checker: it reads EVERY person&#x27;s card and writes corrections into our records</li><li>If a card has no alarm name on it, that checker quietly falls back to the card&#x27;s title — which never matches the panel. That is how you get hundreds of wrong &#x27;this is broken&#x27; notes in one night</li><li>So: give it ID numbers first, and make it say &#x27;I could not find this person&#x27; out loud instead of guessing from a title</li><li>While it is at it, it can fill in the missing ID numbers itself — it already reads every card once a day, so the gap closes on its own instead of needing another cleanup session</li><li>Also asked and answered here: can we delete the old alarm-name box? Not yet, and the reason is worth knowing</li><li>529 people have a remembered door code but no entry on the panel any more. When one of them comes back, that old name box is what tells us how the panel spelled them</li><li>Delete it and they come back as &#x27;Quynh Quinn QTrang Tran [Peerspace]&#x27; instead of &#x27;Quynh Tran&#x27; — the exact mess we just cleaned up, all over again</li><li>So the last piece is deciding what to do about those 529 dormant cards. Once that is settled, the old name box can finally go</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Finish the id migration — job D, morning prep and the attended skills still resolve by name</b></p><h2>Question</h2>
 
 <p><b>085</b> moved the joins onto stable ids and built the one</p>
@@ -4228,7 +4122,206 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#107</span><span class="emoji">🕳️</span><span class="done-title">Found the hole that made a last-minute booking vanish</span><span class="done-date">2026-08-21</span></summary><div class="done-body"><ul class="plain-bullets"><li>Sara booked studio 509B the night before and got nothing back — no code, no board row, no message</li><li>The booking robot saw it and stepped aside for a helper it thought owned last-minute bookings</li><li>That helper was written back in August but never actually turned on, so nothing ever picked the booking up</li><li>Every last-minute booking since Aug 20 was handed to nobody, quietly</li><li>The answer: stop stepping aside at all, rather than waiting a while and then stepping in</li><li>We are NOT switching the old helper on — it is allowed to text door codes on its own, and it is being removed anyway</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Instant bookings fall into the Registrar/same-day-lane deference gap</b></p><h2>The defect</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#084</span><span class="emoji">🏷️</span><span class="done-title">Bookings from Giggster and Peerspace made more than 2 days ahead reach nobody</span><span class="done-date">2026-08-24</span></summary><div class="done-body"><ul class="plain-bullets"><li>When someone books through Giggster or Peerspace, the booking appears on our calendar with no person attached — the name is only in the booking&#x27;s title, like &#x27;Chris Giggster&#x27;</li><li>The fast robot that handles these only wakes up for bookings happening today or tomorrow. Chris booked ten days ahead, so it never fired</li><li>And the new booking program skips them, because to it they look like a booking with nobody on it</li><li>So nobody automated touches them at all — 5 out of 31 bookings in the four days we checked</li><li>What needs deciding: who owns them, whether reading the name out of the title is safe enough, and what to do about the missing phone number</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Platform bookings made more than 2 days out reach no automation at all</b></p><h2>Question</h2>
+
+<p>Found 2026-08-19 while probing the Skedda admin read for <b>081</b>.</p>
+
+<p>A Giggster/Peerspace/Tagvenue booking is mirrored into Skedda as a <b>casual</b> booking with</p>
+<p><b>no holder</b> — <code>user: {id: null, name: null, email: null, phone: null}</code>. The renter&#x27;s identity</p>
+<p>lives in the booking <b>title</b>, by convention: <code>Chris Giggster</code>, <code>Hanano I. Giggster</code>,</p>
+<p><code>Jessica T. Peerspace</code>, <code>Angelica B. Peerspace</code>, <code>Anneka K. Peerspace</code>.</p>
+
+<p><b>Nobody automated handles these unless they start today or tomorrow.</b></p>
+
+<ul>
+<li>- <code>send-engine/SameDay.gs</code> has full platform logic — it mirrors the booking, creates the Artist</li>
+</ul>
+<p>page, provisions and verifies the code, seeds the board row — but it is <b>mail-triggered at</p>
+<p>arrival and only acts when the booking starts today or tomorrow</b>. <code>Chris Giggster</code> was booked</p>
+<p>Aug 11 for Aug 21: ten days out, so the lane never fired.</p>
+<ul>
+<li>- The booking sweep skips them, correctly under its current rules, as &quot;no holder on the booking&quot;.</li>
+</ul>
+
+<p>Measured: <b>5 of 31 bookings</b> in the Aug 20–23 window were platform mirrors.</p>
+
+<h2>What has to be decided</h2>
+
+<ol>
+<li>1. <b>Who owns them</b> — the sweep (parse the holder out of the title), a widened same-day lane</li>
+</ol>
+<p>(drop its today/tomorrow gate for platform entries only), or a third lane. Note the</p>
+<p>single-writer rule from 079: exactly one unattended provisioner.</p>
+<ol>
+<li>2. <b>The title convention as an identity source.</b> <code>&quot;&lt;First&gt; &lt;LastInitial&gt;. &lt;Platform&gt;&quot;</code> is a</li>
+</ol>
+<p>human habit, not a schema. What happens when someone types it differently — refuse, or</p>
+<p>fuzzy-match and raise residue? (081&#x27;s rule is: never merge on a name alone.)</p>
+<ol>
+<li>3. <b>The missing phone number.</b> Platform renters have no phone on the Skedda side; Giggster</li>
+</ol>
+<p>gives a first name and Peerspace masks the surname. SameDay&#x27;s existing answer is to do</p>
+<p>everything except the send and escalate asking for a mobile number on the platform thread —</p>
+<p>is that still right at T−10 rather than T−1, where there is time to ask?</p>
+<ol>
+<li>4. <b>Whether repeat platform renters short-circuit</b> — SameDay already completes fully and</li>
+</ol>
+<p>automatically for a platform renter already in the Artist DB with a phone. Same here?</p>
+
+<h2>Why it is not just &quot;fold it into the sweep&quot;</h2>
+
+<p>The entry shape is genuinely different — no holder record, no phone, identity by title</p>
+<p>convention, and a mirror that may itself need creating. The same-day lane already solved most</p>
+<p>of this once; the decision is whether to reuse that code by widening its window or to</p>
+<p>re-implement in the sweep, and that is a design call, not a build detail.</p>
+
+<p>---</p>
+
+<p><b>2026-08-19, after the one-owner ruling:</b> question 1 (who owns them) is now answered in</p>
+<p>principle — <b>089 one job, two triggers</b> makes the sweep the sole</p>
+<p>owner, and platform-mirror creation moves into it (089 §What moves, item 3). Questions 2–4</p>
+<p>(title-convention identity, the missing phone at T−10, repeat-renter short-circuit) remain</p>
+<p>this ticket&#x27;s grilling.</p>
+
+<p>---</p>
+
+<h2>New evidence, 2026-08-24 — the mirror itself is manual, and it can be a day late</h2>
+
+<p>This ticket assumed a platform booking <i>is</i> mirrored into Skedda (&quot;mirrored as a casual</p>
+<p>booking with no holder&quot;) and that the open question was who handles it afterwards. Julia S.</p>
+<p>shows the mirror is not happening on its own either — <b>Junyan does it by hand, and when he</p>
+<p>isn&#x27;t watching, the room is not held at all.</b></p>
+
+<p><b>Julia S., Peerspace, Sun 23 Aug 19:00–21:00, 509A, $64, &quot;Me again! Just practice.&quot;</b></p>
+
+<p>| When (UTC) | What arrived / happened |</p>
+<p>|---|---|</p>
+<p>| 23 Aug 04:26 | &quot;Julia S. sent you a booking request&quot; |</p>
+<p>| 23 Aug 05:50 | <b>&quot;Your booking is confirmed with Julia S.&quot;</b> — the class <code>sdParsePeerspace_</code> matches. 01:50 Toronto, ~17h before the session |</p>
+<p>| 23 Aug 22:29 | &quot;starts soon&quot; reminder, 31 min before start — labelled <code>Artist Care - Booking Coming Up</code>. A label, not an action |</p>
+<p>| 24 Aug 01:04 | &quot;booking is complete&quot; |</p>
+<p>| <b>24 Aug 15:40</b> | <b>Skedda booking <code>119616803</code> &quot;Julia S. Peerspace FBS&quot; created — a day after the session ended</b> |</p>
+
+<p>So for the whole session the room was <b>not on our calendar</b>. Not &quot;no board row&quot; — no</p>
+<p>booking. Anyone could have booked 509A over her. She is also a returning Peerspace renter</p>
+<p>(previous booking 15 Aug), and Peerspace masks her number, so nothing could have texted her</p>
+<p>anyway.</p>
+
+<p>Compare <b>Kim M.</b> (Peerspace, mail 15 Aug 16:17Z → mirror <code>119143355</code> created 16:24Z, seven</p>
+<p>minutes later, by hand). Same path, and it worked — because Junyan happened to be at the desk.</p>
+<p>Julia&#x27;s landed at 01:50 Toronto. <b>That is the whole difference between the two outcomes.</b></p>
+
+<h3>What this fixes in the ticket&#x27;s framing</h3>
+
+<ul>
+<li>- Question 1 (&quot;who owns them&quot;) had been answered in principle by <b>089</b>.</li>
+</ul>
+<p>But 089 and <b>108</b> both work off <b>the Skedda board</b>,</p>
+<p>and a platform booking is not on it until something mirrors it. <b>Neither ticket helps Julia.</b></p>
+<p>The mirror is upstream of everything this map has built.</p>
+<ul>
+<li>- The route already exists and was proven live 2026-08-12: <code>POST /mirror-booking</code> on skedda-mcp</li>
+</ul>
+<p>(<code>skedda-mcp-00020-bxk</code>), create + read-back verified, idempotent on a repeat call. <b>What is</p>
+<p>missing is the thing that calls it</b> — that logic lives only in the uninstalled <code>SameDay.gs</code>.</p>
+<ul>
+<li>- So the cheapest real fix is a small deterministic caller on the platform confirmation mail:</li>
+</ul>
+<p>no LLM, no send authority, one job — hold the room and attach the holder. It would have</p>
+<p>created Julia&#x27;s booking at 01:50.</p>
+
+<h3>Still open (unchanged, and now sharper)</h3>
+
+<p>Q2 title-convention identity, Q3 the missing phone, Q4 repeat-renter short-circuit. Julia</p>
+<p>bears on Q4 directly: she is a repeat renter whose number we still do not have, because</p>
+<p>Peerspace masks it on every booking, not just the first.</p>
+
+<h3>Live and unhandled right now</h3>
+
+<p><b>Kim M., Thu 27 Aug 18:30–21:30, Studio 693, 30 attendees.</b> Mirrored (so the room is held)</p>
+<p>but holder <code>null</code> and no phone — invisible to every robot. Junyan asked her for a number on</p>
+<p>21 Aug; <b>no reply on the thread as of 24 Aug.</b> Three days out.</p>
+
+<h2>Correction, same day — most of the downstream IS handled</h2>
+
+<p>The section above claimed Kim M. was &quot;invisible to every robot&quot; and that Julia got nothing.</p>
+<p><b>Both wrong</b>, checked against live records 2026-08-24:</p>
+
+<ul>
+<li>- <b>Kim M.</b> has an Artist card keyed on her relay, <b>alarm code 6205</b> verified live on 4 panels</li>
+</ul>
+<p>(<code>code_is_stale: false</code>), and an <b>FBS board row</b> for 27 Aug 18:30 in 693. HTA/EOB unset is</p>
+<p>correct at T−3. She needs nothing.</p>
+<ul>
+<li>- <b>Julia S.</b> has a board row with <b>HTA <code>Sent</code> and EOB <code>Sent</code></b> — she was messaged and let in</li>
+</ul>
+<p>normally.</p>
+<ul>
+<li>- ~20 Peerspace guests hold cards on their relay address, each with a code and an</li>
+</ul>
+<p><code>Alarm Display Name</code>. This route has been working for months.</p>
+
+<p><b>Why:</b> the FBS board is built from the Skedda calendar by <b>booking title</b>, not by holder</p>
+<p>record. So a blank-holder mirror is legible to the desk. The sweep&#x27;s holder-based lookup is the</p>
+<p>only thing that skips them, and the board row is what actually drives EOB/PBF.</p>
+
+<p><b>So the ticket narrows sharply.</b> The failure is <i>one step</i>: nothing puts the booking on the</p>
+<p>calendar. Everything after that already works. Q1 (who owns them) and Q4 (repeat-renter</p>
+<p>short-circuit) are effectively answered by observation — the existing path handles both.</p>
+
+<p><b>Junyan&#x27;s ruling, 2026-08-24:</b> platform bookings stay <b>casual bookings with no Skedda user</b>.</p>
+<p>Do not create Skedda accounts for platform guests — confirmed against prior bookings, which are</p>
+<p>all <code>type: 1, user: null</code>. This is now settled, not open. Note the practical reason found while</p>
+<p>testing: <code>create_user</code> <b>emails the person a Skedda registration invite</b> on commit, which no</p>
+<p>platform guest should receive.</p>
+
+<p><b>Q2 (title-convention identity) — RULED (Junyan, 2026-08-24): the title is <code>&lt;Name&gt; &lt;Platform&gt;</code>.</b></p>
+<p>e.g. <code>Kim M. Peerspace</code>. It is load-bearing precisely because the holder is <code>null</code> by design, so</p>
+<p>this string is the only link from a calendar booking to a person. Variants still in the wild</p>
+<p>(<code>Julia S. Peerspace FBS</code>, <code>Peerspace Booking, Julia S.</code>) normalise on touch. <b>All four of this</p>
+<p>ticket&#x27;s questions are now answered</b> — Q1 and Q4 by observation, Q2 and the casual-booking rule</p>
+<p>by Junyan, Q3 as a platform ceiling rather than a defect. What remains is the one-card-per-guest</p>
+<p>problem below, which is a different ticket&#x27;s shape.</p>
+
+<p><b>Q3 (the missing phone) is a platform ceiling, not a defect</b> — booking sites mask numbers</p>
+<p>permanently. Reply on the platform thread. Not worth further design.</p>
+
+<p><b>New, real, and not previously on this ticket: one card per guest.</b> Peerspace issues a fresh</p>
+<p>relay per booking, so every booking mints a new Artist card. <b>Julia S. has two</b> (relays</p>
+<p><code>prod-6a5753e7…</code> and <code>prod-6a8088af…</code>, same phone, same code 9312). The contact-points table</p>
+<p>(<b>101</b>/<b>103</b>) exists for</p>
+<p>exactly this and should absorb platform relays.</p>
+
+
+<p>---</p>
+
+<h2>Closed 2026-08-24 — all four questions answered</h2>
+
+<ul>
+<li>- <b>Q1 who owns them</b> — answered by observation: the FBS board already picks platform bookings</li>
+</ul>
+<p>up from the calendar feed by title, and ~20 Peerspace guests hold cards with verified codes.</p>
+<p>The only unowned step is the mirror itself → <b>109</b>.</p>
+<ul>
+<li>- <b>Q2 title-convention identity</b> — RULED: <code>&lt;Name&gt; &lt;Platform&gt;</code> (Junyan, 2026-08-24).</li>
+<li>- <b>Q3 the missing phone</b> — not a defect. Booking sites mask numbers permanently; reply on the</li>
+</ul>
+<p>platform thread. No design owed.</p>
+<ul>
+<li>- <b>Q4 repeat-renter short-circuit</b> — answered by observation: repeat platform renters already</li>
+</ul>
+<p>complete (Julia&#x27;s second booking reused card and code 9312).</p>
+
+<p>Plus the standing rule: platform bookings stay <b>casual, no Skedda user</b> — <code>create_user</code> emails</p>
+<p>the guest a registration invite, which settles it independently of preference.</p>
+
+<p><b>The one-card-per-guest problem is NOT a new ticket</b> — <b>101</b></p>
+<p>already owns it: contact points dedup on <code>(value, booking_ref)</code>, the lookup matches a person by</p>
+<p>ANY contact-point row, and there is a <b>Relays needing a person</b> surface for exactly the</p>
+<p>unattached case. <b>100</b> further corrected the premise this</p>
+<p>ticket was carrying — relays are minted <b>per notification thread, not per booking</b>, and</p>
+<p>routinely outlive their booking by a month. Julia S.&#x27;s two cards are 101&#x27;s case, not a new one.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#107</span><span class="emoji">🕳️</span><span class="done-title">Found the hole that made a last-minute booking vanish</span><span class="done-date">2026-08-21</span></summary><div class="done-body"><ul class="plain-bullets"><li>Sara booked studio 509B the night before and got nothing back — no code, no board row, no message</li><li>The booking robot saw it and stepped aside for a helper it thought owned last-minute bookings</li><li>That helper was written back in August but never actually turned on, so nothing ever picked the booking up</li><li>Every last-minute booking since Aug 20 was handed to nobody, quietly</li><li>The answer: stop stepping aside at all, rather than waiting a while and then stepping in</li><li>We are NOT switching the old helper on — it is allowed to text door codes on its own, and it is being removed anyway</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Instant bookings fall into the Registrar/same-day-lane deference gap</b></p><h2>The defect</h2>
 
 <p>Skedda instant booking (approval off, enabled by Junyan 2026-08-21) produces the</p>
 <p>self-serve notification class — &quot;X made a booking&quot; — for EVERY direct booking,</p>
@@ -11129,5 +11222,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-24 21:48 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-24 22:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
