@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-25 17:08 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-25 17:47 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3358,7 +3358,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>are this class (both cards native, shared stable identifiers) rather than the relay class?</p>
 <p><b>104</b> will surface the evidence per pair — this ticket wants</p>
 <p>the split.</p>
-</div></details></details></div><div class="job"><div class="jnum">#108</div><div class="jhead"><span class="emoji">🏠</span><h4>Let the booking robot look after last-minute bookings itself</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>LIVE (deployed Aug 25) — the robot now handles last-minute bookings itself</li><li>Right now the booking robot skips anything starting today or tomorrow</li><li>It was told a second helper would handle those — that helper was never switched on</li><li>So it will stop skipping: it sets up the person, checks their door code, makes the board row, and writes the confirmation</li><li>For last-minute bookings it now sends the messages itself too (Junyan said go, Aug 25): the confirmation and the door-code message go out with no waiting — a switch exists to bring the human check back</li><li>Junyan said yes and it is deployed — a switch exists to put the old skip back if anything looks wrong</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The sweep takes the same-day window, record-only — delete the deference branch</b></p><h2>Ruling this implements</h2>
+</div></details></details></div><div class="job"><div class="jnum">#108</div><div class="jhead"><span class="emoji">🏠</span><h4>Let the booking robot look after last-minute bookings itself</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>LIVE (deployed Aug 25) — the robot now handles last-minute bookings itself</li><li>Right now the booking robot skips anything starting today or tomorrow</li><li>It was told a second helper would handle those — that helper was never switched on</li><li>So it will stop skipping: it sets up the person, checks their door code, makes the board row, and writes the confirmation</li><li>For last-minute bookings it now sends the messages itself too (Junyan said go, Aug 25): the confirmation and the door-code message go out with no waiting — a switch exists to bring the human check back</li><li>Junyan said yes and it is deployed — a switch exists to put the old skip back if anything looks wrong</li><li>PAUSED the same evening (Aug 25, 4:47pm): in its first few hours it texted nine renters — nothing unsafe, but three regulars got the same code twice, four got first-timer instructions they did not need, and two went out after a human had said do not send</li><li>Why: the robot could only see access texts IT had tagged, so the desk&#x27;s own 141 past access messages were invisible and almost every regular looked like a newcomer</li><li>Three checks were built the same evening and are live: it must be a booking that appeared since the last look, any &#x27;do not send&#x27; for that person that day stops both messages, and the master switch</li><li>The messages are still written for you and wait — turning the automatic sending back on is Junyan&#x27;s decision</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The sweep takes the same-day window, record-only — delete the deference branch</b></p><h2>Ruling this implements</h2>
 
 <p><b>107 — Instant bookings fall into the Registrar/same-day-lane deference gap</b>:</p>
 <p>the Registrar defers today/tomorrow bookings to <code>send-engine/SameDay.gs</code>, which has</p>
@@ -3483,6 +3483,58 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Honest remaining gap: a booking made &lt;30 min before start can begin before the next pass</p>
 <p>(Vladimir Sidorkin booked at 27 min). Closing that needs the mail-poke (089&#x27;s territory).</p>
+
+<h2>INCIDENT + rollback 2026-08-25 evening — the window is HELD, not robotic</h2>
+
+<p>The fully-robotic build above (<code>12289d34</code>, 16:49Z) texted <b>nine renters</b> by 20:31Z on its first</p>
+<p>afternoon. No wrong codes and no security exposure, but:</p>
+
+<ul>
+<li>- <b>three regulars received the same code twice</b> in one day;</li>
+<li>- <b>four were sent first-timer onboarding</b> they did not need;</li>
+<li>- <b>two sends walked past a human&#x27;s explicit <code>Will Not Send</code>.</b></li>
+</ul>
+
+<p><code>SWEEP_SAMEDAY_HOLD=1</code> went on at <b>20:47Z and is set on the service now</b> — the pair is composed</p>
+<p>exactly as before and waits at <code>Pending Review</code>. Nothing about this ticket&#x27;s chain was reverted;</p>
+<p>only the send authority.</p>
+
+<p><b>Root cause of the returning-renter half:</b> <code>prior_htas()</code> counted only rows this sweep had</p>
+<p>tagged with its own <code>Template</code> field, so the Host&#x27;s <b>141 access rows (6 tagged)</b> were invisible</p>
+<p>and nearly every real renter read as a first-timer. Fixed by matching access texts by SHAPE</p>
+<p>(<code>_HTA_SHAPED</code>: template OR title Access/HTA OR body &quot;Door Code&quot;). <b>This is the same disease as</p>
+<p>canon <code>845c93f3</code> — a gate that reads only its own lane&#x27;s bookkeeping and calls the rest of the</p>
+<p>world empty.</b> Worth generalising: any &quot;have we done this before?&quot; check that queries one lane&#x27;s</p>
+<p>own paperwork is wrong by construction.</p>
+
+<p><b>Three gates, deployed in <code>6725b236</code> (live in <code>a25606b8</code> / revision <code>event-gate-00074-5dc</code>),</b></p>
+<p>one auto decision computed once in <code>process()</code>, each independently sufficient to hold, and holding</p>
+<p>means <code>Pending Review</code> — never a skip:</p>
+
+<ol>
+<li>1. <code>booked_late</code> — last-minute means <b>booked</b> late, not <b>starting</b> soon. Skedda&#x27;s read carries</li>
+</ol>
+<p>no created-at, so the definition is the snapshot&#x27;s made-list: a booking the previous pass had</p>
+<p>never seen. <b>No snapshot = everything held.</b></p>
+<ol>
+<li>2. <code>human_said_no</code> — any <code>Will Not Send</code> for that renter on that date holds the pair. The WNS rows</li>
+</ol>
+<p>were on Caryl&#x27;s and Anita&#x27;s confirmations, but the human&#x27;s decision was about the renter and the</p>
+<p>day; the gate honours it at that width. Fails closed.</p>
+<ol>
+<li>3. <code>sameday_autosend</code> — the master hold switch, unchanged.</li>
+</ol>
+
+<p>539 tests pass.</p>
+
+<p><b>Open decision: whether to clear <code>SWEEP_SAMEDAY_HOLD</code>.</b> The gates are live, so the hold is now</p>
+<p>belt-and-braces rather than the only guard — but taking it off is a send-authority change and is</p>
+<p>Junyan&#x27;s alone. Until then the same-day window behaves exactly as it did before 16:49Z.</p>
+
+<p><b>Lesson for the record:</b> the ruling (&quot;bypass all human gates for same-day&quot;) was sound and is not</p>
+<p>being second-guessed. What failed was the <i>definition</i> — &quot;same-day&quot; was implemented as <b>starts</p>
+<p>soon</b>, which swept up every regular with a booking today, including ones a human had already</p>
+<p>decided about. The gates encode the definition Junyan actually meant.</p>
 </div></details></details></div><div class="job"><div class="jnum">#109</div><div class="jhead"><span class="emoji">🏢</span><h4>Put booking-site bookings on our calendar the moment they come in</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When somebody books through Peerspace, Giggster or Tagvenue, it does NOT appear on our calendar</li><li>Junyan has been putting them on by hand — which works fine, when he is awake</li><li>Julia booked for Sunday evening and the email came in at 1:50 in the morning; her room only went on the calendar the day AFTER she had already danced</li><li>So all evening, studio 509A looked free and somebody else could have booked right over her</li><li>Everything AFTER that step already works — the desk finds these guests by the booking title, and about twenty of them have cards and working door codes</li><li>So this job is only about holding the room. Door codes, cards and messages are all fine already</li><li>SWITCHED ON (Aug 25): a small program now reads the confirmation email every five minutes and holds the room by itself</li><li>Junyan&#x27;s ruling (Aug 25): saying YES to a request on the booking site IS the decision — that one tap should set everything up, within minutes, with nothing else asked of him</li><li>We do NOT make Skedda accounts for booking-site guests (Junyan, Aug 24) — that would email them a sign-up invite they never asked for</li><li>Because of that, the booking&#x27;s TITLE is the only thing saying who the guest is — so it now has one fixed form: the name, then the site. &quot;Kim M. Peerspace&quot;</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Hold the room — a caller that mirrors platform bookings into Skedda on arrival</b></p><h2>The defect</h2>
 
 <p>A Giggster/Peerspace/Tagvenue booking is not on the Skedda calendar until a human puts it</p>
@@ -11744,5 +11796,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-25 17:08 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-25 17:47 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
