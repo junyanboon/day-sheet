@@ -721,6 +721,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-26 &middot; 14:45Z</span>
+      <h3>The Planner gets eyes: skedda-mcp primary, Gmail label + Calendar as fallbacks<span class="kind">ROUTE</span></h3></summary>
+      <p><strong>Junyan&rsquo;s ruling, closing the Aug&nbsp;9 board-gap root cause (previous entry).</strong> The Planner&rsquo;s nightly T&minus;3 board build no longer identifies bookings from the Artist DB + Calendar alone. New source chain: <b>(1) skedda-mcp <code>list_bookings_range</code></b> &mdash; direct, authoritative for holder/payment/times, one call per window; <b>(2) Gmail <code>Sales&nbsp;-&nbsp;Skedda</code> label</b> &mdash; existence/identity only, never the read/unread bit (078); <b>(3) Google Calendar</b> &mdash; times/titles only. Every run report states the source used; a fallback in use files a Run&nbsp;Error Action row &mdash; degradation is a finding, never silent.</p>
+      <p><strong>The dead-end branch is gone:</strong> <code>not-in-Artist-DB</code> no longer skips the board row &mdash; the Planner resolves the holder from Skedda and builds the row (<code>Pending</code> tier, Host still sole tier assigner). <strong>Write boundary held:</strong> the Planner NEVER creates Artist rows &mdash; the Registrar stays sole writer (two writers = the Mia Vescarelli duplicate class); a confirmed holder with no Artist row at T&minus;3 now files an Action row flagging a Registrar miss &mdash; a real alarm, not a checklist line.</p>
+      <p>Shipped: connectors attached by Junyan (skedda-mcp, alarm-mcp, phonecom-mcp; Zapier + QuickBooks dropped), governing Notion page <code>38a75032&hellip;</code> and trigger prompt <code>trig_0196R2&hellip;</code> both rewritten and verified by re-read. Stale claims corrected on the page: &ldquo;runs locally on the Mac&rdquo; (it&rsquo;s a cloud trigger), &ldquo;no Alarm.com or Skedda&rdquo;. First run on the new chain: tonight 19:30 Toronto &mdash; worth reading the report. <code>RUNTIMES.md</code> + canon gotchas updated.</p>
+      </details>
+    </li>
       <li class="entry human">
       <details>
       <summary><span class="when">2026-08-26 &middot; 15:05Z</span>
