@@ -910,14 +910,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   --al1:#2cc6cf;--al2:#4cc471;--al3:#5a95ea;--al4:#e05a9f;--al5:#d3a624;
   --ayou:#a685e8;--abad:#f0605c;--aok:#4cc471;--atrack:#3a4252}
 .alarmmap .buildmap svg{min-width:1000px}
+.alarmmap .buildmap h2{margin:.55rem .55rem .15rem}
+.alarmmap .buildmap .sub{font-family:ui-monospace,Menlo,monospace;font-size:.68rem;color:var(--muted);margin:0 .55rem .3rem;max-width:none}
+.alarmmap .buildmap .mapkey{border-top:1px dashed var(--line)}
 .alarmmap .mapkey .kguard{background:var(--panel);border:3px solid var(--abad)}
 .alarmmap .mapkey .kdead{background:var(--atrack);border:3px solid var(--atrack)}
 .alarmmap .mapkey .kghost{width:1.05rem;height:0;background:transparent;border:none;border-top:3px dashed var(--abad);border-radius:0}
 </style>
 <div class="pipes alarmmap" id="alarmproto">
-<h2>Alarm Automation Protocol — four lines · one panel read every 60s</h2>
-<p class="hint">Everything the five alarm panels do without you, as a route map. All four lines run off a single read of the panels every 60 seconds, and all of it is deterministic — it keeps working in a full token outage. Click any station for what it does and why. Companion to pipe&nbsp;6 above, which shows the same lanes in the pipe idiom.</p>
 <div class="buildmap">
+<h2>Alarm Automation Protocol — four lines · one panel read every 60s</h2>
+<p class="sub">fully deterministic — keeps working in a full token outage · click any station · same lanes as pipe&nbsp;6, in the route idiom</p>
 <svg viewBox="0 0 1080 470" role="img" aria-label="Overview map of the four automated alarm lines">
 
   <!-- ===== LINE 1 · SIREN ===== -->
@@ -1044,17 +1047,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <text x="678" y="463" class="nm" fill="var(--aok)">Error disappears → ticket closes itself</text>
   </g>
 </svg>
-</div>
 <div class="mapkey">
   <span><i class="kguard"></i>a check that can stop everything</span>
   <span><i class="km"></i>machine step</span>
   <span><i class="kh"></i>reaches a person</span>
   <span><i class="kdead"></i>quiet ending, nobody told</span>
 </div>
+</div>
 
-<h2>Line 3 in detail — the sorter · one line in, five ways out</h2>
-<p class="hint">The lane that was silently broken for six days. Until 25 Aug a panel condition that matched no named list fell off the end of the classifier — no error, no log, no row. The default is now <b>file a ticket</b>, so the only way to silence a condition is to name it.</p>
 <div class="buildmap">
+<h2>Line 3 in detail — the sorter · one line in, five ways out</h2>
+<p class="sub">silently broken for six days until 25&nbsp;Aug — an unmatched condition fell off the end, no error, no log · the default is now <b>file a ticket</b>: the only way to silence a condition is to name it</p>
 <svg viewBox="0 0 1080 520" role="img" aria-label="Detail map of how a panel condition is classified">
 
   <path d="M70 250 H1000" stroke="var(--al5)" stroke-width="8" fill="none" stroke-linecap="round"/>
@@ -1116,11 +1119,11 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <text x="1000" y="205" text-anchor="middle" class="sb" fill="var(--al5)">THE CHANGE · end of the line</text>
   </g>
 </svg>
-</div>
 <div class="mapkey">
   <span><i class="kghost"></i>where the line used to end — nothing was told</span>
   <span><i class="km"></i>machine step</span>
   <span><i class="kh"></i>reaches a person</span>
+</div>
 </div>
 </div>
 
@@ -1336,7 +1339,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <h3>Alarm Automation Protocol &mdash; the alarm route maps live on this page now<span class="kind">MAP</span></h3></summary>
       <p>The two alarm maps are ported off the standalone artifact and into this page as a named section, <b>Alarm Automation Protocol</b>: the four-line overview and the Line&nbsp;3 sorter detail, every station clickable into the same detail panel everything else here uses. It sits alongside pipe&nbsp;6, which shows the same lanes in the pipe idiom &mdash; the map is for seeing the shape, the pipe for reading the chain. Station keys are namespaced <code>a_*</code> so they cannot collide with the page&rsquo;s existing dictionary.</p>
       <p><strong>Fixed in the same pass:</strong> the detail-panel handler bound only <code>[data-k]</code>, so the <b>35 <code>data-d</code> stations of the Annex Transit map had been inert since it was ported</b> &mdash; they looked clickable and did nothing. Now both attributes bind, and the &ldquo;is there an entry for this?&rdquo; check happens at <em>click</em> time rather than bind time, because later <code>&lt;script&gt;</code> blocks <code>Object.assign</code> more entries onto <code>D</code> after the handler runs &mdash; a bind-time check silently ignores every station defined further down the page. (Caught by testing the ported stations rather than assuming: the first version of this change had exactly that bug.)</p>
-      <p><strong>Re-done 15:5xZ after Junyan's screenshot showed it broken:</strong> the first port styled the maps in their own idiom instead of the page's, and shipped two visible defects — <b>Line 2 was completely invisible</b> (the scoped palette never defined <code>--l2</code>, so its track stroked an undefined variable and painted nothing) and labels clipped off the right edge (forced monospace is far wider than the condensed font the coordinates were drawn for). Now restyled to the page's own <code>.buildmap</code> idiom — serif station names, mono subtitles, standard <code>.mapkey</code> — with the palette namespaced <code>--a*</code> so a missing variable cannot silently borrow or lose a color again, and five edge labels re-anchored inside the frame. Verified by measurement: zero unpainted strokes, zero labels outside their box, all 25 stations click, dark palette swaps, no sideways page scroll. The lesson, again: the first check counted stations and clicks but never asked whether the tracks <em>painted</em> — presence is not rendering.</p>
+      <p><strong>Re-done 15:5xZ after Junyan's screenshot showed it broken:</strong> the first port styled the maps in their own idiom instead of the page's, and shipped two visible defects — <b>Line 2 was completely invisible</b> (the scoped palette never defined <code>--l2</code>, so its track stroked an undefined variable and painted nothing) and labels clipped off the right edge (forced monospace is far wider than the condensed font the coordinates were drawn for). Now restyled to the page's own <code>.buildmap</code> idiom — serif station names, mono subtitles, standard <code>.mapkey</code> — with the palette namespaced <code>--a*</code> so a missing variable cannot silently borrow or lose a color again, and five edge labels re-anchored inside the frame. Verified by measurement: zero unpainted strokes, zero labels outside their box, all 25 stations click, dark palette swaps, no sideways page scroll. The lesson, again: the first check counted stations and clicks but never asked whether the tracks <em>painted</em> — presence is not rendering. <b>Layout pass (16:xxZ, Junyan's call):</b> titles and legends now live <em>inside</em> each map's callout box, and the intro paragraphs are gone — the load-bearing facts (one panel read every 60s, deterministic through a token outage, the sorter's six-day silent break and its file-a-ticket default) moved into the title bar and a one-line mono sub inside the box.</p>
       <p><strong>Dropped 16:1xZ, restored 16:4xZ — an instruction misread.</strong> Junyan wrote <em>&ldquo;this needs to be dropped&rdquo;</em> under a screenshot of the overview map with overlapping labels; the agent read &ldquo;drop the map&rdquo; when the meaning was &ldquo;drop what&rsquo;s broken about it&rdquo; — and deleted the map instead of fixing it. Restored from git with the real fix: a full collision pass over <b>both</b> maps (every label vs every other label <em>and</em> every marker, not just the frame edge) — four serif name/subtitle pairs given clearance, and the two right-edge terminal labels moved <b>below</b> their markers, where the earlier right-alignment &ldquo;fix&rdquo; had slid them straight across the very markers they name. Zero collisions on both maps now. Lesson for the log: an ambiguous &ldquo;this&rdquo; over a screenshot deserves one clarifying question, not a deletion.</p>
       </details>
     </li>
