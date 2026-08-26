@@ -608,6 +608,23 @@
       .replace(/\*\*([^*]+)\*\*/g, "<ins>$1</ins>");
   }
 
+  // The card is a glance, not the filing (Junyan, 2026-08-26: "the number of
+  // words is too confusing"). Strip links, row references, dividers, and
+  // trailing provenance — the full write-up stays one tap away on the title.
+  function sugClean(txt) {
+    var lines = String(txt).replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").split("\n");
+    var keep = [];
+    for (var i = 0; i < lines.length; i++) {
+      var L = lines[i].trim();
+      L = L.replace(/https?:\/\/[^\s~]+/g, "[link]").trim();
+      if (L === "---" || L === "" || L === "[link]") continue;
+      if (/^Row\b/i.test(L)) continue;
+      keep.push(L);
+    }
+    return keep;
+  }
+  function clip(t, n) { t = t || ""; return t.length > n ? t.slice(0, n - 1).replace(/\s+\S*$/, "") + "\u2026" : t; }
+
   function renderSuggestion(r) {
     fetchSugContent(r.url);
     var c = state.sugContent[r.url];
@@ -618,14 +635,28 @@
     var body;
     if (c && !c.raw) {
       body = "";
-      if (c.said) body += '<div class="sec">They said</div><div class="sb-in">' + sugMarkup(c.said) + "</div>";
-      if (c.sent) body += '<div class="sec">We sent</div><div class="sb-out">' + sugMarkup(c.sent) + "</div>";
+      if (c.said) {
+        // quote lines (>) make the bubble; the first non-quote line is the byline
+        var sl = sugClean(c.said), q = [], meta = "";
+        for (var qi = 0; qi < sl.length; qi++) {
+          if (/^>\s?/.test(sl[qi])) q.push(sl[qi].replace(/^>\s?/, ""));
+          else if (!meta) meta = sl[qi];
+        }
+        if (!q.length && sl.length) { q = [sl[0]]; meta = sl[1] || ""; }
+        body += '<div class="sec">They said</div><div class="sb-in">' + sugMarkup(clip(q.join(" "), 160)) + "</div>" +
+          (meta ? '<div class="sb-meta">' + esc(clip(meta, 80)) + "</div>" : "");
+      }
+      if (c.sent) {
+        // keep only the message itself (the ~~cut~~ / **kept** diff), no references
+        body += '<div class="sec">We sent</div><div class="sb-out">' +
+          sugMarkup(clip(sugClean(c.sent).join("\n"), 320)) + "</div>";
+      }
       if (c.proposed) {
-        var prop = c.proposed, where = "";
-        var wm = prop.match(/^Where:\s*(.+)$/im);
-        if (wm) { where = wm[1].trim(); prop = prop.replace(wm[0], "").trim(); }
-        body += '<div class="sec">Proposed</div><div class="proposal">' + sugMarkup(prop) +
-          (where ? '<div class="where">\u2192 ' + esc(where) + "</div>" : "") + "</div>";
+        // one plain sentence; the Where pointer stays in the filing, not the card
+        var prop = sugClean(c.proposed).filter(function (L) { return !/^Where:/i.test(L); }).join(" ");
+        var fs = prop.match(/^.*?[.!?](?=\s|$)/);
+        body += '<div class="sec">Proposed</div><div class="proposal">' +
+          sugMarkup(clip(fs ? fs[0] : prop, 200)) + "</div>";
       }
     } else {
       var note;
