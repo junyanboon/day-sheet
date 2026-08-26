@@ -1151,6 +1151,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-26 &middot; 22:05Z</span>
+      <h3>Two sitting promotions ship: the monthly insurance sweep, and invariant H closes its own tickets<span class="kind">ROUTE BUILT + CADENCE ADDED</span></h3></summary>
+      <p><strong>Insurance sweep</strong> (dc-canon <code>c5667698</code> + tombstone fix <code>27bd33df</code>): new <code>event-gate /insurance-sweep</code> route with its own Cloud Scheduler job <code>insurance-sweep</code>, <code>0 9 1 * *</code> America/Toronto (1st of the month, 09:00). Compares each Artist row&rsquo;s <code>Insurance Valid Until</code> (now machine-fed by DocIntake.gs certificate parsing) against the coverage horizon &mdash; furthest future Skedda booking end, with <code>Agreement End Date</code> carrying recurring renters past the recurrence trap &mdash; and queues ONE renewal ask per renter at <strong>Pending Review, never auto-sent</strong>. Dedup 45 days per artist, cap 10/run, merged tombstone rows skipped, deduped Run Error on crash. First live dry-run: 89 artists, <strong>16 real coverage gaps</strong> incl. Fabio (Sep&nbsp;2 &lt; Dec&nbsp;31), Alison (expired 2025), and Nicholas Walsh (expired since March, bookings to Dec&nbsp;13).</p>
+      <p><strong>Invariant H auto-close</strong> (same deploy; canon <code>473c39fc</code>): a fulfilled-but-open Sales ticket whose read passes on the checker&rsquo;s own pass data &mdash; no open linked action/money row, no unsent queue row, no open Next Action row &mdash; is closed to <code>Position = Review</code> by the hourly checker instead of filed as a row for a human (~8 rows/2wk gone). Any failing leg still files. Capped 5/run; <code>INVARIANTS_H_AUTO_CLOSE=0</code> reverts. 603 tests pass; fingerprints verified (<code>b77ade0838b4</code>).</p>
+      </details>
+    </li>
+
+      <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-26 &middot; 20:58Z</span>
       <h3>A sent access text now covers the confirmation &mdash; the missing direction<span class="kind">GUARD</span></h3></summary>
       <p><strong>Daniel again, one hour later.</strong> His provisioning failure meant the confirmation never got written; the HTA went out first at 16:25 opening <em>&ldquo;You have an upcoming booking at the Dance Annex - Studio 509A &#127881;&rdquo;</em> &mdash; which IS the confirmation, and carries more than the confirmation does. The next pass then queued &ldquo;you&rsquo;re all set&rdquo; on top of it. Junyan: <em>&ldquo;his you&rsquo;re all set confirmation is actually a duplicate&rdquo;</em>. Row marked Will&nbsp;Not&nbsp;Send.</p>
