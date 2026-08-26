@@ -1131,6 +1131,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-27 &middot; ~00:30Z</span>
+      <h3>Drop sweep built &mdash; Buzz #desk-drops gets a deterministic reader<span class="kind">NEW</span></h3></summary>
+      <p><strong>The gap it closes:</strong> the workspace is moving Slack&rarr;Buzz, but the Concierge&rsquo;s JOB 4 Drop scan reads <em>Slack</em> &mdash; the first code screenshot dropped in Buzz would strand silently (an empty Slack read is indistinguishable from a quiet day). New <code>drop_sweep.py</code> in event-gate (commit <code>48e866b7</code>, 628 tests): reads the Buzz channel through the <strong>Linux <code>buzz</code> CLI</strong> (extracted from the sha256-pinned desktop .deb in a Docker stage), files one <strong>&#128248; Desk Drops</strong> Notion row per media-bearing message (data source <code>14b4c1f6</code>, dedup on Buzz Event ID, fails closed), re-uploads media to Notion, reacts &#128229; as the staff receipt. <strong>Capture is green-rail; routing stays amber:</strong> the Concierge vision-reads and routes from the &#128248; DB &mdash; in a token outage drops are captured durably and processed when tokens return. &#9989;/&#10067; stay exclusively the Concierge&rsquo;s.</p>
+      <p><strong>Identity:</strong> own Nostr keypair, secret <code>buzz-drop-sweep-key</code> v1 (64 bytes, own IAM binding), pubkey <code>720217ff&hellip;e241</code> &mdash; never a person&rsquo;s key. <strong>NOT LIVE YET:</strong> needs Junyan &mdash; channel membership grant for the pubkey (role <code>bot</code>), env vars on the service, deploy, dry-run, then the 15-min Cloud Scheduler job. The Concierge repoint (JOB 4 reads the &#128248; DB, Slack read kept as legacy drain until empty) waits for a proven live pass. Until then <strong>Slack remains the live drop channel</strong> &mdash; do not onboard staff to Buzz drops yet.</p>
+      </details>
+    </li>
       <li class="entry det">
       <details>
       <summary><span class="when">2026-08-26 &middot; 23:30Z</span>
