@@ -345,6 +345,106 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 </div>
 </div>
 
+<div class="pipes" id="bookline">
+<h2>The booking line — who runs which stop · click a stop</h2>
+<p class="hint">The booking chain only, labelled by the agent that owns each stretch — so it reads apart from
+the four-line desk map above. Dashed boxes are the two unattended machines: <b>PlatformMirror.gs</b>
+(Apps Script, every 5 min) holds booking-site rooms; <b>the Registrar</b> (booking_sweep.py on event-gate,
+every 30 min) does everything from the calendar to the written messages. <b>The Host</b> (04:00 daily)
+composes the T&minus;24 access text for advance bookings; the <b>send engine</b> dispatches whatever a human
+releases. Violet squares are you.</p>
+<div class="buildmap">
+<svg viewBox="0 0 960 440" role="img" aria-label="The booking line: three ways in, PlatformMirror holds site rooms, the Registrar prepares everything, humans send">
+
+  <!-- agent bands -->
+  <rect x="196" y="196" width="150" height="150" rx="10" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 5" opacity=".65"/>
+  <text x="204" y="360" class="lw" fill="var(--accent)">PLATFORMMIRROR.GS · apps script · 5 min</text>
+  <rect x="360" y="60" width="330" height="310" rx="10" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 5" opacity=".65"/>
+  <text x="368" y="386" class="lw" fill="var(--accent)">THE REGISTRAR · booking_sweep.py · event-gate · 30 min</text>
+
+  <!-- rails -->
+  <path d="M110 120 H400" stroke="var(--det)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M110 240 H271" stroke="var(--det)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M110 310 C180 310 190 240 240 240" stroke="var(--human)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M400 120 Q430 120 445 140 L470 170" stroke="var(--det)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M271 240 C340 240 350 178 470 172" stroke="var(--det)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- who fork -->
+  <path d="M470 171 C510 171 515 115 555 112" stroke="var(--det)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M470 171 C510 171 515 240 555 244" stroke="var(--det)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M555 112 C610 112 620 172 655 176" stroke="var(--det)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M555 244 C610 244 620 182 655 178" stroke="var(--det)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- timing fork -->
+  <path d="M655 177 C690 177 695 110 725 108" stroke="var(--det)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M725 108 H830 C880 108 900 150 918 180" stroke="var(--human)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M655 177 C695 177 700 300 745 302 H790 C860 302 895 230 918 192" stroke="var(--human)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <text x="668" y="132" class="lw">starts later</text>
+  <text x="668" y="268" class="lw">today / tomorrow</text>
+
+  <!-- entries -->
+  <g class="stn" data-k="b_direct" tabindex="0">
+    <circle cx="110" cy="120" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="110" y="100" text-anchor="middle" class="nm">booked direct</text>
+    <text x="110" y="87" text-anchor="middle" class="sb">skedda</text>
+  </g>
+  <g class="stn" data-k="b_instant" tabindex="0">
+    <circle cx="110" cy="240" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="110" y="220" text-anchor="middle" class="nm">instant book</text>
+    <text x="110" y="207" text-anchor="middle" class="sb">site confirms</text>
+  </g>
+  <g class="stn" data-k="b_accept" tabindex="0">
+    <rect x="101" y="301" width="18" height="18" rx="4" fill="var(--human)" stroke="var(--human)" stroke-width="3"/>
+    <text x="110" y="340" text-anchor="middle" class="nm" fill="var(--human)">you accept</text>
+    <text x="110" y="353" text-anchor="middle" class="sb">a request</text>
+  </g>
+  <g class="stn" data-k="b_mirror" tabindex="0">
+    <circle cx="271" cy="240" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="271" y="268" text-anchor="middle" class="nm">room held</text>
+    <text x="271" y="281" text-anchor="middle" class="sb">2 min · raquel 25 aug</text>
+  </g>
+  <g class="stn" data-k="b_cal" tabindex="0">
+    <circle cx="470" cy="171" r="10" fill="var(--panel)" stroke="var(--ink)" stroke-width="4"/>
+    <circle cx="470" cy="171" r="3.5" fill="var(--ink)"/>
+    <text x="470" y="199" text-anchor="middle" class="nm">on the calendar</text>
+  </g>
+  <g class="stn" data-k="b_known" tabindex="0">
+    <circle cx="555" cy="112" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="555" y="92" text-anchor="middle" class="nm">already set up</text>
+    <text x="555" y="79" text-anchor="middle" class="sb">nothing to do</text>
+  </g>
+  <g class="stn" data-k="b_setup" tabindex="0">
+    <circle cx="555" cy="244" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="555" y="272" text-anchor="middle" class="nm">card · code · row</text>
+    <text x="555" y="285" text-anchor="middle" class="sb">code read back on 4 panels</text>
+  </g>
+  <g class="stn" data-k="b_conf" tabindex="0">
+    <rect x="716" y="99" width="18" height="18" rx="4" fill="var(--human)" stroke="var(--human)" stroke-width="3"/>
+    <text x="725" y="86" text-anchor="middle" class="nm" fill="var(--human)">you send</text>
+    <text x="725" y="73" text-anchor="middle" class="sb">confirmation</text>
+  </g>
+  <g class="stn" data-k="b_hta" tabindex="0">
+    <rect x="821" y="99" width="18" height="18" rx="4" fill="var(--human)" stroke="var(--human)" stroke-width="3"/>
+    <text x="830" y="86" text-anchor="middle" class="nm" fill="var(--human)">HTA T&minus;24</text>
+    <text x="830" y="73" text-anchor="middle" class="sb">the host · 04:00</text>
+  </g>
+  <g class="stn" data-k="b_pair" tabindex="0">
+    <rect x="736" y="293" width="18" height="18" rx="4" fill="var(--human)" stroke="var(--human)" stroke-width="3"/>
+    <text x="745" y="332" text-anchor="middle" class="nm" fill="var(--human)">the pair waits</text>
+    <text x="745" y="345" text-anchor="middle" class="sb">auto-send held 25 aug</text>
+  </g>
+  <g class="stn" data-k="b_dance" tabindex="0">
+    <circle cx="920" cy="186" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="920" y="214" text-anchor="middle" class="nm">they dance</text>
+  </g>
+</svg>
+<div class="mapkey">
+  <span><i class="km"></i>unattended machine</span>
+  <span><i class="kh"></i>a person (you)</span>
+  <span>dashed box = which agent owns the stretch</span>
+  <span>dispatch of anything a human releases: <b>send engine</b> (apps script)</span>
+</div>
+</div>
+</div>
+
 <div class="fix">
 <h2>🔴 Broken / not yet trusted — fix in this order</h2>
 <ol>
@@ -2515,6 +2615,21 @@ m_cardc:["The card","Interchange","Whether someone is reachable is entirely a pr
 m_addr:["The address on the card","Line C · fixed 21 Aug","The field messages actually leave by. A real address always wins, otherwise the current relay goes here, and a filled-in field is never wiped.","ok"],
 m_sent:["Sent","Line C","Out with a receipt. A message marked sent with no receipt never left — its own watch.","ok"],
 m_doors:["Door codes","Never this way","Codes and access instructions go by text or a real address, sent by a person. Platform relays forbid it and it is not up for negotiation.","tok"]});
+</script>
+<script>
+/* booking-line stops — same #detail panel */
+Object.assign(D,{
+b_direct:["Booked direct","Skedda · the booking email + the board itself","Skedda emails the moment somebody books, and the Registrar reads the live board every 30 minutes regardless — mail is never consumed, so a lost email costs nothing.","ok"],
+b_instant:["Instant book","Peerspace / Giggster / Tagvenue","The site confirms a paid booking. Our calendar still shows the room free at that moment — which is what PlatformMirror exists to fix.","ok"],
+b_accept:["You accept a request","Human · the one decision","For request-mode platform bookings your acceptance IS the decision; everything after it is supposed to be automatic, and since 25 Aug it is: mirror in minutes, then the Registrar's two-gate lane (phone ask drafted in your own words when no number is on file).","tok"],
+b_mirror:["Room held","PlatformMirror.gs · Apps Script · every 5 min · LIVE 25 Aug","Reads the platform's confirmation email and books the room on Skedda itself, title 'Name Platform', no guest account. First real run: Raquel K., Studio 901 — held two minutes after the tap. Releases on cancellation too.","ok"],
+b_cal:["On the calendar","Interchange — where all three entries merge","From here the booking looks identical whichever door it came in. The Registrar (booking_sweep.py, event-gate, every 30 min, deterministic, no LLM) takes over: it re-derives what should exist for every renter-shaped booking.","ok"],
+b_known:["Already set up","The Registrar","A returning or contract renter: card exists, code live, nothing to build. The pass verifies and moves on — zero calls made.","ok"],
+b_setup:["Card · code · row","The Registrar · code on booking (ticket 110)","A new renter gets an Artist card, a panel code verified by read-back on all four panels, and the FBS board row at T−2. Due the moment they book, whatever the lead time; done once, never re-checked (failures retry, completions don't).","ok"],
+b_conf:["You send the confirmation","Human gate · dispatched by the send engine","For bookings starting later, the written confirmation parks at Pending Review. Your tap releases it; the Apps Script send engine does the delivery.","tok"],
+b_hta:["HTA at T−24","The Host · 04:00 daily · sent by you","For advance bookings the access text (door code, alarm code, walkthrough) is composed by the Host's morning batch the day before, and goes out through the same human gate.","tok"],
+b_pair:["The same-day pair","The Registrar composes · auto-send HELD 25 Aug","Today/tomorrow bookings get confirmation + HTA written in one pass. Auto-send ran for four hours on 25 Aug, texted nine renters, and was held the same evening; three gates now stand behind the switch (booked-late, human-said-no, master hold) and Junyan sends the pair himself until the queued wording earns the switch back.","tok"],
+b_dance:["They dance","End of the line","Room held, code proven, messages sent. Every failure on the way here is now late and noisy — a Review row or an ops text — never silent.","ok"]});
 </script>
 </body>
 </html>
