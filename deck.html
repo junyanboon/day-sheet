@@ -569,11 +569,24 @@
     state.sugContent[url] = null; // in flight
     MCP.callTool(SERVER, FETCH_TOOL, { id: url }, { cache: { staleTime: 300000 } })
       .then(function (res) {
-        var text = res && res.payload && (res.payload.text || res.payload.content) || "";
+        // Unwrap defensively: the runtime has handed back the parsed JSON, the raw
+        // JSON string, and an MCP content-array in different builds. Any of them
+        // must resolve to the page text, or every row shows the "predates" stub.
+        var p = res && res.payload !== undefined ? res.payload : res;
+        if (p && p.content && Object.prototype.toString.call(p.content) === "[object Array]") {
+          var acc = "";
+          for (var ci = 0; ci < p.content.length; ci++)
+            if (p.content[ci] && typeof p.content[ci].text === "string") acc += p.content[ci].text;
+          p = acc;
+        }
+        if (typeof p === "string") {
+          try { var pj = JSON.parse(p); if (pj && typeof pj === "object") p = pj; } catch (e) {}
+        }
+        var text = (p && typeof p.text === "string") ? p.text : (typeof p === "string" ? p : "");
         var m = String(text).match(/<content>([\s\S]*?)<\/content>/);
         var body = m ? m[1] : String(text);
         function sect(names) {
-          var re = new RegExp("^#{2,3}\\s*(?:" + names + ")\\s*$([\\s\\S]*?)(?=^#{2,3}\\s|\\Z)", "im");
+          var re = new RegExp("^#{2,3}\\s*(?:" + names + ")\\s*$([\\s\\S]*?)(?=^#{2,3}\\s|$(?![\\s\\S]))", "im");
           var hit = body.match(re);
           return hit ? hit[1].trim() : null;
         }
