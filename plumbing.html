@@ -721,7 +721,23 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
-      <li class="ui"><span class="d">2026-08-26</span> <b>The Deck's source now lives in this repo</b> — <code>day-sheet/deck.html</code> is the source of truth; the claude.ai artifact is republished from it. Until now the only copy sat in a session scratchpad, which got cleared and forced a rebuild from the published artifact (recovered byte-identical). Same commit trail as the rest of the day-sheet from here on. Also: the deck's rate-limit screen no longer reads as fatal — a Notion 429 now says "Waiting on Notion," in words, with a Try-now button, instead of dumping raw error JSON at the reviewer.</li>
+      <li class="entry human">
+      <details>
+      <summary><span class="when">2026-08-26 &middot; 15:05Z</span>
+      <h3>The Deck's source moves into this repo, and its rate-limit screen stops crying wolf<span class="kind">UI + PROCESS</span></h3></summary>
+      <p><strong><code>day-sheet/deck.html</code> is now the source of truth for the Deck artifact</strong>
+      (<code>claude.ai/code/artifact/2aabe1e6&hellip;</code>). Until now the only editable copy lived in a session
+      scratchpad, which got cleared and forced a rebuild from the published artifact &mdash; recovered byte-identical,
+      but that was luck, not process. To ship a Deck change: edit <code>deck.html</code>, commit, push, republish the
+      artifact from the file. The Pages copy renders only the &ldquo;Open inside claude.ai&rdquo; screen by design &mdash;
+      its data layer is the claude.ai Notion connector, which does not exist outside the app.</p>
+      <p><strong>The 429 screen told the reviewer the opposite of the truth.</strong> A Notion rate-limit (tripped when an
+      agent session queries the same workspace the Deck polls each minute) rendered as <em>CAN&rsquo;T LOAD THE DECK</em>
+      over raw <code>APIResponseError</code> JSON &mdash; a self-healing pause dressed as a fatal failure. It now says
+      <em>Waiting on Notion</em>, in words, with a Try-now button; other tool errors keep their message, capped at 180
+      chars. Same failure class as the Chikako Error: the system knew why, and the surface led the reader the wrong way.</p>
+      </details>
+    </li>
     <li class="entry det">
       <span class="when">2026-08-26 &middot; 14:34Z</span>
       <span class="kind">ROUTINE FIX</span>
