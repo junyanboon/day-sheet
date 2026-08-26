@@ -315,6 +315,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-26 &middot; 03:05Z</span>
+      <h3>Platform booking messages now reach the Correspondence Log &mdash; the renter&rsquo;s own words were only ever in the ticket<span class="kind">SOP</span></h3></summary>
+      <p>Sol R. booked 901 for Sep 19 and wrote &ldquo;Hi! my name is Sol and im a fashion student. Im doing a pilates class to show my first pilates collection!&rdquo; The Concierge captured it faithfully in the Sales ticket&rsquo;s Situation &mdash; but nowhere in the \ud83d\udcec Correspondence Log, so The Deck rendered her held T1 under <strong>&ldquo;Start of thread &mdash; nothing on record&rdquo;</strong> and a reviewer would have sent a cold opener to someone who had already introduced herself.</p>
+      <p><strong>Cause:</strong> \u26a1 Platform &mdash; Instant Book or Booking Request mentioned the Correspondence Log <em>only</em> for the OUTBOUND reply (&ldquo;Reconcile after an in-thread reply&rdquo;), so logging looked handled when only half was. <strong>Fixed on the SOP</strong> with a new <code>[AI]</code> step logging the guest&rsquo;s message as <code>Direction = &rarr; Us</code>, verbatim, right after the read step (change log records the incident). Sol&rsquo;s message backfilled as <code>3c87503281c481d699cffdc831131d2e</code>.</p>
+      <p><strong>Scope:</strong> not wholesale &mdash; the log holds 59 inbound Peerspace / 40 Giggster / 30 Tagvenue rows; it is the booking-notification message specifically that falls through, because it arrives as a confirmation rather than as a reply. Sweep Feedback <code>3c87503281c481f29c99cf889f0a3719</code> asks the same question of the three sibling SOPs (Last-Minute, Inquiry via a platform, Skedda Time Slot). Beyond tidiness this feeds the Responder&rsquo;s already-answered dedup, which reads the log to decide whether we have spoken.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-26 &middot; ~03:30Z</span>
       <h3>Ticket 104 merge-proposal pass: 22 evidence-carrying pairs on one review sheet; 14 relays backfilled; Giggster DOES mint an email relay<span class="kind">IDENTITY LAYER</span></h3></summary>
       <p><strong>The pass, one sentence:</strong> a full dump of the &#127912;&nbsp;Artist DB (1,055 rows) and ☎️&nbsp;Contact Points (1,733 rows) was cross-joined on every hard signal &mdash; shared contact-point values, duplicate alarm codes, shared Alarm/Skedda user ids, duplicate live names &mdash; and every candidate became a PROPOSAL row on one review sheet (<code>wayfinder/&hellip;/104-merge-proposals-2026-08-25.md</code>); <strong>nothing was merged, cross-linked, or deleted</strong> (081/098 human-only rule intact).</p>
