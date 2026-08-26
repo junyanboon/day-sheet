@@ -1152,6 +1152,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-26 &middot; 23:55Z</span>
+      <h3>Desk Invariants stops manufacturing its own backlog &mdash; B sees both worklists, dedup honors Cancelled<span class="kind">FAILURE MODE FIXED &middot; DEPLOY PENDING</span></h3></summary>
+      <p><strong>The single largest Actions-board inflow pipe was the checker itself</strong>: 91 <code>Raised by = Desk Invariants</code> rows since Aug 12, root-caused to two canon/code parity gaps. Both rules were banked in canon on 2026-08-25 (job-10) but <code>services/event-gate/invariants.py</code> never got them &mdash; so (1) invariant B stayed blind to the ⏭️ Next Action queue and filed false orphan-gate rows about the ticket-053 migration itself, and (2) the escalation dedupe read only OPEN self rows, so a <em>Cancelled</em> complaint (adjudicated by definition) was re-filed verbatim within days (Fall Season Youth Theatre: Cancelled Aug 22, re-filed Aug 26), and re-detections cut new rows instead of updating &mdash; the &ldquo;(98 runs)&rdquo; pathology.</p>
+      <p><strong>Fix (dc-canon <code>c1c24975</code>, 584 tests pass):</strong> <code>next_action_covered_ids()</code> treats an open Proposed/Ready/Mismatch queue row as covering its ticket for B, and a failed queue read suppresses B for the pass rather than false-filing; <code>board_escalations()</code> dedupes per (invariant code, ticket id) against open AND Cancelled self rows &mdash; open &rarr; bump the run count in place, Cancelled &rarr; never re-raise, and a cancelled E cannot gag a later B on the same ticket. <strong>Not yet live:</strong> the Cloud Run deploy needs Junyan (<code>services/event-gate/deploy.sh</code>) &mdash; until then the old checker keeps filing. Part of the 2026-08-26 &ldquo;kill classes, not rows&rdquo; strategy (inflow ~34 rows/day, ~45% machine chatter).</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-26 &middot; 17:10Z</span>
       <h3>The deterministic watchdog learns to text &mdash; but the wire stays cut<span class="kind">ROUTE BUILT, OFF</span></h3></summary>
       <p><strong><code>sentinel_sweep.py</code> now carries a full live escalation path</strong> (dc-canon <code>4c290c14</code>, event-gate fingerprint <code>16aefa7f112e</code>): when the alarm set <em>changes</em>, one ops SMS to Junyan via the existing <code>send_ops_text</code> lane &mdash; an alarm texts once on appearing and once on recovery, never per-pass. The dedupe ledger is Notion, not memory: the sweep files <strong>one own report row per Toronto day</strong> in 📊 Workflow Reports (<code>🤖 Sentinel sweep &mdash; YYYY-MM-DD</code>), appending a 🕒 line and an <code>ALARMS:</code> line every pass, so a cold start cannot re-text and the row doubles as the sweep&rsquo;s heartbeat. A <em>failed</em> send keeps the previous ledger so the next pass retries rather than going silent; a broken ledger degrades to a log line, never a 500.</p>
