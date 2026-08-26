@@ -329,6 +329,12 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 .fleetmap .al{font-size:10.5px;fill:var(--muted)}
 .fleetmap .bx{font-size:13px;font-weight:700}
 .fleetmap .bs{font-size:10px;fill:var(--muted)}
+.fleetmap g.fstn{cursor:pointer}
+.fleetmap g.fstn:hover rect,.fleetmap g.fstn:focus rect{stroke-width:3.5}
+.fleetmap g.fstn:focus{outline:none}
+.fleetmap #fleetinfo{font-family:ui-monospace,Menlo,monospace;font-size:.78rem;border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:.55rem .8rem;margin-top:.6rem;min-height:2.2rem}
+.fleetmap #fleetinfo b{font-size:.82rem}
+.fleetmap #fleetinfo span{color:var(--muted)}
 </style>
 <div class="pipes fleetmap" id="fleet">
 <h2>The fleet — who does the work, what it files, who checks it · times America/Toronto</h2>
@@ -353,57 +359,83 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <rect x="30" y="34" width="1020" height="192" rx="12" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".5"/>
   <text x="50" y="24" class="band">THE DESK — DOES THE WORK</text>
 
-  <g>
+  <g class="fstn" data-fleet="concierge" tabindex="0" role="button">
     <rect x="50" y="52" width="152" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
     <text x="126" y="69" class="nm" text-anchor="middle">🛎️ Concierge</text>
     <text x="126" y="84" class="tm" text-anchor="middle">every 2 h at :10</text>
+  </g>
+  <g class="fstn" data-fleet="responder" tabindex="0" role="button">
     <rect x="216" y="52" width="152" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
     <text x="292" y="69" class="nm" text-anchor="middle">🎤 Responder</text>
     <text x="292" y="84" class="tm" text-anchor="middle">:20 + :50</text>
+  </g>
+  <g class="fstn" data-fleet="loop" tabindex="0" role="button">
     <rect x="382" y="52" width="152" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
     <text x="458" y="69" class="nm" text-anchor="middle">⏭️ Loop</text>
     <text x="458" y="84" class="tm" text-anchor="middle">hourly :35</text>
+  </g>
+  <g class="fstn" data-fleet="mechanic" tabindex="0" role="button">
     <rect x="548" y="52" width="152" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
     <text x="624" y="69" class="nm" text-anchor="middle">🔧 Mechanic</text>
     <text x="624" y="84" class="tm" text-anchor="middle">hourly :54</text>
+  </g>
+  <g class="fstn" data-fleet="weatherman" tabindex="0" role="button">
     <rect x="714" y="52" width="152" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
     <text x="790" y="69" class="nm" text-anchor="middle">⛈️ Weatherman</text>
     <text x="790" y="84" class="tm" text-anchor="middle">hourly</text>
+  </g>
+  <g class="fstn" data-fleet="custodian" tabindex="0" role="button">
     <rect x="880" y="52" width="152" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
     <text x="956" y="69" class="nm" text-anchor="middle">🧹 Custodian</text>
     <text x="956" y="84" class="tm" text-anchor="middle">02:35 + 09:35</text>
   </g>
-  <g>
+  <g class="fstn" data-fleet="doorman" tabindex="0" role="button">
     <rect x="50" y="104" width="152" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
     <text x="126" y="121" class="nm" text-anchor="middle">🚪 Doorman</text>
     <text x="126" y="136" class="tm" text-anchor="middle">04:00 + 06:00</text>
+  </g>
+  <g class="fstn" data-fleet="analyst" tabindex="0" role="button">
     <rect x="216" y="104" width="152" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
     <text x="292" y="121" class="nm" text-anchor="middle">🧐 Analyst</text>
     <text x="292" y="136" class="tm" text-anchor="middle">~04:06</text>
+  </g>
+  <g class="fstn" data-fleet="host" tabindex="0" role="button">
     <rect x="382" y="104" width="152" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
     <text x="458" y="121" class="nm" text-anchor="middle">🤗 Host</text>
     <text x="458" y="136" class="tm" text-anchor="middle">04:00</text>
+  </g>
+  <g class="fstn" data-fleet="timekeeper" tabindex="0" role="button">
     <rect x="548" y="104" width="152" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
     <text x="624" y="121" class="nm" text-anchor="middle">⏱️ Timekeeper</text>
     <text x="624" y="136" class="tm" text-anchor="middle">04:00</text>
+  </g>
+  <g class="fstn" data-fleet="bookkeeper" tabindex="0" role="button">
     <rect x="714" y="104" width="152" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
     <text x="790" y="121" class="nm" text-anchor="middle">📖 Bookkeeper</text>
     <text x="790" y="136" class="tm" text-anchor="middle">06:00</text>
+  </g>
+  <g class="fstn" data-fleet="planner" tabindex="0" role="button">
     <rect x="880" y="104" width="152" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
     <text x="956" y="121" class="nm" text-anchor="middle">🗺️ Planner</text>
     <text x="956" y="136" class="tm" text-anchor="middle">19:30</text>
   </g>
-  <g>
+  <g class="fstn" data-fleet="treasurer" tabindex="0" role="button">
     <rect x="50" y="156" width="152" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
     <text x="126" y="173" class="nm" text-anchor="middle">🪎 Treasurer</text>
     <text x="126" y="188" class="tm" text-anchor="middle">1st of month 08:00</text>
-    <text x="230" y="180" class="al">clockwork — no LLM →</text>
+  </g>
+  <text x="230" y="180" class="al">clockwork — no LLM →</text>
+  <g class="fstn" data-fleet="eventgate" tabindex="0" role="button">
     <rect x="548" y="156" width="152" height="40" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 4"/>
     <text x="624" y="173" class="nm" text-anchor="middle">event-gate</text>
     <text x="624" y="188" class="tm" text-anchor="middle">every 1 min</text>
+  </g>
+  <g class="fstn" data-fleet="registrar" tabindex="0" role="button">
     <rect x="714" y="156" width="152" height="40" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 4"/>
     <text x="790" y="173" class="nm" text-anchor="middle">Registrar sweep</text>
     <text x="790" y="188" class="tm" text-anchor="middle">every 30 min</text>
+  </g>
+  <g class="fstn" data-fleet="watchlist" tabindex="0" role="button">
     <rect x="880" y="156" width="152" height="40" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 4"/>
     <text x="956" y="173" class="nm" text-anchor="middle">watchlist-refresh</text>
     <text x="956" y="188" class="tm" text-anchor="middle">every 15 min</text>
@@ -418,13 +450,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <text x="270" y="296" class="al" text-anchor="end">files a report</text>
 
   <!-- THE RECORD -->
-  <rect x="120" y="356" width="330" height="62" rx="10" fill="none" stroke="currentColor" stroke-width="2.5"/>
-  <text x="138" y="382" class="bx">📊 Reports</text>
-  <text x="138" y="402" class="bs" fill="var(--fwarn)">forgeable — anything can file one</text>
-
-  <rect x="630" y="356" width="330" height="62" rx="10" fill="none" stroke="var(--c)" stroke-width="2.5"/>
-  <text x="648" y="382" class="bx" fill="var(--c)">⏰ Trigger registry</text>
-  <text x="648" y="402" class="bs" fill="var(--fok)">unforgeable — no report can fake it</text>
+  <g class="fstn" data-fleet="reports" tabindex="0" role="button">
+    <rect x="120" y="356" width="330" height="62" rx="10" fill="none" stroke="currentColor" stroke-width="2.5"/>
+    <text x="138" y="382" class="bx">📊 Reports</text>
+    <text x="138" y="402" class="bs" fill="var(--fwarn)">forgeable — anything can file one</text>
+  </g>
+  <g class="fstn" data-fleet="registry" tabindex="0" role="button">
+    <rect x="630" y="356" width="330" height="62" rx="10" fill="none" stroke="var(--c)" stroke-width="2.5"/>
+    <text x="648" y="382" class="bx" fill="var(--c)">⏰ Trigger registry</text>
+    <text x="648" y="402" class="bs" fill="var(--fok)">unforgeable — no report can fake it</text>
+  </g>
 
   <!-- watch edges -->
   <path d="M240 418 V512" fill="none" stroke="var(--b)" stroke-width="2.5" marker-end="url(#fm-b)"/>
@@ -440,18 +475,23 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <rect x="30" y="496" width="1020" height="120" rx="12" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".5"/>
   <text x="50" y="488" class="band">THE WATCH</text>
 
-  <rect x="90" y="520" width="300" height="70" rx="10" fill="none" stroke="var(--b)" stroke-width="2.5"/>
-  <text x="108" y="548" class="bx" fill="var(--b)">📟 Morning Text · 08:45</text>
-  <text x="108" y="570" class="bs">verdict: CAUGHT UP / INCOMPLETE</text>
-
-  <rect x="580" y="520" width="300" height="70" rx="10" fill="none" stroke="var(--c)" stroke-width="2.5"/>
-  <text x="598" y="548" class="bx" fill="var(--c)">The Sentinel · hourly</text>
-  <text x="598" y="570" class="bs">two senses — reports + timers</text>
+  <g class="fstn" data-fleet="morningtext" tabindex="0" role="button">
+    <rect x="90" y="520" width="300" height="70" rx="10" fill="none" stroke="var(--b)" stroke-width="2.5"/>
+    <text x="108" y="548" class="bx" fill="var(--b)">📟 Morning Text · 08:45</text>
+    <text x="108" y="570" class="bs">verdict: CAUGHT UP / INCOMPLETE</text>
+  </g>
+  <g class="fstn" data-fleet="sentinel" tabindex="0" role="button">
+    <rect x="580" y="520" width="300" height="70" rx="10" fill="none" stroke="var(--c)" stroke-width="2.5"/>
+    <text x="598" y="548" class="bx" fill="var(--c)">The Sentinel · hourly</text>
+    <text x="598" y="570" class="bs">two senses — reports + timers</text>
+  </g>
 
   <!-- phone -->
-  <rect x="470" y="660" width="140" height="58" rx="10" fill="none" stroke="var(--fok)" stroke-width="3"/>
-  <text x="540" y="684" class="bx" text-anchor="middle" fill="var(--fok)">your phone</text>
-  <text x="540" y="702" class="bs" text-anchor="middle">the only terminus</text>
+  <g class="fstn" data-fleet="phone" tabindex="0" role="button">
+    <rect x="470" y="660" width="140" height="58" rx="10" fill="none" stroke="var(--fok)" stroke-width="3"/>
+    <text x="540" y="684" class="bx" text-anchor="middle" fill="var(--fok)">your phone</text>
+    <text x="540" y="702" class="bs" text-anchor="middle">the only terminus</text>
+  </g>
 
   <path d="M240 590 Q240 672 462 684" fill="none" stroke="var(--fok)" stroke-width="2.5" marker-end="url(#fm-ok)"/>
   <text x="312" y="648" class="al" fill="var(--fok)">one text every morning</text>
@@ -460,6 +500,40 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <text x="700" y="646" class="al" fill="var(--fok)" text-anchor="end">SMS on a miss or a dead timer</text>
 </svg>
 </div>
+<p id="fleetinfo"><span>Click any box.</span></p>
+<script>
+(()=>{
+const F={
+concierge:["🛎️ Concierge","reads studio mail; decides money, alarms, messages, tickets."],
+responder:["🎤 Responder","answers inbound texts fast — drafts held for your approval."],
+loop:["⏭️ Loop","advances tickets through their gates."],
+mechanic:["🔧 Mechanic","sweeps for errors and fixes small breakages."],
+weatherman:["⛈️ Weatherman","watches the studio thermostats."],
+custodian:["🧹 Custodian","double-checks the fleet's own work."],
+doorman:["🚪 Doorman","door codes and access — arm checks, pre-flights, retirements."],
+analyst:["🧐 Analyst","writes the IPR: today and tomorrow at a glance."],
+host:["🤗 Host","drafts the day's access texts."],
+timekeeper:["⏱️ Timekeeper","handles overtime; books the extra time itself."],
+bookkeeper:["📖 Bookkeeper","the daily money pass."],
+planner:["🗺️ Planner","evening rundown of tomorrow's bookings."],
+treasurer:["🪎 Treasurer","monthly money summary."],
+eventgate:["event-gate","emergency SMS lane — pure rules, no AI, never sleeps."],
+registrar:["Registrar sweep","card, code and board row for every booking — re-derived."],
+watchlist:["watchlist-refresh","rebuilds today's who-is-texting-us list."],
+reports:["📊 Reports","every run writes down what it did. Anything can write one — so it's never the only proof."],
+registry:["⏰ Trigger registry","the scheduler itself: is each timer on, and when does it fire next."],
+morningtext:["📟 Morning Text","one text at 08:45 — did the overnight work actually finish?"],
+sentinel:["The Sentinel","hourly: was each report on time, and is each timer still alive?"],
+phone:["your phone","every alert ends here — nothing else texts you."]};
+const info=document.getElementById('fleetinfo');
+document.querySelectorAll('#fleet .fstn').forEach(n=>{
+  const show=()=>{const e=F[n.dataset.fleet]; if(!e) return;
+    info.innerHTML=`<b>${e[0]}</b> <span>— ${e[1]}</span>`;};
+  n.addEventListener('click',show);
+  n.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show();}});
+});
+})();
+</script>
 </div>
 
 <div class="pipes" id="buildmap">
