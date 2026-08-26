@@ -1150,6 +1150,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-26 &middot; ~20:30Z</span>
+      <h3>Fleet fallback lane built &mdash; the amber pipes get a hand-crank<span class="kind">NEW</span></h3></summary>
+      <p><strong>Why:</strong> when the Anthropic budget runs dry (the 2026-08-24 <code>rate_limit (seven_day)</code> rejection was the warning shot), every cloud RemoteTrigger lane stops at once and nothing stands behind it. New standby: <code>Claude Workspace/fleet-fallback/</code> runs any lane locally on <strong>GPT-5.6 Sol</strong> via CLIProxyAPI (<code>claudex</code>, port 8317), billing the OpenAI/Codex subscription instead.</p>
+      <p><strong>Shape:</strong> all 20 trigger prompts mirrored from the live API into <code>lanes/</code> (they go stale &mdash; re-mirror after prompt edits); <code>run-lane.sh</code> prepends a fallback preamble (connector substitutions, canon via direct git clone, UTC-3 clock warning, hard rails restated &mdash; the Send-Timing Verifier&rsquo;s auto-release carve-out is <em>suspended</em> in fallback mode). Sol&rsquo;s config (<code>~/.claude-sol</code>) now carries <code>gmail-business</code> + <code>gmail-personal</code> stdio MCP (verified connected) and the Notion remote MCP (<strong>needs one interactive OAuth</strong> &mdash; until then Notion steps are report-only). Skedda / Alarm.com / phone.com / Slack / Calendar are hosted-connector-only and absent: those lanes run degraded and must say so.</p>
+      <p><strong>Failure modes:</strong> activation is manual by design &mdash; an auto-running shadow fleet would double-write the moment the cloud fleet recovers (overlap breaks single-writer, the 079 lesson). And Sol&rsquo;s quota can run out too; <code>run-lane.sh</code> detects quota/auth failures and fires <code>sol-notify.sh</code>.</p>
+      </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-26 &middot; 20:20Z</span>
