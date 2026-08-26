@@ -1149,6 +1149,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry det"><details><summary><span class="when">2026-08-26</span>
+        <h3>The Deck's case-file cards were never rendering <span class="kind">UI BUG</span></h3></summary>
+        <p>Every HTR-suggestion card showed the "predates the case-file filing format" stub even for rows
+        filed under the convention. Cause: <code>fetchSugContent</code> in deck.html only understood one
+        fetch-result shape (<code>res.payload.text</code>); the runtime's actual shape never matched, so the
+        parser never saw the page text. The unwrap now handles parsed JSON, raw JSON strings, and MCP
+        content-arrays, and the section regex's <code>\Z</code> (not a JS escape) is replaced with a real
+        end-of-input lookahead. Commit in day-sheet; artifact republished as "case-file-unwrap-fix".</p>
+      </details></li>
 
     <li class="entry llm">
       <details>
