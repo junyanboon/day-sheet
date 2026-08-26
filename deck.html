@@ -598,7 +598,7 @@
         state.sugContent[url] = (parsed.said || parsed.sent || parsed.proposed) ? parsed : { raw: true };
         render();
       })
-      .catch(function () { state.sugContent[url] = { raw: true }; render(); });
+      .catch(function (e) { state.sugContent[url] = { err: (e && e.code) || "error" }; render(); });
   }
 
   function sugMarkup(txt) {
@@ -628,9 +628,11 @@
           (where ? '<div class="where">\u2192 ' + esc(where) + "</div>" : "") + "</div>";
       }
     } else {
-      body = '<div class="sug-note">' + (c === null || c === undefined
-        ? "reading the write-up\u2026"
-        : "This row predates the case-file filing format \u2014 the full write-up is on the Notion page (tap the title).") + "</div>";
+      var note;
+      if (c === null || c === undefined) note = "reading the write-up\u2026";
+      else if (c.err) note = "Couldn't read the write-up (" + esc(c.err) + ") \u2014 it's on the Notion page (tap the title).";
+      else note = "This row predates the case-file filing format \u2014 the full write-up is on the Notion page (tap the title).";
+      body = '<div class="sug-note">' + note + "</div>";
     }
     return '<div class="card top c-suggest" id="topcard">' + head +
       '<div class="sug-body">' + body + "</div></div>";
