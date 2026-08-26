@@ -65,6 +65,25 @@
 .entry>details>summary .when{display:block}
 .entry>details>summary::after{content:" · expand";font-family:ui-monospace,Menlo,monospace;font-size:.62rem;color:var(--muted)}
 .entry>details[open]>summary::after{content:" · collapse"}
+
+/* ---- the lines: build map (merged from the What-Now-Flows artifact 2026-08-26) ---- */
+.buildmap{border:1px solid var(--line);border-radius:8px;background:var(--panel);margin:0 0 1.6rem;padding:.4rem .4rem .1rem;overflow-x:auto}
+.buildmap svg{display:block;min-width:880px;width:100%;height:auto}
+.buildmap text{font-family:"Iowan Old Style",Georgia,serif;fill:var(--ink)}
+.buildmap .nm{font-size:12.5px;font-weight:700}
+.buildmap .sb{font-family:ui-monospace,Menlo,monospace;font-size:9.5px;fill:var(--muted)}
+.buildmap .ln{font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:700}
+.buildmap .lw{font-family:ui-monospace,Menlo,monospace;font-size:9.5px;fill:var(--muted)}
+.buildmap g.stn{cursor:pointer}
+.buildmap g.stn:hover circle,.buildmap g.stn:hover rect,.buildmap g.stn:focus circle,.buildmap g.stn:focus rect{stroke-width:5}
+.buildmap g.stn:focus{outline:none}
+.mapkey{display:flex;flex-wrap:wrap;gap:1.1rem;padding:.5rem .6rem .55rem;color:var(--muted);font-family:ui-monospace,Menlo,monospace;font-size:.68rem;align-items:center}
+.mapkey i{display:inline-block;width:.75rem;height:.75rem;border-radius:50%;margin-right:.35rem;vertical-align:-.12em}
+.mapkey .km{background:var(--panel);border:3px solid var(--det)}
+.mapkey .kh{background:var(--human);border:3px solid var(--human);border-radius:3px}
+.mapkey .kg{background:transparent;border:3px dashed var(--muted)}
+.mapkey .ki{background:var(--panel);border:3px solid var(--ink)}
+
 </style>
 </head>
 <body>
@@ -165,6 +184,145 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <button data-f="alert" class="on"><span class="dot" style="background:var(--alert)"></span>EMERGENCY / ALERTING</button>
 </div>
 
+
+<div class="pipes" id="buildmap">
+<h2>The lines — what&rsquo;s built · click a stop</h2>
+<div class="buildmap">
+<svg viewBox="0 0 960 545" role="img" aria-label="Four-line map of the desk: identity, booking-site holds, booking prep, and outreach, with one closed route">
+
+  <!-- interchange tie -->
+  <line x1="520" y1="110" x2="520" y2="470" stroke="var(--line)" stroke-width="2" stroke-dasharray="3 6"/>
+
+  <!-- == A · identity == -->
+  <circle cx="42" cy="110" r="12" fill="var(--det)"/>
+  <text x="42" y="114" text-anchor="middle" class="ln" fill="var(--bg)">A</text>
+  <text x="42" y="136" text-anchor="middle" class="lw">identity</text>
+  <path d="M80 110 H880" stroke="var(--det)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <g class="stn" data-k="m_arrive" tabindex="0">
+    <circle cx="120" cy="110" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="120" y="138" text-anchor="middle" class="nm">mail lands</text>
+  </g>
+  <g class="stn" data-k="m_reply" tabindex="0">
+    <circle cx="255" cy="110" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="255" y="92" text-anchor="middle" class="nm">reply address</text>
+    <text x="255" y="79" text-anchor="middle" class="sb">hidden header</text>
+  </g>
+  <g class="stn" data-k="m_filed" tabindex="0">
+    <circle cx="385" cy="110" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="385" y="138" text-anchor="middle" class="nm">filed</text>
+    <text x="385" y="151" text-anchor="middle" class="sb">1,733</text>
+  </g>
+  <g class="stn" data-k="m_card" tabindex="0">
+    <circle cx="520" cy="110" r="12" fill="var(--panel)" stroke="var(--ink)" stroke-width="4"/>
+    <circle cx="520" cy="110" r="4.5" fill="var(--ink)"/>
+    <text x="520" y="88" text-anchor="middle" class="nm">THE CARD</text>
+  </g>
+  <g class="stn" data-k="m_match" tabindex="0">
+    <circle cx="700" cy="110" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="700" y="138" text-anchor="middle" class="nm">matched</text>
+  </g>
+  <g class="stn" data-k="m_one" tabindex="0">
+    <circle cx="880" cy="110" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="880" y="138" text-anchor="middle" class="nm">one card</text>
+  </g>
+
+  <!-- == P · booking sites, merges into B == -->
+  <circle cx="42" cy="205" r="12" fill="var(--det)"/>
+  <text x="42" y="209" text-anchor="middle" class="ln" fill="var(--bg)">P</text>
+  <text x="42" y="231" text-anchor="middle" class="lw">sites</text>
+  <path d="M80 205 H285 C322 205 336 236 346 262 C352 277 360 290 378 290" stroke="var(--det)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <g class="stn" data-k="m_site" tabindex="0">
+    <circle cx="120" cy="205" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="120" y="187" text-anchor="middle" class="nm">site confirms</text>
+  </g>
+  <g class="stn" data-k="m_hold" tabindex="0">
+    <circle cx="245" cy="205" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="245" y="187" text-anchor="middle" class="nm">room held</text>
+    <text x="245" y="174" text-anchor="middle" class="sb">every 5 min · live 25 aug</text>
+  </g>
+
+  <!-- == B · prep == -->
+  <circle cx="42" cy="290" r="12" fill="var(--det)"/>
+  <text x="42" y="294" text-anchor="middle" class="ln" fill="var(--bg)">B</text>
+  <text x="42" y="316" text-anchor="middle" class="lw">prep</text>
+  <path d="M80 290 H880" stroke="var(--det)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- old same-day detour, closed -->
+  <path d="M400 290 Q428 290 438 325 T458 372 M462 378 Q468 383 478 383 H880" stroke="var(--muted)" stroke-width="3.5" stroke-dasharray="2 9" fill="none" stroke-linecap="round" opacity=".55"/>
+  <g class="stn" data-k="m_direct" tabindex="0">
+    <circle cx="120" cy="290" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="120" y="318" text-anchor="middle" class="nm">booked</text>
+  </g>
+  <g class="stn" data-k="m_cal" tabindex="0">
+    <circle cx="400" cy="290" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="400" y="268" text-anchor="middle" class="nm">any lead time</text>
+    <text x="400" y="255" text-anchor="middle" class="sb">fork closed 25 aug</text>
+  </g>
+  <g class="stn" data-k="m_cardb" tabindex="0">
+    <circle cx="520" cy="290" r="12" fill="var(--panel)" stroke="var(--ink)" stroke-width="4"/>
+    <circle cx="520" cy="290" r="4.5" fill="var(--ink)"/>
+  </g>
+  <g class="stn" data-k="m_code" tabindex="0">
+    <circle cx="660" cy="290" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="660" y="318" text-anchor="middle" class="nm">code checked</text>
+  </g>
+  <g class="stn" data-k="m_send" tabindex="0">
+    <rect x="771" y="281" width="18" height="18" rx="4" fill="var(--human)" stroke="var(--human)" stroke-width="3"/>
+    <text x="780" y="268" text-anchor="middle" class="nm" fill="var(--human)">you send</text>
+  </g>
+  <g class="stn" data-k="m_dance" tabindex="0">
+    <circle cx="880" cy="290" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="880" y="318" text-anchor="middle" class="nm">they dance</text>
+  </g>
+
+  <!-- closed route stops -->
+  <g class="stn" data-k="m_aside" tabindex="0">
+    <circle cx="470" cy="383" r="8.5" fill="none" stroke="var(--muted)" stroke-width="3.5" stroke-dasharray="4 4"/>
+    <text x="470" y="411" text-anchor="middle" class="nm" fill="var(--muted)">stepped aside</text>
+    <text x="470" y="424" text-anchor="middle" class="sb">closed 25 aug</text>
+  </g>
+  <g class="stn" data-k="m_helper" tabindex="0">
+    <circle cx="650" cy="383" r="8.5" fill="none" stroke="var(--muted)" stroke-width="3.5" stroke-dasharray="4 4"/>
+    <text x="650" y="366" text-anchor="middle" class="nm" fill="var(--muted)">fast helper</text>
+    <text x="650" y="353" text-anchor="middle" class="sb">never built</text>
+  </g>
+  <g class="stn" data-k="m_arrivex" tabindex="0">
+    <circle cx="880" cy="383" r="8" fill="var(--panel)" stroke="var(--muted)" stroke-width="3.5" stroke-dasharray="4 4"/>
+    <text x="880" y="411" text-anchor="middle" class="nm" fill="var(--muted)">they arrive</text>
+  </g>
+
+  <!-- == C · reach == -->
+  <circle cx="42" cy="470" r="12" fill="var(--det)"/>
+  <text x="42" y="474" text-anchor="middle" class="ln" fill="var(--bg)">C</text>
+  <text x="42" y="496" text-anchor="middle" class="lw">reach</text>
+  <path d="M80 470 H880" stroke="var(--det)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <g class="stn" data-k="m_cardc" tabindex="0">
+    <circle cx="520" cy="470" r="12" fill="var(--panel)" stroke="var(--ink)" stroke-width="4"/>
+    <circle cx="520" cy="470" r="4.5" fill="var(--ink)"/>
+    <text x="520" y="500" text-anchor="middle" class="sb">the card</text>
+  </g>
+  <g class="stn" data-k="m_addr" tabindex="0">
+    <circle cx="660" cy="470" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="660" y="452" text-anchor="middle" class="nm">address</text>
+    <text x="660" y="439" text-anchor="middle" class="sb">fixed 21 aug</text>
+  </g>
+  <g class="stn" data-k="m_sent" tabindex="0">
+    <circle cx="780" cy="470" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
+    <text x="780" y="498" text-anchor="middle" class="nm">sent</text>
+  </g>
+  <g class="stn" data-k="m_doors" tabindex="0">
+    <rect x="871" y="461" width="18" height="18" rx="4" fill="var(--human)" stroke="var(--human)" stroke-width="3"/>
+    <text x="880" y="448" text-anchor="middle" class="nm" fill="var(--human)">door codes</text>
+    <text x="880" y="435" text-anchor="middle" class="sb">never auto</text>
+  </g>
+</svg>
+<div class="mapkey">
+  <span><i class="km"></i>machine</span>
+  <span><i class="kh"></i>you</span>
+  <span><i class="kg"></i>closed route</span>
+  <span><i class="ki"></i>the card — every line meets</span>
+</div>
+</div>
+</div>
 
 <div class="fix">
 <h2>🔴 Broken / not yet trusted — fix in this order</h2>
@@ -312,6 +470,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-26 &middot; 04:55Z</span>
+      <h3>The build map moves home &mdash; the What-Now-Flows subway map now heads this page<span class="kind">MAP</span></h3></summary>
+      <p>Redrawn wordless at the top of this page: four lines (A identity &middot; P booking-site holds &middot; B booking prep &middot; C outreach), the closed same-day detour in dashed grey, violet squares where a human is the gate, and the card as the interchange every line passes through. Every stop clicks into the detail panel below, same as the pipes.</p>
+      <p>Merged from the Claude artifact <code>34a22b34</code>, which is now frozen with a pointer here &mdash; same treatment as the original plumbing artifact <code>79d671e9</code>. One page, one map, one change log.</p>
+      </details>
+    </li>
 
     <li class="entry det">
       <details>
@@ -2246,5 +2413,30 @@ document.querySelectorAll('#legend button').forEach(b=>b.addEventListener('click
 </script>
 
 
+<script>
+/* build-map stops — feed the same #detail panel */
+Object.assign(D,{
+m_arrive:["A message lands","Line A · any of four channels","Skedda, Peerspace, Tagvenue or Giggster. All four look different and none says plainly who the person is.","ok"],
+m_reply:["The hidden reply address","Line A · new 21 Aug","Booking sites mail from their own address, so guests look anonymous. The real relay hides in a header neither mail tool shows; the desk reads it directly since 21 Aug.","ok"],
+m_filed:["Filed on the list","Line A · fixed 25 Aug — direct mail too","Every address and number goes on one list tied to the person — 1,733 now, nothing ever replaced. The rule was written for booking-site guests and missed plain direct email until 25 Aug (the Chikako class); every lane now files everything it can see, and the daily sweep heals a wrongly-minted card the first time it recognises the person (sweep half rides the next event-gate deploy).","ok"],
+m_card:["The card","Interchange — every line meets here","One record per person. Identity, prep and outreach all pass through it, which is why one wrong edit here can break something that looks unrelated.","ok"],
+m_match:["Matched next time","Line A","When they next get in touch — from any address or number on the list — the desk finds the same person.","ok"],
+m_one:["One person, one card","Line A · end of the line","New throwaway addresses no longer mint duplicate cards. Suspected cross-platform pairs become evidence-carrying merge proposals for Junyan, never silent links (ticket 104).","ok"],
+m_site:["Site confirms","Line P · Peerspace / Giggster / Tagvenue","The site says a booking is paid — at that moment our own calendar still shows the room free.","ok"],
+m_hold:["Room held, and given back","Line P · every 5 min · live 25 Aug","Reads the booking email, holds the room on Skedda, and releases it on cancellation — server-side guards, read-back proof both ways. First real run: Raquel K., Studio 901, held two minutes after Peerspace confirmed, verified on the calendar itself.","ok"],
+m_direct:["Booked","Line B","Skedda emails the moment somebody books; that email wakes everything else up.","ok"],
+m_cal:["Any lead time","Line B · fork closed 25 Aug","How soon the session is no longer changes what the desk prepares. The today/tomorrow step-aside — which wrote nothing and handed to a helper that did not exist — was deleted 25 Aug.","ok"],
+m_cardb:["The card","Interchange","Same card as Line A: the booking line looks the person up rather than minting a new one. Built in that order on purpose.","ok"],
+m_code:["Code set and checked","Line B","The renter is set up on the panel and the panel is read back to prove the code works across all four studios. No proof → the line stops and says so.","ok"],
+m_send:["You send","Human gate","The confirmation message parks for your release. The desk never sends it by itself.","tok"],
+m_dance:["They dance","Line B · end of the line","The renter turns up, the code works, nobody scrambled.","ok"],
+m_aside:["Stepped aside","Closed route · 25 Aug","Same-day bookings used to be deliberately skipped in favour of a helper that was never installed. Drawn so it is remembered, not used.","ok"],
+m_helper:["The fast helper","Never installed · stays off","The one program allowed to text a door code to a stranger unsupervised. Nothing hands to it any more; it can be deleted.","ok"],
+m_arrivex:["They arrive","Was: nothing ever sent","What waited at the end of the closed route. A same-day booking now runs the same chain as any other.","ok"],
+m_cardc:["The card","Interchange","Whether someone is reachable is entirely a property of their card — which made the address rule so costly to get wrong.","ok"],
+m_addr:["The address on the card","Line C · fixed 21 Aug","The field messages actually leave by. A real address always wins, otherwise the current relay goes here, and a filled-in field is never wiped.","ok"],
+m_sent:["Sent","Line C","Out with a receipt. A message marked sent with no receipt never left — its own watch.","ok"],
+m_doors:["Door codes","Never this way","Codes and access instructions go by text or a real address, sent by a person. Platform relays forbid it and it is not up for negotiation.","tok"]});
+</script>
 </body>
 </html>
