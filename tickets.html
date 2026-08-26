@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-25 17:57 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-25 22:28 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">33</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">34</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">60</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">61</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">7</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">6</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -1163,72 +1163,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>The night-ops rebuild map owns the evidence-source design and already logs this build;</p>
 <p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
 <p>Ops Lead&#x27;s use of it here.</p>
-</div></details></details></div><div class="job"><div class="jnum">#112</div><div class="jhead"><span class="emoji">🧩</span><h4>The room-holder and the booking robot do not talk to each other</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Raquel booked through Peerspace on Aug 25 and asked for a room two hours later</li><li>You accepted at 4:57pm, and the room-holder put it on the calendar by itself at 4:59pm — two minutes, nobody awake needed. That half is proven now, for the first time</li><li>Then the booking robot looked straight past her, twice, and said nothing</li><li>Why: booking-site guests deliberately get NO account on our calendar (making one would email them a sign-up they never asked for), and the robot&#x27;s very first rule is to skip any booking with nobody attached</li><li>So both halves were built to the same decision and they do not join up</li><li>Everything she actually received was done by hand: her phone asked for in the chat, her code made, her access text sent at 5:53pm — 67 minutes before she danced</li><li>It worked because somebody was awake. That is the same sentence as Julia and Gabrielle, one step further along</li><li>The genuinely hard part is the phone number: booking sites hide it on purpose, and we never send codes through their chat. So the most this can do is everything EXCEPT the text, plus a loud note saying &#x27;ask this guest for a number&#x27;</li><li>The cheap version, if nothing else: make the skip leave a note instead of leaving silence</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A mirrored platform booking is invisible to the Registrar — &quot;no holder on the booking&quot; drops it silently</b></p><h2>Found by the first real one, 2026-08-25 (Raquel K.)</h2>
-
-<p>Peerspace <b>request</b> 16:56 EDT → Junyan accepted 16:57 → <b>the mirror created Skedda booking</p>
-<p><code>119728204</code> at 16:59:06 EDT</b> (<code>POST /mirror-booking</code> 200; booking stamped 20:59:10Z), titled</p>
-<p>&quot;Raquel K. Peerspace&quot;, Studio 901, 19:00–20:30, $60. <b>That half worked, unattended, two minutes</p>
-<p>after the tap — 109&#x27;s acceptance is met.</b></p>
-
-<p>Then nothing. The 17:00 and 17:30 sweep passes both <b>skipped her</b>, and skipped her <i>silently</i>:</p>
-
-<p>``<code>python</p>
-<p>holder = (booking.get(&quot;holder&quot;) or &quot;&quot;).strip().lower()</p>
-<p>if not holder:</p>
-<p>return &quot;no holder on the booking&quot;</p>
-<p></code>`<code></p>
-
-<p>The mirror deliberately creates a booking with <b>no linked Skedda user</b> — Junyan&#x27;s 2026-08-24</p>
-<p>ruling, because creating one emails the guest a sign-up invite they never asked for. The</p>
-<p>Registrar&#x27;s first gate drops exactly that shape. The two lanes were built to the same ruling and</p>
-<p>do not join.</p>
-
-<p>Everything a renter actually receives was then done <b>by hand</b>: phone asked for in the Peerspace</p>
-<p>chat (17:41), panel user </code>248361767<code> + code </code>7368<code> created and verified (17:47), HTA sent by</p>
-<p>direct SMS (17:53, phone.com </code>258793424<code>) — <b>67 minutes before her booking</b>. It worked because</p>
-<p>somebody was awake. That is the Julia sentence and the Gabrielle sentence, one lane further along.</p>
-
-<p><b>Note what this is NOT.</b> It is not the same-day send hold: the Registrar never held her at all,</p>
-<p>so there was no queued pair to release. Clearing </code>SWEEP_SAMEDAY_HOLD<code> would not have sent her</p>
-<p>anything.</p>
-
-<h2>Why the skip is defensible and still wrong</h2>
-
-<p>Per booking, &quot;no holder&quot; genuinely means the holder is absent. Across a WHOLE read it means a</p>
-<p>stripped session, and </code>run()<code> correctly fails closed on that. The bug is that a mirrored booking</p>
-<p>is a <b>known, expected, titled</b> shape — the title convention exists precisely so downstream lanes</p>
-<p>can identify the guest without an account — and the sweep treats it as an anonymous nobody.</p>
-
-<p>Worse: a skip files no residue. The lane&#x27;s whole design principle is that failures are late and</p>
-<p>noisy rather than silent and permanent, and this one is silent.</p>
-
-<h2>Shape (not ruled)</h2>
-
-<ul>
-<li>- Recognise the mirror&#x27;s title convention (</code>Name Platform`, e.g. &quot;Raquel K. Peerspace&quot;) and treat</li>
-</ul>
-<p>the parsed name as the holder for artist matching, instead of skipping. The convention was fixed</p>
-<p>for exactly this purpose (084).</p>
-<ul>
-<li>- The phone is the genuinely missing fact — platforms mask it permanently, and the code must never</li>
-</ul>
-<p>go through a platform relay (HOUSE-RULES 🌍 3). So the honest ceiling is: card + code + board row</p>
-<p>automatically, and a <b>loud residue</b> naming &quot;ask this guest for a phone number in the platform</p>
-<p>chat&quot; — not silence.</p>
-<ul>
-<li>- Cheapest interim, if the above is not built: make the holder-less skip file a residue when the</li>
-</ul>
-<p>title matches the mirror convention. One row, and nobody arrives uncontacted.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- A mirrored booking produces either a completed chain or a visible row. Never a silent skip.</li>
-<li>- Replay Raquel: same board, same result, no human in the loop up to the phone request.</li>
-<li>- RUNTIMES.md + Plumbing Map entries.</li>
-</ul>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">33</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">34</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -3327,6 +3263,203 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Coordination with <b>091</b>, which reads and writes these</li>
 </ul>
 <p>same Artist rows daily.</p>
+
+<p>---</p>
+
+<h2>2026-08-25 — evidence from the no-contact-point sweep, routed here per Junyan</h2>
+
+<p>Junyan&#x27;s ruling while clearing the &quot;66 unreachable cards&quot; number: <b>people arriving</p>
+<p>through multiple platforms are resolved through THIS ticket&#x27;s proposal pass</b>, not by</p>
+<p>ad-hoc filing during backfills. Two concrete inputs from that sweep:</p>
+
+<ol>
+<li>1. <b>Sindy O. / Sindy Ortiz</b> — the live cross-platform example. One card (&quot;Sindy O.&quot;,</li>
+</ol>
+<p>One-Off, created 2026-06-19 off a Giggster enquiry) with nothing on file; the mailbox</p>
+<p>also holds a 2025-04 <b>Tagvenue</b> arc as &quot;Sindy Ortiz&quot; with relay</p>
+<p><code>sindy.ortiz.u2257887@reply.tagvenue.com</code> (the OLD dot format — see dc-canon</p>
+<p><code>f24a09f6</code>). Same person is probable, not proven — exactly the evidence-carrying</p>
+<p>proposal row this ticket exists to put in front of Junyan. Do NOT file the Tagvenue</p>
+<p>relay onto the Giggster-era card ahead of that ruling.</p>
+<ol>
+<li>2. <b>~19 untagged 2026 platform guests with no contact point</b> (no <code>[Platform]</code> name</li>
+</ol>
+<p>tag: Preeti K. — Peerspace &quot;The Connection Social&quot;; Eman S; Monica C.; Darline T.;</p>
+<p>Mahaylia Hardie; Inaaya I.; Persis S.; Anna Ampily James; Mustafa C.; Laine H.; et</p>
+<p>al.). Their relays are recoverable by <code>Reply-To</code> (<code>scripts/gmail_reply_to.py</code>), but</p>
+<p>each backfill is also a potential merge input — a recovered relay may collide with</p>
+<p>an existing card&#x27;s contact point. Run the recovery WITH the proposal pass so a</p>
+<p>collision becomes a proposal row, never a silent second link.</p>
+
+<h2>2026-08-25 (later) — PROPOSAL PASS PRODUCED</h2>
+
+<p>The pass ran over a <b>full paginated dump</b> of both data sources (1,055 Artist rows, 1,733</p>
+<p>Contact Points rows — not a single SQL query, per the 08-13 staleness gotcha). Output is the</p>
+<p>one-sitting review sheet <b><b>104-merge-proposals-2026-08-25.md</b></b></p>
+<p>(also published as a private artifact: https://claude.ai/code/artifact/4334a85a-697f-4dfc-b5c2-791f902504d4): 16 Tier-A pairs (hard shared signal —</p>
+<p>stable contact point, relay, alarm code, or Alarm/Skedda user id — with ≥1 live card), 6</p>
+<p>Tier-B probables (Sindy O./Sindy Ortiz; Carrie Jiang/Sheldon Shannon; four 2026-04-21</p>
+<p>Tagvenue-import cards vs their 2025 [One-Off] twins), a post-merge-tidy proposal, and an</p>
+<p>appendix of everything checked and deliberately left alone. Nothing was merged, linked</p>
+<p>across candidate cards, or deleted.</p>
+
+<p>Open questions resolved:</p>
+
+<ul>
+<li>- <b>Threshold:</b> propose on ≥1 hard shared signal with a live card; probable-tier on</li>
+</ul>
+<p>conversation/era evidence; leave alone on name-only-with-distinct-signals and</p>
+<p>closed×closed pairs. A shared alarm code between different names is NOT identity.</p>
+<ul>
+<li>- <b>Where proposals land:</b> the single markdown sheet above, one Ruling column, tiered —</li>
+</ul>
+<p>the 077 lesson applied. No scattered Notion rows.</p>
+<ul>
+<li>- <b>Post-merge CP tidy:</b> proposed pattern in the sheet — retarget the tombstone&#x27;s Contact</li>
+</ul>
+<p>Points rows&#x27; <code>Artist</code> relation to the survivor at merge time; rows kept, never deleted.</p>
+<p>Awaiting ruling; ~20 tombstone-linked rows exist today.</p>
+
+<p>Population reconciliation: of the alarm report&#x27;s 13 same-person duplicate-code pairs, <b>10</p>
+<p>are already merged</b> (tombstones verified in the dump) — only Rita Stefan, Julia S., and</p>
+<p>Jesse remain, as A2/A3/A4. The 08-20 count of &quot;25 names holding more than one live card&quot;</p>
+<p>is now 13 exact-name pairs, all covered in the sheet or the appendix. <b>Alice Hamman now</p>
+<p>resolves to a single card</b> — the ticket&#x27;s live example was fixed upstream.</p>
+
+<p>Relay recovery (addendum item 2): 12 remaining no-contact-point 2026 untagged guests, all</p>
+<p>recovered via <code>gmail_reply_to.py</code> against thedanceannex@gmail.com (searched via the local</p>
+<p>gmail-business connector; hosted connector not attached to this session). <b>Zero</p>
+<p>collisions</b> with existing Contact Points, so 14 rows were filed directly per</p>
+<p>relay-addresses.md (Peerspace + Giggster relays <code>recognition-only</code> under the age rule;</p>
+<p>the two Tagvenue relays <code>usable</code>, inside the 145-day observed arc). Sindy Ortiz&#x27;s</p>
+<p>Tagvenue relay was NOT filed — held as B1 evidence per Junyan&#x27;s ruling.</p>
+
+<p><b>Canon finding:</b> Giggster DOES mint an email relay — <code>&lt;conversation-uuid&gt;@reply.giggster.com</code></p>
+<p>in the notification&#x27;s Reply-To (7 live samples this pass). relay-addresses.md says</p>
+<p>Giggster&#x27;s relay is &quot;an SMS proxy number, never an address&quot;; that needs a correction.</p>
+<p>Filed as Source=giggster, Booking Ref = the conversation uuid.</p>
+
+<p>---</p>
+
+<p>Also relevant: the <b>Aaron Aquino-Annobil</b> pair (one alarm identity on two cards) was</p>
+<p>merged 2026-08-25 on Junyan&#x27;s explicit instruction — tombstone pattern, survivor</p>
+<p><code>Aaron Aquino-Annobil [Skedda]</code>. It is this ticket&#x27;s class and is recorded here as a</p>
+<p>worked example of the mechanics: content moved, duplicate Closed + renamed as a</p>
+<p>signpost, alarm fields cleared on the tombstone so no audit reads two claimants.</p>
+</div></details></details></div><div class="job"><div class="jnum">#104</div><div class="jhead"><span class="emoji">🗂️</span><h4>104-merge-proposals-2026-08-25</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>104-merge-proposals-2026-08-25</b></p><h2>Merge Proposal Sheet — 2026-08-25</h2>
+
+<p>The one review surface for ticket <b>104</b>. <b>Nothing here has been</p>
+<p>merged, linked, or deleted.</b> Every row is a proposal with its evidence; Junyan rules by</p>
+<p>writing <code>MERGE</code> / <code>NOT SAME</code> / <code>HOLD</code> in the Ruling column (or telling the desk, which will</p>
+<p>transcribe). Merges themselves stay human-only and irreversible (canon 081/098). Reference</p>
+<p>mechanics: the Aaron Aquino-Annobil worked example — content moved, duplicate Closed and</p>
+<p>renamed as a signpost pointing at the survivor, alarm fields cleared on the tombstone.</p>
+
+<p>Populations covered: full dump of both data sources (1,055 Artist rows, 1,733 + 14 new</p>
+<p>Contact Points rows — a complete paginated read, not a single SQL query, per the 08-13</p>
+<p>staleness gotcha), the alarm reconciliation&#x27;s duplicate-code list, and the 2026 platform-guest</p>
+<p>relay recovery (this session).</p>
+
+<p><b>Evidence threshold used</b> (the ticket&#x27;s first open question, now decided):</p>
+
+<ul>
+<li>- <b>Propose (Tier A)</b> — the pair shares at least one <i>hard</i> signal: a stable contact-point</li>
+</ul>
+<p>value (direct email or phone), a platform relay address, an Alarm user id, a Skedda user</p>
+<p>id, or an alarm code, <b>and</b> at least one card is live. Hard signals are things a</p>
+<p>stranger cannot coincidentally share.</p>
+<ul>
+<li>- <b>Propose as probable (Tier B)</b> — no shared row in the databases, but conversation or</li>
+</ul>
+<p>era evidence links them (cross-platform arcs; same name + relay minted in the same</p>
+<p>enquiry window). Junyan&#x27;s judgment is the only closer.</p>
+<ul>
+<li>- <b>Leave alone</b> — name similarity with <i>distinct</i> hard signals (provably two people), or</li>
+</ul>
+<p>closed×closed pairs (dormant; no sweep cost; listed in the appendix so they aren&#x27;t</p>
+<p>re-derived next quarter).</p>
+<ul>
+<li>- A shared <b>alarm code alone between different names is NOT identity</b> — codes get reissued</li>
+</ul>
+<p>(see appendix C).</p>
+
+<p>Survivor suggestion = the card with the richer history / live product; it is a suggestion only.</p>
+
+<h2>Tier A — hard shared signal, at least one live card (16 pairs)</h2>
+
+<p><b>RULED 2026-08-25: all 16 MERGE.</b> Junyan&#x27;s standing preferences recorded with the ruling:</p>
+<p>survivor favours the <b>full name</b> (A4 → Jesse Dwyre), and A8&#x27;s survivor is the <b>[One-Off]</b></p>
+<p>card. &quot;Same number is proof&quot; — a shared phone number between same/compatible names is</p>
+<p>sufficient evidence. Tier B is NOT covered by this ruling (no shared numbers there).</p>
+
+<p>| # | Cards (suggested survivor first) | Shared evidence | Ruling |</p>
+<p>|---|---|---|---|</p>
+<p>| A1 | [Sabrina Caputi [Fixed Option]](https://app.notion.com/p/Sabrina-Caputi-Fixed-Option-8c1b41513f0240888944b93ccc583e8a) ← [Sabrina Caputi [Studio Viewing]](https://app.notion.com/p/Sabrina-Caputi-Studio-Viewing-3517503281c480819647f5b43d12239e) | phone +14164007084 · alarm code 9414 · same name | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A2 | [Rita Stefan [Skedda]](https://app.notion.com/p/Rita-Stefan-Skedda-3497503281c48022a7d5d3bc4f59a4eb) ← [Rita Stefan [Tagvenue]](https://app.notion.com/p/Rita-Stefan-Tagvenue-3897503281c4817da65ae07bb42897d7) | phone +16479711848 · alarm code 7532 · same name (alarm-report pair) | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A3 | [Julia S. [Peerspace] (2026-01)](https://app.notion.com/p/Julia-S-Peerspace-2eb7503281c4800c9340da7ec1b5100e) ← [Julia S. [Peerspace] (2026-07)](https://app.notion.com/p/Julia-S-Peerspace-3ae7503281c481f5bfa0fb303a555d44) | phone +16472728761 · alarm code 9312 · <b>Alarm user id 247781878 on both</b> (alarm-report pair) | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A4 | <a href="https://app.notion.com/p/Jesse-Dwyre-3b57503281c481e19d3ad4dedd10ca9f" target="_blank" rel="noopener">Jesse Dwyre</a> ← [Jesse [Giggster]](https://app.notion.com/p/Jesse-Giggster-3a87503281c481349012c27bfa30b848) | phone +16475199699 · alarm code 7018 (alarm-report pair) | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A5 | <a href="https://app.notion.com/p/Jacob-Willis-e6f4ec71d14e4051aee5c8ecb7878ebe" target="_blank" rel="noopener">Jacob Willis (a)</a> ← <a href="https://app.notion.com/p/Jacob-Willis-3875c0b88e5448f89ffb0296fd64f54e" target="_blank" rel="noopener">Jacob Willis (b)</a> | phone +17809918007 · email jbwillis99@gmail.com · same name, both minted 2026-05-28 | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A6 | <a href="https://app.notion.com/p/Jasintha-Ravieshanker-3e54e3c41eab4cf4a645a50c87c3cbda" target="_blank" rel="noopener">Jasintha Ravieshanker (a)</a> ← <a href="https://app.notion.com/p/Jasintha-Ravieshanker-5575181088ac4f67a094ea37df2e092c" target="_blank" rel="noopener">Jasintha Ravieshanker (b)</a> | Tagvenue relay jasintha_ravieshanker-u2856741 on both · both minted 2026-05-19 | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A7 | [Sol C [Tagvenue] (06-26)](https://app.notion.com/p/Sol-C-Tagvenue-38b7503281c4813cbb28c979990389a3) ← [Sol C [Tagvenue] (06-27)](https://app.notion.com/p/Sol-C-Tagvenue-38c7503281c48108bad6dfdf1b80a3a7) | phone +14372457092 · Tagvenue relay sol_c-u2909186 on both | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A8 | [Andrea Jane Penaverde [One-Off]](https://app.notion.com/p/Andrea-Jane-Penaverde-One-Off-2b97503281c4808e9d1ad829a31f05c8) ← [Andrea Jane Penaverde [Tagvenue]](https://app.notion.com/p/Andrea-Jane-Penaverde-Tagvenue-2e97503281c480e5809ed6ca7d7dbeff) | phone +16479013509 · same name | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A9 | [Ayoola Bello [Skedda]](https://app.notion.com/p/Ayoola-Bello-Skedda-35c7503281c480df9480fb236c2f8cf4) ← <a href="https://app.notion.com/p/Ay-a1fbbc76b00d43a38cd56e88c97521ef" target="_blank" rel="noopener">Ay</a> | phone +12897881885 · email afropuppyyogaofficial@gmail.com | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A10 | [Sara Aljabery [Skedda]](https://app.notion.com/p/Sara-Aljabery-Skedda-3b67503281c481568eefef972786fdd2) ← [Sara A. [Tagvenue]](https://app.notion.com/p/Sara-A-Tagvenue-3447503281c48084a53bf7889d3c09dc) | phone +13652286596 | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A11 | [Regina Moleva [One-Off]](https://app.notion.com/p/Regina-Moleva-One-Off-20b7503281c4803ebebbe75af9cb94a7) ← [Regina [One-Off]](https://app.notion.com/p/Regina-One-Off-1b07503281c4803a9f97f984d12b564c) | phone +14167278466 | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A12 | [Alina Chuienko [Skedda]](https://app.notion.com/p/Alina-Chuienko-Skedda-3357503281c48070bf5ef8ef8d36940b) ← [Alina [One-Off]](https://app.notion.com/p/Alina-One-Off-24e7503281c480d9990bf20992002f5d) | phone +16477066928 | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A13 | [Aris Wu [Skedda]](https://app.notion.com/p/Aris-Wu-Skedda-2ae7503281c480459043e297bea04d2b) ← [Aris [Giggster]](https://app.notion.com/p/Aris-Giggster-2757503281c48066916ce2089e27887b) | phone +16479785512 | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A14 | [Nick Lee-Scott [Skedda]](https://app.notion.com/p/Nick-Lee-Scott-Skedda-33d7503281c480708b7deb58ab952b7c) ← [Nick L. [Peerspace]](https://app.notion.com/p/Nick-L-Peerspace-29f7503281c4806bacb0d50d4e4891bd) | phone +19022131528 | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A15 | [Nanu Daniela Bragagnolo [1AP]](https://app.notion.com/p/Nanu-Daniela-Bragagnolo-1AP-e633d77257ad488dbea29bba04d9c5cf) (Active) ← [Daniela Bragagnolo [Community Rate]](https://app.notion.com/p/Daniela-Bragagnolo-Community-Rate-38a7503281c481889869df642ca73847) | phone +12896816094 | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+<p>| A16 | [Samantha D&#x27;Arcy [Authorized]](https://app.notion.com/p/Samantha-D-Arcy-Authorized-2187503281c480509736fcbd5c6a9211) ← <a href="https://app.notion.com/p/Samantha-D-Arcy-c4a1dba74e0a44d6b3e238902799db9c" target="_blank" rel="noopener">Samantha D&#x27;Arcy</a> (Closed, 2023) | phone +16478830223 | <b>MERGE</b> (Junyan, 2026-08-25) |</p>
+
+<h2>Tier B — probable, judgment required (6 pairs)</h2>
+
+<p>| # | Cards | Evidence | Ruling |</p>
+<p>|---|---|---|---|</p>
+<p>| B1 | <a href="https://app.notion.com/p/Sindy-O-3847503281c481d58de6d895e9ce3bca" target="_blank" rel="noopener">Sindy O.</a> (Giggster 2026-06) ↔ <b>Sindy Ortiz</b> (Tagvenue 2025-04 arc, <b>no card</b>) | Tagvenue relay <code>sindy.ortiz.u2257887@reply.tagvenue.com</code> (old dot format), enquiry for Studio 693 on 2025-05-17; same first name, both dance-studio enquiries. Relay is held UNFILED pending this ruling. If MERGE: relay is filed onto the Sindy O. card as <code>recognition-only</code>, Guest Label &quot;Sindy Ortiz&quot;. If NOT SAME: relay stays out of the table (no card to hang it on) and this row records why. | |</p>
+<p>| B2 | [Carrie Jiang [One-Off]](https://app.notion.com/p/Carrie-Jiang-One-Off-2aa7503281c48080af01d578c9b0a9f9) ↔ [Sheldon Shannon [Skedda]](https://app.notion.com/p/Sheldon-Shannon-Skedda-3d8fe8c3abb1453686986906cbcc02ad) | shared email cj.sheldonsvirtualclasses@gmail.com — but <b>different names</b>; may be two people sharing one studio account rather than one person. If two people, the email stays a shared contact point and both cards stand. | |</p>
+<p>| B3 | <a href="https://app.notion.com/p/Alexander-Osborne-78bdd23f8a574bc98386989407e330e5" target="_blank" rel="noopener">Alexander Osborne</a> 2026-04-21 ↔ [Alexander Osborne [One-Off]](https://app.notion.com/p/Alexander-Osborne-One-Off-19e7503281c48009b64df8fa904eb77e) 2025-02-18 | same name; the 2026-04-21 card carries old-format Tagvenue relay <code>alexander.osborne.u2157821</code> whose u-id dates to the early-2025 enquiry window of the other card. No shared DB row. | |</p>
+<p>| B4 | <a href="https://app.notion.com/p/Godofredo-Garcia-040dc1850d694201b1c7fb183fe1e7d2" target="_blank" rel="noopener">Godofredo Garcia</a> (2026-04-21, relay <code>godofredo.garcia.u2113801</code>) ↔ [Godofredo Garcia [One-Off]](https://app.notion.com/p/Godofredo-Garcia-One-Off-18c7503281c480ed8c67f22d648c0c7d) (2025-01-31) | same pattern as B3 | |</p>
+<p>| B5 | <a href="https://app.notion.com/p/Richelle-Ramirez-7afcf65a314a40909b5bdb75a3237b15" target="_blank" rel="noopener">Richelle Ramirez</a> (2026-04-21, relay <code>richelle.ramirez.u2146623</code>) ↔ [Richelle Ramirez [One-Off]](https://app.notion.com/p/Richelle-Ramirez-One-Off-1987503281c48085be5eef8525d04027) (2025-02-12) | same pattern as B3 | |</p>
+<p>| B6 | <a href="https://app.notion.com/p/tracy-826af9840fb14cbfb25be9c0de7103c6" target="_blank" rel="noopener">tracy</a> (2026-04-21, relay <code>tracy.u2125546</code>) ↔ [Tracy [One-Off]](https://app.notion.com/p/Tracy-One-Off-1917503281c480b3afe5e702bbd1ef7e) (2025-02-05) | same pattern as B3, weakest — single common first name only | |</p>
+
+<h2>Post-merge tidy (already-ruled merges, mechanical follow-through)</h2>
+
+<p>Ten of the alarm report&#x27;s 13 same-person pairs are ALREADY merged with tombstones</p>
+<p>(Dailyn Martinez, Kyle FitzGerald, Claudia Dzierbicki, Tugrul Avci, Kateryna Zozulia,</p>
+<p>Pablo Perez, Nichola Chan, Angus Dirnbeck/Ifreestyle, Mia Vescarelli, Adrianna Yanuziello —</p>
+<p>plus Jai Smith). The three that remain are A2, A3, A4 above. <b>Their Contact Points rows</p>
+<p>still point at the tombstones.</b> Proposed pattern (the ticket&#x27;s third open question):</p>
+<p>at merge time, each tombstone&#x27;s Contact Points rows get their <code>Artist</code> relation retargeted</p>
+<p>to the survivor — the row is kept, never deleted, so history survives and <code>find_artist</code></p>
+<p>resolves to the living card. If approved, one pass retargets the ~20 existing tombstone-linked</p>
+<p>rows. Ruling: ______</p>
+
+<h2>Appendix — checked and deliberately left alone</h2>
+
+<ul>
+<li>- <b>Provably distinct:</b> Julia Chen [Skedda] vs Julia Chen 2 [Skedda] — different email,</li>
+</ul>
+<p>phone, alarm code, and the &quot;2&quot; was deliberate. Isabelle N. [One-Off] ×2 (2025-01/2025-02)</p>
+<p>— zero signals on either card; unresolvable and dormant.</p>
+<ul>
+<li>- <b>Alice Hamman</b> — the ticket&#x27;s live <code>artist:ambiguous</code> example now resolves to a single</li>
+</ul>
+<p>card (one email, one CP row); already fixed upstream, nothing to propose.</p>
+<ul>
+<li>- <b>Aaron Aquino-Annobil</b> — merged 2026-08-25 by Junyan; not redone.</li>
+<li>- <b>Closed×closed same-person splits with shared signals</b> (dormant, no sweep cost; merge</li>
+</ul>
+<p>only if the person resurfaces): Sukriti Sharma, Audra Simmons, Anita Katakkar, Maysara</p>
+<p>Manal, Claudia Huerta, Stephanie Salazar, Akshiptika Malhotra, Prajakta Dravid (×4),</p>
+<p>Angelica Gil Aguilar (×3), Zahra Harriet Badua-Baffoe, Abdul Kareem, Devanshi Mishra (×3),</p>
+<p>Emily Curran/Emzy Shadows.</p>
+<ul>
+<li>- <b>C. Shared alarm codes between DIFFERENT people — not identity, audit items only:</b></li>
+</ul>
+<p>2004 (Bianca Soskic / Sarah Ambedkar), 2514 (Ben Mariano / Jessy Zhao), 4931 (Gabrielle</p>
+<p>Curate / Tanurina Datta), 6097 (Dina Seddon / Jon Alexander), 6820 (KHAY Karen Andrews /</p>
+<p>Vanessa Vassell), 9176 (KJ McKnight / Ya&#x27;ad Bat-Kol). These belong to the alarm-code</p>
+<p>audit (520-orphan question), not to this pass.</p>
 </div></details></details></div><div class="job"><div class="jnum">#105</div><div class="jhead"><span class="emoji">🗂️</span><h4>Teach the send lanes to pick a door — stable-first, reply on the thread&#x27;s own relay</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Teach the send lanes to pick a door — stable-first, reply on the thread&#x27;s own relay</b></p><h2>Question</h2>
 
 <p><b>101</b> made the desk able to <b>find</b> a person by any of</p>
@@ -3856,7 +3989,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Both routes answered from Apps Script&#x27;s own network with the project&#x27;s own token, so the</p>
 <p>URL, the credential and the reachability are all proven — not assumed. Exactly one trigger,</p>
 <p>which matters: two would mean two writers racing on the same mail. Independently confirmed</p>
-<p>from the workspace the same afternoon that </code>POST /mirror-booking<code> on </code>skedda-mcp` returns</p>
+<p>from the workspace the same afternoon that </code>POST /mirror-booking<code> on </code>skedda-mcp<code> returns</p>
 <p>401 unauthenticated and 400 authenticated, i.e. the server enforces the token rather than</p>
 <p>ignoring it.</p>
 
@@ -3865,6 +3998,24 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>like &quot;no platform bookings came in&quot;), which is the Julia failure mode all over again.</p>
 
 <p>Remaining, and unprovable without one: the first real platform booking mirroring end to end.</p>
+
+<p>---</p>
+
+<h2>2026-08-25 evening — FIRST LIVE RUN, verified</h2>
+
+<p>Junyan installed the 5-minute trigger. First real booking through the lane: <b>Raquel K.</b>,</p>
+<p>Peerspace, &quot;Sunny Dance Studio by Yonge and Bloor&quot; → <b>Studio 901 (Elements)</b>.</p>
+
+<p>| | |</p>
+<p>|---|---|</p>
+<p>| Peerspace &quot;Your booking is confirmed&quot; | 2026-08-25 <b>20:57:02Z</b> (thread </code>1a03ab6631edbe44<code>) |</p>
+<p>| Skedda booking created | <b>20:59:10Z</b> — booking <b>119728204</b>, &quot;Raquel K. Peerspace&quot; |</p>
+<p>| Slot / price / holder | 19:00–20:30 EDT, price 60, <b>null holder</b> |</p>
+
+<p>Two minutes, mail to calendar, no human. Verified by a separate </code>list_bookings` read of the</p>
+<p>calendar, not the trigger screen. The lane is <b>live</b>; what remains open lives on</p>
+<p><b>111</b> (cancellation shapes for Peerspace/Tagvenue, one supervised</p>
+<p>release, booking changes).</p>
 </div></details></details></div><div class="job"><div class="jnum">#111</div><div class="jhead"><span class="emoji">🗂️</span><h4>A mirrored room is held once and never given back — cancellations and changes</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A mirrored room is held once and never given back — cancellations and changes</b></p><h2>Why this is not ticket 084</h2>
 
 <p>Junyan asked for this as &quot;084, it&#x27;s a huge gap.&quot; <b>084 is closed and correctly so</b> — its</p>
@@ -4776,6 +4927,112 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>dial. Junyan has set it to 14.</p>
 
 <p>Status: <b>closed.</b></p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#112</span><span class="emoji">🧩</span><span class="done-title">The room-holder and the booking robot do not talk to each other</span><span class="done-date">2026-08-25</span></summary><div class="done-body"><ul class="plain-bullets"><li>Raquel booked through Peerspace on Aug 25 and asked for a room two hours later</li><li>You accepted at 4:57pm, and the room-holder put it on the calendar by itself at 4:59pm — two minutes, nobody awake needed. That half is proven now, for the first time</li><li>Then the booking robot looked straight past her, twice, and said nothing</li><li>Why: booking-site guests deliberately get NO account on our calendar (making one would email them a sign-up they never asked for), and the robot&#x27;s very first rule is to skip any booking with nobody attached</li><li>So both halves were built to the same decision and they do not join up</li><li>Everything she actually received was done by hand: her phone asked for in the chat, her code made, her access text sent at 5:53pm — 67 minutes before she danced</li><li>It worked because somebody was awake. That is the same sentence as Julia and Gabrielle, one step further along</li><li>The genuinely hard part is the phone number: booking sites hide it on purpose, and we never send codes through their chat. So the most this can do is everything EXCEPT the text, plus a loud note saying &#x27;ask this guest for a number&#x27;</li><li>The cheap version, if nothing else: make the skip leave a note instead of leaving silence</li><li>FIXED THE SAME NIGHT (Aug 25, live): the robot now recognises these bookings by their title instead of skipping them</li><li>If there is no phone yet: it leaves a note, texts the on-call phone, AND writes the message asking the guest for their number — in Junyan&#x27;s own words — ready for him to send back through the booking site</li><li>The moment that number is on their card, the next run does the whole thing normally: card, code, board row, messages</li><li>Two people with the same name, or nobody matching, both fall back to asking again — a reminder costs nothing, a text to the wrong person does not</li><li>Also brought back an old promise that got lost: every same-day booking now produces one text to the on-call phone, whether it went well or badly</li><li>One step is still by hand: when the guest replies with their number, somebody has to put it on their card. Everything either side of that runs itself</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A mirrored platform booking is invisible to the Registrar — &quot;no holder on the booking&quot; drops it silently</b></p><h2>Found by the first real one, 2026-08-25 (Raquel K.)</h2>
+
+<p>Peerspace <b>request</b> 16:56 EDT → Junyan accepted 16:57 → <b>the mirror created Skedda booking</p>
+<p><code>119728204</code> at 16:59:06 EDT</b> (<code>POST /mirror-booking</code> 200; booking stamped 20:59:10Z), titled</p>
+<p>&quot;Raquel K. Peerspace&quot;, Studio 901, 19:00–20:30, $60. <b>That half worked, unattended, two minutes</p>
+<p>after the tap — 109&#x27;s acceptance is met.</b></p>
+
+<p>Then nothing. The 17:00 and 17:30 sweep passes both <b>skipped her</b>, and skipped her <i>silently</i>:</p>
+
+<p>``<code>python</p>
+<p>holder = (booking.get(&quot;holder&quot;) or &quot;&quot;).strip().lower()</p>
+<p>if not holder:</p>
+<p>return &quot;no holder on the booking&quot;</p>
+<p></code>`<code></p>
+
+<p>The mirror deliberately creates a booking with <b>no linked Skedda user</b> — Junyan&#x27;s 2026-08-24</p>
+<p>ruling, because creating one emails the guest a sign-up invite they never asked for. The</p>
+<p>Registrar&#x27;s first gate drops exactly that shape. The two lanes were built to the same ruling and</p>
+<p>do not join.</p>
+
+<p>Everything a renter actually receives was then done <b>by hand</b>: phone asked for in the Peerspace</p>
+<p>chat (17:41), panel user </code>248361767<code> + code </code>7368<code> created and verified (17:47), HTA sent by</p>
+<p>direct SMS (17:53, phone.com </code>258793424<code>) — <b>67 minutes before her booking</b>. It worked because</p>
+<p>somebody was awake. That is the Julia sentence and the Gabrielle sentence, one lane further along.</p>
+
+<p><b>Note what this is NOT.</b> It is not the same-day send hold: the Registrar never held her at all,</p>
+<p>so there was no queued pair to release. Clearing </code>SWEEP_SAMEDAY_HOLD<code> would not have sent her</p>
+<p>anything.</p>
+
+<h2>Why the skip is defensible and still wrong</h2>
+
+<p>Per booking, &quot;no holder&quot; genuinely means the holder is absent. Across a WHOLE read it means a</p>
+<p>stripped session, and </code>run()<code> correctly fails closed on that. The bug is that a mirrored booking</p>
+<p>is a <b>known, expected, titled</b> shape — the title convention exists precisely so downstream lanes</p>
+<p>can identify the guest without an account — and the sweep treats it as an anonymous nobody.</p>
+
+<p>Worse: a skip files no residue. The lane&#x27;s whole design principle is that failures are late and</p>
+<p>noisy rather than silent and permanent, and this one is silent.</p>
+
+<h2>Shape (not ruled)</h2>
+
+<ul>
+<li>- Recognise the mirror&#x27;s title convention (</code>Name Platform<code>, e.g. &quot;Raquel K. Peerspace&quot;) and treat</li>
+</ul>
+<p>the parsed name as the holder for artist matching, instead of skipping. The convention was fixed</p>
+<p>for exactly this purpose (084).</p>
+<ul>
+<li>- The phone is the genuinely missing fact — platforms mask it permanently, and the code must never</li>
+</ul>
+<p>go through a platform relay (HOUSE-RULES 🌍 3). So the honest ceiling is: card + code + board row</p>
+<p>automatically, and a <b>loud residue</b> naming &quot;ask this guest for a phone number in the platform</p>
+<p>chat&quot; — not silence.</p>
+<ul>
+<li>- Cheapest interim, if the above is not built: make the holder-less skip file a residue when the</li>
+</ul>
+<p>title matches the mirror convention. One row, and nobody arrives uncontacted.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A mirrored booking produces either a completed chain or a visible row. Never a silent skip.</li>
+<li>- Replay Raquel: same board, same result, no human in the loop up to the phone request.</li>
+<li>- RUNTIMES.md + Plumbing Map entries.</li>
+</ul>
+
+<h2>FIXED + DEPLOYED 2026-08-25 evening — the platform two-gate lane</h2>
+
+<p>Built and live the same night the gap was found. Verified from the workspace: </code>27bfa058<code> is an</p>
+<p>ancestor of the running </code>4da13b48<code> (</code>/health<code>, started 23:28Z), so all three commits are deployed.</p>
+
+<p><b>The skip is gone.</b> A mirrored booking is now recognised by its title convention</p>
+<p>(</code>platform_name()<code> strips the platform word off &quot;Raquel K. Peerspace&quot;) and routed through two</p>
+<p>gates instead of being dropped:</p>
+
+<ul>
+<li>- <b>GATE 1 — accepted, no phone yet.</b> One keyed ✅ Actions row, one ops text to the on-call phone,</li>
+</ul>
+<p><b>and the phone-number request drafted into the Message Queue</b> (</code>PHONE-{platform}-{stamp}<code>,</p>
+<p>Channel </code>Platform Relay<code>, </code>Pending Review<code>) in Junyan&#x27;s own verbatim wording. The chain</p>
+<p>deliberately does NOT run: no junk empty-named Artist card, and nothing to send anyway because</p>
+<p><b>the code must never travel through a platform relay</b> (HOUSE-RULES 🌍 3). It rides on the</p>
+<p>residue&#x27;s </code>created<code> so it queues exactly once.</p>
+<ul>
+<li>- <b>GATE 2 — a phone exists.</b> Exactly one Artist card matching the title-name carries a Phone →</li>
+</ul>
+<p>the next pass runs the <b>full normal chain</b> with that identity, and the HTA pulls the phone from</p>
+<p>the card like any other renter. <b>Zero or multiple matches both fall back to gate 1</b> — that</p>
+<p>costs a reminder, never a wrong send.</p>
+
+<p>Also ported in the same commit: SameDay.gs&#x27;s lost contract, *every same-day booking produces one</p>
+<p>text, success or failure*. </code>_ops_report()` texts the on-call phone when a same-day booking had real</p>
+<p>work done that pass; settled passes stay silent, so the 30-minute cadence cannot text twice about</p>
+<p>the same booking. 546 tests pass.</p>
+
+<p><b>One seam left, named honestly and not a defect:</b> the reply carrying the number is not parsed.</p>
+<p>Gate 2 fires on a <b>Phone written to the Artist card</b>, so the number still moves from the relay</p>
+<p>reply onto the card by hand. Everything either side of that is automatic — the ask is drafted</p>
+<p>without being asked for, and the whole chain runs the moment the number lands.</p>
+
+<p><b>Note on Junyan&#x27;s framing</b> (&quot;the Registrar gets the information directly from the mail&quot;): the</p>
+<p>platform&#x27;s mail is where the request goes OUT and where the answer comes BACK, and the outbound</p>
+<p>half is now drafted automatically. The inbound number still needs a hand. Recorded precisely so a</p>
+<p>later session does not assume an auto-parse that isn&#x27;t there.</p>
+
+<p>Status: <b>closed.</b> Acceptance replay: the next accepted platform booking should produce a gate-1</p>
+<p>row, an ops text, and a drafted ask — with no silent skip anywhere.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#084</span><span class="emoji">🏷️</span><span class="done-title">Bookings from Giggster and Peerspace made more than 2 days ahead reach nobody</span><span class="done-date">2026-08-24</span></summary><div class="done-body"><ul class="plain-bullets"><li>When someone books through Giggster or Peerspace, the booking appears on our calendar with no person attached — the name is only in the booking&#x27;s title, like &#x27;Chris Giggster&#x27;</li><li>The fast robot that handles these only wakes up for bookings happening today or tomorrow. Chris booked ten days ahead, so it never fired</li><li>And the new booking program skips them, because to it they look like a booking with nobody on it</li><li>So nobody automated touches them at all — 5 out of 31 bookings in the four days we checked</li><li>What needs deciding: who owns them, whether reading the name out of the title is safe enough, and what to do about the missing phone number</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Platform bookings made more than 2 days out reach no automation at all</b></p><h2>Question</h2>
 
 <p>Found 2026-08-19 while probing the Skedda admin read for <b>081</b>.</p>
@@ -11876,5 +12133,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-25 17:57 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-25 22:28 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
