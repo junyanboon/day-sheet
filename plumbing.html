@@ -595,6 +595,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-26 &middot; ~06:40Z</span>
+      <h3>The code mirror could not see 377 live rows &mdash; it fell back to the decorated Notion title<span class="kind">MONITOR FIX</span></h3></summary>
+      <p><strong>The defect, one sentence:</strong> job D matches a person by <code>Alarm Display Name</code>, and when that field is blank it fell back to the Notion title &mdash; which carries a <code>[Skedda]</code> / <code>[Tagvenue]</code> tag the panel never carries &mdash; so it matched nobody and counted the row as <em>&ldquo;no live code (remembered only)&rdquo;</em>, which is the NORMAL state for a retired renter. <strong>A real gap and an ordinary retirement produced the same number.</strong> The old comment named the hazard exactly (&ldquo;The Notion title is often decorated &hellip; and will not match&rdquo;) and the next line used the decorated title anyway.</p>
+      <p><strong>Scale, measured on the live board 2026-08-25:</strong> 423 of 705 coded rows have a blank display name, <strong>377 of them live</strong>, and 376 of those 377 carry a square-bracket tag. So today&rsquo;s reassuring <code>needs a human 0</code> covered 282 rows, not 705 &mdash; and this is the <strong>Dillan Mendonca class</strong> (blank display name, booking three days out, counted as normal, caught only by a separate pre-flight).</p>
+      <p><strong>Fixed</strong> in <code>danceannex-alarm-monitor</code> <code>b95f329</code>. <code>identity.py</code> has stripped the tag since ticket 085 and this job never did &mdash; same service, two behaviours. That normalization is now one named helper, <code>identity.bare_name</code>, used by both, per identity.py&rsquo;s own <em>&ldquo;ONE place the trust ladder is implemented&rdquo;</em>. Second half: a miss on a title-derived name is now reported as <code>unverified</code> instead of folded into the healthy <code>dormant</code> count, and the run report explains how to clear it (fill in the display name). A run where every row has a real display name reads exactly as before. <strong>247 tests pass; the two new regression tests fail against the old fallback.</strong> No change to what the job ACTS on &mdash; still corrects only genuine drift, still never blanks a code.</p>
+      <p>⚠️ <strong>Committed and pushed, NOT deployed</strong> &mdash; <code>./deploy.sh</code> is Junyan&rsquo;s to run, same as the event-gate half on 08-26. Until it runs, the daily mirror still cannot see those 377 rows. <em>Watch for:</em> the first post-deploy run should report a large <code>unverified</code> number and a smaller <code>dormant</code> one &mdash; that is the fix working, not a new fault.</p>
+      </details>
+    </li>
+
     <li class="entry alert">
       <details>
       <summary><span class="when">2026-08-26 &middot; 06:10Z</span>
