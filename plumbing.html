@@ -722,6 +722,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-26 &middot; 14:28Z</span>
+      <h3>Registrar &harr; Responder confirmation overlap closed<span class="kind">GUARD</span></h3></summary>
+      <p><strong>The Akira Huang case:</strong> staff sent &ldquo;Thank you for booking space with us on Friday, August&nbsp;28&rdquo; on Aug&nbsp;25 &mdash; a queue row literally coded <em>&ldquo;Booking confirmation &mdash; Akira Huang&rdquo;</em> &mdash; and the 04:00Z sweep still queued its own &ldquo;you&rsquo;re all set&rdquo; for the same booking. <code>confirmation_queued</code> rung&nbsp;2 matched the Artist and the date but accepted only four body phrases and <em>never read the row title</em> &mdash; the 845c93f3 disease again, a detector recognising only its own lane&rsquo;s phrasing.</p>
+      <p><strong>Fix:</strong> the dedupe now also matches &ldquo;thank you for booking&rdquo; in the body, and any row whose Message Code contains &ldquo;confirmation&rdquo; counts whatever the body says. Akira&rsquo;s pending duplicate marked Will&nbsp;Not&nbsp;Send; Jennifer/Alice/Ishfaaq audited &mdash; no prior confirmations, genuinely due. Deployed rev <code>event-gate-00082-l8b</code>, fingerprint <code>868295f89e7d</code> verified; hold intact; 557 tests pass. <em>Watch for:</em> the reverse overlap &mdash; staff confirming a booking the sweep has already queued at Pending Review &mdash; is a human-side habit the queue view has to carry.</p>
+      </details>
+    </li>
+
     <li class="entry alert">
       <details>
       <summary><span class="when">2026-08-26 &middot; 19:05Z</span>
