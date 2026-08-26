@@ -1152,6 +1152,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-26 &middot; 17:10Z</span>
+      <h3>The deterministic watchdog learns to text &mdash; but the wire stays cut<span class="kind">ROUTE BUILT, OFF</span></h3></summary>
+      <p><strong><code>sentinel_sweep.py</code> now carries a full live escalation path</strong> (dc-canon <code>4c290c14</code>, event-gate fingerprint <code>16aefa7f112e</code>): when the alarm set <em>changes</em>, one ops SMS to Junyan via the existing <code>send_ops_text</code> lane &mdash; an alarm texts once on appearing and once on recovery, never per-pass. The dedupe ledger is Notion, not memory: the sweep files <strong>one own report row per Toronto day</strong> in 📊 Workflow Reports (<code>🤖 Sentinel sweep &mdash; YYYY-MM-DD</code>), appending a 🕒 line and an <code>ALARMS:</code> line every pass, so a cold start cannot re-text and the row doubles as the sweep&rsquo;s heartbeat. A <em>failed</em> send keeps the previous ledger so the next pass retries rather than going silent; a broken ledger degrades to a log line, never a 500.</p>
+      <p><strong>Nothing is enabled.</strong> The route passes <code>live=True</code> only when <code>SENTINEL_SWEEP_LIVE=1</code> is set on the service &mdash; it is not set, and setting it is the human-approved flip after the shadow&rsquo;s log verdicts have matched the LLM Sentinel for a few days. Verified post-deploy: manual fire returned <code>shadow: true, 16/16 healthy</code>, zero writes. Suite: 577 passing, including five new live-mode tests (text-once, standing-alarm silence, recovery text, failed-send retry, broken-ledger survival).</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-26 &middot; 17:00Z</span>
       <h3>The mystery file-dropper was Dropbox Sign itself &mdash; an hourly Drive forwarder that survived every delete<span class="kind">ROUTE REMOVED</span></h3></summary>
       <p><strong>Raw <code>Dance_Annex_Long_Term_Rental_Agreement-&lt;signer-email&gt;.pdf</code> files kept appearing in the ROOT of the filing folder</strong>, un-triaged and un-named, alongside the copies <code>DocIntake</code> files properly. Junyan was confident nothing was configured to do it, and every automation surface agreed: <strong>IFTTT</strong> (10 applets, all thermostat), <strong>Zapier</strong> (zero workflows), <strong>every sibling <code>.gs</code></strong> in the Send Engine project (only <code>Code.gs:566</code> touches Drive, and it reads), and <strong>Google Drive for Desktop</strong> (not installed on this Mac). On that evidence the working theory became &ldquo;a person clicking Save to Drive&rdquo; &mdash; which was wrong, and the folder said so within the hour.</p>
