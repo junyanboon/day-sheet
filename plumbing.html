@@ -597,6 +597,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-26 &middot; 03:45Z</span>
+      <h3>Send-Timing Verifier was emailing the personal inbox &mdash; and a rate-limited fire silently ran 16h late<span class="kind">ROUTINE FIX</span></h3></summary>
+      <p><strong>Two defects in one routine</strong>, <code>&#9201;&#65039; Send-Timing Verifier</code> <code>trig_013TgaXwW2twipdmo2NUrHwa</code> (cloud, cron <code>0 9</code> UTC = 05:00 Toronto). Both found from the Aug&nbsp;24 report Junyan received.</p>
+      <p><strong>1. Wrong mailbox.</strong> Step 6 of the prompt hardcoded <code>junyan.boon@gmail.com</code>. It sends through the <em>business</em> Gmail connector, so every daily report arrived <em>from</em> <code>info@danceannex.ca</code> <em>to</em> the personal inbox &mdash; an operational fleet alert filed with personal mail, against the CLAUDE.md rule that agent alerts live in the business mailbox. <strong>Now emails <code>thedanceannex@gmail.com</code></strong>, with an explicit do-not-use note on the personal address so a future edit does not quietly restore it. The Needs-Care card pipeline keys off the business-side message id, so it is unaffected.</p>
+      <p><strong>2. A late fire can produce a false all-clear.</strong> The Aug&nbsp;24 fire landed on time at 09:09Z and died in <em>one second</em>: <code>rate_limit: rejected (seven_day)</code> &mdash; org monthly spend limit. A <code>Try again</code> at 01:27Z Aug&nbsp;25 (21:27 Toronto) ran it <strong>~16 hours late</strong>. The prompt&rsquo;s fixed &ldquo;last 12 hours&rdquo; window would then have started at 13:28Z &mdash; <em>after</em> the Host&rsquo;s 14:05Z batch &mdash; so it would have audited zero rows and reported clean. That run caught it and widened the window on its own initiative; the next one might not. <strong>Late-fire handling is now written into step 1:</strong> read the real Toronto clock first, and if materially past 05:00, widen to 00:00Z of the Toronto day plus 72h context and state the run time and window in the email. <em>Never report a clean run off a window that could not have contained the Host&rsquo;s batch.</em></p>
+      <p>The same long-tail pattern appears on Aug&nbsp;17, 22 and 23 &mdash; assume those were rate-limited-and-retried too. <em>Watch for:</em> the rate limit itself is not fixed here, only made survivable. A fire that is rejected and never manually retried leaves that day genuinely unaudited, with no alert at all.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-26 &middot; ~06:40Z</span>
       <h3>The code mirror could not see 377 live rows &mdash; it fell back to the decorated Notion title<span class="kind">MONITOR FIX</span></h3></summary>
       <p><strong>The defect, one sentence:</strong> job D matches a person by <code>Alarm Display Name</code>, and when that field is blank it fell back to the Notion title &mdash; which carries a <code>[Skedda]</code> / <code>[Tagvenue]</code> tag the panel never carries &mdash; so it matched nobody and counted the row as <em>&ldquo;no live code (remembered only)&rdquo;</em>, which is the NORMAL state for a retired renter. <strong>A real gap and an ordinary retirement produced the same number.</strong> The old comment named the hazard exactly (&ldquo;The Notion title is often decorated &hellip; and will not match&rdquo;) and the next line used the decorated title anyway.</p>
