@@ -661,7 +661,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <span class="branch"></span>
 <span class="blabel">tamper?</span><span class="hop det" tabindex="0" data-k="tamperline">ticket · any hour</span><span class="arr">→</span><span class="hop human" tabindex="0" data-k="stefansms">SMS Stefan · daytime · ×2</span><span class="arr">→</span><span class="hop alert" tabindex="0" data-k="tamperline">then YOU</span><span class="arr">→</span><span class="hop det" tabindex="0" data-k="tamperline">clears → row resolves itself</span>
 </div>
-<p class="why"><b>Without you:</b> a tripped siren clears and re-arms itself (max twice, and never with a person inside — the ⛔ guard checks arm state, <code>in_alarm</code>, and open/motion sensors <em>before any command</em>); a stuck bypass is restored; every panel trouble lands somewhere a human can see it — the sorter&rsquo;s default is now <b>file a ticket</b>, not silence; a tamper runs its own ticket→Stefan→you loop and closes its own row. All deterministic: it keeps working in a full token outage. <b>Not on the Sentinel roster, deliberately</b> — this is not an LLM agent with runs to miss; its heartbeat is the Cloud Scheduler tick itself and the <code>[watchdog]</code> log line every minute.</p>
+<p class="why"><b>Without you:</b> a tripped siren clears and re-arms itself (max twice, and never with a person inside — the ⛔ guard checks arm state, <code>in_alarm</code>, and open/motion sensors <em>before any command</em>); a stuck bypass is restored; every panel trouble lands somewhere a human can see it — the sorter&rsquo;s default is now <b>file a ticket</b>, not silence; a tamper runs its own ticket→Stefan→you loop and closes its own row. All deterministic: it keeps working in a full token outage. <b>On the 🚥 Run Monitor since 2026-08-26</b> — it stamps its own <code>Self-heartbeat</code> every 5 min (row <i>alarm-watchdog (Cloud Run)</i>, stale after 15, window 00–24), outside the arm switch, so a stale row means the service is dead rather than merely disarmed. <i>This entry previously read &ldquo;not on the Sentinel roster, deliberately — not an LLM agent with runs to miss&rdquo;. That was wrong: determinism is not liveness, the board already carries deterministic jobs, and the only liveness proof was a log line nobody but an agent reads.</i></p>
 </details>
 </div>
 
@@ -721,6 +721,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+
+    <li class="entry alert">
+      <details>
+      <summary><span class="when">2026-08-26 &middot; 14:20Z</span>
+      <h3>The alarm watchdog joins the 🚥 Run Monitor &mdash; reversing Monday&rsquo;s call<span class="kind">MAP</span></h3></summary>
+      <p><strong>Junyan asked the question that broke the old answer:</strong> <em>&ldquo;how can I know if it is off or malfunctioning? The run monitor is where I go, and there are other deterministic code on there.&rdquo;</em> On 2026-08-24 this map recorded the opposite ruling &mdash; that the watchdog stays off the roster because it is not an LLM agent with runs to miss, and the every-60s <code>[watchdog]</code> log line is its heartbeat. <strong>That was wrong.</strong> The log line is real evidence, but only to someone holding a <code>gcloud logging read</code> command, which made the true answer to &ldquo;is it off?&rdquo; <em>&ldquo;ask Claude&rdquo;</em>. Determinism is not liveness &mdash; <code>watchlist-refresh</code> and The Mechanic are both deterministic, both went dark, and both are watched.</p>
+      <p><strong>Now:</strong> <code>alarm_monitor/heartbeat.py</code> stamps <code>Self-heartbeat</code> on roster row <em>alarm-watchdog (Cloud Run)</em> &mdash; cadence <b>5-min</b>, stale after <b>15</b>, window <b>00&ndash;24</b>. Throttled to one write per 5 min (the tick is 60s; stamping each would be 1,440 Notion writes/day), non-fatal, and the throttle clock advances <em>only on a successful write</em> so a Notion blip retries next tick instead of ageing the board itself. Stamped <strong>outside the <code>WATCHDOG_ARMED</code> gate</strong>, like the escalation and tamper lanes: pausing the arm switch stops the watchdog acting on panels, not running &mdash; so a stale row means genuinely dead, never merely disarmed. Deployed <code>heartbeat-2026-08-26</code>, first live stamp verified 14:18Z; 256 tests pass.</p>
+      <p>⚠️ <strong>Green means the tick is alive, not that the alarm system is healthy.</strong> It cannot see a tampered panel, a faulted sensor, or a siren suppressed as needing a human &mdash; those keep their own lanes (SMS for critical, tickets for the rest).</p>
+      </details>
+    </li>
 
     <li class="entry det">
       <details>
