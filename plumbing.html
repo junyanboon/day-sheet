@@ -1152,6 +1152,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-26 &middot; 16:57Z</span>
+      <h3>Confirmations move to booking time &mdash; the T&minus;2 gap is closed<span class="kind">ROUTE CHANGE</span></h3></summary>
+      <p><strong>Ruled by Junyan (&ldquo;close the gap&rdquo;):</strong> the Registrar now queues the &ldquo;you&rsquo;re all set&rdquo; confirmation <strong>within one pass (~30&nbsp;min) of a booking being made</strong> &mdash; the made-list (between-pass snapshot diff, the same signal the auto-send gates trust) is the trigger; T&minus;2 becomes the backstop for bookings it never saw made (first pass, lost bucket, or a &gt;14-day booking entering the horizon window, which confirms at T&minus;14). Only the <em>writing</em> moved: rows still queue held under the hold, the three auto-send gates are untouched, the FBS board row stays a T&minus;2 concern, agreement renters still skipped by Artist-card Product.</p>
+      <p><strong>Canon:</strong> new Universal Rule in <code>process-studio-tickets-full.md</code> &mdash; routine confirmations for plain direct bookings are the Registrar&rsquo;s; the ticket lane drafts one only when answering a conversation, and checks for the <code>BC-sweep-&hellip;</code> row first. This removes the hand-filled silence that produced the Akira Huang double-confirmation. Deployed rev <code>event-gate-00089-zwt</code>, fingerprint <code>b057856a4887</code> verified; 560 tests pass.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-26 &middot; 15:15Z</span>
       <h3>Document intake goes live and files 15 &mdash; then shows its naming was guessing<span class="kind">LANE LIVE + SCHEMA + DEFECT</span></h3></summary>
       <p><strong>The lane had never filed anything.</strong> Three causes stacked, each hiding the next. <code>DOC_INTAKE_ENABLED</code> was unset, so every run returned on the first line &mdash; an execution log with <em>zero</em> lines, which reads as &ldquo;ran fine&rdquo;. There was also <strong>no trigger</strong> on <code>docIntakeTick</code>; had one existed it would have fired hourly at 0&nbsp;% error rate doing nothing, which is worse than no trigger, because the trigger screen would have looked healthy. Once enabled, the real fault surfaced: the 📎&nbsp;Docs data source was <strong>not shared with the <code>Send Engine</code> Notion integration</strong> &mdash; 404 <code>object_not_found</code> on every row write. The 🎨&nbsp;Artist DB was already shared, proven by <code>docFindArtist_</code> running two lines earlier without throwing. Connection added; the 60-day sweep then <strong>filed 15 documents in 3m16s</strong>, including the three Duuo certificates stuck since 15&ndash;18&nbsp;July.</p>
