@@ -915,8 +915,145 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 .alarmmap .mapkey .kghost{width:1.05rem;height:0;background:transparent;border:none;border-top:3px dashed var(--abad);border-radius:0}
 </style>
 <div class="pipes alarmmap" id="alarmproto">
-<h2>Alarm Automation Protocol — the sorter · one line in, five ways out</h2>
-<p class="hint">How a panel condition becomes an SMS, a ticket, or silence. The lane that was silently broken for six days: until 25 Aug a condition that matched no named list fell off the end of the classifier — no error, no log, no row. The default is now <b>file a ticket</b>, so the only way to silence a condition is to name it. The full four-lane picture (siren, bypass, tamper) lives in pipe&nbsp;6 above — click its hops.</p>
+<h2>Alarm Automation Protocol — four lines · one panel read every 60s</h2>
+<p class="hint">Everything the five alarm panels do without you, as a route map. All four lines run off a single read of the panels every 60 seconds, and all of it is deterministic — it keeps working in a full token outage. Click any station for what it does and why. Companion to pipe&nbsp;6 above, which shows the same lanes in the pipe idiom.</p>
+<div class="buildmap">
+<svg viewBox="0 0 1080 470" role="img" aria-label="Overview map of the four automated alarm lines">
+
+  <!-- ===== LINE 1 · SIREN ===== -->
+  <path d="M85 68 H700" stroke="var(--abad)" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M700 68 Q740 68 748 44 Q756 22 800 22 H1000"
+        stroke="var(--abad)" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+  <path d="M700 68 Q740 68 748 92 Q756 114 800 114 H1000"
+        stroke="var(--atrack)" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+  <text x="20" y="72" class="nm" fill="var(--abad)">1</text>
+
+  <!-- ===== LINE 2 · BYPASS ===== -->
+  <path d="M85 190 H860" stroke="var(--al2)" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <text x="20" y="194" class="nm" fill="var(--al2)">2</text>
+
+  <!-- ===== LINE 3 · TROUBLE ===== -->
+  <path d="M85 300 H860" stroke="var(--al5)" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <text x="20" y="304" class="nm" fill="var(--al5)">3</text>
+
+  <!-- ===== LINE 4 · TAMPER ===== -->
+  <path d="M85 412 H820" stroke="var(--al4)" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M580 412 Q615 412 624 438 Q633 464 651 466"
+        stroke="var(--aok)" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <text x="20" y="416" class="nm" fill="var(--al4)">4</text>
+
+  <!-- interchange: line 3 feeds line 4 -->
+  <path d="M690 300 Q718 300 722 330 L722 384 Q722 412 750 412"
+        stroke="var(--al4)" stroke-width="4" fill="none" stroke-dasharray="1 7"
+        stroke-linecap="round" opacity=".8"/>
+
+  <!-- ================= LINE 1 STATIONS ================= -->
+  <g class="stn" data-d="a_siren" tabindex="0">
+    <circle cx="85" cy="68" r="9" fill="var(--panel)" stroke="var(--abad)" stroke-width="3.5"/>
+    <text x="85" y="45" text-anchor="middle" class="nm">Siren goes off</text>
+  </g>
+  <g class="stn" data-d="a_wait" tabindex="0">
+    <circle cx="255" cy="68" r="8" fill="var(--panel)" stroke="var(--abad)" stroke-width="3.5"/>
+    <text x="255" y="45" text-anchor="middle" class="nm">Let it scream 3 minutes</text>
+    <text x="255" y="27" text-anchor="middle" class="sb">the point is to scare people off</text>
+  </g>
+  <g class="stn" data-d="a_guard" tabindex="0">
+    <circle cx="455" cy="68" r="13" fill="var(--panel)" stroke="var(--abad)" stroke-width="4.5"/>
+    <circle cx="455" cy="68" r="4.5" fill="var(--abad)"/>
+    <text x="455" y="99" text-anchor="middle" class="nm" fill="var(--abad)">Is anyone in there?</text>
+    <text x="455" y="112" text-anchor="middle" class="sb" fill="var(--abad)">THE HANANO FIX · nothing is sent until this passes</text>
+  </g>
+  <g class="stn" data-d="a_cycle" tabindex="0">
+    <circle cx="620" cy="68" r="8" fill="var(--panel)" stroke="var(--abad)" stroke-width="3.5"/>
+    <text x="620" y="45" text-anchor="middle" class="nm">Turn off, turn back on</text>
+  </g>
+  <g class="stn" data-d="a_quiet" tabindex="0">
+    <circle cx="925" cy="114" r="9" fill="var(--atrack)" stroke="var(--atrack)" stroke-width="3.5"/>
+    <text x="1072" y="141" text-anchor="end" class="nm">Quiet again, still armed</text>
+    <text x="1072" y="155" text-anchor="end" class="sb">the normal ending</text>
+  </g>
+  <g class="stn" data-d="a_suppressed" tabindex="0">
+    <rect x="916" y="13" width="18" height="18" rx="4" fill="var(--ayou)" stroke="var(--ayou)" stroke-width="3"/>
+    <text x="1072" y="50" text-anchor="end" class="nm" fill="var(--ayou)">After 2 tries → a person</text>
+    <text x="1072" y="64" text-anchor="end" class="sb" fill="var(--ayou)">something keeps re-triggering it</text>
+  </g>
+
+  <!-- ================= LINE 2 STATIONS ================= -->
+  <g class="stn" data-d="a_sweep" tabindex="0">
+    <circle cx="85" cy="190" r="9" fill="var(--panel)" stroke="var(--al2)" stroke-width="3.5"/>
+    <text x="85" y="167" text-anchor="middle" class="nm">Every 15 minutes</text>
+  </g>
+  <g class="stn" data-d="a_bypassed" tabindex="0">
+    <circle cx="300" cy="190" r="8" fill="var(--panel)" stroke="var(--al2)" stroke-width="3.5"/>
+    <text x="300" y="167" text-anchor="middle" class="nm">A sensor is bypassed</text>
+  </g>
+  <g class="stn" data-d="a_bcycle" tabindex="0">
+    <circle cx="545" cy="190" r="8" fill="var(--panel)" stroke="var(--al2)" stroke-width="3.5"/>
+    <text x="545" y="216" text-anchor="middle" class="nm">Take it off bypass</text>
+    <text x="545" y="229" text-anchor="middle" class="sb">panel takes 9–13 min to admit it worked</text>
+  </g>
+  <g class="stn" data-d="a_bstuck" tabindex="0">
+    <rect x="851" y="181" width="18" height="18" rx="4" fill="var(--ayou)" stroke="var(--ayou)" stroke-width="3"/>
+    <text x="878" y="187" class="nm" fill="var(--ayou)">Twice and still off → a person</text>
+    <text x="878" y="201" class="sb">that usually means the door is open</text>
+  </g>
+
+  <!-- ================= LINE 3 STATIONS ================= -->
+  <g class="stn" data-d="a_says" tabindex="0">
+    <circle cx="85" cy="300" r="9" fill="var(--panel)" stroke="var(--al5)" stroke-width="3.5"/>
+    <text x="85" y="277" text-anchor="middle" class="nm">Panel says something</text>
+  </g>
+  <g class="stn" data-d="a_sorter" tabindex="0">
+    <circle cx="380" cy="300" r="11" fill="var(--panel)" stroke="var(--al5)" stroke-width="4"/>
+    <circle cx="380" cy="300" r="4" fill="var(--al5)"/>
+    <text x="380" y="277" text-anchor="middle" class="nm" fill="var(--al5)">The sorter</text>
+    <text x="380" y="259" text-anchor="middle" class="sb" fill="var(--al5)">five ways out — see the next map</text>
+  </g>
+  <g class="stn" data-d="a_unknown" tabindex="0">
+    <circle cx="690" cy="300" r="9" fill="var(--panel)" stroke="var(--al5)" stroke-width="3.5"/>
+    <text x="690" y="326" text-anchor="middle" class="nm">Never heard of it? Still a ticket</text>
+    <text x="690" y="339" text-anchor="middle" class="sb">this is what was missing for six days</text>
+  </g>
+  <g class="stn" data-d="a_tamperfeed" tabindex="0">
+    <circle cx="855" cy="300" r="7" fill="var(--panel)" stroke="var(--al4)" stroke-width="3"/>
+    <text x="855" y="277" text-anchor="middle" class="nm" fill="var(--al4)">Tamper? → Line 4</text>
+  </g>
+
+  <!-- ================= LINE 4 STATIONS ================= -->
+  <g class="stn" data-d="a_tamper" tabindex="0">
+    <circle cx="85" cy="412" r="9" fill="var(--panel)" stroke="var(--al4)" stroke-width="3.5"/>
+    <text x="85" y="389" text-anchor="middle" class="nm">Panel pulled off the wall</text>
+  </g>
+  <g class="stn" data-d="a_tticket" tabindex="0">
+    <circle cx="300" cy="412" r="8" fill="var(--panel)" stroke="var(--al4)" stroke-width="3.5"/>
+    <text x="300" y="389" text-anchor="middle" class="nm">Ticket, straight away</text>
+    <text x="300" y="371" text-anchor="middle" class="sb">any hour, 3am included</text>
+  </g>
+  <g class="stn" data-d="a_stefan" tabindex="0">
+    <rect x="521" y="403" width="18" height="18" rx="4" fill="var(--ayou)" stroke="var(--ayou)" stroke-width="3"/>
+    <text x="530" y="389" text-anchor="middle" class="nm" fill="var(--ayou)">Text Stefan</text>
+    <text x="530" y="371" text-anchor="middle" class="sb">daytime only · once a day · twice max</text>
+  </g>
+  <g class="stn" data-d="a_tesc" tabindex="0">
+    <rect x="781" y="403" width="18" height="18" rx="4" fill="var(--abad)" stroke="var(--abad)" stroke-width="3"/>
+    <text x="808" y="409" class="nm" fill="var(--abad)">Then you</text>
+    <text x="808" y="423" class="sb" fill="var(--abad)">it's the hardware, not the clip</text>
+  </g>
+  <g class="stn" data-d="a_tclear" tabindex="0">
+    <circle cx="660" cy="466" r="9" fill="var(--panel)" stroke="var(--aok)" stroke-width="3.5"/>
+    <text x="678" y="463" class="nm" fill="var(--aok)">Error disappears → ticket closes itself</text>
+  </g>
+</svg>
+</div>
+<div class="mapkey">
+  <span><i class="kguard"></i>a check that can stop everything</span>
+  <span><i class="km"></i>machine step</span>
+  <span><i class="kh"></i>reaches a person</span>
+  <span><i class="kdead"></i>quiet ending, nobody told</span>
+</div>
+
+<h2>Line 3 in detail — the sorter · one line in, five ways out</h2>
+<p class="hint">The lane that was silently broken for six days. Until 25 Aug a panel condition that matched no named list fell off the end of the classifier — no error, no log, no row. The default is now <b>file a ticket</b>, so the only way to silence a condition is to name it.</p>
 <div class="buildmap">
 <svg viewBox="0 0 1080 520" role="img" aria-label="Detail map of how a panel condition is classified">
 
@@ -1182,7 +1319,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p>The two alarm maps are ported off the standalone artifact and into this page as a named section, <b>Alarm Automation Protocol</b>: the four-line overview and the Line&nbsp;3 sorter detail, every station clickable into the same detail panel everything else here uses. It sits alongside pipe&nbsp;6, which shows the same lanes in the pipe idiom &mdash; the map is for seeing the shape, the pipe for reading the chain. Station keys are namespaced <code>a_*</code> so they cannot collide with the page&rsquo;s existing dictionary.</p>
       <p><strong>Fixed in the same pass:</strong> the detail-panel handler bound only <code>[data-k]</code>, so the <b>35 <code>data-d</code> stations of the Annex Transit map had been inert since it was ported</b> &mdash; they looked clickable and did nothing. Now both attributes bind, and the &ldquo;is there an entry for this?&rdquo; check happens at <em>click</em> time rather than bind time, because later <code>&lt;script&gt;</code> blocks <code>Object.assign</code> more entries onto <code>D</code> after the handler runs &mdash; a bind-time check silently ignores every station defined further down the page. (Caught by testing the ported stations rather than assuming: the first version of this change had exactly that bug.)</p>
       <p><strong>Re-done 15:5xZ after Junyan's screenshot showed it broken:</strong> the first port styled the maps in their own idiom instead of the page's, and shipped two visible defects — <b>Line 2 was completely invisible</b> (the scoped palette never defined <code>--l2</code>, so its track stroked an undefined variable and painted nothing) and labels clipped off the right edge (forced monospace is far wider than the condensed font the coordinates were drawn for). Now restyled to the page's own <code>.buildmap</code> idiom — serif station names, mono subtitles, standard <code>.mapkey</code> — with the palette namespaced <code>--a*</code> so a missing variable cannot silently borrow or lose a color again, and five edge labels re-anchored inside the frame. Verified by measurement: zero unpainted strokes, zero labels outside their box, all 25 stations click, dark palette swaps, no sideways page scroll. The lesson, again: the first check counted stations and clicks but never asked whether the tracks <em>painted</em> — presence is not rendering.</p>
-      <p><strong>Cut back 16:1xZ, Junyan's call:</strong> the four-line overview map is <b>dropped</b> — even restyled, its dense right edge kept labels colliding with markers, and it duplicated what pipe&nbsp;6 already says. The section now carries only the <b>Line&nbsp;3 sorter map</b>, which was the original point; the section hint routes readers to pipe&nbsp;6 for the full four-lane picture. Remaining map passes a real collision check now — every label tested against every other label and marker, not just the frame edge.</p>
+      <p><strong>Dropped 16:1xZ, restored 16:4xZ — an instruction misread.</strong> Junyan wrote <em>&ldquo;this needs to be dropped&rdquo;</em> under a screenshot of the overview map with overlapping labels; the agent read &ldquo;drop the map&rdquo; when the meaning was &ldquo;drop what&rsquo;s broken about it&rdquo; — and deleted the map instead of fixing it. Restored from git with the real fix: a full collision pass over <b>both</b> maps (every label vs every other label <em>and</em> every marker, not just the frame edge) — four serif name/subtitle pairs given clearance, and the two right-edge terminal labels moved <b>below</b> their markers, where the earlier right-alignment &ldquo;fix&rdquo; had slid them straight across the very markers they name. Zero collisions on both maps now. Lesson for the log: an ambiguous &ldquo;this&rdquo; over a screenshot deserves one clarifying question, not a deletion.</p>
       </details>
     </li>
 
