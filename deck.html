@@ -1,0 +1,1325 @@
+<!--
+  THE DECK — source of truth for the claude.ai artifact
+  https://claude.ai/code/artifact/2aabe1e6-99a5-47a8-b7aa-fbf636c6c43c
+
+  This page's data layer is window.claude.mcp (the Notion connector inside
+  claude.ai). Opened from GitHub Pages it shows the "Open inside claude.ai"
+  screen by design — the hosted copy is for versioning, recovery, and reading
+  the code, not for reviewing cards. To ship a change: edit HERE, commit,
+  push, then republish the artifact from this file. (2026-08-26)
+-->
+<meta charset="utf-8">
+<title>The Deck — Dance Annex</title>
+<style>
+  /* Palette: Day Sheet system — same tokens as the FBS Monitor / Desk Messages. */
+  :root{
+    --ink:#f5f4f0; --scrim:#fbfaf7; --scrim-2:#edebe4; --line:#dedbd3;
+    --chalk:#191715; --chalk-dim:#716c64; --chalk-faint:#a09a90;
+    --tungsten:#5b2fd4; --tungsten-soft:rgba(91,47,212,.09);
+    --ok:#2c7a4e; --watch:#b06c00; --crit:#c23a2b;
+    --ok-bg:#e2efe7; --watch-bg:#f6ead6; --crit-bg:#f9e6e2;
+    --live-bg:#eef3ec; --live-line:#bcd4c2;
+    --shadow:0 6px 18px rgba(25,23,21,.07);
+    --shadow-lift:0 14px 38px rgba(25,23,21,.16);
+    --disp:"Avenir Next Condensed","Arial Narrow","Helvetica Neue",sans-serif;
+    --sans:"Avenir Next",Avenir,Seravek,"Segoe UI",Ubuntu,sans-serif;
+    --body:Seravek,"Avenir Next","Segoe UI",Ubuntu,sans-serif;
+    --mono:"SF Mono",ui-monospace,"Cascadia Mono",Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#161412; --scrim:#1e1b18; --scrim-2:#2a2622; --line:#403b34;
+      --chalk:#f4f1ea; --chalk-dim:#beb7ab; --chalk-faint:#948d82;
+      --tungsten:#b598f5; --tungsten-soft:rgba(181,152,245,.18);
+      --ok:#82cda2; --watch:#eab365; --crit:#f08a7b;
+      --ok-bg:#1d3527; --watch-bg:#3d2f12; --crit-bg:#46221c;
+      --live-bg:#20312a; --live-line:#41604e;
+      --shadow:0 8px 24px rgba(0,0,0,.4);
+      --shadow-lift:0 16px 44px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#161412; --scrim:#1e1b18; --scrim-2:#2a2622; --line:#403b34;
+    --chalk:#f4f1ea; --chalk-dim:#beb7ab; --chalk-faint:#948d82;
+    --tungsten:#b598f5; --tungsten-soft:rgba(181,152,245,.18);
+    --ok:#82cda2; --watch:#eab365; --crit:#f08a7b;
+    --ok-bg:#1d3527; --watch-bg:#3d2f12; --crit-bg:#46221c;
+    --live-bg:#20312a; --live-line:#41604e;
+    --shadow:0 8px 24px rgba(0,0,0,.4);
+    --shadow-lift:0 16px 44px rgba(0,0,0,.55);
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--ink);color:var(--chalk);font-family:var(--body);
+       font-size:15.5px;line-height:1.5;-webkit-font-smoothing:antialiased;
+       display:flex;flex-direction:column;overflow:hidden}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+  header{flex:0 0 auto;background:var(--ink);border-bottom:1px solid var(--line);
+         padding:10px 18px 8px;display:flex;align-items:center;gap:16px}
+  .brandcol{display:flex;flex-direction:column;gap:1px}
+  .brand{font-family:var(--sans);font-weight:600;letter-spacing:.24em;text-transform:uppercase;
+         font-size:10px;color:var(--chalk-dim)}
+  h1{font-family:var(--disp);font-weight:800;font-size:clamp(18px,2.4vw,24px);margin:0;
+     letter-spacing:.02em;text-transform:uppercase;line-height:1}
+  h1 em{font-style:normal;color:var(--tungsten)}
+  .counter{margin-left:auto;font-size:13px;color:var(--chalk-dim);font-variant-numeric:tabular-nums;text-align:right}
+  .counter b{color:var(--chalk)}
+  .datastamp{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-weight:600;
+             font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ok)}
+  .datastamp .dot{width:8px;height:8px;border-radius:50%;background:var(--tungsten);
+                  animation:pulse 2.4s ease-in-out infinite}
+  .datastamp.stale{color:var(--crit)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+  @media (prefers-reduced-motion: reduce){ .datastamp .dot{animation:none} }
+
+  .dots{flex:0 0 auto;display:flex;gap:5px;padding:10px 18px 4px;max-width:560px;margin:0 auto;width:100%}
+  .dots i{height:3px;border-radius:2px;flex:1;background:var(--line);min-width:6px}
+  .dots i.done{background:var(--ok)}
+  .dots i.on{background:var(--tungsten)}
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;position:relative;max-width:560px;width:100%;margin:0 auto;
+         padding:10px 16px 12px;display:flex;min-height:0}
+  .card{position:absolute;inset:10px 16px auto;max-height:calc(100% - 22px);background:var(--scrim);border:1px solid var(--line);
+        border-left:5px solid var(--watch);border-radius:14px;box-shadow:var(--shadow-lift);
+        display:flex;flex-direction:column;min-height:0;overflow:hidden;
+        touch-action:pan-y;will-change:transform}
+  .card.behind1{transform:scale(.96) translateY(14px);box-shadow:var(--shadow);z-index:1;pointer-events:none}
+  .card.behind2{transform:scale(.92) translateY(26px);box-shadow:none;opacity:.7;z-index:0;pointer-events:none}
+  .card.top{z-index:2}
+  .card.c-error{border-left-color:var(--crit)}
+  .card.c-closing{border-left-color:var(--crit)}
+  @media (prefers-reduced-motion: no-preference){
+    .card.top{transition:transform .18s ease-out}
+    .card.leaving{transition:transform .28s ease-in, opacity .28s ease-in;opacity:0}
+  }
+  .card.leaving{pointer-events:none}
+
+  .cardhead{flex:0 0 auto;padding:14px 16px 10px;border-bottom:1px dashed var(--line)}
+  .who{font-family:var(--sans);font-weight:700;font-size:18px;display:flex;align-items:center;
+       gap:8px;flex-wrap:wrap}
+  .sub{margin-top:4px;font-size:12.5px;color:var(--chalk-dim);display:flex;gap:6px;flex-wrap:wrap;align-items:baseline}
+  .sub > * + *::before{content:"·";color:var(--chalk-faint);margin-right:6px}
+
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-family:var(--sans);
+        font-weight:700;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+  .p-wa{color:var(--ok);background:var(--ok-bg)}
+  .p-ig{color:var(--tungsten);background:var(--tungsten-soft)}
+  .p-sms{color:var(--watch);background:var(--watch-bg)}
+  .p-email{color:var(--ok);background:var(--ok-bg)}
+  .p-error{color:var(--crit);background:var(--crit-bg)}
+  .p-window{color:var(--ok);background:var(--live-bg);border:1px solid var(--live-line)}
+  .p-window.closing{color:var(--crit);background:var(--crit-bg);border-color:transparent}
+
+  .threadwrap{position:relative;flex:0 1 auto;display:flex;min-height:0}
+  .threadpane{flex:1 1 auto;overflow-y:auto;padding:4px 16px 8px;min-height:0}
+  /* history scrolls under both edges; fades say which side holds more */
+  .threadwrap::before,.threadwrap::after{content:"";position:absolute;left:0;right:0;height:26px;
+      pointer-events:none;opacity:0;transition:opacity .15s;z-index:1}
+  .threadwrap::before{top:0;background:linear-gradient(to bottom,var(--scrim),transparent)}
+  .threadwrap::after{bottom:0;background:linear-gradient(to top,var(--scrim),transparent)}
+  .threadwrap.clip-top::before{opacity:1}
+  .threadwrap.clip-bottom::after{opacity:1}
+  .threadwrap .scrollrail .thumb{background:var(--chalk-faint)}
+  .threadwrap.clip-top .scrollrail,.threadwrap.clip-bottom .scrollrail{opacity:1}
+  .daymark{text-align:center;font-family:var(--sans);font-weight:700;font-size:10.5px;
+           letter-spacing:.1em;text-transform:uppercase;color:var(--chalk-faint);margin:12px 0 2px}
+  .msg{max-width:82%;margin:8px 0}
+  .m-in{margin-right:auto} .m-out{margin-left:auto}
+  .bubble{padding:8px 12px;border-radius:12px;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+  .m-in .bubble{background:var(--scrim-2);border:1px solid var(--line);border-bottom-left-radius:4px}
+  .m-out .bubble{background:var(--tungsten-soft);border:1px solid transparent;border-bottom-right-radius:4px}
+  .m-meta{font-size:10.5px;color:var(--chalk-faint);margin-top:2px;padding:0 4px}
+  .m-in .m-meta{text-align:left} .m-out .m-meta{text-align:right}
+  .startnote{font-size:13px;color:var(--chalk-dim);background:var(--scrim-2);border:1px dashed var(--line);
+             border-radius:8px;padding:8px 12px;margin:10px 0 4px}
+  .startnote b{color:var(--chalk)}
+
+  /* ── deck 2: the case file (Junyan, 2026-08-26) — header mirrors deck 1
+        (who-sized title, chips, no banner); body is three labeled exhibits ── */
+  .card.c-suggest{border-left-color:var(--tungsten)}
+  .ch-sugg{color:var(--tungsten);background:var(--tungsten-soft)}
+  .sug-body{flex:1 1 auto;overflow-y:auto;padding:10px 16px 14px;font-size:14.5px;line-height:1.5;min-height:0}
+  .sug-note{margin-top:10px;font-size:12.5px;color:var(--chalk-dim)}
+  .sec{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.11em;
+       text-transform:uppercase;color:var(--chalk-faint);margin:14px 0 6px}
+  .sug-body .sec:first-child{margin-top:2px}
+  .sb-in{background:var(--scrim-2);border:1px solid var(--line);border-radius:12px;
+         border-bottom-left-radius:4px;padding:8px 12px;font-size:14px;max-width:88%;white-space:pre-wrap}
+  .sb-out{background:var(--tungsten-soft);border-radius:12px;border-bottom-right-radius:4px;
+          padding:8px 12px;font-size:14px;max-width:88%;margin-left:auto;white-space:pre-wrap}
+  .sb-meta{font-size:10.5px;color:var(--chalk-faint);margin:2px 0 0 4px}
+  .sug-body del{background:var(--crit-bg);color:var(--crit);text-decoration:line-through;
+                text-decoration-thickness:1px;border-radius:3px;padding:0 2px}
+  .sug-body ins{background:var(--ok-bg);color:var(--ok);text-decoration:none;border-radius:3px;padding:0 2px}
+  .proposal{border:1.5px solid var(--ok);background:var(--ok-bg);border-radius:10px;
+            padding:10px 13px;font-size:14.5px;white-space:pre-wrap}
+  .proposal .where{font-size:11.5px;color:var(--chalk-dim);margin-top:6px;font-family:var(--mono)}
+
+  .draftpane{flex:0 0 auto;border-top:1.5px dashed var(--watch);background:var(--scrim);
+             padding:10px 16px 12px;max-height:46%;display:flex;flex-direction:column;min-height:0}
+  .card.c-error .draftpane{border-top-color:var(--crit)}
+  .d-head{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-family:var(--sans);font-weight:700;
+          font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--chalk-dim);margin-bottom:6px}
+  .d-err{color:var(--crit);font-family:var(--body);font-weight:400;text-transform:none;letter-spacing:0;font-size:12.5px}
+  .drafttext{overflow-y:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14.5px;
+             border:1px solid transparent;border-radius:8px;padding:2px 2px;min-height:0}
+  .draftpane textarea{width:100%;flex:1 1 auto;min-height:96px;resize:none;background:var(--ink);color:var(--chalk);
+                  border:1px solid var(--line);border-radius:8px;padding:10px 12px;
+                  font-family:var(--body);font-size:14.5px;line-height:1.5}
+  .draftpane textarea:focus-visible{outline:2px solid var(--tungsten);outline-offset:-1px}
+  /* A draft that scrolls with no edge treatment reads as a SHORT draft — which is how a
+     billing line hid under a "how did everything go?" opener (Junyan, 2026-08-25). The
+     box now grows to the text, and when it still cannot, it says so in words. */
+  .draftwrap{position:relative;flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+  .draftwrap .tabox{position:relative;flex:1 1 auto;display:flex;min-height:0}
+  .draftwrap .tabox::after{content:"";position:absolute;left:1px;right:1px;bottom:0;height:34px;border-radius:0 0 8px 8px;
+                    background:linear-gradient(to top,var(--ink),transparent);opacity:0;transition:opacity .15s;pointer-events:none}
+  .draftwrap.clipped .tabox::after{opacity:1}
+  /* Overflow is signalled WITHOUT words (Junyan, 2026-08-25): a slim amber thumb
+     on the right edge — always visible while text is clipped, tracking position —
+     plus the bottom fade and the lit border. macOS overlay scrollbars hide
+     themselves, so the thumb is ours, not the native one. */
+  .scrollrail{position:absolute;top:6px;bottom:6px;right:3px;width:4px;border-radius:2px;
+              background:color-mix(in srgb, var(--line) 55%, transparent);opacity:0;
+              transition:opacity .15s;pointer-events:none}
+  .scrollrail .thumb{position:absolute;left:0;right:0;border-radius:2px;background:var(--watch)}
+  .draftwrap.clipped .scrollrail{opacity:1}
+  .draftwrap.clipped textarea{border-color:var(--watch)}
+
+  /* ── the context strip: what this card IS, in words, before any agent prose ── */
+  .ctx{margin-top:9px;background:var(--scrim-2);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+  .card.c-error .ctx{background:var(--crit-bg);border-color:transparent}
+  .ctx-gist{font-size:14px;line-height:1.45;color:var(--chalk)}
+  .ctx-meta{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:baseline;
+            font-size:11.5px;color:var(--chalk-dim)}
+  .ctx-meta > * + *::before{content:"·";color:var(--chalk-faint);margin-right:6px}
+  .ctx-why{margin-top:6px;font-size:11.5px;color:var(--tungsten);background:none;border:0;padding:0;
+           cursor:pointer;font-family:var(--sans);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+  .ctx-full{margin-top:6px;font-size:12.5px;color:var(--chalk-dim);line-height:1.45;
+            max-height:150px;overflow-y:auto;white-space:pre-wrap}
+
+  /* ── identity line: channel + address FUSED into one chip (the Plain envelope
+        pattern via Mobbin, Junyan 2026-08-25); state chips after; no links ── */
+  .idline{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;
+        font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.05em;
+        text-transform:uppercase;white-space:nowrap}
+  .chip .addr{font-family:var(--mono);font-weight:500;font-size:11.5px;letter-spacing:0;text-transform:none}
+  .ch-sms{color:var(--watch);background:var(--watch-bg)}
+  .ch-email,.ch-wa{color:var(--ok);background:var(--ok-bg)}
+  .ch-ig{color:var(--tungsten);background:var(--tungsten-soft)}
+  .ch-code{color:var(--chalk-dim);background:var(--scrim-2)}
+  .ch-err{color:var(--crit);background:var(--crit-bg)}
+  .ch-win{color:var(--ok);background:var(--live-bg);border:1px solid var(--live-line)}
+  .ch-win.closing{color:var(--crit);background:var(--crit-bg);border:0}
+  .gist{margin-top:9px;font-size:14.5px;line-height:1.45}
+  .byline{margin-top:3px;font-size:11.5px;color:var(--chalk-faint)}
+  .who a{color:inherit;text-decoration:none}
+  .subjrow{font-size:12.5px;color:var(--chalk-dim);margin-bottom:6px}
+  .subjrow .mono{font-size:12px;color:var(--chalk)}
+  .preflight{margin-top:8px;border:1px solid var(--crit);border-radius:10px;padding:8px 12px;background:var(--scrim)}
+  .pf-title{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:.1em;
+            text-transform:uppercase;color:var(--crit);margin-bottom:4px}
+  .pf-row{display:flex;gap:8px;align-items:center;font-size:12.5px;padding:2px 0;flex-wrap:wrap}
+  .pf-row .lbl{color:var(--chalk-dim);min-width:86px}
+  .pf-row .val{font-family:var(--mono);font-size:12px}
+  .pf-row.ok .mark{color:var(--ok)} .pf-row.miss .mark{color:var(--crit);font-weight:700}
+  .pf-row input{flex:1 1 140px;min-width:120px;background:var(--ink);color:var(--chalk);
+                border:1px solid var(--crit);border-radius:6px;padding:4px 8px;
+                font-family:var(--mono);font-size:12px}
+  .pf-row input:focus-visible{outline:2px solid var(--tungsten);outline-offset:-1px}
+  .pf-save{background:var(--tungsten);color:#fff;border:0;border-radius:6px;padding:4px 12px;
+           cursor:pointer;font-family:var(--sans);font-weight:700;font-size:11px}
+  .pf-save[disabled]{opacity:.5;cursor:default}
+  .pf-note{font-size:11.5px;color:var(--chalk-dim);margin-top:3px}
+  .deadnote{background:var(--crit-bg);color:var(--chalk);border-radius:8px;padding:8px 12px;
+            font-size:12.5px;line-height:1.45;margin-bottom:8px}
+  .deadnote b{font-weight:700}
+  .whyline{margin-top:7px;color:var(--chalk-dim);font-size:12px;overflow:hidden;display:-webkit-box;
+           -webkit-line-clamp:2;-webkit-box-orient:vertical;cursor:pointer}
+  .whyline.full{display:block;max-height:110px;overflow-y:auto}
+  .whyline b{color:var(--chalk)}
+
+  .verbs{flex:0 0 auto;max-width:560px;width:100%;margin:0 auto;padding:10px 16px
+         calc(14px + env(safe-area-inset-bottom));display:flex;gap:10px;align-items:center}
+  .btn{font-family:var(--sans);font-weight:700;font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;
+       border-radius:10px;padding:12px 10px;cursor:pointer;border:1px solid var(--line);
+       background:var(--scrim);color:var(--chalk);flex:1;text-align:center}
+  .btn small{display:block;font-weight:400;font-size:10px;color:var(--chalk-faint);letter-spacing:.02em;text-transform:none;margin-top:1px}
+  .btn:hover{background:var(--scrim-2)}
+  .btn:focus-visible{outline:2px solid var(--tungsten);outline-offset:1px}
+  .btn:disabled{opacity:.4;cursor:default}
+  .btn-send{background:var(--tungsten);border-color:var(--tungsten);color:#fff}
+  :root[data-theme="dark"] .btn-send{color:#161412}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .btn-send{color:#161412} }
+  .btn-send:hover{filter:brightness(1.08);background:var(--tungsten)}
+  .btn-send small{color:inherit;opacity:.75}
+  .btn-reject{color:var(--crit)}
+  .ticketlink{color:var(--tungsten);font-weight:700}
+
+  /* reject reason */
+  .rejectrow{display:flex;flex-direction:column;gap:8px;width:100%}
+  .rejectrow .lbl{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.08em;
+                text-transform:uppercase;color:var(--crit)}
+  .rejectrow textarea{width:100%;min-height:64px;resize:vertical;background:var(--ink);color:var(--chalk);
+        border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-family:var(--body);font-size:14px}
+  .rejectrow textarea:focus-visible{outline:2px solid var(--crit);outline-offset:-1px}
+  .rejectbtns{display:flex;gap:10px}
+  .rejectbtns .btn{flex:1}
+
+  /* toasts */
+  .toasts{position:fixed;left:50%;transform:translateX(-50%);
+          bottom:calc(84px + env(safe-area-inset-bottom));z-index:50;display:flex;
+          flex-direction:column;gap:8px;width:min(92vw,460px)}
+  .toast{background:var(--chalk);color:var(--ink);border-radius:10px;padding:10px 14px;font-size:13.5px;
+         display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lift)}
+  .toast .grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .toast button{background:none;border:0;color:var(--tungsten);font-weight:700;font-family:var(--sans);
+                font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:4px 6px}
+  :root[data-theme="dark"] .toast{background:#f4f1ea;color:#161412}
+  .toast.bad{background:var(--crit);color:#fff}
+  .toast.bad button{color:#fff;text-decoration:underline}
+
+  .state{margin:auto;text-align:center;color:var(--chalk-dim);font-size:14.5px;padding:24px;max-width:400px}
+  .state b{display:block;font-family:var(--disp);font-weight:800;text-transform:uppercase;letter-spacing:.03em;
+           font-size:26px;color:var(--chalk);margin-bottom:6px}
+  .state .big{font-size:44px;margin-bottom:10px}
+  .state .fix{display:block;margin-top:8px;font-size:13px}
+  .skeleton{margin:auto;width:min(80vw,380px);height:50vh;border-radius:14px;
+            background:var(--scrim);border:1px solid var(--line)}
+  @media (prefers-reduced-motion: no-preference){
+    .skeleton{animation:sk 1.2s ease-in-out infinite alternate}
+    @keyframes sk{from{opacity:.5}to{opacity:1}}
+  }
+  .keyhint{flex:0 0 auto;text-align:center;font-size:11px;color:var(--chalk-faint);padding-bottom:8px}
+  @media (max-width:700px){ .keyhint{display:none} }
+</style>
+
+<header>
+  <div class="brandcol">
+    <span class="brand">Dance Annex</span>
+    <h1>The <em>Deck</em></h1>
+  </div>
+  <div class="counter" id="counter">
+    <span class="datastamp" id="stamp"><span class="dot"></span><span id="stamp-text">connecting</span></span>
+  </div>
+</header>
+<div class="dots" id="dots"></div>
+<div class="stage" id="stage"><div class="skeleton"></div></div>
+<div class="verbs" id="verbs"></div>
+<div class="keyhint" id="keyhint"></div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var SERVER = "Notion";
+  var QUERY_TOOL = "notion-query-data-sources";
+  var FETCH_TOOL = "notion-fetch";
+  var UPDATE_TOOL = "notion-update-page";
+  var INBOUND = "collection://89fabb66-6cf4-4da5-920d-b379ccb7cc8f";
+  var QUEUE = "collection://df37abce-2222-4e68-8452-9457a4de32df";
+  var CORR = "collection://defec0fd-e817-4191-8a50-b69ad3e72b59";
+  var ARTISTS = "collection://3cfb93cb-55f9-46a4-bde8-9b7023797d4b";
+  var SWEEP = "collection://849ebf67-041f-4912-9972-7ef7381199e7";
+  var UNDO_SECONDS = 5;
+
+  var inboundQuery = { data: { data_source_urls: [INBOUND], query:
+    'SELECT url, "Channel", "Sender", "Sender Name", "Body", "Artist", ' +
+    '"date:Received:start" AS at, "Processed" FROM "' + INBOUND + '" ' +
+    'ORDER BY datetime("date:Received:start") DESC LIMIT 100' } };
+
+  var queueQuery = { data: { data_source_urls: [QUEUE], query:
+    'SELECT url, "Message Code", "Channel", "Status", "Template", "Message Body", ' +
+    '"Studio", "Raised by", "Reasoning", "Artist", "Reply To", "Dispatch Receipt", ' +
+    // Email Subject + Source Email are PREFLIGHT INPUTS — omitting them made every
+    // email card report a missing subject and skipped the Invariant J check
+    // entirely (Sol R. / Peerspace, 2026-08-26: the row had both, correctly set).
+    '"Email Subject", "Source Email", ' +
+    '"Customer Care Ticket", "Sales Ticket", ' +
+    '"date:Send After:start" AS sendAfter, "date:Sent At:start" AS sentAt, "Created" ' +
+    'FROM "' + QUEUE + '" ' +
+    "WHERE \"Status\" IN ('Pending Review','Error') " +
+    "OR datetime(\"date:Sent At:start\") >= datetime('now','-7 days') " +
+    // Reviewable rows FIRST, always. Without this ordering the LIMIT crowds
+    // them out: 330 Sent rows landed in 14 days and the deck read as empty
+    // while 9 drafts waited (2026-08-14).
+    "ORDER BY CASE WHEN \"Status\" IN ('Pending Review','Error') THEN 0 ELSE 1 END, " +
+    'datetime("Created") DESC LIMIT 250' } };
+
+  var corrQuery = { data: { data_source_urls: [CORR], query:
+    'SELECT url, "Subject", "Medium", "Direction", substr("Content",1,700) AS body, "Artist", ' +
+    '"date:Date & Time:start" AS at FROM "' + CORR + '" ' +
+    "WHERE datetime(\"date:Date & Time:start\") >= datetime('now','-14 days') " +
+    'ORDER BY datetime("date:Date & Time:start") DESC LIMIT 400' } };
+
+  var sweepQuery = { data: { data_source_urls: [SWEEP], query:
+    'SELECT url, "Feedback", "Type", "Status", "Causing Job", "What the sweep did", "Logged" ' +
+    'FROM "' + SWEEP + '" ' +
+    "WHERE \"Status\" = 'New' AND \"Type\" IN ('HTR suggestion','HTR proposal') " +
+    'ORDER BY datetime("Logged") ASC LIMIT 50' } };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var state = {
+    inbound: null, queue: null, corr: null, sweep: null, names: {}, contacts: {}, sugContent: {}, storedAt: null, fatal: null,
+    deck: null,        // ordered array of card objects, built once per session refresh
+    idx: 0,            // current card position
+    total: 0,          // session length for the progress bar
+    decided: {},       // pageUrl -> "sent"|"rejected"|"saved" — keeps refreshes from resurrecting
+    skipped: {},       // pageUrl -> true this pass
+    rejecting: false, busy: false, edits: {},
+    pendingSends: {},  // pageUrl -> {timer, deadline, props, toastEl}
+  };
+
+  // ---------- helpers ----------
+  function parseTs(s) { if (!s) return null; var d = new Date(String(s).replace(" ", "T")); return isNaN(d) ? null : d; }
+  function clock(d) { return d ? d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : ""; }
+  function dayOf(d) {
+    if (!d) return "";
+    var t = new Date(); var y = new Date(); y.setDate(t.getDate() - 1);
+    if (d.toDateString() === t.toDateString()) return "Today";
+    if (d.toDateString() === y.toDateString()) return "Yesterday";
+    return d.toLocaleDateString([], { month: "short", day: "numeric" });
+  }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function pageIdFrom(url) {
+    var seg = String(url || "").split("?")[0].split("/").pop() || "";
+    var m = seg.match(/[0-9a-f]{32}$/i);
+    return m ? m[0] : null;
+  }
+  function notionHref(url) {
+    var id = pageIdFrom(url);
+    return id ? "https://www.notion.so/" + id : String(url || "#");
+  }
+  function chPill(c) {
+    var map = { WhatsApp: "p-wa", Instagram: "p-ig", SMS: "p-sms", Email: "p-email", Giggster: "p-email" };
+    return '<span class="pill ' + (map[c] || "p-sms") + '">' + esc(c || "?") + "</span>";
+  }
+  function artistUrlOf(raw) {
+    try { var v = JSON.parse(raw || "null"); if (Array.isArray(v)) return v[0] || null; return v || null; }
+    catch (e) { return raw || null; }
+  }
+  function cleanBody(text, medium) {
+    var t = String(text || "").trim();
+    if (!t) return "(Image)";
+    if (t.indexOf("@media only screen") >= 0 || /{[^}]*!important/.test(t.slice(0, 300)))
+      return "[" + (medium || "platform") + " email — open the row in Notion for the original]";
+    // Emails arrive with signature blocks, quoted reply chains and double-spaced
+    // paragraphs that bury the actual message on a phone. Trim to the words.
+    if (/email|peerspace|tagvenue|giggster|skedda/i.test(medium || "")) {
+      t = t.replace(/\r/g, "");
+      var sig = t.search(/\n--\s*\n/);          // "-- " signature delimiter
+      if (sig > 40) t = t.slice(0, sig);
+      var q = t.search(/\nOn .{5,80} wrote:\s*\n/); // quoted reply chain
+      if (q > 40) t = t.slice(0, q);
+      t = t.split("\n").map(function (l) { return l.replace(/\s+$/, ""); }).join("\n")
+           .replace(/\n{3,}/g, "\n\n")
+           .trim();
+    }
+    return t;
+  }
+  function normKey(s) { return String(s || "").toLowerCase().replace(/\s+/g, " ").trim().slice(0, 90); }
+
+  // ---------- deck assembly ----------
+  function buildDeck() {
+    // Gather thread events per person (artist url, else sender), same merge the
+    // Desk Messages board uses, then attach one card per reviewable draft.
+    var convs = {};
+    function conv(k) {
+      if (!convs[k]) convs[k] = { key: k, artistUrl: null, senders: {}, events: [], drafts: [] };
+      return convs[k];
+    }
+    function keyFor(artist, sender) { return artist || (sender ? "s:" + sender : null); }
+
+    (state.corr || []).forEach(function (r) {
+      var a = artistUrlOf(r.Artist); var k = keyFor(a, r.Subject);
+      if (!k) return; var c = conv(k);
+      if (a) c.artistUrl = a;
+      c.events.push({ dir: r.Direction === "→ Us" ? "in" : "out", ts: parseTs(r.at),
+        body: cleanBody(r.body, r.Medium), medium: r.Medium });
+    });
+    (state.inbound || []).forEach(function (r) {
+      var a = artistUrlOf(r.Artist); var k = keyFor(a, r.Sender);
+      if (!k) return; var c = conv(k);
+      if (a) c.artistUrl = a;
+      c.senders[r.Sender] = r["Sender Name"] || null;
+      c.events.push({ dir: "in", ts: parseTs(r.at), body: r.Body || "(Image)", medium: r.Channel });
+    });
+    (state.queue || []).forEach(function (r) {
+      var a = artistUrlOf(r.Artist); var k = keyFor(a, r["Reply To"]) || "q:" + r.url;
+      var c = conv(k);
+      if (a) c.artistUrl = a;
+      if (r.Status === "Sent") {
+        c.events.push({ dir: "out", ts: parseTs(r.sentAt) || parseTs(r.Created),
+          body: r["Message Body"] || (r.Template ? "template: " + r.Template : "(template)"), medium: r.Channel });
+      } else if (r.Status === "Pending Review" || r.Status === "Error") {
+        c.drafts.push(r);
+      }
+    });
+
+    // merge sender-keyed into artist-keyed
+    var bySender = {};
+    Object.keys(convs).forEach(function (k) {
+      var c = convs[k];
+      if (c.artistUrl) Object.keys(c.senders).forEach(function (s) { bySender[s] = k; });
+    });
+    Object.keys(convs).forEach(function (k) {
+      if (k.slice(0, 2) !== "s:") return;
+      var t = bySender[k.slice(2)];
+      if (t && t !== k) {
+        convs[t].events = convs[t].events.concat(convs[k].events);
+        convs[t].drafts = convs[t].drafts.concat(convs[k].drafts);
+        Object.assign(convs[t].senders, convs[k].senders);
+        delete convs[k];
+      }
+    });
+
+    var cards = [];
+    Object.keys(convs).forEach(function (k) {
+      var c = convs[k];
+      if (!c.drafts.length) return;
+      c.events.sort(function (a, b) { return (a.ts || 0) - (b.ts || 0); });
+      var kept = [];
+      c.events.forEach(function (e) {
+        var dup = kept.some(function (p) {
+          return p.dir === e.dir && normKey(p.body) === normKey(e.body) &&
+            p.ts && e.ts && Math.abs(p.ts - e.ts) < 3600000;
+        });
+        if (!dup) kept.push(e);
+      });
+      c.events = kept.slice(-20);
+
+      var lastIn = null;
+      kept.forEach(function (e) { if (e.dir === "in" && e.ts) lastIn = e.ts; });
+
+      c.drafts.forEach(function (d) {
+        if (state.decided[d.url]) return;
+        var meta = d.Channel === "WhatsApp" || d.Channel === "Instagram";
+        var windowHours = meta && lastIn ? 24 - (Date.now() - lastIn.getTime()) / 3600000 : null;
+        if (windowHours != null && windowHours <= 0) windowHours = 0;
+        cards.push({
+          row: d, url: d.url, conv: c,
+          isError: d.Status === "Error",
+          windowHours: windowHours,
+          created: parseTs(d.Created),
+          editedBody: d["Message Body"] || "",
+        });
+      });
+    });
+
+    cards.sort(function (a, b) {
+      // A closed window disables Send — the card is a dead end that can only be
+      // rejected or routed another way. Those sort LAST so the deck opens on
+      // work you can actually clear. (2026-08-14: a three-day-old closed-window
+      // card sat at position 1 of 9 with its only live verb being Reject.)
+      var aDead = a.windowHours != null && a.windowHours <= 0;
+      var bDead = b.windowHours != null && b.windowHours <= 0;
+      if (aDead !== bDead) return aDead ? 1 : -1;
+      // errors first, then closing windows, then oldest drafts
+      if (a.isError !== b.isError) return a.isError ? -1 : 1;
+      var aw = a.windowHours == null ? 99 : a.windowHours;
+      var bw = b.windowHours == null ? 99 : b.windowHours;
+      if (Math.floor(aw) !== Math.floor(bw)) return aw - bw;
+      return (a.created || 0) - (b.created || 0);
+    });
+    return cards;
+  }
+
+  function displayName(card) {
+    var c = card.conv;
+    if (c.artistUrl && state.names[c.artistUrl])
+      return state.names[c.artistUrl].replace(/\s*\[[^\]]*\]\s*$/, "");
+    var senders = Object.keys(c.senders);
+    for (var i = 0; i < senders.length; i++) if (c.senders[senders[i]]) return c.senders[senders[i]];
+    var code = card.row["Message Code"] || "";
+    var m = code.match(/—\s*([A-Z][\w'.-]+(?:\s+[A-Z][\w'.-]+)*)/);
+    if (m) return m[1];
+    if (card.row["Reply To"]) return card.row["Reply To"];
+    if (senders.length) return senders[0];
+    return "Unknown";
+  }
+
+  // ---------- rendering ----------
+  // ---------- deck 2: desk improvements ----------
+  // When every reply is decided, the HTR recommendations the agents have filed
+  // (Sweep Feedback rows, Type = HTR suggestion / HTR proposal, Status = New)
+  // surface as their own deck. Only human hands change canned wording, so the
+  // verbs here are about the ROW: mark it applied once you have made the edit
+  // in How to Respond, or decline it with a reason. Neither touches an HTR row.
+  function suggestionCards() {
+    return (state.sweep || []).filter(function (r) {
+      return !state.decided[r.url] && !state.skipped[r.url];
+    });
+  }
+
+  // Case-file sections come from the row's PAGE CONTENT under a filing
+  // convention (canon, 2026-08-26): "## They said" / "## We sent" / "## Proposed",
+  // optional "Where:" line inside Proposed, ~~strike~~ / **insert** inside We sent.
+  // Rows filed before the convention fall back to the title-only card.
+  function fetchSugContent(url) {
+    if (state.sugContent[url] !== undefined) return;
+    state.sugContent[url] = null; // in flight
+    MCP.callTool(SERVER, FETCH_TOOL, { id: url }, { cache: { staleTime: 300000 } })
+      .then(function (res) {
+        var text = res && res.payload && (res.payload.text || res.payload.content) || "";
+        var m = String(text).match(/<content>([\s\S]*?)<\/content>/);
+        var body = m ? m[1] : String(text);
+        function sect(names) {
+          var re = new RegExp("^#{2,3}\\s*(?:" + names + ")\\s*$([\\s\\S]*?)(?=^#{2,3}\\s|\\Z)", "im");
+          var hit = body.match(re);
+          return hit ? hit[1].trim() : null;
+        }
+        var parsed = {
+          said: sect("they said|what they said"),
+          sent: sect("we sent|we did|what we (?:sent|did)"),
+          proposed: sect("proposed|proposal|suggested change[^\\n]*")
+        };
+        state.sugContent[url] = (parsed.said || parsed.sent || parsed.proposed) ? parsed : { raw: true };
+        render();
+      })
+      .catch(function () { state.sugContent[url] = { raw: true }; render(); });
+  }
+
+  function sugMarkup(txt) {
+    // minimal, deliberate: escape first, then strike/insert markers only
+    return esc(txt)
+      .replace(/~~([^~]+)~~/g, "<del>$1</del>")
+      .replace(/\*\*([^*]+)\*\*/g, "<ins>$1</ins>");
+  }
+
+  function renderSuggestion(r) {
+    fetchSugContent(r.url);
+    var c = state.sugContent[r.url];
+    var head = '<div class="cardhead"><div class="who"><a href="' + esc(notionHref(r.url)) +
+      '" target="_blank" rel="noopener">' + esc(r.Feedback || "(untitled)") + "</a></div>" +
+      '<div class="idline"><span class="chip ch-sugg">Deck 2 \u00b7 ' + esc(r.Type || "suggestion") + "</span></div></div>";
+
+    var body;
+    if (c && !c.raw) {
+      body = "";
+      if (c.said) body += '<div class="sec">They said</div><div class="sb-in">' + sugMarkup(c.said) + "</div>";
+      if (c.sent) body += '<div class="sec">We sent</div><div class="sb-out">' + sugMarkup(c.sent) + "</div>";
+      if (c.proposed) {
+        var prop = c.proposed, where = "";
+        var wm = prop.match(/^Where:\s*(.+)$/im);
+        if (wm) { where = wm[1].trim(); prop = prop.replace(wm[0], "").trim(); }
+        body += '<div class="sec">Proposed</div><div class="proposal">' + sugMarkup(prop) +
+          (where ? '<div class="where">\u2192 ' + esc(where) + "</div>" : "") + "</div>";
+      }
+    } else {
+      body = '<div class="sug-note">' + (c === null || c === undefined
+        ? "reading the write-up\u2026"
+        : "This row predates the case-file filing format \u2014 the full write-up is on the Notion page (tap the title).") + "</div>";
+    }
+    return '<div class="card top c-suggest" id="topcard">' + head +
+      '<div class="sug-body">' + body + "</div></div>";
+  }
+
+  function renderSuggestVerbs() {
+    if (state.busy) return '<button class="btn" disabled>working…</button>';
+    if (state.rejecting) {
+      return '<div class="rejectrow"><span class="lbl">Why decline?</span>' +
+        '<textarea id="rejectbox" placeholder="Goes on the row so the agents stop re-suggesting it. Optional."></textarea>' +
+        '<div class="rejectbtns"><button class="btn" data-act="cancelreject">Back</button>' +
+        '<button class="btn btn-reject" data-act="declinesug">Decline</button></div></div>';
+    }
+    return '<button class="btn btn-reject" data-act="reject">Decline</button>' +
+      '<button class="btn" data-act="skipsug">Skip</button>' +
+      '<button class="btn btn-send" data-act="appliedsug">Mark applied</button>';
+  }
+
+  function decideSuggestion(r, applied, why) {
+    var ts = new Date().toISOString().slice(0, 16).replace("T", " ");
+    var stamp = applied
+      ? "[Marked applied in the Deck — " + ts + "]"
+      : "[Declined in the Deck" + (why ? ": " + why : "") + " — " + ts + "]";
+    var props = { "Status": "Applied",
+      "What the sweep did": ((r["What the sweep did"] || "") + "\n" + stamp).trim() };
+    state.decided[r.url] = applied ? "applied" : "declined";
+    state.rejecting = false;
+    render();
+    writeRow({ url: r.url, row: r }, props, function (ok, msg) {
+      if (ok) toast(applied ? "Marked applied." : "Declined — it will stop resurfacing.", { ttl: 3000 });
+      else {
+        delete state.decided[r.url];
+        toast("Update failed: " + msg + " — card is back.", { bad: true, ttl: 8000 });
+        render();
+      }
+    });
+  }
+
+  function currentCards() {
+    if (!state.deck) return [];
+    return state.deck.filter(function (c) { return !state.decided[c.url] && !state.skipped[c.url]; });
+  }
+
+  function render() {
+    if (state.fatal) return;
+    if (!state.inbound || !state.queue || !state.corr) return;
+    if (!state.deck) { state.deck = buildDeck(); state.total = state.deck.length; }
+
+    var live = currentCards();
+    var doneCount = state.total - live.length - Object.keys(state.skipped).length;
+
+    // progress dots reflect this session: decided + skipped + remaining
+    var dotsHtml = "";
+    for (var i = 0; i < state.total; i++) {
+      dotsHtml += "<i class=\"" + (i < doneCount ? "done" : i === doneCount && live.length ? "on" : "") + "\"></i>";
+    }
+    $("dots").innerHTML = state.total > 1 ? dotsHtml : "";
+
+    if (!live.length) {
+      var sugs = suggestionCards();
+      if (sugs.length) {
+        var html2 = "";
+        for (var m = Math.min(sugs.length - 1, 2); m >= 1; m--)
+          html2 += '<div class="card behind' + m + '" aria-hidden="true"></div>';
+        html2 += renderSuggestion(sugs[0]);
+        $("stage").innerHTML = html2;
+        $("verbs").innerHTML = renderSuggestVerbs();
+        $("keyhint").innerHTML = "";
+        $("counter").innerHTML = "<b>" + sugs.length + "</b> improvement" + (sugs.length === 1 ? "" : "s") + " to review";
+        return;
+      }
+      var skippedN = Object.keys(state.skipped).length;
+      $("stage").innerHTML = '<div class="state"><div class="big">🃏</div><b>Deck clear</b>' +
+        (state.total ? "You made " + doneCount + " decision" + (doneCount === 1 ? "" : "s") + "." : "Nothing was waiting for you.") +
+        (skippedN ? '<span class="fix">' + skippedN + " skipped — they return on the next visit.</span>" : "") +
+        '<span class="fix">New drafts appear here as the desk writes them. Data refreshes every minute.</span></div>';
+      $("verbs").innerHTML = skippedN ? '<button class="btn" data-act="unskip">Show skipped cards</button>' : "";
+      $("keyhint").textContent = "";
+      renderCounter(live);
+      return;
+    }
+
+    var html = "";
+    for (var n = Math.min(live.length - 1, 2); n >= 0; n--) {
+      var card = live[n];
+      if (n > 0) { html += '<div class="card behind' + n + '" aria-hidden="true"></div>'; continue; }
+      html += renderCard(card);
+    }
+    $("stage").innerHTML = html;
+    var tp = document.querySelector("#topcard .threadpane");
+    if (tp) tp.scrollTop = tp.scrollHeight; // latest message sits next to the draft
+    $("verbs").innerHTML = renderVerbs(live[0]);
+    $("keyhint").innerHTML = "";
+    renderCounter(live);
+    wireSwipe(live[0]);
+    markDraftOverflow();
+    fetchNames();
+  }
+
+
+  // ---------- dispatch preflight ----------
+  // Mirrors the Send Engine's validate_() (send-engine/Code.gs v20) so a row that
+  // WILL be refused at release is fixable HERE, before Send is offered — whoever
+  // queued it and whatever they forgot. Recipient truth is the ARTIST PAGE
+  // (the engine backfills phone/email from it; the queue's `Reply To` is never
+  // read by the engine at all). Fixes write to where the engine actually looks.
+  function preflightOf(card) {
+    var d = card.row;
+    var aUrl = card.conv.artistUrl;
+    var c = aUrl ? state.contacts[aUrl] : null;
+    var checks = [], fixable = true;
+    function add(ok, label, val, fix) { checks.push({ ok: ok, label: label, val: val, fix: fix || null }); }
+
+    if (d.Channel !== "SMS" && d.Channel !== "Email") {
+      add(false, "Channel", d.Channel || "(blank)", null);
+      return { checks: checks, ok: false, pending: false,
+        note: "The engine only dispatches SMS and Email — WhatsApp/Instagram rows are the platform worker\u2019s." };
+    }
+    if (!aUrl) {
+      add(false, "Artist", "not linked", null);
+      return { checks: checks, ok: false, pending: false,
+        note: "No Artist is linked, so the engine has no one to read a " +
+          (d.Channel === "SMS" ? "phone number" : "email address") +
+          " from. Link or create the Artist on the Notion row, then come back." };
+    }
+    if (c === undefined || c === null) {
+      return { checks: [], ok: true, pending: true, note: null }; // contacts still loading
+    }
+
+    if (d.Channel === "SMS") {
+      var digits = String(c.phone || "").replace(/\D/g, "");
+      add(digits.length >= 10, "Phone", c.phone || "(missing)",
+        digits.length >= 10 ? null : { key: "phone", target: "artist", placeholder: "+1 647 555 0100" });
+    } else {
+      var okE = c.email && c.email.indexOf("@") > 0;
+      add(!!okE, "Email", c.email || "(missing)",
+        okE ? null : { key: "email", target: "artist", placeholder: "name@example.com" });
+      var subj = d["Email Subject"] || "";
+      add(!!subj.trim(), "Subject", subj || "(blank)",
+        subj.trim() ? null : { key: "Email Subject", target: "row", placeholder: "Re: their subject" });
+      if (/^\s*re\s*:/i.test(subj) && !d["Source Email"]) {
+        add(false, "Source Email", "(blank — a \u201cRe:\u201d with no source sends as a NEW thread)",
+          { key: "Source Email", target: "row", placeholder: "Gmail link, hex-id form (…#all/1a03…)" });
+      } else if (/^\s*re\s*:/i.test(subj)) {
+        add(true, "Source Email", "linked", null);
+      }
+    }
+    if (c.alarm) add(true, "Alarm code", "code " + c.alarm, null);
+    var ok = checks.every(function (x) { return x.ok; });
+    return { checks: checks, ok: ok, pending: false, note: null };
+  }
+
+  // Healthy dispatch fields are IDENTITY, not a checklist — they read as one quiet
+  // line under the name. Only a failing check earns a box, because only a failure
+  // gives the reviewer something to do (Junyan, 2026-08-25).
+  function renderIdentityLine(card) {
+    var pf = preflightOf(card);
+    card.pfOk = pf.pending ? true : pf.ok;
+    var d = card.row;
+    var chanCls = { SMS: "ch-sms", Email: "ch-email", WhatsApp: "ch-wa", Instagram: "ch-ig", Giggster: "ch-email" };
+    var addr = "";
+    if (!pf.pending) pf.checks.forEach(function (x) {
+      if (x.ok && (x.label === "Phone" || x.label === "Email")) addr = x.val;
+    });
+    var chips = ['<span class="chip ' + (chanCls[d.Channel] || "ch-sms") + '">' + esc(d.Channel || "?") +
+      (addr ? ' <span class="addr">' + esc(addr) + "</span>" : "") + "</span>"];
+    if (!pf.pending) pf.checks.forEach(function (x) {
+      if (x.ok && x.label === "Alarm code")
+        chips.push('<span class="chip ch-code">' + esc(x.val).replace(/^code /, 'code <span class="addr">') + "</span></span>");
+    });
+    if (card.isError) chips.push('<span class="chip ch-err">errored</span>');
+    if (card.windowHours != null) {
+      chips.push(card.windowHours <= 0
+        ? '<span class="chip ch-win closing">window closed</span>'
+        : '<span class="chip ch-win' + (card.windowHours < 6 ? " closing" : "") + '">window ' +
+          (card.windowHours < 1 ? "&lt;1 h" : Math.floor(card.windowHours) + " h") + " left</span>");
+    }
+    return '<div class="idline">' + chips.join(" ") + "</div>";
+  }
+
+  function renderPreflight(card) {
+    var pf = preflightOf(card);
+    if (pf.pending || pf.ok) return "";
+    var rows = pf.checks.filter(function (x) { return !x.ok; }).map(function (x) {
+      var h = '<div class="pf-row miss"><span class="mark">\u2717</span><span class="lbl">' + esc(x.label) + "</span>";
+      if (!x.fix) h += '<span class="val">' + esc(x.val) + "</span>";
+      else h += '<input id="fix-' + esc(x.fix.key).replace(/\s/g, "_") + '" data-fixkey="' + esc(x.fix.key) +
+        '" data-fixtarget="' + x.fix.target + '" placeholder="' + esc(x.fix.placeholder) + '">' +
+        '<button class="pf-save" data-act="pfsave" data-fixkey="' + esc(x.fix.key) + '">Save</button>';
+      return h + "</div>";
+    }).join("");
+    return '<div class="preflight"><div class="pf-title">Can\u2019t dispatch yet</div>' +
+      rows + (pf.note ? '<div class="pf-note">' + pf.note + "</div>" : "") + "</div>";
+  }
+
+  function savePreflightFix(card, key) {
+    var inp = document.querySelector('input[data-fixkey="' + key + '"]');
+    if (!inp || !inp.value.trim()) return;
+    var val = inp.value.trim(), tgt = inp.dataset.fixtarget;
+    state.busy = true; render();
+    function done(ok, msg) {
+      state.busy = false;
+      if (!ok) toast("Save failed: " + msg, { bad: true, ttl: 8000 });
+      else toast("Saved — the engine reads it from there.", { ttl: 2500 });
+      render();
+    }
+    if (tgt === "artist") {
+      var aUrl = card.conv.artistUrl;
+      var props = {}; props[key === "phone" ? "Phone" : "Email"] = val;
+      writeRow({ url: aUrl, row: {} }, props, function (ok, msg) {
+        if (ok && state.contacts[aUrl]) state.contacts[aUrl][key] = val;
+        done(ok, msg);
+      });
+    } else {
+      var props2 = {}; props2[key] = val;
+      writeRow(card, props2, done);
+    }
+  }
+
+  // ---------- the gist ----------
+  // A card should say what it IS in a breath, before anyone reads a word of agent prose.
+  // Families are matched on Message Code; anything unmatched falls back to the first
+  // sentence of Reasoning rather than inventing a summary it cannot actually derive.
+  var GIST = [
+    [/^PBF-overtime/i,  "They stayed past their booked end. This tells them we added the extra time."],
+    [/^PBF/i,           "Their booking is finished. This asks how it went."],
+    [/^HTA/i,           "They have a booking today. This is the door and alarm info."],
+    [/^EOB/i,           "Their booking is ending. This is the lock-up reminder."],
+    [/^AVA/i,           "This offers them studio time that just opened up."],
+    [/alarm/i,          "The alarm went off during their booking. This checks they're okay."],
+    [/additional-time|ADDITIONAL/i, "They used time beyond the booking. This tells them it was added."],
+    [/review/i,         "They said something kind. This asks them for a Google review."]
+  ];
+  function gistOf(d) {
+    var code = d["Message Code"] || "";
+    for (var i = 0; i < GIST.length; i++) if (GIST[i][0].test(code)) return GIST[i][1];
+    var r = (d.Reasoning || "").trim();
+    if (!r) return "No note was left on why this was drafted.";
+    var stop = r.search(/\.\s/);
+    return stop > 0 ? r.slice(0, stop + 1) : r.slice(0, 140);
+  }
+
+  // An Error status with no written cause is unactionable — and, per the
+  // 2026-08-25 investigation, may simply be a mis-click (Error sits next to
+  // Pending Review in the status control; 1 Error in 2,718 rows ever).
+  // Convention: whatever sets Status=Error appends "[Error — <why> — <ts>]"
+  // to Reasoning. This card renders that stamp, or its absence, in words.
+  function errorDiagnostic(d) {
+    var m = String(d.Reasoning || "").match(/\[Error — ([^\]]+)\]/);
+    var rec = d["Dispatch Receipt"];
+    if (rec) {
+      // A receipt is proof a send COMPLETED. An Error status on top of one means
+      // a later stale run stomped the state (seen live 2026-08-25, Avante) —
+      // re-sending is the one wrong move.
+      return '<div class="deadnote"><b>This message already went out</b> — the row carries dispatch receipt ' +
+        '<span class="mono">' + esc(rec) + "</span>, so a send completed and the Error status was written over it " +
+        "afterwards (a stale engine run). Do NOT send again — check the phone/mail log, then set the row back to Sent.</div>";
+    }
+    if (m) return '<div class="deadnote"><b>Dispatch failed:</b> ' + esc(m[1]) + "</div>";
+    return '<div class="deadnote"><b>The engine didn\u2019t say why.</b> No [Error — …] stamp on the row and no ' +
+      "dispatch receipt — so no send completed, and this engine version records its reason only as a page comment " +
+      "and an alert email to the business mailbox (search subject \u201c[Send Engine]\u201d). " +
+      "Read that alert before deciding: if the cause is fixed, Send releases it as normal.</div>";
+  }
+
+  function renderCard(card) {
+    var name = displayName(card);
+    var d = card.row;
+    var cls = card.isError ? " c-error" : (card.windowHours != null && card.windowHours < 6 ? " c-closing" : "");
+
+    var thread = "";
+    if (!card.conv.events.length) {
+      thread = '<div class="startnote"><b>Start of thread</b> — nothing on record before this draft. This is our opening message to them.</div>';
+    } else {
+      var lastDay = null;
+      card.conv.events.forEach(function (e) {
+        var day = dayOf(e.ts);
+        if (day && day !== lastDay) { thread += '<div class="daymark">' + esc(day) + "</div>"; lastDay = day; }
+        thread += '<div class="msg ' + (e.dir === "in" ? "m-in" : "m-out") + '"><div class="bubble">' + esc(e.body) + "</div>" +
+          '<div class="m-meta">' + (e.dir === "in" ? esc(name) : "Dance Annex") + " · " + esc(e.medium || "") +
+          " · " + esc(clock(e.ts)) + "</div></div>";
+      });
+    }
+
+    var liveText = state.edits[card.url] != null ? state.edits[card.url] : card.editedBody;
+    var draftInner = '<div class="draftwrap" id="draftwrap"><div class="tabox">' +
+      '<textarea id="editbox" data-url="' + esc(card.url) + '" aria-label="The reply">' +
+      esc(liveText) + "</textarea>" +
+      '<div class="scrollrail" aria-hidden="true"><div class="thumb"></div></div></div></div>';
+
+    // A closed window is not a UI state to shrug at — it means this text can
+    // never leave as-is. Say what the remaining routes actually are.
+    var deadNote = "";
+    if (card.isError) deadNote = errorDiagnostic(d);
+    if (card.windowHours != null && card.windowHours <= 0) {
+      deadNote = '<div class="deadnote"><b>' + esc(d.Channel) + " won’t accept this reply.</b> " +
+        "Their last message was more than 24 h ago, so free-form text is blocked. " +
+        (d.Channel === "WhatsApp"
+          ? "You can still reach them with an approved template, or by SMS if we have a number."
+          : "Instagram allows nothing outside the window — reach them another way or let it go.") +
+        " If it no longer matters, <b>Reject</b> it so it stops resurfacing.</div>";
+    }
+
+    // The name is itself the quiet path to the Notion row — no visible chrome,
+    // but the escape hatch survives the link purge (needed e.g. to link a
+    // missing Artist from the preflight note).
+    var byline = [d["Raised by"], d.Studio ? "Studio " + d.Studio : null]
+      .filter(Boolean).map(esc).join(" · ");
+    var subjRow = d.Channel === "Email" && d["Email Subject"]
+      ? '<div class="subjrow">Subject: <span class="mono">' + esc(d["Email Subject"]) + "</span></div>" : "";
+    return '<div class="card top' + cls + '" id="topcard">' +
+      '<div class="cardhead"><div class="who"><a href="' + esc(notionHref(d.url)) +
+      '" target="_blank" rel="noopener">' + esc(name) + "</a></div>" +
+      renderIdentityLine(card) +
+      '<div class="gist">' + esc(gistOf(d)) + "</div>" +
+      (byline ? '<div class="byline">' + byline + "</div>" : "") +
+      renderPreflight(card) + "</div>" +
+      '<div class="threadwrap" id="threadwrap"><div class="threadpane" id="threadpane">' + thread + "</div>" +
+      '<div class="scrollrail" aria-hidden="true"><div class="thumb"></div></div></div>' +
+      '<div class="draftpane"><div class="d-head">' +
+      (card.isError ? "errored draft — fix and resend"
+        : card.windowHours != null && card.windowHours <= 0 ? "this reply can no longer be sent"
+        : "The Reply") + "</div>" +
+      subjRow + deadNote + draftInner + "</div></div>";
+  }
+
+  function renderVerbs(card) {
+    if (state.busy) return '<button class="btn" disabled>working…</button>';
+    if (state.rejecting) {
+      return '<div class="rejectrow"><span class="lbl">Why reject?</span>' +
+        '<textarea id="rejectbox" placeholder="Say why — it goes on the row and teaches the desk. Optional."></textarea>' +
+        '<div class="rejectbtns"><button class="btn" data-act="cancelreject">Back</button>' +
+        '<button class="btn btn-reject" data-act="rejectgo">Reject</button></div></div>';
+    }
+    var windowClosed = card.windowHours != null && card.windowHours <= 0;
+    var blocked = windowClosed || card.pfOk === false;
+    return '<button class="btn btn-reject" data-act="reject">Reject</button>' +
+      '<button class="btn" data-act="skip">Skip</button>' +
+      '<button class="btn btn-send" data-act="send"' + (blocked ? " disabled" : "") + ">" +
+      (card.pfOk === false && !windowClosed ? "Fix dispatch first" : "Send") + "</button>";
+  }
+
+  function renderCounter(live) {
+    var stampHtml = "";
+    if (state.storedAt) {
+      var mins = Math.round((Date.now() - state.storedAt) / 60000);
+      stampHtml = '<span class="datastamp' + (mins > 5 ? " stale" : "") + '"><span class="dot"></span>' +
+        (mins < 1 ? "live" : mins + " min old") + "</span>";
+    }
+    $("counter").innerHTML = (live.length ? "<b>" + live.length + "</b> to decide · " : "") + stampHtml;
+  }
+
+  // ---------- artist names ----------
+  var namesInFlight = false;
+  function fetchNames() {
+    var missing = [];
+    (state.deck || []).forEach(function (c) {
+      var u = c.conv.artistUrl;
+      if (u && state.names[u] === undefined && missing.indexOf(u) < 0) missing.push(u);
+    });
+    if (!missing.length || namesInFlight) return;
+    namesInFlight = true;
+    missing.sort();
+    var inList = missing.map(function (u) { return "'" + u.replace(/'/g, "''") + "'"; }).join(",");
+    MCP.callTool(SERVER, QUERY_TOOL, { data: { data_source_urls: [ARTISTS], query:
+      'SELECT url, "Name", "Email", "Phone", "Alarm Code" FROM "' + ARTISTS + '" WHERE url IN (' + inList + ") LIMIT 100" } },
+      { cache: { staleTime: 300000 } })
+      .then(function (res) {
+        var rows = res && res.payload && res.payload.results ? res.payload.results : [];
+        rows.forEach(function (r) {
+          state.names[r.url] = r.Name || null;
+          state.contacts[r.url] = { email: r.Email || "", phone: r.Phone || "", alarm: r["Alarm Code"] || "" };
+        });
+        missing.forEach(function (u) { if (state.names[u] === undefined) state.names[u] = null; });
+        namesInFlight = false; render();
+      })
+      .catch(function () {
+        missing.forEach(function (u) { if (state.names[u] === undefined) state.names[u] = null; });
+        namesInFlight = false; render();
+      });
+  }
+
+  // ---------- toasts ----------
+  function toast(text, opts) {
+    opts = opts || {};
+    var el = document.createElement("div");
+    el.className = "toast" + (opts.bad ? " bad" : "");
+    el.innerHTML = '<span class="grow"></span>' + (opts.action ? "<button>" + esc(opts.action) + "</button>" : "");
+    el.firstChild.textContent = text;
+    if (opts.action && opts.onAction) el.querySelector("button").addEventListener("click", function () {
+      opts.onAction(); el.remove();
+    });
+    $("toasts").appendChild(el);
+    if (opts.ttl) setTimeout(function () { el.remove(); }, opts.ttl);
+    return el;
+  }
+
+  // ---------- decisions ----------
+  function topCard() { return currentCards()[0] || null; }
+
+  function animateAway(dir, then) {
+    var el = document.getElementById("topcard");
+    if (!el) { then(); return; }
+    el.classList.add("leaving");
+    el.style.transform = dir === "right" ? "translateX(120%) rotate(8deg)"
+      : dir === "left" ? "translateX(-120%) rotate(-8deg)" : "translateY(40px)";
+    var fired = false;
+    var done = function () { if (!fired) { fired = true; then(); } };
+    el.addEventListener("transitionend", done, { once: true });
+    setTimeout(done, 320);
+  }
+
+  function decideSend(card) {
+    var box = document.getElementById("editbox");
+    if (box) { card.editedBody = box.value; state.edits[card.url] = box.value; }
+    // The write is DELAYED: nothing reaches Notion until the undo window runs
+    // out. Closing the page inside the window cancels the send (fail-closed) —
+    // the card simply comes back next visit. This is what makes a one-tap
+    // send safe against the seconds-fast email/SMS engine.
+    var props = { "Status": "Ready to Send" };
+    var original = card.row["Message Body"] || "";
+    if (card.editedBody !== original) {
+      props["Message Body"] = card.editedBody;
+      // An edit is the ONLY quality signal this desk has on composed wording —
+      // the drafted-vs-sent diff retired with `Drafted Body` (2026-07-29) and
+      // nothing replaced it. Overwriting Message Body silently destroyed the
+      // signal at the moment it was created: the words the reviewer actually
+      // fixed vanished, so "what does Junyan always change?" was answerable
+      // only by feel. Stamp it the way Reject already stamps its reason, and
+      // keep the original body so the diff survives on the row. (2026-08-25)
+      var stampE = "[Edited in the Deck — " + new Date().toISOString().slice(0, 16).replace("T", " ") +
+        "]\nDrafted: " + original;
+      props["Reasoning"] = ((card.row.Reasoning || "") + "\n" + stampE).trim();
+    }
+
+    state.decided[card.url] = "sent";
+    var name = displayName(card);
+    var secs = UNDO_SECONDS;
+    var t = toast("Reply to " + name + " sends in " + secs + " s", {
+      action: "Undo",
+      onAction: function () {
+        var p = state.pendingSends[card.url];
+        if (p) { clearTimeout(p.timer); clearInterval(p.tick); delete state.pendingSends[card.url]; }
+        delete state.decided[card.url];
+        toast("Held — back in the deck.", { ttl: 2500 });
+        render();
+      },
+    });
+    var deadline = Date.now() + secs * 1000;
+    var tick = setInterval(function () {
+      var left = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+      var span = t.querySelector(".grow");
+      if (span) span.textContent = "Reply to " + name + " sends in " + left + " s";
+    }, 250);
+    var timer = setTimeout(function () {
+      clearInterval(tick);
+      delete state.pendingSends[card.url];
+      t.remove();
+      writeRow(card, props, function (ok, msg) {
+        if (ok) { delete state.edits[card.url]; }
+        else {
+          delete state.decided[card.url];
+          toast("Release failed: " + msg + " — card is back in the deck.", { bad: true, ttl: 8000 });
+          render();
+        }
+      });
+    }, secs * 1000);
+    state.pendingSends[card.url] = { timer: timer, tick: tick, toastEl: t };
+    animateAway("right", render);
+  }
+
+  function decideReject(card, why) {
+    var props = { "Status": "Will Not Send" };
+    var stamp = "[Rejected in the Deck" + (why ? ": " + why : "") + " — " + new Date().toISOString().slice(0, 16).replace("T", " ") + "]";
+    props["Reasoning"] = ((card.row.Reasoning || "") + "\n" + stamp).trim();
+    state.decided[card.url] = "rejected";
+    state.rejecting = false;
+    animateAway("left", render);
+    writeRow(card, props, function (ok, msg) {
+      if (ok) toast("Rejected — it will not send.", { ttl: 3000 });
+      else {
+        delete state.decided[card.url];
+        toast("Reject failed: " + msg + " — card is back in the deck.", { bad: true, ttl: 8000 });
+        render();
+      }
+    });
+  }
+
+  function writeRow(card, props, cb) {
+    var pageId = pageIdFrom(card.url);
+    if (!pageId) { cb(false, "couldn't read the row id"); return; }
+    window.claude.mcp
+      .callTool(SERVER, UPDATE_TOOL, { page_id: pageId, command: "update_properties", properties: props })
+      .then(function () {
+        Object.keys(props).forEach(function (k) { card.row[k] = props[k]; });
+        MCP.invalidate(SERVER, QUERY_TOOL).catch(function () {});
+        cb(true);
+      })
+      .catch(function (err) {
+        var code = err && err.code;
+        var msg = code === "needs_reauth" ? "Notion needs reconnecting (Settings → Connectors)"
+          : code === "tool_error" ? "Notion rejected the change" + (err.message ? ": " + err.message : "")
+          : code === "server_unavailable" ? "Notion unreachable"
+          : "update failed (" + (code || "unknown") + ")";
+        cb(false, msg);
+      });
+  }
+
+  // ---------- draft overflow signalling ----------
+  // No words: while text is clipped the wrapper lights its border, fades the
+  // bottom edge, and shows a slim amber thumb on the right whose size/position
+  // mirror the scroll state. Everything clears when the reader reaches the end.
+  function markPaneOverflow(boxId, wrapId) {
+    var box = document.getElementById(boxId);
+    var wrap = document.getElementById(wrapId);
+    if (!box || !wrap) return;
+    var below = box.scrollHeight - box.clientHeight - box.scrollTop;
+    var above = box.scrollTop;
+    wrap.classList.toggle("clipped", below > 4);        // draft: lit border + fade + rail
+    wrap.classList.toggle("clip-top", above > 4);       // thread: fades per edge
+    wrap.classList.toggle("clip-bottom", below > 4);
+    var thumb = wrap.querySelector(".scrollrail .thumb");
+    if (thumb && box.scrollHeight > 0) {
+      var frac = box.clientHeight / box.scrollHeight;
+      var top = box.scrollTop / box.scrollHeight;
+      thumb.style.height = Math.max(12, frac * 100) + "%";
+      thumb.style.top = Math.min(100 - Math.max(12, frac * 100), top * 100) + "%";
+    }
+  }
+  function markDraftOverflow() {
+    markPaneOverflow("editbox", "draftwrap");
+    markPaneOverflow("threadpane", "threadwrap");
+  }
+
+  document.addEventListener("scroll", function (e) {
+    if (e.target && (e.target.id === "editbox" || e.target.id === "threadpane")) markDraftOverflow();
+  }, true);
+
+  // ---------- input: buttons, keys, swipe ----------
+  document.addEventListener("input", function (e) {
+    var t = e.target;
+    if (t && t.id === "editbox" && t.dataset.url) { state.edits[t.dataset.url] = t.value; markDraftOverflow(); }
+  });
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest ? e.target.closest("[data-act]") : null;
+    if (!btn) return;
+    var act = btn.dataset.act;
+    var card = topCard();
+    if (act === "pfsave" && card && !state.busy) { savePreflightFix(card, btn.dataset.fixkey); return; }
+    if (act === "unskip") { state.skipped = {}; state.deck = null; render(); return; }
+    if (!card) {
+      // deck 2 — the top card is a suggestion row, not a draft
+      var sug = suggestionCards()[0];
+      if (!sug) return;
+      if (act === "appliedsug" && !state.busy) { decideSuggestion(sug, true); return; }
+      if (act === "skipsug") { state.skipped[sug.url] = true; render(); return; }
+      if (act === "reject") { state.rejecting = true; render(); var rb2 = document.getElementById("rejectbox"); if (rb2) rb2.focus(); return; }
+      if (act === "cancelreject") { state.rejecting = false; render(); return; }
+      if (act === "declinesug") {
+        var rbx = document.getElementById("rejectbox");
+        decideSuggestion(sug, false, rbx ? rbx.value.trim() : "");
+        return;
+      }
+      return;
+    }
+    if (act === "send" && !state.busy) decideSend(card);
+    else if (act === "reject") { state.rejecting = true; render(); var rb0 = document.getElementById("rejectbox"); if (rb0) rb0.focus(); }
+    else if (act === "cancelreject") { state.rejecting = false; render(); }
+    else if (act === "rejectgo") {
+      var rb = document.getElementById("rejectbox");
+      decideReject(card, rb ? rb.value.trim() : "");
+    }
+    else if (act === "skip") { state.skipped[card.url] = true; state.rejecting = false; animateAway("down", render); }
+  });
+
+  function wireSwipe(card) {
+    var el = document.getElementById("topcard");
+    if (!el || state.rejecting) return;
+    var startX = null, dx = 0;
+    el.addEventListener("touchstart", function (e) {
+      if (e.target.closest(".threadpane, .draftpane, a, button")) return;
+      startX = e.touches[0].clientX; dx = 0;
+    }, { passive: true });
+    el.addEventListener("touchmove", function (e) {
+      if (startX == null) return;
+      dx = e.touches[0].clientX - startX;
+      el.style.transform = "translateX(" + dx + "px) rotate(" + dx / 40 + "deg)";
+    }, { passive: true });
+    el.addEventListener("touchend", function () {
+      if (startX == null) return;
+      var w = el.offsetWidth;
+      if (dx > w * 0.35 && !(card.windowHours != null && card.windowHours <= 0)) decideSend(card);
+      else if (dx < -w * 0.35) { el.style.transform = ""; state.rejecting = true; render(); }
+      else el.style.transform = "";
+      startX = null;
+    });
+  }
+
+  // Closing the tab mid-undo cancels those releases — warn so it's a choice.
+  window.addEventListener("beforeunload", function (e) {
+    if (Object.keys(state.pendingSends).length) { e.preventDefault(); e.returnValue = ""; }
+  });
+
+  // ---------- reads ----------
+  // Notion 429s under a burst of queries — an agent session working the same
+  // workspace is enough to trip it. It is transient and watchTool refetches on
+  // its own, so the screen must not read like the deck is broken. Dumping the
+  // raw APIResponseError JSON at the reader (which it used to) made a
+  // self-healing pause look fatal enough to close the tab.
+  function isRateLimited(err) {
+    var m = (err && err.message ? String(err.message) : "").toLowerCase();
+    return m.indexOf("rate_limited") >= 0 || m.indexOf("rate limited") >= 0 || m.indexOf("429") >= 0;
+  }
+  function toolErrorFix(err) {
+    if (isRateLimited(err)) {
+      return "Notion is rate-limiting us for a moment — usually because something else " +
+             "is querying the same workspace. <b>Nothing is wrong with the deck and nothing " +
+             "was lost.</b> It retries on its own about once a minute.";
+    }
+    var m = err && err.message ? String(err.message) : "";
+    if (m.length > 180) m = m.slice(0, 180) + "…";
+    return "Notion answered but reported a failure" + (m ? ": " + esc(m) : ".");
+  }
+
+  function errorHtml(err) {
+    var code = err && err.code;
+    var fixes = {
+      needs_reauth: "Reconnect <b>Notion</b> in claude.ai Settings → Connectors, then reload.",
+      server_not_connected: "Add the <b>Notion</b> connector in claude.ai Settings → Connectors, then reload.",
+      selection_required: "More than one Notion connector is connected — choose one when claude.ai asks, then reload.",
+      not_in_manifest: "This page isn't authorized for that Notion tool — it needs republishing.",
+      blocked_by_policy: "Your organization's policy blocks this Notion tool for you.",
+      tool_error: toolErrorFix(err),
+      not_granted: "This view wasn't granted connector access — reopen the artifact and allow it.",
+      capability_disabled: "This view can't reach connectors (older app version) — try reloading claude.ai.",
+    };
+    var fix = fixes[code] || "Temporary problem reaching Notion — data refreshes when it recovers.";
+    var transient = code === "tool_error" && isRateLimited(err);
+    var head = transient ? "Waiting on Notion" : "Can’t load the deck";
+    var again = transient
+      ? '<button class="btn" style="margin-top:14px" onclick="location.reload()">Try now</button>'
+      : "";
+    return '<div class="state"><b>' + head + '</b><span class="fix">' + fix + "</span>" + again + "</div>";
+  }
+
+  function handleEvent(which) {
+    return function (ev) {
+      if (ev.type === "data") {
+        state.fatal = null;
+        var p = ev.result && ev.result.payload;
+        var fresh = p && p.results ? p.results : [];
+        state[which] = fresh;
+        state.storedAt = ev.result.cache && ev.result.cache.storedAt ? ev.result.cache.storedAt : Date.now();
+        // Rebuild the deck only between decisions — never yank the top card
+        // out from under a reader mid-thought.
+        var ae = document.activeElement;
+        var typing = ae && (ae.id === "editbox" || ae.id === "rejectbox" || (ae.dataset && ae.dataset.fixkey));
+        if (state.deck && !state.rejecting && !state.busy && !typing) {
+          var live = currentCards();
+          state.deck = null;
+          if (live.length) { /* rebuilt in render(); decided/skipped filters persist */ }
+        }
+        render();
+        return;
+      }
+      var code = ev.error && ev.error.code;
+      var authz = { needs_reauth: 1, server_not_connected: 1, blocked_by_policy: 1, approval_required: 1, not_granted: 1 };
+      if (authz[code] || state[which] == null) {
+        state.fatal = code;
+        $("stage").innerHTML = errorHtml(ev.error);
+        $("verbs").innerHTML = "";
+        var st = $("stamp-text");
+        if (st) st.textContent = "not connected";
+      }
+    };
+  }
+
+  var MCP = null;
+  function offline() {
+    $("stage").innerHTML =
+      '<div class="state"><b>Open inside claude.ai</b>' +
+      '<span class="fix">This page reads Notion with your account \u2014 open it from your Artifacts list, and allow connector access when asked.</span></div>';
+    $("verbs").innerHTML = "";
+  }
+  function boot(mcp) {
+    MCP = mcp;
+    var opts = { cache: { staleTime: 30000 }, refetchInterval: 60000 };
+    MCP.watchTool(SERVER, QUERY_TOOL, inboundQuery, handleEvent("inbound"), opts);
+    MCP.watchTool(SERVER, QUERY_TOOL, queueQuery, handleEvent("queue"), opts);
+    MCP.watchTool(SERVER, QUERY_TOOL, corrQuery, handleEvent("corr"), opts);
+    MCP.watchTool(SERVER, QUERY_TOOL, sweepQuery, handleEvent("sweep"), opts);
+    setInterval(function () { renderCounter(currentCards()); }, 30000);
+  }
+  // Newer artifact runtimes only hand out capabilities through claude.use();
+  // older ones expose window.claude.mcp directly. Support both — probing the
+  // property alone broke on the runtime the Docket first shipped under.
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("mcp").then(function (mcp) { mcp ? boot(mcp) : offline(); });
+  } else if (window.claude && window.claude.mcp !== undefined) {
+    boot(window.claude.mcp);
+  } else {
+    offline();
+  }
+})();
+</script>
