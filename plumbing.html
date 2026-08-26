@@ -899,36 +899,20 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
 <!-- ── Alarm Automation Protocol · ported from the Annex Alarm artifact 2026-08-26 ── -->
 <style>
-.alarmmap{--l1:#00929c;--l3:#2467c9;--l4:#c22f7d;--l5:#a87f00;--you:#7a4fd0;
-          --bad:#d1322e;--ok:#2e9e4f;--track:#c9c5ba;--mut:var(--muted);--card:var(--panel)}
+/* Colors only — typography, box, hover and key all come from the page's own
+   .buildmap / .mapkey idiom so this section looks like every other map here. */
+.alarmmap{--al1:#00929c;--al2:#2e9e4f;--al3:#2467c9;--al4:#c22f7d;--al5:#a87f00;
+          --ayou:#7a4fd0;--abad:#d1322e;--aok:#2e9e4f;--atrack:#c9c5ba}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .alarmmap{
-  --l1:#2cc6cf;--l3:#5a95ea;--l4:#e05a9f;--l5:#d3a624;--you:#a685e8;
-  --bad:#f0605c;--ok:#4cc471;--track:#3a4252}}
+  --al1:#2cc6cf;--al2:#4cc471;--al3:#5a95ea;--al4:#e05a9f;--al5:#d3a624;
+  --ayou:#a685e8;--abad:#f0605c;--aok:#4cc471;--atrack:#3a4252}}
 :root[data-theme="dark"] .alarmmap{
-  --l1:#2cc6cf;--l3:#5a95ea;--l4:#e05a9f;--l5:#d3a624;--you:#a685e8;
-  --bad:#f0605c;--ok:#4cc471;--track:#3a4252}
-.alarmmap svg{display:block;min-width:980px;width:100%;height:auto}
-.alarmmap svg text{font-family:ui-monospace,Menlo,monospace;fill:var(--ink)}
-.alarmmap .stn-label{font-size:12px;font-weight:700}
-.alarmmap .stn-sub{font-size:9.5px;font-weight:500;fill:var(--muted)}
-.alarmmap .gate{font-size:9.5px;font-weight:700;fill:var(--muted)}
-.alarmmap .ord{font-size:10.5px;font-weight:700;fill:var(--muted)}
-.alarmmap .term{font-size:13px;font-weight:700}
-.alarmmap g.stn{cursor:pointer}
-.alarmmap g.stn:hover circle,.alarmmap g.stn:hover rect,.alarmmap g.stn:hover polygon{stroke-width:5}
-.alarmmap g.stn:focus{outline:none}
-.alarmmap g.stn:focus>circle,.alarmmap g.stn:focus>rect,.alarmmap g.stn:focus>polygon{stroke-width:5}
-.alarmmap .buildmap{overflow-x:auto;margin:0 0 .6rem}
-.alarmmap .mapkey{display:flex;flex-wrap:wrap;gap:1rem;margin:.5rem .2rem .9rem;
-                  color:var(--muted);font-size:.78rem;align-items:center;
-                  font-family:ui-monospace,Menlo,monospace}
-.alarmmap .mapkey span{display:inline-flex;align-items:center;gap:.4rem}
-.alarmmap .mapkey .k{width:.8rem;height:.8rem;border-radius:50%;display:inline-block;flex-shrink:0}
-.alarmmap .mapkey .k.machine{background:var(--panel);border:3px solid var(--track)}
-.alarmmap .mapkey .k.human{background:var(--you);border:3px solid var(--you);border-radius:3px}
-.alarmmap .mapkey .k.guard{background:var(--panel);border:3px solid var(--bad)}
-.alarmmap .mapkey .k.dead{background:var(--track);border:3px solid var(--track)}
-.alarmmap .mapkey .k.ghost{width:1.3rem;height:0;border-top:3px dashed var(--bad);border-radius:0}
+  --al1:#2cc6cf;--al2:#4cc471;--al3:#5a95ea;--al4:#e05a9f;--al5:#d3a624;
+  --ayou:#a685e8;--abad:#f0605c;--aok:#4cc471;--atrack:#3a4252}
+.alarmmap .buildmap svg{min-width:1000px}
+.alarmmap .mapkey .kguard{background:var(--panel);border:3px solid var(--abad)}
+.alarmmap .mapkey .kdead{background:var(--atrack);border:3px solid var(--atrack)}
+.alarmmap .mapkey .kghost{width:1.05rem;height:0;background:transparent;border:none;border-top:3px dashed var(--abad);border-radius:0}
 </style>
 <div class="pipes alarmmap" id="alarmproto">
 <h2>Alarm Automation Protocol — four lines · one panel read every 60s</h2>
@@ -937,135 +921,135 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <svg viewBox="0 0 1080 470" role="img" aria-label="Overview map of the four automated alarm lines">
 
   <!-- ===== LINE 1 · SIREN ===== -->
-  <path d="M85 68 H700" stroke="var(--bad)" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M85 68 H700" stroke="var(--abad)" stroke-width="7" fill="none" stroke-linecap="round"/>
   <path d="M700 68 Q740 68 748 44 Q756 22 800 22 H1000"
-        stroke="var(--bad)" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+        stroke="var(--abad)" stroke-width="5.5" fill="none" stroke-linecap="round"/>
   <path d="M700 68 Q740 68 748 92 Q756 114 800 114 H1000"
-        stroke="var(--track)" stroke-width="5.5" fill="none" stroke-linecap="round"/>
-  <text x="20" y="72" class="term" fill="var(--bad)">1</text>
+        stroke="var(--atrack)" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+  <text x="20" y="72" class="nm" fill="var(--abad)">1</text>
 
   <!-- ===== LINE 2 · BYPASS ===== -->
-  <path d="M85 190 H860" stroke="var(--l2)" stroke-width="7" fill="none" stroke-linecap="round"/>
-  <text x="20" y="194" class="term" fill="var(--l2)">2</text>
+  <path d="M85 190 H860" stroke="var(--al2)" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <text x="20" y="194" class="nm" fill="var(--al2)">2</text>
 
   <!-- ===== LINE 3 · TROUBLE ===== -->
-  <path d="M85 300 H860" stroke="var(--l5)" stroke-width="7" fill="none" stroke-linecap="round"/>
-  <text x="20" y="304" class="term" fill="var(--l5)">3</text>
+  <path d="M85 300 H860" stroke="var(--al5)" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <text x="20" y="304" class="nm" fill="var(--al5)">3</text>
 
   <!-- ===== LINE 4 · TAMPER ===== -->
-  <path d="M85 412 H820" stroke="var(--l4)" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M85 412 H820" stroke="var(--al4)" stroke-width="7" fill="none" stroke-linecap="round"/>
   <path d="M580 412 Q615 412 624 438 Q633 464 651 466"
-        stroke="var(--ok)" stroke-width="5" fill="none" stroke-linecap="round"/>
-  <text x="20" y="416" class="term" fill="var(--l4)">4</text>
+        stroke="var(--aok)" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <text x="20" y="416" class="nm" fill="var(--al4)">4</text>
 
   <!-- interchange: line 3 feeds line 4 -->
   <path d="M690 300 Q718 300 722 330 L722 384 Q722 412 750 412"
-        stroke="var(--l4)" stroke-width="4" fill="none" stroke-dasharray="1 7"
+        stroke="var(--al4)" stroke-width="4" fill="none" stroke-dasharray="1 7"
         stroke-linecap="round" opacity=".8"/>
 
   <!-- ================= LINE 1 STATIONS ================= -->
   <g class="stn" data-d="a_siren" tabindex="0">
-    <circle cx="85" cy="68" r="9" fill="var(--card)" stroke="var(--bad)" stroke-width="3.5"/>
-    <text x="85" y="45" text-anchor="middle" class="stn-label">Siren goes off</text>
+    <circle cx="85" cy="68" r="9" fill="var(--panel)" stroke="var(--abad)" stroke-width="3.5"/>
+    <text x="85" y="45" text-anchor="middle" class="nm">Siren goes off</text>
   </g>
   <g class="stn" data-d="a_wait" tabindex="0">
-    <circle cx="255" cy="68" r="8" fill="var(--card)" stroke="var(--bad)" stroke-width="3.5"/>
-    <text x="255" y="45" text-anchor="middle" class="stn-label">Let it scream 3 minutes</text>
-    <text x="255" y="32" text-anchor="middle" class="stn-sub">the point is to scare people off</text>
+    <circle cx="255" cy="68" r="8" fill="var(--panel)" stroke="var(--abad)" stroke-width="3.5"/>
+    <text x="255" y="45" text-anchor="middle" class="nm">Let it scream 3 minutes</text>
+    <text x="255" y="32" text-anchor="middle" class="sb">the point is to scare people off</text>
   </g>
   <g class="stn" data-d="a_guard" tabindex="0">
-    <circle cx="455" cy="68" r="13" fill="var(--card)" stroke="var(--bad)" stroke-width="4.5"/>
-    <circle cx="455" cy="68" r="4.5" fill="var(--bad)"/>
-    <text x="455" y="99" text-anchor="middle" class="stn-label" fill="var(--bad)">Is anyone in there?</text>
-    <text x="455" y="112" text-anchor="middle" class="stn-sub" fill="var(--bad)">THE HANANO FIX · nothing is sent until this passes</text>
+    <circle cx="455" cy="68" r="13" fill="var(--panel)" stroke="var(--abad)" stroke-width="4.5"/>
+    <circle cx="455" cy="68" r="4.5" fill="var(--abad)"/>
+    <text x="455" y="99" text-anchor="middle" class="nm" fill="var(--abad)">Is anyone in there?</text>
+    <text x="455" y="112" text-anchor="middle" class="sb" fill="var(--abad)">THE HANANO FIX · nothing is sent until this passes</text>
   </g>
   <g class="stn" data-d="a_cycle" tabindex="0">
-    <circle cx="620" cy="68" r="8" fill="var(--card)" stroke="var(--bad)" stroke-width="3.5"/>
-    <text x="620" y="45" text-anchor="middle" class="stn-label">Turn off, turn back on</text>
+    <circle cx="620" cy="68" r="8" fill="var(--panel)" stroke="var(--abad)" stroke-width="3.5"/>
+    <text x="620" y="45" text-anchor="middle" class="nm">Turn off, turn back on</text>
   </g>
   <g class="stn" data-d="a_quiet" tabindex="0">
-    <circle cx="925" cy="114" r="9" fill="var(--track)" stroke="var(--track)" stroke-width="3.5"/>
-    <text x="943" y="111" class="stn-label">Quiet again, still armed</text>
-    <text x="943" y="125" class="stn-sub">the normal ending</text>
+    <circle cx="925" cy="114" r="9" fill="var(--atrack)" stroke="var(--atrack)" stroke-width="3.5"/>
+    <text x="1072" y="111" text-anchor="end" class="nm">Quiet again, still armed</text>
+    <text x="943" y="125" class="sb">the normal ending</text>
   </g>
   <g class="stn" data-d="a_suppressed" tabindex="0">
-    <rect x="916" y="13" width="18" height="18" rx="4" fill="var(--you)" stroke="var(--you)" stroke-width="3"/>
-    <text x="943" y="19" class="stn-label" fill="var(--you)">After 2 tries → a person</text>
-    <text x="943" y="33" class="stn-sub" fill="var(--you)">something keeps re-triggering it</text>
+    <rect x="916" y="13" width="18" height="18" rx="4" fill="var(--ayou)" stroke="var(--ayou)" stroke-width="3"/>
+    <text x="1072" y="19" text-anchor="end" class="nm" fill="var(--ayou)">After 2 tries → a person</text>
+    <text x="1072" y="33" text-anchor="end" class="sb" fill="var(--ayou)">something keeps re-triggering it</text>
   </g>
 
   <!-- ================= LINE 2 STATIONS ================= -->
   <g class="stn" data-d="a_sweep" tabindex="0">
-    <circle cx="85" cy="190" r="9" fill="var(--card)" stroke="var(--l2)" stroke-width="3.5"/>
-    <text x="85" y="167" text-anchor="middle" class="stn-label">Every 15 minutes</text>
+    <circle cx="85" cy="190" r="9" fill="var(--panel)" stroke="var(--al2)" stroke-width="3.5"/>
+    <text x="85" y="167" text-anchor="middle" class="nm">Every 15 minutes</text>
   </g>
   <g class="stn" data-d="a_bypassed" tabindex="0">
-    <circle cx="300" cy="190" r="8" fill="var(--card)" stroke="var(--l2)" stroke-width="3.5"/>
-    <text x="300" y="167" text-anchor="middle" class="stn-label">A sensor is bypassed</text>
+    <circle cx="300" cy="190" r="8" fill="var(--panel)" stroke="var(--al2)" stroke-width="3.5"/>
+    <text x="300" y="167" text-anchor="middle" class="nm">A sensor is bypassed</text>
   </g>
   <g class="stn" data-d="a_bcycle" tabindex="0">
-    <circle cx="545" cy="190" r="8" fill="var(--card)" stroke="var(--l2)" stroke-width="3.5"/>
-    <text x="545" y="216" text-anchor="middle" class="stn-label">Take it off bypass</text>
-    <text x="545" y="229" text-anchor="middle" class="stn-sub">panel takes 9–13 min to admit it worked</text>
+    <circle cx="545" cy="190" r="8" fill="var(--panel)" stroke="var(--al2)" stroke-width="3.5"/>
+    <text x="545" y="216" text-anchor="middle" class="nm">Take it off bypass</text>
+    <text x="545" y="229" text-anchor="middle" class="sb">panel takes 9–13 min to admit it worked</text>
   </g>
   <g class="stn" data-d="a_bstuck" tabindex="0">
-    <rect x="851" y="181" width="18" height="18" rx="4" fill="var(--you)" stroke="var(--you)" stroke-width="3"/>
-    <text x="878" y="187" class="stn-label" fill="var(--you)">Twice and still off → a person</text>
-    <text x="878" y="201" class="stn-sub">that usually means the door is open</text>
+    <rect x="851" y="181" width="18" height="18" rx="4" fill="var(--ayou)" stroke="var(--ayou)" stroke-width="3"/>
+    <text x="878" y="187" class="nm" fill="var(--ayou)">Twice and still off → a person</text>
+    <text x="878" y="201" class="sb">that usually means the door is open</text>
   </g>
 
   <!-- ================= LINE 3 STATIONS ================= -->
   <g class="stn" data-d="a_says" tabindex="0">
-    <circle cx="85" cy="300" r="9" fill="var(--card)" stroke="var(--l5)" stroke-width="3.5"/>
-    <text x="85" y="277" text-anchor="middle" class="stn-label">Panel says something</text>
+    <circle cx="85" cy="300" r="9" fill="var(--panel)" stroke="var(--al5)" stroke-width="3.5"/>
+    <text x="85" y="277" text-anchor="middle" class="nm">Panel says something</text>
   </g>
   <g class="stn" data-d="a_sorter" tabindex="0">
-    <circle cx="380" cy="300" r="11" fill="var(--card)" stroke="var(--l5)" stroke-width="4"/>
-    <circle cx="380" cy="300" r="4" fill="var(--l5)"/>
-    <text x="380" y="277" text-anchor="middle" class="stn-label" fill="var(--l5)">The sorter</text>
-    <text x="380" y="264" text-anchor="middle" class="stn-sub" fill="var(--l5)">five ways out — see the next map</text>
+    <circle cx="380" cy="300" r="11" fill="var(--panel)" stroke="var(--al5)" stroke-width="4"/>
+    <circle cx="380" cy="300" r="4" fill="var(--al5)"/>
+    <text x="380" y="277" text-anchor="middle" class="nm" fill="var(--al5)">The sorter</text>
+    <text x="380" y="264" text-anchor="middle" class="sb" fill="var(--al5)">five ways out — see the next map</text>
   </g>
   <g class="stn" data-d="a_unknown" tabindex="0">
-    <circle cx="690" cy="300" r="9" fill="var(--card)" stroke="var(--l5)" stroke-width="3.5"/>
-    <text x="690" y="326" text-anchor="middle" class="stn-label">Never heard of it? Still a ticket</text>
-    <text x="690" y="339" text-anchor="middle" class="stn-sub">this is what was missing for six days</text>
+    <circle cx="690" cy="300" r="9" fill="var(--panel)" stroke="var(--al5)" stroke-width="3.5"/>
+    <text x="690" y="326" text-anchor="middle" class="nm">Never heard of it? Still a ticket</text>
+    <text x="690" y="339" text-anchor="middle" class="sb">this is what was missing for six days</text>
   </g>
   <g class="stn" data-d="a_tamperfeed" tabindex="0">
-    <circle cx="855" cy="300" r="7" fill="var(--card)" stroke="var(--l4)" stroke-width="3"/>
-    <text x="855" y="277" text-anchor="middle" class="stn-label" fill="var(--l4)">Tamper? → Line 4</text>
+    <circle cx="855" cy="300" r="7" fill="var(--panel)" stroke="var(--al4)" stroke-width="3"/>
+    <text x="855" y="277" text-anchor="middle" class="nm" fill="var(--al4)">Tamper? → Line 4</text>
   </g>
 
   <!-- ================= LINE 4 STATIONS ================= -->
   <g class="stn" data-d="a_tamper" tabindex="0">
-    <circle cx="85" cy="412" r="9" fill="var(--card)" stroke="var(--l4)" stroke-width="3.5"/>
-    <text x="85" y="389" text-anchor="middle" class="stn-label">Panel pulled off the wall</text>
+    <circle cx="85" cy="412" r="9" fill="var(--panel)" stroke="var(--al4)" stroke-width="3.5"/>
+    <text x="85" y="389" text-anchor="middle" class="nm">Panel pulled off the wall</text>
   </g>
   <g class="stn" data-d="a_tticket" tabindex="0">
-    <circle cx="300" cy="412" r="8" fill="var(--card)" stroke="var(--l4)" stroke-width="3.5"/>
-    <text x="300" y="389" text-anchor="middle" class="stn-label">Ticket, straight away</text>
-    <text x="300" y="376" text-anchor="middle" class="stn-sub">any hour, 3am included</text>
+    <circle cx="300" cy="412" r="8" fill="var(--panel)" stroke="var(--al4)" stroke-width="3.5"/>
+    <text x="300" y="389" text-anchor="middle" class="nm">Ticket, straight away</text>
+    <text x="300" y="376" text-anchor="middle" class="sb">any hour, 3am included</text>
   </g>
   <g class="stn" data-d="a_stefan" tabindex="0">
-    <rect x="521" y="403" width="18" height="18" rx="4" fill="var(--you)" stroke="var(--you)" stroke-width="3"/>
-    <text x="530" y="389" text-anchor="middle" class="stn-label" fill="var(--you)">Text Stefan</text>
-    <text x="530" y="376" text-anchor="middle" class="stn-sub">daytime only · once a day · twice max</text>
+    <rect x="521" y="403" width="18" height="18" rx="4" fill="var(--ayou)" stroke="var(--ayou)" stroke-width="3"/>
+    <text x="530" y="389" text-anchor="middle" class="nm" fill="var(--ayou)">Text Stefan</text>
+    <text x="530" y="376" text-anchor="middle" class="sb">daytime only · once a day · twice max</text>
   </g>
   <g class="stn" data-d="a_tesc" tabindex="0">
-    <rect x="781" y="403" width="18" height="18" rx="4" fill="var(--bad)" stroke="var(--bad)" stroke-width="3"/>
-    <text x="808" y="409" class="stn-label" fill="var(--bad)">Then you</text>
-    <text x="808" y="423" class="stn-sub" fill="var(--bad)">it's the hardware, not the clip</text>
+    <rect x="781" y="403" width="18" height="18" rx="4" fill="var(--abad)" stroke="var(--abad)" stroke-width="3"/>
+    <text x="808" y="409" class="nm" fill="var(--abad)">Then you</text>
+    <text x="808" y="423" class="sb" fill="var(--abad)">it's the hardware, not the clip</text>
   </g>
   <g class="stn" data-d="a_tclear" tabindex="0">
-    <circle cx="660" cy="466" r="9" fill="var(--card)" stroke="var(--ok)" stroke-width="3.5"/>
-    <text x="678" y="463" class="stn-label" fill="var(--ok)">Error disappears → ticket closes itself</text>
+    <circle cx="660" cy="466" r="9" fill="var(--panel)" stroke="var(--aok)" stroke-width="3.5"/>
+    <text x="678" y="463" class="nm" fill="var(--aok)">Error disappears → ticket closes itself</text>
   </g>
 </svg>
 </div>
 <div class="mapkey">
-  <span><span class="k guard"></span>a check that can stop everything</span>
-  <span><span class="k machine"></span>machine step</span>
-  <span><span class="k human"></span>reaches a person</span>
-  <span><span class="k dead"></span>quiet ending, nobody told</span>
+  <span><i class="kguard"></i>a check that can stop everything</span>
+  <span><i class="km"></i>machine step</span>
+  <span><i class="kh"></i>reaches a person</span>
+  <span><i class="kdead"></i>quiet ending, nobody told</span>
 </div>
 
 <h2>Line 3 in detail — the sorter · one line in, five ways out</h2>
@@ -1073,72 +1057,70 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <div class="buildmap">
 <svg viewBox="0 0 1080 520" role="img" aria-label="Detail map of how a panel condition is classified">
 
-  <path d="M70 250 H1000" stroke="var(--l5)" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M70 250 H1000" stroke="var(--al5)" stroke-width="8" fill="none" stroke-linecap="round"/>
 
   <path d="M250 250 Q285 250 292 222 L292 128 Q292 95 325 95 H470"
-        stroke="var(--track)" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+        stroke="var(--atrack)" stroke-width="6.5" fill="none" stroke-linecap="round"/>
   <path d="M420 250 Q452 250 458 226 L458 190 Q458 160 490 160 H700"
-        stroke="var(--bad)" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+        stroke="var(--abad)" stroke-width="6.5" fill="none" stroke-linecap="round"/>
   <path d="M590 250 Q622 250 628 276 L628 318 Q628 352 660 352 H860"
-        stroke="var(--l4)" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+        stroke="var(--al4)" stroke-width="6.5" fill="none" stroke-linecap="round"/>
   <path d="M760 250 Q792 250 798 278 L798 406 Q798 440 830 440 H980"
-        stroke="var(--l3)" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+        stroke="var(--al3)" stroke-width="6.5" fill="none" stroke-linecap="round"/>
 
-  <path d="M905 288 H1010" stroke="var(--bad)" stroke-width="4" stroke-dasharray="3 9"
+  <path d="M905 288 H1010" stroke="var(--abad)" stroke-width="4" stroke-dasharray="3 9"
         fill="none" opacity=".6"/>
-  <g stroke="var(--bad)" stroke-width="3.5" stroke-linecap="round" opacity=".75">
+  <g stroke="var(--abad)" stroke-width="3.5" stroke-linecap="round" opacity=".75">
     <path d="M1016 282 l11 12"/><path d="M1027 282 l-11 12"/>
   </g>
-  <text x="905" y="311" class="stn-sub" fill="var(--bad)" font-size="11">
-    until 25 Aug the line ended here — no ticket, no note, no error
-  </text>
+  <text x="1072" y="311" text-anchor="end" class="sb" fill="var(--abad)" font-size="11">until 25 Aug the line ended here — no ticket, no note, no error</text>
 
-  <text x="250" y="238" text-anchor="middle" class="ord">1st check</text>
-  <text x="420" y="238" text-anchor="middle" class="ord">2nd</text>
-  <text x="590" y="238" text-anchor="middle" class="ord">3rd</text>
-  <text x="760" y="238" text-anchor="middle" class="ord">4th</text>
+  <text x="250" y="238" text-anchor="middle" class="ln">1st check</text>
+  <text x="420" y="238" text-anchor="middle" class="ln">2nd</text>
+  <text x="590" y="238" text-anchor="middle" class="ln">3rd</text>
+  <text x="760" y="238" text-anchor="middle" class="ln">4th</text>
 
   <g class="stn" data-d="a_says" tabindex="0">
-    <circle cx="70" cy="250" r="9" fill="var(--card)" stroke="var(--l5)" stroke-width="3.5"/>
-    <text x="70" y="227" text-anchor="middle" class="stn-label">Panel says something</text>
-    <text x="70" y="214" text-anchor="middle" class="stn-sub">read live, every 60 seconds</text>
+    <circle cx="70" cy="250" r="9" fill="var(--panel)" stroke="var(--al5)" stroke-width="3.5"/>
+    <text x="70" y="227" text-anchor="middle" class="nm">Panel says something</text>
+    <text x="8" y="214" class="sb">read live, every 60 seconds</text>
   </g>
   <g class="stn" data-d="a_ignored" tabindex="0">
-    <circle cx="250" cy="250" r="7" fill="var(--card)" stroke="var(--l5)" stroke-width="3"/>
-    <circle cx="470" cy="95" r="9" fill="var(--track)" stroke="var(--track)" stroke-width="3.5"/>
-    <text x="488" y="92" class="stn-label">Silence — on purpose</text>
-    <text x="488" y="106" class="stn-sub">the 4 credential warnings, open since 10 Jul</text>
+    <circle cx="250" cy="250" r="7" fill="var(--panel)" stroke="var(--al5)" stroke-width="3"/>
+    <circle cx="470" cy="95" r="9" fill="var(--atrack)" stroke="var(--atrack)" stroke-width="3.5"/>
+    <text x="488" y="92" class="nm">Silence — on purpose</text>
+    <text x="488" y="106" class="sb">the 4 credential warnings, open since 10 Jul</text>
   </g>
   <g class="stn" data-d="a_critical" tabindex="0">
-    <circle cx="420" cy="250" r="7" fill="var(--card)" stroke="var(--l5)" stroke-width="3"/>
-    <rect x="691" y="151" width="18" height="18" rx="4" fill="var(--bad)" stroke="var(--bad)" stroke-width="3"/>
-    <text x="718" y="157" class="stn-label" fill="var(--bad)">Text you, now</text>
-    <text x="718" y="171" class="stn-sub" fill="var(--bad)">battery dying — the panel has a clock on it</text>
+    <circle cx="420" cy="250" r="7" fill="var(--panel)" stroke="var(--al5)" stroke-width="3"/>
+    <rect x="691" y="151" width="18" height="18" rx="4" fill="var(--abad)" stroke="var(--abad)" stroke-width="3"/>
+    <text x="718" y="157" class="nm" fill="var(--abad)">Text you, now</text>
+    <text x="718" y="171" class="sb" fill="var(--abad)">battery dying — the panel has a clock on it</text>
   </g>
   <g class="stn" data-d="a_handled" tabindex="0">
-    <circle cx="590" cy="250" r="7" fill="var(--card)" stroke="var(--l5)" stroke-width="3"/>
-    <circle cx="860" cy="352" r="9" fill="var(--card)" stroke="var(--l4)" stroke-width="3.5"/>
-    <text x="860" y="378" text-anchor="middle" class="stn-label" fill="var(--l4)">Tamper → Line 4</text>
-    <text x="860" y="391" text-anchor="middle" class="stn-sub">pulled out here so it isn't filed twice</text>
+    <circle cx="590" cy="250" r="7" fill="var(--panel)" stroke="var(--al5)" stroke-width="3"/>
+    <circle cx="860" cy="352" r="9" fill="var(--panel)" stroke="var(--al4)" stroke-width="3.5"/>
+    <text x="860" y="378" text-anchor="middle" class="nm" fill="var(--al4)">Tamper → Line 4</text>
+    <text x="860" y="391" text-anchor="middle" class="sb">pulled out here so it isn't filed twice</text>
   </g>
   <g class="stn" data-d="a_ticket" tabindex="0">
-    <circle cx="760" cy="250" r="7" fill="var(--card)" stroke="var(--l5)" stroke-width="3"/>
-    <circle cx="980" cy="440" r="9" fill="var(--card)" stroke="var(--l3)" stroke-width="3.5"/>
-    <text x="980" y="466" text-anchor="middle" class="stn-label">Maintenance ticket</text>
-    <text x="980" y="479" text-anchor="middle" class="stn-sub">wi-fi down — real, not urgent</text>
+    <circle cx="760" cy="250" r="7" fill="var(--panel)" stroke="var(--al5)" stroke-width="3"/>
+    <circle cx="980" cy="440" r="9" fill="var(--panel)" stroke="var(--al3)" stroke-width="3.5"/>
+    <text x="980" y="466" text-anchor="middle" class="nm">Maintenance ticket</text>
+    <text x="980" y="479" text-anchor="middle" class="sb">wi-fi down — real, not urgent</text>
   </g>
   <g class="stn" data-d="a_unknown" tabindex="0">
-    <circle cx="1000" cy="250" r="11" fill="var(--card)" stroke="var(--l5)" stroke-width="4"/>
-    <circle cx="1000" cy="250" r="4" fill="var(--l5)"/>
-    <text x="1000" y="224" text-anchor="middle" class="stn-label" fill="var(--l5)">Anything else → a ticket</text>
-    <text x="1000" y="211" text-anchor="middle" class="stn-sub" fill="var(--l5)">THE CHANGE · end of the line</text>
+    <circle cx="1000" cy="250" r="11" fill="var(--panel)" stroke="var(--al5)" stroke-width="4"/>
+    <circle cx="1000" cy="250" r="4" fill="var(--al5)"/>
+    <text x="1000" y="224" text-anchor="middle" class="nm" fill="var(--al5)">Anything else → a ticket</text>
+    <text x="1000" y="211" text-anchor="middle" class="sb" fill="var(--al5)">THE CHANGE · end of the line</text>
   </g>
 </svg>
 </div>
 <div class="mapkey">
-  <span><span class="k ghost"></span>where the line used to end — nothing was told</span>
-  <span><span class="k machine"></span>machine step</span>
-  <span><span class="k human"></span>reaches a person</span>
+  <span><i class="kghost"></i>where the line used to end — nothing was told</span>
+  <span><i class="km"></i>machine step</span>
+  <span><i class="kh"></i>reaches a person</span>
 </div>
 </div>
 
@@ -1336,7 +1318,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <h3>Alarm Automation Protocol &mdash; the alarm route maps live on this page now<span class="kind">MAP</span></h3></summary>
       <p>The two alarm maps are ported off the standalone artifact and into this page as a named section, <b>Alarm Automation Protocol</b>: the four-line overview and the Line&nbsp;3 sorter detail, every station clickable into the same detail panel everything else here uses. It sits alongside pipe&nbsp;6, which shows the same lanes in the pipe idiom &mdash; the map is for seeing the shape, the pipe for reading the chain. Station keys are namespaced <code>a_*</code> so they cannot collide with the page&rsquo;s existing dictionary.</p>
       <p><strong>Fixed in the same pass:</strong> the detail-panel handler bound only <code>[data-k]</code>, so the <b>35 <code>data-d</code> stations of the Annex Transit map had been inert since it was ported</b> &mdash; they looked clickable and did nothing. Now both attributes bind, and the &ldquo;is there an entry for this?&rdquo; check happens at <em>click</em> time rather than bind time, because later <code>&lt;script&gt;</code> blocks <code>Object.assign</code> more entries onto <code>D</code> after the handler runs &mdash; a bind-time check silently ignores every station defined further down the page. (Caught by testing the ported stations rather than assuming: the first version of this change had exactly that bug.)</p>
-      <p>Verified in-browser: both maps render at full size, all 25 alarm stations respond, the transit and pipe stations still work, dark palette swaps, and on mobile the maps scroll inside their own box while the page does not.</p>
+      <p><strong>Re-done 15:5xZ after Junyan's screenshot showed it broken:</strong> the first port styled the maps in their own idiom instead of the page's, and shipped two visible defects — <b>Line 2 was completely invisible</b> (the scoped palette never defined <code>--l2</code>, so its track stroked an undefined variable and painted nothing) and labels clipped off the right edge (forced monospace is far wider than the condensed font the coordinates were drawn for). Now restyled to the page's own <code>.buildmap</code> idiom — serif station names, mono subtitles, standard <code>.mapkey</code> — with the palette namespaced <code>--a*</code> so a missing variable cannot silently borrow or lose a color again, and five edge labels re-anchored inside the frame. Verified by measurement: zero unpainted strokes, zero labels outside their box, all 25 stations click, dark palette swaps, no sideways page scroll. The lesson, again: the first check counted stations and clicks but never asked whether the tracks <em>painted</em> — presence is not rendering.</p>
       </details>
     </li>
 

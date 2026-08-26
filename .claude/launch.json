@@ -3,9 +3,12 @@
   "configurations": [
     {
       "name": "day-sheet",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8731"],
-      "port": 8731
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "exec python3 -m http.server \"${PORT:-8731}\""
+      ],
+      "autoPort": true
     }
   ]
 }
