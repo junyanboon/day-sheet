@@ -1149,7 +1149,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
-      <li class="entry det"><details><summary><span class="when">2026-08-26</span>
+      <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-26 &middot; 20:58Z</span>
+      <h3>A sent access text now covers the confirmation &mdash; the missing direction<span class="kind">GUARD</span></h3></summary>
+      <p><strong>Daniel again, one hour later.</strong> His provisioning failure meant the confirmation never got written; the HTA went out first at 16:25 opening <em>&ldquo;You have an upcoming booking at the Dance Annex - Studio 509A &#127881;&rdquo;</em> &mdash; which IS the confirmation, and carries more than the confirmation does. The next pass then queued &ldquo;you&rsquo;re all set&rdquo; on top of it. Junyan: <em>&ldquo;his you&rsquo;re all set confirmation is actually a duplicate&rdquo;</em>. Row marked Will&nbsp;Not&nbsp;Send.</p>
+      <p><strong>The asymmetry:</strong> the sweep already treated the pair as one message in ONE direction &mdash; a confirmation on file suppresses the HTA (<code>hta:not-needed-returning</code>, visible in that very pass&rsquo;s ops text) &mdash; but had no rule for the reverse. <code>access_text_covers()</code>: an access-SHAPED row from any lane, <code>Status = Sent</code>, created inside the 48&nbsp;h before the booking&rsquo;s start (the HTA carries no date in its body, so the join is time). EOB texts are not access-shaped and still never suppress; fails closed. <strong>Deliberate narrowing</strong> of the 2026-08-20 &ldquo;an access text is not a confirmation&rdquo; rule &mdash; that still holds everywhere except a SENT access text inside the booking&rsquo;s own window, which with booking-time confirmations is essentially the recovery case only. Rev <code>event-gate-00095-c8b</code>, fingerprint <code>cf2e35e52069</code> verified; 589 tests pass.</p>
+      </details>
+    </li>
+
+    <li class="entry det"><details><summary><span class="when">2026-08-26</span>
         <h3>The Deck's case-file cards were never rendering <span class="kind">UI BUG</span></h3></summary>
         <p>Every HTR-suggestion card showed the "predates the case-file filing format" stub even for rows
         filed under the convention. Cause: <code>fetchSugContent</code> in deck.html only understood one
