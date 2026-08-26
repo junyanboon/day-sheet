@@ -714,6 +714,251 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
 </details>
 
+<!-- ── Alarm Automation Protocol · ported from the Annex Alarm artifact 2026-08-26 ── -->
+<style>
+.alarmmap{--l1:#00929c;--l3:#2467c9;--l4:#c22f7d;--l5:#a87f00;--you:#7a4fd0;
+          --bad:#d1322e;--ok:#2e9e4f;--track:#c9c5ba;--mut:var(--muted);--card:var(--panel)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .alarmmap{
+  --l1:#2cc6cf;--l3:#5a95ea;--l4:#e05a9f;--l5:#d3a624;--you:#a685e8;
+  --bad:#f0605c;--ok:#4cc471;--track:#3a4252}}
+:root[data-theme="dark"] .alarmmap{
+  --l1:#2cc6cf;--l3:#5a95ea;--l4:#e05a9f;--l5:#d3a624;--you:#a685e8;
+  --bad:#f0605c;--ok:#4cc471;--track:#3a4252}
+.alarmmap svg{display:block;min-width:980px;width:100%;height:auto}
+.alarmmap svg text{font-family:ui-monospace,Menlo,monospace;fill:var(--ink)}
+.alarmmap .stn-label{font-size:12px;font-weight:700}
+.alarmmap .stn-sub{font-size:9.5px;font-weight:500;fill:var(--muted)}
+.alarmmap .gate{font-size:9.5px;font-weight:700;fill:var(--muted)}
+.alarmmap .ord{font-size:10.5px;font-weight:700;fill:var(--muted)}
+.alarmmap .term{font-size:13px;font-weight:700}
+.alarmmap g.stn{cursor:pointer}
+.alarmmap g.stn:hover circle,.alarmmap g.stn:hover rect,.alarmmap g.stn:hover polygon{stroke-width:5}
+.alarmmap g.stn:focus{outline:none}
+.alarmmap g.stn:focus>circle,.alarmmap g.stn:focus>rect,.alarmmap g.stn:focus>polygon{stroke-width:5}
+.alarmmap .buildmap{overflow-x:auto;margin:0 0 .6rem}
+.alarmmap .mapkey{display:flex;flex-wrap:wrap;gap:1rem;margin:.5rem .2rem .9rem;
+                  color:var(--muted);font-size:.78rem;align-items:center;
+                  font-family:ui-monospace,Menlo,monospace}
+.alarmmap .mapkey span{display:inline-flex;align-items:center;gap:.4rem}
+.alarmmap .mapkey .k{width:.8rem;height:.8rem;border-radius:50%;display:inline-block;flex-shrink:0}
+.alarmmap .mapkey .k.machine{background:var(--panel);border:3px solid var(--track)}
+.alarmmap .mapkey .k.human{background:var(--you);border:3px solid var(--you);border-radius:3px}
+.alarmmap .mapkey .k.guard{background:var(--panel);border:3px solid var(--bad)}
+.alarmmap .mapkey .k.dead{background:var(--track);border:3px solid var(--track)}
+.alarmmap .mapkey .k.ghost{width:1.3rem;height:0;border-top:3px dashed var(--bad);border-radius:0}
+</style>
+<div class="pipes alarmmap" id="alarmproto">
+<h2>Alarm Automation Protocol — four lines · one panel read every 60s</h2>
+<p class="hint">Everything the five alarm panels do without you, as a route map. All four lines run off a single read of the panels every 60 seconds, and all of it is deterministic — it keeps working in a full token outage. Click any station for what it does and why. Companion to pipe&nbsp;6 above, which shows the same lanes in the pipe idiom.</p>
+<div class="buildmap">
+<svg viewBox="0 0 1080 470" role="img" aria-label="Overview map of the four automated alarm lines">
+
+  <!-- ===== LINE 1 · SIREN ===== -->
+  <path d="M85 68 H700" stroke="var(--bad)" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M700 68 Q740 68 748 44 Q756 22 800 22 H1000"
+        stroke="var(--bad)" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+  <path d="M700 68 Q740 68 748 92 Q756 114 800 114 H1000"
+        stroke="var(--track)" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+  <text x="20" y="72" class="term" fill="var(--bad)">1</text>
+
+  <!-- ===== LINE 2 · BYPASS ===== -->
+  <path d="M85 190 H860" stroke="var(--l2)" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <text x="20" y="194" class="term" fill="var(--l2)">2</text>
+
+  <!-- ===== LINE 3 · TROUBLE ===== -->
+  <path d="M85 300 H860" stroke="var(--l5)" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <text x="20" y="304" class="term" fill="var(--l5)">3</text>
+
+  <!-- ===== LINE 4 · TAMPER ===== -->
+  <path d="M85 412 H820" stroke="var(--l4)" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M580 412 Q615 412 624 438 Q633 464 651 466"
+        stroke="var(--ok)" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <text x="20" y="416" class="term" fill="var(--l4)">4</text>
+
+  <!-- interchange: line 3 feeds line 4 -->
+  <path d="M690 300 Q718 300 722 330 L722 384 Q722 412 750 412"
+        stroke="var(--l4)" stroke-width="4" fill="none" stroke-dasharray="1 7"
+        stroke-linecap="round" opacity=".8"/>
+
+  <!-- ================= LINE 1 STATIONS ================= -->
+  <g class="stn" data-d="a_siren" tabindex="0">
+    <circle cx="85" cy="68" r="9" fill="var(--card)" stroke="var(--bad)" stroke-width="3.5"/>
+    <text x="85" y="45" text-anchor="middle" class="stn-label">Siren goes off</text>
+  </g>
+  <g class="stn" data-d="a_wait" tabindex="0">
+    <circle cx="255" cy="68" r="8" fill="var(--card)" stroke="var(--bad)" stroke-width="3.5"/>
+    <text x="255" y="45" text-anchor="middle" class="stn-label">Let it scream 3 minutes</text>
+    <text x="255" y="32" text-anchor="middle" class="stn-sub">the point is to scare people off</text>
+  </g>
+  <g class="stn" data-d="a_guard" tabindex="0">
+    <circle cx="455" cy="68" r="13" fill="var(--card)" stroke="var(--bad)" stroke-width="4.5"/>
+    <circle cx="455" cy="68" r="4.5" fill="var(--bad)"/>
+    <text x="455" y="99" text-anchor="middle" class="stn-label" fill="var(--bad)">Is anyone in there?</text>
+    <text x="455" y="112" text-anchor="middle" class="stn-sub" fill="var(--bad)">THE HANANO FIX · nothing is sent until this passes</text>
+  </g>
+  <g class="stn" data-d="a_cycle" tabindex="0">
+    <circle cx="620" cy="68" r="8" fill="var(--card)" stroke="var(--bad)" stroke-width="3.5"/>
+    <text x="620" y="45" text-anchor="middle" class="stn-label">Turn off, turn back on</text>
+  </g>
+  <g class="stn" data-d="a_quiet" tabindex="0">
+    <circle cx="925" cy="114" r="9" fill="var(--track)" stroke="var(--track)" stroke-width="3.5"/>
+    <text x="943" y="111" class="stn-label">Quiet again, still armed</text>
+    <text x="943" y="125" class="stn-sub">the normal ending</text>
+  </g>
+  <g class="stn" data-d="a_suppressed" tabindex="0">
+    <rect x="916" y="13" width="18" height="18" rx="4" fill="var(--you)" stroke="var(--you)" stroke-width="3"/>
+    <text x="943" y="19" class="stn-label" fill="var(--you)">After 2 tries → a person</text>
+    <text x="943" y="33" class="stn-sub" fill="var(--you)">something keeps re-triggering it</text>
+  </g>
+
+  <!-- ================= LINE 2 STATIONS ================= -->
+  <g class="stn" data-d="a_sweep" tabindex="0">
+    <circle cx="85" cy="190" r="9" fill="var(--card)" stroke="var(--l2)" stroke-width="3.5"/>
+    <text x="85" y="167" text-anchor="middle" class="stn-label">Every 15 minutes</text>
+  </g>
+  <g class="stn" data-d="a_bypassed" tabindex="0">
+    <circle cx="300" cy="190" r="8" fill="var(--card)" stroke="var(--l2)" stroke-width="3.5"/>
+    <text x="300" y="167" text-anchor="middle" class="stn-label">A sensor is bypassed</text>
+  </g>
+  <g class="stn" data-d="a_bcycle" tabindex="0">
+    <circle cx="545" cy="190" r="8" fill="var(--card)" stroke="var(--l2)" stroke-width="3.5"/>
+    <text x="545" y="216" text-anchor="middle" class="stn-label">Take it off bypass</text>
+    <text x="545" y="229" text-anchor="middle" class="stn-sub">panel takes 9–13 min to admit it worked</text>
+  </g>
+  <g class="stn" data-d="a_bstuck" tabindex="0">
+    <rect x="851" y="181" width="18" height="18" rx="4" fill="var(--you)" stroke="var(--you)" stroke-width="3"/>
+    <text x="878" y="187" class="stn-label" fill="var(--you)">Twice and still off → a person</text>
+    <text x="878" y="201" class="stn-sub">that usually means the door is open</text>
+  </g>
+
+  <!-- ================= LINE 3 STATIONS ================= -->
+  <g class="stn" data-d="a_says" tabindex="0">
+    <circle cx="85" cy="300" r="9" fill="var(--card)" stroke="var(--l5)" stroke-width="3.5"/>
+    <text x="85" y="277" text-anchor="middle" class="stn-label">Panel says something</text>
+  </g>
+  <g class="stn" data-d="a_sorter" tabindex="0">
+    <circle cx="380" cy="300" r="11" fill="var(--card)" stroke="var(--l5)" stroke-width="4"/>
+    <circle cx="380" cy="300" r="4" fill="var(--l5)"/>
+    <text x="380" y="277" text-anchor="middle" class="stn-label" fill="var(--l5)">The sorter</text>
+    <text x="380" y="264" text-anchor="middle" class="stn-sub" fill="var(--l5)">five ways out — see the next map</text>
+  </g>
+  <g class="stn" data-d="a_unknown" tabindex="0">
+    <circle cx="690" cy="300" r="9" fill="var(--card)" stroke="var(--l5)" stroke-width="3.5"/>
+    <text x="690" y="326" text-anchor="middle" class="stn-label">Never heard of it? Still a ticket</text>
+    <text x="690" y="339" text-anchor="middle" class="stn-sub">this is what was missing for six days</text>
+  </g>
+  <g class="stn" data-d="a_tamperfeed" tabindex="0">
+    <circle cx="855" cy="300" r="7" fill="var(--card)" stroke="var(--l4)" stroke-width="3"/>
+    <text x="855" y="277" text-anchor="middle" class="stn-label" fill="var(--l4)">Tamper? → Line 4</text>
+  </g>
+
+  <!-- ================= LINE 4 STATIONS ================= -->
+  <g class="stn" data-d="a_tamper" tabindex="0">
+    <circle cx="85" cy="412" r="9" fill="var(--card)" stroke="var(--l4)" stroke-width="3.5"/>
+    <text x="85" y="389" text-anchor="middle" class="stn-label">Panel pulled off the wall</text>
+  </g>
+  <g class="stn" data-d="a_tticket" tabindex="0">
+    <circle cx="300" cy="412" r="8" fill="var(--card)" stroke="var(--l4)" stroke-width="3.5"/>
+    <text x="300" y="389" text-anchor="middle" class="stn-label">Ticket, straight away</text>
+    <text x="300" y="376" text-anchor="middle" class="stn-sub">any hour, 3am included</text>
+  </g>
+  <g class="stn" data-d="a_stefan" tabindex="0">
+    <rect x="521" y="403" width="18" height="18" rx="4" fill="var(--you)" stroke="var(--you)" stroke-width="3"/>
+    <text x="530" y="389" text-anchor="middle" class="stn-label" fill="var(--you)">Text Stefan</text>
+    <text x="530" y="376" text-anchor="middle" class="stn-sub">daytime only · once a day · twice max</text>
+  </g>
+  <g class="stn" data-d="a_tesc" tabindex="0">
+    <rect x="781" y="403" width="18" height="18" rx="4" fill="var(--bad)" stroke="var(--bad)" stroke-width="3"/>
+    <text x="808" y="409" class="stn-label" fill="var(--bad)">Then you</text>
+    <text x="808" y="423" class="stn-sub" fill="var(--bad)">it's the hardware, not the clip</text>
+  </g>
+  <g class="stn" data-d="a_tclear" tabindex="0">
+    <circle cx="660" cy="466" r="9" fill="var(--card)" stroke="var(--ok)" stroke-width="3.5"/>
+    <text x="678" y="463" class="stn-label" fill="var(--ok)">Error disappears → ticket closes itself</text>
+  </g>
+</svg>
+</div>
+<div class="mapkey">
+  <span><span class="k guard"></span>a check that can stop everything</span>
+  <span><span class="k machine"></span>machine step</span>
+  <span><span class="k human"></span>reaches a person</span>
+  <span><span class="k dead"></span>quiet ending, nobody told</span>
+</div>
+
+<h2>Line 3 in detail — the sorter · one line in, five ways out</h2>
+<p class="hint">The lane that was silently broken for six days. Until 25 Aug a panel condition that matched no named list fell off the end of the classifier — no error, no log, no row. The default is now <b>file a ticket</b>, so the only way to silence a condition is to name it.</p>
+<div class="buildmap">
+<svg viewBox="0 0 1080 520" role="img" aria-label="Detail map of how a panel condition is classified">
+
+  <path d="M70 250 H1000" stroke="var(--l5)" stroke-width="8" fill="none" stroke-linecap="round"/>
+
+  <path d="M250 250 Q285 250 292 222 L292 128 Q292 95 325 95 H470"
+        stroke="var(--track)" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+  <path d="M420 250 Q452 250 458 226 L458 190 Q458 160 490 160 H700"
+        stroke="var(--bad)" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+  <path d="M590 250 Q622 250 628 276 L628 318 Q628 352 660 352 H860"
+        stroke="var(--l4)" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+  <path d="M760 250 Q792 250 798 278 L798 406 Q798 440 830 440 H980"
+        stroke="var(--l3)" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+
+  <path d="M905 288 H1010" stroke="var(--bad)" stroke-width="4" stroke-dasharray="3 9"
+        fill="none" opacity=".6"/>
+  <g stroke="var(--bad)" stroke-width="3.5" stroke-linecap="round" opacity=".75">
+    <path d="M1016 282 l11 12"/><path d="M1027 282 l-11 12"/>
+  </g>
+  <text x="905" y="311" class="stn-sub" fill="var(--bad)" font-size="11">
+    until 25 Aug the line ended here — no ticket, no note, no error
+  </text>
+
+  <text x="250" y="238" text-anchor="middle" class="ord">1st check</text>
+  <text x="420" y="238" text-anchor="middle" class="ord">2nd</text>
+  <text x="590" y="238" text-anchor="middle" class="ord">3rd</text>
+  <text x="760" y="238" text-anchor="middle" class="ord">4th</text>
+
+  <g class="stn" data-d="a_says" tabindex="0">
+    <circle cx="70" cy="250" r="9" fill="var(--card)" stroke="var(--l5)" stroke-width="3.5"/>
+    <text x="70" y="227" text-anchor="middle" class="stn-label">Panel says something</text>
+    <text x="70" y="214" text-anchor="middle" class="stn-sub">read live, every 60 seconds</text>
+  </g>
+  <g class="stn" data-d="a_ignored" tabindex="0">
+    <circle cx="250" cy="250" r="7" fill="var(--card)" stroke="var(--l5)" stroke-width="3"/>
+    <circle cx="470" cy="95" r="9" fill="var(--track)" stroke="var(--track)" stroke-width="3.5"/>
+    <text x="488" y="92" class="stn-label">Silence — on purpose</text>
+    <text x="488" y="106" class="stn-sub">the 4 credential warnings, open since 10 Jul</text>
+  </g>
+  <g class="stn" data-d="a_critical" tabindex="0">
+    <circle cx="420" cy="250" r="7" fill="var(--card)" stroke="var(--l5)" stroke-width="3"/>
+    <rect x="691" y="151" width="18" height="18" rx="4" fill="var(--bad)" stroke="var(--bad)" stroke-width="3"/>
+    <text x="718" y="157" class="stn-label" fill="var(--bad)">Text you, now</text>
+    <text x="718" y="171" class="stn-sub" fill="var(--bad)">battery dying — the panel has a clock on it</text>
+  </g>
+  <g class="stn" data-d="a_handled" tabindex="0">
+    <circle cx="590" cy="250" r="7" fill="var(--card)" stroke="var(--l5)" stroke-width="3"/>
+    <circle cx="860" cy="352" r="9" fill="var(--card)" stroke="var(--l4)" stroke-width="3.5"/>
+    <text x="860" y="378" text-anchor="middle" class="stn-label" fill="var(--l4)">Tamper → Line 4</text>
+    <text x="860" y="391" text-anchor="middle" class="stn-sub">pulled out here so it isn't filed twice</text>
+  </g>
+  <g class="stn" data-d="a_ticket" tabindex="0">
+    <circle cx="760" cy="250" r="7" fill="var(--card)" stroke="var(--l5)" stroke-width="3"/>
+    <circle cx="980" cy="440" r="9" fill="var(--card)" stroke="var(--l3)" stroke-width="3.5"/>
+    <text x="980" y="466" text-anchor="middle" class="stn-label">Maintenance ticket</text>
+    <text x="980" y="479" text-anchor="middle" class="stn-sub">wi-fi down — real, not urgent</text>
+  </g>
+  <g class="stn" data-d="a_unknown" tabindex="0">
+    <circle cx="1000" cy="250" r="11" fill="var(--card)" stroke="var(--l5)" stroke-width="4"/>
+    <circle cx="1000" cy="250" r="4" fill="var(--l5)"/>
+    <text x="1000" y="224" text-anchor="middle" class="stn-label" fill="var(--l5)">Anything else → a ticket</text>
+    <text x="1000" y="211" text-anchor="middle" class="stn-sub" fill="var(--l5)">THE CHANGE · end of the line</text>
+  </g>
+</svg>
+</div>
+<div class="mapkey">
+  <span><span class="k ghost"></span>where the line used to end — nothing was told</span>
+  <span><span class="k machine"></span>machine step</span>
+  <span><span class="k human"></span>reaches a person</span>
+</div>
+</div>
+
 <div id="detail"><h3>Click a hop or node</h3><p class="meta">Green pipes keep flowing when Claude tokens run out. Amber stops dead.</p></div>
 
 <section class="logsec">
@@ -790,6 +1035,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>The control that kills the obvious wrong answer.</strong> Himanshi Mehta booked on Aug&nbsp;1 &mdash; <em>during</em> the blackout &mdash; and still got a nightly row, because her Artist record dated from June&nbsp;19. Every Aug&nbsp;9 booking with a pre-existing Artist row built; both without one did not. The discriminator is not <em>when the booking was made</em>, it is <strong>whether the renter existed in Notion</strong>. Wanetta&rsquo;s and Ali Ahmad&rsquo;s Artist rows were stamped <code>2026-08-07 18:21:16Z</code> &mdash; five minutes after the blackout lifted at 18:16Z &mdash; and ten catch-up board rows followed at 19:45:54Z. The repair happened on Aug&nbsp;7; the Aug&nbsp;25&ndash;26 pass re-verified it rather than discovering it.</p>
       <p><strong>Partly fixed already, and the gap that remains.</strong> The Registrar (<code>booking-sweep</code>, live 2026-08-20) reads Skedda directly and re-derives Artist row, code, board row and confirmation every pass &mdash; the same blackout today would self-repair inside 30 minutes. But only within <code>SWEEP_HORIZON_DAYS = 14</code>. <strong>Past 14 days the Planner still owns the build, and still depends on the Artist DB.</strong> Isabella&rsquo;s Aug&nbsp;14, Salia&rsquo;s Aug&nbsp;16, Tamina&rsquo;s Aug&nbsp;17 and Saskia&rsquo;s Aug&nbsp;18 rows all sat in that uncovered band.</p>
       <p>⚠️ <strong>Do not patch this by having the Planner create Artist rows</strong> &mdash; with no Skedda connector it cannot see the holder record it would need. The honest options are a Skedda read for the Planner, a wider Registrar horizon (declined on policy 2026-08-25), or routing the <code>not-in-Artist-DB</code> escalation somewhere that alarms instead of a run-report checklist. <strong>That escalation working exactly as designed is how this stayed invisible for 11 days.</strong> No production change made &mdash; diagnosis only; canon <code>library/gotchas.md</code> <code>7c3154ca</code>.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-26 &middot; 15:10Z</span>
+      <h3>Alarm Automation Protocol &mdash; the alarm route maps live on this page now<span class="kind">MAP</span></h3></summary>
+      <p>The two alarm maps are ported off the standalone artifact and into this page as a named section, <b>Alarm Automation Protocol</b>: the four-line overview and the Line&nbsp;3 sorter detail, every station clickable into the same detail panel everything else here uses. It sits alongside pipe&nbsp;6, which shows the same lanes in the pipe idiom &mdash; the map is for seeing the shape, the pipe for reading the chain. Station keys are namespaced <code>a_*</code> so they cannot collide with the page&rsquo;s existing dictionary.</p>
+      <p><strong>Fixed in the same pass:</strong> the detail-panel handler bound only <code>[data-k]</code>, so the <b>35 <code>data-d</code> stations of the Annex Transit map had been inert since it was ported</b> &mdash; they looked clickable and did nothing. Now both attributes bind, and the &ldquo;is there an entry for this?&rdquo; check happens at <em>click</em> time rather than bind time, because later <code>&lt;script&gt;</code> blocks <code>Object.assign</code> more entries onto <code>D</code> after the handler runs &mdash; a bind-time check silently ignores every station defined further down the page. (Caught by testing the ported stations rather than assuming: the first version of this change had exactly that bug.)</p>
+      <p>Verified in-browser: both maps render at full size, all 25 alarm stations respond, the transit and pipe stations still work, dark palette swaps, and on mobile the maps scroll inside their own box while the page does not.</p>
       </details>
     </li>
 
@@ -2836,8 +3091,12 @@ slack:["Slack #desk-status","incoming webhook (FBS Watch app)","Deterministic ou
 panellog:["Watchdog log","Cloud Logging · [watchdog] prefixed lines","One line per tick recording what the watchdog saw and what it would have done. During the dry run this is the whole product: it proves the decisions before anything acts. Read it with gcloud logging read '… textPayload:\"[watchdog]\"'. Becomes the Night Watch alarm rundown once real trips exist.","ok"],
 morning:["Morning surfaces","Night Watch page · Fixer Report","Daily human review surfaces. Generated by LLM passes, consumed by Junyan.","tok"]};
 const detail=document.getElementById('detail');
-document.querySelectorAll('[data-k]').forEach(n=>{
-  const show=()=>{const[t,m,b,s]=D[n.dataset.k];
+document.querySelectorAll('[data-k],[data-d]').forEach(n=>{
+  const key=n.dataset.k||n.dataset.d;
+  /* Checked at CLICK time, not bind time: later <script> blocks Object.assign more
+     entries onto D after this runs, so a bind-time check would permanently ignore
+     every station defined further down the page. */
+  const show=()=>{const e=D[key]; if(!e) return; const[t,m,b,s]=e;
     detail.innerHTML=`<h3>${t}<span class="badge ${s}">${s==='ok'?'SURVIVES TOKEN OUTAGE':'TOKEN-GATED'}</span></h3><p class="meta">${m}</p><p>${b}</p>`;};
   n.addEventListener('click',show);
   n.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show();}});
@@ -2892,6 +3151,56 @@ b_conf:["You send the confirmation","Human gate · dispatched by the send engine
 b_hta:["HTA at T−24","The Host · 04:00 daily · sent by you","For advance bookings the access text (door code, alarm code, walkthrough) is composed by the Host's morning batch the day before, and goes out through the same human gate.","tok"],
 b_pair:["The same-day pair","The Registrar composes · auto-send HELD 25 Aug","Today/tomorrow bookings get confirmation + HTA written in one pass. Auto-send ran for four hours on 25 Aug, texted nine renters, and was held the same evening; three gates now stand behind the switch (booked-late, human-said-no, master hold) and Junyan sends the pair himself until the queued wording earns the switch back.","tok"],
 b_dance:["They dance","End of the line","Room held, code proven, messages sent. Every failure on the way here is now late and noisy — a Review row or an ops text — never silent.","ok"]});
+</script>
+<script>
+/* Alarm Automation Protocol stations — same #detail panel */
+Object.assign(D,{
+a_siren:["Siren goes off", null,
+            "Somebody trips a sensor on an armed studio. Nobody is coming — the panels are not police-monitored, so the siren's whole job is to make an unwanted person leave.","ok"],
+a_wait:["Let it scream 3 minutes", "deliberate",
+            "The alarm is left running on purpose before anything tries to stop it. Three minutes is long enough to do its job, and long enough that a person who set it off by accident has usually punched in their code — in which case the rest of the line never runs.","ok"],
+a_guard:["Is anyone in there?", "the Hanano fix",
+            "<b>The check that was missing on 22 August.</b> It asks three things, in this order, before a single command leaves: is the studio <b>still armed</b>; is the siren <b>still going</b>; is any door open or any motion sensor picking something up.<br><br>The first question is the one that matters. The old code only asked the second — and that flag stays stuck on even after somebody disarms, so Hanano dealing with the alarm read as <i>nobody has dealt with this</i>, and it armed the studio on her twice. If a studio is no longer armed, a person turned it off, and a person turning it off is the clearest sign of life this system will ever get.<br><br>All three run <b>before</b> the turn-off, never between turn-off and turn-on — stopping halfway would leave the studio wide open.","ok"],
+a_cycle:["Turn off, turn back on", null,
+            "A clean off-and-on: it silences the siren and puts the studio straight back on guard, in the same mode it was in. If the turn-back-on doesn't confirm, that is treated as an emergency — a studio left unguarded while the log says fine is the worst thing this system could do.","ok"],
+a_quiet:["Quiet again, still armed", "the normal ending",
+            "The usual outcome, and deliberately silent — you are not told. A stranger set it off, the siren ran, the studio re-armed itself. Nothing here needs a person.","ok"],
+a_suppressed:["After 2 tries → a person", "gives up",
+            "If the siren is still going after two clean off-and-on cycles, something is actively re-triggering it and turning the alarm off repeatedly is the wrong answer. It stops and calls a human. This cap is the only reason the Hanano incident stopped at two rather than running all afternoon — it was doing a job it was never designed for.","ok"],
+a_sweep:["Every 15 minutes", "not faster, on purpose",
+            "A separate pass looking for sensors left <b>bypassed</b> and never restored. Fifteen minutes is deliberate: the panel takes 9–13 minutes to admit a sensor is back on, so a faster sweep would decide its own fix had failed and escalate a perfectly healthy door.","ok"],
+a_bypassed:["A sensor is bypassed", null,
+            "Someone bypassed a door — usually to get a stuck one to arm — and never restored it. The studio looks armed but that door is not being watched, which is the quietest way to be unprotected.","ok"],
+a_bcycle:["Take it off bypass", null,
+            "The same clean off-and-on as Line 1, which brings the sensor back under guard. It runs the identical room check first, because it also turns a studio off and on and could otherwise do exactly what happened to Hanano.","ok"],
+a_bstuck:["Twice and still off → a person", "needs a human",
+            "A sensor that will not stay on after two attempts almost always means the door is physically open or not latching. No amount of retrying fixes a propped door.","ok"],
+a_says:["Panel says something", "every 60s",
+            "All five panels are read live, once a minute, and every condition found is handed to the sorter. Nothing is remembered between reads — a condition that clears and comes back is a fresh arrival.","ok"],
+a_sorter:["The sorter", "rebuilt 25 Aug",
+            "Decides what a panel message is worth. Five ways out, checked in a fixed order — the detail map below shows all of them. The change this week was to the <b>last</b> one.","ok"],
+a_ignored:["Silence — on purpose", "1st check",
+            "Checked <b>first</b>, deliberately: if you have decided to tolerate something, that decision should beat every other rule. Today this holds the four credential warnings that have sat on the panels since 10 July. They were noise then and they are noise now.","ok"],
+a_critical:["Text you, now", "2nd check",
+            "The only route that wakes a person. Reserved for a panel running down its battery, because that one has a clock on it — the panel goes offline when it dies. A power cut on its own is <b>not</b> here: 693 does it often and it fixes itself, and texting on it would teach you to ignore the next text.","ok"],
+a_handled:["Tamper → Line 4", "3rd check",
+            "Tamper is pulled out here so the catch-all does not also grab it — otherwise every tamper would raise <b>two</b> tickets, one from each. Both sides read the same single list rather than keeping a copy each, because two copies drift and the first sign would be the duplicates.","ok"],
+a_ticket:["Maintenance ticket", "4th check",
+            "Real, needs fixing, nobody needs waking. A panel wi-fi outage is the case this route was built for: usually an unplugged router at 527 or 693, and the panel keeps working over cellular meanwhile, so alarm cover is never actually lost.","ok"],
+a_unknown:["Anything else → a ticket", "the change",
+            "<b>This is the fix.</b> Before, a condition matching none of the four checks above reached the end of the line and was thrown away — no ticket, no note, no error. That is how 509B sat reporting a tamper from 18 to 24 August with nobody told. Now the end of the line is a ticket. It gets a ticket and never a text, because something we cannot identify is by definition something we cannot call urgent — and the ticket itself spells out the ways to stop it appearing again.","ok"],
+a_tamperfeed:["Tamper → Line 4", null,
+            "The handover from the sorter to the tamper line. Same single list of words on both sides, so nothing is filed twice and nothing falls between them.","ok"],
+a_tamper:["Panel pulled off the wall", null,
+            "The panel casing has been opened, or has come away from its base. It is the one fault with a reliable, non-technical fix: somebody walks over and clips it back on.","ok"],
+a_tticket:["Ticket, straight away", "any hour",
+            "Raised the moment it is seen, 3am included. Only the <b>text</b> waits for daylight — the record never does.","ok"],
+a_stefan:["Text Stefan", "twice, max",
+            "Asks him to reseat and reboot the panel. Held until 8am Toronto and sent at most once a day, so a fault flapping on and off all afternoon is still one message. Two asks per episode — and if the panel keeps doing it across separate episodes, it stops asking him at all rather than sending the same request forever.","ok"],
+a_tesc:["Then you", "third time",
+            "The third message goes to <b>your</b> phone, not Stefan's, and says the reboot is not holding so this looks like the hardware. He already told you on 24 August the panel is \"kind of broken… no idea how to repair it fully without replacing it\" — asking him again cannot help. The ticket deliberately stays <b>open</b>: a panel waiting on a replacement decision is not resolved.","ok"],
+a_tclear:["Error disappears → ticket closes itself", "any time",
+            "Drawn after the text to Stefan because that is the usual order &mdash; he reseats the panel, the error disappears, the row closes. It is still reachable from <b>any</b> point on the line: if it clears before anyone is asked, or after it has escalated to you, the same thing happens. The moment the panel stops reporting the error, the ticket is marked resolved with the time it cleared and how long it was open. Nobody has to remember to close it.","ok"]});
 </script>
 </body>
 </html>
