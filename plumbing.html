@@ -1152,6 +1152,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-26 &middot; 20:20Z</span>
+      <h3>Every brand-new renter was dying at the verify probe &mdash; fixed<span class="kind">BUG</span></h3></summary>
+      <p><strong>The Daniel Thevarasalingam case:</strong> paid first-ever booking at 13:09, 509A 19:00 tonight. The Registrar caught it in one pass, built the Artist card and contact points, then filed <code>/provision HTTP 409</code> and paged Junyan &mdash; and kept 409ing on all five passes since, each in ~1.4&nbsp;s. That latency was the tell: a real provision waits up to 60&nbsp;s for panel sync, so <em>no create was ever attempted</em>.</p>
+      <p><strong>Root cause:</strong> alarm-mcp&rsquo;s <code>/provision</code> stamps HTTP&nbsp;409 on every non-pass verdict &mdash; including the <code>verify_only</code> probe&rsquo;s honest &ldquo;this person is not provisioned yet&rdquo; (<code>manual_no_match</code>) &mdash; and the sweep&rsquo;s <code>_alarm_call</code> raised on any non-2xx. So the probe itself threw, the chain died before the create-and-retry logic (yesterday&rsquo;s 409-retry guards the CREATE, which never ran), and <strong>every brand-new renter failed</strong> while returning renters passed the probe and kept the lane looking alive. Fix: the probe passes <code>read_status=(409,)</code> and the 409 body is parsed as the answer it is. Daniel himself was provisioned by hand (user <code>248425645</code>, code <code>6259</code>, verified on all 4 panels, <code>allow_permanent</code>) with 3&nbsp;h to spare. Deployed rev <code>event-gate-00091-6ss</code>, fingerprint <code>bd6089f480e8</code> verified; 586 tests pass.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-26 &middot; 23:55Z</span>
       <h3>Desk Invariants stops manufacturing its own backlog &mdash; B sees both worklists, dedup honors Cancelled<span class="kind">FAILURE MODE FIXED &middot; DEPLOY PENDING</span></h3></summary>
       <p><strong>The single largest Actions-board inflow pipe was the checker itself</strong>: 91 <code>Raised by = Desk Invariants</code> rows since Aug 12, root-caused to two canon/code parity gaps. Both rules were banked in canon on 2026-08-25 (job-10) but <code>services/event-gate/invariants.py</code> never got them &mdash; so (1) invariant B stayed blind to the ⏭️ Next Action queue and filed false orphan-gate rows about the ticket-053 migration itself, and (2) the escalation dedupe read only OPEN self rows, so a <em>Cancelled</em> complaint (adjudicated by definition) was re-filed verbatim within days (Fall Season Youth Theatre: Cancelled Aug 22, re-filed Aug 26), and re-detections cut new rows instead of updating &mdash; the &ldquo;(98 runs)&rdquo; pathology.</p>
