@@ -1189,6 +1189,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-26 &middot; 20:45Z</span>
+      <h3>The deterministic watchdog goes LIVE &mdash; the fleet&rsquo;s watcher no longer burns tokens<span class="kind">ROUTE LIVE</span></h3></summary>
+      <p><strong>Junyan flipped the switch</strong>: <code>SENTINEL_SWEEP_LIVE=1</code> on event-gate (rev <code>00094</code>). The hourly deterministic sweep now escalates for real &mdash; ops SMS on alarm-set change, daily own report row as heartbeat + dedupe ledger. Order of operations mattered: its board row (<code>sentinel-sweep (Cloud Run)</code>, Hourly, 24/7, stale 90) was created <em>Paused</em>, the first live pass filed its report (<code>&#129302; Sentinel sweep &mdash; 2026-08-26</code>: 16/16 healthy, no SMS, <code>ALARMS: none</code>), and only then did the row go Live &mdash; so the watchdog could not alarm on its own missing first report.</p>
+      <p><strong>The LLM Sentinel stays enabled &mdash; the two watchers now run in parallel.</strong> A real alarm may text twice until the LLM lane is retired (Junyan&rsquo;s call, separately). The runtime sense still reports itself skipped pending a <code>TRIGGER_API_TOKEN</code> secret.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-26 &middot; 17:10Z</span>
       <h3>The deterministic watchdog learns to text &mdash; but the wire stays cut<span class="kind">ROUTE BUILT, OFF</span></h3></summary>
       <p><strong><code>sentinel_sweep.py</code> now carries a full live escalation path</strong> (dc-canon <code>4c290c14</code>, event-gate fingerprint <code>16aefa7f112e</code>): when the alarm set <em>changes</em>, one ops SMS to Junyan via the existing <code>send_ops_text</code> lane &mdash; an alarm texts once on appearing and once on recovery, never per-pass. The dedupe ledger is Notion, not memory: the sweep files <strong>one own report row per Toronto day</strong> in 📊 Workflow Reports (<code>🤖 Sentinel sweep &mdash; YYYY-MM-DD</code>), appending a 🕒 line and an <code>ALARMS:</code> line every pass, so a cold start cannot re-text and the row doubles as the sweep&rsquo;s heartbeat. A <em>failed</em> send keeps the previous ledger so the next pass retries rather than going silent; a broken ledger degrades to a log line, never a 500.</p>
