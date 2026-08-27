@@ -1137,6 +1137,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-27 &middot; ~15:10Z</span>
+      <h3>Canon sync broke on the Scribe&rsquo;s own birth certificate; and the Concierge&rsquo;s plate was re-sorted <span class="kind">FIXED</span></h3></summary>
+      <p><strong>Sync fix:</strong> <code>library/the-scribe.md</code> (Junyan&rsquo;s 09:35 commit) landed with no MIRRORS row, so the canon completeness check failed every <code>watchlist-refresh</code> run from 13:45Z &mdash; same class as <code>the-loop.md</code> (2026-08-06). Mirror page <code>3c97503281c481888149cbfdd44fadee</code> created + mapped in <code>library_mirror_sync.py</code>; rerun green. Both Run Error rows closed.</p>
+      <p><strong>Plate re-sort (the permanent bit):</strong> the 37-row Review backlog was not Concierge slowness &mdash; most rows were never machine work. 22 closed at the sitting (done, moot, or OBE with dated evidence), 5 converted to engineering tickets <code>wayfinder/concierge-repair/tickets/113&ndash;117</code> (event-gate ALARM lane never paged; IPR dedup; Invariant K blank-receipt; booking-state null-arrival backfill; DocIntake error-path guard), 11 re-typed <code>Review &rarr; Decision / For = Junyan</code> (rate rulings, physical tasks, Tagvenue UI work, Ela questions). Review lane now holds 4 genuinely-live rows.</p>
+      <p><strong>Schema (tool-surface) changes:</strong> Actions&nbsp;&rarr;&nbsp;Raised by gains <code>The Responder</code> + <code>Insurance Sweep</code>; Correspondence Log&nbsp;&rarr;&nbsp;Medium gains <code>Instagram DM</code>. Existing option ids untouched. Sabrina&rsquo;s replacement 693 forgot-to-arm T2 queued at Pending Review (<code>3c97503281c48106a5dce83301f2887c</code>).</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-27 &middot; ~13:40Z</span>
       <h3>Approved suggestions now SHIP themselves &mdash; the Scribe closes the improvement loop <span class="kind">NEW ROUTE</span></h3></summary>
       <p><strong>What changed:</strong> the Deck&rsquo;s green button now writes <code>Status = Approved</code> (new Sweep Feedback status) instead of <code>Applied</code>, and a new cloud agent &mdash; <strong>&#9997;&#65039; The Scribe</strong> (<code>trig_01GNrDJyPPoCm93zwUgJgbLN</code>, 09:05 / 13:05 / 17:05 / 21:05 Toronto, env shared with the Responder) &mdash; sweeps <code>Approved</code> rows, makes the actual canon/SOP edit as a git commit, records the commit on the row, and only then flips it to <code>Applied</code>.</p>
