@@ -1158,6 +1158,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-27 &middot; 13:40Z</span>
+      <h3>The Registrar is now the ONLY author of How-to-Access texts &mdash; and the videos come from the site, not from history<span class="kind">ROUTE CHANGE &middot; RULED</span></h3></summary>
+      <p><strong>Junyan's ruling:</strong> with the Registrar live, day-before HTA authoring is removed from the Host/concierge lane. Changes, all verified by read-back:</p>
+      <p><strong>(1) The Host's FBS Daily Prep page</strong> (Notion source of truth): Step 4 rewritten &mdash; no HTA queueing, tomorrow or catch-up. It now verifies coverage and FILES an Action row on a Registrar miss, keeps board sync, and keeps Returning Access (the Registrar does not write those). <strong>(2) dc-canon <code>concierge-orchestration.md</code></strong> Job 33: "queue missing EOB / AVA" only &mdash; HTA misses are flagged, never drafted. <strong>(3) Send-Timing Verifier trigger</strong> (<code>trig_013TgaXwW2twipdmo2NUrHwa</code>): new &#9940; REGISTRAR HOLD guard &mdash; it must never release <code>HTA-sweep-</code>/<code>BC-sweep-</code>/<code>PHONE-</code> or sweep-authored Pending Review rows, which are held for Junyan while <code>SWEEP_SAMEDAY_HOLD</code> is on; without this the 05:00 pass could have defeated the hold now that the Host no longer supersedes sweep rows. (API gotcha: RemoteTrigger update REPLACES <code>job_config.ccr</code> wholesale &mdash; send events + session_context together or one wipes the other; the trigger's Read/WebFetch tool restriction was briefly widened and restored.)</p>
+      <p><strong>(4) Walkthrough videos</strong> (<code>event-gate-00107-x6c</code>, fp <code>bf4cd5d19e54</code>, 635 tests): the sweep's <code>walkthrough_line()</code> now reads a canonical per-studio table matched against <a href="https://www.danceannex.ca/guides">danceannex.ca/guides</a> (527 <code>SDa9hnRObvo</code>, 509A <code>kpuUbY8nZTc</code>, 509B <code>o_2BtrrODmY</code>, 693 <code>-kz0fqOYn6c</code>, 901 <code>dj5OMc-a63c</code>), env-overridable per studio. Audit at cutover: four studios matched; <strong>693 was live-wrong</strong> &mdash; Kim received retired <code>lS1zAPUz5Mg</code> on Aug 26. When Junyan changes a video: update the site, then the table (one line + deploy).</p>
+      <p><strong>Correction to the 13:10Z entry:</strong> sweep-coded HTA rows do NOT fail a Send Engine guard &mdash; Khalid's <code>HTA-sweep-0825-1915-527</code> row dispatched and shows Sent. The Host's "v12 How to Access guard" claim in its cancellation reasoning was wrong; no such code check exists in engine v20.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-27 &middot; 13:10Z</span>
       <h3>&ldquo;Will Not Send&rdquo; now means no &mdash; the Registrar had been re-drafting cancelled access texts<span class="kind">FAILURE MODE &middot; CLOSED</span></h3></summary>
       <p><strong>Junyan got the same ops text twice, four hours apart, for Brad Wong&rsquo;s Aug 28 booking.</strong> At 04:00Z the sweep queued <code>HTA-sweep-0828-0930-509A</code>; The Host cancelled it minutes later with a good reason (Brad computes to <strong>Self Serve</strong> on the Support Ladder for 509A &mdash; five completed visits, permanent codes &mdash; so a full walkthrough is not warranted). At 08:30Z the sweep queued it <strong>again</strong>.</p>
