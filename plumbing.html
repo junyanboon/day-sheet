@@ -1137,6 +1137,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-27 &middot; ~16:20Z</span>
+      <h3>Docket sitting: name-based attribution back on, platform overtime rate ruled, queue-rows-are-the-tracker <span class="kind">RULING</span></h3></summary>
+      <p><strong>What changed (Junyan's one-shot docket, 2026-08-27):</strong> (1) <strong>Name-based attribution from the arm-state ledger is ON again</strong> &mdash; the red &ldquo;no actor names&rdquo; callout on Skill: Generate Overtime Report was rewritten: <code>studio_activity</code> (alarm-mcp) is the attribution source, the retired name-based rules (exempt staff by name, staff-attributed departure Review, next-booking-holder arm) are back in force, schedule join is fallback, unnamed/ambiguous transitions still Review-never-charge. (2) <strong>Platform overtime bills at the platform listing's rate</strong>, not the studio rate &mdash; unblocks the two held Aug 15 charges. (3) <strong>Stefan's cleaning feed moves to a Notion checklist</strong> he marks himself; the overtime report's Stefan step reads that, not arm-state actors. (4) <strong>Message work is tracked in the Message Queue / Deck only</strong> &mdash; no duplicate Actions-board gate rows for queued messages; a Deck rejection asking for a fix must produce the corrected queue row immediately (the Sabrina T2 sat 3 days because it didn't).</p>
+      <p><strong>Also this pass:</strong> the 901 &ldquo;Front Door Alarm&rdquo; unrecognised-phrase investigation concluded it was a REAL entry-under-arm (Aug 25 22:46:32Z door-open while armed, keypad disarm 2m15s later) &mdash; recommendation CRITICAL_PHRASES in <code>alarm_monitor/escalate.py</code>, awaiting Junyan's word (pairs with ticket 113, the paging lane that never paged). Chelly Li's &ldquo;stuck&rdquo; EOB and the watchlist-refresh Run Error both self-recovered and were closed on live reads.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-27 &middot; ~21:30Z</span>
       <h3>The Weatherman goes deterministic &mdash; climate sweep ships in shadow <span class="kind">NEW ROUTE</span></h3></summary>
       <p><strong>What changed:</strong> the hourly LLM climate controller&rsquo;s whole procedure (canon <code>library/climate-controller.md</code>, all ten steps) is now plain code: <code>services/event-gate/climate_sweep.py</code>, route <code>POST /climate-sweep</code> (header auth), commit <code>a0f594a9</code>, 36 new tests, suite 686. Ruled on wayfinder ticket 118, built as ticket 119. Bookings come from the Skedda board (the service&rsquo;s proven reader), weather from Open-Meteo feels-like (fetch failure &rarr; conservative max-lead fallback, stated), and every ambiguity <em>flags</em> a Sweep Feedback row rather than guessing &mdash; no LLM residue anywhere.</p>
