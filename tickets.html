@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-27 09:38 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-27 10:45 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">33</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">39</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">62</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">63</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1164,7 +1164,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
 <p>Ops Lead&#x27;s use of it here.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">33</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">39</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -4004,6 +4004,110 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>unattended. Deploying it is <code>./deploy.sh</code> in <code>skedda-cli</code> — which rebuilds the image and</p>
 <p>updates <b>both</b> the <code>skedda-mcp</code> service and the <code>skedda-refresh</code> job (never a partial</p>
 <p>deploy; canon <code>library/skedda-session.md</code>).</p>
+</div></details></details></div><div class="job"><div class="jnum">#113</div><div class="jhead"><span class="emoji">🗂️</span><h4>113-event-gate-alarm-lane-never-paged</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>113-event-gate-alarm-lane-never-paged</b></p><h2>113 — event-gate ALARM lane never paged on the Aug 15 real 693 alarms</h2>
+
+<p><b>Filed:</b> 2026-08-27, from Actions board row 3be75032-81c4-814a (The Custodian, 2026-08-16). Row closed to this ticket at the plate-clearing sitting.</p>
+
+<h2>Problem</h2>
+<p>Two REAL Studio 693 alarms on Aug 15 produced <b>no page</b>: the event-gate ALARM lane did not fire, so neither a 📞 Staff Call Queue row nor a Customer Care Alarm Trigger ticket was created. This is the on-call emergency lane — the highest-severity silent failure the fleet has.</p>
+
+<h2>Verify by (from the original row, machine-readable)</h2>
+<p>A real panel event (alarm-mcp <code>panel_snapshot</code> <code>in_alarm = true</code>, or a Secure.business@telus.com &quot;reported an Alarm&quot; email) produces BOTH (a) a 📞 Staff Call Queue row summoning on-call and (b) a Customer Care Alarm Trigger ticket, WITHOUT a Concierge pass creating either.</p>
+
+<h2>Notes</h2>
+<ul>
+<li>- Investigate event-gate&#x27;s ALARM lane path in <code>dc-canon/services/event-gate/</code> — why the Aug 15 events never reached it (subscription, phrase match, or dead SMS path via the phone.com token era of self-revocations around that date).</li>
+<li>- Related gotcha: the phone.com token self-revokes on login; Aug 15 falls in the window before v2 was minted Aug 18 — the token may have been dead, killing the SMS page path. Confirm before writing code.</li>
+<li>- Test with a synthetic event if possible; do NOT trip a live panel.</li>
+</ul>
+</div></details></details></div><div class="job"><div class="jnum">#114</div><div class="jhead"><span class="emoji">🗂️</span><h4>114-ipr-tight-transition-dedup</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>114-ipr-tight-transition-dedup</b></p><h2>114 — IPR tight-transition detector re-raises already-resolved tickets</h2>
+
+<p><b>Filed:</b> 2026-08-27, from Actions board row 3c275032-81c4-8157 (originally filed in the Maintenance DB 2026-07-20, moved 2026-08-20). Row closed to this ticket at the plate-clearing sitting.</p>
+
+<h2>Problem</h2>
+<p>The IPR tight-transition detector has no dedup against resolved tickets: a transition it already raised (and a human resolved) gets re-raised on later runs.</p>
+
+<h2>Fix shape</h2>
+<p>Before creating, query for an existing ticket keyed on the same (studio, date, transition pair) regardless of terminal state; a resolved match suppresses re-creation (mirror the moved-after-send sweep&#x27;s <code>[sweep:...]</code> key convention).</p>
+</div></details></details></div><div class="job"><div class="jnum">#115</div><div class="jhead"><span class="emoji">🗂️</span><h4>115-invariant-k-reconciled-blank-receipt</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>115-invariant-k-reconciled-blank-receipt</b></p><h2>115 — Invariant K blind spot: hand-reconciled rows are indistinguishable from never-dispatched</h2>
+
+<p><b>Filed:</b> 2026-08-27, from Actions board row 3c475032-81c4-81c1 (2026-08-22). Row closed to this ticket at the plate-clearing sitting.</p>
+
+<h2>Problem</h2>
+<p>Reconciliation sets Message Queue rows to Sent with a BLANK Dispatch Receipt, so a real never-dispatched row and a hand-reconciled one look identical to Invariant K [invariant-k:reconciled-no-receipt].</p>
+
+<h2>Fix shape</h2>
+<p>Hand-reconciled rows should stamp a receipt-equivalent (e.g. <code>manual:&lt;ledger-thread&gt;</code> or <code>offsystem:&lt;date&gt;</code>) at reconcile time; Invariant K then treats blank-receipt Sent rows as true positives again. Update the reconcile path and the invariant&#x27;s docs together.</p>
+</div></details></details></div><div class="job"><div class="jnum">#116</div><div class="jhead"><span class="emoji">🗂️</span><h4>116-booking-state-null-arrival-backfill</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>116-booking-state-null-arrival-backfill</b></p><h2>116 — booking-state.json backfills a null arrival to the booked start hours later</h2>
+
+<p><b>Filed:</b> 2026-08-27, from Actions board row 3c975032-81c4-81a4 (The Timekeeper, 2026-08-27). Row closed to this ticket at the plate-clearing sitting.</p>
+
+<h2>Problem</h2>
+<p>A booking with no observed arrival gets its <code>arrived</code> backfilled to exactly the booked start in a later snapshot — which can fabricate a Forgot-to-Arm ticket against a renter who never showed. Live near-miss: Daniel Thevarasalingam, 509A, Aug 26 — the Timekeeper flagged him as a no-show; he had in fact attended (509A has no motion detector and its door was bypassed), and the Concierge refuted it via his own SMS. Either error direction is possible from this defect.</p>
+
+<h2>Verify by (from the original row)</h2>
+<p>Re-read booking-state.json across a day&#x27;s commits for any booking whose <code>arrived</code> equals the booked start exactly and appeared only in a late snapshot.</p>
+
+<h2>Fix shape</h2>
+<p>In fbs-monitor&#x27;s booking-state writer: never synthesize <code>arrived</code> from the schedule; a null arrival stays null, and downstream consumers must treat null as &quot;no signal&quot;, not &quot;on time&quot;.</p>
+</div></details></details></div><div class="job"><div class="jnum">#117</div><div class="jhead"><span class="emoji">🗂️</span><h4>117-docintake-error-path-guard</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>117-docintake-error-path-guard</b></p><h2>117 — DocIntake error path: no dedup, no backoff (7 identical rows in 52s)</h2>
+
+<p><b>Filed:</b> 2026-08-27, from Actions board row 3c875032-81c4-815f (2026-08-26 404 burst). Row closed to this ticket at the plate-clearing sitting.</p>
+
+<h2>Problem</h2>
+<p>A transient Notion 404 on 2026-08-26 made DocIntake.gs file SEVEN identical Run-Error/Review rows in 52 seconds. The lane recovered on its own; the board took the damage. The error path has no dedup guard and no backoff.</p>
+
+<h2>Also folded in</h2>
+<p>The Aug 6 message it never filed (gmail 19fd99917be09490 — Enrico Casertano&#x27;s signed Long Term Rental Agreement, Dropbox Sign) is reflected on his Artist row (Agreement End 2026-12-31, Active); verify the signed PDF itself is in 📎 Docs while in there, and file it if not.</p>
+
+<h2>Fix shape</h2>
+<p>On error: query for an existing open row with the same error signature before filing (the insurance_sweep <code>file_run_error</code> pattern — one open row per raiser); add exponential backoff on Notion 5xx/404 before the seen-mark commits.</p>
+</div></details></details></div><div class="job"><div class="jnum">#119</div><div class="jhead"><span class="emoji">🌡️</span><h4>Build the plain-code thermostat watcher</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Builds what ticket 118 decided: a plain program that runs the hourly thermostat routine</li><li>First it runs in practice mode — watching and deciding but touching nothing</li><li>For a few days we compare its decisions with the AI&#x27;s real ones</li><li>Only after Junyan approves does it take over for real, and the AI version is switched off</li><li>The independent safety guards (too hot, frost, nightly off) never change</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the climate sweep — the deterministic Weatherman</b></p><h2>Question</h2>
+
+<p>Build the lane <b>118</b> ruled: <code>climate_sweep.py</code> in</p>
+<p><code>services/event-gate</code>, a straight port of canon <code>library/climate-controller.md</code></p>
+<p>(all ten steps — the canon file is the spec), on today&#x27;s clock (hourly 09:10–23:10 +</p>
+<p>03:10 Toronto) with its own Cloud Scheduler job, <code>CLIMATE_SWEEP_DISABLED</code> kill switch,</p>
+<p>and <code>Run Error</code> row.</p>
+
+<p>Rulings that bind the build (see 118 for the full text):</p>
+
+<ul>
+<li>- <b>No LLM residue.</b> Ambiguity flags a Sweep Feedback row, never guesses. Step 9b&#x27;s</li>
+</ul>
+<p>comfort scan is the canon keyword list in code.</p>
+<ul>
+<li>- <b>Weather: Open-Meteo</b> hourly <code>apparent_temperature</code>; fetch failure → conservative</li>
+</ul>
+<p>max-lead-time fallback, stated in the pass&#x27;s Thermal Log row.</p>
+<ul>
+<li>- <b>Actuation: direct SDM commands</b> (mode + cool setpoint) with the sdm-logger OAuth</li>
+</ul>
+<p>refresh token from Secret Manager (per-secret IAM binding; strip trailing newlines).</p>
+<p>Read-back next pass verifies. IFTTT keeps only the safety applets. Edit canon&#x27;s</p>
+<p>&quot;must not call SDM directly&quot; line to scope it to the retired LLM runtime.</p>
+<ul>
+<li>- <b>Shadow first</b>: phase 1 writes nothing — <code>climate-shadow:</code> Cloud Run log lines</li>
+</ul>
+<p>only; the LLM Weatherman keeps running and owns the daily report. ~3–5 days of</p>
+<p>comparison, then a separate human-approved live flip (Junyan deploys), then trigger</p>
+<p>retirement + canon re-head.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Shadow phase live and logging verdicts each pass; LLM lane untouched.</li>
+<li>- Every step&#x27;s port pinned by test, including: never alert on a hand-changed setpoint,</li>
+</ul>
+<p>dancer-heat non-alerts, 901 inside-Liz-window silence, telemetry-gap escalation</p>
+<p>(2+ passes, dedup against open row), report row created with explicit</p>
+<p><code>data_source_id</code> parent + Run Monitor relation verified by SQL.</p>
+<ul>
+<li>- A zero pass reports zero; a pass that cannot run files a <code>Run Error</code> row.</li>
+<li>- RUNTIMES.md + Plumbing Map updated at each phase (shadow, live flip, retirement).</li>
+<li>- Live flip and trigger retirement are separate, Junyan-approved steps — not part of</li>
+</ul>
+<p>this build&#x27;s definition of done unless he flips them in-session.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -4607,7 +4711,106 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#087</span><span class="emoji">🐌</span><span class="done-title">The Registrar is too slow, and it ran out of time on its very first night</span><span class="done-date">2026-08-25</span></summary><div class="done-body"><ul class="plain-bullets"><li>It was switched on at 10pm and its first unattended run was cut off after exactly five minutes, having not finished</li><li>Two separate time limits were both set to five minutes, so there was no slack anywhere — the first limit it hit was also the last</li><li>Both raised to fifteen minutes, which fixes tonight. It is not the real fix</li><li>The real reason it is slow: it asks the booking calendar for one day at a time, so a two-week look-ahead is fifteen separate requests before it even starts work</li><li>Asking for the whole fortnight in one request would do nearly all of it. The calendar already supports that</li><li>This matters because the run happens every half hour. If a run ever took longer than that, two would overlap — and two copies working at once is exactly what caused the duplicate door codes back in August</li><li>Deliberately NOT fixed by looking at fewer days ahead. That would just mean bookings a week or two out get set up late</li><li>DONE (Aug 25): the one-request fix already went in on Aug 24, and runs now take about 85 seconds against a 15-minute limit</li><li>The last missing piece was simply reporting how long each run took — added, along with a warning if a run ever creeps past ten minutes</li><li>Because of that, looking further ahead is now cheap: 45 days holds 100 bookings against 59 for two weeks, not three times as many</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar reads the Skedda board one day at a time — 15 round-trips per pass, and it already hit a wall</b></p><h2>Problem</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#118</span><span class="emoji">⛈️</span><span class="done-title">Decided: the thermostat robot&#x27;s job moves to plain code</span><span class="done-date">2026-08-27</span></summary><div class="done-body"><ul class="plain-bullets"><li>The Weatherman is the AI that watches the studio thermostats every hour</li><li>Its checklist turned out to be almost all rules a plain program can follow exactly</li><li>Junyan ruled it: the whole job moves to plain code, and the AI version retires after</li><li>The code will set thermostats directly through Google, not through the middleman service</li><li>Weather comes from a free forecast feed; if that fails, the code plays it safe and cools early</li><li>It forgot to file its daily check-in three times — code can&#x27;t forget that</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move the Weatherman to deterministic code</b></p><h2>RESOLUTION — 2026-08-27 (grilled with Junyan, all five rulings his)</h2>
+
+<p><b>The Weatherman becomes a deterministic event-gate lane and the LLM trigger retires</p>
+<p>entirely once the lane proves out.</b> No residual LLM pass anywhere.</p>
+
+<ol>
+<li>1. <b>Venue: event-gate.</b> <code>climate_sweep.py</code> beside the other lanes — own route, own</li>
+</ol>
+<p>Cloud Scheduler job on today&#x27;s clock (hourly 09:10–23:10 + 03:10 Toronto), own</p>
+<p><code>CLIMATE_SWEEP_DISABLED</code> kill switch, own <code>Run Error</code> row. GH Actions disqualified</p>
+<p>(drops runs; standing rule).</p>
+<ol>
+<li>2. <b>Judgment residue: none.</b> All ten procedure steps code. Step 9b&#x27;s comfort scan is</li>
+</ol>
+<p>already a keyword scan — code runs it; ambiguity everywhere follows the standing</p>
+<p>contract: <b>flag (Sweep Feedback row), never guess.</b> No daily LLM read-over kept.</p>
+<p>Safety applets untouched.</p>
+<ol>
+<li>3. <b>Weather source: Open-Meteo</b> (free, keyless, hourly <code>apparent_temperature</code> = the</li>
+</ol>
+<p>feels-like step 6 needs). On fetch failure, <b>fall back conservative</b>: assume the</p>
+<p>hottest band → max pre-cool lead time, and say so in the pass&#x27;s Thermal Log row.</p>
+<p>A complaint beats energy savings; overcooling an hour is pennies.</p>
+<ol>
+<li>4. <b>Actuation: Option B — direct Google SDM commands from event-gate</b> (mode + cool</li>
+</ol>
+<p>setpoint), reusing the sdm-logger OAuth refresh token via Secret Manager (remember</p>
+<p>the per-secret IAM binding + newline gotchas). Read-back next pass verifies the</p>
+<p>command landed. IFTTT leaves the command hot path; it keeps only the independent</p>
+<p>safety applets. Canon&#x27;s &quot;the cloud controller must not call SDM directly&quot; line was</p>
+<p>written for the credential-less LLM runtime — the reason dissolves with the venue;</p>
+<p>canon gets edited to say so in the build.</p>
+<ol>
+<li>5. <b>Rollout: shadow first, sentinel-sweep pattern.</b> Phase 1 reads everything, writes</li>
+</ol>
+<p>nothing (<code>climate-shadow:</code> log lines only); the LLM Weatherman keeps running and</p>
+<p>keeps sole ownership of the daily report — no two-writers seam. ~3–5 days of</p>
+<p>verdict comparison, divergences explained. Then a separate human-approved flip to</p>
+<p>live (Junyan runs the deploy — the classifier blocks agent deploys, standing</p>
+<p>convention), the lane takes over Thermal Log writes, alerts, JOB 32 report, and SDM</p>
+<p>commands; after the first clean live days the trigger <code>trig_01XrgdtzNqjzRJtaoEp2Ebnu</code></p>
+<p>is disabled and the canon file re-headed as the spec the code implements.</p>
+
+<p>Motivating tell, banked: step 10&#x27;s report/Run-Monitor write is the exact step the LLM</p>
+<p>botched three separate times (08-01→03 unlinked, 08-23 and 08-27 parentless pages while</p>
+<p>the pass log claimed success). Code cannot forget a parent id.</p>
+
+<p><b>Build graduated as <b>119 — build the climate sweep</b>.</b></p>
+
+<h2>Question</h2>
+
+<p>Junyan wants the Weatherman — the hourly LLM climate controller (RemoteTrigger</p>
+<p><code>trig_01XrgdtzNqjzRJtaoEp2Ebnu</code>, procedure in canon <code>library/climate-controller.md</code>) —</p>
+<p>moved onto deterministic code, following the lane the map has already proven four times</p>
+<p>(alarm watch, booking sweep, sentinel-sweep, J12 decay): <b>code finds the work, the LLM</p>
+<p>only does flagged work.</b></p>
+
+<p>The sizing read says most of the pass is already mechanical:</p>
+
+<ul>
+<li>- Steps 1–3 (read Thermal Model, read SDM rows, ingest crossings) — pure reads/moves.</li>
+<li>- Step 5 (901 policy) — window check + threshold over 2 consecutive readings, fully specified.</li>
+<li>- Step 7 (malfunction check) — written as explicit rules a/b/c with explicit non-alerts.</li>
+<li>- Step 8 (alerting/logging) — routing rules, fully specified.</li>
+<li>- Step 10 (JOB 32 report + Run Monitor relation) — the exact step the LLM has botched</li>
+</ul>
+<p>three times (08-01→03, 08-23, 08-27); code cannot forget a parent id.</p>
+<ul>
+<li>- Step 9c (Sunday re-fit) — a clamped regression fit, codeable.</li>
+</ul>
+
+<p>The judgment-shaped residue to rule on:</p>
+
+<ul>
+<li>- Step 6 (509 pre-cool decision) — thermal-model math, but needs today&#x27;s <b>outdoor peak</li>
+</ul>
+<p>feels-like</b> (where does code get weather?) and calendar reads.</p>
+<ul>
+<li>- Step 9b (comfort-feedback language scan) — keyword scan is codeable; is keyword-only</li>
+</ul>
+<p>good enough, or does this stay a flagged LLM job?</p>
+<ul>
+<li>- Actuation — the LLM applies setpoints <b>via the IFTTT connector</b>; code needs its own</li>
+</ul>
+<p>IFTTT path (webhooks/API) from event-gate.</p>
+
+<p>Decide: venue (event-gate lane vs elsewhere), what stays LLM/flag-only vs codes,</p>
+<p>the weather source, the IFTTT actuation path from code, rollout shape</p>
+<p>(shadow/parallel like sentinel-sweep? record-only first?), and what retires when</p>
+<p>(trigger, wrapper prompt, canon file&#x27;s role). Build ticket(s) graduate from the ruling.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Each of the ten procedure steps has a ruled owner: code, code-flags-LLM, or human.</li>
+<li>- Weather source and IFTTT actuation path named.</li>
+<li>- Rollout order ruled (shadow first? which safety nets stay untouched?).</li>
+<li>- Build ticket(s) cut; this ticket closes on the ruling, not the build.</li>
+</ul>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#087</span><span class="emoji">🐌</span><span class="done-title">The Registrar is too slow, and it ran out of time on its very first night</span><span class="done-date">2026-08-25</span></summary><div class="done-body"><ul class="plain-bullets"><li>It was switched on at 10pm and its first unattended run was cut off after exactly five minutes, having not finished</li><li>Two separate time limits were both set to five minutes, so there was no slack anywhere — the first limit it hit was also the last</li><li>Both raised to fifteen minutes, which fixes tonight. It is not the real fix</li><li>The real reason it is slow: it asks the booking calendar for one day at a time, so a two-week look-ahead is fifteen separate requests before it even starts work</li><li>Asking for the whole fortnight in one request would do nearly all of it. The calendar already supports that</li><li>This matters because the run happens every half hour. If a run ever took longer than that, two would overlap — and two copies working at once is exactly what caused the duplicate door codes back in August</li><li>Deliberately NOT fixed by looking at fewer days ahead. That would just mean bookings a week or two out get set up late</li><li>DONE (Aug 25): the one-request fix already went in on Aug 24, and runs now take about 85 seconds against a 15-minute limit</li><li>The last missing piece was simply reporting how long each run took — added, along with a warning if a run ever creeps past ten minutes</li><li>Because of that, looking further ahead is now cheap: 45 days holds 100 bookings against 59 for two weeks, not three times as many</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar reads the Skedda board one day at a time — 15 round-trips per pass, and it already hit a wall</b></p><h2>Problem</h2>
 
 <p><b>The Registrar&#x27;s first unattended pass timed out</b>, 2026-08-20 02:00Z, five minutes after it was</p>
 <p>switched on. HTTP 504, Cloud Scheduler <code>DEADLINE_EXCEEDED</code> at <b>299.97s</b> against a 300s ceiling.</p>
@@ -12149,5 +12352,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-27 09:38 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-27 10:45 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
