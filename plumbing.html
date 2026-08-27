@@ -1137,6 +1137,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-27 &middot; 02:30Z</span>
+      <h3>The leaked gate token is dead &mdash; rotated with zero downtime on the emergency lane<span class="kind">SECURITY &middot; CLOSED</span></h3></summary>
+      <p><strong>Moving the token into a header stopped new leakage but did not close the exposure</strong> &mdash; the old value still sat in roughly 30 days of Cloud Logging, and a stolen token works just as well in a header as in a URL. It is now <strong>rotated and the leaked value returns 404</strong>.</p>
+      <p><strong>The obstacle was that the token lives in two places that cannot change in the same instant:</strong> the service environment and six Cloud Scheduler job headers &mdash; one of which is the every-minute emergency SMS poller. Swapping the env alone would 404 every caller until the last job caught up. So the gate learned a second env var, <code>GATE_PATH_TOKEN_PREV</code> (<code>0be6be9a</code>): during a rotation both the outgoing and incoming token open the door, and the jobs move across one at a time.</p>
+      <p><strong>Sequence, each step verified before the next:</strong> deploy PREV support &rarr; one atomic env update setting the new token and PREV=old &rarr; confirm <em>both</em> tokens return 200 and garbage returns 404 &rarr; rotate the five low-risk jobs, <strong>emergency poller last</strong> &rarr; verify all six job headers by sha256 rather than trusting the write &rarr; remove PREV &rarr; confirm the old token is refused. <strong>Zero auth failures across the entire rotation</strong>, and the poller never missed a tick.</p>
+      <p><strong>Standing rule:</strong> leaving <code>PREV</code> set would silently keep a retired token alive forever, so removing it is the last step of a rotation, not an optional tidy-up &mdash; a test pins that.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-27 &middot; 01:40Z</span>
       <h3>FBS board stops calling an unobservable arrival a no-show<span class="kind">FAILURE MODE</span></h3></summary>
       <p><strong>The panel can only witness an arrival as a disarm.</strong> On a tight transition the outgoing renter walks out without arming, the panel stays disarmed, and the incoming renter has nothing to disarm &mdash; so the board painted a red <code>no arrival</code> / MISSING on someone standing in the room (2026-08-26: Fabio Hernandez, 509A 20:15, right behind Daniel&rsquo;s 19:00&ndash;20:00).</p>
