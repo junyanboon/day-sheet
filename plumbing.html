@@ -1137,6 +1137,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-27 &middot; 13:10Z</span>
+      <h3>&ldquo;Will Not Send&rdquo; now means no &mdash; the Registrar had been re-drafting cancelled access texts<span class="kind">FAILURE MODE &middot; CLOSED</span></h3></summary>
+      <p><strong>Junyan got the same ops text twice, four hours apart, for Brad Wong&rsquo;s Aug 28 booking.</strong> At 04:00Z the sweep queued <code>HTA-sweep-0828-0930-509A</code>; The Host cancelled it minutes later with a good reason (Brad computes to <strong>Self Serve</strong> on the Support Ladder for 509A &mdash; five completed visits, permanent codes &mdash; so a full walkthrough is not warranted). At 08:30Z the sweep queued it <strong>again</strong>.</p>
+      <p><strong>Cause:</strong> <code>hta_queued()</code> treated <code>Will Not Send</code> as if the row did not exist, so a cancellation read as absence and invited an identical redraft on the next pass &mdash; every pass, forever. Anita Shack and Akira Huang escaped only by accident: The Host had written <em>replacement</em> rows for them whose codes still match the access shape, and Brad&rsquo;s was cancelled with no replacement.</p>
+      <p><strong>Fix</strong> (<code>event-gate-00106-55z</code>, fp <code>9a060ec4a021</code>, 633 tests): a <code>Will Not Send</code> row whose Message Code carries <em>this session&rsquo;s</em> stamp is an answer and blocks the redraft. A cancellation for another date still does not &mdash; a no is scoped to its own booking, not to the renter forever.</p>
+      <p><strong>Two findings left open for Junyan, both surfaced by the same incident:</strong> (1) the sweep and The Host <em>both</em> author day-before access texts, and The Host&rsquo;s are better &mdash; they carry the Support Ladder tier, a Send After time, and a Message Code the Send Engine v12 guard actually accepts, so every sweep HTA this week was cancelled and replaced; (2) <code>walkthrough_line()</code> learns each studio&rsquo;s video URL from <em>the last HTA actually sent</em>, which made a retired 901 walkthrough (<code>_fYUtgUJT9k</code>) self-perpetuating &mdash; it reached Raquel, Megan and Anita on Aug 25 before The Host caught it. Canon is <code>dj5OMc-a63c</code>. A history-scraped constant is not a source of truth.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-27 &middot; 02:30Z</span>
       <h3>The leaked gate token is dead &mdash; rotated with zero downtime on the emergency lane<span class="kind">SECURITY &middot; CLOSED</span></h3></summary>
       <p><strong>Moving the token into a header stopped new leakage but did not close the exposure</strong> &mdash; the old value still sat in roughly 30 days of Cloud Logging, and a stolen token works just as well in a header as in a URL. It is now <strong>rotated and the leaked value returns 404</strong>.</p>
