@@ -680,21 +680,24 @@
     }
     return '<button class="btn btn-reject" data-act="reject">Decline</button>' +
       '<button class="btn" data-act="skipsug">Skip</button>' +
-      '<button class="btn btn-send" data-act="appliedsug">Mark applied</button>';
+      '<button class="btn btn-send" data-act="appliedsug">Approve</button>';
   }
 
   function decideSuggestion(r, applied, why) {
     var ts = new Date().toISOString().slice(0, 16).replace("T", " ");
     var stamp = applied
-      ? "[Marked applied in the Deck — " + ts + "]"
+      ? "[Approved in the Deck — " + ts + " — the Scribe ships it and flips this row to Applied]"
       : "[Declined in the Deck" + (why ? ": " + why : "") + " — " + ts + "]";
-    var props = { "Status": "Applied",
+    // Approve hands the row to the Scribe (Status=Approved); the Scribe makes the
+    // canon/SOP edit and only THEN writes Applied — so Applied always means "the
+    // text actually changed" (Junyan, 2026-08-27). Declines close the row directly.
+    var props = { "Status": applied ? "Approved" : "Applied",
       "What the sweep did": ((r["What the sweep did"] || "") + "\n" + stamp).trim() };
     state.decided[r.url] = applied ? "applied" : "declined";
     state.rejecting = false;
     render();
     writeRow({ url: r.url, row: r }, props, function (ok, msg) {
-      if (ok) toast(applied ? "Marked applied." : "Declined — it will stop resurfacing.", { ttl: 3000 });
+      if (ok) toast(applied ? "Approved — the Scribe ships it on its next pass." : "Declined — it will stop resurfacing.", { ttl: 3000 });
       else {
         delete state.decided[r.url];
         toast("Update failed: " + msg + " — card is back.", { bad: true, ttl: 8000 });
