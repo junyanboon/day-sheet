@@ -1137,6 +1137,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-27 &middot; ~22:05Z</span>
+      <h3>Same-day confirmation + HTA become ONE merged text <span class="kind">ROUTE CHANGE</span></h3></summary>
+      <p><strong>The incident that forced it:</strong> Raquel Khan (same-day 527, 20:00) reached the evening with a live door code and <em>no access text</em>. The sweep&rsquo;s 21:31Z pass queued her first-timer confirmation &mdash; whose body promises &ldquo;Your door code and studio access details will follow&rdquo; &mdash; and then asked &ldquo;does an HTA exist?&rdquo;. The HTA-shape filter matched any body containing <code>Door Code</code> (Notion <code>contains</code> is case-insensitive), so the seconds-old confirmation answered yes: <code>hta:found</code>, false positive, nothing sent. The emergency HTA + address follow-up went out by hand at 21:38Z with Junyan&rsquo;s approval.</p>
+      <p><strong>What changed (ruled by Junyan 2026-08-27):</strong> (1) same-day, the pair is <strong>one merged message</strong> &mdash; the canonical combined card opening <em>&ldquo;Thank you for booking with us today!&rdquo;</em>, keeping the &ldquo;confirmed for [Day, Date]&rdquo; line (the dedupe recognises past confirmations by it) and carrying the Artist Care intro / rebooking terms only when owed. The HTA due/not-due decision moved <em>above</em> the confirmation and is made once per pass. (2) The HTA shape now demands the code <em>line</em> &mdash; <code>Door Code:</code> with the colon &mdash; so a promise of a code can never again impersonate one. Commit <code>5b306052</code>, revision <strong><code>event-gate-00115-fdn</code></strong>, fp <code>e440e21e1552</code> verified against HEAD, 703 tests.</p>
+      <p><strong>Still open from the incident:</strong> the duplicate artist card (Raquel K. code 7368 vs Raquel Khan code 9710, both live on all four panels) awaits Junyan&rsquo;s merge decision, and her held <code>BC-sweep-0827-2000-527</code> row is now covered by the sent access text.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-27 &middot; 20:23Z</span>
       <h3>The gate&rsquo;s last two plaintext credentials move into Secret Manager <span class="kind">FIX</span></h3></summary>
       <p><strong>What changed:</strong> <code>NOTION_TOKEN</code> and <code>GATE_PATH_TOKEN</code> were the only credentials on <code>event-gate</code> still stored as literal environment values &mdash; readable by anyone with console or <code>gcloud describe</code> access, while the other seven already came from Secret Manager. Both now resolve from secrets (<code>notion-token:2</code>, <code>gate-path-token:latest</code>), revision <strong><code>event-gate-00114-qwg</code></strong>. This closes the same class of exposure as yesterday&rsquo;s path-token rotation, one layer down.</p>
