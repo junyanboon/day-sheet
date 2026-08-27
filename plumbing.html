@@ -1135,6 +1135,20 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-27 &middot; 01:35Z</span>
+      <h3>The smart watchdog stops being a watchdog and becomes the robot&rsquo;s examiner<span class="kind">ROLE CHANGED</span></h3></summary>
+      <p><strong>Two watchdogs doing the same job meant a real problem would text Junyan twice.</strong> Since the deterministic <code>sentinel-sweep</code> went live it has owned the routine job &mdash; hourly, 24/7, zero tokens &mdash; so <code>sentinel-v3-2026-08-27</code> retires the LLM lane&rsquo;s duplicate role and gives it three jobs it can do that the robot cannot:</p>
+      <ul>
+        <li><strong>Dead-man.</strong> The sweep cannot report its own death. The auditor reads the sweep&rsquo;s rolling report and treats a gap over 90 minutes as SWEEP SILENT &mdash; SMS, and it takes the watchdog job back for that pass. This is the role the retired Watchman used to play for the Sentinel.</li>
+        <li><strong>Audit.</strong> It still computes the whole fleet&rsquo;s health independently &mdash; an auditor that trusts what it audits is worthless &mdash; then compares against the sweep&rsquo;s <code>ALARMS:</code> ledger. <em>Agree</em> &rarr; log only, no text (the sweep already sent one). <em>It found a miss the sweep did not</em> &rarr; SMS, the dangerous direction. <em>The sweep alarmed on something it judges healthy</em> &rarr; defect row, no SMS.</li>
+        <li><strong>Runtime watch.</strong> Unchanged and still exclusive: the sweep has no trigger-API token, so it is blind to whether each bot&rsquo;s timer is actually switched on.</li>
+      </ul>
+      <p><strong>The agreement record is the point.</strong> Every pass logs <code>audit: AGREE</code> or a disagreement, so the decision to eventually switch the LLM lane off rests on evidence rather than nerve. <strong>Known gap, written into the prompt:</strong> the auditor sleeps 23:00&ndash;07:00 Toronto while the sweep runs on, so a sweep death overnight is not caught until the 07:00 pass.</p>
+      </details>
+    </li>
+
     <li class="entry alert">
       <details>
       <summary><span class="when">2026-08-27 &middot; 00:05Z</span>
