@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-27 10:45 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-27 11:23 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">39</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">38</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">63</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">64</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1164,7 +1164,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
 <p>Ops Lead&#x27;s use of it here.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">39</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">38</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
 <p><b>(Re-shaped 2026-07-15 late, per Junyan&#x27;s clarification — supersedes the first draft&#x27;s scope.)</b></p>
 
@@ -4062,52 +4062,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <h2>Fix shape</h2>
 <p>On error: query for an existing open row with the same error signature before filing (the insurance_sweep <code>file_run_error</code> pattern — one open row per raiser); add exponential backoff on Notion 5xx/404 before the seen-mark commits.</p>
-</div></details></details></div><div class="job"><div class="jnum">#119</div><div class="jhead"><span class="emoji">🌡️</span><h4>Build the plain-code thermostat watcher</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Builds what ticket 118 decided: a plain program that runs the hourly thermostat routine</li><li>First it runs in practice mode — watching and deciding but touching nothing</li><li>For a few days we compare its decisions with the AI&#x27;s real ones</li><li>Only after Junyan approves does it take over for real, and the AI version is switched off</li><li>The independent safety guards (too hot, frost, nightly off) never change</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the climate sweep — the deterministic Weatherman</b></p><h2>Question</h2>
-
-<p>Build the lane <b>118</b> ruled: <code>climate_sweep.py</code> in</p>
-<p><code>services/event-gate</code>, a straight port of canon <code>library/climate-controller.md</code></p>
-<p>(all ten steps — the canon file is the spec), on today&#x27;s clock (hourly 09:10–23:10 +</p>
-<p>03:10 Toronto) with its own Cloud Scheduler job, <code>CLIMATE_SWEEP_DISABLED</code> kill switch,</p>
-<p>and <code>Run Error</code> row.</p>
-
-<p>Rulings that bind the build (see 118 for the full text):</p>
-
-<ul>
-<li>- <b>No LLM residue.</b> Ambiguity flags a Sweep Feedback row, never guesses. Step 9b&#x27;s</li>
-</ul>
-<p>comfort scan is the canon keyword list in code.</p>
-<ul>
-<li>- <b>Weather: Open-Meteo</b> hourly <code>apparent_temperature</code>; fetch failure → conservative</li>
-</ul>
-<p>max-lead-time fallback, stated in the pass&#x27;s Thermal Log row.</p>
-<ul>
-<li>- <b>Actuation: direct SDM commands</b> (mode + cool setpoint) with the sdm-logger OAuth</li>
-</ul>
-<p>refresh token from Secret Manager (per-secret IAM binding; strip trailing newlines).</p>
-<p>Read-back next pass verifies. IFTTT keeps only the safety applets. Edit canon&#x27;s</p>
-<p>&quot;must not call SDM directly&quot; line to scope it to the retired LLM runtime.</p>
-<ul>
-<li>- <b>Shadow first</b>: phase 1 writes nothing — <code>climate-shadow:</code> Cloud Run log lines</li>
-</ul>
-<p>only; the LLM Weatherman keeps running and owns the daily report. ~3–5 days of</p>
-<p>comparison, then a separate human-approved live flip (Junyan deploys), then trigger</p>
-<p>retirement + canon re-head.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- Shadow phase live and logging verdicts each pass; LLM lane untouched.</li>
-<li>- Every step&#x27;s port pinned by test, including: never alert on a hand-changed setpoint,</li>
-</ul>
-<p>dancer-heat non-alerts, 901 inside-Liz-window silence, telemetry-gap escalation</p>
-<p>(2+ passes, dedup against open row), report row created with explicit</p>
-<p><code>data_source_id</code> parent + Run Monitor relation verified by SQL.</p>
-<ul>
-<li>- A zero pass reports zero; a pass that cannot run files a <code>Run Error</code> row.</li>
-<li>- RUNTIMES.md + Plumbing Map updated at each phase (shadow, live flip, retirement).</li>
-<li>- Live flip and trigger retirement are separate, Junyan-approved steps — not part of</li>
-</ul>
-<p>this build&#x27;s definition of done unless he flips them in-session.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -4810,6 +4764,141 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Rollout order ruled (shadow first? which safety nets stay untouched?).</li>
 <li>- Build ticket(s) cut; this ticket closes on the ruling, not the build.</li>
 </ul>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#119</span><span class="emoji">🌡️</span><span class="done-title">Built: the plain-code thermostat watcher</span><span class="done-date">2026-08-27</span></summary><div class="done-body"><ul class="plain-bullets"><li>The plain program that runs the hourly thermostat routine is written and tested (686 tests pass)</li><li>It runs in practice mode first — watching and deciding but touching nothing</li><li>Anything it can&#x27;t be sure about, it raises a flag instead of guessing</li><li>Junyan still has to press deploy and set up its hourly timer — then a few days comparing its calls with the AI&#x27;s</li><li>Only after Junyan approves does it take over for real, and the AI version is switched off</li><li>The independent safety guards (too hot, frost, nightly off) never change</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the climate sweep — the deterministic Weatherman</b></p><h2>RESOLUTION — 2026-08-27</h2>
+
+<p><b>Built and committed; shadow phase awaits Junyan&#x27;s deploy + scheduler job.</b></p>
+<p><code>services/event-gate/climate_sweep.py</code> + <code>test_climate_sweep.py</code>, route</p>
+<p><code>POST /climate-sweep</code> in app.py — dc-canon commit <code>a0f594a9</code>, pushed. 36 new</p>
+<p>tests, full event-gate suite <b>686 passed</b>.</p>
+
+<p>All ten canon steps ported; every 118 ruling held:</p>
+
+<ul>
+<li>- <b>No LLM residue.</b> Ten steps in code. Ambiguity flags, never guesses — pinned</li>
+</ul>
+<p>in four places: a Thermal Model page the parser can&#x27;t read falls back to</p>
+<p>conservative defaults AND files a parse-gap flag (staff edits stay</p>
+<p>authoritative — the parser never overrules, and the Sunday re-fit COMPUTES but</p>
+<p>deliberately does not write the page, it logs the proposal and flags, because</p>
+<p>matching prose blocks to patch is exactly where a blind write could destroy a</p>
+<p>staff edit); a board-blind Skedda read = hold + flag, never an empty calendar;</p>
+<p>a recurring series touching 509 flags (series rows carry the series start —</p>
+<p>occupancy can&#x27;t be derived); step 9b&#x27;s comfort scan is the canon keyword list</p>
+<p>in code (&quot;space&quot;/&quot;account&quot; pinned as non-matches for AC).</p>
+<ul>
+<li>- <b>Weather: Open-Meteo</b> hourly <code>apparent_temperature</code>, Toronto point; fetch</li>
+</ul>
+<p>failure → max-lead-time fallback, stated in the pass verdict and (live) the</p>
+<p>Thermal Log row.</p>
+<ul>
+<li>- <b>Actuation: direct SDM</b> (mode + cool setpoint) with the sdm-logger OAuth</li>
+</ul>
+<p>refresh token; one retry then a 7b alert; read-back verification is the next</p>
+<p>pass&#x27;s SDM rows. Canon&#x27;s &quot;must not call SDM directly&quot; line re-scoped to the</p>
+<p>retired LLM runtime in the same commit.</p>
+<ul>
+<li>- <b>Shadow first</b>: shadow is the default and writes NOTHING (pinned by a test</li>
+</ul>
+<p>that fails on any Notion/SDM/SMS call); live is implemented but gated on</p>
+<p><code>CLIMATE_SWEEP_LIVE=1</code> — Junyan&#x27;s flip, later, separately.</p>
+
+<p>Acceptance walked:</p>
+
+<ul>
+<li>- ✅ never alert on a hand-changed setpoint (test: falling ambient at setpoint</li>
+</ul>
+<p>23.5 vs baseline 26 → no alert; the check never reads the number)</p>
+<ul>
+<li>- ✅ dancer-heat non-alert (rising ambient + overlapping booking → silent)</li>
+<li>- ✅ 901 inside-Liz-window silence (25°C at 13:00 → monitor-only, &quot;customer</li>
+</ul>
+<p>heat load&quot;); boundary tests at 10:59/11:00/18:59/19:00</p>
+<ul>
+<li>- ✅ telemetry-gap escalation: 2+ passes derived statelessly (newest reading</li>
+</ul>
+<p>&gt;3h old proves the previous hourly pass was already blind — no state file a</p>
+<p>cold start could lose); dedup appends to the open Sweep Feedback row</p>
+<ul>
+<li>- ✅ report row with explicit <code>data_source_id</code> parent + <code>Run Monitor</code> relation</li>
+</ul>
+<p>in the same write, verified by RE-QUERY (fetch-proof); empty relation raises</p>
+<ul>
+<li>- ✅ zero pass reports zero (explicit alerts=[], bookings=0, decision stated)</li>
+<li>- ✅ a pass that cannot run: live files a deduped Run Error feedback row;</li>
+</ul>
+<p>shadow stays a loud log line (shadow writes nothing, by ruling)</p>
+<ul>
+<li>- ✅ RUNTIMES.md row added (climate-sweep, TO CREATE, full spec + live-flip</li>
+</ul>
+<p>checklist); Plumbing Map entry pushed</p>
+<ul>
+<li>- ✅ live flip + trigger retirement NOT taken — separate Junyan-approved steps</li>
+</ul>
+
+<p>Two build decisions worth naming (both flagged, neither guessed):</p>
+
+<ol>
+<li>1. <b>Bookings read from Skedda, not Google Calendar</b> — event-gate has no GCal</li>
+</ol>
+<p>credential and a proven Skedda reader; same physical bookings, no new door.</p>
+<ol>
+<li>2. <b>The Sunday re-fit&#x27;s page WRITE stays flagged</b> (computation + clamp are</li>
+</ol>
+<p>code and tested; the Thermal Log gets the proposal row). If shadow shows</p>
+<p>this matters weekly, promoting the write is a small follow-up.</p>
+
+<p><b>Left for Junyan (the deploy convention — classifier blocks agent deploys):</b></p>
+<p>deploy event-gate; create Cloud Scheduler job <code>climate-sweep</code></p>
+<p>(<code>10 3,9-23 <i> </i> *</code> America/Toronto, header auth). Then ~3–5 days of</p>
+<p><code>climate-shadow:</code> log comparison against the LLM Weatherman&#x27;s Thermal Log</p>
+<p>decisions before ruling the live flip.</p>
+
+<h2>Question</h2>
+
+<p>Build the lane <b>118</b> ruled: <code>climate_sweep.py</code> in</p>
+<p><code>services/event-gate</code>, a straight port of canon <code>library/climate-controller.md</code></p>
+<p>(all ten steps — the canon file is the spec), on today&#x27;s clock (hourly 09:10–23:10 +</p>
+<p>03:10 Toronto) with its own Cloud Scheduler job, <code>CLIMATE_SWEEP_DISABLED</code> kill switch,</p>
+<p>and <code>Run Error</code> row.</p>
+
+<p>Rulings that bind the build (see 118 for the full text):</p>
+
+<ul>
+<li>- <b>No LLM residue.</b> Ambiguity flags a Sweep Feedback row, never guesses. Step 9b&#x27;s</li>
+</ul>
+<p>comfort scan is the canon keyword list in code.</p>
+<ul>
+<li>- <b>Weather: Open-Meteo</b> hourly <code>apparent_temperature</code>; fetch failure → conservative</li>
+</ul>
+<p>max-lead-time fallback, stated in the pass&#x27;s Thermal Log row.</p>
+<ul>
+<li>- <b>Actuation: direct SDM commands</b> (mode + cool setpoint) with the sdm-logger OAuth</li>
+</ul>
+<p>refresh token from Secret Manager (per-secret IAM binding; strip trailing newlines).</p>
+<p>Read-back next pass verifies. IFTTT keeps only the safety applets. Edit canon&#x27;s</p>
+<p>&quot;must not call SDM directly&quot; line to scope it to the retired LLM runtime.</p>
+<ul>
+<li>- <b>Shadow first</b>: phase 1 writes nothing — <code>climate-shadow:</code> Cloud Run log lines</li>
+</ul>
+<p>only; the LLM Weatherman keeps running and owns the daily report. ~3–5 days of</p>
+<p>comparison, then a separate human-approved live flip (Junyan deploys), then trigger</p>
+<p>retirement + canon re-head.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Shadow phase live and logging verdicts each pass; LLM lane untouched.</li>
+<li>- Every step&#x27;s port pinned by test, including: never alert on a hand-changed setpoint,</li>
+</ul>
+<p>dancer-heat non-alerts, 901 inside-Liz-window silence, telemetry-gap escalation</p>
+<p>(2+ passes, dedup against open row), report row created with explicit</p>
+<p><code>data_source_id</code> parent + Run Monitor relation verified by SQL.</p>
+<ul>
+<li>- A zero pass reports zero; a pass that cannot run files a <code>Run Error</code> row.</li>
+<li>- RUNTIMES.md + Plumbing Map updated at each phase (shadow, live flip, retirement).</li>
+<li>- Live flip and trigger retirement are separate, Junyan-approved steps — not part of</li>
+</ul>
+<p>this build&#x27;s definition of done unless he flips them in-session.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#087</span><span class="emoji">🐌</span><span class="done-title">The Registrar is too slow, and it ran out of time on its very first night</span><span class="done-date">2026-08-25</span></summary><div class="done-body"><ul class="plain-bullets"><li>It was switched on at 10pm and its first unattended run was cut off after exactly five minutes, having not finished</li><li>Two separate time limits were both set to five minutes, so there was no slack anywhere — the first limit it hit was also the last</li><li>Both raised to fifteen minutes, which fixes tonight. It is not the real fix</li><li>The real reason it is slow: it asks the booking calendar for one day at a time, so a two-week look-ahead is fifteen separate requests before it even starts work</li><li>Asking for the whole fortnight in one request would do nearly all of it. The calendar already supports that</li><li>This matters because the run happens every half hour. If a run ever took longer than that, two would overlap — and two copies working at once is exactly what caused the duplicate door codes back in August</li><li>Deliberately NOT fixed by looking at fewer days ahead. That would just mean bookings a week or two out get set up late</li><li>DONE (Aug 25): the one-request fix already went in on Aug 24, and runs now take about 85 seconds against a 15-minute limit</li><li>The last missing piece was simply reporting how long each run took — added, along with a warning if a run ever creeps past ten minutes</li><li>Because of that, looking further ahead is now cheap: 45 days holds 100 bookings against 59 for two weeks, not three times as many</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar reads the Skedda board one day at a time — 15 round-trips per pass, and it already hit a wall</b></p><h2>Problem</h2>
 
 <p><b>The Registrar&#x27;s first unattended pass timed out</b>, 2026-08-20 02:00Z, five minutes after it was</p>
@@ -12352,5 +12441,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-27 10:45 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-27 11:23 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
