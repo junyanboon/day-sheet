@@ -1137,6 +1137,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-27 &middot; ~18:30Z</span>
+      <h3>Job C&rsquo;s missing 30-day horizon is built &mdash; the last-seen roll-up <span class="kind">NEW ROUTE</span></h3></summary>
+      <p><strong>What changed:</strong> alarm-monitor gained <code>alarm_monitor/last_seen.py</code> (commit <code>c9f41bf</code>): the watchdog minute tick now folds the websocket relay&rsquo;s NAMED KEYPAD events into a durable per-person ledger &mdash; <code>last-seen.json</code>, same GCS bucket, one row per <code>contact_id</code>, kept forever. Best-effort like the arrival ledger (never a reason a siren goes unanswered), throttled to one fold per 15 min against the door ledger&rsquo;s 72h retention. Read it at <code>GET /last-seen</code> (bearer; <code>?name=</code> substring, <code>?contact_id=</code> exact) or the new <code>last_seen</code> MCP tool.</p>
+      <p><strong>Why:</strong> the Doorman&rsquo;s retirement sweep (Job C) asks &ldquo;has this person been in the building in 30 days&rdquo;. Its evidence was the ADT emails (dead 2026-08-20); the relay restored names but only 72h of them. This is the horizon. Keypad events only &mdash; the same line the ADT taxonomy and billing draw; remote app arm/disarms are excluded.</p>
+      <p><strong>Failure mode, first-class:</strong> an ABSENCE is believable only when <code>covers_since</code> predates the window AND no <code>gaps</code> entry overlaps it &mdash; a fold outage longer than 72h loses events and is recorded as a gap, and a person whose absence spans one is SKIPPED (keep-bias). Presence rows are always real.</p>
+      <p><strong>Not yet live:</strong> committed, 270 tests pass, <strong>alarm-mcp NOT redeployed</strong>. Job C stays suspended until redeploy + 30 days of accumulation + Junyan&rsquo;s go &mdash; canon <code>doorman-access-lifecycle.md</code> banner has the three conditions.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-27 &middot; ~15:10Z</span>
       <h3>Canon sync broke on the Scribe&rsquo;s own birth certificate; and the Concierge&rsquo;s plate was re-sorted <span class="kind">FIXED</span></h3></summary>
       <p><strong>Sync fix:</strong> <code>library/the-scribe.md</code> (Junyan&rsquo;s 09:35 commit) landed with no MIRRORS row, so the canon completeness check failed every <code>watchlist-refresh</code> run from 13:45Z &mdash; same class as <code>the-loop.md</code> (2026-08-06). Mirror page <code>3c97503281c481888149cbfdd44fadee</code> created + mapped in <code>library_mirror_sync.py</code>; rerun green. Both Run Error rows closed.</p>
