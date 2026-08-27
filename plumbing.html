@@ -1135,6 +1135,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry alert">
+      <details>
+      <summary><span class="when">2026-08-27 &middot; 00:05Z</span>
+      <h3>The gate&rsquo;s only password was sitting in the logs &mdash; it now travels in a header<span class="kind">SECURITY &middot; ROTATION PENDING</span></h3></summary>
+      <p><strong>Every event-gate route took its token as part of the web address</strong>, and Cloud Run copies the full address of every request into its access log. That token is the <em>only</em> thing standing in front of the SMS poller, the advancement loop, the booking sweep and the emergency lane &mdash; so anyone who could read the project&rsquo;s logs could lift it and call any of them. Found while reading sentinel-sweep logs for an unrelated reason.</p>
+      <p><strong>Fixed in two deploys, callers migrated in between.</strong> <code>48e866b7</code> taught every route to accept the token in an <code>X-Gate-Token</code> header (headers are not logged) while still accepting the old way; the six Cloud Scheduler jobs were then moved one at a time and each verified firing; <code>aadf65b0</code> deleted the token-in-URL routes outright. A request carrying the real token in the address now returns 404, and a test fails loudly if anyone ever adds such a route back. The emergency poller was migrated last and confirmed green on the next minute tick.</p>
+      <p><strong>⚠️ Not finished:</strong> this stops <em>new</em> leakage only. The old token still sits in roughly 30 days of historical logs, so it has to be <strong>rotated</strong> before the exposure is genuinely closed &mdash; a leaked token works just as well in a header as in a URL.</p>
+      </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-27 &middot; ~00:30Z</span>
