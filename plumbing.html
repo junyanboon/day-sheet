@@ -1135,6 +1135,29 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry ai">
+      <details>
+      <summary><span class="when">2026-08-29 &middot; 17:08Z</span>
+      <h3>Fallback Analyst and Timekeeper stop mistaking a registered trigger for a live writer <span class="kind">FIX + POLICY CORRECTION</span></h3></summary>
+      <p><strong>The failure:</strong> the Codex fallback Analyst saw the Claude trigger still registered and enabled, treated that registry row as proof that Claude was actively working, and stopped at the collision gate even though the Claude fleet was quota-blocked. The forward-looking IPR went stale or missing. The same false-positive gate could prevent the Timekeeper from repairing an absent run.</p>
+      <p><strong>The corrected gate:</strong> registration and enabled state are schedule intent, not active-work evidence. A fallback run now yields only to concrete post-slot evidence: an in-progress run monitor, a matching runtime process, or a completed report written for that slot. This changes no trigger state and does not permit overlapping writers.</p>
+      <p><strong>The ownership and billing rails:</strong> the Analyst owns forward-looking today/tomorrow IPRs; the Timekeeper exclusively owns retrospective overtime. For direct bookings, the Timekeeper corrects source lag first; once the adjusted overage meets the 17-minute flag threshold, it bills the complete <strong>15-minute blocks</strong> and leaves any final 1&ndash;14 minutes unbilled as the grace remainder. Junyan&rsquo;s example is explicit: 36 adjusted minutes is two billed 15-minute blocks plus 6 grace minutes; Ish&rsquo;s corrected 29-minute example is one billed block plus 14 grace minutes. Booking duration and held suggested amount must describe the same billed block total. No charge, settlement, message release, or trigger enable/disable is part of this repair.</p>
+      <p><strong>Correction during review:</strong> an earlier draft incorrectly described one 30-minute block. It never reached main. The live Timekeeper, SOP, regression check, and both review branches were corrected before the next scheduled run; the public Terms&rsquo; 15-minute-increment wording now agrees with the operational block size.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-29 &middot; 03:29Z</span>
+      <h3>The bypass watchdog stops counting things it never did <span class="kind">FIX + FAILURE MODE</span></h3></summary>
+      <p><strong>The live incident:</strong> Studio 509A Door became bypassed at 20:16 Toronto. The deterministic <code>alarm-watchdog-bypass</code> job fired and proposed restores at 20:30 and 20:45, but its occupancy guard saw <strong>Studio 509B Door open</strong> and refused both with <code>acted=False</code>. That was the wrong room boundary: 509A and 509B are separate partitions but share Alarm.com panel prefix <code>101222561</code>. The guard&rsquo;s panel-prefix filter treated activity in either room as occupancy in both.</p>
+      <p><strong>The second failure made the first permanent:</strong> <code>BypassLedger.record()</code> ran while the action was merely being proposed, before the executor&rsquo;s final safety read. Both refusals therefore consumed the two-attempt cap without one disarm/re-arm command being sent. Every later pass emitted <code>bypass_stuck</code> and stopped retrying. Despite saying &ldquo;Needs a person at the door,&rdquo; that action was report-only: it reached Cloud Run logs and no human.</p>
+      <p><strong>Fixed and live:</strong> shared-panel occupancy now resolves each named sensor to its exact partition; an explicitly-509B door or motion sensor cannot veto a 509A cycle, while a genuinely shared/ambiguous device still blocks both. Attempts move to post-execution accounting and persist only on <code>acted=True, ok=True</code>. The durable ledger is versioned to v2 and discards the old counters once because no v1 counter can prove a real cycle occurred. A bypass that survives two completed cycles now texts on-call once per episode; delivery is durable across cold starts, resets when the sensor clears, and a failed text retries next pass. Commits <code>a59cf42</code> + <code>796a6ee</code>, image <code>alarm:0829-796a6ee</code>, revision <strong><code>alarm-mcp-00060-qgq</code></strong>; 277 tests.</p>
+      <p><strong>The cadence collision now retries instead of lying green:</strong> the 23:30 bypass fire started 22 ms before the every-minute siren tick finished and returned the shared <code>_busy</code> guard in 2.9 ms. Scheduler recorded HTTP 200 even though no bypass decision ran. Busy now returns HTTP 503, and this one job has exactly one retry after 10 seconds (<code>retryCount=1</code>, <code>minBackoffDuration=10s</code>). That is long enough for the ordinary tick to leave and bounded enough not to turn a panel action into an open-ended retry loop.</p>
+      <p><strong>Production proof, ordinary schedule:</strong> the unchanged 23:45 fire emitted <code>[watchdog] armed=True bypass=True :: bypass_restore:Studio 509A</code>, called it Attempt 1 of 2, and completed <code>acted=True ok=True</code>. The durable v2 ledger then contained exactly <code>101222561-1: 1</code>; the old refusals were not resurrected. At 23:54 Toronto, nine minutes after execution, Alarm.com no longer reported <code>Sensor Bypassed (Studio 509A Door)</code>: all five studios were armed away and all 18 sensors needed no attention. The midnight scheduled bypass pass then reported quiet and reset the durable ledger to empty. Recovery and episode closure proven end to end.</p>
+      </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-27 &middot; ~22:05Z</span>
