@@ -1135,6 +1135,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry ai">
+      <details>
+      <summary><span class="when">2026-08-29 &middot; 17:08Z</span>
+      <h3>Fallback Analyst and Timekeeper stop mistaking a registered trigger for a live writer <span class="kind">FIX + POLICY CORRECTION</span></h3></summary>
+      <p><strong>The failure:</strong> the Codex fallback Analyst saw the Claude trigger still registered and enabled, treated that registry row as proof that Claude was actively working, and stopped at the collision gate even though the Claude fleet was quota-blocked. The forward-looking IPR went stale or missing. The same false-positive gate could prevent the Timekeeper from repairing an absent run.</p>
+      <p><strong>The corrected gate:</strong> registration and enabled state are schedule intent, not active-work evidence. A fallback run now yields only to concrete post-slot evidence: an in-progress run monitor, a matching runtime process, or a completed report written for that slot. This changes no trigger state and does not permit overlapping writers.</p>
+      <p><strong>The ownership and billing rails:</strong> the Analyst owns forward-looking today/tomorrow IPRs; the Timekeeper exclusively owns retrospective overtime. For direct bookings, the Timekeeper corrects source lag first; once the adjusted overage meets the 17-minute flag threshold, it bills the complete <strong>15-minute blocks</strong> and leaves any final 1&ndash;14 minutes unbilled as the grace remainder. Junyan&rsquo;s example is explicit: 36 adjusted minutes is two billed 15-minute blocks plus 6 grace minutes; Ish&rsquo;s corrected 29-minute example is one billed block plus 14 grace minutes. Booking duration and held suggested amount must describe the same billed block total. No charge, settlement, message release, or trigger enable/disable is part of this repair.</p>
+      <p><strong>Correction during review:</strong> an earlier draft incorrectly described one 30-minute block. It never reached main. The live Timekeeper, SOP, regression check, and both review branches were corrected before the next scheduled run; the public Terms&rsquo; 15-minute-increment wording now agrees with the operational block size.</p>
+      </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-29 &middot; 03:29Z</span>
