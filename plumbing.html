@@ -1137,6 +1137,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-30 &middot; 19:40Z</span>
+      <h3>The Registrar remembers a late HTA by booking key, not by a window that already closed <span class="kind">FAILURE MODE FIX</span></h3></summary>
+      <p><strong>The incident:</strong> Francisco Delgado&rsquo;s Studio 527 booking began at 14:00. The first catch-up HTA was queued at 14:30, but <code>hta_queued()</code> searched only rows created no later than the booking start. The 15:00 and 15:30 passes therefore could not see the Registrar&rsquo;s own 14:30 row and created the same <code>HTA-sweep-0830-1400-527</code> again. One FBS booking produced three queue rows and three operational texts; the booking and Artist records themselves were not duplicated.</p>
+      <p><strong>What changed:</strong> dedup now checks the exact Registrar booking key (Artist + full <code>HTA-sweep-MMDD-HHMM-STUDIO</code> code) before applying the older cross-lane historical window. A late catch-up row therefore remains visible after the booking start; the exact-key query keeps a 48-hour lower bound (the title omits the year, so last year&rsquo;s row must not suppress next year&rsquo;s booking) and has no upper bound. <code>Pending Review</code>, <code>Ready to Send</code>, <code>Sent</code>, and exact <code>Will Not Send</code> block another draft; <code>Error</code> is excluded server-side and remains repairable. The wider historical-shape check keeps its 48h&rarr;start boundary so another booking&rsquo;s generic &ldquo;How to Access&rdquo; row cannot suppress this one. Regression: a row created after start blocks the next pass; prior-year rows do not; Error falls through; 716 event-gate tests pass. No scheduler cadence, auto-send authority, or trigger state changed.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-30 &middot; 19:26Z</span>
       <h3>FBS Monitor shows the AVA/EOB queue beside each booking <span class="kind">ROUTE VIEW + FAILURE MODE</span></h3></summary>
       <p><strong>What changed:</strong> FBS and Monitor booking cards now carry the approved right-side AVA/EOB pills: the Toronto send time when a matching row is scheduled, neutral <code>QUEUED</code> when the row exists without a time, and red <code>MISSING</code> only when a successful Message Queue read proves an expected row is absent. Matching uses the Artist relation, studio, message kind, and the canonical booking time (AVA = start&minus;2h; EOB = end&minus;15m); an untimed row is shown only when it cannot be confused with a second same-artist booking in that studio.</p>
