@@ -1135,6 +1135,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-30 &middot; 19:22Z</span>
+      <h3>The Responder checks whether a renter already reviewed us before recommending another ask <span class="kind">FIX + FAILURE MODE</span></h3></summary>
+      <p><strong>The gap:</strong> the review-ask route said to check whether the renter had already left one, but named only their correspondence history. That catches &ldquo;I just left a review&rdquo;; it misses a renter who reviewed the studio without telling the desk. The 90-day ask-cadence guard also answers a different question: how recently we asked, not whether they have already completed the action.</p>
+      <p><strong>What changed:</strong> review praise is now a candidate until a hard gate passes. Before selecting a review-request HTR row, The Responder must ALWAYS run a targeted live search of the business mailbox <code>thedanceannex@gmail.com</code> for Google Business Profile review mail from <code>businessprofile-noreply@google.com</code>, then check the renter&rsquo;s own J28 / Correspondence Log. The rendered Google-notification ledger is a cross-check, never a substitute for the live source. A confirmed review at any Dance Annex studio suppresses future asks permanently; the current praise takes the fitted courtesy path instead. Ambiguous or unreadable history fails closed, and successful asks stamp the completed check in <code>Reasoning</code>. This is canon-only routing logic; no production trigger, connector, or send authority changed.</p>
+      </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-29 &middot; 03:29Z</span>
