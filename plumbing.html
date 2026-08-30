@@ -1137,6 +1137,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-30 &middot; 19:26Z</span>
+      <h3>FBS Monitor shows the AVA/EOB queue beside each booking <span class="kind">ROUTE VIEW + FAILURE MODE</span></h3></summary>
+      <p><strong>What changed:</strong> FBS and Monitor booking cards now carry the approved right-side AVA/EOB pills: the Toronto send time when a matching row is scheduled, neutral <code>QUEUED</code> when the row exists without a time, and red <code>MISSING</code> only when a successful Message Queue read proves an expected row is absent. Matching uses the Artist relation, studio, message kind, and the canonical booking time (AVA = start&minus;2h; EOB = end&minus;15m); an untimed row is shown only when it cannot be confused with a second same-artist booking in that studio.</p>
+      <p><strong>Failure and privacy boundary:</strong> an unreadable Message Queue, an absent Artist relation, or an ambiguous untimed match renders no dispatch pill rather than manufacturing a missing alarm. Duplicate replacements resolve newest-first. The public page receives only message kind, the three-state display value, and a local clock time &mdash; never recipients, bodies, access instructions, relation ids, queue ids, reasoning, or receipts. This is an observability route only: no send status, schedule, trigger, or delivery path changed.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-27 &middot; ~22:05Z</span>
       <h3>Same-day confirmation + HTA become ONE merged text <span class="kind">ROUTE CHANGE</span></h3></summary>
       <p><strong>The incident that forced it:</strong> Raquel Khan (same-day 527, 20:00) reached the evening with a live door code and <em>no access text</em>. The sweep&rsquo;s 21:31Z pass queued her first-timer confirmation &mdash; whose body promises &ldquo;Your door code and studio access details will follow&rdquo; &mdash; and then asked &ldquo;does an HTA exist?&rdquo;. The HTA-shape filter matched any body containing <code>Door Code</code> (Notion <code>contains</code> is case-insensitive), so the seconds-old confirmation answered yes: <code>hta:found</code>, false positive, nothing sent. The emergency HTA + address follow-up went out by hand at 21:38Z with Junyan&rsquo;s approval.</p>
