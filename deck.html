@@ -253,6 +253,8 @@
   .btn:hover{background:var(--scrim-2)}
   .btn:focus-visible{outline:2px solid var(--tungsten);outline-offset:1px}
   .btn:disabled{opacity:.4;cursor:default}
+  .btn-manual{border-color:var(--watch);color:var(--watch)}
+  .btn-manual:hover{background:var(--watch-bg)}
   .btn-send{background:var(--tungsten);border-color:var(--tungsten);color:#fff}
   :root[data-theme="dark"] .btn-send{color:#161412}
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .btn-send{color:#161412} }
@@ -1013,10 +1015,19 @@
     }
     var windowClosed = card.windowHours != null && card.windowHours <= 0;
     var blocked = windowClosed || card.pfOk === false;
+    // MANUAL FALLBACK (Junyan, 2026-08-31). Every automated send path can be down at
+    // once — the phone.com token self-revokes on login and Zapier's connections died
+    // with it. So the reviewer always keeps a hand path: Copy takes the exact text,
+    // he sends it himself, then "Sent manually" records THAT text as what really went
+    // out. Shown whenever the engine can't do it, and always available behind Copy.
+    var manualBtns =
+      '<button class="btn" data-act="copy">Copy text</button>' +
+      '<button class="btn btn-manual" data-act="sentmanual">Sent manually</button>';
     return '<button class="btn btn-reject" data-act="reject">Reject</button>' +
       '<button class="btn" data-act="skip">Skip</button>' +
+      (blocked || card.pfManual ? manualBtns : '<button class="btn" data-act="copy">Copy</button>') +
       '<button class="btn btn-send" data-act="send"' + (blocked ? " disabled" : "") + ">" +
-      (card.pfManual ? "Manual send required" :
+      (card.pfManual ? "Engine can\u2019t send this" :
         card.pfOk === false && !windowClosed ? "Fix dispatch first" : "Send") + "</button>";
   }
 
@@ -1149,6 +1160,65 @@
     animateAway("right", render);
   }
 
+  // Copy the text EXACTLY as it stands in the box, edits included — that is the
+  // text he is about to paste, and the text "Sent manually" will record.
+  function copyDraft(card) {
+    var box = document.getElementById("editbox");
+    var text = box ? box.value : (card.row["Message Body"] || "");
+    if (box) { card.editedBody = text; state.edits[card.url] = text; }
+    function ok() { toast("Copied \u2014 paste it, send it, then tap \u201cSent manually\u201d.", { ttl: 4000 }); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(ok).catch(function () { legacyCopy(text, ok); });
+    } else legacyCopy(text, ok);
+  }
+  function legacyCopy(text, ok) {
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      document.execCommand("copy"); document.body.removeChild(ta); ok();
+    } catch (e) {
+      toast("Couldn\u2019t copy \u2014 select the text in the box and copy it by hand.", { bad: true, ttl: 7000 });
+    }
+  }
+
+  // "Sent manually" — the row is closed as a REAL send, with the body replaced by
+  // whatever is in the box, because that is what the renter actually received. The
+  // receipt is stamped `manual:<iso>` so nothing downstream mistakes it for an
+  // engine dispatch and nothing ever re-sends it. No undo window: by the time this
+  // is tapped the message is already gone, so there is nothing to call back.
+  function decideSentManually(card) {
+    var box = document.getElementById("editbox");
+    var body = box ? box.value : (card.row["Message Body"] || "");
+    var nowIso = new Date().toISOString();
+    var ts = nowIso.slice(0, 16).replace("T", " ");
+    var original = card.row["Message Body"] || "";
+    var props = {
+      "Status": "Sent",
+      "Dispatch Receipt": "manual:" + nowIso,
+      "date:Sent At:start": nowIso,
+      "date:Sent At:is_datetime": 1,
+      "Message Body": body
+    };
+    var stamp = "[Sent MANUALLY from the Deck \u2014 " + ts + "]\n" +
+      "Sent by hand by Junyan because the automated path was unavailable. The Message Body " +
+      "above is the text that ACTUALLY went out \u2014 treat it as ground truth, not a draft. " +
+      "Receipt `manual:` means no engine dispatched this; never re-send this row." +
+      (body !== original ? "\nDrafted: " + original : "");
+    props["Reasoning"] = ((card.row.Reasoning || "") + "\n" + stamp).trim();
+    state.decided[card.url] = "sent";
+    animateAway("right", render);
+    writeRow(card, props, function (ok, msg) {
+      if (ok) { delete state.edits[card.url]; toast("Recorded as sent by hand.", { ttl: 3500 }); }
+      else {
+        delete state.decided[card.url];
+        toast("Couldn\u2019t record it: " + msg + " \u2014 card is back. The message still went out; try again.", { bad: true, ttl: 9000 });
+        render();
+      }
+    });
+  }
+
   function decideReject(card, why) {
     var props = { "Status": "Will Not Send" };
     var stamp = "[Rejected in the Deck" + (why ? ": " + why : "") + " — " + new Date().toISOString().slice(0, 16).replace("T", " ") + "]";
@@ -1251,6 +1321,8 @@
       decideReject(card, rb ? rb.value.trim() : "");
     }
     else if (act === "skip") { state.skipped[card.url] = true; state.rejecting = false; animateAway("down", render); }
+    else if (act === "copy") copyDraft(card);
+    else if (act === "sentmanual" && !state.busy) decideSentManually(card);
   });
 
   function wireSwipe(card) {
