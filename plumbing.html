@@ -1135,6 +1135,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-08-31 &middot; later</span>
+      <h3>SMS now has a Zapier fallback &mdash; armed in code, off until the webhook is set <span class="kind">NEW ROUTE</span></h3></summary>
+      <p><strong>What:</strong> <code>send-engine/Code.gs</code> <code>sendSms_()</code> can now hand a message to a Zapier Catch Hook when phone.com refuses the credential. Controlled by a new Script Property <code>ZAPIER_SMS_WEBHOOK</code> &mdash; <strong>unset = off</strong>, engine unchanged.</p>
+      <p><strong>The safety line, and it is the whole design:</strong> the fallback fires on <strong>401/403 only</strong> &mdash; a refused credential proves nothing was sent. <strong>429 and 5xx are deliberately excluded</strong>, because phone.com may have accepted the message before failing and a fallback there double-texts a renter. This engine has already stomped <code>Error</code> over a delivered message once; the rule is rather-not-send than send-twice.</p>
+      <p><strong>Honest receipt:</strong> <code>zapier-queued:&lt;iso&gt;</code>, not <code>zapier:</code> &mdash; a Catch Hook 200 means Zapier <em>accepted</em> the message, not that it was delivered. Plus one alert per day, because a day on the fallback is a day the primary is broken and nobody noticed.</p>
+      <p><strong>Left for Junyan</strong> (steps in <code>send-engine/SETUP.md</code>): reconnect Phone.com in Zapier, build the Catch Hook &rarr; Send SMS Zap, paste the hook URL into the Script Property. Then test by executing a real call &mdash; Zapier&rsquo;s own health flag proved worthless here.</p>
+      </details>
+    </li>
+
     <li class="entry amber">
       <details>
       <summary><span class="when">2026-08-31</span>
