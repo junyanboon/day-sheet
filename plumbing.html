@@ -1137,6 +1137,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-31</span>
+      <h3>Giggster instant bookings have NO reply channel &mdash; the welcome message now routes to a staff Action row, same pass <span class="kind">NEW ROUTE</span></h3></summary>
+      <p><strong>The fact (Junyan):</strong> when a guest instant-books on Giggster, the platform generates <em>no</em> guest-chat SMS relay and <em>no</em> reply-to email. There is no door to the renter at all until they write first or give a direct number.</p>
+      <p><strong>What changed:</strong> the desk used to fall into the wait-for-the-relay pattern (hold a <code>PHONE-*</code> row at <code>Channel = Platform Relay</code>) &mdash; correct for ordinary Giggster bookings, wrong here, because the relay is not late, it does not exist. New rule: the first pass that processes an instant booking queues an <strong>&#9989; Actions to Perform row</strong> the same pass &mdash; message verbatim in the body, platform-safe wording, asking for the guest&rsquo;s direct number &mdash; and staff send it by hand in the Giggster app chat. Human-confirmed gate; turn logged via <code>log_drop.py</code> after sending. Never a Message Queue row (nothing can dispatch to a platform app; the row just strands).</p>
+      <p><strong>Where:</strong> dc-canon <code>library/house-rules.md</code> &sect;&#128245; (commit <code>38cd8d24</code>) + cross-ref in <code>library/job-2-triage.md</code> (<code>ff03ec26</code>).</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-31 &middot; 21:58Z</span>
       <h3>The HTA guard was never actually installed &mdash; now it is, and wiring is provable <span class="kind">GATE INSTALLED</span></h3></summary>
       <p><strong>The finding:</strong> <code>hta_guard.js</code> has lived in dc-canon since it was written, its regression suite passed, and the service README stated &ldquo;the live guard is called from <code>validate_(row)</code>.&rdquo; None of that was true of the running system. The Apps Script project <em>Message Queue Send Engine</em> had no <code>HtaGuard.gs</code> file at all and <code>validate_</code> never referenced it, so every How to Access message dispatched unchecked. Discovered only because Junyan pasted the live <code>Code.gs</code> in full. The Himanshi Mehta wrong-studio incident (Aug 15) happened inside that gap.</p>
