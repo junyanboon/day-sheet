@@ -330,6 +330,11 @@
   var ARTISTS = "collection://3cfb93cb-55f9-46a4-bde8-9b7023797d4b";
   var SWEEP = "collection://849ebf67-041f-4912-9972-7ef7381199e7";
   var UNDO_SECONDS = 5;
+  // Zapier SMS fallback. Shape OBSERVED live 2026-08-31 23:23Z (message
+  // 70944d3d-2e50-43fa-a777-87f3a0fbd3fd, confirmed in the phone.com log), not guessed.
+  var ZAP_SERVER = "Zapier";
+  var ZAP_TOOL = "execute_zapier_write_action";
+  var STUDIO_FROM = "+16479321050";
 
   var inboundQuery = { data: { data_source_urls: [INBOUND], query:
     'SELECT url, "Channel", "Sender", "Sender Name", "Body", "Artist", ' +
@@ -1021,6 +1026,10 @@
     // he sends it himself, then "Sent manually" records THAT text as what really went
     // out. Shown whenever the engine can't do it, and always available behind Copy.
     var manualBtns =
+      // An SMS whose only problem is the engine can go out through Zapier's own
+      // phone.com connection in one tap — a different door to the same carrier.
+      (card.row.Channel === "SMS" && card.pfOk !== false
+        ? '<button class="btn btn-manual" data-act="zapsend">Send via Zapier</button>' : "") +
       '<button class="btn" data-act="copy">Copy text</button>' +
       '<button class="btn btn-manual" data-act="sentmanual">Sent manually</button>';
     return '<button class="btn btn-reject" data-act="reject">Reject</button>' +
@@ -1219,6 +1228,70 @@
     });
   }
 
+  // SEND VIA ZAPIER — the second door to phone.com, used when the Apps Script engine
+  // cannot (dead API token). It dispatches IMMEDIATELY: there is no undo, because the
+  // carrier has it the moment the call returns. The row is then closed exactly the way
+  // a manual send is, with the real message id as the receipt.
+  function sendViaZapier(card) {
+    var box = document.getElementById("editbox");
+    var body = box ? box.value : (card.row["Message Body"] || "");
+    // Same contact lookup preflight uses — state.contacts, keyed by the Artist url.
+    var aUrl = card.conv && card.conv.artistUrl;
+    var contact = aUrl ? state.contacts[aUrl] : null;
+    var to = (contact && contact.phone) || "";
+    var digits = String(to).replace(/\D/g, "");
+    if (digits.length === 10) to = "+1" + digits;
+    else if (digits.length === 11 && digits.charAt(0) === "1") to = "+" + digits;
+    else if (String(to).charAt(0) !== "+") to = digits ? "+" + digits : "";
+    if (!to) { toast("No phone number on the Artist \u2014 can\u2019t send.", { bad: true, ttl: 6000 }); return; }
+    state.busy = true; render();
+    window.claude.mcp.callTool(ZAP_SERVER, ZAP_TOOL, {
+      selected_api: "PhoneComCLIAPI",
+      action: "sms",
+      tool_name: "phone_com_send_sms",
+      params: { to: to, from: STUDIO_FROM, text: body }
+    }).then(function (result) {
+      state.busy = false;
+      // Observed response: results[0].to["0"].id is the phone.com message id.
+      var id = "";
+      try {
+        var r = result && result.payload;
+        if (typeof r === "string") r = JSON.parse(r);
+        var rec = r && r.results && r.results[0] && r.results[0].to;
+        if (rec) { var k = Object.keys(rec)[0]; id = (rec[k] && rec[k].id) || ""; }
+      } catch (e) { /* receipt falls back to a timestamp marker */ }
+      var nowIso = new Date().toISOString();
+      var props = {
+        "Status": "Sent",
+        "Dispatch Receipt": id ? "zapier:" + id : "zapier:accepted-" + nowIso,
+        "date:Sent At:start": nowIso,
+        "date:Sent At:is_datetime": 1,
+        "Message Body": body
+      };
+      var stamp = "[Sent via ZAPIER from the Deck \u2014 " + nowIso.slice(0, 16).replace("T", " ") + "]\n" +
+        "Dispatched through Zapier\u2019s phone.com connection, not the Apps Script engine \u2014 " +
+        "use this when the engine\u2019s API token is dead. The Message Body above is what actually " +
+        "went out. Never re-send this row.";
+      props["Reasoning"] = ((card.row.Reasoning || "") + "\n" + stamp).trim();
+      state.decided[card.url] = "sent";
+      animateAway("right", render);
+      writeRow(card, props, function (ok2, msg) {
+        if (ok2) { delete state.edits[card.url]; toast("Sent via Zapier.", { ttl: 3500 }); }
+        else {
+          // The TEXT IS GONE either way. Never put the card back as if it were unsent.
+          toast("Text SENT, but the row didn\u2019t update: " + msg +
+            " \u2014 mark it Sent in Notion by hand. Do NOT send again.", { bad: true, ttl: 12000 });
+        }
+      });
+    }).catch(function (err) {
+      state.busy = false;
+      var code = (err && err.code) || "error";
+      toast("Zapier couldn\u2019t send (" + code + ") \u2014 nothing went out. Use Copy text and send it by hand.",
+        { bad: true, ttl: 9000 });
+      render();
+    });
+  }
+
   function decideReject(card, why) {
     var props = { "Status": "Will Not Send" };
     var stamp = "[Rejected in the Deck" + (why ? ": " + why : "") + " — " + new Date().toISOString().slice(0, 16).replace("T", " ") + "]";
@@ -1323,6 +1396,7 @@
     else if (act === "skip") { state.skipped[card.url] = true; state.rejecting = false; animateAway("down", render); }
     else if (act === "copy") copyDraft(card);
     else if (act === "sentmanual" && !state.busy) decideSentManually(card);
+    else if (act === "zapsend" && !state.busy) sendViaZapier(card);
   });
 
   function wireSwipe(card) {
