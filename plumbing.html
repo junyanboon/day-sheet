@@ -1135,6 +1135,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-31</span>
+      <h3>Process Studio Tickets gains a second engine &mdash; Codex (GPT-5.6 Sol) can now run the skill off the Anthropic meter <span class="kind">NEW LANE</span></h3></summary>
+      <p><strong>Why:</strong> Claude subscription tokens were running short and the ticket pass still had to happen. The <code>process-studio-tickets</code> skill already existed in Codex at <code>~/.codex/skills/process-studio-tickets/SKILL.md</code> &mdash; same thin pointer that fetches the live Notion runtime page each run &mdash; but Codex had no Notion and no Gmail connector, so it died on step 1.</p>
+      <p><strong>What changed:</strong> two MCP servers added to <code>~/.codex/config.toml</code>. <code>notion</code> &rarr; hosted <code>https://mcp.notion.com/mcp</code>, OAuth completed. <code>gmail-business</code> &rarr; the same local stdio server Claude uses (<code>npx -y @gongrzhe/server-gmail-autoauth-mcp</code> with <code>GMAIL_CREDENTIALS_PATH=/Users/jboon/.gmail-mcp/business-credentials.json</code>), so no re-auth. Backup of the prior config at <code>~/.codex/config.toml.bak-1787855836</code>.</p>
+      <p><strong>The failure mode that cost the time:</strong> every Gmail tool call in <code>codex exec</code> came back <code>user cancelled MCP tool call</code>. Not an auth failure and not a timeout &mdash; the server answered fine when driven directly over JSON-RPC. Codex was raising an approval elicitation (<code>mcp_tool_call_approval_&hellip;</code>) per tool call, and headless <code>exec</code> auto-cancels any prompt it cannot show. Fix: <code>default_tools_approval_mode = "auto"</code> on the server block. <strong>Valid values are <code>auto</code>, <code>prompt</code>, <code>writes</code>, <code>approve</code></strong> &mdash; strings scraped from the binary suggested <code>allow</code>, which is wrong and fails the whole config load with <code>unknown variant</code>. Set on both <code>gmail-business</code> and <code>notion</code>; Notion reads were passing unprompted (its read tools carry <code>readOnlyHint</code>) but writes &mdash; the actual ticket creation &mdash; would have hit the same cancel.</p>
+      <p><strong>Standing limit &mdash; this lane cannot close the loop.</strong> The local <code>gmail-business</code> server is message-level only: no <code>search_threads</code>, <code>get_thread</code>, or <code>label_thread</code>. Codex can find the mail and create the Notion ticket; it <em>cannot</em> label the thread processed. That step stays with the hosted business connector (a Claude session) or gets done by hand in Gmail. A Codex-only pass therefore leaves threads unlabelled, which reads as unprocessed to the next sweep &mdash; watch for double-processing.</p>
+      <p><strong>Run it:</strong> <code>codex "process studio tickets"</code>. Harmless noise on every run: <code>failed to load models cache: missing field supports_parallel_tool_calls</code> (stale cache, unrelated) and a skills-context-budget warning.</p>
+      </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-31</span>
