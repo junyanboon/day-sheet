@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-27 11:23 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-08-31 17:24 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -4764,7 +4764,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Rollout order ruled (shadow first? which safety nets stay untouched?).</li>
 <li>- Build ticket(s) cut; this ticket closes on the ruling, not the build.</li>
 </ul>
-</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#119</span><span class="emoji">🌡️</span><span class="done-title">Built: the plain-code thermostat watcher</span><span class="done-date">2026-08-27</span></summary><div class="done-body"><ul class="plain-bullets"><li>The plain program that runs the hourly thermostat routine is written and tested (686 tests pass)</li><li>It runs in practice mode first — watching and deciding but touching nothing</li><li>Anything it can&#x27;t be sure about, it raises a flag instead of guessing</li><li>Junyan still has to press deploy and set up its hourly timer — then a few days comparing its calls with the AI&#x27;s</li><li>Only after Junyan approves does it take over for real, and the AI version is switched off</li><li>The independent safety guards (too hot, frost, nightly off) never change</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the climate sweep — the deterministic Weatherman</b></p><h2>RESOLUTION — 2026-08-27</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#119</span><span class="emoji">🌡️</span><span class="done-title">Built and practising: the plain-code thermostat watcher</span><span class="done-date">2026-08-27</span></summary><div class="done-body"><ul class="plain-bullets"><li>The plain program that runs the hourly thermostat routine is written and tested (686 tests pass)</li><li>It runs in practice mode first — watching and deciding but touching nothing</li><li>Anything it can&#x27;t be sure about, it raises a flag instead of guessing</li><li>It has now practised for four days: 68 runs, none failed, and its cool-the-room calls all look right</li><li>It cried wolf three times — each time about a room that had already reached its target temperature</li><li>The AI had always known better and said so in its notes; the written rulebook simply never spelled it out</li><li>Both the rulebook and the program now say it plainly: a room sitting at its target is fine, not broken</li><li>It was also mistaking the AI&#x27;s own written notes for thermostat readings — fixed too</li><li>Still practising, and still not touching anything. Junyan pushes the fixes, then we watch a fresh clean week</li><li>The independent safety guards (too hot, frost, nightly off) never change</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the climate sweep — the deterministic Weatherman</b></p><h2>RESOLUTION — 2026-08-27</h2>
 
 <p><b>Built and committed; shadow phase awaits Junyan&#x27;s deploy + scheduler job.</b></p>
 <p><code>services/event-gate/climate_sweep.py</code> + <code>test_climate_sweep.py</code>, route</p>
@@ -4899,6 +4899,118 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Live flip and trigger retirement are separate, Junyan-approved steps — not part of</li>
 </ul>
 <p>this build&#x27;s definition of done unless he flips them in-session.</p>
+
+<h2>FIRST LIVE SHADOW PASS — 2026-08-27 18:10Z</h2>
+
+<p><b>Deployed <code>event-gate-00110-wjl</code> (git_sha <code>a0f594a9</code>, fingerprint <code>4e8cef5c8844</code>);</p>
+<p>Cloud Scheduler job <code>climate-sweep</code> created and ENABLED by Junyan</b> (<code>10 3,9-23 <i> </i> *</code></p>
+<p>America/Toronto, header auth, 300s deadline). It fired on schedule.</p>
+
+<p><b>The pass failed, and the failure was mine.</b> <code>climate-shadow: PASS FAILED:</p>
+<p>HTTPError: HTTP Error 404: Not Found</code>, twice (the 18:10Z scheduled fire and an</p>
+<p>18:15Z manual run).</p>
+
+<p>What that proves, before the bug: <b>the scheduler, the gate-token header, the route</p>
+<p>auth, and the shadow failure path all work.</b> A failed shadow pass returned</p>
+<p><code>ok: false</code>, logged loudly, filed nothing, and returned 200 rather than starting a</p>
+<p>scheduler retry storm — exactly as</p>
+<p><code>test_pass_that_cannot_run_in_shadow_stays_a_log_line</code> specifies. The only broken</p>
+<p>thing was inside the module.</p>
+
+<p><b>Root cause: a Notion database id where a data-source id belongs.</b></p>
+<p><code>THERMAL_LOG_DS</code> held <code>f08b6309-32ce-44ec-bc90-22bf8d207f46</code>, copied from</p>
+<p><code>sdm-logger/log_reading.py</code>. That repo talks Notion <b>2022-06-28</b>, where a database</p>
+<p>id is what <code>parent: {database_id: …}</code> wants. event-gate talks <b>2025-09-03</b>, where</p>
+<p><code>/data_sources/{id}/query</code> needs the <b>data-source</b> id —</p>
+<p><code>6976717e-77db-471a-8b13-2eac63696685</code> — and a database id 404s. The two ids are</p>
+<p>different strings for the same table, and nothing in either repo says so.</p>
+
+<p><b>Fixed in dc-canon <code>d1a51d7a</code></b> with the id pinned by a test naming the wrong value,</p>
+<p>so a future copy-paste from the sibling repo cannot reintroduce it.</p>
+
+<p><b>Second fix, from the same failure — the error named no step.</b> A bare</p>
+<p><code>HTTP Error 404</code> could have come from any of four reads, and finding out which cost a</p>
+<p>round-trip. Every read now labels itself (<code>thermal model page read failed: …</code>), and</p>
+<p>crossing ingestion moved inside the pass&#x27;s own failure guard so it files a Run Error</p>
+<p>instead of escaping to the route, which files nothing. Pinned by test. Suite <b>688</b>.</p>
+
+<p><b>Checked for the same class elsewhere while it was fresh:</b> <code>CORRESPONDENCE_DS</code></p>
+<p>(taken from canon prose, not from working code) verified against the live schema — a</p>
+<p>genuine data-source id, and its <code>Date &amp; Time</code> / <code>Content</code> property names are exact.</p>
+<p><code>REPORTS_DS</code> / <code>FEEDBACK_DS</code> / <code>ACTIONS_DS</code> come from modules already running live.</p>
+<p>One bad id, now fixed.</p>
+
+<p><b>Still owed:</b> redeploy on <code>d1a51d7a</code>, re-run, and read the first clean</p>
+<p><code>climate-shadow:</code> verdict. Then the ~3–5 day comparison begins for real — the shadow</p>
+<p>window has NOT started yet.</p>
+
+<h2>SHADOW WINDOW READ — 2026-08-31 (4 days)</h2>
+
+<p><b>Still in SHADOW. The live flip did not land</b> — <code>CLIMATE_SWEEP_LIVE</code> is absent from</p>
+<p><code>event-gate-00128-k77</code>&#x27;s env, and every pass through 21:10Z today logged</p>
+<p><code>climate-shadow:</code>. The four <code>SDM_*</code> secrets are absent too, so had the flag landed</p>
+<p>alone the lane would have written to Notion while failing every thermostat command.</p>
+<p>Nothing was actuated; nothing was written.</p>
+
+<p><b>Reliability: 68 clean passes, 0 failures since the id fix.</b> The only 4 failures in</p>
+<p>the whole window are the 08-27 404s from before <code>d1a51d7a</code>. First clean pass</p>
+<p>08-27 18:31Z, latest 08-31 21:10Z. Telemetry <code>fresh</code> on both studios in 68 of 68</p>
+<p>passes. Decisions: 32 hold · 20 relax · 14 pre-cool · 2 off; 901 monitor-only 36</p>
+<p>(inside Liz&#x27;s window) / assert-cool-20 32 (outside) — the window split is exactly</p>
+<p>right.</p>
+
+<p><b>3 alerts, and ALL THREE WERE FALSE POSITIVES.</b> This is the shadow window doing</p>
+<p>precisely the job it exists for, and it is the argument for having run one.</p>
+
+<ul>
+<li>- Every alert was <code>empty-room-wont-cool</code> on a room sitting AT its setpoint:</li>
+</ul>
+<p>ambient 25.23 vs setpoint COOL 25.30 (08-27, twice) and 23.24 vs COOL 23.05</p>
+<p>(08-30). Flat, empty, HVAC COOLING — canon 7a&#x27;s literal conditions, all met.</p>
+<ul>
+<li>- <b>The LLM lane declined all three, and wrote down why</b>, in the Thermal Log at</li>
+</ul>
+<p>2026-08-27 20:12Z: *&quot;25.23°C is already AT/BELOW the 25.3°C setpoint, i.e. target</p>
+<p>achieved and being held, not a stalled cooling failure. Step 7a requires</p>
+<p>flat/rising ambient WHILE failing to reach setpoint.&quot;*</p>
+<ul>
+<li>- <b>Canon never said that.</b> The written 7a says only &quot;flat or rising while HVAC</li>
+</ul>
+<p>reports COOLING&quot;, and its sentence &quot;an empty room that will not cool&quot; carries the</p>
+<p>real test implicitly. The LLM supplied the judgment silently every pass; the port</p>
+<p>read the words literally. <b>The divergence was not a coding slip — it was an</p>
+<p>under-specified spec, and the port is what made the gap visible.</b></p>
+<ul>
+<li>- Fixed in both places (<code>1fc5991b</code>): code requires the room to be &gt;1°C above its</li>
+</ul>
+<p>cool setpoint (<code>SETPOINT_MARGIN</code>) and now quotes the setpoint in the alert basis</p>
+<p>so a human can check the call; canon 7a states the condition outright, with the</p>
+<p>LLM&#x27;s own sentence as the citation. A blank setpoint never alerts.</p>
+
+<p><b>Second bug, found while reading the alert basis: the sweep was eating the LLM&#x27;s</p>
+<p>homework.</b> One alert printed its span backwards — <code>18:12→18:05</code>. Cause: the LLM</p>
+<p>Weatherman files its own narrative pass rows into the Thermal Log as</p>
+<p><code>Kind=observation, Source=controller</code> — <b>the same two markers the device logger</p>
+<p>uses</b> — and its prose (&quot;509 25.23°C mode COOL/HVAC COOLING&quot;) parses as a reading.</p>
+<p><code>fetch_readings</code> filtered on <code>Kind</code> alone, so those rows entered the trend window,</p>
+<p>double-counting readings and scrambling their order. Readings now match on the Entry</p>
+<p>title <code>SDM reading — </code> (exactly 86 rows per studio over the window); canon step 2</p>
+<p>updated to say so. Self-limiting — it dies with the LLM lane — but it was corrupting</p>
+<p>the very comparison the shadow window exists to produce.</p>
+
+<p><b>An existing test encoded bug 1</b> (its room sat at setpoint 26.0 and expected an</p>
+<p>alert) and was corrected. Five replay tests added, each replaying real logged data.</p>
+<p>Suite <b>739</b>.</p>
+
+<p><b>The shadow window has NOT been served yet.</b> Its verdicts were computed on a</p>
+<p>polluted reading set and against a wrong alert rule, so the four days prove</p>
+<p><i>reliability</i> (68/68 clean, correct hold/relax/pre-cool/off calls, correct Liz-window</p>
+<p>split) but not <i>agreement</i>. The clock on the agreement comparison restarts at the</p>
+<p>redeploy on <code>1fc5991b</code>.</p>
+
+<p><b>Do not flip live until:</b> (1) redeploy on <code>1fc5991b</code>; (2) the four <code>SDM_*</code> secrets</p>
+<p>are bound with per-secret IAM and byte-checked for trailing newlines — without them</p>
+<p>live actuation fails every pass; (3) a fresh clean window with zero false alerts.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#087</span><span class="emoji">🐌</span><span class="done-title">The Registrar is too slow, and it ran out of time on its very first night</span><span class="done-date">2026-08-25</span></summary><div class="done-body"><ul class="plain-bullets"><li>It was switched on at 10pm and its first unattended run was cut off after exactly five minutes, having not finished</li><li>Two separate time limits were both set to five minutes, so there was no slack anywhere — the first limit it hit was also the last</li><li>Both raised to fifteen minutes, which fixes tonight. It is not the real fix</li><li>The real reason it is slow: it asks the booking calendar for one day at a time, so a two-week look-ahead is fifteen separate requests before it even starts work</li><li>Asking for the whole fortnight in one request would do nearly all of it. The calendar already supports that</li><li>This matters because the run happens every half hour. If a run ever took longer than that, two would overlap — and two copies working at once is exactly what caused the duplicate door codes back in August</li><li>Deliberately NOT fixed by looking at fewer days ahead. That would just mean bookings a week or two out get set up late</li><li>DONE (Aug 25): the one-request fix already went in on Aug 24, and runs now take about 85 seconds against a 15-minute limit</li><li>The last missing piece was simply reporting how long each run took — added, along with a warning if a run ever creeps past ten minutes</li><li>Because of that, looking further ahead is now cheap: 45 days holds 100 bookings against 59 for two weeks, not three times as many</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar reads the Skedda board one day at a time — 15 round-trips per pass, and it already hit a wall</b></p><h2>Problem</h2>
 
 <p><b>The Registrar&#x27;s first unattended pass timed out</b>, 2026-08-20 02:00Z, five minutes after it was</p>
@@ -12441,5 +12553,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-08-27 11:23 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-08-31 17:24 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
