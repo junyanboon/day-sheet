@@ -781,6 +781,13 @@
     var checks = [], fixable = true;
     function add(ok, label, val, fix) { checks.push({ ok: ok, label: label, val: val, fix: fix || null }); }
 
+    var isGiggsterPhoneAsk = d.Channel === "Platform Relay" &&
+      /^PHONE-giggster-/i.test(d["Message Code"] || "");
+    if (isGiggsterPhoneAsk) {
+      add(false, "Route", "platform thread", null);
+      return { checks: checks, ok: false, pending: false, manual: true,
+        note: "This is a manual Giggster message, not a broken SMS/email. Copy the draft into the booking’s Giggster chat, then mark this queue row Sent with the real timestamp. Never substitute a Giggster booking-alert number from Phone.com." };
+    }
     if (d.Channel !== "SMS" && d.Channel !== "Email") {
       add(false, "Channel", d.Channel || "(blank)", null);
       return { checks: checks, ok: false, pending: false,
@@ -826,6 +833,7 @@
   function renderIdentityLine(card) {
     var pf = preflightOf(card);
     card.pfOk = pf.pending ? true : pf.ok;
+    card.pfManual = !!pf.manual;
     var d = card.row;
     var chanCls = { SMS: "ch-sms", Email: "ch-email", WhatsApp: "ch-wa", Instagram: "ch-ig", Giggster: "ch-email" };
     var addr = "";
@@ -859,7 +867,8 @@
         '<button class="pf-save" data-act="pfsave" data-fixkey="' + esc(x.fix.key) + '">Save</button>';
       return h + "</div>";
     }).join("");
-    return '<div class="preflight"><div class="pf-title">Can\u2019t dispatch yet</div>' +
+    return '<div class="preflight"><div class="pf-title">' +
+      (pf.manual ? "Manual platform send" : "Can\u2019t dispatch yet") + "</div>" +
       rows + (pf.note ? '<div class="pf-note">' + pf.note + "</div>" : "") + "</div>";
   }
 
@@ -1007,7 +1016,8 @@
     return '<button class="btn btn-reject" data-act="reject">Reject</button>' +
       '<button class="btn" data-act="skip">Skip</button>' +
       '<button class="btn btn-send" data-act="send"' + (blocked ? " disabled" : "") + ">" +
-      (card.pfOk === false && !windowClosed ? "Fix dispatch first" : "Send") + "</button>";
+      (card.pfManual ? "Manual send required" :
+        card.pfOk === false && !windowClosed ? "Fix dispatch first" : "Send") + "</button>";
   }
 
   function renderCounter(live) {
