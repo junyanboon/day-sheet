@@ -1137,6 +1137,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-31 &middot; 23:23Z</span>
+      <h3>SMS has a real second door: &ldquo;Send via Zapier&rdquo; on the Deck &mdash; proven with a live text <span class="kind">LIVE</span></h3></summary>
+      <p><strong>The free-plan problem, solved a different way.</strong> Webhooks by Zapier is a premium app, so the engine-level Catch Hook fallback cannot be built. But Zapier&rsquo;s Phone.com <strong>Send SMS action can be called directly</strong> &mdash; no Zap, no webhook, no paid plan. That path is reachable by agents and by the Deck, though <strong>never by Apps Script</strong>, so the engine still has no automatic fallback and must not be described as having one.</p>
+      <p><strong>Proven, not assumed &mdash; three ways.</strong> Junyan reconnected Phone.com in Zapier (connection <code>0235f1c9&hellip;</code>, refreshed 23:16Z). A live test text to his test line at 23:23Z returned message id <code>70944d3d-2e50-43fa-a777-87f3a0fbd3fd</code>; the same id appears in the phone.com log read through the <em>other</em> connector; and it arrived on his handset at 7:23 PM. The button was wired from that observed response shape, never a guessed one &mdash; which matters here, because Zapier&rsquo;s own <code>is_stale</code> flag had already lied once.</p>
+      <p><strong>How it behaves:</strong> shown on SMS cards alongside Copy text / Sent manually. <strong>No undo window</strong> &mdash; the carrier has the message the moment the call returns, so there is nothing to call back. Receipt <code>zapier:&lt;message id&gt;</code>; body overwritten with what actually went out. If the send succeeds but the Notion write fails, the toast says the text IS gone and to mark the row by hand &mdash; it never returns the card as if unsent, which would invite a double text.</p>
+      <p><strong>Three paths now, in order:</strong> engine &rarr; phone.com API (<code>phonecom:</code>) &middot; Deck &rarr; Zapier (<code>zapier:</code>) &middot; by hand (<code>manual:</code>). Canon: <code>library/house-rules.md</code> (<code>7ca866d9</code>).</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-31 &middot; later</span>
       <h3>SMS now has a Zapier fallback &mdash; armed in code, off until the webhook is set <span class="kind">NEW ROUTE</span></h3></summary>
       <p><strong>What:</strong> <code>send-engine/Code.gs</code> <code>sendSms_()</code> can now hand a message to a Zapier Catch Hook when phone.com refuses the credential. Controlled by a new Script Property <code>ZAPIER_SMS_WEBHOOK</code> &mdash; <strong>unset = off</strong>, engine unchanged.</p>
