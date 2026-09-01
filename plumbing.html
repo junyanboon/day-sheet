@@ -1098,6 +1098,19 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-01 &middot; 22:20</span>
+      <h3>A dead-man for the sweep, living outside both failure domains <span class="kind">NEW</span></h3></summary>
+      <p><strong>The gap.</strong> <code>sentinel-sweep</code> is the fleet&rsquo;s only routine watchdog and it cannot report its own death. Both things that covered that sit in the <strong>Anthropic token</strong> failure domain: the LLM Sentinel&rsquo;s dead-man sleeps 23:00&ndash;07:00 Toronto <em>and</em> dies in a token outage, and the Morning Text&rsquo;s daily check does too &mdash; today it filed no report at all for exactly that reason. So on a token-out day nothing watched the watchdog, and nobody would have known.</p>
+      <p><strong>The fix.</strong> <code>send-engine/SweepWatch.gs</code>, in the Message Queue Send Engine Apps Script project &mdash; outside GCP (where the sweep runs) and outside the token budget. Every 30 minutes it reads the newest <code>&#128126; Sentinel sweep &mdash; &lt;date&gt;</code> report and checks its server-maintained <code>last_edited_time</code>. Every pass is a write, so that field <em>is</em> the heartbeat, and unlike <code>Completed At</code> the sweep cannot forge it. Over 90 minutes stale &rarr; alert. Sorted by <code>last_edited_time</code> DESC, never by created time &mdash; a rolling report is started once and edited all day, which is the read trap that made the LLM Sentinel send two wrong texts on 2026-08-26.</p>
+      <p><strong>Alerting is <code>canaryShout_()</code> unchanged</strong> &mdash; email &rarr; Slack &rarr; Twilio &rarr; carrier gateway &rarr; phone.com last. State-change only plus one daily reminder. A network blip stays silent on purpose; a Notion 401 gets its own alert worded as <em>the watcher is blind</em>, never as the sweep dying.</p>
+      <p><strong>Verified before install, not after.</strong> The exact query ran live and returned HTTP 200 with <code>&#128126; Sentinel sweep &mdash; 2026-09-01</code>, <code>last_edited 22:07:00Z</code>. <strong>Status: pushed to disk, trigger NOT installed</strong> &mdash; <code>setupSweepWatch()</code> is a manual run, so the file is inert until Junyan installs it. Steps are in <code>RUNTIMES.md</code>.</p>
+      <p><strong>Also confirmed this hour:</strong> the 18:07 sweep pass read <code>all clear</code> &mdash; the first even-hour pass all day to do so, after 10:07/12:07/14:07/16:07 all alarmed. The Concierge cadence fix holds.</p>
+      <p><strong>Still open:</strong> nothing checks whether a Codex Scheduled Task is enabled, and 19 of 20 Live rows now run that way. That is the same class of failure as the 2026-08-22&ndash;25 Concierge outage, where the trigger sat disabled ~21 fires while a fallback filed reports under the same persona name and every watchdog read green and was technically correct.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-01 &middot; 22:05</span>
       <h3>The drop lane can no longer fail silently &mdash; heartbeat + &#128739; Run Monitor row are live <span class="kind">NEW</span></h3></summary>
       <p><strong>The gap this closes.</strong> A <em>failed</em> drop-sweep pass was already loud: it files its own Run Error row on &#9989; Actions naming Buzz #desk-drops UNWATCHED. A <em>stopped</em> pass was silent. If the sweep never runs, the &#128248; Desk Drops DB returns zero <code>Status = New</code> rows &mdash; which is exactly what a quiet hour looks like. Staff keep dropping into Buzz, nothing files, and nobody is told. That was the only lie this lane could tell, and it was the last unguarded seam in the Slack&rarr;Buzz migration.</p>
