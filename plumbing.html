@@ -1095,6 +1095,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-31 &middot; night</span>
+      <h3>SMS resilience plan ruled: token canary built, rotation script completed, cause story corrected <span class="kind">RULING + BUILD</span></h3></summary>
+      <p><strong>Owner correction first:</strong> the phone.com token is a <em>permanent</em> token and logins do NOT revoke it &mdash; Junyan attributes the Aug 18&ndash;25 churn to a phone.com platform update (new MFA). CLAUDE.md&rsquo;s &ldquo;self-revokes on login&rdquo; gotcha is rewritten; the do-not-log-in taboo is lifted. What survives: the token has still died without warning more than once, and detection was the expensive part (29 silent hours on Aug 18).</p>
+      <p><strong>Built &mdash; the canary:</strong> <code>tokenCanary()</code> in <code>send-engine/Code.gs</code>, every 5 minutes, alerts by <strong>email</strong> (+ Slack if <code>SLACK_WEBHOOK_URL</code> set) &mdash; channels that don&rsquo;t ride the token, because every existing watchdog shouts by SMS. State-change alerts + one daily reminder while dead; network blips deliberately silent. <em>Junyan runs <code>setupCanary()</code> once to install the trigger.</em></p>
+      <p><strong>Fixed &mdash; rotation blast radius:</strong> <code>rotate-phonecom-token.sh</code> now cold-starts all THREE token consumers (<code>phonecom-mcp</code>, <code>event-gate</code>, <code>alarm-mcp</code>) instead of just one &mdash; the old behaviour left the emergency lane serving a dead secret, the exact Aug 18 failure shape.</p>
+      <p><strong>Ruled:</strong> Zapier stays on the free plan (~50 direct sends/month as the Deck&rsquo;s one-tap fallback, budgeted for outage hours, not days); a Twilio number for the emergency lane is approved and pending setup. Options memo: the &ldquo;One Wire to the Renters&rdquo; artifact.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-31 &middot; late</span>
       <h3>The all-nodes reference grid is gone &mdash; and two of its entries were lying <span class="kind">MAP RETIRED</span></h3></summary>
       <p><strong>What:</strong> the collapsed &ldquo;All nodes &mdash; reference grid (the old four-column view)&rdquo; is deleted (Junyan's call). It held 30 node cards, and 25 of them were already drawn as hops in the six pipes above &mdash; a second copy of the same facts, updated half as often. The five that existed <em>only</em> in the grid were rehomed first, each checked against <code>RUNTIMES.md</code> rather than carried across on trust.</p>
