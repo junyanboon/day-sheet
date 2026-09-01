@@ -525,7 +525,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <circle cx="255" cy="110" r="8" fill="var(--panel)" stroke="var(--llm)" stroke-width="3.5"/>
     <text x="255" y="92" text-anchor="middle" class="nm">reply address</text>
     <text x="255" y="75" text-anchor="middle" class="sb">hidden header</text>
-    <text x="255" y="66" text-anchor="middle" class="bot tok">gmail_reply_to.py</text>
+    <text x="255" y="62" text-anchor="middle" class="bot tok">gmail_reply_to.py</text>
   </g>
   <g class="stn" data-k="m_filed" tabindex="0">
     <circle cx="385" cy="110" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
@@ -564,7 +564,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <circle cx="245" cy="205" r="8" fill="var(--panel)" stroke="var(--det)" stroke-width="3.5"/>
     <text x="245" y="187" text-anchor="middle" class="nm">room held</text>
     <text x="245" y="170" text-anchor="middle" class="sb">every 5 min · live 25 aug</text>
-    <text x="245" y="161" text-anchor="middle" class="bot">PlatformMirror.gs → skedda-mcp</text>
+    <text x="245" y="157" text-anchor="middle" class="bot">PlatformMirror.gs → skedda-mcp</text>
   </g>
 
   <!-- == B · prep == -->
@@ -1125,6 +1125,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>The 17.</strong> Every station on the Annex Transit map was clickable; seventeen of them had no entry in the detail dictionary, so clicking did nothing at all. They had been dead since the map was drawn &mdash; <code>deck</code>, <code>renter</code>, <code>drafts</code>, <code>mirror</code>, <code>registrar</code>, <code>pin</code>, <code>hta</code>, <code>sentinel</code>, <code>misssms</code>, <code>wlog</code>, <code>nightwatch</code>, <code>keypad</code>, <code>socket</code>, <code>alarmevents</code>, <code>ledger</code>, <code>activity</code>, <code>names</code>. All seventeen are written, grounded in <code>RUNTIMES.md</code> rather than reconstructed from the station labels. <b>The page now has 129 stations and 129 entries, and nothing on it is a dead click.</b></p>
       <p><strong>What writing them surfaced.</strong> Four facts that were on no map: the <b>Sentinel runs twice</b> &mdash; the LLM lane hourly 07:00&ndash;23:00 and the deterministic <code>sentinel-sweep</code> hourly at :07, both enabled, so a real alarm may text twice until one is retired. The <b>door ledger and the trip ledger have opposite failure rules</b> on purpose: the trip ledger fails the whole tick rather than decide on empty state, the arrival ledger swallows every error, because an arrival must never be the reason a siren goes unanswered. <b>An absence in <code>studio_activity</code> is only believable if the relay covered the window</b> &mdash; an uncovered gap and an empty studio look identical. And <b>alarm-events still has a redeploy pending</b>: the keep-alive re-minted its own websocket token every ~6 minutes and killed the socket, 265 gaps in 24 hours, fixed in source only.</p>
       <p><strong>Then the whole page was measured, not eyeballed.</strong> Every label on all six maps checked against every other label, against every station marker, and against its own frame &mdash; 242 labels. Found and fixed <b>13 subtitles overlapping their own station name</b> by 2&ndash;3px (eight on the build map, five on the booking line; each sat 13px above its name where it needed 17). Found and fixed <b>two identifiers running off the right edge of a 375px phone</b> with no way to reach them, because the body clips rather than scrolls &mdash; a <code>wss://</code> URL and a test name; <code>code</code> now wraps. <b>Not</b> touched, because measuring is not the same as judging: the line roundels on the transit and build maps report as label-over-marker collisions and are meant to &mdash; a background-coloured letter inside a filled dot is a badge. An early &ldquo;the page scrolls sideways&rdquo; reading was also wrong, and worth writing down: the browser pane was zero-width at the time, so every element overflowed a 0px viewport. Re-measured at 1280 and at 375: no sideways scroll at either.</p>
+      <p><strong>The fix had a second round, which is the honest part.</strong> Lifting the subtitles cleared the collision below and created one above at the two stations carrying <em>three</em> stacked labels &mdash; script name, subtitle, station name in a 26px span. The first audit after the fix said zero because it ran before the web font finished loading and the boxes were narrower than they render. Caught only on the published page with <code>document.fonts.status === &ldquo;loaded&rdquo;</code>; the top label moved up 4px instead. <b>Measure after the fonts land, or the measurement is of a page nobody sees.</b></p>
       <p><strong>Result:</strong> 0 dead clicks, 0 label overlaps, 0 clipped labels, 0 horizontal overflow at desktop or mobile.</p>
       </details>
     </li>
