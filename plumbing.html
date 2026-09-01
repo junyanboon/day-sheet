@@ -1098,6 +1098,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-01 &middot; 17:58</span>
+      <h3>Confirmation texts: late bookings get the right terms line, Returning Access loses a sentence <span class="kind">RULED</span></h3></summary>
+      <p><strong>Ruled (Junyan, 2026-09-01)</strong> on August TenWolde&rsquo;s reordered row. Two wording changes in <code>services/event-gate/booking_sweep.py</code>:</p>
+      <p><strong>1. Terms line.</strong> A booking made inside its own 24-hour window was still told <em>&ldquo;you can rebook with at least 24 hours&rsquo; notice&rdquo;</em> &mdash; notice the renter no longer has. New <code>LATE_BOOKING_TERMS_LINE</code>: <em>&ldquo;Just a reminder that bookings made within 24 hours of the booking date cannot be moved or cancelled for a refund.&rdquo;</em> <code>queue_confirmation</code> picks it when the booking&rsquo;s Skedda <code>created</code> time is less than 24 h before its start; every other booking keeps the existing rebooking-terms line. <em>Assumption:</em> the swap is conditional, not a replacement for the standard line &mdash; flip the condition if Junyan wants it everywhere.</p>
+      <p><strong>2. Returning Access.</strong> The trailing sentence about setting up an Authorized User is gone from <code>compose_returning_access</code>. The codes text now ends at <em>&ldquo;&hellip;please do not share them with anyone else.&rdquo;</em> The Host page&rsquo;s Returning Access template in Notion still carries the old sentence; the sweep is the sender now, so code is what matters, but the page should be trimmed to match.</p>
+      <p><strong>Live row.</strong> August&rsquo;s <code>BC-sweep-0902-1045-509A</code> rewritten by hand to Junyan&rsquo;s exact text. Pending Review, nothing sent. Code goes live on the next <code>event-gate</code> deploy.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-01 &middot; 17:40</span>
       <h3>Merged confirmation + Returning Access texts now read as one message &mdash; and the Deck&rsquo;s reply box grew <span class="kind">FIXED</span></h3></summary>
       <p><strong>Seen.</strong> August TenWolde&rsquo;s 509A Sep 02 confirmation (queue row <code>BC-sweep-0902-1045-509A</code>) said &ldquo;Looking forward to having you back!&rdquo; in the <em>middle</em> of the text, then carried on with the door and alarm codes. A sign-off followed by two more paragraphs reads like two texts pasted together &mdash; because it was.</p>
