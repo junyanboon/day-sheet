@@ -1096,6 +1096,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-01 &middot; 17:12</span>
+      <h3>The Correspondence Log sync now re-links rows written before their Artist existed <span class="kind">FIXED</span></h3></summary>
+      <p><strong>Seen.</strong> Jaimee Vicente-Hall (BELT Collective) wrote to info@ at 13:56. The Deck card for the Concierge&rsquo;s reply read <em>&ldquo;Start of thread &mdash; nothing on record before this draft&rdquo;</em> with her email sitting one table away in the 📬 Correspondence Log (row <code>3ce7503281c481e08302db90c59653a0</code>).</p>
+      <p><strong>Why.</strong> <code>notion_log_sync.py</code> projected the email into the log at 14:01 and resolved <code>Artist</code> by exact email match against the Artist DB &mdash; but the Concierge only created her Artist row at 14:22 (JOB 2 triage). The sync wrote the row once with an empty relation and never looked back. The Deck pairs a draft with its thread by that relation (else by sender, and for a synced email row the &ldquo;sender&rdquo; fallback is the email subject, which matches nothing), so a first-contact email is invisible on its own reply card <em>every time</em> &mdash; the exact card where the reviewer most needs the inbound.</p>
+      <p><strong>Fix.</strong> (1) Jaimee&rsquo;s row linked by hand. (2) Every 15-min tick, <code>notion_log_sync.py</code> now runs a <strong>re-link pass</strong> before the new-row sync: read log rows created in the last 7 days with an empty <code>Artist</code>, find each one&rsquo;s ledger message (same UTC minute + direction + subject), and patch the relation when the counterparty resolves now. Additive only &mdash; a row that already has an Artist is never touched; an ambiguous match (two candidate artists) is left alone. Dry run on live data: 141 unlinked rows in 7 days, 3 linkable today, 15 s wall clock.</p>
+      <p><strong>Still true.</strong> Platform notifications, e-transfer receipts and strangers stay unlinked &mdash; that is correct, there is no Artist to link. The Deck&rsquo;s sender-fallback for email log rows remains blind (the Notion row does not carry the counterparty address); the re-link pass makes that moot for anyone who gets an Artist row within a week.</p>
+      </details>
+    </li>
+
     <li class="entry human">
       <details>
       <summary><span class="when">2026-09-01 &middot; 16:47</span>
