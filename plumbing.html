@@ -1096,6 +1096,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry crit">
+      <details>
+      <summary><span class="when">2026-08-31 &middot; late</span>
+      <h3>The emergency page now has a second carrier &mdash; the Aug 15 silent failure closed <span class="kind">STAGED</span></h3></summary>
+      <p><strong>The failure this answers:</strong> on 2026-08-15 two REAL Studio 693 alarms produced <em>no page at all</em> &mdash; no SMS, no Staff Call Queue row &mdash; and the suspected cause was a Phone.com token dead in the window before v2 was minted (ticket 113, still open). A renter in trouble reached nobody.</p>
+      <p><strong>What changed:</strong> <code>event-gate</code>&rsquo;s <code>send_summons()</code> falls back to <strong>Twilio</strong> when Phone.com fails. Unset env = off, byte-identical to before.</p>
+      <p><strong>The rule is deliberately the OPPOSITE of the send engine&rsquo;s.</strong> The Message Queue engine falls back only on 401/403, because double-texting a renter is a real harm. Here the message is &ldquo;someone may be in trouble, wake up&rdquo;: paged twice is an annoyance, paged zero times is Aug 15. <strong>So the emergency lane falls back on ANY failure</strong>, including a completely missing <code>PHONECOM_API_TOKEN</code>. Four tests lock both halves in, including &ldquo;never touches Twilio when Phone.com works&rdquo;.</p>
+      <p><strong>Unlocked by the account upgrade:</strong> Junyan paid $20 and turned on auto-reload, which removed the trial&rsquo;s verified-Caller-ID limit &mdash; a trial account can only text numbers you pre-verify, so it could never have paged staff. Also gone: the trial prefix and the balance cliff.</p>
+      <p><strong>⚠️ Left for Junyan &mdash; deploy:</strong> set <code>TWILIO_SID</code>, <code>TWILIO_TOKEN</code>, <code>TWILIO_FROM</code> on the <code>event-gate</code> Cloud Run service using <strong><code>--update-env-vars</code>, never <code>--set-env-vars</code></strong> &mdash; the latter deleted twelve variables on 2026-08-15 and downed the whole gate for 4.5 hours on a Friday evening. dc-canon <code>1b070cc7</code>.</p>
+      </details>
+    </li>
+
     <li class="entry llm">
       <details>
       <summary><span class="when">2026-08-31 &middot; late</span>
