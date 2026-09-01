@@ -1202,6 +1202,28 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-01 &middot; 23:50</span>
+      <h3>The Runtime column was naming a fleet that is switched off <span class="kind">FIX</span></h3></summary>
+      <p><strong>13 of 20 Live roster rows said <code>Runtime = Codex Scheduled Task &lt;name&gt; &middot; GPT-5.6 Sol</code>. Every one of those automations reads <code>status = "PAUSED"</code> on disk.</strong> Junyan paused the whole Dance Annex Codex fleet on 2026-08-31 &mdash; 18 automations, only the two personal ones still ACTIVE &mdash; and the roster was never reverted. The agents were running fine the whole time on their <strong>cloud RemoteTriggers</strong>, which is what actually fires them.</p>
+      <p><strong>Why this was worse than a stale string.</strong> The <code>Runtime</code> column exists to answer one question: <em>is the scheduler actually going to fire this?</em> That question was added after the 2026-08-22&ndash;25 Concierge outage, where the trigger sat disabled ~21 fires while a fallback filed reports under the same persona name and every watchdog read green. A column pointing at a paused shadow lane cannot answer it, and makes the fleet look dependent on something switched off.</p>
+      <p><strong>It also invented a phantom job.</strong> Last night&rsquo;s entry here said &ldquo;nothing checks whether a Codex Scheduled Task is enabled&rdquo; and filed it as the next build. That was wrong &mdash; there was nothing to monitor, because none of them run anything. <strong>Fixed:</strong> all 13 rewritten to name the real trigger id and cadence, with the Codex lane marked PAUSED and explicitly <em>not a runtime</em>. Zero Live rows now claim one.</p>
+      <p><strong>And a Codex checker should not be built as things stand</strong> &mdash; the status lives in <code>~/.codex/automations/</code> on Junyan&rsquo;s Mac, so any checker runs locally, and a local scheduler skips fires while the Mac sleeps. That is the exact failure that moved The Mechanic to the cloud. Revisit if Hermes ever exposes task state over the network.</p>
+      <p><strong>Two traps worth keeping:</strong> Notion <strong>eats <code>*</code></strong> in a text property (<code>cron 0 8,10 * * *</code> stored as <code>cron 0 8,10&nbsp;&nbsp;&nbsp;*</code>, read as markdown emphasis) &mdash; keep raw cron in <code>RUNTIMES.md</code>, not Notion. And a Notion SQL datetime literal must use a <strong>space, not <code>T</code></strong>: <code>"Created time" &gt;= '2026-09-01T00:00'</code> matches nothing, because the stored value is space-separated and 0x20 sorts before <code>T</code>.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-01 &middot; 23:40</span>
+      <h3>The Morning Text files its report but does not always link it <span class="kind">FIX</span></h3></summary>
+      <p><strong>Correction to last night&rsquo;s entry, which said the Morning Text filed no Sep 1 report.</strong> It did &mdash; <code>The Morning Text &mdash; 2026-09-01</code>, created 12:51:41Z, Status Completed, matching the 08:51 text on Junyan&rsquo;s handset. The earlier claim came from a broken query, not from Notion.</p>
+      <p><strong>But the sweep&rsquo;s 11:07 alarm was still right.</strong> That report&rsquo;s <code>Run Monitor</code> relation was <strong>null</strong>. The sweep reads heartbeats through that relation (<code>heartbeat_map</code> walks <code>report["rows"]</code>), so <strong>an unlinked report is invisible to the watchdog</strong> no matter how healthy the run was. The 12:07 &ldquo;recovery&rdquo; was not one either &mdash; the row&rsquo;s watch window just closes at 12:00.</p>
+      <p>Same null on the 2026-08-27 report; Aug 29/30/31 all linked. Intermittent, not systematic. <strong>Relation repaired by hand for Sep 1. Root cause NOT fixed</strong> &mdash; the Morning Text&rsquo;s prompt must set <code>Run Monitor</code> on every report it files. Any run that files without linking false-alarms the same way.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-01 &middot; 18:45</span>
       <h3>Still&rsquo;s plan API moved off Cloudflare Workers onto the Hostinger VPS <span class="kind">NEW</span></h3></summary>
       <p><strong>The failure.</strong> The desktop orb drew <em>&ldquo;plan may be stale&rdquo;</em>, which it does after 15 minutes without a good fetch. It was telling the truth: <code>still-api</code> answered <strong>HTTP 503 eight times running, 15:35&ndash;15:49</strong> (last good fetch 15:33), and again for three fetches at 14:38&ndash;14:42. Forcing fresh builds reproduced it &mdash; <strong>6 of 8 returned 503</strong> after ~5.5 s, body <code>error code: 1102</code>, Cloudflare&rsquo;s &ldquo;Worker exceeded resource limits&rdquo;. The free tier caps CPU at <strong>10 ms</strong> and parsing two iCal calendars does not fit. Cached responses (5 min) always succeeded, which is why the phone app mostly looked fine and this went unnoticed.</p>
