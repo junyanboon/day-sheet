@@ -1096,6 +1096,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-08-31 &middot; late</span>
+      <h3>Codex shadow fleet: built, fixed, PAUSED &mdash; Hermes will orchestrate the fallback <span class="kind">RETIRED</span></h3></summary>
+      <p><strong>What existed:</strong> from 2026-08-28 Junyan ran a per-lane Codex automation fleet (<code>~/.codex/automations/</code>, gpt-5.6-sol) shadowing 18 Dance Annex lanes &mdash; mechanic, concierge, doorman, host, sentinel, and the rest &mdash; each on its own cron, each with a prompt-level single-writer gate. It was never on this map until now.</p>
+      <p><strong>What it proved on 2026-08-31:</strong> the org monthly spend limit killed every cloud Mechanic fire in ~8s (<code>rate_limit (seven_day)</code>, &ge;12:55Z&ndash;20:54Z, reset 21:00Z). The Codex Mechanic covered some hours; hours where the Mac was also closed (08/09/11 Toronto) got nothing &mdash; the sleeping-laptop hole that moved these lanes to the cloud in the first place. Two defects surfaced: (a) the Codex prompt read Notion&rsquo;s &ldquo;cached snapshot as of &lt;date&gt;&rdquo; notice as a stale source and filed every pass <code>Ended Early</code>, when the snapshot dates exactly equalled the pages&rsquo; own <code>last_edited_time</code> &mdash; fixed same day with a CACHE RULE in the automation prompt; (b) cloud and Codex both fired at :54, racing every hour with only prompt politeness preventing double-writes.</p>
+      <p><strong>State now:</strong> all 18 studio automations verified <code>status = "PAUSED"</code> (3 personal ones stay ACTIVE: flight-watch, sabrina-lead, receipt-matcher). Junyan is building <strong>Hermes</strong> to orchestrate Codex fallback centrally instead of per-lane crons. <strong>Until Hermes exists there is NO automatic fallback</strong> &mdash; a rate-limit day goes uncovered unless lanes are run by hand. The earlier crank-panel approach (one-button local runs) was tried and dropped the same week: its one live Mechanic run on Aug 28 wrote alongside a healthy cloud fleet because nothing forced the &ldquo;is the fleet actually dead?&rdquo; check. Requirements Hermes inherits: prove the cloud lane dead before acting (a fire dying in seconds with <code>rate_limit</code> is dead; a fresh heartbeat row means alive), never share a fire minute with the cloud twin, apply the cache rule fleet-wide, and queue-and-hold everything &mdash; no fallback path gets send authority. Registry detail in <code>RUNTIMES.md</code> under the Mechanic&rsquo;s row.</p>
+      </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-08-31 &middot; 22:01</span>
