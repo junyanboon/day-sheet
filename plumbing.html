@@ -1202,6 +1202,20 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-01 &middot; 23:58</span>
+      <h3>Audit: who else files a report the watchdog cannot see <span class="kind">AUDIT</span></h3></summary>
+      <p><strong>Audited by data, not by reading prompts</strong> &mdash; whether a report is <em>actually</em> linked beats whatever a prompt claims. Window 2026-08-26 &rarr; 09-01: <strong>263 reports, 237 linked, 26 unlinked.</strong> The count query and the row listing agreed exactly, which is the cross-check canon asks for before believing a Notion sweep.</p>
+      <p><strong>The 26 are only three names, and they are three different problems:</strong></p>
+      <p>&bull; <strong>&#128273; Code Mirror &mdash; 23, every report it files.</strong> Not this bug at all: it has <strong>no &#128721; Run Monitor row</strong>, so there is nothing to link to and <strong>nothing watches it</strong>. It runs 2&ndash;3 times a day and if it stopped tomorrow nobody would hear. Unmonitored <em>by accident</em>, which is the worst of the three possible states.</p>
+      <p>&bull; <strong>The Morning Text &mdash; 3 (Aug 26, Aug 27, Sep 1).</strong> A genuine prompt gap, fixed earlier tonight in v2.3.</p>
+      <p>&bull; <strong>The Loop &mdash; 1 (Aug 27).</strong> <em>Not</em> a spec gap: <code>library/the-loop.md</code> lines 417&ndash;420 already demand the link and call the relation &ldquo;the lane&rsquo;s only heartbeat&rdquo;. One lapse in four passes, against a rule that exists. Aug 27 is also the day The Morning Text missed, so a transient cause that day is more likely than two independent slips.</p>
+      <p><strong>Every other Live persona linked 100%.</strong> But there is <strong>no workspace-wide rule</strong> requiring the link &mdash; <code>house-rules.md</code> mentions Run Monitor only for how to treat a missed run. Nine Live lanes have no canon file at all and carry only what their prompt happens to say. They are clean in the data and unverified in the specification: possibly linking by habit rather than instruction.</p>
+      <p><strong>The durable fix belongs in the sweep, not in nine prompts.</strong> <code>heartbeat_map</code> finds heartbeats only through the relation, so coverage depends on prompt discipline forever. A title fallback &mdash; when a row has no linked report, match titles starting with the row&rsquo;s exact name &mdash; would close the class for every lane at once. <strong>Proposed, deliberately not built:</strong> a loose match (<code>The Doorman</code> also catching <code>The Doorman (evening arm-check)</code>) would make a heartbeat <em>fresher</em> than it should be &mdash; trading a false alarm for false silence, which is the dangerous direction. That needs an exact-prefix rule and tests, not a late-night patch to watchdog matching.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-01 &middot; 23:50</span>
       <h3>The Runtime column was naming a fleet that is switched off <span class="kind">FIX</span></h3></summary>
       <p><strong>13 of 20 Live roster rows said <code>Runtime = Codex Scheduled Task &lt;name&gt; &middot; GPT-5.6 Sol</code>. Every one of those automations reads <code>status = "PAUSED"</code> on disk.</strong> Junyan paused the whole Dance Annex Codex fleet on 2026-08-31 &mdash; 18 automations, only the two personal ones still ACTIVE &mdash; and the roster was never reverted. The agents were running fine the whole time on their <strong>cloud RemoteTriggers</strong>, which is what actually fires them.</p>
