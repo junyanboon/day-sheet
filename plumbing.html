@@ -1098,6 +1098,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-01 &middot; 17:40</span>
+      <h3>Merged confirmation + Returning Access texts now read as one message &mdash; and the Deck&rsquo;s reply box grew <span class="kind">FIXED</span></h3></summary>
+      <p><strong>Seen.</strong> August TenWolde&rsquo;s 509A Sep 02 confirmation (queue row <code>BC-sweep-0902-1045-509A</code>) said &ldquo;Looking forward to having you back!&rdquo; in the <em>middle</em> of the text, then carried on with the door and alarm codes. A sign-off followed by two more paragraphs reads like two texts pasted together &mdash; because it was.</p>
+      <p><strong>Why.</strong> Both merge points in <code>services/event-gate/booking_sweep.py</code> (<code>queue_confirmation</code> when access is known at queue time, and <code>merge_returning_access_into_confirmation</code> when the daily lane finds a held confirmation later) did a bare <code>confirmation + "\n\n" + access</code>. The confirmation composer always ends on the closer, so the closer always landed mid-message. Every merged returning-renter text since the 2026-08-21 rule was shaped this way.</p>
+      <p><strong>Fix.</strong> One helper, <code>merge_access_into_body</code>, used by both paths: strip the closer off the confirmation, append the access block, put the closer back last &mdash; once. A confirmation with no closer (first-timers, same-day add-ons) merges unchanged. August&rsquo;s live row was reordered by hand and is still at Pending Review; nothing was sent. Deploy of <code>event-gate</code> is what makes the code change live.</p>
+      <p><strong>Also, the Deck.</strong> The reply textarea grew from a 150px minimum to 280px and the draft pane may take 76% of the card instead of 64% &mdash; a merged text was scrolling inside a box a third of an otherwise empty screen. And the empty-thread note now says what is true: <em>&ldquo;Nothing in the last 14 days&rdquo;</em>, not &ldquo;Start of thread &hellip; our opening message&rdquo; &mdash; the Deck only loads 14 days of the Correspondence Log, so a regular like August (last exchange 2026-08-11) showed as a stranger. Both files: <code>deck-app/public/index.html</code> and <code>day-sheet/deck.html</code>.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-01 &middot; 17:12</span>
       <h3>The Correspondence Log sync now re-links rows written before their Artist existed <span class="kind">FIXED</span></h3></summary>
       <p><strong>Seen.</strong> Jaimee Vicente-Hall (BELT Collective) wrote to info@ at 13:56. The Deck card for the Concierge&rsquo;s reply read <em>&ldquo;Start of thread &mdash; nothing on record before this draft&rdquo;</em> with her email sitting one table away in the 📬 Correspondence Log (row <code>3ce7503281c481e08302db90c59653a0</code>).</p>
