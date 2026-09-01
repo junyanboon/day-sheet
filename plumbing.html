@@ -1565,6 +1565,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-01 &middot; ~12:00Z</span>
+      <h3>Verdict write-back &mdash; the desk&rsquo;s judgment reaches Buzz, and Slack&rsquo;s last advantage falls<span class="kind">CHANGED</span></h3></summary>
+      <p><strong>The gap:</strong> after the repoint, staff in Buzz saw only the sweep&rsquo;s &#128229; (captured) &mdash; a processed drop and an ignored one looked identical, because the Concierge has no Buzz connector and its verdict lived only in the Notion row&rsquo;s <code>Status</code>. That was the one thing the Slack era did better.</p>
+      <p><strong>The fix (commit <code>ab3db5c2</code>, 772 tests):</strong> each sweep pass now runs a second phase &mdash; rows with <code>Status</code> Processed/Parked and the new <code>Verdict Posted</code> checkbox unticked get <strong>&#9989; / &#10067; on the original Buzz message</strong>, then the checkbox. React FIRST, mark SECOND: a crash between the two repeats a harmless reaction; the reverse order could silently lose a verdict. Per-row, non-fatal, retries next pass; dry-run counts without writing. Staff now see capture (&#128229;) and verdict (&#9989;/&#10067;) in-channel, on the sweep&rsquo;s ~15-min cadence. Junyan&rsquo;s ruling: <em>&ldquo;do the fix and stay off Slack&rdquo;</em> &mdash; Buzz is the drop surface going forward.</p>
+      <p><strong>&#9888; Deploy pending</strong> (Junyan runs <code>deploy.sh</code>); until then judged rows queue with the checkbox unticked and the first pass after deploy posts the backlog. Still open: staff onboarding to Buzz (then the Slack legacy drain retires), the &#128673; Run Monitor row, and the token rotation.</p>
+      </details>
+    </li>
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-27 &middot; ~18:18Z</span>
       <h3>Drop sweep LIVE &mdash; and Buzz membership is two doors, not one<span class="kind">NEW</span></h3></summary>
       <p><strong>Live and scheduled.</strong> Cloud Scheduler job <code>drop-sweep</code> (<code>*/15 * * * *</code>, America/Toronto) is ENABLED against <code>POST /drop-sweep</code> with header auth. Proven end to end on a real staff drop: the dry-run parsed caption + one image; the live pass filed the &#128248; row with the media <em>re-uploaded into Notion</em> and reacted &#128229;; a second pass returned <code>filed:0, deduped:1</code>, so the Buzz-Event-ID dedup holds against the real relay, not just the tests. Env set: <code>BUZZ_RELAY_URL=wss://danceannex.communities.buzz.xyz</code>, <code>DROP_SWEEP_CHANNEL=04d5c93f-bcb1-4edf-b868-105dffbe408d</code>, key from Secret Manager.</p>
