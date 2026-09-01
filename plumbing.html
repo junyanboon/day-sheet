@@ -1199,6 +1199,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-02 &middot; 00:20</span>
+      <h3>The watchdog can now find a report its author forgot to tag <span class="kind">NEW</span></h3></summary>
+      <p><strong>The class, closed at the source.</strong> <code>heartbeat_map</code> read heartbeats ONLY through the <code>Run Monitor</code> relation, so a run that filed a perfectly good report and forgot to link it was invisible &mdash; the sweep alarmed while the run saw a clean success and could never detect it from inside itself. New <code>title_fallback_map()</code>: when a roster row has <strong>no linked report at all</strong>, match reports whose title starts with the row&rsquo;s name plus <code>&nbsp;&mdash;&nbsp;</code>. Fixing this in the sweep beats patching prompts one lane at a time, which would leave coverage depending on prompt discipline forever.</p>
+      <p><strong>Two rules keep it from trading a false alarm for false SILENCE</strong> &mdash; the direction that actually hurts, because a quiet watchdog looks exactly like a healthy fleet. <strong>(1) Fallback only:</strong> a row with any linked report keeps relation-only behaviour, so a stale linked report stays stale and no stray page can rescue a genuinely dead lane. <strong>(2) Exact prefix, longest match wins:</strong> without the separator, <code>The Doorman</code> would swallow <code>The Doorman (evening arm-check)</code> and read a heartbeat <em>fresher</em> than it is. That hazard is exactly why this was flagged and not built on the spot last night.</p>
+      <p><strong>Blast radius measured against the live board before committing:</strong> of 25 roster rows only three have no linked reports, and two of those (<code>alarm-watchdog</code>, <code>drop-sweep</code>) file no reports at all and run on <code>Self-heartbeat</code>, so no title matches them. <strong>&#128273; Code Mirror is the only row whose reading changes.</strong> 9 new tests pin both rules plus the <code>Completed At</code> cap, so the fallback cannot become a back door around it. 830 pass.</p>
+      <p><strong>&#128273; Code Mirror now has a &#128721; row</strong> &mdash; Daily, 36-hour threshold (longest real gap in 13 days was 29.2h), created <strong>Paused</strong> so it cannot alarm on itself before the fallback is live. It is <em>not</em> its own runtime: it is Job D of The Doorman, and a separate scheduler job for it was deliberately never created (Junyan, 2026-08-15, &ldquo;no duplicates, all under the Doorman&rdquo;). A monitor row does not run anything, so it does not reopen that ruling &mdash; and it catches what the Doorman&rsquo;s own heartbeat cannot: the Doorman running fine while Job D quietly stops filing.</p>
+      <p><strong>Status: committed <code>6c3e4ef8</code>, NOT deployed.</strong> Then flip Code Mirror to Live &mdash; in that order, so the row is never judged before the code that can see it exists.</p>
+      </details>
+    </li>
       <li class="entry det">
       <details>
       <summary><span class="when">2026-09-01 &middot; 23:39Z</span>
