@@ -1098,6 +1098,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-08-31 &middot; 22:01</span>
+      <h3>The token canary is LIVE &mdash; the first alarm about SMS that doesn&rsquo;t travel by SMS <span class="kind">LIVE</span></h3></summary>
+      <p><strong>Installed:</strong> <code>Canary.gs</code> in the Message Queue Send Engine project, trigger <code>tokenCanary</code> every <strong>5 minutes</strong> (log: &ldquo;canary trigger installed&rdquo;, 22:01:39 Toronto). It asks phone.com whether the token still works; 401/403 is death, a network blip is deliberately silent. Alerts fire on state change only &mdash; alive&rarr;dead, dead&rarr;alive &mdash; plus one daily reminder while dead.</p>
+      <p><strong>Why it is built the way it is:</strong> every other watchdog in the fleet reports by SMS &mdash; <code>sentinel-sweep</code>, the Morning Text, <code>alarm-mcp</code> escalation. When the SMS credential dies, the messenger dies with the message. That is why the Aug 18 outage ran <strong>29 hours</strong> and why two real 693 alarms on Aug 15 paged nobody. So the canary&rsquo;s channels are ordered by independence: email always, then Slack, then a text via <strong>Twilio</strong> (separate carrier, separate credential), then a carrier email-to-SMS gateway, and phone.com dead last &mdash; where by definition it can only ever deliver the &ldquo;it&rsquo;s back&rdquo; notice.</p>
+      <p><strong>Twilio line:</strong> <code>+1 289 307 5186</code> (Markham ON). Junyan started on a US trial number and swapped it for a Canadian one so the same line can later carry emergency staff paging &mdash; Canada&rarr;Canada needs no A2P registration, and a local area code is one people answer. Junyan&rsquo;s mobile is verified as a Caller ID (a trial account rejects unverified destinations with <code>21608</code>). Still a trial: finite credit, trial prefix on every text &mdash; upgrade before trusting it with real paging.</p>
+      <p><strong>Also fixed:</strong> <code>rotate-phonecom-token.sh</code> now cold-starts all three token consumers, not one. <strong>Also corrected:</strong> the &ldquo;token self-revokes on login&rdquo; gotcha is retracted &mdash; Junyan&rsquo;s permanent token is not revoked by logins; the Aug churn is attributed to a phone.com MFA update.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-08-31 &middot; night</span>
       <h3>SMS resilience plan ruled: token canary built, rotation script completed, cause story corrected <span class="kind">RULING + BUILD</span></h3></summary>
       <p><strong>Owner correction first:</strong> the phone.com token is a <em>permanent</em> token and logins do NOT revoke it &mdash; Junyan attributes the Aug 18&ndash;25 churn to a phone.com platform update (new MFA). CLAUDE.md&rsquo;s &ldquo;self-revokes on login&rdquo; gotcha is rewritten; the do-not-log-in taboo is lifted. What survives: the token has still died without warning more than once, and detection was the expensive part (29 silent hours on Aug 18).</p>
