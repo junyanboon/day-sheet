@@ -1565,6 +1565,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
     <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-01 &middot; ~13:30Z</span>
+      <h3>Drop media into the page body &mdash; the desk could not see the photos<span class="kind">FIXED</span></h3></summary>
+      <p><strong>Found by the desk itself</strong> (the parked &ldquo;Spoke to megan&rdquo; drop): the sweep re-uploads media into the row&rsquo;s <code>Media</code> files property, but the cloud Concierge&rsquo;s Notion connector cannot render that surface &mdash; notion-fetch returns an internal attachment reference with no presigned URL, notion-download-attachment 404s on binary re-uploads, and canon rightly forbids reading Buzz directly. Both live drops were judged from captions alone; <strong>a captionless code screenshot would have stranded.</strong></p>
+      <p><strong>Fix (<code>e8b8581e</code>, 774 tests):</strong> each media file is uploaded twice &mdash; a Notion file upload attaches to exactly one home &mdash; once for the <code>Media</code> property (human gallery) and once as an <strong>image block appended to the row&rsquo;s page body</strong>, which the connector renders readably. Block-append failure is non-fatal: the row still files, with the gap named in <code>Ingest Note</code>. The megan drop itself was closed by Junyan directly (&ldquo;I spoke to megan &mdash; it&rsquo;s done&rdquo;): turn logged once in canon (<code>b2da7c78</code>), row Processed, Action row closed. <strong>&#9888; Deploy pending</strong> (Junyan); existing rows are not backfilled &mdash; only the megan/Aug-30 rows predate the fix and both are closed.</p>
+      </details>
+    </li>
+    <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-01 &middot; ~12:00Z</span>
       <h3>Verdict write-back &mdash; the desk&rsquo;s judgment reaches Buzz, and Slack&rsquo;s last advantage falls<span class="kind">CHANGED</span></h3></summary>
       <p><strong>The gap:</strong> after the repoint, staff in Buzz saw only the sweep&rsquo;s &#128229; (captured) &mdash; a processed drop and an ignored one looked identical, because the Concierge has no Buzz connector and its verdict lived only in the Notion row&rsquo;s <code>Status</code>. That was the one thing the Slack era did better.</p>
