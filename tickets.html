@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-01 08:08 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-01 16:16 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3007,7 +3007,64 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Invariant U and the invariants roster are <b>observed</b> covering the deleted work.</li>
 <li>- Plumbing Map entry.</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#094</div><div class="jhead"><span class="emoji">✅</span><h4>The reconciling chore becomes a program that runs every ten minutes</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Split off Aug 19 from the big busywork ticket — the biggest of the pieces</li><li>Junyan ruled Aug 15 that all four dropped chores matter: when they get missed, each one causes real problems. So none can be deleted</li><li>We read it closely: closing the loop after messages send and charges land is all looking at lists and ticking boxes. No thinking in it</li><li>The one wordy step has a tidy replacement — a ticket sitting at a gate with no open task and nothing waiting for review is a stuck ticket, and that&#x27;s checkable</li><li>Where it isn&#x27;t sure, it raises a hand instead of guessing. That rule is written down and tested</li><li>It reports every run, including the quiet ones. A chore that only speaks up when something&#x27;s wrong is how a real problem reaches nobody</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 3&#x27;s mechanical reconcile moves to the event-gate tick</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#094</div><div class="jhead"><span class="emoji">✅</span><h4>The reconciling chore becomes a program that runs every ten minutes</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Split off Aug 19 from the big busywork ticket — the biggest of the pieces</li><li>Junyan ruled Aug 15 that all four dropped chores matter: when they get missed, each one causes real problems. So none can be deleted</li><li>We read it closely: closing the loop after messages send and charges land is all looking at lists and ticking boxes. No thinking in it</li><li>The one wordy step has a tidy replacement — a ticket sitting at a gate with no open task and nothing waiting for review is a stuck ticket, and that&#x27;s checkable</li><li>Where it isn&#x27;t sure, it raises a hand instead of guessing. That rule is written down and tested</li><li>It reports every run, including the quiet ones. A chore that only speaks up when something&#x27;s wrong is how a real problem reaches nobody</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 3&#x27;s mechanical reconcile moves to the event-gate tick</b></p><h2>Progress</h2>
+
+<p><b>First slice BUILT 2026-09-01 — shadow-ready, awaiting Junyan&#x27;s deploy.</b> dc-canon</p>
+<p><code>206b33052</code>: <code>services/event-gate/reconcile_sweep.py</code> on <code>POST /reconcile-sweep</code>, its own</p>
+<p>Cloud Scheduler job at a 10-minute cadence beside <code>/loop</code>, own <code>RECONCILE_SWEEP_DISABLED</code></p>
+<p>kill switch, own <code>Run Error</code> row. Step 2&#x27;s four mechanical branches are code&#x27;s; step 2&#x27;s</p>
+<p><code>Sent</code>-with-a-linked-ticket branch and steps 4/5/6 remain the agent pass&#x27;s.</p>
+
+<p><b>The bright line, and why it is drawn there.</b> The lane never ticks <code>Reconciled</code> on a row</p>
+<p>carrying a <code>Customer Care Ticket</code> or <code>Sales Ticket</code> relation. Canon calls a bare</p>
+<p><code>Reconciled</code> with no log/close a known bug pattern, and it is <i>worse</i> than leaving the row,</p>
+<p>because the Sent-to-reconcile view filters on <code>Reconciled = unchecked</code> — a wrongly</p>
+<p>reconciled row drops out of every view forever. <b>Leaving a row is how this lane flags it:</b></p>
+<p>the queue view IS the agent pass&#x27;s worklist, so ambiguity needs no separate flag surface.</p>
+<p>A status the lane does not positively recognise — including <code>Error</code>, which canon&#x27;s branch</p>
+<p>table never covered — is left untouched by the same rule. Three tests pin it.</p>
+
+<p><b>The stuck-send branch files a board row as well as leaving the checkbox.</b> It is the</p>
+<p>safety-critical one (a customer message that silently never dispatched), and the standing</p>
+<p>rule is that every needs-a-human surface is generated FROM the Actions board — a log line</p>
+<p>depends on somebody reading logs. <code>Type = Review</code>, <code>For = Ops Lead</code>, deduped by Message</p>
+<p>Code. A 20-minute grace window keeps a dispatch in flight from being reported as a failure.</p>
+
+<p><b>Two canon property names were stale, found by reading the live schema rather than the</p>
+<p>prose.</b> The send-time property is <b><code>Send After</code></b>, not &quot;Time to Send&quot;; and there is no</p>
+<p><b><code>Scheduled</code></b> status — the live options are exactly Pending Review / Error / Ready to</p>
+<p>Send / Will Not Send / Sent. Code written from canon&#x27;s prose would have compared against a</p>
+<p>property that does not exist and silently never found a stuck send. <code>Status</code> is also a</p>
+<p>Notion <i>status</i>-type property, so filters take <code>{&quot;status&quot;: …}</code>, not <code>{&quot;select&quot;: …}</code>.</p>
+
+<p><b>Lane 1&#x27;s third defect pre-empted:</b> <code>Reconcile Sweep</code> was added to the ✅ Actions</p>
+<p><code>Raised by</code> select <b>before</b> anything needed it, and the write was verified to have kept</p>
+<p>all twenty pre-existing options with their original option ids. The failure path is</p>
+<p>covered by tests — a failed run files exactly one <code>Run Error</code> row, does not duplicate while</p>
+<p>one is open, and carries this lane&#x27;s <code>Raised by</code>.</p>
+
+<p><b>Verified vs merely written.</b> <i>Proven:</i> 21 lane tests + the full auth/relay/insurance</p>
+<p>suites (73) pass; a real bug was caught and fixed in the process (the live path queried the</p>
+<p>Actions board on every tick even with nothing to flag, which broke the zero-pass</p>
+<p>assertion); the existing <code>test_app_auth</code> route registry caught the new route and now lists</p>
+<p>it; the live 22-row working set was re-read at 2026-09-01 ~20:10Z and matches the ticket&#x27;s</p>
+<p>evidence exactly (5 mechanical, 3 ticket-linked, 11 pending, 3 future sends, zero stuck),</p>
+<p>and the shadow test replays that exact set; the schema write was verified by re-fetch.</p>
+<p><i>Written but NOT proven:</i> the lane has never executed against the live board — no shadow</p>
+<p>pass has run, so <b>035&#x27;s test is not yet met and this ticket stays open.</b> Everything past</p>
+<p>the unit boundary (the <code>Reconciled</code> checkbox PATCH, the <code>created_time</code> filter shape, the</p>
+<p>stuck-send row actually landing) is unexercised until Junyan deploys.</p>
+
+<p><b>Deliberately not done:</b> no deploy (agent deploys are blocked on this map); nothing</p>
+<p>flipped live — the lane ships in shadow and <code>RECONCILE_SWEEP_LIVE=1</code> is a separate</p>
+<p>human-approved flip; no trigger enabled or disabled; no queue row&#x27;s <code>Status</code> touched and no</p>
+<p>message sent; steps 4/5/6 (strand backstop, orphan-gate audit, PBF off-queue backstop) not</p>
+<p>started — the ticket&#x27;s own sizing read says land the message-reconcile branch first.</p>
+
+<p><b>Next:</b> deploy in shadow, compare a few passes&#x27; counts against the Sent-to-reconcile</p>
+<p>view, flip live, see it act (035), then take steps 4–6 as the second slice.</p>
+
+<h2>Question</h2>
 
 <p>Split out of <b>055</b> (lane 5) 2026-08-19, where it arrived via</p>
 <p>Junyan&#x27;s 2026-08-15 capacity ruling: walked through the four chronically-dropped jobs, he ruled</p>
@@ -12667,5 +12724,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-01 08:08 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-01 16:16 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
