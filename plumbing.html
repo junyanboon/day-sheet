@@ -1099,6 +1099,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
       <details>
       <summary><span class="when">2026-09-01</span>
+      <h3>Renter texts get the Twilio backup line, and Apps Script finally gets real sync <span class="kind">NEW ROUTE + TOOLING</span></h3></summary>
+      <p><strong>Renter SMS fallback (Junyan approved):</strong> <code>sendSms_()</code> now falls back to <strong>Twilio</strong> on a refused phone.com credential &mdash; still <strong>401/403 only</strong>, because 429/5xx may mean the message already went and double-texting a renter is a real harm. The Zapier webhook stays as a second-choice path but is inert on the free plan. Receipt <code>twilio:&lt;sid&gt;</code>; one alert per day while the backup carries traffic.</p>
+      <p><strong>The renter sees a different number</strong> &mdash; a door code arriving mid-thread from an unknown 289 line reads like a scam. So the fallback <em>prefixes the body</em>: &ldquo;Dance Annex (backup line &mdash; reply to our usual number)&rdquo;. This is the ONE place a stored HTR wording is altered in flight, deliberately: an unattributed code is worse than a slightly longer one. Keep the window short.</p>
+      <p><strong>Drift fixed at the root:</strong> <code>clasp</code> 3.4.1 installed, runbook at <code>send-engine/CLASP.md</code>. Manual pasting is what let the two copies diverge; <code>clasp pull</code> before editing and <code>clasp push</code> after makes neither copy silently outrank the other. Junyan&rsquo;s hands: enable the Apps Script API, <code>clasp login</code>, link the script id.</p>
+      <p><strong>Correction:</strong> the earlier claim that <code>HtaGuard.gs</code> was cloud-only is <strong>out of date</strong> &mdash; a parallel session mirrored it to disk 2026-08-31 22:03. Verified today: all six canon functions present, plus two Apps-Script-only probes. Its own header carries the sharper lesson &mdash; the canon copy tested green for weeks while the live project had no guard file at all, so <em>a passing test never proved anything called the guard</em>.</p>
+      </details>
+    </li>
+
+    <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-01</span>
       <h3>event-gate&rsquo;s ERROR log was an alarm that always rang &mdash; sweep progress now logs at INFO <span class="kind">FAILURE MODE</span></h3></summary>
       <p><strong>What was broken:</strong> every sweep route in <code>services/event-gate/app.py</code> defined its progress-log callback as <code>level=logging.ERROR</code>, unconditionally. So <code>gcloud logging read '&hellip; severity&gt;=ERROR'</code> on event-gate returned <strong>two ERROR entries every 30 minutes on a completely healthy service</strong> &mdash; including the plainly successful <code>booking sweep daily lanes (live): EOB 0, AVA 0, RA 0, updated 1, skipped 0</code> and the full <code>{"ok": true, &hellip;, "errors": 0, "errors_detail": []}</code> summary. Verified 2026-08-31.</p>
       <p><strong>Why it matters:</strong> a real failure became indistinguishable from routine chatter. Anyone auditing this service &mdash; including the Sentinel work of 2026-08-27 &mdash; had to hand-inspect payloads to tell healthy from broken. The classic alarm-that-always-rings: the loudest channel carried no information.</p>
