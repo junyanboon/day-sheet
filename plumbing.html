@@ -1096,6 +1096,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry crit">
+      <details>
+      <summary><span class="when">2026-09-01 &middot; 07:53</span>
+      <h3>Apps Script is under clasp now &mdash; and the first sync found a ruled convention that never shipped <span class="kind">FIXED + FOUND</span></h3></summary>
+      <p><strong>The whole reason this mattered.</strong> The local folder and the live Apps Script project had been kept in step by hand-pasting, and nobody could say which copy was true. Comparing them properly, for the first time, turned up two changes that were written, reviewed, and <em>never reached production</em>:</p>
+      <p><strong>1. A ruled booking-title format sat undeployed for a week.</strong> <code>SameDay.gs</code> builds the title for platform mirror bookings. The ruling of 2026-08-24 (tickets 084/109) set it to <code>&lt;Name&gt; &lt;Platform&gt;</code>; the code running in production still wrote <code>&lt;Name&gt; (&lt;Platform&gt;)</code> with parentheses. The code&rsquo;s own comment explains the stakes: platform bookings carry no Skedda holder, so <strong>that title string is the only identity link</strong>. Every same-day platform booking since the ruling was created in the wrong format.</p>
+      <p><strong>2. A trigger installer existed only on disk.</strong> <code>InboundNotify.gs</code>&rsquo;s one-time installer &mdash; written because on 2026-08-18 the trigger was created by hand, &ldquo;Save&rdquo; was clicked, and the Triggers page still listed only <code>main</code> &mdash; was never pushed. The fix for a silent failure had itself silently not shipped.</p>
+      <p><strong>Pushed 07:53, verified by re-pulling:</strong> all seven files now byte-identical between disk and the live project. Live and confirmed: the ruled title format, the trigger installer, the Twilio backup line for renter SMS, and the canary&rsquo;s fuel check.</p>
+      <p><strong>Method changed, not just content.</strong> <code>clasp</code> is installed and configured (script id in <code>.clasp.json</code>, <code>.claspignore</code> keeping local orphans like <code>FbsTick.gs</code> out of the project). Claude edits files on disk and runs <code>clasp status</code> to show exactly what would move; Junyan runs <code>clasp push</code> &mdash; the deploy classifier blocks agents from pushing, which is the standing convention for this lane. Runbook: <code>send-engine/CLASP.md</code>. Backup taken before the first sync: <code>send-engine-backup-20260831-233223</code>.</p>
+      </details>
+    </li>
+
     <li class="entry det">
       <details>
       <summary><span class="when">2026-09-01</span>
