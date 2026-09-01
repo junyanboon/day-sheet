@@ -1096,6 +1096,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+    <li class="entry alert">
+      <details>
+      <summary><span class="when">2026-09-01 &middot; ~02:40Z</span>
+      <h3>Orphan alarm codes were never real &mdash; and the 409 rule goes with them <span class="kind">FAILURE MODE</span></h3></summary>
+      <p><strong>What changed:</strong> Junyan reversed a canon claim that had been marked <em>tested</em> since 2026-08-09 and hardened by an owner ruling on 08-19 &mdash; <em>&ldquo;deleting an Alarm.com user leaves its code permanently reserved.&rdquo;</em> His words: <em>&ldquo;Deleting a user doesn&rsquo;t leave its code permanently reserved. I do it all the time.&rdquo;</em></p>
+      <p><strong>How it got written down wrong:</strong> canon already documents that a delete needs <strong>~10 minutes to sync across panels</strong> before a re-add takes. The 08-09 probe on code <code>2578</code> almost certainly read inside that window, saw the validator refuse, and recorded a <em>temporary</em> rejection as a <em>permanent, by-design</em> reservation. A refusal seen once, right after a write, is evidence about timing &mdash; not about permanence.</p>
+      <p><strong>What it breaks:</strong> the standing provisioning rule <em>&ldquo;a 409 is almost always an orphan belonging to nobody &mdash; don&rsquo;t hunt for the user, pick different digits&rdquo;</em> is <strong>withdrawn</strong>. With no standing orphan population, a 409 means something real: a genuine live collision (findable), a dormant stored <code>Alarm User ID</code>, or capacity. <strong>The cause of the eight <code>/provision HTTP 409</code> failures on 2026-08-25 that locked eight people out is reopened</strong> &mdash; eight in one day was never plausible as random digit collision.</p>
+      <p><strong>What it fixes:</strong> retiring a user genuinely reclaims capacity, both slot and code. That matters now the panel cap is known to be <strong>200, not 242</strong> (also corrected today) against a live roster of <strong>180</strong>. Canon updated in <code>gotchas.md</code> + <code>doorman-access-lifecycle.md</code>.</p>
+      </details>
+    </li>
+
     <li class="entry crit">
       <details>
       <summary><span class="when">2026-08-31 &middot; late</span>
