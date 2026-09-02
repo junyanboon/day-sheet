@@ -1206,6 +1206,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-02 &middot; 22:30Z</span>
+      <h3>The Greeter goes live, and a platform booking request is accepted by default<span class="kind">LIVE &middot; NEW ROUTE &middot; FAILURE MODE FIXED &times;4</span></h3></summary>
+      <p><strong>Live.</strong> Cloud Scheduler <code>greeter-sweep</code> every 5 min &rarr; <code>event-gate /greeter-sweep</code> (rev <code>a18b34ec</code>). First pass 20:50Z texted xavier&rsquo;s two Tagvenue requests within the window.</p>
+      <p><strong>Ruled 2026-09-02 (Junyan).</strong> (1) A booking request is <em>accepted by default</em>: the Greeter holds the room on Skedda at once via skedda-mcp <code>/mirror-booking</code> (title <code>&lt;Name&gt; &lt;Platform&gt;</code>, Paid, payout) and the Registrar starts setup from the held room; the Accept click is a parallel task. Why: <code>PlatformMirror.gs</code> mirrors only on a &ldquo;confirmed and paid&rdquo; mail, which Tagvenue never sends. (2) One held reply per platform thread, funnelled into ONE main thread (latest request: combined confirmation + phone ask; other threads: a one-line pointer) &mdash; Tagvenue opens a thread per enquiry and per request, xavier had five. (3) We ask the <em>guest</em> for their number, as always; Tagvenue shows it only on its dashboard. A staff phone-drop (<code>staff_drop.py</code>: text <code>phone &lt;name&gt; &lt;number&gt;</code> from the on-call phone) exists but is not nudged. (4) <strong>Tagvenue price = payout</strong>: rounded guest price less the 15% commission seen on the dashboard (C$52 &rarr; C$44.20), in both Skedda writers (<code>greeter_sweep.price_for</code>, <code>PlatformMirror.gs pmTagvenuePayout_</code>, clasp-pushed).</p>
+      <p><strong>Four first-pass defects fixed the same day.</strong> Guest chat texts only on FIRST contact (Tagvenue <code>RE:</code> is always in-thread); the Accept text carries the platform&rsquo;s own Accept link; the Registrar skips its &ldquo;booking accepted&rdquo; text and its own phone-ask row when the Greeter already wrote one (seven queue rows for one guest, one showing as &ldquo;Unknown&rdquo;); the nag ladder closes on a Sent reply and caps at 3 (Tagvenue never says &ldquo;confirmed&rdquo;).</p>
+      <p><strong>Status.</strong> dc-canon <code>a18b34ec</code>, 1077 event-gate tests; send-engine PlatformMirror 39 tests. Kill switch <code>GREETER_DISABLED=1</code>. Not yet: a &#128678; Run Monitor heartbeat for the Greeter, and a Greeter option in Actions&rsquo; <code>Raised by</code> (rows say Other).</p>
+      </details>
+    </li>
+
+      <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-02 &middot; 23:40Z</span>
       <h3>The Analyst detector now queues the SOP heads-ups itself &mdash; HELD, never sent, no ticket<span class="kind">NEW WRITE (SHADOW) &middot; MESSAGE QUEUE</span></h3></summary>
       <p><strong>Why.</strong> Junyan&rsquo;s ruling, 2026-09-02: tickets stay a human system, but when a rule fires the templated message should be auto-generated. The evidence: of the 7 Tight Time Transition tickets since Aug 1, 5 were exactly T3 + T4 with every optional SOP step unchecked, 4 of them the same weekly 509B renter; 1 Case A succeeded; 1 was stale-cleared. The SOP walk added nothing to those five.</p>
