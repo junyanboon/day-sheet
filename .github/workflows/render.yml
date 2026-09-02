@@ -77,18 +77,6 @@ jobs:
         # --state-out is provisional; the script names the dated file itself when
         # given a directory-less default — we rename below so "changed?" is easy.
 
-      # The Night Watch — exception console (2026-09-02). Port of the 08:40 LLM publisher
-      # (trig_01Y6Jom8Qbq66jy4XzAzRMxD): reads the Concierge's NW-HANDOFF-V1 marker, re-reads
-      # each named residual row, reads the open surface direct, fills night-watch's own
-      # template.html. SHADOW = committed here as night-watch.html for comparison. LIVE =
-      # pushed to junyanboon/night-watch index.html (below). Non-fatal, like the Docket.
-      - name: Render Night Watch
-        if: steps.gate.outputs.ready == 'true'
-        continue-on-error: true
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-        run: python3 desk/scripts/night_watch_build.py --out new-night-watch.html
-
       - name: Publish index.html (change-only, stamp line ignored)
         if: steps.gate.outputs.ready == 'true'
         run: |
@@ -128,55 +116,6 @@ jobs:
               sleep $((i * 3))
             done
           fi
-
-      - name: Publish night-watch.html (SHADOW — change-only, kicker time ignored)
-        if: steps.gate.outputs.ready == 'true'
-        continue-on-error: true
-        run: |
-          [ -f new-night-watch.html ] || { echo "no night-watch render — skipping"; exit 0; }
-          strip_stamp() { sed -E 's/Night Watch · [^<]*//; s/re-read live at [0-9:]+ [AP]M//; s/checked [0-9:]+ [AP]M//; s/as of [0-9:]+ [AP]M//g' "$1"; }
-          if [ -f night-watch.html ] && diff -q <(strip_stamp night-watch.html) <(strip_stamp new-night-watch.html) >/dev/null; then
-            echo "no night-watch change — not committing"
-          else
-            cp new-night-watch.html night-watch.html
-            git config user.name "day-sheet-bot"
-            git config user.email "day-sheet-bot@users.noreply.github.com"
-            git add night-watch.html
-            git commit -m "Night Watch $(date -u +%F' '%H:%M) render (shadow)"
-            for i in 1 2 3; do
-              git push && break
-              git fetch origin main && git rebase -X theirs origin/main || git rebase --abort
-              sleep $((i * 3))
-            done
-          fi
-
-      # LIVE flip — a human decision (Junyan): set repo variable NIGHT_WATCH_LIVE=1 and add
-      # secret NIGHT_WATCH_PAT (fine-grained, junyanboon/night-watch, contents:rw). Publishes
-      # from 08:40 Toronto onward (the Concierge's 08:10 pass must have filed the marker),
-      # change-only, same commit message the LLM used. Before the flip this step is a no-op.
-      - name: Publish Night Watch LIVE (junyanboon/night-watch index.html)
-        if: steps.gate.outputs.ready == 'true'
-        continue-on-error: true
-        env:
-          NIGHT_WATCH_PAT: ${{ secrets.NIGHT_WATCH_PAT }}
-          NIGHT_WATCH_LIVE: ${{ vars.NIGHT_WATCH_LIVE }}
-        run: |
-          [ -f new-night-watch.html ] || { echo "no render — skipping"; exit 0; }
-          if [ "$NIGHT_WATCH_LIVE" != "1" ] || [ -z "$NIGHT_WATCH_PAT" ]; then
-            echo "::notice::Night Watch in SHADOW (NIGHT_WATCH_LIVE=${NIGHT_WATCH_LIVE:-unset}, PAT $([ -n "$NIGHT_WATCH_PAT" ] && echo set || echo unset)) — LLM trigger still publishes."
-            exit 0
-          fi
-          HHMM=$(TZ=America/Toronto date +%H%M)
-          if [ "$HHMM" -lt 0840 ]; then echo "before 08:40 Toronto — the marker is not due yet; skipping live publish"; exit 0; fi
-          API="https://api.github.com/repos/junyanboon/night-watch/contents/index.html"
-          CUR=$(curl -sf -H "Authorization: Bearer $NIGHT_WATCH_PAT" "$API")
-          SHA=$(echo "$CUR" | python3 -c "import json,sys; print(json.load(sys.stdin)['sha'])")
-          echo "$CUR" | python3 -c "import json,sys,base64; sys.stdout.write(base64.b64decode(json.load(sys.stdin)['content']).decode())" > live-index.html
-          strip_stamp() { sed -E 's/Night Watch · [^<]*//; s/re-read live at [0-9:]+ [AP]M//; s/checked [0-9:]+ [AP]M//; s/as of [0-9:]+ [AP]M//g' "$1"; }
-          if diff -q <(strip_stamp live-index.html) <(strip_stamp new-night-watch.html) >/dev/null; then echo "live page unchanged — not publishing"; exit 0; fi
-          TODAY=$(TZ=America/Toronto date +%F)
-          BODY=$(python3 -c "import base64,json,sys; print(json.dumps({'message':f'Night Watch {sys.argv[1]} — exception console','content':base64.b64encode(open('new-night-watch.html','rb').read()).decode(),'sha':sys.argv[2],'branch':'main'}))" "$TODAY" "$SHA")
-          curl -sf -X PUT -H "Authorization: Bearer $NIGHT_WATCH_PAT" -d "$BODY" "$API" >/dev/null && echo "published Night Watch $TODAY to junyanboon/night-watch"
 
       - name: Push desk-state snapshot (change-only, race-tolerant)
         if: steps.gate.outputs.ready == 'true'

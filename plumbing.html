@@ -1204,6 +1204,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry human">
+      <details>
+      <summary><span class="when">2026-09-02 &middot; 20:45Z</span>
+      <h3>The Night Watch is retired &mdash; trigger disabled, console, renderer, skill and Docket route all removed<span class="kind">LANE RETIRED &middot; SURFACE REMOVED</span></h3></summary>
+      <p><strong>Why.</strong> Junyan: <em>&ldquo;I haven&rsquo;t even been using the Night Watch report for weeks &hellip; this was a failed surface, let&rsquo;s remove it all.&rdquo;</em> Checked before acting: <strong>no machine read the page.</strong> The Morning Text reads the Concierge&rsquo;s <code>NW-HANDOFF-V1</code> marker directly (the 2026-08-25 decision), no Run Monitor row exists for the publisher, and nothing in event-gate, the Sentinel, or the render workflow depends on the URL. The Docket (needs-you by skill) and the Day Sheet (open surface) already cover everything the console showed, and show more of it.</p>
+      <p><strong>What was removed.</strong> LLM trigger <code>trig_01Y6Jom8Qbq66jy4XzAzRMxD</code> &rarr; <strong>DISABLED</strong> 20:36Z (its 2026-09-03 12:40Z fire will not happen). The deterministic port from the 20:30Z entry below &rarr; reverted the same hour: the <em>Render Night Watch</em> steps are out of <code>render.yml</code>, <code>night-watch.html</code> is deleted here, <code>scripts/night_watch_build.py</code> + tests are deleted from canon. Canon skill <code>library/process-night-watch.md</code> deleted and its Notion projection archived; the local <code>~/.claude/skills/process-night-watch</code> pointer deleted. The Docket&rsquo;s <code>night-watch</code> route and section are gone (a report titled &ldquo;Night Watch&rdquo; no longer routes anywhere &mdash; none is filed any more). <code>junyanboon/night-watch</code> <code>index.html</code> now says <em>retired</em> and points at the Docket; <code>night-watch-brief</code> carries a RETIRED banner.</p>
+      <p><strong>What stays, on purpose.</strong> The Concierge&rsquo;s JOB 34 overnight handoff and its <code>NW-HANDOFF-V1</code> marker. The marker&rsquo;s consumer is <code>morning_text.py</code>, which texts CAUGHT UP / HANDOFF INCOMPLETE at 08:45; that is the push channel and it is unchanged. <code>concierge-orchestration.md</code> now names the Morning Text, not the publisher, as the marker&rsquo;s reader. <strong>Failure mode to know:</strong> a stale bookmark to junyanboon.github.io/night-watch shows the retirement notice, never week-old data as current.</p>
+      </details>
+    </li>
+
       <li class="entry det">
       <details>
       <summary><span class="when">2026-09-02 &middot; 20:30Z</span>
