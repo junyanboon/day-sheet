@@ -64,6 +64,16 @@ jobs:
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         run: python3 desk/scripts/day_sheet_build.py --out new-index.html --state-out desk/desk-state/snapshot.json
+
+      # The Docket — the daily human surface (2026-09-02): every open human item grouped
+      # by the skill that clears it. Same reads, same tick, no LLM. Non-fatal: a Docket
+      # failure must never block the Day Sheet.
+      - name: Render Docket
+        if: steps.gate.outputs.ready == 'true'
+        continue-on-error: true
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: python3 desk/scripts/docket_build.py --out new-docket.html
         # --state-out is provisional; the script names the dated file itself when
         # given a directory-less default — we rename below so "changed?" is easy.
 
@@ -79,6 +89,27 @@ jobs:
             git config user.email "day-sheet-bot@users.noreply.github.com"
             git add index.html
             git commit -m "Day Sheet $(date -u +%F' '%H:%M) render"
+            for i in 1 2 3; do
+              git push && break
+              git fetch origin main && git rebase -X theirs origin/main || git rebase --abort
+              sleep $((i * 3))
+            done
+          fi
+
+      - name: Publish docket.html (change-only, stamp line ignored)
+        if: steps.gate.outputs.ready == 'true'
+        continue-on-error: true
+        run: |
+          [ -f new-docket.html ] || { echo "no docket render — skipping"; exit 0; }
+          strip_stamp() { sed -E 's/Toronto · [0-9]+ item[s]? waiting[^<]*//; s/[A-Z][a-z]+ [A-Z][a-z]+ [0-9]+, [0-9]{4} · [0-9]{2}:[0-9]{2}//' "$1"; }
+          if [ -f docket.html ] && diff -q <(strip_stamp docket.html) <(strip_stamp new-docket.html) >/dev/null; then
+            echo "no docket change — not committing"
+          else
+            mv new-docket.html docket.html
+            git config user.name "day-sheet-bot"
+            git config user.email "day-sheet-bot@users.noreply.github.com"
+            git add docket.html
+            git commit -m "Docket $(date -u +%F' '%H:%M) render"
             for i in 1 2 3; do
               git push && break
               git fetch origin main && git rebase -X theirs origin/main || git rebase --abort
