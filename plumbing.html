@@ -1204,6 +1204,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-02 &middot; 21:05Z</span>
+      <h3>The Greeter &mdash; platform mail answered in 5 minutes<span class="kind">NEW LANE &middot; NEW CADENCE &middot; NOT YET DEPLOYED</span></h3></summary>
+      <p><strong>Why.</strong> Tagvenue, Peerspace and Giggster rank venues on response speed. xavier&rsquo;s two Tagvenue booking requests landed 13:51 Toronto; the 2-hourly Concierge filed them at 14:14 and nobody was asked to click Accept for ~6 h. Junyan: <em>&ldquo;they need to be processed immediately as we are judged on our speed of response.&rdquo;</em></p>
+      <p><strong>Route.</strong> Cloud Scheduler <code>greeter-sweep</code> (<code>*/5 * * * *</code>) &rarr; <code>event-gate /greeter-sweep</code> &rarr; Gmail API read (secrets <code>gmail-client-id / gmail-client-secret / gmail-refresh-token</code>, the <code>gmail_pull</code> read-only token) &rarr; per mail: booking <strong>request</strong> = SMS to on-call (studio, slot, payout, Skedda availability) + &#10004; Decision row + nag at 30 min then every 2 h in waking hours; <strong>enquiry / request / instant</strong> = first reply queued in &#128228; at <strong>Pending Review, never auto-sent</strong> (Reply To = relay, Invariant J fields set, platform-safe wording); guest <strong>message</strong> = SMS with their words + Review row; <strong>confirmed / cancelled</strong> = closes the Decision row. Dedup <code>[greeter:&lt;gmail id&gt;]</code>, stateless 48 h window, Run Error row when Gmail is unreadable. Kill switch <code>GREETER_DISABLED=1</code>.</p>
+      <p><strong>Status.</strong> dc-canon <code>25550ad9</code>, 15 tests, 1041 green. Secrets created with the runtime-SA binding. <strong>Not deployed:</strong> Junyan attaches the three secrets to <code>event-gate</code>, runs <code>deploy.sh</code>, and creates the scheduler job with the same <code>X-Gate-Token</code> header as <code>drop-sweep</code>. Still the Concierge&rsquo;s job: the Skedda mirror of a confirmed platform booking, which is what hands it to the Registrar.</p>
+      </details>
+    </li>
+
       <li class="entry human">
       <details>
       <summary><span class="when">2026-09-02 &middot; 20:45Z</span>
