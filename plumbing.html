@@ -425,6 +425,11 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <text x="126" y="188" class="tm" text-anchor="middle">1st of month 08:00</text>
   </g>
   <text x="230" y="180" class="al">clockwork — no LLM →</text>
+  <g class="fstn" data-d="f_treasurersweep" tabindex="0" role="button">
+    <rect x="382" y="156" width="152" height="40" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 4"/>
+    <text x="458" y="173" class="nm" text-anchor="middle">Treasurer sweep</text>
+    <text x="458" y="188" class="tm" text-anchor="middle">1st · 15th · Mon 08:00</text>
+  </g>
   <g class="fstn" data-d="f_eventgate" tabindex="0" role="button">
     <rect x="548" y="156" width="152" height="40" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 4"/>
     <text x="624" y="173" class="nm" text-anchor="middle">event-gate</text>
@@ -4425,7 +4430,9 @@ f_host:["🤗 Host","04:00","Drafts the day's access texts.","tok"],
 f_timekeeper:["⏱️ Timekeeper","04:00","Handles overtime; books the extra time itself.","tok"],
 f_bookkeeper:["📖 Bookkeeper","06:00","The daily money pass.","tok"],
 f_planner:["🗺️ Planner","19:30","Evening rundown of tomorrow's bookings.","tok"],
-f_treasurer:["🪎 Treasurer","1st of month 08:00","Monthly money summary.","tok"],
+f_treasurer:["🪎 Treasurer","1st of month 08:00","Monthly money summary. The LLM lane — stays on for the Oct 1 side-by-side against the code sweep next to it, then retires.","tok"],
+f_treasurersweep:["Treasurer sweep","1st · 15th · Mondays 08:00 · SHADOW",
+  "The Treasurer as code (<code>treasurer_sweep.py</code>, since 2026-09-02). Reads Stripe through a key that can only read — it cannot charge, refund or settle anything. Three timers, one module:<br><br><b>1st of month</b> — reconciles the month that just ended: what each renter agreed to pay, what Stripe actually collected, and the difference. Failed card → one ticket + one held draft. A gap → one question on the Docket, never a dollar figure.<br><b>15th</b> — renewals ending soon, next month unbilled, an early read of the current month.<br><b>Mondays</b> — the weekly card check, added after Stephanie Brinning's dead card went unseen for 75 days between monthly passes. Three questions to Stripe: did a card die this week, is an auto-charge invoice still bouncing, is anyone declining over and over. One row per hit.<br><br><b>Also fixed 2026-09-02:</b> an uncollectible invoice now reads as a failed payment instead of vanishing; hand-built card-charge invoices count as billing; \"prepaid\" on a record needs the how and the through-when or it is flagged; and the close-out card lists every unpaid dollar above the deposit line.<br><br><b>Status:</b> shadow — computing and logging, writing nothing. Monday timer not yet created. The flip to live is Junyan's.","ok"],
 f_eventgate:["event-gate","every 1 min","Emergency SMS lane — pure rules, no AI, never sleeps.","ok"],
 f_registrar:["Registrar sweep","every 30 min","Card, code and board row for every booking — re-derived.","ok"],
 f_watchlist:["watchlist-refresh","every 15 min","Rebuilds today's who-is-texting-us list.","ok"],
