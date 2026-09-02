@@ -1206,6 +1206,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-02 &middot; 21:30Z</span>
+      <h3>A platform booking request is accepted by default &mdash; the Greeter holds the room on Skedda within 5 minutes<span class="kind">RULING &middot; NEW ROUTE &middot; DEPLOY PENDING</span></h3></summary>
+      <p><strong>The hole.</strong> <code>PlatformMirror.gs</code> mirrors a Tagvenue booking only on a &ldquo;booking is confirmed and paid&rdquo; mail. Tagvenue has never sent one (0 in the ledger since June). So a Tagvenue request never reached Skedda on its own, the Registrar never saw it, and xavier&rsquo;s two accepted requests were mirrored by hand ~7 h after they landed (<code>120230872</code> Sep 4, <code>120230876</code> Sep 7, Studio 693, $51.98 each = list &times; HST; Tagvenue prints no payout).</p>
+      <p><strong>Ruling (Junyan).</strong> &ldquo;Assume that if someone is submitting a booking request it will be accepted by a human and that a human just needs to also accept it &mdash; it is not a blocker.&rdquo;</p>
+      <p><strong>Route.</strong> Greeter <code>request</code> &rarr; Skedda availability read &rarr; no clash &rarr; <code>POST skedda-mcp /mirror-booking</code> (casual, title <code>&lt;Name&gt; &lt;Platform&gt;</code>, Paid, price = stated payout else list &times; hours &times; HST) &rarr; skedda-mcp read-back is the proof &rarr; on-call text and the Decision row say <em>room HELD</em> / <em>already on Skedda</em> / <em>&#9888; room NOT held (why)</em> &rarr; the Registrar&rsquo;s next 30-min pass finds a title-only platform booking and starts setup. A platform cancellation mail &rarr; <code>/release-booking</code> (refuses holders, wrong titles, series). Instant books and confirmations stay with <code>PlatformMirror.gs</code>; its slot pre-read finds the held room and writes nothing. A clash holds nothing. Staff who DECLINE free the room by hand.</p>
+      <p><strong>Status.</strong> dc-canon (greeter commit after <code>25550ad9</code>), 22 tests, 1055 green. <strong>Needs deploy:</strong> <code>SKEDDA_HTTP_URL</code> + secret <code>SKEDDA_HTTP_TOKEN=mcp-auth-token</code> on <code>event-gate</code>, then <code>deploy.sh</code>. Until then a request texts and queues but does not hold.</p>
+      </details>
+    </li>
+
+      <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-02 &middot; 21:05Z</span>
       <h3>The Greeter &mdash; platform mail answered in 5 minutes<span class="kind">NEW LANE &middot; NEW CADENCE &middot; NOT YET DEPLOYED</span></h3></summary>
       <p><strong>Why.</strong> Tagvenue, Peerspace and Giggster rank venues on response speed. xavier&rsquo;s two Tagvenue booking requests landed 13:51 Toronto; the 2-hourly Concierge filed them at 14:14 and nobody was asked to click Accept for ~6 h. Junyan: <em>&ldquo;they need to be processed immediately as we are judged on our speed of response.&rdquo;</em></p>
