@@ -1199,6 +1199,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-02 &middot; 11:54Z</span>
+      <h3>A sweep-seeded board row is now tier &lsquo;Pending&rsquo;, never &lsquo;Self Serve&rsquo; &mdash; the silent no-messages default is gone<span class="kind">FAILURE MODE CLOSED</span></h3></summary>
+      <p><strong>The bug (Garjanah Thayakumar, 509A, 2026-09-01 17:00).</strong> <code>create_board_row()</code> seeded every new direct booking with <code>Type of Booking = Self Serve</code> as a placeholder for the Host to re-tier at 04:00. But Self Serve is <em>also</em> the terminal &ldquo;record-only, never messaged&rdquo; tier, which <code>run_daily_lanes()</code> skips silently. When re-tiering never happened the placeholder was indistinguishable from a real decision: no AVA, no EOB, no skip note, no residue. Her 08-30 row (Monitor Only) got both texts; her 09-01 row (Self Serve) got nothing. Caught by the LLM verifier&rsquo;s final run.</p>
+      <p><strong>Fix</strong> (dc-canon <code>7ac6e608</code>, rev <code>event-gate-00153-j94</code>, fp <code>85799fb687a3</code>, 208 tests): seed <code>Pending</code>, which the lanes already skip WITH a visible note. New guard: a sweep-seeded row (<code>Source Event ID sweep:*</code>) still Pending on its own booking day after 05:00 Toronto files one deduped <code>Review</code> Action row (&ldquo;Booking sweep row never tiered&rdquo;). Host-authored Pending rows are left to the Host. Julie Marouze was NOT a bug &mdash; her row was tiered Monitor Only; the code follows the tier, not the (Fixed Option) title tag.</p>
+      <p><strong>Deployed dirty, knowingly.</strong> Junyan ran <code>deploy.sh</code> with another session&rsquo;s uncommitted insurance-sweep ask-window change in the tree (<code>insurance_sweep.py</code>, <code>test_insurance_sweep.py</code>, <code>house-rules.md</code>); that change is therefore live under <code>7ac6e608-dirty</code> and still needs its own commit.</p>
+      </details>
+    </li>
 
     <li class="entry det">
       <details>
