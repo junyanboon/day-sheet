@@ -179,17 +179,34 @@ h1{font-size:1.7rem;margin:0 0 .2rem;text-wrap:balance}
 .open h3{margin:0 0 .3rem;font-size:.9rem;color:var(--alert);font-family:ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase}
 .open ul{margin:.3rem 0 0;padding-left:1.1rem}
 .open li{margin:.25rem 0;max-width:70ch}
+.target-architecture{border:1px solid var(--llm);border-radius:8px;padding:.75rem .9rem;margin:1rem 0 1.4rem;background:var(--llm-bg)}
+.target-architecture h2{margin:0 0 .35rem;font-size:1rem;color:var(--llm)}
+.target-architecture p{margin:.3rem 0;max-width:78ch}
+.target-architecture ul{margin:.45rem 0 .2rem;padding-left:1.2rem}
+.target-architecture li{margin:.25rem 0;max-width:76ch}
 footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 </style>
 <div class="wrap">
 <h1>Dance Annex — Message Plumbing Map</h1>
-<p class="sub">Every inbound message path, what moves it, and whether it survives a Claude token outage. Click any node for detail. Compiled 2026-08-11 from <code>RUNTIMES.md</code> and the event-gate source in <code>dc-canon</code> — <strong>maintained since;</strong> see the change log at the foot of the page.</p>
+<p class="sub">Every inbound message path, what moves it, and whether it survives an LLM outage. Click any node for detail. Compiled 2026-08-11 from <code>RUNTIMES.md</code> and the event-gate source in <code>dc-canon</code> — <strong>maintained since;</strong> see the change log at the foot of the page.</p>
 
 <div class="legend" id="legend">
   <button data-f="det" class="on"><span class="dot" style="background:var(--det)"></span>DETERMINISTIC — no tokens, always up</button>
   <button data-f="llm" class="on"><span class="dot" style="background:var(--llm)"></span>LLM — dies in token outage</button>
   <button data-f="human" class="on"><span class="dot" style="background:var(--human)"></span>HUMAN-GATED</button>
   <button data-f="alert" class="on"><span class="dot" style="background:var(--alert)"></span>EMERGENCY / ALERTING</button>
+</div>
+
+<div class="target-architecture">
+  <h2>Concierge runtime decision — current versus target</h2>
+  <p><strong>Current production:</strong> the Claude cloud RemoteTrigger remains the live two-hourly Concierge. Hermes has no production Concierge cron yet. Nothing has been cut over by this design decision.</p>
+  <p><strong>Target:</strong> one Hermes VPS cron runs one Codex / GPT-5.6 Sol Concierge as the sole unattended LLM production worker. Claude is the builder and reviewer: it may design, implement, test, and prepare releases, but it does not run a second scheduled writer or automatically take over production.</p>
+  <ul>
+    <li><strong>Why one worker:</strong> one runtime owns each pass, so two agents cannot process the same ticket or write conflicting results.</li>
+    <li><strong>Before cutover:</strong> shadow runs, a local one-run-at-a-time lock, persistent cursor/state, a pass ledger, narrow Notion write permissions, external completion monitoring, and explicit kill/catch-up tests.</li>
+    <li><strong>Locking:</strong> no Firestore-style cross-runtime lease is required for the first cutover while Codex is the only production LLM writer. Add atomic fencing only if another runtime later receives concurrent write authority.</li>
+    <li><strong>Unchanged machinery:</strong> deterministic GCP/event-gate lanes remain in place; Sentinel/SweepWatch remain outside the Concierge failure domain.</li>
+  </ul>
 </div>
 
 
@@ -278,7 +295,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <!-- ============ LINE 3 · EMAIL ============ -->
   <g class="stn" data-line="l3" data-d="bizmail" tabindex="0"><circle cx="100" cy="350" r="8" fill="var(--card)" stroke="var(--l3)" stroke-width="3.5"/><text x="100" y="327" text-anchor="middle" class="stn-label">Business Gmail</text></g>
   <g class="stn" data-line="l3" data-d="gmailpull" tabindex="0"><circle cx="310" cy="350" r="9" fill="var(--l3)"/><text x="310" y="377" text-anchor="middle" class="stn-label">gmail_pull</text></g>
-  <g class="stn" data-line="l3" data-d="concierge" tabindex="0"><circle cx="520" cy="350" r="9" fill="var(--l3)"/><text x="520" y="327" text-anchor="middle" class="stn-label">Concierge</text><text x="520" y="313" text-anchor="middle" class="stn-sub">cloud + Codex</text></g>
+  <g class="stn" data-line="l3" data-d="concierge" tabindex="0"><circle cx="520" cy="350" r="9" fill="var(--l3)"/><text x="520" y="327" text-anchor="middle" class="stn-label">Concierge</text><text x="520" y="313" text-anchor="middle" class="stn-sub">Claude live · Codex target</text></g>
   <g class="stn" data-line="l3" data-d="tickets" tabindex="0"><circle cx="730" cy="350" r="8" fill="var(--card)" stroke="var(--l3)" stroke-width="3.5"/><text x="730" y="377" text-anchor="middle" class="stn-label">Notion tickets</text></g>
 
   <!-- ============ LINE 4 · ACCESS & BOOKING ============ -->
@@ -1257,6 +1274,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-09-03 &middot; 03:09Z</span>
+      <h3>Concierge roles settled: Codex operates production; Claude builds and reviews<span class="kind">TARGET DESIGN &middot; NOT YET CUT OVER</span></h3></summary>
+      <p><strong>Decision.</strong> The target has one unattended LLM production writer: a Hermes VPS cron running Codex / GPT-5.6 Sol. Claude owns architecture, implementation, tests and release review, but has no scheduled production-writing fallback. The existing Claude cloud RemoteTrigger remains the live Concierge until a separately approved cutover; this entry changes the map, not the trigger.</p>
+      <p><strong>Why.</strong> The original split uses each runtime for the work it is meant to own: Claude can reshape the system deliberately while Codex performs repeatable production passes. Keeping exactly one production writer also removes the immediate need for a cross-runtime Firestore lease and prevents two agents from claiming the same work.</p>
+      <p><strong>Build gate.</strong> Before activation: remove unsafe Hermes write tools such as <code>alarm.retirement_check(write=True)</code>; clear or explicitly fence pending deployments; add shadow mode, a local run lock, persistent cursor/state, a pass ledger, a scoped Notion write wrapper, external completion monitoring, and kill/catch-up tests. Run at least ten clean shadow passes before an explicit owner-approved trigger swap.</p>
+      <p><strong>Boundary.</strong> Claude may prepare the build and hand back a reviewed release candidate. Codex owns the eventual production execution. Neither enabling the Hermes cron nor disabling the current Claude trigger is authorized by this entry.</p>
+      </details>
+    </li>
+
       <li class="entry det">
       <details>
       <summary><span class="when">2026-09-03 &middot; 02:16Z</span>
@@ -4428,7 +4456,7 @@ sendengine:["Send engine","Google Apps Script time trigger · v18 (2026-08-13)",
 sameday:["Same-day access","The Registrar owns it · every 30 min · auto-send HELD","CORRECTED 2026-08-31. This used to describe send-engine/SameDay.gs (1-min Apps Script, SAMEDAY_ENABLED off). That lane was NEVER installed and ticket 108 deleted the deference to it on 25 Aug — 089 retires the file; it is do-not-install. The booking sweep (the Registrar, event-gate, every 30 min, deterministic) now owns the today/tomorrow window and runs the full chain: artist card, panel-verified code, board row, and the confirmation + HTA pair composed in one pass. Auto-send ran for four hours on 25 Aug, texted nine renters, and SWEEP_SAMEDAY_HOLD=1 went on that evening — the pair now waits at Pending Review and Junyan sends it. Three gates stand behind the switch: booked_late, human_said_no (fails closed), and the master hold. Branch kill switch SWEEP_SAMEDAY_DISABLED=1.","tok"],
 watchlist:["Fast-Track Watchlist rebuild","every 15 min, ~08:00–22:59 Toronto · driven by cron-job.org, NOT GitHub cron","Builds the Today watchlist that event-gate uses to resolve senders. LIFE-SAFETY vs UNVERIFIED-distress titling depends on it — when it goes dark the emergency still summons, just anonymously. The GitHub schedule: crons were removed from watchlist.yml on 18 Aug because Actions cron is unreliable fleet-wide; cron-job.org fires it by workflow_dispatch. That external tick is itself a single point of failure — it stopped on 20 Aug and the rebuild went dark 9h15m, which is why the job carries a Run Monitor row (watchlist-refresh (GitHub Actions)). The board window mirrors the cron-job.org crontab, not the workflow file.","ok"],
 gap:["The email emergency gap","No coverage today","event-gate watches SMS only. An emergency arriving by email (alarm mail, urgent renter email) has no fast path — it waits for the next token-gated LLM pass, up to 2h. Design decision pending: extend a deterministic email urgency tier that POSTs to event-gate's actuator.","tok"],
-concierge:["The Concierge","RemoteTrigger · 2-hourly 08:10–22:10 · Opus medium","The main judgment pass: money, alarms, messages, tickets. First thing to stop in a token outage.","tok"],
+concierge:["The Concierge","CURRENT: Claude RemoteTrigger · 2-hourly 08:10–22:10 · Opus medium","The main judgment pass: money, alarms, messages, tickets. TARGET (not cut over): one Hermes VPS cron running Codex / GPT-5.6 Sol as the sole production LLM writer; Claude builds and reviews only. The existing Claude trigger stays live until an explicitly approved cutover.","tok"],
 responder:["The Responder","two staggered hourly triggers = 30-min cadence","Probe micro-agent lane, answers inbound quickly when tokens exist.","tok"],
 receptionist:["The Receptionist","hourly :00 · card sends, template-driven","Candidate to move to Sonnet tier or deterministic lane — mostly mechanical.","tok"],
 doorman:["The Doorman","RemoteTrigger · cron 0 8,10 UTC = 04:00 + ~06:00 Toronto · prompt v3 (2026-08-13) · Gmail connector attached","Both fires live. Prompt v3 implements the access-lifecycle canon: 04:00 = PROCEDURE A overnight arm-check; ~06:00 = PROCEDURE B, a 7-DAY access pre-flight (allow_permanent is the expected verdict; legacy windows flagged for migration), plus a 48h revert check on Processed Access/PIN rows (the Kate Keenan class), plus the retirement sweep — whose presence evidence is now the ADT notification emails (Gmail label Artist Care - ADT, read-only, that label only), NOT the actor-less Activity Log. Feed canary: zero label mail in 48h = feed down, sweep suspends + Review row. Keep-bias: unattributed (Panel User) disarms count as presence for anyone booked; (info@danceannex.ca) remote disarms never count. Idle 30d + no bookings ±30/60d → Human-confirmed delete row, max 5/pass, protected list untouchable. Cloud runner has no find_user_codes, so digit-matching stays local and attended.","tok"],
@@ -4590,7 +4618,7 @@ a_tclear:["Error disappears → ticket closes itself", "any time",
 <script>
 /* Annex Fleet chips — same #detail panel */
 Object.assign(D,{
-f_concierge:["🛎️ Concierge","every 2 h at :10","Reads studio mail; decides money, alarms, messages, tickets.","tok"],
+f_concierge:["🛎️ Concierge","CURRENT: Claude every 2 h at :10","Reads studio mail; decides money, alarms, messages, tickets. TARGET (not live): Hermes-hosted Codex is the sole scheduled production worker; Claude builds and reviews the release.","tok"],
 f_responder:["🎤 Responder",":20 + :50","Answers inbound texts fast — drafts held for your approval.","tok"],
 f_scribe:["✍️ Scribe","RETIRED 2026-09-02","Was: ships Sweep Feedback rows you marked Approved. Retired because its cards were unreadable without a conversation — approved suggestions now ship inside the daily Fixer run, briefed in plain words. Trigger disabled.","off"],
 f_loop:["⏭️ Loop","hourly :35","Advances tickets through their gates.","tok"],
