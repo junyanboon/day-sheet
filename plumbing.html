@@ -150,6 +150,7 @@ h1{font-size:1.7rem;margin:0 0 .2rem;text-wrap:balance}
 .badge{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:.65rem;padding:.1rem .45rem;border-radius:999px;border:1px solid var(--line);margin-left:.4rem;vertical-align:middle}
 .badge.ok{color:var(--det);border-color:var(--det)}
 .badge.tok{color:var(--llm);border-color:var(--llm)}
+.badge.off{color:var(--muted);border-color:var(--muted);text-decoration:line-through}
 .gapnote{border:1px dashed var(--alert);border-radius:6px;padding:.55rem .7rem;margin-bottom:.6rem;color:var(--alert);font-size:.85rem;cursor:pointer}
 .gapnote:focus-visible{outline:2px solid var(--accent)}
 
@@ -370,9 +371,8 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <text x="244" y="84" class="tm" text-anchor="middle">:20 + :50</text>
   </g>
   <g class="fstn" data-d="f_scribe" tabindex="0" role="button">
-    <rect x="322" y="52" width="140" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
-    <text x="392" y="69" class="nm" text-anchor="middle">✍️ Scribe</text>
-    <text x="392" y="84" class="tm" text-anchor="middle">4×/day 09:05 → 21:05</text>
+    <text x="392" y="69" class="tm" text-anchor="middle">✍️ Scribe (LLM)</text>
+    <text x="392" y="84" class="tm" text-anchor="middle">retired 09-02 → Fixer run</text>
   </g>
   <g class="fstn" data-d="f_loop" tabindex="0" role="button">
     <rect x="470" y="52" width="140" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
@@ -1257,6 +1257,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-09-03 &middot; 01:45Z</span>
+      <h3>The Scribe is retired &mdash; approved suggestions ship in the Fixer conversation instead<span class="kind">RETIRED &middot; TRIGGER OFF &middot; DECK</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-09-02: &ldquo;A big problem is that I read these but can&rsquo;t understand them. So I end up needing to converse with an LLM in the end to even get it set up. Let&rsquo;s decommission the scribe.&rdquo; The Sweep Feedback case files (They said / We sent / Proposed) are written by the desk for the desk; an unattended shipper behind an Approve button added nothing when the ruling itself needed a conversation.</p>
+      <p><strong>What moved.</strong> Trigger <code>trig_01GNrDJyPPoCm93zwUgJgbLN</code> DISABLED (read back <code>enabled:false</code>), renamed &ldquo;&mdash; RETIRED&rdquo;; 0 rows were at Approved. <code>library/the-scribe.md</code> heads with the retirement; its boundaries now bind the Fixer session. The <strong>Fixer</strong> skill compiles HTR rows at New <em>or</em> Approved and briefs each in plain words &mdash; what happened, what would change, the exact text, what you&rsquo;d notice &mdash; then ships the ruling in-session and flips the row. The Deck&rsquo;s Approve still parks a row at Approved; its stamp and toast now say &ldquo;ships in your next Fixer run&rdquo; (<code>deck-app</code>).</p>
+      <p><strong>Open.</strong> Sweeps that FILE HTR suggestions still write the case-file format; a plain-words lead paragraph on the row itself is the next step so the Deck card reads at a glance too.</p>
+      </details>
+    </li>
+
       <li class="entry det">
       <details>
       <summary><span class="when">2026-09-02 &middot; 23:40Z</span>
@@ -4548,7 +4558,7 @@ a_tclear:["Error disappears → ticket closes itself", "any time",
 Object.assign(D,{
 f_concierge:["🛎️ Concierge","every 2 h at :10","Reads studio mail; decides money, alarms, messages, tickets.","tok"],
 f_responder:["🎤 Responder",":20 + :50","Answers inbound texts fast — drafts held for your approval.","tok"],
-f_scribe:["✍️ Scribe","09:05 · 13:05 · 17:05 · 21:05","Ships what you approved: reads 🔧 Sweep Feedback rows marked Approved, makes the canon / SOP edit, records it on the row, flips it to Applied. Never touches the Message Queue, never sends. LLM, since 2026-08-27 (canon: the-scribe.md).","tok"],
+f_scribe:["✍️ Scribe","RETIRED 2026-09-02","Was: ships Sweep Feedback rows you marked Approved. Retired because its cards were unreadable without a conversation — approved suggestions now ship inside the daily Fixer run, briefed in plain words. Trigger disabled.","off"],
 f_loop:["⏭️ Loop","hourly :35","Advances tickets through their gates.","tok"],
 f_mechanic:["🔧 Mechanic","hourly :54","Sweeps for errors and fixes small breakages.","tok"],
 f_custodian:["🧹 Custodian","02:35 + 09:35","Double-checks the fleet's own work.","tok"],
