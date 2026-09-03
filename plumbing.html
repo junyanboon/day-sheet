@@ -1259,6 +1259,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-03 &middot; 02:16Z</span>
+      <h3>skedda-mcp list tools no longer drop monthly or multi-weekday series &mdash; a paid slot read as free<span class="kind">FAILURE MODE FIXED &middot; SKEDDA &middot; DEPLOY PENDING</span></h3></summary>
+      <p><strong>Why.</strong> <code>list_bookings</code> / <code>list_bookings_range</code> expand a recurring series into occurrences. The expander understood only <code>FREQ=WEEKLY</code> and <code>DAILY</code>, and stepped WEEKLY seven days off <code>DTSTART</code>. A <code>FREQ=MONTHLY</code> series (<code>BYSETPOS=4;BYDAY=FR</code>, &ldquo;the 4th Friday&rdquo;) parsed fine, then expanded to nothing &mdash; so the <code>unexpanded</code> safety net never fired and the series vanished. A weekly series with two weekdays (<code>BYDAY=TU,WE</code>) yielded only the first. Five live series affected: two monthly ones gone entirely (Fusion dance 527, Half Day Meditation), three multi-day ones missing a weekday (X Movement Training 693 lost every Thursday).</p>
+      <p><strong>What it did.</strong> 2026-09-02 10:51 Toronto: the desk texted Justin Blayney that his Sep 25 527 night was &ldquo;still open&rdquo;. He had booked and paid it in May. The tell was Skedda itself: <code>create_booking</code> for that slot was refused <code>422 conflicts with one already scheduled</code> while the list said empty.</p>
+      <p><strong>What moved.</strong> skedda-cli <code>b0ee199</code>: <code>_parse_recurrence</code> now carries <code>BYDAY</code>/<code>BYSETPOS</code>/<code>BYMONTHDAY</code>; <code>_occurrences</code> handles MONTHLY (nth weekday, BYMONTHDAY, day-of-DTSTART) and multi-day WEEKLY; new <code>_rule_supported</code> guard passes any shape the client cannot expand through as <code>recurring="unexpanded"</code> instead of dropping it. <strong>Consumers must treat an <code>unexpanded</code> row as occupied, occurrence unknown &mdash; never as absent.</strong> Canon: GOTCHAS &rarr; Skedda, and a new non-negotiable in the Process Studio Tickets runtime (&ldquo;an empty Skedda read is not an open slot&rdquo;).</p>
+      <p><strong>Verification.</strong> <code>tests/test_recurrence.py</code>, 23 checks from rule blobs captured live, all pass; existing suites 8 + 13 pass. Local CLI now lists both of Justin&rsquo;s nights at $235.04. <strong>Not yet on Cloud Run</strong> &mdash; <code>deploy.sh</code> was blocked in-session; the hosted MCP the desk calls still has the bug until Junyan runs it. Verify after deploy: hosted <code>list_bookings("2026-09-25")</code> must show Studio 527 20:00 Justin Blayney.</p>
+      </details>
+    </li>
+
+      <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-03 &middot; 02:05Z</span>
       <h3>The Mechanic&rsquo;s two Notion-only silence checks move into <code>sentinel-sweep</code> &mdash; SHADOW, own flag<span class="kind">NEW CHECK (SHADOW) &middot; WATCHERS &middot; MESSAGE QUEUE</span></h3></summary>
       <p><strong>Why.</strong> Handoff step 4: the LLM Mechanic (<code>trig_01A2iWdZaRpqV4H5StkLKWoK</code>, hourly :54Z) runs four silence checks; two read only Notion and are pure rules. A dispatch-stall check that burns tokens dies in the token outage it exists to catch, so those two now also run inside the deterministic hourly <code>sentinel-sweep</code> (:07Z), which already survives that outage.</p>
