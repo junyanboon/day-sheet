@@ -1257,6 +1257,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-03 &middot; 02:05Z</span>
+      <h3>The Mechanic&rsquo;s two Notion-only silence checks move into <code>sentinel-sweep</code> &mdash; SHADOW, own flag<span class="kind">NEW CHECK (SHADOW) &middot; WATCHERS &middot; MESSAGE QUEUE</span></h3></summary>
+      <p><strong>Why.</strong> Handoff step 4: the LLM Mechanic (<code>trig_01A2iWdZaRpqV4H5StkLKWoK</code>, hourly :54Z) runs four silence checks; two read only Notion and are pure rules. A dispatch-stall check that burns tokens dies in the token outage it exists to catch, so those two now also run inside the deterministic hourly <code>sentinel-sweep</code> (:07Z), which already survives that outage.</p>
+      <p><strong>What moved.</strong> New <code>services/event-gate/mechanic_checks.py</code>, called at the end of every <code>sentinel_sweep.run()</code> and wrapped so a failed queue read can never break the watchdog verdict. Ported rule-for-rule from prompt &sect;1(c): <em>queue stall</em> = &#128228; Message Queue <code>Ready to Send</code> with <code>Send After</code> more than 2 h past; <em>receipt check</em> (engine-v19 Invariant K) = <code>Sent</code>, <code>Sent At</code> in the last day and over 15 min ago, empty <code>Dispatch Receipt</code>, channels Giggster / WhatsApp / Instagram / International excluded, a <code>manual:</code> receipt counts, and self-calibration says it once when NO row in the window carries a receipt. &sect;4 routing: one &#9989; Actions row per stalled queue row (Type Run Error, Raised by Other + The Mechanic named in the body, exactly the LLM&rsquo;s own choice since the board has no Mechanic option), key in brackets, dedup against OPEN rows only with a latest-occurrence note prepended. Never an SMS.</p>
+      <p><strong>Gating.</strong> SHADOW by default even though the sentinel&rsquo;s own job is live: writes need <code>MECHANIC_CHECKS_LIVE=1</code> (not set); <code>MECHANIC_CHECKS_DISABLED=1</code> skips both. Shadow logs <code>mechanic-shadow:</code> lines with <code>would file [key]</code>; the route line carries the dict under <code>mechanic</code>.</p>
+      <p><strong>What did not move.</strong> The LLM trigger stays ENABLED and still owns the two Gmail checks (inbox backlog, unprocessed intake &mdash; event-gate has no Gmail credential), Send Engine error triage, the one auto-fix (bare message id &rarr; thread URL), Sweep Feedback rows and the hourly heartbeat. Open diff for the morning compare: a <code>Ready to Send</code> row with a blank <code>Send After</code> is only watched by edit age, never filed.</p>
+      <p><strong>Verification.</strong> 1125 event-gate tests pass (20 new in <code>test_mechanic_checks.py</code>). Shadow replay 2026-09-03 01:50Z against live Notion: clean &mdash; 0 Ready to Send, 35 Sent rows judged of 37 in window, 0 misses, calibration ok; the LLM&rsquo;s 19:00 Toronto heartbeat read 35/35 receipts and its 20:00 heartbeat &ldquo;all four silence checks clean&rdquo;. Not yet deployed &mdash; needs <code>services/event-gate/deploy.sh</code> (Junyan).</p>
+      </details>
+    </li>
+
       <li class="entry llm">
       <details>
       <summary><span class="when">2026-09-03 &middot; 01:45Z</span>
