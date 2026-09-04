@@ -158,6 +158,8 @@
   .proposal{border:1.5px solid var(--ok);background:var(--ok-bg);border-radius:10px;
             padding:10px 13px;font-size:14.5px;white-space:pre-wrap}
   .proposal .where{font-size:11.5px;color:var(--chalk-dim);margin-top:6px;font-family:var(--mono)}
+  .propcap{font-size:12px;color:var(--chalk-dim);margin:9px 0 4px;line-height:1.35}
+  .sug-body .propcap:first-child{margin-top:0}
 
   .draftpane{flex:0 0 auto;border-top:1.5px dashed var(--watch);background:var(--scrim);
              padding:10px 16px 12px;max-height:76%;display:flex;flex-direction:column;min-height:0}
@@ -633,6 +635,64 @@
   }
   function clip(t, n) { t = t || ""; return t.length > n ? t.slice(0, n - 1).replace(/\s+\S*$/, "") + "\u2026" : t; }
 
+  // ---- the MESSAGE, and the filer talking ABOUT the message ----
+  // "## We sent" holds the outbound text as a ~~cut~~ / **kept** diff and, below
+  // it, the filer's analysis of that diff. Only the diff is the message. Until
+  // 2026-09-04 the card poured the whole section into the outbound bubble, so
+  // Akira Huang's ONE reply rendered as two struck lines, an inserted line, and
+  // a sentence of commentary chopped mid-word — Junyan read it as three texts
+  // and said "I don't think I sent that message back."
+  // The message ends at the first line that is not part of the diff: a bullet or
+  // numbered line always, and any prose line once the diff has begun.
+  function sentMessageOnly(lines) {
+    var out = [], seenDiff = false;
+    for (var i = 0; i < lines.length; i++) {
+      var L = lines[i];
+      if (/^(\d+[.)]|[-*\u2022])\s/.test(L)) break;
+      var isDiff = /^(~~|\*\*)/.test(L);
+      if (seenDiff && !isDiff) break;
+      if (isDiff) seenDiff = true;
+      out.push(L);
+    }
+    return out;
+  }
+
+  // "## Proposed" carries the replacement wording VERBATIM as > quoted lines
+  // (canon, house-rules § 📝). Junyan, 2026-09-04: "show the exact words that we
+  // would send instead" — a rule stated in the abstract is not something anyone
+  // can rule on. Quoted runs render as the words; unquoted lines between them are
+  // the labels saying when each applies. A row filed before the rule carries no
+  // quotes and falls back to its first sentence, as before.
+  function renderProposed(section) {
+    var lines = sugClean(section).filter(function (L) { return !/^Where:/i.test(L); });
+    var hasQuote = false;
+    for (var q = 0; q < lines.length; q++) if (/^>\s?/.test(lines[q])) { hasQuote = true; break; }
+    if (!hasQuote) {
+      var prop = lines.join(" ");
+      var fs = prop.match(/^.*?[.!?](?=\s|$)/);
+      return '<div class="proposal">' + sugMarkup(clip(fs ? fs[0] : prop, 200)) + "</div>";
+    }
+    // A wording box is NEVER dropped — it is the whole point of the section.
+    // Labels get their own budget, so a long preamble can never push the words
+    // off the card (caught 2026-09-04: a shared cap ate the second wording).
+    var html = "", buf = [], boxes = 0, labels = 0;
+    function flush() {
+      if (buf.length && boxes < 6) {
+        html += '<div class="proposal">' + sugMarkup(clip(buf.join("\n"), 600)) + "</div>";
+        boxes++;
+      }
+      buf = [];
+    }
+    for (var i = 0; i < lines.length; i++) {
+      if (/^>\s?/.test(lines[i])) { buf.push(lines[i].replace(/^>\s?/, "")); continue; }
+      flush();
+      if (labels < 6) { html += '<div class="propcap">' + esc(clip(lines[i], 180)) + "</div>"; labels++; }
+    }
+    flush();
+    return html;
+  }
+
+
   function renderSuggestion(r) {
     fetchSugContent(r.url);
     var c = state.sugContent[r.url];
@@ -655,16 +715,12 @@
           (meta ? '<div class="sb-meta">' + esc(clip(meta, 80)) + "</div>" : "");
       }
       if (c.sent) {
-        // keep only the message itself (the ~~cut~~ / **kept** diff), no references
+        // the message only — the filer's analysis of it stays in the filing
         body += '<div class="sec">We sent</div><div class="sb-out">' +
-          sugMarkup(clip(sugClean(c.sent).join("\n"), 320)) + "</div>";
+          sugMarkup(clip(sentMessageOnly(sugClean(c.sent)).join("\n"), 320)) + "</div>";
       }
       if (c.proposed) {
-        // one plain sentence; the Where pointer stays in the filing, not the card
-        var prop = sugClean(c.proposed).filter(function (L) { return !/^Where:/i.test(L); }).join(" ");
-        var fs = prop.match(/^.*?[.!?](?=\s|$)/);
-        body += '<div class="sec">Proposed</div><div class="proposal">' +
-          sugMarkup(clip(fs ? fs[0] : prop, 200)) + "</div>";
+        body += '<div class="sec">Proposed</div>' + renderProposed(c.proposed);
       }
     } else {
       var note;
