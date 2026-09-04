@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>The Alarm That Always Rang</title>
+<link rel="icon" href="../favicon.svg">
+<style>img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<style>
+:root{
+  --bg:#f6f5f1; --panel:#ffffff; --ink:#22251f; --muted:#6b6f63; --line:#d8d6cc;
+  --det:#2e6e4e; --det-bg:#e6f0ea;
+  --llm:#8a5a2b; --llm-bg:#f3e9dc;
+  --human:#6b4a8a; --human-bg:#ece4f2;
+  --alert:#a33b2e; --alert-bg:#f6e3df;
+  --accent:#2e6e4e;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#191b17; --panel:#22251f; --ink:#e8e6dd; --muted:#9aa08f; --line:#3a3e35;
+  --det:#7ec49a; --det-bg:#24352c; --llm:#d9a86a; --llm-bg:#3a3226;
+  --human:#b79ad4; --human-bg:#322a3a; --alert:#e08a7c; --alert-bg:#3d2723; --accent:#7ec49a;}}
+:root[data-theme="dark"]{
+  --bg:#191b17; --panel:#22251f; --ink:#e8e6dd; --muted:#9aa08f; --line:#3a3e35;
+  --det:#7ec49a; --det-bg:#24352c; --llm:#d9a86a; --llm-bg:#3a3226;
+  --human:#b79ad4; --human-bg:#322a3a; --alert:#e08a7c; --alert-bg:#3d2723; --accent:#7ec49a;}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-size:16px;line-height:1.5}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+main{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 4rem}
+a{color:var(--accent)}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:.02em .32em}
+p{max-width:68ch;margin:.5rem 0}
+h1,h2,h3{text-wrap:balance;margin:0}
+.eyebrow{font-family:ui-monospace,Menlo,monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 .5rem}
+h1{font-size:2.2rem;line-height:1.1;font-weight:700;max-width:22ch}
+.lede{font-size:1.1rem;color:var(--muted);max-width:60ch;margin:.8rem 0 0}
+.kind{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:.62rem;letter-spacing:.08em;padding:.1rem .5rem;border-radius:999px;border:1px solid var(--alert);color:var(--alert);vertical-align:.35em;margin-left:.5rem;text-transform:uppercase}
+
+section{margin:2.6rem 0 0}
+section>h2{font-family:ui-monospace,Menlo,monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 .7rem}
+.panel{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:1rem 1.1rem}
+
+/* ---- the strip ---- */
+.strip-wrap{overflow-x:auto;padding:.6rem .4rem .2rem}
+.strip{min-width:900px;position:relative;height:164px}
+.strip .axis{position:absolute;left:0;right:0;bottom:22px;border-top:1px solid var(--line)}
+.strip .hour{position:absolute;bottom:0;font-family:ui-monospace,Menlo,monospace;font-size:.62rem;color:var(--muted);transform:translateX(-50%)}
+.strip .pass{position:absolute;bottom:26px;width:7px;display:flex;flex-direction:column-reverse;gap:2px;transform:translateX(-50%)}
+.strip .pass i{display:block;height:22px;border-radius:2px;background:var(--det)}
+.strip .pass i.err{background:var(--alert)}
+.strip .pass:hover i,.strip .pass:focus-visible i{outline:2px solid var(--ink);outline-offset:1px}
+.strip .pass:focus-visible{outline:none}
+.strip .rev{position:absolute;top:14px;bottom:22px;border-left:1.5px dashed var(--ink);opacity:.55}
+.strip .rev b{position:absolute;top:-2px;left:5px;white-space:nowrap;font-family:ui-monospace,Menlo,monospace;font-size:.6rem;font-weight:700;color:var(--ink);letter-spacing:.03em;background:var(--panel);padding:0 .2rem}
+.strip .rev.bad{border-left-color:var(--alert);opacity:1}
+.strip .rev.bad b{color:var(--alert)}
+.strip .rev.good{border-left-color:var(--det);opacity:1}
+.strip .rev.good b{color:var(--det)}
+.strip .now{position:absolute;bottom:26px;top:20px;border-left:1px solid var(--muted)}
+.key{display:flex;flex-wrap:wrap;gap:1.2rem;font-family:ui-monospace,Menlo,monospace;font-size:.68rem;color:var(--muted);padding:.5rem .5rem 0}
+.key i{display:inline-block;width:.7rem;height:.7rem;border-radius:2px;margin-right:.35rem;vertical-align:-.1em;background:var(--det)}
+.key i.err{background:var(--alert)}
+.key i.rev{width:0;height:.8rem;border-left:1.5px dashed var(--ink);border-radius:0}
+.tip{font-family:ui-monospace,Menlo,monospace;font-size:.72rem;color:var(--muted);padding:.4rem .5rem 0;min-height:1.6em}
+
+/* ---- numbers ---- */
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem}
+.num{border:1px solid var(--line);border-left-width:4px;border-radius:6px;background:var(--panel);padding:.8rem 1rem}
+.num .v{font-family:ui-monospace,Menlo,monospace;font-size:2rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.num .l{font-family:ui-monospace,Menlo,monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:.4rem}
+.num .s{font-size:.86rem;color:var(--muted);margin-top:.3rem}
+.num.err{border-left-color:var(--alert)} .num.err .v{color:var(--alert)}
+.num.warn{border-left-color:var(--llm)} .num.warn .v{color:var(--llm)}
+.num.ok{border-left-color:var(--det)} .num.ok .v{color:var(--det)}
+
+/* ---- the line, dissected ---- */
+.logline{font-family:ui-monospace,Menlo,monospace;font-size:.8rem;line-height:1.9;white-space:pre-wrap;word-break:break-word;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:.7rem .9rem;margin:.6rem 0}
+.logline .sev{display:inline-block;font-weight:700;padding:0 .4rem;border-radius:3px;margin-right:.6rem}
+.logline .sev.err{background:var(--alert);color:var(--bg)}
+.logline .sev.ok{background:var(--det);color:var(--bg)}
+.logline mark{background:transparent;color:inherit;border-bottom:2px solid var(--alert);padding-bottom:1px}
+.logline mark.ok{border-bottom-color:var(--det)}
+.logline .dim{color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+.two h3{font-size:1rem;margin-bottom:.3rem}
+.rule{font-size:1.05rem;border-left:4px solid var(--det);padding:.4rem 0 .4rem 1rem;margin:1rem 0 0;max-width:62ch}
+
+/* ---- table ---- */
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:ui-monospace,Menlo,monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.n{font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+td.n.err{color:var(--alert);font-weight:700} td.n.ok{color:var(--det);font-weight:700}
+.tblwrap{overflow-x:auto}
+
+/* ---- timeline ---- */
+.tl{list-style:none;margin:0;padding:0;border-left:2px solid var(--line);margin-left:.4rem}
+.tl li{position:relative;padding:.1rem 0 1.1rem 1.3rem}
+.tl li::before{content:"";position:absolute;left:-7px;top:.45rem;width:12px;height:12px;border-radius:50%;background:var(--panel);border:3px solid var(--det)}
+.tl li.err::before{border-color:var(--alert)}
+.tl li.warn::before{border-color:var(--llm)}
+.tl .t{font-family:ui-monospace,Menlo,monospace;font-size:.7rem;color:var(--muted);letter-spacing:.04em}
+.tl h3{font-size:1.02rem;margin:.1rem 0 .2rem}
+.tl p{margin:.15rem 0;font-size:.95rem}
+.foot{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--line);font-family:ui-monospace,Menlo,monospace;font-size:.72rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:.4rem 1.6rem}
+@media (prefers-reduced-motion:no-preference){.strip .pass i{transition:outline-color .12s}}
+</style>
+
+<main>
+  <p class="eyebrow">event-gate &middot; Cloud Run &middot; 2026-09-01 &middot; all times UTC</p>
+  <h1>The alarm that always rang <span class="kind">Failure mode</span></h1>
+  <p class="lede">For weeks, a perfectly healthy booking sweep logged two ERROR entries every 30 minutes. A real failure was indistinguishable from a good day. This is the day it was fixed &mdash; twice &mdash; and what the logs looked like while it happened.</p>
+
+  <section>
+    <h2>Every booking-sweep log line today, coloured by severity</h2>
+    <div class="panel" style="padding:.4rem .2rem .5rem">
+      <div class="strip-wrap"><div class="strip" id="strip" aria-label="Booking sweep log lines over 24 hours"></div></div>
+      <div class="key"><span><i></i>INFO</span><span><i class="err"></i>ERROR</span><span><i class="rev"></i>new revision went live</span><span>each column = one sweep pass, three log lines</span></div>
+      <div class="tip mono" id="tip">hover a pass</div>
+    </div>
+    <p>Same service, same healthy passes all day &mdash; <code>"ok": true</code>, <code>"errors": 0</code> on every one of them. Only the colour changed. That colour is the whole story: <code>gcloud logging read '&hellip; severity&gt;=ERROR'</code> was returning the red tiles, and there was nothing wrong behind any of them.</p>
+  </section>
+
+  <section>
+    <h2>False ERROR entries per healthy sweep pass</h2>
+    <div class="nums">
+      <div class="num err"><div class="v">2</div><div class="l">before &middot; up to 15:13Z</div><div class="s">Every progress line hard-coded to <code>logging.ERROR</code>. Six routes. Since the routes were written.</div></div>
+      <div class="num warn"><div class="v">1</div><div class="l">fix 1 &middot; 15:13&ndash;19:49Z</div><div class="s">Progress judged by its words. But the word &ldquo;error&rdquo; matched the JSON key <code>"errors": 0</code>.</div></div>
+      <div class="num err"><div class="v">2</div><div class="l">regression &middot; 20:08&ndash;20:12Z</div><div class="s">A deploy from the wrong checkout shipped <code>3e6f1598</code>, which predates both fixes. Lived four minutes.</div></div>
+      <div class="num ok"><div class="v">0</div><div class="l">fix 2 &middot; live since 20:12Z</div><div class="s">Counters read as counters, then prose read as prose. Verified on the 20:31Z pass.</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Why fix 1 still rang &mdash; the line, dissected</h2>
+    <div class="panel">
+      <p style="margin-top:0">This is the real line from the first pass after fix 1, <code>event-gate-00143-ccj</code> at 15:31:11Z. The sweep is reporting that nothing went wrong. Fix 1 searched it for the substring <em>error</em>:</p>
+      <div class="logline"><span class="sev err">ERROR</span>booking sweep: {"ok": true, "dry_run": false, "scanned": 106, "skipped": 52, "deferred": 0, "residue": 0, "<mark>error</mark>s": 0, "<mark>error</mark>s_detail": [], "snapshot": "loaded", &hellip;}</div>
+      <p><strong>A line saying &ldquo;zero errors&rdquo; set off the error alarm.</strong> And drop-sweep&rsquo;s healthy summary &mdash; <code>"media_failures": 0, "receipt_failures": 0</code> &mdash; was queued up to do the same on the substring <em>failure</em>.</p>
+      <div class="two">
+        <div>
+          <h3>The problem</h3>
+          <p>A sweep <em>summary</em> is JSON. A sweep <em>complaint</em> is prose. The same words live in both, and a substring search cannot tell a key from a sentence.</p>
+        </div>
+        <div>
+          <h3>Fix 2 reads it in two passes</h3>
+          <p><strong>1.</strong> Read the JSON counters <em>as counters</em>. A trouble-named key rings only when it holds a non-zero number or a non-empty list.<br><strong>2.</strong> Strip the pairs out and read what is <em>left</em> as prose.</p>
+        </div>
+      </div>
+      <div class="logline"><span class="sev ok">INFO</span>booking sweep: {"ok": true, &hellip; "<mark class="ok">errors": 0</mark>, "<mark class="ok">errors_detail": []</mark>, "snapshot": "loaded", &hellip;}  <span class="dim">&larr; counters: all zero / empty. prose remainder: "booking sweep:" &mdash; nothing to ring on.</span></div>
+      <div class="logline"><span class="sev err">ERROR</span>alarm watch panel read <mark>failed</mark> (1): TimeoutError: The read operation <mark>timed out</mark>  <span class="dim">&larr; no counters. prose says failed. rings.</span></div>
+      <p class="rule">A counter saying zero is the strongest possible statement that nothing went wrong. It must never be what sets off the alarm.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Checked against the real corpus, not invented strings</h2>
+    <div class="panel">
+      <p style="margin-top:0">149 distinct progress lines pulled from live Cloud Logging, 08-31 &rarr; 09-01, run through each rule. Then the failure f-strings from <code>booking_sweep</code>, <code>invariants</code>, <code>loop</code> and <code>drop_sweep</code>, to check the other direction.</p>
+      <div class="tblwrap"><table>
+        <thead><tr><th>Rule</th><th>Live lines that ring</th><th>Of which healthy</th><th>Real failure lines that ring</th></tr></thead>
+        <tbody>
+          <tr><td>Before (blanket ERROR)</td><td class="n err">149</td><td class="n err">148</td><td class="n ok">17 / 17</td></tr>
+          <tr><td>Fix 1 &mdash; substring words</td><td class="n err">7</td><td class="n err">6</td><td class="n ok">17 / 17</td></tr>
+          <tr><td>Fix 2 &mdash; counters, then prose</td><td class="n ok">1</td><td class="n ok">0</td><td class="n ok">17 / 17</td></tr>
+        </tbody>
+      </table></div>
+      <p>The one line fix 2 rings on: <code>alarm watch panel read failed (1): TimeoutError: The read operation timed out</code>. A genuine failure. The 34 healthy summaries containing &ldquo;error&rdquo; or &ldquo;fail&rdquo; all stay quiet. Those real strings are now the test data in <code>test_app_log_severity.py</code>; suite 788 passed.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>The day, in revisions</h2>
+    <ol class="tl">
+      <li class="err"><div class="t">until 15:13Z &middot; 00130 &rarr; 00141</div><h3>Two ERROR entries per healthy pass</h3><p>Six progress callbacks in <code>app.py</code> hard-coded <code>level=logging.ERROR</code>: <code>/invariants</code>, <code>/loop</code>, <code>/booking-sweep</code>, <code>/insurance-sweep</code>, <code>/drop-sweep</code>, and the alarm-watch callback on <code>/poll</code>. Two more had the mirror fault, blanket INFO: <code>/climate-sweep</code> and <code>/sentinel-sweep</code> would have narrated real trouble quietly.</p></li>
+      <li class="warn"><div class="t">15:13Z &middot; 00143-ccj &middot; dc-canon <code>c00f3b02</code></div><h3>Fix 1 lands &mdash; and the first pass says it is half right</h3><p>Fingerprint verified byte-identical. At 15:31:11Z the daily-lanes line came back INFO; the summary line still came back ERROR, on the word &ldquo;errors&rdquo; in <code>"errors": 0</code>.</p></li>
+      <li><div class="t">19:49Z &middot; 00144-78s &middot; dc-canon <code>a847600c</code></div><h3>Fix 2 first reaches the service</h3><p>The 20:01Z pass logs all three lines INFO.</p></li>
+      <li class="err"><div class="t">20:08Z &middot; 00145-xlt &middot; shipped <code>3e6f1598</code></div><h3>A deploy goes backwards</h3><p><code>deploy.sh</code> ships the tree it lives in. Run from a <code>.claude/worktrees/</code> checkout sitting on an older branch, it shipped a commit that predates both fixes &mdash; restoring all five blanket-ERROR callbacks. <code>/health</code> caught it: <code>git_sha</code> came back <code>3e6f1598</code> and the fingerprint <code>e77a241bc7df</code> matched the unfixed tree. No sweep fired in its four minutes.</p></li>
+      <li><div class="t">20:12Z &middot; 00146-w5m &middot; <code>a847600c-dirty</code> &middot; fingerprint <code>8c7da767e4ac</code></div><h3>Fix 2, from the right checkout</h3><p>The fingerprint matches the clean <code>main</code> tree (the dirty marker is an unrelated <code>library/</code> edit). The 20:31Z pass: three INFO lines, 0 ERROR across every record since the restart. The pending <code>1fc5991b</code> climate redeploy rode along and is cleared.</p></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>What to keep</h2>
+    <div class="panel">
+      <p style="margin-top:0"><strong>Judge a log line by what it says, not by which callback it came through.</strong> A progress callback is a pipe, not a severity.</p>
+      <p><strong>A count of zero is not a keyword.</strong> Anything that reads log text for trouble words has to read counters first, or it will ring on the healthiest line the service can produce.</p>
+      <p><strong><code>deploy.sh</code> ships the tree it lives in.</strong> Deploy from the checkout that holds the commit you mean, then read <code>git_sha</code> and <code>code_fingerprint</code> back from <code>/health</code> before believing it. A matching fingerprint is the only cheap proof of which code is live; a mismatched one is the only cheap tell.</p>
+    </div>
+  </section>
+
+  <div class="foot">
+    <span>dc-canon <code>c00f3b02</code> &middot; <code>a847600c</code></span>
+    <span>services/event-gate/app.py &middot; test_app_log_severity.py</span>
+    <span>source: Cloud Logging, jsonPayload.decision="booking-sweep", 2026-09-01T00:00Z &rarr; 20:35Z, 127 records</span>
+    <span><a href="https://junyanboon.github.io/day-sheet/plumbing.html">&larr; Plumbing map</a></span>
+  </div>
+</main>
+
+<script>
+// 127 real records: [HH:MM:SS, severity, revision]. Pulled 2026-09-01T20:35Z.
+const ROWS = [["00:01:31","ERROR","00130-g75"],["00:01:32","ERROR","00130-g75"],["00:01:32","INFO","00130-g75"],["00:31:19","ERROR","00130-g75"],["00:31:21","ERROR","00130-g75"],["00:31:21","INFO","00130-g75"],["01:01:21","ERROR","00130-g75"],["01:01:22","ERROR","00130-g75"],["01:01:22","INFO","00130-g75"],["01:31:13","ERROR","00130-g75"],["01:31:14","ERROR","00130-g75"],["01:31:14","INFO","00130-g75"],["02:01:18","ERROR","00130-g75"],["02:01:28","ERROR","00130-g75"],["02:01:28","INFO","00130-g75"],["02:31:19","ERROR","00130-g75"],["02:31:23","ERROR","00130-g75"],["02:31:23","INFO","00130-g75"],["03:01:29","ERROR","00136-674"],["03:01:30","ERROR","00136-674"],["03:01:30","INFO","00136-674"],["03:31:14","ERROR","00138-s72"],["03:31:15","ERROR","00138-s72"],["03:31:15","INFO","00138-s72"],["04:01:21","ERROR","00138-s72"],["04:01:22","ERROR","00138-s72"],["04:01:22","INFO","00138-s72"],["04:31:10","ERROR","00138-s72"],["04:31:11","ERROR","00138-s72"],["04:31:11","INFO","00138-s72"],["05:01:12","ERROR","00138-s72"],["05:01:13","ERROR","00138-s72"],["05:01:13","INFO","00138-s72"],["05:31:09","ERROR","00138-s72"],["05:31:10","ERROR","00138-s72"],["05:31:10","INFO","00138-s72"],["06:01:49","ERROR","00138-s72"],["06:01:49","ERROR","00138-s72"],["06:01:49","INFO","00138-s72"],["06:31:08","ERROR","00138-s72"],["06:31:09","ERROR","00138-s72"],["06:31:09","INFO","00138-s72"],["07:01:51","ERROR","00138-s72"],["07:01:52","ERROR","00138-s72"],["07:01:52","INFO","00138-s72"],["07:31:12","ERROR","00138-s72"],["07:31:13","ERROR","00138-s72"],["07:31:13","INFO","00138-s72"],["08:01:34","ERROR","00138-s72"],["08:01:35","ERROR","00138-s72"],["08:01:35","INFO","00138-s72"],["08:31:44","ERROR","00138-s72"],["08:31:46","ERROR","00138-s72"],["08:31:46","INFO","00138-s72"],["09:01:15","ERROR","00138-s72"],["09:01:16","ERROR","00138-s72"],["09:01:16","INFO","00138-s72"],["09:31:21","ERROR","00138-s72"],["09:31:22","ERROR","00138-s72"],["09:31:22","INFO","00138-s72"],["10:01:34","ERROR","00138-s72"],["10:01:35","ERROR","00138-s72"],["10:01:35","INFO","00138-s72"],["10:31:05","ERROR","00138-s72"],["10:31:06","ERROR","00138-s72"],["10:31:06","INFO","00138-s72"],["11:01:20","ERROR","00138-s72"],["11:01:21","ERROR","00138-s72"],["11:01:21","INFO","00138-s72"],["11:31:11","ERROR","00138-s72"],["11:31:12","ERROR","00138-s72"],["11:31:12","INFO","00138-s72"],["12:01:13","ERROR","00138-s72"],["12:01:14","ERROR","00138-s72"],["12:01:14","INFO","00138-s72"],["12:30:09","ERROR","00138-s72"],["12:31:07","ERROR","00138-s72"],["12:31:08","ERROR","00138-s72"],["12:31:08","INFO","00138-s72"],["13:01:28","ERROR","00138-s72"],["13:01:29","ERROR","00138-s72"],["13:01:29","INFO","00138-s72"],["13:31:14","ERROR","00138-s72"],["13:31:15","ERROR","00138-s72"],["13:31:15","INFO","00138-s72"],["14:01:23","ERROR","00138-s72"],["14:01:24","ERROR","00138-s72"],["14:01:24","INFO","00138-s72"],["14:31:14","INFO","00140-mr6"],["14:31:15","ERROR","00140-mr6"],["14:31:15","INFO","00140-mr6"],["15:01:19","INFO","00141-dvb"],["15:01:21","ERROR","00141-dvb"],["15:01:21","INFO","00141-dvb"],["15:31:10","INFO","00143-ccj"],["15:31:11","ERROR","00143-ccj"],["15:31:11","INFO","00143-ccj"],["16:01:25","INFO","00143-ccj"],["16:01:26","ERROR","00143-ccj"],["16:01:26","INFO","00143-ccj"],["16:31:20","INFO","00143-ccj"],["16:31:21","ERROR","00143-ccj"],["16:31:21","INFO","00143-ccj"],["17:01:16","INFO","00143-ccj"],["17:01:18","ERROR","00143-ccj"],["17:01:18","INFO","00143-ccj"],["17:31:18","INFO","00143-ccj"],["17:31:19","ERROR","00143-ccj"],["17:31:19","INFO","00143-ccj"],["18:01:24","INFO","00143-ccj"],["18:01:25","ERROR","00143-ccj"],["18:01:25","INFO","00143-ccj"],["18:31:08","INFO","00143-ccj"],["18:31:09","ERROR","00143-ccj"],["18:31:09","INFO","00143-ccj"],["19:01:11","INFO","00143-ccj"],["19:01:12","ERROR","00143-ccj"],["19:01:12","INFO","00143-ccj"],["19:31:17","INFO","00143-ccj"],["19:31:18","ERROR","00143-ccj"],["19:31:18","INFO","00143-ccj"],["20:01:18","INFO","00144-78s"],["20:01:19","INFO","00144-78s"],["20:01:19","INFO","00144-78s"],["20:31:26","INFO","00146-w5m"],["20:31:27","INFO","00146-w5m"],["20:31:27","INFO","00146-w5m"]];
+const REVS = [
+  ["03:14:54","00138-s72","",""],
+  ["14:15:36","00140-mr6","",""],
+  ["14:53:00","00141-dvb","",""],
+  ["15:13:13","00143-ccj","fix 1","good",0],
+  ["19:49:23","00144-78s","fix 2","good",0],
+  ["20:08:49","00145-xlt","regression","bad",1],
+  ["20:12:15","00146-w5m","fix 2 again","good",2],
+];
+const NOW = "20:35:15";
+const sec = t => { const [h,m,s] = t.split(":").map(Number); return h*3600+m*60+s; };
+const pct = t => (sec(t)/86400*100).toFixed(3) + "%";
+const strip = document.getElementById("strip");
+const tip = document.getElementById("tip");
+
+// group into passes: records within 5s of each other
+const passes = [];
+for (const r of ROWS) {
+  const last = passes[passes.length-1];
+  if (last && sec(r[0]) - sec(last.t) <= 5) last.lines.push(r);
+  else passes.push({t: r[0], rev: r[2], lines: [r]});
+}
+let html = '<div class="axis"></div>';
+for (let h = 0; h <= 24; h += 3) html += `<span class="hour" style="left:${h/24*100}%;transform:translateX(${h===0?"0":h===24?"-100%":"-50%"})">${String(h).padStart(2,"0")}:00</span>`;
+for (const p of passes) {
+  const tiles = p.lines.map(l => `<i class="${l[1]==="ERROR"?"err":""}"></i>`).join("");
+  const errs = p.lines.filter(l => l[1]==="ERROR").length;
+  html += `<div class="pass" tabindex="0" style="left:${pct(p.t)}" data-tip="${p.t}Z · ${p.rev} · ${p.lines.length} lines · ${errs} ERROR">${tiles}</div>`;
+}
+for (const [t, name, label, cls, row] of REVS) {
+  html += `<div class="rev ${cls}" style="left:${pct(t)}">${label ? `<b style="top:${(row||0)*15-2}px">${label} · ${name}</b>` : ""}</div>`;
+}
+html += `<div class="now" style="left:${pct(NOW)}"></div>`;
+strip.innerHTML = html;
+strip.addEventListener("mouseover", e => { const p = e.target.closest(".pass"); if (p) tip.textContent = p.dataset.tip; });
+strip.addEventListener("focusin", e => { const p = e.target.closest(".pass"); if (p) tip.textContent = p.dataset.tip; });
+</script>
+
+</body>
+</html>
