@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-03 22:35 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-03 22:55 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1298,6 +1298,197 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>The absorb fix closes one mouth. This ticket is the thing that notices the next one</p>
 <p>inside an hour instead of ten days — and it is the last unwatched failure shape on a</p>
 <p>board that otherwise watches everything.</p>
+
+<h2>Progress (2026-09-04) — BUILT, TESTED, PUSHED. Not deployed; Junyan holds the deploy.</h2>
+
+<p>Pushed as dc-canon <b><code>22e63714</code></b> on <code>origin/main</code> (verified with</p>
+<p><code>git branch -r --contains 22e63714</code> <b>after</b> the rebase — a <code>pull --rebase</code></p>
+<p>rewrote it from <code>936a0831</code>, so any earlier citation of that SHA is stale).</p>
+
+<h3>The open question — RESOLVED: Actions row alone, no email leg</h3>
+
+<p>Not a preference call. <code>RUNTIMES.md:260</code> records a <b>live</b> scope check of the</p>
+<p><code>GMAIL_*</code> credential this service carries, run by a one-off diagnostic</p>
+<p>RemoteTrigger in <code>env_01BjzY9e8uFhWz3ZEUAcAe2c</code>:</p>
+
+<blockquote>all three vars SET, refresh-token exchange OK, scopes <code>gmail.readonly</code> +</blockquote>
+<blockquote><code>drive</code> (read-only — by design; <b>this credential can never send</b>).</blockquote>
+
+<p>So a send helper built on the existing refresh token would fail at runtime, and</p>
+<p>the ticket&#x27;s instruction was explicit: do not assume it can send. I could not</p>
+<p>independently re-verify the scope in-session either — reading the secret needs</p>
+<p><code>gcloud</code>, which is blocked, and reading <code>~/.env</code> was refused by the classifier.</p>
+<p>Both roads lead to the same place: <b>ship the Actions row alone.</b> An email leg</p>
+<p>needs a new <code>gmail.send</code> credential Junyan must mint, and that is a separate</p>
+<p>provisioning job, not this ticket. Named as a follow-up below.</p>
+
+<p>SMS was never a candidate — the phone.com canary precedent the ticket cites</p>
+<p>(email is right for noise; nobody is at a locked door) rules it out.</p>
+
+<h3>What shipped</h3>
+
+<p>| File | What |</p>
+<p>|---|---|</p>
+<p>| <code>services/event-gate/runaway_watch.py</code> | <b>new</b> — the whole Part 1 lane |</p>
+<p>| <code>services/event-gate/test_runaway_watch.py</code> | <b>new</b> — 27 tests, every acceptance line named in a docstring |</p>
+<p>| <code>services/event-gate/loop.py</code> | <code>MONITOR_ROW</code> + <code>stamp_heartbeat()</code> + the call site |</p>
+<p>| <code>services/event-gate/test_loop.py</code> | 7 heartbeat tests + an autouse guard |</p>
+<p>| <code>services/event-gate/app.py</code> | wired into <code>POST /poll</code> beside <code>alarm_watch.tick()</code> |</p>
+<p>| <code>services/event-gate/conftest.py</code> | holds the watch off by default (see &quot;bugs found&quot;) |</p>
+<p>| <code>services/event-gate/test_poller.py</code> | six <code>/poll</code> response-body assertions gain the new key |</p>
+<p>| <code>library/the-loop.md</code> | why the two Loop halves have two separate roster rows |</p>
+<p>| <code>library/house-rules.md</code> | the general rule: when a board is the thing failing, the alarm leaves it |</p>
+
+<p>Outside dc-canon: <code>RUNTIMES.md</code> (the <code>desk-loop</code> roster row + the new watch on the</p>
+<p><code>event-gate-poll</code> row), <code>day-sheet/plumbing.html</code> (change-log entry, newest-first).</p>
+
+<h3>Acceptance — walked line by line</h3>
+
+<p>| Acceptance line | Proved by | How |</p>
+<p>|---|---|---|</p>
+<p>| 5 identical rows in 60 min trip <b>exactly one</b> alert | <code>test_five_identical_rows_in_an_hour_trip_exactly_one_alert</code> | asserts <code>alerts_filed == 1</code>, <code>len(created) == 1</code>, and that the parent data source is ✅ Actions and <b>not</b> 🔧 Sweep Feedback |</p>
+<p>| A 6th and 7th row in the same episode trip <b>no</b> further alert | <code>test_sixth_and_seventh_row_in_the_same_episode_file_nothing_more</code> | re-runs at n=6 and n=7 with the standing alert in the open set: <code>findings == 1</code> (still detected) but <code>alerts_filed == 0</code>, <code>created == []</code> |</p>
+<p>| Normal traffic — 4 distinct titles, or the same title 4× — stays silent | <code>test_four_distinct_titles_stay_silent</code>, <code>test_four_identical_rows_stay_silent</code>, plus <code>test_twenty_distinct_titles_stay_silent</code> | all assert <code>findings == 0</code> and no write |</p>
+<p>| The alert names board, title, count, window, <code>LOOP_DISABLED=1</code> | <code>test_alert_names_board_title_count_window_and_the_operator_switch</code> | asserts each string is present: <code>🔧 Sweep Feedback</code>, the repeated title, <code>6 rows</code>, <code>60-minute window</code>, both window bounds spelled out (<code>2026-09-04 01:05 UTC</code> → <code>02:05 UTC</code>), <code>LOOP_DISABLED=1</code>, <code>JUNYAN ONLY</code> |</p>
+<p>| The watcher <b>never disables a lane, in any test</b> | <code>test_the_watcher_never_disables_anything</code> + <code>test_no_disable_path_exists_in_the_source</code> | the first asserts <code>patched == []</code>, <code>os.environ</code> unchanged before/after, and the only POST is the alert; the second <b>walks the module AST</b> and fails on any assignment into <code>os.environ</code> or any <code>putenv</code> / <code>environ.setdefault</code> / <code>update</code> / <code>pop</code> call |</p>
+<p>| Replaying the 2026-09-04 storm trips on the <b>5th</b> row | <code>test_replaying_the_2026_09_04_storm_trips_on_the_fifth_row</code> | rows at the real storm&#x27;s start (18:30:00Z) on a 10-min cadence: silent at n=1,2,3,4; <code>alerts_filed == 1</code> at n=5, <b>40 minutes in</b> — asserted as <code>timedelta(minutes=40)</code>, against ~10 days in real life |</p>
+<p>| <code>desk-loop</code> heartbeat stamps on a successful pass | <code>test_heartbeat_stamps_on_a_successful_pass</code>, <code>test_heartbeat_stamps_after_a_pass_that_did_real_work</code> | asserts the exact <code>PATCH /pages/&lt;MONITOR_ROW&gt;</code> with a <code>Self-heartbeat</code> date; the second also asserts <code>closed_agent == 1</code>, so the pass really did work |</p>
+<p>| Does <b>not</b> stamp on a pass that could not read its source | <code>test_heartbeat_does_not_stamp_when_the_source_cannot_be_read</code> | <code>open_rows()</code> raises → <code>ok is False</code>, <code>heartbeat is False</code>, <b>zero</b> PATCHes issued |</p>
+<p>| Full event-gate suite green | <code>python3 -m pytest -q</code> | <b>1280 passed, 0 failed</b>, re-run after the rebase pulled in other sessions&#x27; work |</p>
+
+<p>Extra properties tested beyond the acceptance list: stateless dedup survives a cold</p>
+<p>start; a closed episode re-arms the alarm; shadow is the default and writes nothing;</p>
+<p><code>tick()</code> never raises when a board read fails; one unreadable board does not blind the</p>
+<p>other; a failed write is logged not swallowed; Notes stay inside Notion&#x27;s 2000-char</p>
+<p>rich-text limit (an overflow rejects the whole write — i.e. the alarm fails silently,</p>
+<p>the exact disease); untitled rows group with nothing; unsampled minutes cost no Notion</p>
+<p>read; and a quiet pass reports zeroes rather than an empty dict.</p>
+
+<p><b>On the pre-existing failure the brief warned about:</b></p>
+<p><code>test_wrongroom.py::test_a_room_left_disarmed_is_shouted_about</code> <b>passed</b> in every run</p>
+<p>here, before and after my changes and after the rebase. Either it was already fixed in</p>
+<p><code>origin/main</code> or it needs a state this machine does not have. I left it alone and did</p>
+<p>not let it mask anything — the suite went 1275→1280 passed with 0 failures throughout.</p>
+
+<h3>Three bugs found by writing the tests, all before deploy</h3>
+
+<ol>
+<li>1. <b>The heartbeat would have written to the LIVE Notion board from the test suite.</b></li>
+</ol>
+<p><code>spy</code> in <code>test_loop.py</code> does not patch <code>inv.api</code>, so on any machine with</p>
+<p><code>NOTION_TOKEN</code> set every loop test would have PATCHed the real 🚥 row. It surfaced</p>
+<p>as <code>test_handback_flips_authorized_row_when_blocker_closed_same_tick</code> failing with</p>
+<p><code>KeyError: &#x27;Status&#x27;</code> — the heartbeat PATCH had displaced the index it asserts on.</p>
+<p>Fixed with an autouse fixture that neutralises the stamp; the stamp&#x27;s own tests</p>
+<p>re-enable it deliberately.</p>
+<ol>
+<li>2. <b>The watch made the <code>/poll</code> response body depend on the wall-clock minute.</b> Five</li>
+</ol>
+<p>poller tests began failing with <code>{&#x27;runaway_watch&#x27;: {&#x27;skipped&#x27;: &#x27;not-sampled&#x27;}}</code> —</p>
+<p>they would have passed 4 minutes in 5 and hit Notion for real on the 5th. Held off</p>
+<p>in <code>conftest.py</code>; <code>test_runaway_watch.py</code> passes an explicit <code>now=</code> and is</p>
+<p>unaffected.</p>
+<ol>
+<li>3. <b>A real module bug:</b> <code>invariants.title()</code> returns the literal <code>&quot;(untitled)&quot;</code> for a</li>
+</ol>
+<p>blank title, not <code>&quot;&quot;</code>, so nine blank rows grouped into one giant false bucket. Caught</p>
+<p>by <code>test_untitled_rows_group_with_nothing</code> on its first run; fixed with an explicit</p>
+<p><code>UNTITLED</code> sentinel.</p>
+
+<h3>Two judgment calls worth flagging</h3>
+
+<p><b>The Run Monitor row reads Cadence <code>15-min</code> although <code>desk-loop</code> runs every 10 min.</b></p>
+<p>Not sloppiness. The board has no 10-minute option, and <code>sentinel_sweep.judge()</code></p>
+<p>(<code>sentinel_sweep.py:386</code>) applies its overnight <code>window_open</code> clamp <b>only</b> to</p>
+<p><code>Hourly</code> / <code>15-min</code> / <code>5-min</code> — every other value falls through to the raw-elapsed</p>
+<p>branch with no clamp, which would have read the 22:50→08:00 gap as a dead lane <b>every</p>
+<p>single night</b>, i.e. exactly the failure this ticket&#x27;s Part 2 warns about. Adding a</p>
+<p><code>10-min</code> option would have required a matching <code>sentinel_sweep</code> change deployed</p>
+<p><i>first</i>; a deployment-ordering trap in an alarm lane is not worth the tidiness.</p>
+<p><code>Stale after (min)</code> is set from the <b>real</b> cadence: 30 = three missed passes,</p>
+<p>matching greeter 5→15 and drop 15→45. The true cadence is spelled out in <code>Expected</code>.</p>
+<p>A follow-up could add the option properly, in the same change as the <code>sentinel_sweep</code></p>
+<p>tuple.</p>
+
+<p><b>The row ships <code>Monitoring = Paused</code>.</b> The code that stamps it is not deployed; a</p>
+<p>Live row would page about a dead lane that is in fact alive. Flipping it to Live is the</p>
+<p>last step of the runbook below. This is not silencing an existing monitor — the row is</p>
+<p>new, and it was created paused.</p>
+
+<h3>Deploy — Junyan runs these</h3>
+
+<p>Agent <code>gcloud</code> is blocked (Junyan&#x27;s rule, not a bug). <b>One pass lands all three</p>
+<p>undeployed things:</b> <code>reconcile_sweep</code> (<code>206b33052</code>), the Loop absorb fix</p>
+<p>(<code>b5043d2a</code>), and this ticket (<code>22e63714</code>). All three are already on <code>origin/main</code>.</p>
+
+<ol>
+<li>1. Deploy. This is a <b>source deploy — it rebuilds the image.</b> A bare</li>
+</ol>
+<p><code>gcloud run services update</code> with no flag change deploys <i>nothing</i> (the standing</p>
+<p>gotcha in <code>CLAUDE.md</code>, and the one that shipped the climate lane without its fix).</p>
+
+<p>``<code>bash</p>
+<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; git pull --rebase --autostash &amp;&amp; gcloud run deploy event-gate --source services/event-gate --region us-central1 --project danceannex-skedda</p>
+<p></code>`<code></p>
+
+<ol>
+<li>2. Confirm the serving revision actually carries </code>22e63714<code>, rather than trusting the</li>
+</ol>
+<p>deploy&#x27;s own output:</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud run services describe event-gate --region us-central1 --project danceannex-skedda --format=&#x27;value(status.latestReadyRevisionName)&#x27; &amp;&amp; curl -s https://event-gate-249118612005.us-central1.run.app/health</p>
+<p></code>`<code></p>
+
+<p></code>`<code>bash</p>
+<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; git merge-base --is-ancestor 22e63714 $(curl -s https://event-gate-249118612005.us-central1.run.app/health | python3 -c &#x27;import sys,json; print(json.load(sys.stdin).get(&quot;sha&quot;,&quot;&quot;))&#x27;) &amp;&amp; echo &quot;SERVING CARRIES 22e63714&quot; || echo &quot;STOP — the serving revision does NOT carry it&quot;</p>
+<p></code>`<code></p>
+
+<ol>
+<li>3. <b>Flip the desk-loop Run Monitor row to </code>Monitoring = Live<code></b> —</li>
+</ol>
+<p>https://app.notion.com/p/3d17503281c48103be24ccd029cf9b02 . Do this only after</p>
+<p>step 2 passes and one </code>/loop<code> tick has stamped </code>Self-heartbeat<code>; a Live row before</p>
+<p>the first stamp pages about a lane that is alive.</p>
+
+<ol>
+<li>4. <b>Watch the shadow, then flip.</b> The runaway watch is SHADOW by default and writes</li>
+</ol>
+<p>nothing. Read the shadow lines for a few days:</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud logging read &#x27;resource.labels.service_name=&quot;event-gate&quot; AND textPayload:&quot;runaway-shadow&quot;&#x27; --project danceannex-skedda --limit 50 --freshness 3d</p>
+<p></code>`<code></p>
+
+<p>The expected steady state is <b>no lines at all</b> — a shadow line means it <i>would</i></p>
+<p>have alerted, so any line at all deserves a look before going live. When satisfied:</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --update-env-vars RUNAWAY_WATCH_LIVE=1</p>
+<p></code>`<code></p>
+
+<p>(</code>reconcile_sweep<code> has its own separate </code>RECONCILE_SWEEP_LIVE=1<code> flip; this deploy</p>
+<p>does not change it.)</p>
+
+<h3>Follow-ups, not done here</h3>
+
+<ul>
+<li>- <b>The email leg.</b> Needs a new </code>gmail.send<code> OAuth credential in Secret Manager. Per</li>
+</ul>
+<p></code>CLAUDE.md<code>: a new secret needs its own </code>roles/secretmanager.secretAccessor<code> binding</p>
+<p>for </code>249118612005-compute@<code> — project </code>roles/editor<code> is not enough — and the</p>
+<p>credential must be authenticated against the live API before being trusted, not</p>
+<p>merely byte-checked.</p>
+<ul>
+<li>- <b>A real </code>10-min<code> Cadence option</b> on the 🚥 board, shipped together with adding</li>
+</ul>
+<p></code>&quot;10-min&quot;<code> to the clamped-cadence tuple at </code>sentinel_sweep.py:386<code>. Ordering matters:</p>
+<p>the code change must serve before any row is switched to the new value.</p>
+<ul>
+<li>- <b>Per-board thresholds.</b> All boards currently use 5. </code>BOARDS<code> in </code>runaway_watch.py<code></li>
+</ul>
+<p>carries a per-board </code>threshold` field for the day one board&#x27;s normal rate justifies</p>
+<p>a different number.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">37</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -12976,5 +13167,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-03 22:35 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-03 22:55 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
