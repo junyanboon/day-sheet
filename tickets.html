@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-03 22:32 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-03 22:35 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">37</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">65</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">6</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">7</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -1163,6 +1163,141 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>The night-ops rebuild map owns the evidence-source design and already logs this build;</p>
 <p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
 <p>Ops Lead&#x27;s use of it here.</p>
+</div></details></details></div><div class="job"><div class="jnum">#120</div><div class="jhead"><span class="emoji">📢</span><h4>Nobody is watching for a robot that will not stop talking</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Twice now one of the robots got stuck and wrote the same note over and over. The first time it wrote 279 copies over ten days. The second time, 46 copies in eight hours</li><li>Every alarm we have watches for a robot going quiet. Not one watches for a robot going loud</li><li>Worse: the stuck robot&#x27;s complaint lands on the very list it is burying — like leaving a note about a flood at the bottom of the flood</li><li>The exact bug behind the second episode is already fixed. This job is about catching the next one, whatever it turns out to be</li><li>The plan: check every minute for the same note written five or more times in an hour. Say it once, somewhere else, and name what to switch off. It never switches anything off by itself</li><li>Second, smaller thing in the same job: that robot has no pulse check at all. If it died tonight the board would look perfectly normal</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Watch for a lane running too loud — runaway-writer check, plus a heartbeat for desk-loop</b></p><h2>Question</h2>
+
+<p>Every monitor on this desk watches for <b>silence</b> — stale heartbeats, missed passes,</p>
+<p><code>Stale after (min)</code>, <code>Window start</code>/<code>Window end</code>. Not one watches for a lane running</p>
+<p><b>too loud</b>. Twice now a lane has written the same row forever and nothing on the</p>
+<p>board went red:</p>
+
+<p>| Episode | Window | Rows | How it ended |</p>
+<p>|---|---|---|---|</p>
+<p>| First runaway | 2026-08-08 → 2026-08-20 | <b>279</b> | a human triage session, ~10 days later |</p>
+<p>| Second runaway | 2026-09-03 18:30:11Z → 2026-09-04 02:00:07Z | <b>46</b> | this session, by hand |</p>
+
+<p>Both were The Loop filing an identical Sweep Feedback row every 10 minutes. The</p>
+<p>second one&#x27;s cause is fixed in code (<code>loop.py</code> <code>was_rewritten()</code> compared</p>
+<p><code>Original proposal</code> against the FULL current title while the absorb wrote</p>
+<p><code>current[:1900]</code>, so any proposal over 1900 characters could never be absorbed —</p>
+<p>dc-canon <code>b5043d2a</code>, awaiting deploy). That fix closes <i>this</i> mechanism. It does</p>
+<p>nothing about the next one.</p>
+
+<p>And the reason neither episode escalated is structural: <b>a Sweep Feedback row</p>
+<p>complaining that the Sweep Feedback board is being flooded is a note dropped into</p>
+<p>the very queue that is being buried.</b> The alarm has to leave the board.</p>
+
+<p>Second, smaller gap found alongside it: <b><code>desk-loop</code> has no 🚥 Run Monitor row and</p>
+<p>no heartbeat.</b> It runs every 10 minutes 08:00–22:50 Toronto (RUNTIMES.md line 392)</p>
+<p>and the board cannot tell a quiet tick from a dead lane. <code>drop_sweep.py</code> already</p>
+<p>solves exactly this — see <code>stamp_heartbeat()</code> at <code>drop_sweep.py:315</code> and its</p>
+<p><code>MONITOR_ROW</code> note at <code>drop_sweep.py:65</code>, which spells out why a deterministic</p>
+<p>service that files no report needs the stamp as its PRIMARY signal.</p>
+
+<h2>Part 1 — the runaway-writer check</h2>
+
+<p>Deterministic. Rides the existing minute tick (<code>POST /poll</code> in <code>app.py:583</code>, the</p>
+<p>same tick <code>alarm_watch.tick()</code> already rides — see the comment at <code>app.py:588</code>).</p>
+
+<p><b>Detection.</b> Group rows created in the last 60 minutes by</p>
+<p><code>(data source id, first ~80 characters of title)</code>. Trip at <b>≥ 5 identical titles</b>.</p>
+<p>Sixty minutes at the fleet&#x27;s fastest cadence (10 min) is 6 passes, so 5 identical</p>
+<p>rows cannot be normal traffic — but pick the threshold per board if a board&#x27;s own</p>
+<p>normal rate says otherwise, and say so in the code comment.</p>
+
+<p><b>Escalation — off the flooded board.</b> File an ✅ Actions row typed <code>Review</code>. That</p>
+<p>is a different database from 📋 Sweep Feedback, so the alert is not buried by the</p>
+<p>thing it is reporting. <b>Open question for the session to resolve, not guess:</b> the</p>
+<p>proposal in-session was &quot;an ✅ Actions row <b>plus email</b> — not SMS&quot;, on the phone.com</p>
+<p>canary precedent (email is right for noise; nobody is at a locked door). But</p>
+<p><code>services/event-gate</code> has <b>no outbound email path today</b> — a grep for</p>
+<p><code>messages/send</code> / <code>smtplib</code> / SendGrid across the service returns nothing, and the</p>
+<p><code>GMAIL_*</code> secrets are used only to <i>read</i> (<code>greeter_sweep.py:136</code>). So either ship</p>
+<p>Actions-row-only, or build a small send helper and confirm the OAuth scope allows</p>
+<p>send. Do not assume the existing refresh token can send.</p>
+
+<p><b>Rate limit.</b> One alert per <code>(board, title)</code> per episode. A watcher that files an</p>
+<p>alert every minute about a lane filing a row every ten minutes is the same disease.</p>
+<p>Derive the dedup statelessly if you can — the climate sweep&#x27;s telemetry-gap check</p>
+<p>(ticket 119) does this and is the pattern to copy — a state file a cold start loses</p>
+<p>is worse than no state.</p>
+
+<p><b>Alert, never brake.</b> The watcher does <b>not</b> disable anything. It names</p>
+<p><code>LOOP_DISABLED=1</code> in the alert text as the operator&#x27;s move and stops there. Killing</p>
+<p>a production lane is Junyan&#x27;s call under the hard rules in <code>CLAUDE.md</code>; a watcher</p>
+<p>that throws its own kill switch is one bug away from taking the desk down.</p>
+
+<p><b>Never suppress a real stall.</b> This is additive. It must not touch, reorder, or</p>
+<p>quiet any existing staleness check.</p>
+
+<h2>Part 2 — desk-loop heartbeat + Run Monitor row</h2>
+
+<ol>
+<li>1. <code>stamp_heartbeat()</code> in <code>loop.py</code>, modelled on <code>drop_sweep.py:315</code> — stamp</li>
+</ol>
+<p><code>Self-heartbeat</code> only after the pass has actually <b>read</b> its source, so the</p>
+<p>stamp means &quot;the lane is alive&quot;, not &quot;the HTTP endpoint answered&quot;. Non-fatal:</p>
+<p>a Notion blip must not fail a pass that did real work.</p>
+<ol>
+<li>2. Create the 🚥 Run Monitor roster row for <code>desk-loop</code>. Cadence 10 min; the run</li>
+</ol>
+<p>window is 08:00–22:50 Toronto, so <code>Window start</code>/<code>Window end</code> must be set or the</p>
+<p>overnight gap will read as a dead lane every single night. Confirm the exact</p>
+<p>staleness threshold against a sibling row before writing one.</p>
+<ol>
+<li>3. Wire the row id the way drop_sweep does — an env-overridable module constant with</li>
+</ol>
+<p>the id as the default.</p>
+
+<h2>Constraints</h2>
+
+<ul>
+<li>- <b>Junyan runs deploys.</b> Agent gcloud is blocked. Deliver code, tests, canon edits,</li>
+</ul>
+<p>the Plumbing Map entry, and paste-ready deploy commands — then hand over.</p>
+<ul>
+<li>- <b>Ships behind a flag, shadow first</b>, matching <code>climate_sweep</code> and</li>
+</ul>
+<p><code>reconcile_sweep</code>: shadow writes nothing, live is a separate Junyan flip.</p>
+<ul>
+<li>- <b>Two things are already written and not yet deployed</b> — <code>reconcile_sweep</code></li>
+</ul>
+<p>(<code>206b33052</code>) and the Loop absorb fix (<code>b5043d2a</code>). Do not re-do either. One</p>
+<p>deploy pass lands all of it.</p>
+<ul>
+<li>- <b>Plumbing Map entry is part of done</b> — <code>day-sheet/plumbing.html</code>, newest-first.</li>
+</ul>
+<p>Per <code>CLAUDE.md</code>, a plumbing change without a map entry is not finished.</p>
+<ul>
+<li>- <b>RUNTIMES.md</b> gets the new Run Monitor row and any new cadence.</li>
+</ul>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A synthetic burst of 5 identical rows inside 60 minutes trips exactly one alert.</li>
+<li>- A sixth and seventh identical row inside the same episode trip <b>no</b> further alert.</li>
+<li>- Normal traffic — 4 distinct titles, or the same title 4 times — stays silent.</li>
+<li>- The alert names the board, the repeated title, the count, the window, and</li>
+</ul>
+<p><code>LOOP_DISABLED=1</code> as the operator&#x27;s move.</p>
+<ul>
+<li>- The watcher never disables a lane, in any test.</li>
+<li>- Replaying the 2026-09-04 storm&#x27;s shape (identical title, 10-minute cadence) trips</li>
+</ul>
+<p>on the 5th row — i.e. within ~50 minutes, not 10 days.</p>
+<ul>
+<li>- <code>desk-loop</code> heartbeat stamps on a successful pass, and does <b>not</b> stamp on a pass</li>
+</ul>
+<p>that could not read its source.</p>
+<ul>
+<li>- Full event-gate suite green.</li>
+</ul>
+
+<h2>Why now</h2>
+
+<p>The absorb fix closes one mouth. This ticket is the thing that notices the next one</p>
+<p>inside an hour instead of ten days — and it is the last unwatched failure shape on a</p>
+<p>board that otherwise watches everything.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">37</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -5261,6 +5396,44 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>the LLM&#x27;s connector is broken, but this is exactly the single-writer discipline this map</p>
 <p>keeps enforcing. <b>Retirement needs Junyan&#x27;s approval (hard rule: never disable a</p>
 <p>production trigger unattended) and is the last step of 118&#x27;s rollout.</b></p>
+
+<h2>RETIRED — 2026-09-02, and read back 2026-09-04</h2>
+
+<p><b>The LLM Weatherman is off.</b> RemoteTrigger <code>trig_01XrgdtzNqjzRJtaoEp2Ebnu</code> reads</p>
+<p><code>enabled: false</code>, updated <code>2026-09-02T14:30:39Z</code>; its last run was 14:16Z that day and</p>
+<p>it succeeded. <b>The two-writers seam is closed</b> — one thing sets the thermostats now.</p>
+
+<p><b>Three clean days on the fixed build</b>, read at 2026-09-04 02:30Z:</p>
+
+<ul>
+<li>- Live <code>git_sha</code> <code>d360f8c5</code>, <code>code_fingerprint</code> <code>f117c7b29f36</code>, <code>ok: true</code>.</li>
+<li>- <b>42 <code>climate-live:</code> pass lines in 24h, ZERO alerts</b> — the false-7a rule is genuinely</li>
+</ul>
+<p>quiet on real data, not just in tests.</p>
+<ul>
+<li>- Daily reports <code>The Weatherman — 2026-09-01 / -02 / -03</code> all created at the day&#x27;s</li>
+</ul>
+<p><b>first pass (07:10Z = 03:10 Toronto)</b>, all <code>Completed</code>, all carrying the</p>
+<p><b><code>Run Monitor</code> relation</b> (<code>3907503281c4818a89dbd6b0b857e8ab</code>). Same board row, new</p>
+<p>reporter — nothing on the Run Monitor needed changing, and the row never went Overdue.</p>
+<ul>
+<li>- 09-03 peaked at <b>31.4°C</b> and the lane held 509 at the comfort ceiling with no alert.</li>
+</ul>
+
+<p><b>Canon re-headed — dc-canon <code>a00d03ee</code>.</b> <code>library/climate-controller.md</code> now opens</p>
+<p>with a warning that it is a <b>spec, not a prompt</b>: the trigger is disabled, the runtime</p>
+<p>is <code>climate_sweep.py</code> on the <code>climate-sweep</code> scheduler job, and <b>an edit to this file no</p>
+<p>longer reaches a runtime by itself</b> — a rule change is not done until the code changes</p>
+<p>with it, with a test. It also records the two venue facts the steps do not state</p>
+<p>(actuation is direct SDM, not IFTTT; bookings come from Skedda, not Google Calendar) and</p>
+<p>why the old &quot;must not call SDM directly&quot; rule died with the LLM runtime. History line</p>
+<p>added. The Notion page becomes documentation for humans.</p>
+
+<p><b>Board refreshed and pushed</b> (day-sheet <code>9260e4a</code>): news banner, the Weatherman&#x27;s</p>
+<p>roster entry rewritten as <code>thermostats (plain code)</code> with its real shift, the footer, and</p>
+<p>plain-language entries for both 118 and 119 rewritten out of future tense.</p>
+
+<p><b>118&#x27;s rollout is complete end to end: shadow → flip → retirement.</b></p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#087</span><span class="emoji">🐌</span><span class="done-title">The Registrar is too slow, and it ran out of time on its very first night</span><span class="done-date">2026-08-25</span></summary><div class="done-body"><ul class="plain-bullets"><li>It was switched on at 10pm and its first unattended run was cut off after exactly five minutes, having not finished</li><li>Two separate time limits were both set to five minutes, so there was no slack anywhere — the first limit it hit was also the last</li><li>Both raised to fifteen minutes, which fixes tonight. It is not the real fix</li><li>The real reason it is slow: it asks the booking calendar for one day at a time, so a two-week look-ahead is fifteen separate requests before it even starts work</li><li>Asking for the whole fortnight in one request would do nearly all of it. The calendar already supports that</li><li>This matters because the run happens every half hour. If a run ever took longer than that, two would overlap — and two copies working at once is exactly what caused the duplicate door codes back in August</li><li>Deliberately NOT fixed by looking at fewer days ahead. That would just mean bookings a week or two out get set up late</li><li>DONE (Aug 25): the one-request fix already went in on Aug 24, and runs now take about 85 seconds against a 15-minute limit</li><li>The last missing piece was simply reporting how long each run took — added, along with a warning if a run ever creeps past ten minutes</li><li>Because of that, looking further ahead is now cheap: 45 days holds 100 bookings against 59 for two weeks, not three times as many</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar reads the Skedda board one day at a time — 15 round-trips per pass, and it already hit a wall</b></p><h2>Problem</h2>
 
 <p><b>The Registrar&#x27;s first unattended pass timed out</b>, 2026-08-20 02:00Z, five minutes after it was</p>
@@ -12803,5 +12976,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-03 22:32 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-03 22:35 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
