@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-03 22:55 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-03 23:16 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1487,8 +1487,77 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- <b>Per-board thresholds.</b> All boards currently use 5. </code>BOARDS<code> in </code>runaway_watch.py<code></li>
 </ul>
-<p>carries a per-board </code>threshold` field for the day one board&#x27;s normal rate justifies</p>
+<p>carries a per-board </code>threshold<code> field for the day one board&#x27;s normal rate justifies</p>
 <p>a different number.</p>
+
+<h2>Deploy log (2026-09-04)</h2>
+
+<p><b>Attempt 1 — 03:03Z, revision </code>event-gate-00212-k29<code>. Reported success. Shipped the wrong code.</b></p>
+
+<p></code>/health<code> returned </code>git_sha 314e4e7c<code>. That commit&#x27;s parent is </code>29559b7f<code> — a point</p>
+<p><i>before</i> this ticket&#x27;s push. It was a one-commit fork belonging to another session that</p>
+<p>had since been <b>rebased away</b>, reachable from no branch (</code>git branch -a --contains</p>
+<p>314e4e7c<code> → empty). Ticket 120 was not in it:</p>
+
+<p></code>`<code></p>
+<p>fatal: path &#x27;services/event-gate/runaway_watch.py&#x27; exists on disk, but not in &#x27;314e4e7c&#x27;</p>
+<p></code>`<code></p>
+
+<p>and </code>git show 314e4e7c:services/event-gate/loop.py | grep -c stamp_heartbeat<code> → </code>0<code>.</p>
+
+<p><b>The trap:</b> </code>gcloud run deploy --source<code> uploads the <b>working tree</b>, not the branch.</p>
+<p></code>dc-canon<code> takes automated commits from several sessions at once, so &quot;I pulled first&quot; is</p>
+<p>not sufficient — something can re-checkout underneath you between the pull and the</p>
+<p>upload. And the deploy&#x27;s own &quot;Done / serving 100 percent of traffic&quot; says nothing about</p>
+<p><i>which</i> code is serving.</p>
+
+<p><b>It looked like a full success, which is the dangerous part.</b> </code>206b33052<code> and</p>
+<p></code>b5043d2a<code> <i>were</i> ancestors of that fork, so two of the three changes really did land.</p>
+<p>A partial deploy is indistinguishable from a complete one unless you check.</p>
+
+<p><b>Attempt 2 — 03:14Z, revision </code>event-gate-00214-wjg<code>. Correct.</b> </code>git_sha eb21a6b6<code></p>
+<p>(= </code>origin/main<code>). Verified two ways, not one:</p>
+
+<ul>
+<li>- </code>git merge-base --is-ancestor<code> passes for all three: </code>22e63714<code>, </code>206b33052<code>, </code>b5043d2a<code>.</li>
+<li>- and by reading the files out of that tree — </code>runaway_watch.py<code> present,</li>
+</ul>
+<p></code>stamp_heartbeat<code> ×2 in </code>loop.py<code>, </code>runaway_watch<code> ×6 in </code>app.py<code>. <b>A hash that is</p>
+<p>merely newer can still be missing your work</b>, so the hash comparison alone is not</p>
+<p>enough; look for the thing you shipped.</p>
+
+<p>Suite on the deployed tree: <b>1284 passed</b> (up from 1280 — four came from other</p>
+<p>sessions&#x27; work pulled in by the rebase).</p>
+
+<h3>Still open — two steps, neither urgent</h3>
+
+<ol>
+<li>1. <b>The </code>desk-loop<code> heartbeat has not stamped yet, and cannot until morning.</b> The</li>
+</ol>
+<p>deploy landed 03:14Z = <b>23:14 Toronto</b>, outside the lane&#x27;s 08:00–22:50 run window;</p>
+<p>the last pass of the day was 22:50 Toronto (02:50Z). The first stamp arrives on the</p>
+<p><b>08:00 Toronto</b> pass. The roster row is </code>Monitoring = Paused<code> and reads</p>
+<p></code>Health: ⏸️ Paused<code>, so it is not paging about the gap. Confirm </code>Self-heartbeat<code> is</p>
+<p>non-empty after 08:00, then flip the row to </code>Monitoring = Live<code>:</p>
+<p>https://app.notion.com/p/3d17503281c48103be24ccd029cf9b02</p>
+<p>*(Firing an off-window </code>/loop<code> tick by hand would prove the stamp sooner, but it does</p>
+<p>real Notion writes and the run window is a deliberate setting — not worth poking a</p>
+<p>live lane to save nine hours.)*</p>
+<ol>
+<li>2. <b>The runaway watch is live in SHADOW right now</b> — it detects and logs and writes</li>
+</ol>
+<p>nothing. Steady state is <b>no output at all</b>; any line means it <i>would</i> have alerted</p>
+<p>and deserves a look before flipping.</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud logging read &#x27;resource.labels.service_name=&quot;event-gate&quot; AND textPayload:&quot;runaway-shadow&quot;&#x27; --project danceannex-skedda --limit 50 --freshness 2d</p>
+<p></code>`<code></p>
+
+<p></code>`<code>bash</p>
+<p>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --update-env-vars RUNAWAY_WATCH_LIVE=1</p>
+<p></code>`<code></p>
+
+<p>Ticket stays </code>open` until the row is Live and the shadow window has been reviewed.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">37</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -13167,5 +13236,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-03 22:55 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-03 23:16 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
