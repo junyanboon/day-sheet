@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-01 16:16 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-03 22:04 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2978,6 +2978,53 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- The lane reports its own result including zero, and files a <code>Run Error</code> row if it cannot run.</li>
 <li>- Plumbing Map entry.</li>
 </ul>
+
+<p>---</p>
+
+<h2>Progress 2026-09-04 — the RENDERER IS BUILT AND LIVE; what is left is the RETIREMENT</h2>
+
+<p>Junyan, reading a recommendation to start this ticket: *&quot;I thought it&#x27;s already been built and</p>
+<p>done.&quot;* He was right, and the ticket was stale.</p>
+
+<p><b>Built and live:</b> <code>dc-canon/scripts/watchlist_build.py</code> — *&quot;J29 watchlist freshness —</p>
+<p>deterministic rebuild of the fast-track gate&quot;* — rebuilds the <b>Fast-Track Watchlist DB — Today</b></p>
+<p>(<code>0038b3be-51a3-491e-91e5-93c2a7309b2b</code>) and runs as the <b><code>watchlist-refresh</code></b> dispatcher every</p>
+<p>15 minutes. It is real enough to have gone dark and been noticed: the 2026-08-22 Sweep Feedback</p>
+<p>row records a 9h15m outage after 20+ consecutive failures. It also carries a 🚥 Run Monitor row.</p>
+<p>The watchlist-gated quick answers left too — <code>services/event-gate/cards.py</code> has been their sole</p>
+<p>owner since the Receptionist retired 2026-08-01 (036).</p>
+
+<p>So acceptance line 1 (<i>&quot;rebuilt deterministically through the day, no LLM in the path&quot;</i>) is <b>met</b>.</p>
+
+<p><b>What is NOT met, and it is 035&#x27;s lesson exactly:</b> canon still names the Concierge as FAST-TRACK&#x27;s</p>
+<p>owner, and the job is still step 2 of every hourly pass in <code>concierge-orchestration.md</code>. The build</p>
+<p>happened; the retirement never did.</p>
+
+<p><b>And canon was actively WRONG about the neighbouring lane — fixed 2026-09-04, dc-canon <code>40ed688c</code>.</b></p>
+<p><code>library/fast-track.md</code> described <code>send-engine/SameDay.gs</code> as running the same-day access lane</p>
+<p>automatically, and told the reader: <i>&quot;if the board row and a <code>HTA-sameday-</i></code> queue row already</p>
+<p>exist, the lane has it — do not duplicate.&quot;* <b>SameDay.gs was never installed</b> ([107], closed</p>
+<p>2026-08-21) and RUNTIMES.md reads <b>do-not-install</b> (089 retires it) — so those artifacts could</p>
+<p>never exist and the deference pointed at nothing. <code>library/autonomy.md</code> was worse: it granted that</p>
+<p>phantom lane the desk&#x27;s <b>only unattended alarm-code send</b>. Both corrected — the booking sweep owns</p>
+<p>the window ([108], deployed 2026-08-25) and <b>composes-and-holds</b> the confirmation + HTA pair at</p>
+<p>Pending Review under <code>SWEEP_SAMEDAY_HOLD=1</code>; a human sends both. There is now no unattended</p>
+<p>code-send grant anywhere on the desk.</p>
+
+<p><b>Remaining scope, much smaller than this ticket was written for:</b></p>
+
+<ul>
+<li>- Retire the Concierge&#x27;s FAST-TRACK step in <code>concierge-orchestration.md</code> (step 2) and re-head</li>
+</ul>
+<p><code>library/fast-track.md</code> as the renderer&#x27;s spec plus the residual human judgement.</p>
+<ul>
+<li>- Name what stays with the LLM: acting on a fast-track match is triage&#x27;s job and does not move.</li>
+<li>- Apply 035&#x27;s test to the retirement itself — the renderer is already <b>seen</b> acting, so this is</li>
+</ul>
+<p>the cheap half.</p>
+<ul>
+<li>- Plumbing Map entry for the retirement.</li>
+</ul>
 </div></details></details></div><div class="job"><div class="jnum">#093</div><div class="jhead"><span class="emoji">🗑️</span><h4>The last leftover chore gets deleted, not moved</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Split off Aug 19 from the big busywork ticket</li><li>Nothing here gets a new home — every piece is already covered somewhere else</li><li>Chasing up sent messages is doubled work: the message robot queues them, another chore marks them sent, and a standing check catches anything stuck</li><li>The two leftover sweeps fold into the list of standing checks</li><li>With alarms already gone and the who&#x27;s-in list leaving, this closes the chore out entirely</li><li>Rule: no step gets orphaned. Each one either has a proven replacement we can name, or it moves to the standing checks</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete, do not rehome</b></p><h2>Question</h2>
 
 <p>Split out of <b>055</b> (lane 4) 2026-08-19.</p>
@@ -3104,6 +3151,38 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- Plumbing Map entry.</li>
 </ul>
+
+<p>---</p>
+
+<h2>Progress 2026-09-04 — BUILT, NOT DEPLOYED. The desk noticed before we did.</h2>
+
+<p>Lane built 2026-09-01, dc-canon <code>206b33052</code>: <code>services/event-gate/reconcile_sweep.py</code> on</p>
+<p><code>POST /reconcile-sweep</code>, kill switch <code>RECONCILE_SWEEP_DISABLED</code>, own <code>Run Error</code> row, <b>ships in</p>
+<p>shadow</b> (<code>RECONCILE_SWEEP_LIVE=1</code> is the separate human flip). 21 lane tests; the whole event-gate</p>
+<p>suite passes. <code>Reconcile Sweep</code> was added to the ✅ Actions <code>Raised by</code> select <b>before</b> deploy —</p>
+<p>lane 1&#x27;s third defect (the lane failed AND its failure report failed) not repeated.</p>
+
+<p><b>Two canon corrections shipped with it, and they matter more than the code.</b> Written faithfully</p>
+<p>from canon&#x27;s prose, this lane would have been blind: the send-time property is <b><code>Send After</code></b>, not</p>
+<p>&quot;Time to Send&quot;, and there is <b>no <code>Scheduled</code> status</b> (live options are exactly Pending Review /</p>
+<p>Error / Ready to Send / Will Not Send / Sent). A stuck-send check comparing against a property that</p>
+<p>does not exist finds a stuck send <b>never</b> and reports clean every time — silence and health</p>
+<p>identical, the failure this whole lane exists to end. <code>Error</code> is also a live status the branch table</p>
+<p>never covered; absence from the table is ambiguity, not permission, so it goes to the agent bucket.</p>
+
+<p><b>Still open because it has never run.</b> 035&#x27;s test is not met — the <code>Reconciled</code> PATCH, the date</p>
+<p>filter shape, and a stuck-send row actually landing are all unexercised.</p>
+
+<p><b>The board raised it itself on 2026-09-03 20:23Z</b> (Sweep Feedback <code>3d07503281c481ff80a2fa0d39b219c7</code>,</p>
+<p><code>J24 Run monitoring</code>): *&quot;reconcile-sweep (10-min lane) shows no sign of running and has NO Run</p>
+<p>Monitor row — 30 rows sit unreconciled since Sep 2, including six Will Not Send rows its own</p>
+<p>contract says are pure code.&quot;* Both halves are fair. <b>Add the 🚥 Run Monitor row as part of the</p>
+<p>deploy, not after it</b> — a lane with no monitor row is exactly what the Sep 1 session put The Loop</p>
+<p>on the board to stop, and shipping this one without it repeats the mistake in the same week.</p>
+
+<p>Deploy is Junyan&#x27;s (agent deploys blocked): <code>services/event-gate/deploy.sh</code>, then a 10-minute</p>
+<p>Cloud Scheduler job, then read shadow counts (<code>reconcilable</code> / <code>for_agent</code> / <code>stuck</code>) against the</p>
+<p>live view before the <code>RECONCILE_SWEEP_LIVE=1</code> flip.</p>
 </div></details></details></div><div class="job"><div class="jnum">#095</div><div class="jhead"><span class="emoji">👀</span><h4>A program notices when staff finish something; the robot only picks up what got flagged</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Split off Aug 19 from the big busywork ticket</li><li>This chore splits in two. NOTICING is mechanical — ticked rows, new screenshots, new posts in the channel</li><li>PICKING IT BACK UP is real thinking — finding where you left off, reading photos, deciding what changed — and stays with the thinking robot</li><li>The difference is where the work comes from: the robot gets handed a list instead of going looking for one</li><li>The evening review keeps the thinking robot too — and it finally gets the time budget the busywork was eating</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 4&#x27;s detection layer moves to the tick; resumption stays agentic</b></p><h2>Question</h2>
 
 <p>Split out of <b>055</b> (lane 6) 2026-08-19, from the same capacity</p>
@@ -12724,5 +12803,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-01 16:16 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-03 22:04 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
