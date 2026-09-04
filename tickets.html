@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-03 23:16 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-03 23:20 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1557,7 +1557,54 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --update-env-vars RUNAWAY_WATCH_LIVE=1</p>
 <p></code>`<code></p>
 
-<p>Ticket stays </code>open` until the row is Live and the shadow window has been reviewed.</p>
+<p>Ticket stays </code>open<code> until the row is Live and the shadow window has been reviewed.</p>
+
+<h2>Correction (2026-09-04, hours after deploy) — the shadow window was unreadable</h2>
+
+<p>Two mistakes, one mine in the runbook and one mine in the code. Both found trying to</p>
+<p>actually read the shadow output, which is why the runbook step existed.</p>
+
+<p><b>1. The log query in the runbook could never have matched.</b> I wrote</p>
+<p></code>textPayload:&quot;runaway-shadow&quot;<code>. But </code>log_request<code> (</code>app.py:200<code>) prints a <b>JSON</p>
+<p>object</b> to stdout, so Cloud Run files it under </code>jsonPayload<code>, not </code>textPayload<code>. The</p>
+<p>query returns zero rows whether the watch fired or not. <b>The empty result proved</p>
+<p>nothing.</b> Correct query:</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud logging read &#x27;resource.labels.service_name=&quot;event-gate&quot; AND jsonPayload.decision=&quot;runaway_watch&quot;&#x27; --project danceannex-skedda --limit 50 --freshness 2d</p>
+<p></code>`<code></p>
+
+<p><b>2. A healthy pass logged nothing at all — the real defect.</b> Both log paths were</p>
+<p>gated on </code>findings<code>: this module&#x27;s per-finding line (inside </code>for finding in findings:<code>)</p>
+<p>and </code>app.py<code>&#x27;s ERROR summary (</code>if runaway.get(&quot;findings&quot;)<code>). So a clean pass emitted</p>
+<p>zero lines, and <b>&quot;running and healthy&quot; was indistinguishable from &quot;never ran&quot;</b>.</p>
+
+<p>That is this module&#x27;s own disease turned on itself, and it violates the</p>
+<p>zero-pass-reports-zero rule quoted in its own docstring. It also would have made the</p>
+<p>shadow window worse than useless: an empty log read as &quot;nothing is flooding&quot; when it</p>
+<p>might have meant the lane never executed.</p>
+
+<p><b>Fixed in dc-canon </code>48712dd0<code></b> (on </code>origin/main<code>): one INFO line per <b>sampled</b> pass</p>
+<p>— 288/day, not 1440 — naming rows read, boards, window, findings, alerts filed, and any</p>
+<p>unreadable board. Four tests, including one asserting an unsampled minute still logs</p>
+<p>nothing. Full suite <b>1285 passed</b>.</p>
+
+<p><b>This is NOT yet deployed.</b> The serving revision </code>event-gate-00214-wjg<code> (</code>eb21a6b6<code>)</p>
+<p>predates it, so the shadow window stays unreadable until the next deploy. There is no</p>
+<p>urgency and no risk in waiting — the watch is in shadow and writes nothing either way —</p>
+<p>but <b>the shadow observation period does not really begin until </code>48712dd0<code> is serving.</b></p>
+
+<p>Roll it in with the next deploy of anything:</p>
+
+<p></code>`<code>bash</p>
+<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; git pull --rebase --autostash &amp;&amp; git status --short &amp;&amp; gcloud run deploy event-gate --source services/event-gate --region us-central1 --project danceannex-skedda</p>
+<p></code>`<code></p>
+
+<p>Then the liveness line should appear within 5 minutes:</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud logging read &#x27;resource.labels.service_name=&quot;event-gate&quot; AND jsonPayload.reason:&quot;pass ok&quot;&#x27; --project danceannex-skedda --limit 5 --freshness 1h</p>
+<p></code>``</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">37</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -13236,5 +13283,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-03 23:16 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-03 23:20 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
