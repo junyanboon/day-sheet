@@ -1276,6 +1276,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-04 &middot; 13:2xZ</span>
+      <h3>The same name gap, closed in the credit and wrong-room lanes<span class="kind">NAME IN SCOPE AND UNUSED &middot; TWO MORE LANES &middot; ONE LANE DELIBERATELY LEFT</span></h3></summary>
+      <p><strong>Junyan: &ldquo;okay fix that gap.&rdquo;</strong> The <code>who()</code> defect found in the move lane this morning (entry below) was never move-specific. <code>credit_sweep</code> and <code>wrongroom_sweep</code> both resolve <code>artist_for()</code>, both hand the id to <code>_escalate</code>, and <strong>both then asked <code>who()</code> for a display name without passing it</strong> &mdash; so an SMS with no Skedda holder escalated as a phone number while the card sat in scope, exactly as Megan&rsquo;s did.</p>
+      <p><strong>Threaded at the three places per lane a human actually reads:</strong> the &#9989; Actions row title, the ops SMS, and &mdash; credit only &mdash; the <strong>Skedda booking title</strong>, which falls back to <code>who()</code> when the calendar has no holder. That last one is not cosmetic: Nina Li&rsquo;s first live credit booking went onto the calendar titled <code>+16136085446 *credit applied*</code> on 2026-09-03.</p>
+      <p><strong>&#9888;&#65039; <code>extension_sweep</code> was left alone on purpose.</strong> Its single <code>who()</code> call sits <em>inside</em> the branch that fires only when <code>artist_id</code> is <strong>empty</strong> &mdash; <em>&ldquo;no Artist card matches this number&rdquo;</em> &mdash; so there is no id to thread; and its <code>review_row</code> reads an email display name, which that lane always has. <strong>Threading it there would have been a change that looks like a fix and does nothing.</strong></p>
+      <p><strong>Proof the tests are real:</strong> four new tests, two per lane &mdash; the name appears and the number does not, and the number is <em>still</em> the fallback when no card matches. Both naming tests were then run against the <strong>stashed, unpatched modules and confirmed to FAIL</strong>. A regression test that has never failed is a decoration.</p>
+      <p><strong>Pushed:</strong> dc-canon <code>33a639a7</code>. <strong>Full event-gate suite 1314 passed, 0 failed.</strong> <em>Not deployed &mdash; <code>services/event-gate/deploy.sh</code> is Junyan&rsquo;s to run, and it now carries both of today&rsquo;s Registrar naming changes.</em></p>
+      </details>
+    </li>
+
+      <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-04 &middot; 12:3xZ</span>
       <h3>The alarm that always rings, again &mdash; three healthy sweeps shouting ERROR every 5 minutes<span class="kind">LOG SEVERITY &middot; REGRESSION OF A 2026-08-31 FIX &middot; TEST BLIND SPOT CLOSED</span></h3></summary>
       <p><strong>What was in the logs:</strong> <code>extension-sweep</code>, <code>move-sweep</code> and <code>greeter-sweep</code> filed their <em>healthy</em> result lines at <code>severity=ERROR</code>, every 5 minutes, around the clock:</p>
