@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 22:40 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 22:48 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -606,7 +606,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Artist DB alarm-code lookup + Anthropic step (claude-opus-4-8) between step 11 and step 12,</p>
 <p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
 <p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
-</div></details></details></div><div class="job"><div class="jnum">#053</div><div class="jhead"><span class="emoji">🔁</span><h4>Build the new way tickets get done — the robot suggests, Junyan says yes or fixes it</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A new list replaces the old &#x27;things to do&#x27; board — one suggested next step per ticket</li><li>Each suggestion comes with the proof behind it, so Junyan can decide without digging</li><li>Two moves only: say yes, or rewrite the step to what it should have been, then mark it Ready</li><li>The robot only does steps marked Ready — never one Junyan hasn&#x27;t seen</li><li>After doing it, the robot looks again at the real booking or calendar to check it truly happened</li><li>If Junyan already did the job himself, the robot spots it and ticks it off — no double work</li><li>Steps the robot gets right over and over become automatic; one rewrite and it goes back to asking</li><li>Trying it first on booking changes, the busiest and messiest kind</li><li>IN PROGRESS: the two new lists exist in Notion and the rulebook page is written</li><li>Checked what Skedda&#x27;s robot arm can really do: move, create, cancel and approve bookings — but not change a price</li><li>Junyan ruled: the old to-do board gets finished off first, then retired — no copying rows over</li><li>Junyan ruled: instant bookings and moves run on their own, and he gets a text each time one happens</li><li>BUILT Aug 6: the little sweep that runs every 10 minutes — it checks the real booking for every open step and ticks off whatever already happened</li><li>It cannot touch bookings itself, on purpose: one robot does the work, a different one checks it. A checker that can also change things isn&#x27;t a checker</li><li>Safety rule built in first: if it can&#x27;t reach the booking system, it says &#x27;couldn&#x27;t check&#x27; — it never reads silence as &#x27;the booking is gone&#x27;</li><li>Aug 15 — checked what was actually live: the little 10-minute sweep has been running since Aug 7 and works fine</li><li>But every single one of the 15 steps on the new list was written by a human. The robot had never suggested anything, not once</li><li>The thinking half simply had no robot to run it. The Concierge was supposed to be it, and the Concierge never gets that far — it runs out of time every pass</li><li>BUILT Aug 15: a new small robot, The Loop, that runs every hour and does the two missing parts — suggest the next step, and do the ones marked Ready</li><li>SWITCHED ON Aug 15, first run 8:35am. The one step in the way turned out to be already done — Junyan sent David Diep that text himself back on Aug 7, word for word, at 9:42 at night</li><li>Which found the next problem: the list had no way of ever noticing. It can check a booking for itself, but not a text message — so a step that was finished in five minutes sat looking unfinished for eight days</li><li>Three rules sit above everything in its instructions: only do steps marked Ready, never touch money, and never tick its own work off as done</li><li>Day one, four runs: it wrote its first two suggestions on its own. That was the thing to watch for, and it happened</li><li>It did nothing else, four runs in a row — because nobody has said yes to anything yet. The queue of approved work was empty every time</li><li>And it lost one. It spotted a 15-minute gap in Studio 527 at 8:39am, wrote a careful suggestion, checked again at 9:36 — and the gap came and went at 10:30 with nobody having read it</li><li>Nothing went wrong, which is the point. It refused to act without a yes, refused to nag, refused to tick off its own work. All three rules held and the job was still missed</li><li>What&#x27;s missing: a suggestion with a deadline needs to tap someone on the shoulder, not sit in a list waiting to be found</li><li>It also caught a ticket about to nag a customer to move a booking he had already moved four days ago — and noticed it has no alarm clock watching itself, which is the very problem it was built to fix</li><li>Two suggestions are sitting there now waiting on Junyan — and until one gets a yes or a rewrite, the robot cannot start learning what good looks like</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Next Action queue + the advancement loop — pilot on Booking Changes</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#053</div><div class="jhead"><span class="emoji">🔁</span><h4>Build the new way tickets get done — the robot suggests, Junyan says yes or fixes it</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Replan 2026-09-04: the old &#x27;things to do&#x27; board stays and is the ONLY place decisions go — the new list is retired (55 rows closed, now 0)</li><li>Message approvals live only on the Message Queue; alarm codes belong to the doorman; Giggster/Tagvenue replies get their own robot (ticket 121)</li><li>Close path: stop the hourly suggester (Junyan&#x27;s call), land tickets 120–123, repoint the robot at the old board, then measure 7 quiet days</li><li>Each suggestion comes with the proof behind it, so Junyan can decide without digging</li><li>Two moves only: say yes, or rewrite the step to what it should have been, then mark it Ready</li><li>The robot only does steps marked Ready — never one Junyan hasn&#x27;t seen</li><li>After doing it, the robot looks again at the real booking or calendar to check it truly happened</li><li>If Junyan already did the job himself, the robot spots it and ticks it off — no double work</li><li>Steps the robot gets right over and over become automatic; one rewrite and it goes back to asking</li><li>Trying it first on booking changes, the busiest and messiest kind</li><li>IN PROGRESS: the two new lists exist in Notion and the rulebook page is written</li><li>Checked what Skedda&#x27;s robot arm can really do: move, create, cancel and approve bookings — but not change a price</li><li>Junyan ruled: the old to-do board gets finished off first, then retired — no copying rows over</li><li>Junyan ruled: instant bookings and moves run on their own, and he gets a text each time one happens</li><li>BUILT Aug 6: the little sweep that runs every 10 minutes — it checks the real booking for every open step and ticks off whatever already happened</li><li>It cannot touch bookings itself, on purpose: one robot does the work, a different one checks it. A checker that can also change things isn&#x27;t a checker</li><li>Safety rule built in first: if it can&#x27;t reach the booking system, it says &#x27;couldn&#x27;t check&#x27; — it never reads silence as &#x27;the booking is gone&#x27;</li><li>Aug 15 — checked what was actually live: the little 10-minute sweep has been running since Aug 7 and works fine</li><li>But every single one of the 15 steps on the new list was written by a human. The robot had never suggested anything, not once</li><li>The thinking half simply had no robot to run it. The Concierge was supposed to be it, and the Concierge never gets that far — it runs out of time every pass</li><li>BUILT Aug 15: a new small robot, The Loop, that runs every hour and does the two missing parts — suggest the next step, and do the ones marked Ready</li><li>SWITCHED ON Aug 15, first run 8:35am. The one step in the way turned out to be already done — Junyan sent David Diep that text himself back on Aug 7, word for word, at 9:42 at night</li><li>Which found the next problem: the list had no way of ever noticing. It can check a booking for itself, but not a text message — so a step that was finished in five minutes sat looking unfinished for eight days</li><li>Three rules sit above everything in its instructions: only do steps marked Ready, never touch money, and never tick its own work off as done</li><li>Day one, four runs: it wrote its first two suggestions on its own. That was the thing to watch for, and it happened</li><li>It did nothing else, four runs in a row — because nobody has said yes to anything yet. The queue of approved work was empty every time</li><li>And it lost one. It spotted a 15-minute gap in Studio 527 at 8:39am, wrote a careful suggestion, checked again at 9:36 — and the gap came and went at 10:30 with nobody having read it</li><li>Nothing went wrong, which is the point. It refused to act without a yes, refused to nag, refused to tick off its own work. All three rules held and the job was still missed</li><li>What&#x27;s missing: a suggestion with a deadline needs to tap someone on the shoulder, not sit in a list waiting to be found</li><li>It also caught a ticket about to nag a customer to move a booking he had already moved four days ago — and noticed it has no alarm clock watching itself, which is the very problem it was built to fix</li><li>Two suggestions are sitting there now waiting on Junyan — and until one gets a yes or a rewrite, the robot cannot start learning what good looks like</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Next Action queue + the advancement loop — pilot on Booking Changes</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>, which dissolved J01 and ruled that ticket</p>
 <p>advancement is a <b>loop</b>, not a job. This ticket builds it and runs the pilot. It is the head of</p>
@@ -979,6 +979,81 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>must look the limit up in the CAPABILITIES <b>Limits register</b>; an UNTESTED cell bounces the</p>
 <p>proposal with &quot;probe first&quot; instead of raising a staff gate. Three-ish lines at the chokepoint —</p>
 <p>this is the lock half of 064; the register + probe rule are already live in canon.</p>
+
+<h2>Replan — 2026-09-04 (close path; ticket stays OPEN until Phase 4 is measured)</h2>
+
+<p><b>Why the ticket cannot close as written.</b> §1 says the ⏭️ Next Action queue retires ✅ Actions to</p>
+<p>Perform. Junyan ruled the reverse on 2026-09-04: <i>&quot;actions to perform will be where decisions go.&quot;</i></p>
+<p>Three more rulings the same day: *&quot;Approve this message should never be sent anywhere other than</p>
+<p>the message queue&quot;<i>; </i>&quot;alarm-code is always done by the doorman / deterministic model&quot;*; and the</p>
+<p>platform gap (Giggster / Tagvenue) gets its own agent. Measured before the replan: 55 open Next</p>
+<p>Action rows, 1 of 122 ever <code>Rewritten=YES</code>, every <code>Promotion counter</code> at 0, 53 open ✅ Actions rows</p>
+<p>still written daily. The queue held four kinds of row — duplicate message reviews (10), deterministic</p>
+<p>alarm work waiting on a human (11), platform gaps (4), real rulings (~4) — plus ghosts and odd jobs.</p>
+<p>The ladder pointed at <code>Manual Help</code>, a class that cannot promote. All 55 rows were closed</p>
+<p>2026-09-04 with a <code>Verification</code> note; the queue is at 0 open.</p>
+
+<h3>Acceptance, rewritten</h3>
+
+<p>| # | Old criterion | State | New criterion |</p>
+<p>|---|---|---|---|</p>
+<p>| A | Booking Changes ticket end-to-end, Skedda write read back | <b>earned</b> (David Diep) | keep as earned |</p>
+<p>| B | Human-executed action closes its row, no back-capture | <b>earned once</b> (Jesse Dwyre) | re-earn on ✅ Actions to Perform by a deterministic closer (ticket 123, Xavier case) |</p>
+<p>| C | One rewrite → SOP improvement + counter reset | not earned | <b>dropped</b> — the ladder dies with the queue; SOP improvement is the 🔧 Sweep Feedback lane (Junyan to confirm) |</p>
+<p>| D | 051 starvation inheritance | obsolete | <b>dropped</b> |</p>
+<p>| E | — | new | ✅ Actions to Perform holds only rows that need a human ruling: <code>For = Junyan</code>, each with a basis and a deadline; no row for a message approval, an alarm code, or a platform reply |</p>
+<p>| F | — | new | ⏭️ Next Action at 0 open for 7 consecutive days with no new writer; The Loop&#x27;s LLM trigger disabled or repointed by ruling |</p>
+
+<h3>Phases</h3>
+
+<p><b>Phase 0 — contract (this session, no deploy).</b> This section. Canon <code>the-loop.md</code> Surfaces</p>
+<p>table and the FREEZE-then-drain section need the inverse ruling written in; Plumbing Map entry</p>
+<p>for the 2026-09-04 queue close-out. <i>Blocked on Junyan&#x27;s say-so for the canon edit.</i></p>
+
+<p><b>Phase 1 — stop the inflow (Junyan, ~10 min).</b></p>
+<ul>
+<li>- Decide the Loop LLM trigger <code>trig_019ReSFHGqYhhqoXF8Unnf8U</code> (:35 hourly). It writes to a retired</li>
+</ul>
+<p>board. Recommendation: <b>disable</b>, because every class it proposed now has a deterministic owner</p>
+<p>(120/122/123), a lane (Message Queue, 121), or a ruling row on ✅ Actions. Hard rule: only Junyan</p>
+<p>flips it.</p>
+<ul>
+<li>- Deploy <code>b5043d2a</code> (absorb limit) and <code>206b33052</code> on event-gate so the code matches the ticket.</li>
+</ul>
+
+<p><b>Phase 2 — the four builds already in flight.</b> 120 (runaway-writer + desk-loop heartbeat, the</p>
+<p>missing 🚥 Run Monitor row from Day one), 121 (platform messenger), 122 (window-migration sweep),</p>
+<p>123 (access-class closer). These are EXECUTE and VERIFY for the classes that were ~80% of the queue.</p>
+<p>Each lands on event-gate or alarm-monitor; one deploy pass per repo when they finish.</p>
+
+<p><b>Phase 3 — repoint what is left of <code>loop.py</code> (one build session, after Phase 2 lands).</b></p>
+<ul>
+<li>- REVIEW / EXECUTE / VERIFY read ✅ Actions to Perform, not ⏭️ Next Action.</li>
+<li>- PROPOSE rule: the Loop files a row only for a class it can execute or a ruling only a human can</li>
+</ul>
+<p>make. Message classes → Message Queue only. Alarm classes → doorman. Money → <code>For = Junyan</code> row.</p>
+<ul>
+<li>- VERIFY reads every proof source, not Skedda alone: panel keypad events (123), Message Queue</li>
+</ul>
+<p><code>Sent</code> receipts (121), Artist page fields.</p>
+<ul>
+<li>- 064 rider: the UNTESTED-limit lock at the propose chokepoint (three lines).</li>
+<li>- Delete or archive the ladder code (<code>bump_counter</code> / <code>reset_counter</code>) once C is dropped.</li>
+</ul>
+
+<p><b>Phase 4 — measure, then close (7 days after Phase 3 deploys).</b></p>
+<ul>
+<li>- E holds for 3 consecutive days: every new ✅ Actions row is <code>For = Junyan</code> with a basis; zero rows</li>
+</ul>
+<p>of the three banned kinds.</p>
+<ul>
+<li>- F holds for 7 days.</li>
+<li>- B re-earned: one row closed by 123 from a keypad read, none by Junyan&#x27;s hand.</li>
+<li>- Then: final canon pass on <code>the-loop.md</code>, Plumbing Map entry, <code>status: closed</code>.</li>
+</ul>
+
+<p><b>Not in this ticket:</b> Giggster/Tagvenue accept/decline (charges a card — 121 excludes it);</p>
+<p>any message send (Message Queue rules govern); anything that writes a code.</p>
 </div></details></details></div><div class="job"><div class="jnum">#086</div><div class="jhead"><span class="emoji">💓</span><h4>If The Registrar ever stops, nobody would notice</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The Registrar tells us when something goes wrong, and when it needs a person. It says nothing when everything is fine</li><li>That sounds sensible until it stops running. A paused job, a broken address, or an off-switch someone flipped during an emergency and forgot — all of those look exactly like a quiet night</li><li>The cost is real: renters book directly, get no record, no door code, no board row, and nobody finds out until someone is standing at a locked door</li><li>The fix is a check-in every pass, including the passes where it found nothing. The nothing-found pass is the whole point — it is what proves the program is still breathing</li><li>Then the run monitor can say &#x27;The Registrar has not checked in&#x27; the same way it does for the other agents</li><li>One thing to get right: &#x27;switched off on purpose&#x27; must look different from &#x27;fine&#x27;. Otherwise a forgotten off-switch reads as good news</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar has no heartbeat — a silent stall is invisible</b></p><h2>Problem</h2>
 
 <p>The Registrar went live 2026-08-20 01:34Z (<b>082</b>) with <b>no run-monitor</p>
@@ -14471,5 +14546,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-04 22:40 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-04 22:48 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
