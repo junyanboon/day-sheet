@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 22:08 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 22:11 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1828,6 +1828,83 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>(Message Queue + human), nor the Sales SOP steps that call for a platform read. Those</p>
 <p>stay where they are and call this agent. The four dead Next Action rows above close</p>
 <p><code>Won&#x27;t Do</code> under ticket 053&#x27;s replan once this lands — do not close them here.</p>
+
+<h2>Progress (2026-09-04) — DEFINED and TESTED as code; NOT RUN; canon held back by ruling</h2>
+
+<p><b>Runtime confirmed (Junyan, first turn):</b> &quot;grokbot&quot; is an <b>xAI Grok Bot</b> agent. Junyan</p>
+<p>creates it, pastes the definition, and signs in to the platforms himself through Grok</p>
+<p>Bot&#x27;s Agent Computer takeover. That is how the credential constraint is met: there is no</p>
+<p>path by which a password, code or cookie reaches the agent, and the definition makes any</p>
+<p>sign-in form or challenge a hard stop. Junyan: <i>&quot;You don&#x27;t need this&quot;</i> to the 1Password</p>
+<p>question — the password-manager door is not used because no agent in this design types</p>
+<p>a credential at all. Second ruling mid-build: *&quot;Don&#x27;t update the canon page, we need to</p>
+<p>test it first.&quot;* Honoured — nothing was written to <code>dc-canon</code>.</p>
+
+<p><b>Shape (Junyan, mid-build):</b> the Bot polls the Message Queue; a <code>Ready to Send</code> row on</p>
+<p>a platform Channel is posted directly in that platform&#x27;s messenger. Written as skill D.</p>
+
+<p><b>Delivered, all under <b>assets/121-grokbot/</b>:</b></p>
+<ul>
+<li>- <code>DEFINITION-DRAFT.md</code> — paste blocks A–F (identity, instructions, three skills, Auto</li>
+</ul>
+<p>Review rules) and the routine. Harness-neutral in substance; Grok-Bot-shaped in form.</p>
+<ul>
+<li>- <code>protocol.py</code>, <code>guard.py</code>, <code>receipt.py</code>, <code>definition_check.py</code> + tests — <b>29 passed</b>.</li>
+</ul>
+<p>Proofs the ticket asked for: a login form / OTP / CAPTCHA / bot challenge stops the run</p>
+<p>with nothing typed (<code>test_protocol.py</code>); the agent&#x27;s state has no field that could hold</p>
+<p>a credential; the definition text carries every hard rule and no credential-shaped</p>
+<p>string (<code>test_definition.py</code>). Also: <code>Pending Review</code> never posts; an approved body</p>
+<p>carrying a phone / URL / address / access code never posts; read-back mismatch never</p>
+<p>earns a receipt; an identical message already in the thread sets <code>Sent</code> without posting.</p>
+<ul>
+<li>- <code>RUNBOOK.md</code> — setup, the two live rehearsals (R1 credential, R2 challenge), the three</li>
+</ul>
+<p>acceptance runs, go-live, and the paperwork that waits for a pass.</p>
+<ul>
+<li>- <code>send-engine/test_foreign_lane.js</code> + <code>send-engine/proposed-v24-platform-lanes.md</code> —</li>
+</ul>
+<p>the Send Engine change the two new Channel options require. <b>Not applied</b>; the test</p>
+<p>fails on the two new values on purpose until Junyan applies and <code>clasp push</code>es.</p>
+<ul>
+<li>- <code>RUNTIMES.md</code> row (DRAFT, not yet run). Plumbing Map entry <code>2026-09-05 03:1xZ</code>.</li>
+<li>- Receipt shape ruled here: <code>giggster:&lt;conversation-uuid&gt;@&lt;ISO Toronto&gt;</code> /</li>
+</ul>
+<p><code>tagvenue:u&lt;enquiry-id&gt;@&lt;ISO Toronto&gt;</code>, optional <code> already-present</code>.</p>
+
+<p><b>Findings that change the acceptance list:</b></p>
+<ul>
+<li>- <b>Sandra Lewis:</b> her link was already read by Junyan in the messenger on 2026-09-02 —</li>
+</ul>
+<p><b>meditateintoronto.org</b>, Kadampa Meditation Centre Canada (&quot;KMC Canada&quot;). Her</p>
+<p>2026-08-31 reply says her organisation needs time. <b>The desk is not holding her up</b>;</p>
+<p><code>Revisit After = 2026-09-16</code> stands. The grokbot read (4a) is still the first live proof,</p>
+<p>and the block is paste-ready in the runbook if the Bot&#x27;s Notion write fails.</p>
+<ul>
+<li>- <b>Sinéad B.:</b> the held reply answers questions about a <b>2026-08-22</b> booking. The date</li>
+</ul>
+<p>has passed; posting it now fails the temporal check. Recommendation: <code>Will Not Send</code>,</p>
+<p>and prove the Giggster send on a current row Junyan approves. The Action row that</p>
+<p>carried her text is already <code>Processed</code>; her studio (509A vs 901) was never settled.</p>
+<ul>
+<li>- <b>Grace Lim:</b> her Tagvenue enquiry expired <b>2026-08-12 04:13</b> by the platform&#x27;s own</li>
+</ul>
+<p>rule. The close-out&#x27;s expected outcome is <i>state: expired, action: none</i>, recorded on</p>
+<p>the ticket. Next Action row <code>3c37503281c481a8935bde2c4c1531d0</code> untouched (053).</p>
+<ul>
+<li>- <b>Limits register:</b> there is no existing &quot;cannot read platform messenger&quot; row to</li>
+</ul>
+<p>replace — the claim lived in prose and in the four Next Action rows. A new row (text in</p>
+<p>the runbook § 6) goes in when the acceptance sheet has a date to cite.</p>
+
+<p><b>Not done, and why:</b> no Notion write (the harness classifier blocked this session&#x27;s</p>
+<p>Notion API calls after two reads — Sandra&#x27;s block and the register row are paste-ready);</p>
+<p>no Grok Bot run (Junyan&#x27;s account); no canon page (ruling); no Run Monitor row (added the</p>
+<p>day the routine goes on); Send Engine v24 not applied (test-first; the first send does not</p>
+<p>need it). The four dead Next Action rows are left for 053.</p>
+
+<p><b>Next:</b> Junyan works RUNBOOK § 1–4. A passing sheet moves the draft into canon (§ 6) and</p>
+<p>closes this ticket.</p>
 </div></details></details></div><div class="job"><div class="jnum">#121</div><div class="jhead"><span class="emoji">🗂️</span><h4>A retried climate pass writes a duplicate Thermal Log row — key that write</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A retried climate pass writes a duplicate Thermal Log row — key that write</b></p><h2>Question</h2>
 
 <p><code>climate_sweep.thermal_log_row()</code> is an unconditional <code>POST</code> — no key, no existence</p>
@@ -14139,5 +14216,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-04 22:08 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-04 22:11 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
