@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-03 23:20 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 21:47 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">8</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">37</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">65</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">66</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">7</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">8</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -1605,6 +1605,131 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p></code>`<code>bash</p>
 <p>gcloud logging read &#x27;resource.labels.service_name=&quot;event-gate&quot; AND jsonPayload.reason:&quot;pass ok&quot;&#x27; --project danceannex-skedda --limit 5 --freshness 1h</p>
 <p></code>``</p>
+</div></details></details></div><div class="job"><div class="jnum">#121</div><div class="jhead"><span class="emoji">🗂️</span><h4>A retried climate pass writes a duplicate Thermal Log row — key that write</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A retried climate pass writes a duplicate Thermal Log row — key that write</b></p><h2>Question</h2>
+
+<p><code>climate_sweep.thermal_log_row()</code> is an unconditional <code>POST</code> — no key, no existence</p>
+<p>check, no dedup fragment:</p>
+
+<p>``<code>python</p>
+<p>def thermal_log_row(now, studio, kind, entry, notes):</p>
+<p>_notion(&quot;POST&quot;, &quot;/pages&quot;, {</p>
+<p>&quot;parent&quot;: {&quot;type&quot;: &quot;data_source_id&quot;, &quot;data_source_id&quot;: THERMAL_LOG_DS},</p>
+<p>&quot;properties&quot;: { ... &quot;When&quot;: {&quot;date&quot;: {&quot;start&quot;: now...isoformat(...)}} },</p>
+<p>})</p>
+<p></code>`<code></p>
+
+<p>It is called once per studio per pass at </code>climate_sweep.py:1055<code>. <b>As of 2026-09-04</p>
+<p>the </code>climate-sweep<code> Cloud Scheduler job has </code>retryCount=2<code></b>, so a pass that does its</p>
+<p>work and then returns a 5xx — or times out after the writes land — is retried 30s</p>
+<p>later and writes <b>a second row per studio for the same moment</b>.</p>
+
+<p>This is the one accepted cost of the fleet-wide retry change made that night (see the</p>
+<p>Plumbing Map entry <i>&quot;SENTINEL-SWEEP IS DOWN&quot;</i>, and the </code>sentinel-sweep<code> row in</p>
+<p></code>RUNTIMES.md<code>). It was judged worth shipping: a missed climate pass on a hot afternoon</p>
+<p>costs a renter a warm room, a duplicate log row costs nothing anyone will notice</p>
+<p><i>today</i>. This ticket is the follow-up that stops it costing something later.</p>
+
+<p><b>Why it is not purely cosmetic.</b> </code>recent_observations()<code> (</code>climate_sweep.py:281<code>)</p>
+<p>reads <i>&quot;Recent Kind=observation Thermal Log rows, newest first, per studio&quot;</i>, and the</p>
+<p>Sunday Thermal Model re-fit (step 9b, clamped to 25% per parameter) learns from that</p>
+<p>history. Duplicated rows weight a duplicated moment twice in whatever the re-fit</p>
+<p>averages. Small, and clamped — but it is a measurement feeding a control loop, and</p>
+<p>nobody would choose to double-count it.</p>
+
+<p><b>Not hypothetical, and not only about retries.</b> Any repeat of a pass duplicates</p>
+<p>these rows. The retry config just made repeats routine instead of rare.</p>
+
+<h2>What to build</h2>
+
+<p>Key the write and check before inserting, in the shape the same module already uses</p>
+<p>for feedback rows — </code>file_feedback(..., dedup_fragment=...)<code> at </code>climate_sweep.py:762<code></p>
+<p>queries </code>_open_feedback(fragment)<code> first and patches instead of creating. Copy that</p>
+<p>pattern rather than inventing a second one.</p>
+
+<p>Suggested key: </code>(studio, kind, pass timestamp truncated to the minute)<code> — the pass is</p>
+<p>hourly, so minute granularity cannot collide across real passes but does collapse a</p>
+<p>retry with its original. Put the key in a queryable place; </code>Entry<code> (title) is the</p>
+<p>obvious one, matching how ✅ Actions rows carry </code>[key]<code> in the title.</p>
+
+<p><b>Fail closed, like the treasurer does.</b> </code>treasurer_sweep._already_filed()<code> is the</p>
+<p>reference:</p>
+
+<p></code>`<code>python</p>
+<p>except Exception:</p>
+<p>return True  # &quot;could not check&quot; must not become &quot;not filed&quot;</p>
+<p></code>`<code></p>
+
+<p>A Notion read that errors must mean &quot;assume written, skip&quot; — never &quot;write again&quot;. The</p>
+<p>failure this ticket exists to prevent is a duplicate; a lost log row on a Notion blip</p>
+<p>is strictly the lesser harm.</p>
+
+<h2>Constraints</h2>
+
+<ul>
+<li>- <b>Junyan runs deploys.</b> Agent </code>gcloud<code> is blocked (this bit during the retry work</li>
+</ul>
+<p>on 2026-09-04 — some </code>scheduler jobs update<code> calls went through, most were refused).</p>
+<p>Deliver code, tests, the Plumbing Map entry, and paste-ready deploy commands.</p>
+<ul>
+<li>- <b>Do not touch the SDM command path.</b> Thermostat commands are naturally idempotent</li>
+</ul>
+<p>— </code>&quot;cool to 23.0°C&quot;<code> twice lands in the same place — and that half is not broken.</p>
+<ul>
+<li>- <b>Do not remove </code>climate-sweep<code>&#x27;s retries</b> as a workaround. The retries are the fix</li>
+</ul>
+<p>for a real outage; this is the small debt they created, and the debt is the thing to</p>
+<p>pay.</p>
+<ul>
+<li>- <b>Plumbing Map entry is part of done</b> — </code>day-sheet/plumbing.html<code>, newest-first, per</li>
+</ul>
+<p></code>CLAUDE.md<code>. Amend or supersede the 2026-09-04 03:09Z entry&#x27;s *&quot;one real wart, left</p>
+<p>deliberately unfixed&quot;* paragraph so the map stops describing a fixed thing as open.</p>
+<ul>
+<li>- Ships with the module&#x27;s existing flag discipline; no new env var unless the build</li>
+</ul>
+<p>genuinely needs one.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Running the same pass twice with the same </code>now<code> writes <b>one</b> row per studio, not two.</li>
+<li>- Running two genuinely different passes (different hours) writes <b>two</b> rows — the</li>
+</ul>
+<p>dedupe must not swallow real history.</p>
+<ul>
+<li>- A Notion read failure during the dedupe check results in <b>no write</b>, and is logged.</li>
+<li>- The Sunday re-fit&#x27;s input for a replayed hour is unchanged by the replay.</li>
+<li>- No change to any SDM command, and no change to the decision text in </code>notes<code>.</li>
+<li>- Full event-gate suite green.</li>
+</ul>
+
+<h2>Why now</h2>
+
+<p>Nothing is on fire. The retry change on 2026-09-04 converted a rare duplicate into a</p>
+<p>routine one, and this is the smallest correct answer to that. Worth doing before the</p>
+<p>next Sunday re-fit runs against a week that contains retried passes.</p>
+
+<h2>Evidence banked (2026-09-04)</h2>
+
+<ul>
+<li>- </code>climate-sweep<code> schedule </code>10 3,9-23 <i> </i> *<code> America/Toronto, </code>attemptDeadline 300s<code>,</li>
+</ul>
+<p>now </code>retryCount=2 minBackoff=30s maxBackoff=120s<code>.</p>
+<ul>
+<li>- The six outward-acting lanes were code-read before retries went on them. Five needed</li>
+</ul>
+<p>nothing: </code>booking_sweep<code> is idempotent by its own header, </code>greeter_sweep:936<code> gates</p>
+<p>every action on </code>if lane_common.filed_action(key) or _queue_key_exists(key): continue<code></p>
+<p><i>before</i> the SMS, and the three treasurer lanes never write to Stripe (read-only key,</p>
+<p></code>stripe_read.py<code>) with every row keyed. <b></code>climate_sweep<code> was the only one with a gap,</p>
+<p>and this is it.</b></p>
+<ul>
+<li>- ⚠️ Related but out of scope, noticed the same night and now <b>split out as its own ticket</b> —</li>
+</ul>
+<p><b>122 — the alarm that always rings, again</b>. </code>extension-sweep<code>,</p>
+<p></code>move-sweep<code> and </code>greeter-sweep<code> log healthy passes at </code>severity=ERROR<code> because </code>progress_level()<code></p>
+<p>only strips JSON-shaped counters, so their bare </code>errors 0<code> / </code>FAILED 0<code> survives into the prose scan</p>
+<p>and rings on its own zero. Nothing to do here; it lives in </code>app.py<code>, not </code>climate_sweep.py`.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">37</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -5227,7 +5352,536 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#113</span><span class="emoji">🚨</span><span class="done-title">Two real alarms called nobody — because the alarm-watcher was built but not switched on yet</span><span class="done-date">2026-09-01</span></summary><div class="done-body"><ul class="plain-bullets"><li>On August 15 two genuine alarms went off in studio 693 and nothing happened: no text to on-call, no staff-call row, no ticket</li><li>We suspected the phone line&#x27;s password had died that week. That was wrong, and worth saying plainly</li><li>The real answer: the alarm-watcher&#x27;s code was finished on August 15 but had not been put on the server yet. It went live on the 16th. On the day of those alarms there was simply nothing running to notice them</li><li>How we know it was not the phone line: texting and record-keeping use two different logins, so a dead phone login would have left a staff-call row behind and only the text missing. There was nothing at all — the fingerprint of a job that never ran</li><li>Checked today: the watcher is on the server, switched on, and reading the panels every minute</li><li>And the thing we feared is now covered twice over — since August 31 an alarm page that cannot get out by the usual phone line goes out through a second phone company instead</li><li>The wider lesson kept happening all week: code that exists and passes its tests, while nothing in the real system is calling it. Three times in seven days. It is now a written rule — check the running system, never the file on your laptop</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>event-gate ALARM lane never paged on the Aug 15 real 693 alarms</b></p><h2>113 — event-gate ALARM lane never paged on the Aug 15 real 693 alarms</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#104</span><span class="emoji">🗂️</span><span class="done-title">Propose the card merges, with evidence, now that Contact Points can show it</span><span class="done-date">2026-09-04</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>Propose the card merges, with evidence, now that Contact Points can show it</b></p><h2>Question</h2>
+
+<p><b>098</b> deferred the migration until the table existed so</p>
+<p>each proposed merge could <b>show its evidence</b>. It exists now</p>
+<p>(<b>101</b>), so: which live cards are the same human, and</p>
+<p>what does the desk put in front of Junyan for each one?</p>
+
+<p>The population, measured 2026-08-20: <b>42 cards whose primary email is a platform relay</b></p>
+<p>(27 Tagvenue, 19 Peerspace against the table&#x27;s own count), <b>25 names holding more than</p>
+<p>one live card</b>, and the 19 duplicate-code pairs from the alarm reconciliation, which must</p>
+<p>be reconciled against that list rather than worked separately.</p>
+
+<p><code>alice hamman</code> is the live example the 101 dry-run surfaced: two cards sharing one email,</p>
+<p>correctly refused as <code>artist:ambiguous</code> by the sweep on every pass until a human merges</p>
+<p>them. Each such card costs a booking a completed sweep.</p>
+
+<h2>The rule that does not move</h2>
+
+<p><b>Merges stay human-only and irreversible</b> (081/098). This ticket produces PROPOSALS —</p>
+<p>one row per candidate pair, each carrying its evidence (a shared stable contact point, a</p>
+<p>shared conversation uuid, a shared Skedda or Alarm user id) — never an executed merge.</p>
+
+<h2>What has to be decided</h2>
+
+<ul>
+<li>- What evidence is strong enough to <i>propose</i> at all, versus leave alone.</li>
+<li>- Where the proposals land, and in what shape a human can clear a batch of them quickly —</li>
+</ul>
+<p>the <b>077</b> lesson about unusable review forms applies.</p>
+<ul>
+<li>- How a merge, once done by hand, tidies the Contact Points rows behind it (both cards&#x27;</li>
+</ul>
+<p>rows point at the surviving human; nothing is deleted).</p>
+<ul>
+<li>- Coordination with <b>091</b>, which reads and writes these</li>
+</ul>
+<p>same Artist rows daily.</p>
+
+<p>---</p>
+
+<h2>2026-08-25 — evidence from the no-contact-point sweep, routed here per Junyan</h2>
+
+<p>Junyan&#x27;s ruling while clearing the &quot;66 unreachable cards&quot; number: <b>people arriving</p>
+<p>through multiple platforms are resolved through THIS ticket&#x27;s proposal pass</b>, not by</p>
+<p>ad-hoc filing during backfills. Two concrete inputs from that sweep:</p>
+
+<ol>
+<li>1. <b>Sindy O. / Sindy Ortiz</b> — the live cross-platform example. One card (&quot;Sindy O.&quot;,</li>
+</ol>
+<p>One-Off, created 2026-06-19 off a Giggster enquiry) with nothing on file; the mailbox</p>
+<p>also holds a 2025-04 <b>Tagvenue</b> arc as &quot;Sindy Ortiz&quot; with relay</p>
+<p><code>sindy.ortiz.u2257887@reply.tagvenue.com</code> (the OLD dot format — see dc-canon</p>
+<p><code>f24a09f6</code>). Same person is probable, not proven — exactly the evidence-carrying</p>
+<p>proposal row this ticket exists to put in front of Junyan. Do NOT file the Tagvenue</p>
+<p>relay onto the Giggster-era card ahead of that ruling.</p>
+<ol>
+<li>2. <b>~19 untagged 2026 platform guests with no contact point</b> (no <code>[Platform]</code> name</li>
+</ol>
+<p>tag: Preeti K. — Peerspace &quot;The Connection Social&quot;; Eman S; Monica C.; Darline T.;</p>
+<p>Mahaylia Hardie; Inaaya I.; Persis S.; Anna Ampily James; Mustafa C.; Laine H.; et</p>
+<p>al.). Their relays are recoverable by <code>Reply-To</code> (<code>scripts/gmail_reply_to.py</code>), but</p>
+<p>each backfill is also a potential merge input — a recovered relay may collide with</p>
+<p>an existing card&#x27;s contact point. Run the recovery WITH the proposal pass so a</p>
+<p>collision becomes a proposal row, never a silent second link.</p>
+
+<h2>2026-08-26 — one more merge under this ticket&#x27;s rules (Mariel), and the pass CLOSED</h2>
+
+<p>The 08-25 sheet was not the last of the class. The code-mirror fix deployed on 08-26 made</p>
+<p>a 21st pair visible: <b><code>Mariel [Giggster]</code> and <code>Marielle Torrefranca [One-Off]</code></b> — one</p>
+<p>human on two cards, both carrying the SAME alarm code. Junyan ruled it: *&quot;Mariel actually</p>
+<p>has two Artist pages that need to be merged.&quot;*</p>
+
+<p>Merged on this ticket&#x27;s standing rules — survivor favours the full name</p>
+<p>(<code>Marielle Torrefranca [One-Off]</code>), duplicate deleted after its content moved. Verified</p>
+<p>first, because a merge is irreversible: exactly ONE panel user matches &quot;Mariel&quot;</p>
+<p>(<code>Marielle Torrefranca</code>, <code>247310223</code>), and that user&#x27;s code matched both cards. Her</p>
+<p>Giggster-era phone was retargeted onto the survivor as a Contact Points row (Source</p>
+<p><code>giggster</code>) BEFORE the delete; read-back confirmed zero orphaned rows and three contact</p>
+<p>points on the survivor.</p>
+
+<p>Not a merge, recorded here because the same pass surfaced it: <b><code>Anita [Giggster]</code> was a</p>
+<p>FALSE duplicate.</b> The mirror flagged &quot;two panel users share this name&quot; because the card&#x27;s</p>
+<p>bare first name substring-matched both <code>Anita Pandey</code> and <code>Anita Shack</code>. She is a third</p>
+<p>person — her code matches neither, while each of theirs matches her own card. Renamed to</p>
+<p><code>Anita M. [Giggster]</code> from her Giggster arc in thedanceannex@gmail.com, which removes the</p>
+<p>collision at source. <b>This is the counter-example to &quot;same name ⇒ same person&quot;</b>, and it</p>
+<p>belongs beside this ticket&#x27;s threshold: a shared NAME is not evidence; a shared stable</p>
+<p>signal is.</p>
+
+<p><b>Ticket closed 2026-09-04.</b> Total executed under 104: <b>21 merges</b>, all human-ruled,</p>
+<p>all duplicates deleted after content moved, zero orphaned contact points at every</p>
+<p>read-back.</p>
+
+<h2>2026-08-25 — RULED AND EXECUTED (the 20-merge sheet)</h2>
+
+<p>Junyan ruled the full sheet same-day: <b>all 16 Tier A MERGE</b> (&quot;same number is proof&quot;;</p>
+<p>survivors favour full names; A8 → the [One-Off] card), <b>B1 MERGE</b> (Sindy relay filed</p>
+<p>recognition-only), <b>B2 NOT SAME</b> (Sheldon&#x27;s own email sheldonshannonyoga@gmail.com set</p>
+<p>from his Skedda profile; the shared cj.* address stays a contact point on both cards),</p>
+<p><b>B3–B6 MERGE</b>. Tidy ruling: <b>duplicates are DELETED after content moves</b> — overriding</p>
+<p>the keep-tombstones default for fresh merges (older tombstones kept; their ~22 contact</p>
+<p>points retargeted to survivors, Angus included).</p>
+
+<p>Execution (desk, on Junyan&#x27;s confirmation of the per-pair move table): 20 merges — fields</p>
+<p>filled only where the survivor was blank, conflicts noted in dated page-body merge notes</p>
+<p>(A8/A10/A13/A14 second alarm codes flagged for the next code audit), every duplicate&#x27;s</p>
+<p>contact rows retargeted, then the duplicate deleted. Verified by full re-dump: <b>1,035</p>
+<p>artist rows (was 1,055), zero orphaned contact points</b>; remaining flags are the</p>
+<p>documented leave-alones only.</p>
+
+<h2>2026-08-25 (later) — PROPOSAL PASS PRODUCED</h2>
+
+<p>The pass ran over a <b>full paginated dump</b> of both data sources (1,055 Artist rows, 1,733</p>
+<p>Contact Points rows — not a single SQL query, per the 08-13 staleness gotcha). Output is the</p>
+<p>one-sitting review sheet <b><b>104-merge-proposals-2026-08-25.md</b></b></p>
+<p>(also published as a private artifact: https://claude.ai/code/artifact/4334a85a-697f-4dfc-b5c2-791f902504d4): 16 Tier-A pairs (hard shared signal —</p>
+<p>stable contact point, relay, alarm code, or Alarm/Skedda user id — with ≥1 live card), 6</p>
+<p>Tier-B probables (Sindy O./Sindy Ortiz; Carrie Jiang/Sheldon Shannon; four 2026-04-21</p>
+<p>Tagvenue-import cards vs their 2025 [One-Off] twins), a post-merge-tidy proposal, and an</p>
+<p>appendix of everything checked and deliberately left alone. Nothing was merged, linked</p>
+<p>across candidate cards, or deleted.</p>
+
+<p>Open questions resolved:</p>
+
+<ul>
+<li>- <b>Threshold:</b> propose on ≥1 hard shared signal with a live card; probable-tier on</li>
+</ul>
+<p>conversation/era evidence; leave alone on name-only-with-distinct-signals and</p>
+<p>closed×closed pairs. A shared alarm code between different names is NOT identity.</p>
+<ul>
+<li>- <b>Where proposals land:</b> the single markdown sheet above, one Ruling column, tiered —</li>
+</ul>
+<p>the 077 lesson applied. No scattered Notion rows.</p>
+<ul>
+<li>- <b>Post-merge CP tidy:</b> proposed pattern in the sheet — retarget the tombstone&#x27;s Contact</li>
+</ul>
+<p>Points rows&#x27; <code>Artist</code> relation to the survivor at merge time; rows kept, never deleted.</p>
+<p>Awaiting ruling; ~20 tombstone-linked rows exist today.</p>
+
+<p>Population reconciliation: of the alarm report&#x27;s 13 same-person duplicate-code pairs, <b>10</p>
+<p>are already merged</b> (tombstones verified in the dump) — only Rita Stefan, Julia S., and</p>
+<p>Jesse remain, as A2/A3/A4. The 08-20 count of &quot;25 names holding more than one live card&quot;</p>
+<p>is now 13 exact-name pairs, all covered in the sheet or the appendix. <b>Alice Hamman now</p>
+<p>resolves to a single card</b> — the ticket&#x27;s live example was fixed upstream.</p>
+
+<p>Relay recovery (addendum item 2): 12 remaining no-contact-point 2026 untagged guests, all</p>
+<p>recovered via <code>gmail_reply_to.py</code> against thedanceannex@gmail.com (searched via the local</p>
+<p>gmail-business connector; hosted connector not attached to this session). <b>Zero</p>
+<p>collisions</b> with existing Contact Points, so 14 rows were filed directly per</p>
+<p>relay-addresses.md (Peerspace + Giggster relays <code>recognition-only</code> under the age rule;</p>
+<p>the two Tagvenue relays <code>usable</code>, inside the 145-day observed arc). Sindy Ortiz&#x27;s</p>
+<p>Tagvenue relay was NOT filed — held as B1 evidence per Junyan&#x27;s ruling.</p>
+
+<p><b>Canon finding:</b> Giggster DOES mint an email relay — <code>&lt;conversation-uuid&gt;@reply.giggster.com</code></p>
+<p>in the notification&#x27;s Reply-To (7 live samples this pass). relay-addresses.md says</p>
+<p>Giggster&#x27;s relay is &quot;an SMS proxy number, never an address&quot;; that needs a correction.</p>
+<p>Filed as Source=giggster, Booking Ref = the conversation uuid.</p>
+
+<p>---</p>
+
+<p>Also relevant: the <b>Aaron Aquino-Annobil</b> pair (one alarm identity on two cards) was</p>
+<p>merged 2026-08-25 on Junyan&#x27;s explicit instruction — tombstone pattern, survivor</p>
+<p><code>Aaron Aquino-Annobil [Skedda]</code>. It is this ticket&#x27;s class and is recorded here as a</p>
+<p>worked example of the mechanics: content moved, duplicate Closed + renamed as a</p>
+<p>signpost, alarm fields cleared on the tombstone so no audit reads two claimants.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#122</span><span class="emoji">🗂️</span><span class="done-title">The alarm that always rings, again — healthy sweeps log at ERROR on three routes</span><span class="done-date">2026-09-04</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>The alarm that always rings, again — healthy sweeps log at ERROR on three routes</b></p><h2>Question</h2>
+
+<p><code>extension-sweep</code>, <code>move-sweep</code> and <code>greeter-sweep</code> log their <b>healthy</b> result lines at</p>
+<p><code>severity=ERROR</code>, every 5 minutes, around the clock:</p>
+
+<p>``<code>json</p>
+<p>{&quot;decision&quot;: &quot;extension-sweep&quot;, &quot;reason&quot;: &quot;extension: scanned 28, acted 0, skipped 0, errors 0&quot;}</p>
+<p>{&quot;decision&quot;: &quot;move-sweep&quot;,      &quot;reason&quot;: &quot;move: scanned 30, acted 0, skipped 0, errors 0&quot;}</p>
+<p>{&quot;decision&quot;: &quot;greeter-sweep&quot;,   &quot;reason&quot;: &quot;greeter: scanned 8, acted 1, FAILED 0, nagged 0, closed 0, errors 0&quot;}</p>
+<p></code>`<code></p>
+
+<p>So </code>gcloud logging read &#x27;... severity&gt;=ERROR&#x27;<code> on </code>event-gate<code> returns a wall of healthy</p>
+<p>passes and a real failure hides in it.</p>
+
+<p><b>This is a regression of an already-fixed bug.</b> </code>test_app_log_severity.py<code> opens with:</p>
+
+<blockquote>A healthy sweep pass must emit no ERROR-level log record.</blockquote>
+<p>&gt;</p>
+<blockquote>Until 2026-08-31 every sweep route&#x27;s progress callback logged at ERROR unconditionally</blockquote>
+<blockquote>[...] A real failure was indistinguishable from routine chatter — <b>the alarm that always</blockquote>
+<blockquote>rings.</b> These tests pin the quiet.</blockquote>
+
+<p>The fix landed. It does not cover these three routes.</p>
+
+<p><b>Found 2026-09-04</b> while diagnosing the </code>sentinel-sweep<code> false outage — a </code>severity&gt;=ERROR<code></p>
+<p>read during a live incident returned nothing but healthy sweeps and cost a diagnostic step.</p>
+<p>That is the exact scenario the original fix was written for.</p>
+
+<h2>Root cause — a counter the parser cannot see</h2>
+
+<p></code>progress_level()<code> (</code>app.py:245<code>) makes two passes, and the design is right:</p>
+
+<ol>
+<li>1. Read JSON counters. A trouble-named key holding zero means <b>fine</b> — *&quot;A counter saying</li>
+</ol>
+<p>zero is the strongest possible statement that nothing went wrong; it must never be what</p>
+<p>sets off the alarm.&quot;*</p>
+<ol>
+<li>2. Strip those pairs out, then scan what is LEFT as prose for alarm words.</li>
+</ol>
+
+<p>The counter pass only recognises <b>JSON-shaped</b> pairs (</code>app.py:223<code>):</p>
+
+<p></code>`<code>python</p>
+<p>_JSON_PAIR = re.compile(</p>
+<p>r&#x27;&quot;(\w+)&quot;\s*:\s*(&quot;(?:[^&quot;\\]|\\.)<i>&quot;|\<b>^\</b></i>\]|\{[^}]*\}|[\w.+-]+)&#x27;)</p>
+<p></code>`<code></p>
+
+<p>These three routes emit <b>bare prose counters</b> — </code>errors 0<code>, </code>FAILED 0<code>. No quotes, no</p>
+<p>colon. So:</p>
+
+<ul>
+<li>- the counter pass matches nothing and finds no trouble;</li>
+<li>- </code>_JSON_PAIR.sub(&quot; &quot;, text)<code> removes nothing, so the counters survive into the prose;</li>
+<li>- the prose pass hits </code>&quot;error&quot;<code> and </code>&quot;failed&quot;<code> in </code>_PROGRESS_ALARM_WORDS<code> (</code>app.py:211<code>)</li>
+</ul>
+<p>and returns </code>logging.ERROR<code>.</p>
+
+<p><b>The line rings precisely because it reported zero errors.</b> Same disease the docstring</p>
+<p>already describes for </code>&quot;errors&quot;: 0<code>, one syntax over.</p>
+
+<p>Reproduced 2026-09-04 against the real logic (</code>_JSON_PAIR<code>, </code>_ALARM_KEY_STEMS<code> at</p>
+<p></code>app.py:219<code>, and </code>_counter_reports_trouble<code> at </code>app.py:232<code>, all copied verbatim):</p>
+
+<p></code>`<code></p>
+<p>ERROR  extension: scanned 28, acted 0, skipped 0, errors 0</p>
+<p>ERROR  move: scanned 30, acted 0, skipped 0, errors 0</p>
+<p>ERROR  greeter: scanned 8, acted 1, FAILED 0, nagged 0, closed 0, errors 0</p>
+<p>INFO   booking sweep daily lanes (live): EOB 0, AVA 0, RA 0, updated 1, skipped 0</p>
+<p>INFO   {&quot;ok&quot;: true, &quot;updated&quot;: 1, &quot;errors&quot;: 0, &quot;errors_detail&quot;: []}</p>
+<p></code>`<code></p>
+
+<p><b>The JSON path is correct</b> — including the empty-container guard at </code>app.py:236<code></p>
+<p>(</code>if value in (&quot;0&quot;, &quot;0.0&quot;, &quot;false&quot;, &quot;null&quot;, &quot;none&quot;, &quot;[]&quot;, &quot;{}&quot;, &#x27;&quot;&quot;&#x27;)<code>). Only the bare-prose</p>
+<p>path is broken. An earlier reproduction that omitted line 236 falsely flagged the JSON case</p>
+<p>too; do not go chasing that.</p>
+
+<h2>Why the suite is green</h2>
+
+<p></code>HEALTHY<code> in </code>test_app_log_severity.py:32<code> covers exactly six routes:</p>
+
+<p></code>`<code></p>
+<p>[&#x27;invariants&#x27;, &#x27;loop&#x27;, &#x27;booking_sweep&#x27;, &#x27;insurance_sweep&#x27;, &#x27;drop_sweep&#x27;, &#x27;treasurer_sweep&#x27;]</p>
+<p></code>`<code></p>
+
+<p></code>grep -n &quot;extension\|move_sweep\|greeter&quot; test_app_log_severity.py<code> returns <b>nothing</b>. The</p>
+<p>three routes that ring are precisely the three the test does not cover. The blind spot maps</p>
+<p>one-to-one onto the failure.</p>
+
+<h2>What to build</h2>
+
+<p>Teach the counter pass to also read bare </code>word N<code> counters, then let the existing prose scan</p>
+<p>run on what is left. Two candidate shapes — pick one and say why in the code comment:</p>
+
+<ol>
+<li>1. <b>A second regex</b> alongside </code>_JSON_PAIR<code>, e.g. </code>\b(\w+)\s+(\d+)\b<code>, fed through the same</li>
+</ol>
+<p></code>_counter_reports_trouble()<code> and subtracted from the prose the same way. Simple; risks</p>
+<p>eating real prose that happens to be </code>word number<code>.</p>
+<ol>
+<li>2. <b>Normalise at the source</b> — have the three routes emit their summaries in the JSON shape</li>
+</ol>
+<p>the parser already handles. Cleaner parser, but touches three modules and changes log text</p>
+<p>humans read.</p>
+
+<p>Either way the rule stays: <b>a trouble-named counter reading zero must never ring.</b></p>
+
+<p>Then close the blind spot: add </code>extension_sweep<code>, </code>move_sweep<code> and </code>greeter_sweep<code> to</p>
+<p></code>HEALTHY<code> with their <b>real</b> production strings (the three at the top of this ticket,</p>
+<p>verbatim — not JSON paraphrases, which is how the gap opened).</p>
+
+<h2>Constraints</h2>
+
+<ul>
+<li>- <b>Junyan runs deploys.</b> Agent </code>gcloud<code> is blocked or intermittently refused. Deliver code,</li>
+</ul>
+<p>tests, the Plumbing Map entry, and paste-ready deploy commands, then hand over.</p>
+<ul>
+<li>- <b>Do not widen </code>_PROGRESS_ALARM_WORDS<code> or delete words from it.</b> The words are correct;</li>
+</ul>
+<p>the counters reaching them are the bug.</p>
+<ul>
+<li>- <b>Do not change what the three routes report</b> — the counts are useful. Only the severity</li>
+</ul>
+<p>and, optionally, the formatting are in scope.</p>
+<ul>
+<li>- <b>Do not touch the JSON path.</b> It is right, and its empty-container guard is load-bearing.</li>
+<li>- <b>Plumbing Map entry is part of done</b> — </code>day-sheet/plumbing.html<code>, newest-first, per</li>
+</ul>
+<p></code>CLAUDE.md<code>. ⚠️ That repo takes automated commits from other sessions every few minutes; on</p>
+<p>2026-09-04 another session swept an uncommitted edit into its own commit. <b>Verify your text</p>
+<p>is in </code>HEAD<code> before pushing</b>, not just that your </code>git commit<code> returned 0.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- All three production strings above classify as </code>INFO<code>.</li>
+<li>- A genuinely failing line on the same routes still classifies as </code>ERROR<code> — e.g.</li>
+</ul>
+<p></code>extension: scanned 28, acted 0, skipped 0, errors 3<code>, and a prose complaint like</p>
+<p></code>greeter: could not read the board<code>.</p>
+<ul>
+<li>- </code>booking sweep daily lanes (live): EOB 0, AVA 0, RA 0, updated 1, skipped 0<code> stays </code>INFO<code>.</li>
+<li>- </code>{&quot;ok&quot;: true, &quot;updated&quot;: 1, &quot;errors&quot;: 0, &quot;errors_detail&quot;: []}<code> stays </code>INFO<code>.</li>
+<li>- The six routes already in </code>HEALTHY<code> keep their existing behaviour, unchanged.</li>
+<li>- </code>HEALTHY<code> gains the three missing routes, using the verbatim production strings.</li>
+<li>- Full event-gate suite green.</li>
+</ul>
+
+<h2>Why now</h2>
+
+<p>Small, bounded, and it degrades incident response — which is when logs matter most. It also</p>
+<p>restores a fix somebody already paid for once. Split out of</p>
+<p><b>121</b>, where it was a footnote in a ticket about a Notion write in</p>
+<p>a different module and would never have been picked up.</p>
+
+<h2>Progress (2026-09-04) — BUILT, TESTED, PUSHED. Not deployed; Junyan holds the deploy.</h2>
+
+<p><b>Pushed: dc-canon </code>f1684e9e<code></b> on </code>origin/main<code>. Plumbing Map: day-sheet </code>b8e0b2b<code>.</p>
+
+<h3>The diagnosis, verified — not re-derived</h3>
+
+<p>Reproduced against the <b>real</b> </code>app.py<code>, imported, not copied:</p>
+
+<p></code>`<code></p>
+<p>ERROR  extension: scanned 28, acted 0, skipped 0, errors 0</p>
+<p>ERROR  move: scanned 30, acted 0, skipped 0, errors 0</p>
+<p>ERROR  greeter: scanned 8, acted 1, FAILED 0, nagged 0, closed 0, errors 0</p>
+<p>INFO   booking sweep daily lanes (live): EOB 0, AVA 0, RA 0, updated 1, skipped 0</p>
+<p>INFO   {&quot;ok&quot;: true, &quot;updated&quot;: 1, &quot;errors&quot;: 0, &quot;errors_detail&quot;: []}</p>
+<p></code>`<code></p>
+
+<p>Matches the ticket exactly. The JSON path was already correct and was not touched.</p>
+
+<h3>Which fix shape, and why</h3>
+
+<p><b>Shape 1 — a second regex in the parser.</b> Rejected shape 2 (normalise the three routes</p>
+<p>to emit JSON summaries) for one reason, written into the code comment at </code>app.py:225<code>:</p>
+
+<blockquote>The routes are not the bug — the parser&#x27;s blind spot is, and route number four would</blockquote>
+<blockquote>open it again. Bare </code>word N<code> is how humans write a summary; the parser has to be able</blockquote>
+<blockquote>to read one.</blockquote>
+
+<p>Shape 2 fixes three instances. Shape 1 fixes the class. It also leaves the three routes&#x27;</p>
+<p>log text exactly as it is, which the constraints asked for.</p>
+
+<p><b>The ticket&#x27;s stated risk with shape 1 — &quot;risks eating real prose that happens to be</p>
+<p></code>word number<code>&quot; — is real and is handled by narrowing the strip.</b> </code>_JSON_PAIR.sub<code> can</p>
+<p>remove every pair it matched, because a JSON pair is never prose. A bare </code>word N<code> often</p>
+<p><i>is</i> prose. So </code>_quiet_prose_counter<code> removes <b>only trouble-named keys</b>, and by the time</p>
+<p>it runs, a trouble-named counter has already rung if it held anything — what comes out is</p>
+<p>always a zero. A blanket </code>word N<code> strip would have eaten </code>out 5<code> from </code>timed out 5 times<code></p>
+<p>and taken </code>timed out<code> with it, going silently quiet: the same disease pointed the other</p>
+<p>way. Pinned as a TROUBLE case.</p>
+
+<h3>Acceptance, line by line</h3>
+
+<p>| # | Acceptance item | Proved by | Result |</p>
+<p>|---|---|---|---|</p>
+<p>| 1 | All three production strings classify </code>INFO<code> | direct call on the patched </code>progress_level<code>, and </code>ROUTINE<code> params in </code>test_progress_level_stays_quiet_on_routine_lines<code> | <b>INFO, INFO, INFO</b> |</p>
+<p>| 2 | A genuinely failing line still classifies </code>ERROR<code> | </code>extension: … errors 3<code> → ERROR; </code>greeter: could not read the board<code> → ERROR. Both in </code>TROUBLE<code>, plus </code>greeter: … FAILED 2, …<code>, </code>move lane failed on Sat 14:00: TimeoutError<code>, </code>extension: skedda timed out 5 times<code> | <b>ERROR on all five</b> |</p>
+<p>| 3 | </code>booking sweep daily lanes (live): EOB 0, AVA 0, RA 0, updated 1, skipped 0<code> stays </code>INFO<code> | already in </code>ROUTINE<code>; re-checked directly | <b>INFO</b> |</p>
+<p>| 4 | </code>{&quot;ok&quot;: true, &quot;updated&quot;: 1, &quot;errors&quot;: 0, &quot;errors_detail&quot;: []}<code> stays </code>INFO<code> | already in </code>ROUTINE<code>; re-checked directly | <b>INFO</b> |</p>
+<p>| 5 | The six existing </code>HEALTHY<code> routes unchanged | see the 8,335-string sweep below | <b>unchanged</b> |</p>
+<p>| 6 | </code>HEALTHY<code> gains the three routes, verbatim strings | </code>test_app_log_severity.py<code>, strings copied byte-for-byte from this ticket&#x27;s header | <b>added</b> |</p>
+<p>| 7 | Full event-gate suite green | </code>.venv/bin/python -m pytest -q<code> | <b>1310 passed, 0 failed</b> (1294 before) |</p>
+
+<p>*(1310 was the count at </code>f1684e9e<code>. Other sessions have pushed since; re-run at</p>
+<p>dc-canon </code>33a639a7<code> gives <b>1314 passed, 0 failed</b>, and </code>_PROSE_COUNTER<code> is still in</p>
+<p></code>origin/main<code>&#x27;s </code>app.py<code>.)*</p>
+
+<h3>Item 5, properly: nothing else moved</h3>
+
+<p>A count of passing tests does not prove absence of change. So old and new </code>progress_level<code></p>
+<p>were run side by side over <b>every string literal in the service</b> — 8,335 of them,</p>
+<p>harvested by AST from all 44 modules, f-strings included with their slots filled:</p>
+
+<p></code>`<code></p>
+<p>corpus size: 8335 strings</p>
+<p>verdict changed on: 8</p>
+<p>ERROR -&gt; INFO   &#x27;extension: scanned 28, acted 0, skipped 0, errors 0&#x27;</p>
+<p>ERROR -&gt; INFO   &#x27;extension: scanned 0, acted 0, skipped 0, errors 0&#x27;</p>
+<p>ERROR -&gt; INFO   &#x27;move: scanned 30, acted 0, skipped 0, errors 0&#x27;</p>
+<p>ERROR -&gt; INFO   &#x27;move: scanned 0, acted 0, skipped 0, errors 0&#x27;</p>
+<p>ERROR -&gt; INFO   &#x27;greeter: scanned 8, acted 1, FAILED 0, nagged 0, closed 0, errors 0&#x27;</p>
+<p>ERROR -&gt; INFO   &#x27;greeter: scanned 0, acted 0, FAILED 0, nagged 0, closed 0, errors 0&#x27;</p>
+<p>ERROR -&gt; INFO   &#x27;corr-log: FAILED 0: 0&#x27;</p>
+<p>ERROR -&gt; INFO   &quot;…alarm watch has failed 0+ consecutive live-panel reads…&quot;</p>
+<p></code>`<code></p>
+
+<p>Six are the three target routes, at zero counts and at live counts. <b>The last two are</p>
+<p>artifacts of my own harvester</b>, which filled every f-string slot with the literal </code>0<code>:</p>
+
+<ul>
+<li>- </code>corr_log.py:135<code> is </code>f&quot;corr-log: FAILED {str(message.get(&#x27;id&#x27;))[-8:]}: {error}&quot;<code> — the</li>
+</ul>
+<p>slot is an <b>8-char message-id suffix, not a count</b>. Real form</p>
+<p></code>corr-log: FAILED 19a2f3c1: HTTPError 500<code> → <b>ERROR</b>.</p>
+<ul>
+<li>- </code>alarm_watch.py:318<code> is a <b>Notion page body, not a log line</b> — it never reaches</li>
+</ul>
+<p></code>progress_level<code> at all. And </code>MAX_SILENT_FAILURES = 15<code>, so the real text is</p>
+<p></code>has failed 15+ consecutive…<code> → <b>ERROR</b>.</p>
+
+<p>Both are now pinned in </code>TROUBLE<code> so neither can drift quiet later.</p>
+
+<h3>The tests catch the real bug, not a tautology</h3>
+
+<p>The 8 new tests were run against the <b>pre-fix</b> </code>app.py<code> (</code>git stash push -- app.py<code>).</p>
+<p>All 8 fail there:</p>
+
+<p></code>`<code></p>
+<p>FAILED test_a_healthy_pass_emits_no_error_records[extension_sweep]</p>
+<p>FAILED test_a_healthy_pass_emits_no_error_records[greeter_sweep]</p>
+<p>FAILED test_a_healthy_pass_emits_no_error_records[move_sweep]</p>
+<p>FAILED test_progress_level_stays_quiet_on_routine_lines[extension: scanned 28, acted 0, skipped 0, errors 0]</p>
+<p>FAILED test_progress_level_stays_quiet_on_routine_lines[move: scanned 30, acted 0, skipped 0, errors 0]</p>
+<p>FAILED test_progress_level_stays_quiet_on_routine_lines[greeter: scanned 8, acted 1, FAILED 0, nagged 0, closed 0, errors 0]</p>
+<p>FAILED test_a_bare_prose_counter_reads_as_a_counter_not_as_prose</p>
+<p>FAILED test_the_two_counter_syntaxes_agree</p>
+<p>8 failed, 36 passed</p>
+<p></code>`<code></p>
+
+<p></code>app.py<code> was restored byte-identical afterwards (</code>diff -q<code> clean) before committing.</p>
+
+<h3>Constraints honoured</h3>
+
+<ul>
+<li>- </code>_PROGRESS_ALARM_WORDS<code> — <b>untouched</b>, neither widened nor trimmed.</li>
+<li>- The three routes&#x27; report text — <b>untouched</b>. Only severity changed.</li>
+<li>- The JSON path, including the empty-container guard at the old </code>app.py:236<code> — <b>untouched</b>.</li>
+<li>- No deploy attempted.</li>
+</ul>
+
+<h2>Deploy — Junyan&#x27;s to run</h2>
+
+<p>Nothing to flip; no env var, no trigger, no cadence. It is a code change that ships with</p>
+<p>the next deploy of the service. Until it serves, the live logs keep shouting on every</p>
+<p>healthy pass — noisy, but harmless.</p>
+
+<p></code>`<code>bash</p>
+<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; git pull --rebase --autostash &amp;&amp; git status --short &amp;&amp; gcloud run deploy event-gate --source services/event-gate --region us-central1 --project danceannex-skedda</p>
+<p></code>`<code></p>
+
+<p>Then, 5–10 minutes later, the check that closes this ticket. <b>This should return zero</p>
+<p>rows</b> — the three routes fire every 5 minutes, so an hour&#x27;s freshness is ~12 passes each:</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud logging read &#x27;resource.labels.service_name=&quot;event-gate&quot; AND severity&gt;=ERROR AND (jsonPayload.decision=&quot;extension-sweep&quot; OR jsonPayload.decision=&quot;move-sweep&quot; OR jsonPayload.decision=&quot;greeter-sweep&quot;)&#x27; --project danceannex-skedda --limit 20 --freshness 1h</p>
+<p></code>`<code></p>
+
+<p>And the positive control — the same passes must still be <b>logging</b>, at INFO, so &quot;quiet&quot;</p>
+<p>cannot be confused with &quot;dead&quot; (the exact trap ticket 120 fell into):</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud logging read &#x27;resource.labels.service_name=&quot;event-gate&quot; AND jsonPayload.decision=&quot;greeter-sweep&quot;&#x27; --project danceannex-skedda --limit 10 --freshness 1h</p>
+<p></code>`<code></p>
+
+<p>Ticket stays </code>open<code> until both reads come back right on a serving revision.</p>
+
+<h2>Deploy log (2026-09-04) — LIVE and verified. Ticket closed.</h2>
+
+<p>Junyan deployed. The fix is serving and both closing checks pass.</p>
+
+<p>| | |</p>
+<p>|---|---|</p>
+<p>| Commit </code>f1684e9e<code> pushed | </code>2026-09-04T12:03:50Z<code> |</p>
+<p>| Cloud Build </code>08edef5e<code> (<b>us-central1</b>) | </code>2026-09-04T12:06:46Z<code> SUCCESS |</p>
+<p>| Revision </code>event-gate-00218-nt4<code> created | </code>2026-09-04T12:07:45Z<code> |</p>
+<p>| First sweep pass on it | </code>2026-09-04T12:10:22Z<code> |</p>
+
+<h3>Before / after, same routes, same strings</h3>
+
+<p>Last passes on the old revisions:</p>
+
+<p></code>`<code></p>
+<p>12:05:26Z  ERROR  event-gate-00217-jbq  greeter: scanned 9, acted 2, FAILED 0, nagged 0, closed 0, errors 0</p>
+<p>12:05:21Z  ERROR  event-gate-00217-jbq  move: scanned 31, acted 0, skipped 0, errors 0</p>
+<p>12:05:10Z  ERROR  event-gate-00217-jbq  extension: scanned 30, acted 0, skipped 0, errors 0</p>
+<p></code>`<code></p>
+
+<p>First pass on </code>00218<code>:</p>
+
+<p></code>`<code></p>
+<p>12:10:32Z  INFO   extension: scanned 30, acted 0, skipped 0, errors 0</p>
+<p>12:10:22Z  INFO   move: scanned 31, acted 0, skipped 0, errors 0</p>
+<p>12:10:19Z  INFO   greeter: scanned 9, acted 2, FAILED 0, nagged 0, closed 0, errors 0</p>
+<p></code>`<code></p>
+
+<p><b>Byte-identical text, different severity</b> — exactly the scope the ticket allowed. The</p>
+<p>counts are untouched.</p>
+
+<h3>Both closing checks, over four sweep cycles</h3>
+
+<p>Sampled at </code>12:16:27Z<code>, </code>12:21:30Z<code>, </code>12:26:32Z<code>, plus a final read at </code>12:26:45Z<code>:</p>
+
+<p>| Check | ERROR rows from the three routes | INFO rows from the three routes |</p>
+<p>|---|---|---|</p>
+<p>| 12:16:27Z | <b>0</b> | 12 |</p>
+<p>| 12:21:30Z | <b>0</b> | 18 |</p>
+<p>| 12:26:32Z | <b>0</b> | 24 |</p>
+
+<p>The INFO count climbing 6 → 12 → 18 → 24 is the <b>positive control</b>, and it is the half</p>
+<p>that matters: two rows per route per 5-minute cycle, dead on schedule. *The routes went</p>
+<p>quiet because they are healthy, not because they stopped* — the exact confusion ticket 120</p>
+<p>fell into, so it is proved here rather than assumed.</p>
+
+<p>And the real goal, </code>severity&gt;=ERROR<code> on the <b>whole service</b> since </code>00218<code> went live:</p>
+
+<p></code>`<code></p>
+<p>[zero rows]</p>
+<p></code>`<code></p>
+
+<p></code>gcloud logging read &#x27;… severity&gt;=ERROR&#x27;<code> on event-gate is a usable query again.</p>
+
+<h3>One process note worth keeping</h3>
+
+<p>The first </code>gcloud builds list<code> I ran showed <b>nothing newer than 2026-09-03</b>, which read as</p>
+<p>&quot;no deploy happened&quot;. Wrong list: <b></code>gcloud builds list<code> defaults to the global region</b>, and</p>
+<p>Cloud Run source deploys for this service build in <b></code>us-central1<code></b>. </code>--region us-central1<code></p>
+<p>showed the build immediately. *An empty build list is not evidence of no build until it has</p>
+<p>been run against the right region* — the same shape as the three-mailboxes rule in </code>CLAUDE.md<code>.</p>
+
+<p>Status → </code>closed`.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#113</span><span class="emoji">🚨</span><span class="done-title">Two real alarms called nobody — because the alarm-watcher was built but not switched on yet</span><span class="done-date">2026-09-01</span></summary><div class="done-body"><ul class="plain-bullets"><li>On August 15 two genuine alarms went off in studio 693 and nothing happened: no text to on-call, no staff-call row, no ticket</li><li>We suspected the phone line&#x27;s password had died that week. That was wrong, and worth saying plainly</li><li>The real answer: the alarm-watcher&#x27;s code was finished on August 15 but had not been put on the server yet. It went live on the 16th. On the day of those alarms there was simply nothing running to notice them</li><li>How we know it was not the phone line: texting and record-keeping use two different logins, so a dead phone login would have left a staff-call row behind and only the text missing. There was nothing at all — the fingerprint of a job that never ran</li><li>Checked today: the watcher is on the server, switched on, and reading the panels every minute</li><li>And the thing we feared is now covered twice over — since August 31 an alarm page that cannot get out by the usual phone line goes out through a second phone company instead</li><li>The wider lesson kept happening all week: code that exists and passes its tests, while nothing in the real system is calling it. Three times in seven days. It is now a written rule — check the running system, never the file on your laptop</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>event-gate ALARM lane never paged on the Aug 15 real 693 alarms</b></p><h2>113 — event-gate ALARM lane never paged on the Aug 15 real 693 alarms</h2>
 
 <p><b>Filed:</b> 2026-08-27, from Actions board row 3be75032-81c4-814a (The Custodian, 2026-08-16). Row closed to this ticket at the plate-clearing sitting.</p>
 
@@ -5843,143 +6497,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>his call.</p>
 
 <p>Status: <b>closed.</b> Remaining: deploy </code>3b1c3563` (blocked on approval at time of writing).</p>
-</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#104</span><span class="emoji">🗂️</span><span class="done-title">Propose the card merges, with evidence, now that Contact Points can show it</span><span class="done-date">2026-08-25</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>Propose the card merges, with evidence, now that Contact Points can show it</b></p><h2>Question</h2>
-
-<p><b>098</b> deferred the migration until the table existed so</p>
-<p>each proposed merge could <b>show its evidence</b>. It exists now</p>
-<p>(<b>101</b>), so: which live cards are the same human, and</p>
-<p>what does the desk put in front of Junyan for each one?</p>
-
-<p>The population, measured 2026-08-20: <b>42 cards whose primary email is a platform relay</b></p>
-<p>(27 Tagvenue, 19 Peerspace against the table&#x27;s own count), <b>25 names holding more than</p>
-<p>one live card</b>, and the 19 duplicate-code pairs from the alarm reconciliation, which must</p>
-<p>be reconciled against that list rather than worked separately.</p>
-
-<p><code>alice hamman</code> is the live example the 101 dry-run surfaced: two cards sharing one email,</p>
-<p>correctly refused as <code>artist:ambiguous</code> by the sweep on every pass until a human merges</p>
-<p>them. Each such card costs a booking a completed sweep.</p>
-
-<h2>The rule that does not move</h2>
-
-<p><b>Merges stay human-only and irreversible</b> (081/098). This ticket produces PROPOSALS —</p>
-<p>one row per candidate pair, each carrying its evidence (a shared stable contact point, a</p>
-<p>shared conversation uuid, a shared Skedda or Alarm user id) — never an executed merge.</p>
-
-<h2>What has to be decided</h2>
-
-<ul>
-<li>- What evidence is strong enough to <i>propose</i> at all, versus leave alone.</li>
-<li>- Where the proposals land, and in what shape a human can clear a batch of them quickly —</li>
-</ul>
-<p>the <b>077</b> lesson about unusable review forms applies.</p>
-<ul>
-<li>- How a merge, once done by hand, tidies the Contact Points rows behind it (both cards&#x27;</li>
-</ul>
-<p>rows point at the surviving human; nothing is deleted).</p>
-<ul>
-<li>- Coordination with <b>091</b>, which reads and writes these</li>
-</ul>
-<p>same Artist rows daily.</p>
-
-<p>---</p>
-
-<h2>2026-08-25 — evidence from the no-contact-point sweep, routed here per Junyan</h2>
-
-<p>Junyan&#x27;s ruling while clearing the &quot;66 unreachable cards&quot; number: <b>people arriving</p>
-<p>through multiple platforms are resolved through THIS ticket&#x27;s proposal pass</b>, not by</p>
-<p>ad-hoc filing during backfills. Two concrete inputs from that sweep:</p>
-
-<ol>
-<li>1. <b>Sindy O. / Sindy Ortiz</b> — the live cross-platform example. One card (&quot;Sindy O.&quot;,</li>
-</ol>
-<p>One-Off, created 2026-06-19 off a Giggster enquiry) with nothing on file; the mailbox</p>
-<p>also holds a 2025-04 <b>Tagvenue</b> arc as &quot;Sindy Ortiz&quot; with relay</p>
-<p><code>sindy.ortiz.u2257887@reply.tagvenue.com</code> (the OLD dot format — see dc-canon</p>
-<p><code>f24a09f6</code>). Same person is probable, not proven — exactly the evidence-carrying</p>
-<p>proposal row this ticket exists to put in front of Junyan. Do NOT file the Tagvenue</p>
-<p>relay onto the Giggster-era card ahead of that ruling.</p>
-<ol>
-<li>2. <b>~19 untagged 2026 platform guests with no contact point</b> (no <code>[Platform]</code> name</li>
-</ol>
-<p>tag: Preeti K. — Peerspace &quot;The Connection Social&quot;; Eman S; Monica C.; Darline T.;</p>
-<p>Mahaylia Hardie; Inaaya I.; Persis S.; Anna Ampily James; Mustafa C.; Laine H.; et</p>
-<p>al.). Their relays are recoverable by <code>Reply-To</code> (<code>scripts/gmail_reply_to.py</code>), but</p>
-<p>each backfill is also a potential merge input — a recovered relay may collide with</p>
-<p>an existing card&#x27;s contact point. Run the recovery WITH the proposal pass so a</p>
-<p>collision becomes a proposal row, never a silent second link.</p>
-
-<h2>2026-08-25 (latest) — RULED AND EXECUTED, TICKET DONE</h2>
-
-<p>Junyan ruled the full sheet same-day: <b>all 16 Tier A MERGE</b> (&quot;same number is proof&quot;;</p>
-<p>survivors favour full names; A8 → the [One-Off] card), <b>B1 MERGE</b> (Sindy relay filed</p>
-<p>recognition-only), <b>B2 NOT SAME</b> (Sheldon&#x27;s own email sheldonshannonyoga@gmail.com set</p>
-<p>from his Skedda profile; the shared cj.* address stays a contact point on both cards),</p>
-<p><b>B3–B6 MERGE</b>. Tidy ruling: <b>duplicates are DELETED after content moves</b> — overriding</p>
-<p>the keep-tombstones default for fresh merges (older tombstones kept; their ~22 contact</p>
-<p>points retargeted to survivors, Angus included).</p>
-
-<p>Execution (desk, on Junyan&#x27;s confirmation of the per-pair move table): 20 merges — fields</p>
-<p>filled only where the survivor was blank, conflicts noted in dated page-body merge notes</p>
-<p>(A8/A10/A13/A14 second alarm codes flagged for the next code audit), every duplicate&#x27;s</p>
-<p>contact rows retargeted, then the duplicate deleted. Verified by full re-dump: <b>1,035</p>
-<p>artist rows (was 1,055), zero orphaned contact points</b>; remaining flags are the</p>
-<p>documented leave-alones only.</p>
-
-<h2>2026-08-25 (later) — PROPOSAL PASS PRODUCED</h2>
-
-<p>The pass ran over a <b>full paginated dump</b> of both data sources (1,055 Artist rows, 1,733</p>
-<p>Contact Points rows — not a single SQL query, per the 08-13 staleness gotcha). Output is the</p>
-<p>one-sitting review sheet <b><b>104-merge-proposals-2026-08-25.md</b></b></p>
-<p>(also published as a private artifact: https://claude.ai/code/artifact/4334a85a-697f-4dfc-b5c2-791f902504d4): 16 Tier-A pairs (hard shared signal —</p>
-<p>stable contact point, relay, alarm code, or Alarm/Skedda user id — with ≥1 live card), 6</p>
-<p>Tier-B probables (Sindy O./Sindy Ortiz; Carrie Jiang/Sheldon Shannon; four 2026-04-21</p>
-<p>Tagvenue-import cards vs their 2025 [One-Off] twins), a post-merge-tidy proposal, and an</p>
-<p>appendix of everything checked and deliberately left alone. Nothing was merged, linked</p>
-<p>across candidate cards, or deleted.</p>
-
-<p>Open questions resolved:</p>
-
-<ul>
-<li>- <b>Threshold:</b> propose on ≥1 hard shared signal with a live card; probable-tier on</li>
-</ul>
-<p>conversation/era evidence; leave alone on name-only-with-distinct-signals and</p>
-<p>closed×closed pairs. A shared alarm code between different names is NOT identity.</p>
-<ul>
-<li>- <b>Where proposals land:</b> the single markdown sheet above, one Ruling column, tiered —</li>
-</ul>
-<p>the 077 lesson applied. No scattered Notion rows.</p>
-<ul>
-<li>- <b>Post-merge CP tidy:</b> proposed pattern in the sheet — retarget the tombstone&#x27;s Contact</li>
-</ul>
-<p>Points rows&#x27; <code>Artist</code> relation to the survivor at merge time; rows kept, never deleted.</p>
-<p>Awaiting ruling; ~20 tombstone-linked rows exist today.</p>
-
-<p>Population reconciliation: of the alarm report&#x27;s 13 same-person duplicate-code pairs, <b>10</p>
-<p>are already merged</b> (tombstones verified in the dump) — only Rita Stefan, Julia S., and</p>
-<p>Jesse remain, as A2/A3/A4. The 08-20 count of &quot;25 names holding more than one live card&quot;</p>
-<p>is now 13 exact-name pairs, all covered in the sheet or the appendix. <b>Alice Hamman now</p>
-<p>resolves to a single card</b> — the ticket&#x27;s live example was fixed upstream.</p>
-
-<p>Relay recovery (addendum item 2): 12 remaining no-contact-point 2026 untagged guests, all</p>
-<p>recovered via <code>gmail_reply_to.py</code> against thedanceannex@gmail.com (searched via the local</p>
-<p>gmail-business connector; hosted connector not attached to this session). <b>Zero</p>
-<p>collisions</b> with existing Contact Points, so 14 rows were filed directly per</p>
-<p>relay-addresses.md (Peerspace + Giggster relays <code>recognition-only</code> under the age rule;</p>
-<p>the two Tagvenue relays <code>usable</code>, inside the 145-day observed arc). Sindy Ortiz&#x27;s</p>
-<p>Tagvenue relay was NOT filed — held as B1 evidence per Junyan&#x27;s ruling.</p>
-
-<p><b>Canon finding:</b> Giggster DOES mint an email relay — <code>&lt;conversation-uuid&gt;@reply.giggster.com</code></p>
-<p>in the notification&#x27;s Reply-To (7 live samples this pass). relay-addresses.md says</p>
-<p>Giggster&#x27;s relay is &quot;an SMS proxy number, never an address&quot;; that needs a correction.</p>
-<p>Filed as Source=giggster, Booking Ref = the conversation uuid.</p>
-
-<p>---</p>
-
-<p>Also relevant: the <b>Aaron Aquino-Annobil</b> pair (one alarm identity on two cards) was</p>
-<p>merged 2026-08-25 on Junyan&#x27;s explicit instruction — tombstone pattern, survivor</p>
-<p><code>Aaron Aquino-Annobil [Skedda]</code>. It is this ticket&#x27;s class and is recorded here as a</p>
-<p>worked example of the mechanics: content moved, duplicate Closed + renamed as a</p>
-<p>signpost, alarm fields cleared on the tombstone so no audit reads two claimants.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#110</span><span class="emoji">🔑</span><span class="done-title">Give people their door code the moment they book</span><span class="done-date">2026-08-25</span></summary><div class="done-body"><ul class="plain-bullets"><li>Right now you get your code when the robot&#x27;s window reaches your booking — about two weeks before</li><li>That was never a decision; it just fell out of how far ahead the robot looks</li><li>Junyan&#x27;s call (Aug 24): the code should be set up the moment somebody books, however far off the booking is</li><li>Codes do not expire any more, so a code made six months early is simply that person&#x27;s code</li><li>The catch: the robot must set it up ONCE and then leave it alone, or it would be re-checking thousands of old bookings every half hour forever</li><li>The alarm check a week before the booking stays, and that is what catches anything that has gone wrong since</li><li>DECIDED (Aug 25): looking further ahead than two weeks was considered and turned down — Junyan: the code being ready early is an internal detail, not something a renter ever notices</li><li>It would have handed a live door code to 17 more people today, for bookings up to six weeks away, some of whom will cancel and never come — and codes do not expire</li><li>The real win landed anyway: a code is now worked out ONCE and never re-checked, so how far ahead we look is a free choice rather than a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Door access is due when someone books, not when the horizon reaches them</b></p><h2>Ruling (Junyan, 2026-08-24)</h2>
 
 <p>&quot;I want to provision door access the moment someone makes a booking (it&#x27;s not based on the</p>
@@ -13283,5 +13800,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-03 23:20 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-04 21:47 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
