@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 22:48 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 22:49 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2476,6 +2476,115 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Message-class close (ticket 076, the J28 ledger from Cloud Run) stays separate.</p>
 <p>This ticket is access only. It reads the panel; it never writes it.</p>
+
+<h2>Progress</h2>
+
+<p><b>2026-09-05 — BUILT, TESTED, PUSHED. SHADOW. Two deploys pending, both Junyan&#x27;s.</b></p>
+
+<p><b>Where it rides and why.</b> <code>services/event-gate/access_closer.py</code> (dc-canon <code>d7278403</code>),</p>
+<p>called from <code>POST /loop</code> after <code>loop.run()</code> — the 10-minute <code>desk-loop</code> tick. It IS the</p>
+<p>VERIFY beat for this class; <code>/poll</code> fires every minute and would query Notion and the</p>
+<p>panel six times as often for rows that change on the hour. Own switches:</p>
+<p><code>ACCESS_CLOSER_LIVE=1</code> (Junyan&#x27;s flip, not set), <code>ACCESS_CLOSER_DISABLED=1</code>. Inert when</p>
+<p><code>NOTION_TOKEN</code> or the alarm base/token is missing. Reports inside desk-loop&#x27;s ledger as</p>
+<p><code>result[&quot;access_closer&quot;]</code> and on the <code>access_closer</code> log tag — no own job, no own Run</p>
+<p>Monitor row.</p>
+
+<p><b>A second door on alarm-mcp.</b> <code>check_access_covers</code> had no plain-HTTP twin (only</p>
+<p><code>/door-history</code> existed for <code>studio_activity</code>), and the Doorman&#x27;s <code>/provision verify_only</code></p>
+<p>probe was rejected because its answer carries the code. So <code>GET /access-covers</code> was added</p>
+<p>(danceannex-alarm-monitor <code>15771f2</code>, <code>hosting/server_http.py</code> + <code>access.covers_answer</code>):</p>
+<p>same resolve ladder, same Step-6 verdict, same <code>dormant_id</code>, records cut to</p>
+<p><code>PUBLIC_RECORD_FIELDS</code>, no write-back. Until alarm-mcp ships, Read 1 gets a 404 →</p>
+<p><code>unverifiable</code> → nothing closes; Read 2 works from the first event-gate pass.</p>
+
+<h3>Acceptance, line by line</h3>
+
+<ul>
+<li>- <b>Replay xavier → shadow names the row closable by BOTH reads, 14:46:43 disarm as</li>
+</ul>
+<p>Read-2 evidence; live closes it.</b> <code>test_xavier_shadow_names_the_row_closable_by_both_reads</code></p>
+<p>feeds the recorded reads (Artist page with id <code>248894155</code>; 693 feed with the keypad</p>
+<p>disarm at <code>18:46:43Z</code> and armed_away at <code>19:55:02Z</code>; <code>/access-covers</code> →</p>
+<p><code>allow_permanent</code>): <code>reads == [&quot;read1&quot;, &quot;read2&quot;]</code>, Read-2 evidence carries the</p>
+<p>timestamp, contact id and actor, <code>writes == []</code>.</p>
+<p><code>test_xavier_live_closes_the_row_processed_with_the_evidence</code>: <code>Status = Processed</code>,</p>
+<p>evidence in Notes and in the ticket&#x27;s Current Block. *Replayed from recorded reads, not</p>
+<p>live — no Notion or alarm token exists on this Mac. The first live shadow pass after</p>
+<p>both deploys is the in-situ replay; look for <code>would close … read1+read2</code> on the</p>
+<p><code>access_closer</code> tag.*</p>
+<ul>
+<li>- <b>Dormant id → NOT closed.</b> <code>test_dormant_id_is_not_covered_and_the_row_stays_open</code>:</li>
+</ul>
+<p><code>dormant_id</code> set, empty feed → <code>closable == []</code>, no writes, log says DORMANT.</p>
+<ul>
+<li>- <b>Past booking, no named disarm → NOT closed, one stall line, second pass silent.</b></li>
+</ul>
+<p><code>test_past_booking_with_no_named_disarm_is_not_closed_and_gets_one_stall_line</code>: one</p>
+<p>PATCH carrying only Notes (no Status), the line reads <code>no keypad entry by xavier xavier</p>
+<p>observed 2026-09-04T18:30:00Z–2026-09-04T20:00:00Z (…); feed covered: false</p>
+<p>[access-closer stall 120230872]</code>; the second pass on the noted row writes nothing.</p>
+<p><code>test_a_failed_feed_read_never_writes_a_stall_line</code> pins the other half: a feed that</p>
+<p>could not be read writes no line.</p>
+<ul>
+<li>- <b>Different contact id → not closed.</b> <code>test_a_disarm_by_a_different_contact_id_does_not_close</code></li>
+</ul>
+<p>(same name, id <code>247640077</code>) → not closable, stall noted. Also: remote-login disarm by</p>
+<p>the right id does not count; a named disarm outside the window does not count.</p>
+<ul>
+<li>- <b>No test output contains a 4-digit code.</b> The Artist page is planted with <code>Alarm Code</li>
+</ul>
+<p>4321</code> and every feed event with a <code>code: 1776</code> field; <code>assert_no_code</code> greps every</p>
+<p>write body, the ledger and every log line in the closing tests. <code>pytest -s | grep -c</p>
+<p>&quot;4321\|1776&quot;</code> → 0. <code>alarm-monitor tests/test_access_covers_http.py</code> pins the server-side</p>
+<p>whitelist the same way.</p>
+<ul>
+<li>- <b>RUNTIMES.md</b> — desk-loop row updated (2026-09-05 paragraph). <b>Run Monitor row</b> — not</li>
+</ul>
+<p>its own job, so none; it reports inside desk-loop&#x27;s ledger. <b>Plumbing Map</b> — entry</p>
+<p>2026-09-05 05:5xZ, newest-first. <b><code>library/the-loop.md</code></b> — new § &quot;Which classes</p>
+<p>self-close, and from which read&quot;: a table of the two classes (booking changes from the</p>
+<p>Skedda read; Access / PIN from Read 1 / Read 2) and the rules the closer carries.</p>
+
+<p><b>Tests.</b> 33 new in <code>test_access_closer.py</code>; event-gate suite 1489 pass. <code>test_wrongroom.py</code></p>
+<p>passed on this tree (the pre-existing failure the brief mentions did not reproduce).</p>
+<p>alarm-monitor: 4 new, 374 pass.</p>
+
+<p><b>Deploy (Junyan), in this order:</b></p>
+
+<p>``<code>bash</p>
+<p>cd ~/DanceAnnex-AlarmMonitor/alarm-monitor &amp;&amp; ./deploy.sh</p>
+<p></code>`<code></p>
+
+<p></code>`<code>bash</p>
+<p>curl -s -o /dev/null -w &quot;%{http_code}\n&quot; -H &quot;Authorization: Bearer $ALARM_TOKEN&quot; &quot;https://alarm-mcp-cfnon4wh3q-uc.a.run.app/access-covers?alarm_user_id=248894155&amp;booking_start=2026-09-04T19:00:00Z&amp;booking_end=2026-09-04T20:00:00Z&quot;</p>
+<p></code>`<code></p>
+
+<p>(expect </code>200<code> with </code>&quot;verdict&quot;: &quot;allow_permanent&quot;<code> and </code>&quot;dormant_id&quot;: null<code>; a </code>404<code> means the old image is still serving)</p>
+
+<p></code>`<code>bash</p>
+<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; services/event-gate/deploy.sh</p>
+<p></code>`<code></p>
+
+<p>(expect </code>code_fingerprint<code> = </code>e617f7051a7b<code>)</p>
+
+<p>Then watch two or three desk-loop passes:</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud logging read &#x27;resource.type=&quot;cloud_run_revision&quot; AND resource.labels.service_name=&quot;event-gate&quot; AND jsonPayload.decision=&quot;access_closer&quot;&#x27; --project danceannex-skedda --limit 20 --format=&#x27;value(jsonPayload.reason)&#x27;</p>
+<p></code>`<code></p>
+
+<p>Flip live only after a shadow pass has named at least one row correctly:</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --update-env-vars ACCESS_CLOSER_LIVE=1</p>
+<p></code>`<code></p>
+
+<p><b>Not done / out of scope.</b> Message-class close (ticket 076) untouched. A row with no</p>
+<p></code>Artist<code> relation and no holder name in its title is skipped (counted under </code>skipped<code>);</p>
+<p>a row whose Artist page has no </code>Alarm User ID<code> is skipped, not stalled — without an id</p>
+<p>there is no &quot;named&quot; disarm to look for. The </code>alarm-mcp` connector needs no reconnect for</p>
+<p>this (HTTP route, not an MCP tool).</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">37</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -14546,5 +14655,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-04 22:48 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-04 22:49 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
