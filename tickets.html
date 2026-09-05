@@ -2267,24 +2267,24 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p></code>`<code></p>
 
 <p>Then: reconnect the </code>alarm-mcp<code> connector (tool list is cached), set the 🚥 row Monitoring → Live,</p>
-<p>and add one line to the Doorman prompt: *&quot;Job A0: call </code>migration_sweep(write=true)` first and</p>
+<p>and add one line to the Doorman prompt: *&quot;Job A0: call </code>migration_sweep(write=true)<code> first and</p>
 <p>report its answer; do not grant, set windows, or file the row yourself.&quot;*</p>
 
 <p><b>Next:</b> deploy → shadow read → flip. The nine dead Next Action rows close under 053&#x27;s replan.</p>
 
 <h3>Update (2026-09-05, after Junyan&#x27;s deploy) — shadow ran on the live service; rule tightened</h3>
 
-<p>Live image  (contains  + the retirement id fix).  ran:</p>
+<p>Live image </code>0905-3bafee4<code> (contains </code>9f1e412<code> + the retirement id fix). </code>GET /migration-sweep<code> ran:</p>
 <p>shadow, 29 temporary, 1823 bookings read, <b>26 candidates</b> — too many. Cause: Job C&#x27;s keep rule</p>
 <p>counts a booking in the last 30 days, so 16 one-off renters with one past booking qualified.</p>
-<p>Fixed in : liveness = an upcoming booking (next 60 days) or a protected status.</p>
+<p>Fixed in </code>6845d2a<code>: liveness = an upcoming booking (next 60 days) or a protected status.</p>
 <p>Expected shadow list after redeploy (from tonight&#x27;s evidence): Adalia Knight, Anita Shack,</p>
 <p>Camila Avendano, Dana Hufe, Grace Lim, Rebecca Wise, Sandra To, Tunde Ifafore, Zoey Gould,</p>
 <p>Jana Jedlovska (Authorized User). KellyAnn Johnson has no upcoming booking and is skipped, per</p>
-<p>canon.  is set on the service. <b>Scheduler job</p>
+<p>canon. </code>MIGRATION_SWEEP_MONITOR_ROW<code> is set on the service. <b>Scheduler job </code>alarm-migration-sweep<code></p>
 <p>is not created yet.</b> Not flipped live.</p>
 
-<p><b>Next for Junyan:</b>  again, re-run the shadow read, then the scheduler command and the flip.</p>
+<p><b>Next for Junyan:</b> </code>./deploy.sh` again, re-run the shadow read, then the scheduler command and the flip.</p>
 </div></details></details></div><div class="job"><div class="jnum">#123</div><div class="jhead"><span class="emoji">🚪</span><h4>The desk asked Junyan whether a renter got in. The door log already said yes</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Xavier had a booking today. Junyan set up his door code, got his phone number, and replied to him, all by hand</li><li>The door system logged him unlocking Studio 693 at 2:46 and locking up at 3:55, by name. His customer card got his code and number the moment Junyan added them</li><li>The robot that closes open tasks only ever looks at the booking calendar. It never looks at the door log or the customer card. So it kept the &#x27;no phone, no code&#x27; note open and handed it back to Junyan at 10pm</li><li>This gap was written down three weeks ago and nobody built the fix</li><li>This job teaches the closer to look at the two places it ignores: the customer card before the booking, the door log after it starts. Either one means the problem solved itself</li><li>It only ever reads. It never sets, changes or prints a code. And if the door log shows nobody came in, it leaves the note open and says so louder</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Close access-class work from the panel and the Artist DB — the executor-agnostic close, finished</b></p><h2>Question</h2>
 
 <p>053 promised <i>&quot;I notice what you did&quot;</i>. It notices one thing: a Skedda write.</p>
