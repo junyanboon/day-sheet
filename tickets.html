@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 21:49 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 22:07 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1604,7 +1604,87 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p></code>`<code>bash</p>
 <p>gcloud logging read &#x27;resource.labels.service_name=&quot;event-gate&quot; AND jsonPayload.reason:&quot;pass ok&quot;&#x27; --project danceannex-skedda --limit 5 --freshness 1h</p>
-<p></code>``</p>
+<p></code>`<code></p>
+
+<h2>Retraction (2026-09-05) — the &quot;wrong tree&quot; deploy diagnosis above is WRONG</h2>
+
+<p>The Deploy log section above claims attempt 1 shipped code that did not contain this</p>
+<p>ticket, and that attempt 2 fixed it. <b>Neither is true.</b> Retracted here rather than</p>
+<p>edited in place, so the reasoning error stays visible.</p>
+
+<p><b>What actually happened.</b> Both revisions reported the same </code>code_fingerprint<code>:</p>
+
+<p>| Revision | Time | </code>git_sha<code> reported | </code>code_fingerprint<code> reported |</p>
+<p>|---|---|---|---|</p>
+<p>| </code>event-gate-00212-k29<code> | 03:03Z | </code>314e4e7c<code> | </code>0a68527ef4bd<code> |</p>
+<p>| </code>event-gate-00214-wjg<code> | 03:14Z | </code>eb21a6b6<code> | </code>0a68527ef4bd<code> |</p>
+
+<p>The fingerprints are identical, so the two deploys shipped identical code. And:</p>
+
+<p></code>`<code></p>
+<p>fingerprint of eb21a6b6 = 0a68527ef4bd   (HAS runaway_watch.py)</p>
+<p>fingerprint of 314e4e7c = 7952bdf4667b   (no runaway_watch.py)</p>
+<p></code>`<code></p>
+
+<p>So the serving code was </code>eb21a6b6<code> <b>both times</b>. </code>314e4e7c<code> was never deployed. The</p>
+<p>first deploy was correct. The second was a no-op I caused by misdiagnosing the first.</p>
+
+<p><b>The root cause: </code>/health<code>&#x27;s </code>git_sha<code> is a label, not a measurement.</b> It reads a</p>
+<p></code>GIT_SHA<code> environment variable (</code>app.py:604<code>) that changes only when someone passes</p>
+<p></code>--set-env-vars GIT_SHA=…<code>. A plain </code>gcloud run deploy --source<code> leaves it alone.</p>
+<p>Confirmed 2026-09-05 by reading the service env directly:</p>
+
+<p></code>`<code></p>
+<p>GIT_SHA = 12917dd4        # while the running code fingerprints to 9a68db83</p>
+<p></code>`<code></p>
+
+<p>It is drifting right now.</p>
+
+<p><b></code>code_fingerprint<code> is the field to trust.</b> </code>version.py<code> hashes every non-test </code>.py<code></p>
+<p>the container ships. It is computed from what was deployed, not from what someone said</p>
+<p>they deployed — which is the whole reason that file exists. To check a candidate commit:</p>
+
+<p></code>`<code>bash</p>
+<p>TMP=$(mktemp -d); git archive &lt;sha&gt; services/event-gate | tar -x -C $TMP; python3 $TMP/services/event-gate/version.py</p>
+<p></code>`<code></p>
+
+<p><b>Every </code>merge-base --is-ancestor<code> check in the Deploy log above is void</b>, because each</p>
+<p>one was run against a SHA taken from </code>git_sha<code>. The conclusions happened to be right</p>
+<p>from the second deploy onward, but the method could not have detected it if they were</p>
+<p>wrong.</p>
+
+<p><b>Why the false conclusion was convincing, which is the part worth keeping.</b> Two</p>
+<p>signals agreed: the stale </code>git_sha<code>, and the fact that the lane emitted no log lines at</p>
+<p>all. The silence had an unrelated cause — at </code>eb21a6b6<code> every log path in</p>
+<p></code>runaway_watch.py<code> was gated on </code>findings<code>, so a healthy pass logged nothing. That is</p>
+<p>the separate defect fixed in </code>48712dd0<code> and recorded in the Correction section above.</p>
+<p>A running healthy lane and an undeployed one produced identical evidence.</p>
+
+<p><b>Two weak signals pointing the same way are not corroboration when neither one</p>
+<p>measures the thing you are asking about.</b> The </code>git_sha<code> field does not measure what</p>
+<p>code is running, and an absence of logs did not measure whether the lane executed. I</p>
+<p>treated their agreement as confirmation. It was a coincidence of two blind instruments.</p>
+
+<h3>Runbook correction</h3>
+
+<p>Replace the </code>git_sha<code> verification step in the Deploy section above with:</p>
+
+<p></code>`<code>bash</p>
+<p>curl -s https://event-gate-249118612005.us-central1.run.app/health</p>
+<p></code>`<code></p>
+
+<p></code>`<code>bash</p>
+<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; TMP=$(mktemp -d) &amp;&amp; git archive HEAD services/event-gate | tar -x -C $TMP &amp;&amp; echo &quot;local HEAD fingerprint: $(python3 $TMP/services/event-gate/version.py)&quot; &amp;&amp; rm -rf $TMP</p>
+<p></code>`<code></p>
+
+<p>The two fingerprints must match. Ignore </code>git_sha<code>.</p>
+
+<h3>Follow-up worth doing</h3>
+
+<p>Either set </code>GIT_SHA<code> on every deploy, or drop the field from </code>/health` entirely. A</p>
+<p>field that silently reports a stale value is worse than no field: it invites exactly</p>
+<p>the mistake made here. Dropping it is the safer of the two, because remembering a flag</p>
+<p>on every deploy is the kind of discipline that fails quietly.</p>
 </div></details></details></div><div class="job"><div class="jnum">#121</div><div class="jhead"><span class="emoji">🦾</span><h4>Give the desk a pair of hands inside Giggster and Tagvenue</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Two booking websites hold conversations we cannot finish. Giggster has no way to send a reply from the desk. Tagvenue forwards messages but blanks out every link</li><li>So a customer&#x27;s reply has sat unsent for 29 days, and a 30-person weekly lead sent us a link twice that nobody has been able to open</li><li>The robot kept asking a person to go log in and look. That is not a task, it is a missing tool</li><li>This job builds the tool: something that can log in, read the whole thread including links, post a reply a human already approved, and close out finished enquiries</li><li>Hard lines: it never sees a password, it never writes its own messages, and it stops dead if the website asks it to prove it is human</li><li>Accepting bookings stays with a person, because accepting charges the customer&#x27;s card</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the platform messenger agent (grokbot) — the desk&#x27;s hands inside Giggster and Tagvenue</b></p><h2>Question</h2>
 
 <p>Two platforms hold conversations the desk cannot finish:</p>
@@ -13943,5 +14023,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-04 21:49 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-04 22:07 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
