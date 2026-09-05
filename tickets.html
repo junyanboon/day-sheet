@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 22:27 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 22:28 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1905,6 +1905,51 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Next:</b> Junyan works RUNBOOK § 1–4. A passing sheet moves the draft into canon (§ 6) and</p>
 <p>closes this ticket.</p>
+
+<h2>Progress (2026-09-05) — RE-SCOPED by Junyan: read and repair, never send</h2>
+
+<p><b>Rulings (Junyan, 2026-09-05):</b> grokbot is a standalone, bolted-on agent. *&quot;Its job is</p>
+<p>to see the messages and then fix notion message queue and artist database so that we</p>
+<p>can send message properly. It won&#x27;t send any messages.&quot;* Then, narrowed: it fixes only</p>
+<p>the Artist page&#x27;s email/phone (and the contact db); it never touches a queue row, so</p>
+<p>nothing sends by side effect. The text to Junyan goes as one queue SMS row to his own</p>
+<p>card. Giggster: the SMS proxy is an acceptable door. Contact values go into ☎️ Contact</p>
+<p>Points. <i>&quot;Sineads message is will not send.&quot;</i></p>
+
+<p><b>Answers found:</b></p>
+<ul>
+<li>- <b>The queue &quot;hole&quot; is already closed by canon.</b> The queue&#x27;s <code>Email</code>/<code>Phone</code> are</li>
+</ul>
+<p>rollups off the Artist card; relay-addresses.md (2026-08-21) rules the newest usable</p>
+<p>relay is mirrored into the card field when no direct value exists. grokbot writes both</p>
+<p>the Contact Points row and the card field under that precedence. No queue change.</p>
+<ul>
+<li>- <b>Sinéad B. has no queue row.</b> Her text lived in Action row <code>3b47…49633</code> (Processed);</li>
+</ul>
+<p>ticket <code>3b47…3ddaf</code> closed <code>Lost</code> 2026-08-19. Nothing to set.</p>
+<ul>
+<li>- <b>Giggster texts today:</b> the SMS poller logs a <code>(Giggster) &lt;guest&gt;:</code> proxy text as an</li>
+</ul>
+<p>ordinary inbound from an unknown number; nothing files it as a contact point. None</p>
+<p>appear in the last 100 inbound texts. grokbot files it when phonecom-mcp (reads only)</p>
+<p>is attached; a deterministic poller rule is the durable fix — separate ticket.</p>
+<ul>
+<li>- <code>greeter_sweep.py:397</code> (&quot;no email relay&quot;) disagrees with canon&#x27;s 2026-08-26 Giggster</li>
+</ul>
+<p>relay correction — reconcile on the first live case, separate ticket.</p>
+
+<p><b>Delivered (v2, all under <b>assets/121-grokbot/</b>):</b></p>
+<p><code>DEFINITION-DRAFT.md</code> (blocks A–E: identity, instructions, read skill, repair skill,</p>
+<p>text-Junyan skill + Auto Review rules, routine); <code>protocol.py</code> + <code>test_protocol.py</code> —</p>
+<p><b>20 passed</b> (credential never in state; challenge stops with nothing typed; no action</p>
+<p>can type into a platform page; the only outbound is the fixed text to Junyan with no</p>
+<p>guest contact info; direct email/phone never overwritten; Tagvenue relay parsed from the</p>
+<p>mail body with its enquiry id; Giggster proxy requires all three signals); <code>RUNBOOK.md</code></p>
+<p>v2. Deleted: the v1 posting code, receipt module, Send Engine v24 proposal and its test.</p>
+<p>RUNTIMES row and Plumbing Map entry updated. Canon untouched by ruling.</p>
+
+<p><b>Acceptance now:</b> 4a Sandra read + relay filed; 4b the next held Giggster row → door</p>
+<p>filed or one text to Junyan; 4c Grace read only (close-out capability dropped).</p>
 </div></details></details></div><div class="job"><div class="jnum">#121</div><div class="jhead"><span class="emoji">🗂️</span><h4>A retried climate pass writes a duplicate Thermal Log row — key that write</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A retried climate pass writes a duplicate Thermal Log row — key that write</b></p><h2>Question</h2>
 
 <p><code>climate_sweep.thermal_log_row()</code> is an unconditional <code>POST</code> — no key, no existence</p>
@@ -14412,5 +14457,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-04 22:27 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-04 22:28 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
