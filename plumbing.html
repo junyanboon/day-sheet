@@ -1276,6 +1276,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-05 &middot; 15:1xZ</span>
+      <h3>A cancelled sibling row voided the live booking&rsquo;s AVA and EOB &mdash; the cancel void now matches one booking, not one renter<span class="kind">AVA / EOB &middot; event-gate booking_sweep cancel void &middot; FIXED IN CANON 2720f6d3 &middot; NOT YET DEPLOYED</span></h3></summary>
+      <p><strong>Asked.</strong> Junyan, 2026-09-05: Rebecca Wise (527, 16:45&ndash;21:45) shows no AVA or EOB pill on the board, and neither does Kaushik Boga.</p>
+      <p><strong>Kaushik is fine.</strong> His AVA sent at 07:00 and his EOB at 10:15. A Sent row draws no pill by design (README &sect;5: the pill is work still owed). Nothing to fix.</p>
+      <p><strong>Rebecca is a real gap.</strong> Her four AVA/EOB rows &mdash; two from the 04:02Z daily lane, two from the Host at 08:18Z &mdash; all read <code>Will Not Send</code> with the Reasoning <em>&ldquo;the booking (Rebecca Wise &mdash; Booking Extension Request, 527 Sep 05 21:15) is Cancelled on the board &mdash; this unsent row is voided with it.&rdquo;</em> That is a different board row: the extension request, cancelled after the Registrar created the extra 21:30&ndash;22:00 block instead. <code>booking_sweep._unsent_sweep_rows</code> matched by artist + <code>EOB-sweep-</code> prefix only, so the sibling&rsquo;s cancel killed the live booking&rsquo;s rows, and killed them again when the Host re-queued. The board then shows nothing rather than MISSING, because a terminal row suppresses the MISSING claim (the Stella Dada rule, 2026-09-04).</p>
+      <p><strong>Fix.</strong> The void now passes the cancelled row&rsquo;s own <code>MMDD-HHMM-studio</code> stamp; a renter&rsquo;s other bookings that day keep their rows. Two regression tests, 258 pass. <strong>Deploy is owner action</strong> (event-gate README &sect;deploy). <strong>Rebecca&rsquo;s rows still need re-queueing by hand today</strong> &mdash; AVA due 14:45, EOB 21:45 (extended end 22:00) &mdash; the fix only stops the next kill.</p>
+      </details>
+    </li>
+
+      <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-05 &middot; 15:0xZ</span>
+      <h3>FBS Monitor rebuilds hourly overnight &mdash; the board no longer sits on yesterday until the first morning tick<span class="kind">FBS MONITOR &middot; GitHub cron 03:00&ndash;06:59 Toronto &middot; quiet-hours gate REMOVED &middot; DEPLOYED e520c4ef</span></h3></summary>
+      <p><strong>Asked.</strong> Junyan, 2026-09-05: <em>&ldquo;It seems to only update from the prior day around 7am why?&rdquo;</em> then <em>&ldquo;from midnight to 7 can we have it run on a 1 hr cron?&rdquo;</em></p>
+      <p><strong>Why.</strong> The tick of record is the day-sheet render workflow (<code>render.yml</code> &rarr; bumps <code>.rebuild-tick</code>), poked by cron-job.org 08:00&ndash;02:45 Toronto. The 02:45 build carries the prior day (day rolls at 05:00). Between 02:45 and 08:00 the only trigger was GitHub&rsquo;s own cron, throttled to one fire every 1&ndash;3 h, and <code>build.py</code> skipped any fire before 07:00. Measured Sep 2&ndash;5: first fresh board at 07:39, 07:38, 07:10, 08:00.</p>
+      <p><strong>Change.</strong> <code>build.py</code> time gate removed; <code>rebuild.yml</code> cron split into every-15-min 07:00&ndash;02:59 plus hourly 03:00&ndash;06:59 (UTC hours cover both DST offsets); both editions wait 90 min overnight before flagging stale (40 min by day). GitHub cron stays best-effort &mdash; a guaranteed hourly overnight needs the cron-job.org window widened, which is Junyan&rsquo;s console. The 08:00 cron-job.org start is unchanged.</p>
+      </details>
+    </li>
+      <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-05 &middot; 14:4xZ</span>
       <h3>The go-ahead lane answered in two minutes &mdash; with an escalation, because the board said the access text was never sent<span class="kind">FAILURE MODE &middot; gtg-sweep &middot; host-sweep &middot; DIAGNOSED &middot; NOT FIXED</span></h3></summary>
       <p><strong>Asked.</strong> Junyan, 2026-09-05: <em>&ldquo;investigate why it was slow&rdquo;</em>, on Diana Leal&rsquo;s Post-HTA confirmation reaching the Deck about 40 minutes after she answered.</p>
