@@ -1276,6 +1276,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-05 &middot; 16:25Z</span>
+      <h3>FBS Monitor gets a second home on Vercel &mdash; staff sign-in, and Claim on every open shift<span class="kind">FBS MONITOR &middot; new route: Actions build &rarr; publish.py &rarr; Postgres &rarr; Vercel &middot; new writer: claim &rarr; Staff calendar &middot; CODE PUSHED, VERCEL NOT YET CONNECTED</span></h3></summary>
+      <p><strong>Asked.</strong> Junyan, 2026-09-05: a login so the board knows which staff is using it, claim a shift directly on it, a second host so this one does not go down with GitHub Pages, and it must stay usable offline. Hostinger VPS was weighed and dropped for Vercel (<em>&ldquo;push apps quickly without lots of issues&rdquo;</em>).</p>
+      <p><strong>Route.</strong> The builder does not move. Every Actions run still commits the Pages edition; a new last step, <code>publish.py</code>, uploads the same built files into a Postgres <code>pages</code> table, and <code>server/app.py</code> on Vercel serves them behind an email + password sign-in (five accounts, no self-signup, 30-day cookie). No <code>DATABASE_URL</code> secret &rarr; the step prints one line and the Pages edition is untouched.</p>
+      <p><strong>New writer.</strong> <code>POST /api/claim</code> creates one named event on the Staff calendar (<code>KyJah FBS</code>, studio in the description &mdash; the exact shape <code>build._staff_identity</code> already reads), records the claim, and both pages overlay it at once. The next build then drops the placeholder the way it always did. Release deletes the event. Refusals: stale id 404, ended 410, someone else&rsquo;s 409, calendar failure 502 with no claim recorded. Claims made offline wait in a <code>localStorage</code> outbox; the server stays the only judge. Notion&rsquo;s ☑️ Open Shifts board is unchanged and still the claim path on the Pages edition.</p>
+      <p><strong>Failure modes.</strong> <code>/healthz</code> reports <code>built</code> (null = publish never ran), <code>calendar</code> (false = service-account or calendar id missing) and <code>db</code>. Calendar 403 = Staff calendar not shared to the service account; 404 = wrong calendar id. Full table in <code>fbs-monitor/deploy/README.md</code>.</p>
+      <p><strong>Still owner action.</strong> Connect the repo to Vercel, attach Neon, set <code>FBS_SECRET_KEY</code> / <code>GOOGLE_SERVICE_ACCOUNT_JSON</code> / <code>STAFF_CALENDAR_ID</code>, add <code>DATABASE_URL</code> to the GitHub secrets, create the five accounts. Tests: 12 server guards + every existing builder suite pass; claim flow verified in the browser on both editions against a local build.</p>
+      </details>
+    </li>
+
+      <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-05 &middot; 15:1xZ</span>
       <h3>A cancelled sibling row voided the live booking&rsquo;s AVA and EOB &mdash; the cancel void now matches one booking, not one renter<span class="kind">AVA / EOB &middot; event-gate booking_sweep cancel void &middot; FIXED IN CANON 2720f6d3 &middot; NOT YET DEPLOYED</span></h3></summary>
       <p><strong>Asked.</strong> Junyan, 2026-09-05: Rebecca Wise (527, 16:45&ndash;21:45) shows no AVA or EOB pill on the board, and neither does Kaushik Boga.</p>
