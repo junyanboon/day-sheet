@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 22:28 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 22:40 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2271,6 +2271,20 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>report its answer; do not grant, set windows, or file the row yourself.&quot;*</p>
 
 <p><b>Next:</b> deploy → shadow read → flip. The nine dead Next Action rows close under 053&#x27;s replan.</p>
+
+<h3>Update (2026-09-05, after Junyan&#x27;s deploy) — shadow ran on the live service; rule tightened</h3>
+
+<p>Live image  (contains  + the retirement id fix).  ran:</p>
+<p>shadow, 29 temporary, 1823 bookings read, <b>26 candidates</b> — too many. Cause: Job C&#x27;s keep rule</p>
+<p>counts a booking in the last 30 days, so 16 one-off renters with one past booking qualified.</p>
+<p>Fixed in : liveness = an upcoming booking (next 60 days) or a protected status.</p>
+<p>Expected shadow list after redeploy (from tonight&#x27;s evidence): Adalia Knight, Anita Shack,</p>
+<p>Camila Avendano, Dana Hufe, Grace Lim, Rebecca Wise, Sandra To, Tunde Ifafore, Zoey Gould,</p>
+<p>Jana Jedlovska (Authorized User). KellyAnn Johnson has no upcoming booking and is skipped, per</p>
+<p>canon.  is set on the service. <b>Scheduler job</p>
+<p>is not created yet.</b> Not flipped live.</p>
+
+<p><b>Next for Junyan:</b>  again, re-run the shadow read, then the scheduler command and the flip.</p>
 </div></details></details></div><div class="job"><div class="jnum">#123</div><div class="jhead"><span class="emoji">🚪</span><h4>The desk asked Junyan whether a renter got in. The door log already said yes</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Xavier had a booking today. Junyan set up his door code, got his phone number, and replied to him, all by hand</li><li>The door system logged him unlocking Studio 693 at 2:46 and locking up at 3:55, by name. His customer card got his code and number the moment Junyan added them</li><li>The robot that closes open tasks only ever looks at the booking calendar. It never looks at the door log or the customer card. So it kept the &#x27;no phone, no code&#x27; note open and handed it back to Junyan at 10pm</li><li>This gap was written down three weeks ago and nobody built the fix</li><li>This job teaches the closer to look at the two places it ignores: the customer card before the booking, the door log after it starts. Either one means the problem solved itself</li><li>It only ever reads. It never sets, changes or prints a code. And if the door log shows nobody came in, it leaves the note open and says so louder</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Close access-class work from the panel and the Artist DB — the executor-agnostic close, finished</b></p><h2>Question</h2>
 
 <p>053 promised <i>&quot;I notice what you did&quot;</i>. It notices one thing: a Skedda write.</p>
@@ -14457,5 +14471,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-04 22:28 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-04 22:40 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
