@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 22:11 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-04 22:19 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">10</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">11</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">37</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">66</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">10</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">11</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -2146,6 +2146,122 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>This ticket owns migration only. Provisioning a NEW user is the Registrar&#x27;s</p>
 <p>(<code>booking_sweep.py</code>). Retirement is Job C (<code>retirement_sweep.py</code>, suspended).</p>
 <p>The nine dead Next Action rows close under 053&#x27;s replan once this lands.</p>
+</div></details></details></div><div class="job"><div class="jnum">#123</div><div class="jhead"><span class="emoji">🚪</span><h4>The desk asked Junyan whether a renter got in. The door log already said yes</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Xavier had a booking today. Junyan set up his door code, got his phone number, and replied to him, all by hand</li><li>The door system logged him unlocking Studio 693 at 2:46 and locking up at 3:55, by name. His customer card got his code and number the moment Junyan added them</li><li>The robot that closes open tasks only ever looks at the booking calendar. It never looks at the door log or the customer card. So it kept the &#x27;no phone, no code&#x27; note open and handed it back to Junyan at 10pm</li><li>This gap was written down three weeks ago and nobody built the fix</li><li>This job teaches the closer to look at the two places it ignores: the customer card before the booking, the door log after it starts. Either one means the problem solved itself</li><li>It only ever reads. It never sets, changes or prints a code. And if the door log shows nobody came in, it leaves the note open and says so louder</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Close access-class work from the panel and the Artist DB — the executor-agnostic close, finished</b></p><h2>Question</h2>
+
+<p>053 promised <i>&quot;I notice what you did&quot;</i>. It notices one thing: a Skedda write.</p>
+
+<p>On 2026-09-04 Junyan handled xavier&#x27;s Studio 693 access by hand — provisioned a</p>
+<p>panel user, captured his phone, replied through the Tagvenue relay. xavier</p>
+<p>disarmed 693 at 14:46:43 Toronto from the keypad, contact <code>248894155</code>, and armed</p>
+<p>away at 15:55:02. His Artist page (<code>3cf7503281c4811c93a7fe3c43c66e1c</code>) gained</p>
+<p>Alarm User ID <code>248894155</code>, a code, and a phone.</p>
+
+<p>The queue row saying &quot;no phone, no surname, no access path&quot; sat <code>Proposed</code> through</p>
+<p>all of it, and the desk handed it back to Junyan at 22:00 as an open question.</p>
+<p>Junyan: *&quot;Xavier got in with no issues. I processed everything already. Why was it</p>
+<p>not able to assess this?&quot;<i> Ruling: </i>&quot;I absolutely need these to be checked rather</p>
+<p>than pushed to me.&quot;*</p>
+
+<p>Because VERIFY (<code>services/event-gate/loop.py</code> <code>verify_row</code>) reads <b>Skedda only</b>,</p>
+<p>for rows with <code>Proof type = booking</code> and a <code>&lt;id&gt; @ &lt;date&gt;</code> ref. Everything else is</p>
+<p><code>unverifiable</code> and — correctly, per the dead-checker guard — left alone forever.</p>
+<p>Ticket 076 recorded this on 2026-08-15 for message-class rows (David Diep).</p>
+<p>Nothing was built. This ticket builds it for the class that strands people at</p>
+<p>doors.</p>
+
+<h2>What to build</h2>
+
+<p>A deterministic <b>access-class closer</b> on the event-gate tick (<code>POST /poll</code> or</p>
+<p>the 10-min <code>desk-loop</code>, builder&#x27;s call — name the reason). Two ground-truth reads,</p>
+<p>both already live on <code>alarm-mcp</code>:</p>
+
+<p><b>Read 1 — before the booking: the premise is false.</b></p>
+<p>For any open access-class item — an ✅ Actions row <code>Type = Access / PIN</code>, or a</p>
+<p>ticket whose <code>Current Block</code> / gate says no code / no access path — with a booking</p>
+<p>holder resolvable to an Artist page:</p>
+
+<ul>
+<li>- Artist page carries <code>Alarm User ID</code> <b>and</b> <code>check_access_covers(alarm_user_id,</li>
+</ul>
+<p>booking_start, booking_end)</code> returns <code>pass</code> or <code>allow_permanent</code></p>
+<p>→ the access problem no longer exists. Close the row <code>Processed</code> with the</p>
+<p>verdict as evidence. <code>dormant_id</code> set → NOT covered, leave it (079&#x27;s ladder).</p>
+
+<p><b>Read 2 — after the booking start: they got in.</b></p>
+<p>For the same items once <code>booking_start</code> has passed:</p>
+
+<ul>
+<li>- <code>studio_activity(studio, start-30min, end)</code> shows a keypad <code>disarm</code> whose</li>
+</ul>
+<p><code>contact_id</code> equals the holder&#x27;s <code>Alarm User ID</code> → they entered. Close</p>
+<p><code>Processed</code>, evidence = the event line (actor, contact id, timestamp).</p>
+<ul>
+<li>- Do NOT use this to bill or to judge departure — that is the overtime lane&#x27;s</li>
+</ul>
+<p><code>departure.verdict</code> and its <code>covered</code> rules. This closer answers one question:</p>
+<p><i>did the person get through the door</i>. A single named disarm inside the window</p>
+<p>answers it.</p>
+
+<p><b>Rate and scope.</b> Reads are cheap but not free — one <code>check_access_covers</code> per</p>
+<p>open item per pass, one <code>studio_activity</code> per (studio, window) per pass. Cap the</p>
+<p>lookback at 48 h; older items stay for a human.</p>
+
+<p><b>Never silence a real stall.</b> A row whose booking is in the past with NO named</p>
+<p>disarm is NOT closed. It is left open and the closer appends one line: *&quot;no</p>
+<p>keypad entry by &lt;name&gt; observed &lt;window&gt;; feed covered: &lt;bool&gt;&quot;* — that is the</p>
+<p>signal that someone was stranded, and it must get louder, not quieter.</p>
+
+<h2>Hard constraints</h2>
+
+<ul>
+<li>- <b>No code in any transcript, log, or row.</b> Use <code>check_access_covers</code> (verdicts)</li>
+</ul>
+<p>and <code>studio_activity</code> (events). Never <code>find_user_codes</code> / <code>get_user_code</code>.</p>
+<ul>
+<li>- <b>Read-only on the panel.</b> This closer never provisions, grants, arms, or</li>
+</ul>
+<p>disarms. Provisioning is the Registrar&#x27;s; migration is ticket 122&#x27;s.</p>
+<ul>
+<li>- <b>Closes ✅ Actions to Perform rows only</b> — never ⏭️ Next Action (retiring).</li>
+</ul>
+<p>Ticket-side: append the evidence to <code>Current Block</code>; do not flip <code>Position</code></p>
+<p>unless canon for that ticket type says the gate clears on a machine read</p>
+<p>(<code>CONTEXT.md</code>: machine-readable gates clear on the agent&#x27;s own read).</p>
+<ul>
+<li>- <b>Shadow first.</b> Logs what it would close, writes nothing. <code>ACCESS_CLOSER_LIVE=1</code></li>
+</ul>
+<p>is Junyan&#x27;s flip.</p>
+<ul>
+<li>- <b>Junyan runs deploys.</b></li>
+</ul>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Replay xavier: an Access / PIN row + his Artist page + the 2026-09-04 693 feed</li>
+</ul>
+<p>→ shadow names the row as closable by BOTH reads, with the 14:46:43 disarm as</p>
+<p>Read-2 evidence. Live closes it.</p>
+<ul>
+<li>- A row whose holder has <code>dormant_id</code> on the panel is NOT closed (Greg Samba&#x27;s</li>
+</ul>
+<p>2026-09-04 shape).</p>
+<ul>
+<li>- A past booking with no named disarm is NOT closed and gets the one-line stall</li>
+</ul>
+<p>note; a second pass does not append a second line.</p>
+<ul>
+<li>- A disarm by a DIFFERENT contact id in the window does not close the row.</li>
+<li>- No test output contains a 4-digit code.</li>
+<li>- RUNTIMES.md, Run Monitor row (if its own job), Plumbing Map entry, and</li>
+</ul>
+<p><code>library/the-loop.md</code> § executor-agnostic close updated to say which classes</p>
+<p>now self-close and from which read.</p>
+
+<h2>Seam</h2>
+
+<p>Message-class close (ticket 076, the J28 ledger from Cloud Run) stays separate.</p>
+<p>This ticket is access only. It reads the panel; it never writes it.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">37</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -14216,5 +14332,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-04 22:11 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-04 22:19 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
