@@ -1108,6 +1108,15 @@
 
   // ---------- artist names ----------
   var namesInFlight = false;
+  // ASK IN BATCHES. The worker answers this query with one Notion page read per
+  // artist, and Cloudflare's free plan allows 50 subrequests per request. This
+  // used to send every missing artist in one call under `LIMIT 100` — double the
+  // ceiling. Past the 50th, each read threw, the worker's per-artist catch
+  // swallowed it, and the url came back absent, which this function then marks
+  // null and the card renders as "Unknown". No error, anywhere, on any screen
+  // (found 2026-09-05). Batches of 30 keep every request well inside the budget;
+  // the remainder is fetched on the next pass, which this function schedules.
+  var NAME_BATCH = 30;
   function fetchNames() {
     var missing = [];
     (state.deck || []).forEach(function (c) {
@@ -1117,9 +1126,19 @@
     if (!missing.length || namesInFlight) return;
     namesInFlight = true;
     missing.sort();
-    var inList = missing.map(function (u) { return "'" + u.replace(/'/g, "''") + "'"; }).join(",");
+    var batch = missing.slice(0, NAME_BATCH);
+    var more = missing.length > batch.length;
+    // Every url in `batch` is marked before the next pass runs — resolved to a
+    // name or to null — so `missing` always shrinks and this cannot loop.
+    function settle() {
+      batch.forEach(function (u) { if (state.names[u] === undefined) state.names[u] = null; });
+      namesInFlight = false;
+      render();
+      if (more) fetchNames();
+    }
+    var inList = batch.map(function (u) { return "'" + u.replace(/'/g, "''") + "'"; }).join(",");
     MCP.callTool(SERVER, QUERY_TOOL, { data: { data_source_urls: [ARTISTS], query:
-      'SELECT url, "Name", "Email", "Phone", "Alarm Code" FROM "' + ARTISTS + '" WHERE url IN (' + inList + ") LIMIT 100" } },
+      'SELECT url, "Name", "Email", "Phone", "Alarm Code" FROM "' + ARTISTS + '" WHERE url IN (' + inList + ") LIMIT " + NAME_BATCH } },
       { cache: { staleTime: 300000 } })
       .then(function (res) {
         var rows = res && res.payload && res.payload.results ? res.payload.results : [];
@@ -1127,13 +1146,9 @@
           state.names[r.url] = r.Name || null;
           state.contacts[r.url] = { email: r.Email || "", phone: r.Phone || "", alarm: r["Alarm Code"] || "" };
         });
-        missing.forEach(function (u) { if (state.names[u] === undefined) state.names[u] = null; });
-        namesInFlight = false; render();
+        settle();
       })
-      .catch(function () {
-        missing.forEach(function (u) { if (state.names[u] === undefined) state.names[u] = null; });
-        namesInFlight = false; render();
-      });
+      .catch(settle);
   }
 
   // ---------- toasts ----------
