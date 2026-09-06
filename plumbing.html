@@ -2537,6 +2537,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
       <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-06 &middot; 14:10Z</span>
+      <h3>Morning Alert: the two jobs nobody else pushed go back to the phone, as clockwork, alert-only<span class="kind">LANE ADDED</span></h3></summary>
+      <p><strong>Why.</strong> Retiring the Morning Text (entry below) left two questions with no push channel: <em>is the sentinel-sweep itself alive this morning?</em> and <em>did the desk actually catch up overnight?</em> Junyan wants both on the phone. Neither needs a digest &mdash; they are two yes/no facts the deterministic port already computes.</p>
+      <p><strong>What it is.</strong> The same Cloud Run route <code>/morning-text</code> with <code>MORNING_TEXT_ALERT_ONLY=1</code> (dc-canon <code>cb65796c</code>). At 08:40 Toronto it reads the sentinel-sweep&rsquo;s own report and the Concierge&rsquo;s <code>NW-HANDOFF-V1</code> marker. If the sweep&rsquo;s newest signal predates 07:00, or the verdict is INCOMPLETE or UNKNOWN, it sends one SMS signed <code>- Morning Alert</code> (with the red-morning streak). Otherwise it sends <strong>nothing</strong> and files a Completed heartbeat whose body says <code>No alert needed</code> &mdash; so the sentinel-sweep still sees the lane alive, and silence on the phone means &ldquo;quiet&rdquo;, not &ldquo;dead&rdquo;. No studio counts, no review-row counts, no first booking, no money lines: those live on the boards and in the daily report.</p>
+      <p><strong>Switches.</strong> Lease <code>executors.morning-text</code> &rarr; <code>cloudrun</code> (Codex copies keep exiting); &#128678; row Monitoring &rarr; Live again with the alert-only expectation; <code>RUNTIMES.md</code>. <strong>Pending:</strong> <code>deploy.sh</code> was blocked for this session, so Junyan deploys; then <code>MORNING_TEXT_ALERT_ONLY=1</code> + <code>MORNING_TEXT_LIVE=1</code> via <code>--update-env-vars</code>, then the scheduler job resumes. Until then the row is Live with a paused job: if the 08:40 fire is missed tomorrow, the sweep will say <code>missing:The Morning Text</code> &mdash; that is the correct alarm, not a false one.</p>
+      </details>
+    </li>
+
+      <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-06 &middot; 12:50Z</span>
       <h3>The Morning Text is retired &mdash; every line was a board row without a link<span class="kind">LANE RETIRED</span></h3></summary>
       <p><strong>Why.</strong> Junyan read the 2026-09-06 text (<em>&ldquo;DA MORNING &mdash; All 5 studios armed overnight&hellip; ACCESS: xavier [Tagvenue] 693 Mon 15:00 has no access message&hellip; Money: 4 held rows&hellip;&rdquo;</em>) and could not act on it: &ldquo;my eyes totally glaze over.&rdquo; Walked line by line, every clause was a copy of an Action, Review or Money row that already exists on a board, compressed to 480 characters with links forbidden by the prompt. A second copy of the Actions board that cannot be clicked is not a push channel. The daily report being built in a separate session owns this surface now.</p>
