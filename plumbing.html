@@ -1276,6 +1276,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-06 &middot; 21:5xZ</span>
+      <h3>A Giggster row is a route, not a fault<span class="kind">FAILURE-MODE FIX &middot; the Deck &middot; LIVE</span></h3></summary>
+      <p><strong>What it looked like.</strong> A Giggster row on the Deck carried the red <em>Can&rsquo;t dispatch yet</em> box and a Send button reading <em>Fix dispatch first</em> &mdash; asking the reviewer to repair something that cannot exist. Giggster masks the guest&rsquo;s contact and mints no relay, so replies live only inside the Giggster app: <code>greeter_sweep.relay_of</code> returns <code>&quot;&quot;</code> for it and the send engine skips it through <code>isForeignLane_</code>. The row was working exactly as designed and reading as broken.</p>
+      <p><strong>Why it slipped through.</strong> The manual treatment already existed &mdash; written for <code>Channel = Manual Send</code> on 2026-09-03, with a comment saying such a row must <em>&ldquo;never &lsquo;fix dispatch&rsquo;, because there is nothing to fix&rdquo;</em>. A literal <code>Channel = Giggster</code> never reached that branch; it fell through to the generic &ldquo;not SMS or Email&rdquo; case meant for WhatsApp and Instagram rows.</p>
+      <p><strong>What changed.</strong> Giggster now passes preflight as a manual route (<code>ok: true, manual: true</code>), so the box disappears entirely and the verb carries the whole message: <strong>Engine can&rsquo;t send this</strong>, with <em>Copy text</em> beside it. Junyan, 2026-09-06, on the prototype: <em>&ldquo;Just the button&hellip; is good enough. Drop the callout.&rdquo;</em></p>
+      <p><strong>The trap in dropping the box.</strong> The Send button was disabled <em>only</em> by a failing check. A row that now passes preflight would have had a LIVE Send button &mdash; one tap dispatching a row the engine will never take. So the disable is read off <code>pfManual</code> directly, not off the absence of a failure. Two lines, not one.</p>
+      <p><strong>Live.</strong> deck-app <code>c1bf00c</code>, deployed to Cloudflare the same minute (version <code>4738de11</code>). Nothing in the engine or the Greeter changed &mdash; both already treated Giggster this way. This is the Deck agreeing with them.</p>
+      </details>
+    </li>
+
+      <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-06 &middot; 22:2xZ</span>
       <h3>Adding a date to an invoiced series would have billed nobody for it &mdash; and nothing on any surface would have looked wrong<span class="kind">MONEY GUARD &middot; skedda-mcp <code>add_occurrence</code> + <code>extend_series</code> &middot; LIVE rev skedda-mcp-00070-n5w &middot; refuses the commit</span></h3></summary>
       <p><strong>Found by testing yesterday&rsquo;s new tools, not by a customer.</strong> A dry-run against Nabil Fairbairn&rsquo;s Studio 693 Friday series <code>120370013</code> came back carrying <code>invoiceId: in_1UCTokPunGOWPTflIiEf1YDb</code> and <code>paymentStatus: 4</code> &mdash; state it did not have the day before, because the invoice had since been issued.</p>
