@@ -1276,6 +1276,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-06 &middot; 01:2xZ</span>
+      <h3>The Deck drops a renter&rsquo;s second text in the same minute &mdash; the Correspondence Log key was one person per minute<span class="kind">FAILURE MODE FIXED &middot; corr_log (event-gate, NEEDS DEPLOY) &middot; notion_log_sync (GitHub Actions, live on next run) &middot; one row backfilled</span></h3></summary>
+      <p><strong>Asked.</strong> Junyan, 2026-09-06: <em>&ldquo;the deck is not populating with the most recent messages.&rdquo;</em> Thea&rsquo;s card ended at <em>&ldquo;No problem, thank you&rdquo;</em> 8:17 PM.</p>
+      <p><strong>What was missing.</strong> phone.com has two inbound texts from <code>+14166021522</code> at 00:17Z: <code>00:17:02</code> &ldquo;No problem, thank you&rdquo; and <code>00:17:29</code> <strong>&ldquo;Will I receive the codes in the morning? &#128522;&rdquo;</strong>. The Correspondence Log had only the first (created <code>00:17:06Z</code>). The Deck reads the Correspondence Log (last 14 days, 400 rows), so the question she actually needed answered was invisible.</p>
+      <p><strong>Why.</strong> <code>corr_log.already_logged()</code> deduped on <strong>Subject + UTC minute</strong> &mdash; and Subject is <code>+1416&hellip; &mdash; sms inbound</code>, per sender, not per message. The second text arrived in the next <code>/poll</code> cycle (<code>ensure_artist</code> shadow lines at <code>00:17:06</code> and <code>00:18:04</code> prove two cycles), found the first row by subject + minute, and skipped. Her 21:52 and 21:53 pairs survived only because each pair landed in one cycle. <code>scripts/notion_log_sync.py</code> keyed the same way &mdash; <code>(minute, direction, subject)</code> &mdash; so the 15-minute sync would never have written it either. Two writers, one flaw.</p>
+      <p><strong>Fixed.</strong> Both keys gain a fourth part: the first 60 characters of the content, lowercased, whitespace collapsed (<code>content_key</code>, mirrored in both files and checked to agree). A same-minute second text is written; the same text arriving twice on a cold start is still one row; a row whose Content cannot be read is still a duplicate, so the cold-start guard keeps winning when we cannot tell. 4 new tests; the mutation (subject + minute only) fails the same-minute test. <strong>The event-gate half needs a deploy; the sync half runs on the next <code>watchlist-refresh</code>.</strong></p>
+      <p><strong>Backfilled by hand.</strong> Her <code>00:17:29</code> row is now in the Log (<code>3d375032-81c4-8140-a385-c271a6725cd9</code>, Artist linked) &mdash; the Deck shows it on next refresh. <strong>Her question is still unanswered</strong>; the staged first-ever HTA (<code>HTA-manual-0906-1400-509A</code>, Send After 09:00 Toronto) is the answer, and a one-line &ldquo;yes, 9am&rdquo; tonight is Junyan&rsquo;s call.</p>
+      </details>
+    </li>
+
+      <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-05 &middot; 23:5xZ</span>
       <h3>The board rebuilds the minute something happens, and a red dot says a renter is waiting on us<span class="kind">BOARD &middot; fbs-monitor rebuild &middot; NEW ROUTE &middot; three writers &middot; TOKEN PENDING</span></h3></summary>
       <p><strong>Asked.</strong> Junyan, 2026-09-05: faster than 15 minutes without paying for it, and <em>&ldquo;the FBS board to actually indicate that there is a message from someone (red dot) and then that red dot disappears when we reply.&rdquo;</em></p>
