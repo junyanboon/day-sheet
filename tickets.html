@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 09:39 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 09:53 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2197,8 +2197,59 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Not done / out of scope.</b> Message-class close (ticket 076) untouched. A row with no</p>
 <p></code>Artist<code> relation and no holder name in its title is skipped (counted under </code>skipped<code>);</p>
 <p>a row whose Artist page has no </code>Alarm User ID<code> is skipped, not stalled — without an id</p>
-<p>there is no &quot;named&quot; disarm to look for. The </code>alarm-mcp` connector needs no reconnect for</p>
+<p>there is no &quot;named&quot; disarm to look for. The </code>alarm-mcp<code> connector needs no reconnect for</p>
 <p>this (HTTP route, not an MCP tool).</p>
+
+<h3>Shadow verdict — 2026-09-07, after two days live in shadow</h3>
+
+<p><b>79 complete passes read. </code>unverifiable<code> 0 on every one, </code>stalls<code> 0, no code in any line.</b></p>
+<p>Deployed 2026-09-05 02:59Z (</code>d7278403<code>, fingerprint </code>e617f7051a7b<code>); alarm-mcp carries the</p>
+<p>twin on image </code>alarm:0905-15771f2<code>.</p>
+
+<p>Nine distinct rows were named closable, four of them by <b>both</b> reads. The four Read-2</p>
+<p>closes, each a keypad disarm whose </code>contact_id<code> equals the holder&#x27;s stored Alarm User ID,</p>
+<p>inside </code>[start − 30 min, end]<code>:</p>
+
+<p>| Row | Holder | Disarm | Studio / booking |</p>
+<p>|---|---|---|---|</p>
+<p>| </code>2ddf9975<code> | Adalia Knight | </code>2026-09-03T13:21:29Z<code>, contact </code>247090649<code> | 693 / 120022310 |</p>
+<p>| </code>a0795bed<code> | Hannah Hyuna Cho | </code>2026-09-06T23:53:02Z<code>, contact </code>247807749<code> | 509B / 120390464 |</p>
+<p>| </code>cab71266<code> | Hannah Hyuna Cho | same event, second row on the same booking | 509B / 120390464 |</p>
+<p>| </code>e8d913ed<code> | Tufan Bhattarai | </code>2026-09-05T11:51:54Z<code>, contact </code>245533823<code> | 901 / 120321072 |</p>
+
+<p>Hannah&#x27;s disarm lands 7 minutes before her 20:00 Toronto start — inside the 30-minute lead,</p>
+<p>which is what the lead is for. The other five rows (</code>3b3f56f5<code> Nina Li, </code>72f3456c<code> and</p>
+<p></code>8a465e16<code> Jia Chian Lee, </code>9589cb8e<code> and </code>ced1aa62<code> Hannah Cho) are Read-1 only: the panel</p>
+<p>returns </code>allow_permanent<code> against a booking still ahead. Two rows are skipped every pass and</p>
+<p>correctly so — one Artist page with no </code>Alarm User ID<code>, one row naming no resolvable holder.</p>
+
+<p><b>One real defect found and fixed (</code>4ac886f25<code>, fingerprint </code>b8dc8ab909b6<code>) — NOT yet deployed.</b></p>
+<p>Two passes (2026-09-05 22:50Z, 2026-09-06 02:40Z) returned </code>{&quot;ok&quot;: false, &quot;error&quot;: &quot;The read</p>
+<p>operation timed out&quot;}<code> and did nothing at all. Cause: </code>socket.timeout<code> <b>is</b> </code>TimeoutError<code></p>
+<p>and is <b>not</b> a </code>urllib.error.URLError<code>, so a urlopen read timeout escaped </code>_alarm_get<code>&#x27;s</p>
+<p>catch, escaped </code>assess()<code> and </code>run()<code>, and aborted the pass from app.py&#x27;s wrapper. One slow</p>
+<p>panel read should cost exactly one row an </code>unverifiable<code> and leave the rest of the pass</p>
+<p>working. Now catches </code>OSError<code>, which covers both, with the </code>HTTPError<code> branch still first.</p>
+<p>Fail-safe before and after — nothing is ever written on a failed read — but a whole-pass</p>
+<p>abort is the loud kind of wrong, and it is exactly the failure this lane&#x27;s own rules exist</p>
+<p>to make small. Pinned by </code>test_a_read_timeout_is_one_unverifiable_row_not_a_dead_pass<code>,</p>
+<p>which asserts the pass survives with </code>ok: true<code>, two </code>unverifiable<code>, and no writes.</p>
+
+<p><b>Recommendation: ready for the flip, after Junyan eyeballs the nine rows.</b> Every Read-2</p>
+<p>close is self-proving — a keypad disarm under the holder&#x27;s own contact id is the person</p>
+<p>getting through the door. The Read-1 closes rest on the panel&#x27;s own </code>allow_permanent<code>. What</p>
+<p>I cannot check from here is whether any of those nine rows is open for a reason the panel</p>
+<p>cannot see. Deploy the timeout fix first, so the live lane degrades one row at a time:</p>
+
+<p></code>`<code>bash</p>
+<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; services/event-gate/deploy.sh</p>
+<p></code>`<code></p>
+
+<p>(expect </code>code_fingerprint<code> = </code>b8dc8ab909b6<code>)</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --update-env-vars ACCESS_CLOSER_LIVE=1</p>
+<p></code>``</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">37</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -14888,5 +14939,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-07 09:39 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-07 09:53 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
