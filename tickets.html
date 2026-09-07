@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 09:53 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 09:58 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">10</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">9</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">37</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">67</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">68</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">10</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">9</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -185,33 +185,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>sidestep the J30 renderer contest; confirm/renumber at the batched schema review. New capability</p>
 <p>to bind at that review: <b>calendar write (Staff Scheduling)</b> — currently documented in the job</p>
 <p>page only, not in CAPABILITIES; harnesses without it skip (Planner 19:30 backstops).</p>
-</div></details></details></div><div class="job"><div class="jnum">#021</div><div class="jhead"><span class="emoji">🔔</span><h4>Save door-alarm events automatically</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Save every alarm ping automatically</li><li>Nothing gets missed between checks</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J06 alarm-capture Zap (Door-Watch spec) — ASAP</b></p><h2>Question</h2>
-
-<p>HITL — Junyan&#x27;s hands, flagged ASAP (2026-07-16): the capture slice of the J06 decomposition</p>
-<p>(handoff session-2, item 6):</p>
-
-<ul>
-<li>- <b>NEW Zap:</b> Gmail alarm-notification email → parse studio/state/actor/timestamp →</li>
-</ul>
-<p>🚪 Alarm Activity Log row (<code>815836641dd442d5871568e7ccb05f27</code>), <code>Source = Alarm.com Live</code>,</p>
-<p><code>Dedup Key = studio|state|event-time</code>. Real-time, cloud, zero tokens — the dormant Door-Watch</p>
-<p>spec landing in the already-shaped DB.</p>
-<ul>
-<li>- Panel truth stays with the Doorman (done — SKILL.md step a2 change-only snapshots). The</li>
-</ul>
-<p>judgment slice reads the Activity Log DB afterward (any runtime; never chained to the Mac).</p>
-
-<p>Resolved when live alarm events appear as Activity Log rows. Unblocks: 020 (Ops-lead monitor)</p>
-<p>and the J06-residual cadence re-cut (needs a few days of rows — see 004 resolution).</p>
-
-<h2>2026-08-15 — premise check: this ticket cannot be built as written</h2>
-
-<p>This is &quot;Build the J06 alarm-capture <b>Zap</b>&quot; — and Zapier was cancelled 2026-07-23 (ticket 034</p>
-<p>retired the last Zaps and ended the subscription). The data it was meant to capture</p>
-<p>(arrivals/departures/panel states) now flows from <code>alarm-mcp /panel-states</code>, read every minute by</p>
-<p>the 055 lane-1 alarm watch. 020&#x27;s blocked-by on this ticket was removed today. Left open for</p>
-<p>Junyan&#x27;s call: re-scope this as &quot;persist panel-state history for the monitor&quot; (if the monitor</p>
-<p>needs history, not just live state) or close it as superseded.</p>
 </div></details></details></div><div class="job"><div class="jnum">#026</div><div class="jhead"><span class="emoji">🧪</span><h4>Test the emergency line end to end</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Send test emergency texts</li><li>Watch staff actually get paged</li><li>Then retire the old backup check</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Verify the Emergency Call Line Zap end-to-end, then retire the Receptionist 15-min poll</b></p><h2>Question</h2>
 
 <p>Execute ticket 011&#x27;s banked flip checklist (HITL — Junyan texts, Claude verifies + flips):</p>
@@ -1220,7 +1193,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>19:30:49 — the exit door event is the departure time, not the arm. Anything computing</p>
 <p>occupancy from this feed inherits that correction.</p>
 <ul>
-<li>- <b>Never bill off a socket.</b> No replay means a gap is invisible from inside; </code>covered`</li>
+<li>- <b>Never bill off a socket.</b> No replay means a gap is invisible from inside; </code>covered<code></li>
 </ul>
 <p>must be checked before any overtime is computed, and an uncovered window goes to a</p>
 <p>Review row, never to a charge.</p>
@@ -1238,6 +1211,30 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>The night-ops rebuild map owns the evidence-source design and already logs this build;</p>
 <p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
 <p>Ops Lead&#x27;s use of it here.</p>
+
+
+<h2>Inherited 2026-09-07 from the close of <b>021</b> — the 3-day evidence horizon</h2>
+
+<p>021 was closed as superseded (no panel-snapshot store is needed). One finding does not close with</p>
+<p>it, and lands here because this ticket owns the named-event feed:</p>
+
+<p><b>Every named source expires at ~3 days, and the hole-free one covers one studio.</b> </code>door_events.py<code></p>
+<p>retains 72 hours. </code>panel_history.py<code> is a clean REST record but is <b>Studio 901 only</b> — the API is</p>
+<p>locked to unitId 110267422 and every documented switch endpoint 404s or 500s (verified twice,</p>
+<p>2026-08-18 and 2026-09-04). So Studios other than 901 have <b>no hole-free arm/disarm record beyond</p>
+<p>72 hours</b>.</p>
+
+<p>The cost is already on the record: Janet Zamora&#x27;s 901 booking ran 19:30–22:30 on 2026-08-31 and the</p>
+<p>panel armed at 22:52. The Timekeeper correctly refused to charge and filed a Review row reading</p>
+<p>&quot;Named studio_activity read for Studio 901, 2026-08-31 22:30–23:00&quot;. By the time a human reached it</p>
+<p>the window had aged out. That one was rescued by hand from the Alarm.com portal, and only because</p>
+<p>it was 901.</p>
+
+<p><b>The open question, not yet ruled:</b> does a Review row&#x27;s evidence need to outlive the source that</p>
+<p>would answer it — i.e. does the relay&#x27;s frame get folded into something durable at capture time, the</p>
+<p>way </code>last_seen.py<code> folds presence? </code>last_seen.py` deliberately keeps only the most recent sighting</p>
+<p>per person, so it does not answer a &quot;what happened in this window&quot; question. Do not build against</p>
+<p>this note; it is a flag, not a spec.</p>
 </div></details></details></div><div class="job"><div class="jnum">#121</div><div class="jhead"><span class="emoji">🦾</span><h4>Give the desk a pair of hands inside Giggster and Tagvenue</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Two booking websites hold conversations we cannot finish. Giggster has no way to send a reply from the desk. Tagvenue forwards messages but blanks out every link</li><li>So a customer&#x27;s reply has sat unsent for 29 days, and a 30-person weekly lead sent us a link twice that nobody has been able to open</li><li>The robot kept asking a person to go log in and look. That is not a task, it is a missing tool</li><li>This job builds the tool: something that can log in, read the whole thread including links, post a reply a human already approved, and close out finished enquiries</li><li>Hard lines: it never sees a password, it never writes its own messages, and it stops dead if the website asks it to prove it is human</li><li>Accepting bookings stays with a person, because accepting charges the customer&#x27;s card</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the platform messenger agent (grokbot) — the desk&#x27;s hands inside Giggster and Tagvenue</b></p><h2>Question</h2>
 
 <p>Two platforms hold conversations the desk cannot finish:</p>
@@ -5872,7 +5869,77 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#120</span><span class="emoji">📢</span><span class="done-title">Nobody is watching for a robot that will not stop talking</span><span class="done-date">2026-09-07</span></summary><div class="done-body"><ul class="plain-bullets"><li>Twice now one of the robots got stuck and wrote the same note over and over. The first time it wrote 279 copies over ten days. The second time, 46 copies in eight hours</li><li>Every alarm we have watches for a robot going quiet. Not one watches for a robot going loud</li><li>Worse: the stuck robot&#x27;s complaint lands on the very list it is burying — like leaving a note about a flood at the bottom of the flood</li><li>The exact bug behind the second episode is already fixed. This job is about catching the next one, whatever it turns out to be</li><li>The plan: check every minute for the same note written five or more times in an hour. Say it once, somewhere else, and name what to switch off. It never switches anything off by itself</li><li>Second, smaller thing in the same job: that robot has no pulse check at all. If it died tonight the board would look perfectly normal</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Watch for a lane running too loud — runaway-writer check, plus a heartbeat for desk-loop</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#021</span><span class="emoji">🔔</span><span class="done-title">Save door-alarm events automatically</span><span class="done-date">2026-09-07</span></summary><div class="done-body"><ul class="plain-bullets"><li>Save every alarm ping automatically</li><li>Nothing gets missed between checks</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J06 alarm-capture Zap (Door-Watch spec) — ASAP</b></p><h2>Question</h2>
+
+<p>HITL — Junyan&#x27;s hands, flagged ASAP (2026-07-16): the capture slice of the J06 decomposition</p>
+<p>(handoff session-2, item 6):</p>
+
+<ul>
+<li>- <b>NEW Zap:</b> Gmail alarm-notification email → parse studio/state/actor/timestamp →</li>
+</ul>
+<p>🚪 Alarm Activity Log row (<code>815836641dd442d5871568e7ccb05f27</code>), <code>Source = Alarm.com Live</code>,</p>
+<p><code>Dedup Key = studio|state|event-time</code>. Real-time, cloud, zero tokens — the dormant Door-Watch</p>
+<p>spec landing in the already-shaped DB.</p>
+<ul>
+<li>- Panel truth stays with the Doorman (done — SKILL.md step a2 change-only snapshots). The</li>
+</ul>
+<p>judgment slice reads the Activity Log DB afterward (any runtime; never chained to the Mac).</p>
+
+<p>Resolved when live alarm events appear as Activity Log rows. Unblocks: 020 (Ops-lead monitor)</p>
+<p>and the J06-residual cadence re-cut (needs a few days of rows — see 004 resolution).</p>
+
+<h2>2026-08-15 — premise check: this ticket cannot be built as written</h2>
+
+<p>This is &quot;Build the J06 alarm-capture <b>Zap</b>&quot; — and Zapier was cancelled 2026-07-23 (ticket 034</p>
+<p>retired the last Zaps and ended the subscription). The data it was meant to capture</p>
+<p>(arrivals/departures/panel states) now flows from <code>alarm-mcp /panel-states</code>, read every minute by</p>
+<p>the 055 lane-1 alarm watch. 020&#x27;s blocked-by on this ticket was removed today. Left open for</p>
+<p>Junyan&#x27;s call: re-scope this as &quot;persist panel-state history for the monitor&quot; (if the monitor</p>
+<p>needs history, not just live state) or close it as superseded.</p>
+
+
+<h2>CLOSED 2026-09-07 — superseded, and the store was never needed</h2>
+
+<p>Junyan&#x27;s challenge on the re-scope question — *&quot;think carefully to see if we even need to save</p>
+<p>this information&quot;* — is what closed it. The honest answer is no. Not because arm/disarm data is</p>
+<p>worthless, but because <b>every consumer this ticket was cut to serve now has a purpose-built</p>
+<p>source, and none of them is a panel-snapshot log in Notion.</b></p>
+
+<ul>
+<li>- <b>The monitor does not need history.</b> <b>020</b> wants live studio</li>
+</ul>
+<p>state. A board reading <code>alarm-mcp /panel-states</code> on the minute tick answers &quot;who is in right</p>
+<p>now&quot; with no store behind it. The feed section of 020 should be written against that route.</p>
+<ul>
+<li>- <b>Named arm/disarm events</b> — <code>alarm_monitor/door_events.py</code>, the websocket relay. Actor name</li>
+</ul>
+<p>plus a stable <code>ew_contact_id</code>, at second precision; strictly more than the dead ADT emails</p>
+<p>carried. Owned by <b>106</b>.</p>
+<ul>
+<li>- <b>The 30-day presence horizon</b> — <code>alarm_monitor/last_seen.py</code>. A durable per-person roll-up</li>
+</ul>
+<p>that never prunes, carrying <code>covers_since</code> and <code>gaps</code> so an absence is trusted only when the</p>
+<p>ledger was actually listening.</p>
+<ul>
+<li>- <b>The billing tie-break</b> — <code>alarm_monitor/panel_history.py</code> (2026-09-04). A hole-free REST</li>
+</ul>
+<p>pull of Alarm.com&#x27;s own server-side record.</p>
+
+<p><b>What 021 would have added is a fourth store with no consumer</b>, written to the 🚪 Alarm Activity</p>
+<p>Log in Notion — the store canon is moving off under the data-sovereignty redraw. The Doorman&#x27;s</p>
+<p>04:00 A4 pass (<code>doorman_armcheck.py:235</code>, <code>log_panel_truth</code>) already writes change-only rows there</p>
+<p>and is enough for a diary.</p>
+
+<p><b>And the signal 021 proposed is the weaker one.</b> <code>panel_history.py</code> writes the correction down:</p>
+<p><i>&quot;Arming is not leaving.&quot;</i> Anneka armed 509A at 19:30:37 and opened the door at 19:30:49. A panel</p>
+<p>edge is not a departure. Attribution needs the door event and the name — which the relay has and a</p>
+<p>panel snapshot never will.</p>
+
+<p><b>Residual gap, handed to 106, not lost with this ticket:</b> both named sources hold ~3 days, and</p>
+<p><code>panel_history</code> is Studio 901 ONLY. The Janet Zamora case (2026-08-31 booking, 22:52 arm, Review</p>
+<p>row unanswerable by the time a human reached it) is the shape of the cost. Four studios have no</p>
+<p>hole-free record past 72 hours.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#120</span><span class="emoji">📢</span><span class="done-title">Nobody is watching for a robot that will not stop talking</span><span class="done-date">2026-09-07</span></summary><div class="done-body"><ul class="plain-bullets"><li>Twice now one of the robots got stuck and wrote the same note over and over. The first time it wrote 279 copies over ten days. The second time, 46 copies in eight hours</li><li>Every alarm we have watches for a robot going quiet. Not one watches for a robot going loud</li><li>Worse: the stuck robot&#x27;s complaint lands on the very list it is burying — like leaving a note about a flood at the bottom of the flood</li><li>The exact bug behind the second episode is already fixed. This job is about catching the next one, whatever it turns out to be</li><li>The plan: check every minute for the same note written five or more times in an hour. Say it once, somewhere else, and name what to switch off. It never switches anything off by itself</li><li>Second, smaller thing in the same job: that robot has no pulse check at all. If it died tonight the board would look perfectly normal</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Watch for a lane running too loud — runaway-writer check, plus a heartbeat for desk-loop</b></p><h2>Question</h2>
 
 <p>Every monitor on this desk watches for <b>silence</b> — stale heartbeats, missed passes,</p>
 <p><code>Stale after (min)</code>, <code>Window start</code>/<code>Window end</code>. Not one watches for a lane running</p>
@@ -14939,5 +15006,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-07 09:53 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-07 09:58 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
