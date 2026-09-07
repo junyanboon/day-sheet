@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 12:30 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 12:42 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -102,7 +102,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="stat"><div class="n">8</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">37</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">69</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">70</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1625,349 +1625,151 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p></code>move-sweep<code> and </code>greeter-sweep<code> log healthy passes at </code>severity=ERROR<code> because </code>progress_level()<code></p>
 <p>only strips JSON-shaped counters, so their bare </code>errors 0<code> / </code>FAILED 0<code> survives into the prose scan</p>
 <p>and rings on its own zero. Nothing to do here; it lives in </code>app.py<code>, not </code>climate_sweep.py`.</p>
-</div></details></details></div><div class="job"><div class="jnum">#123</div><div class="jhead"><span class="emoji">🚪</span><h4>The desk asked Junyan whether a renter got in. The door log already said yes</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Xavier had a booking today. Junyan set up his door code, got his phone number, and replied to him, all by hand</li><li>The door system logged him unlocking Studio 693 at 2:46 and locking up at 3:55, by name. His customer card got his code and number the moment Junyan added them</li><li>The robot that closes open tasks only ever looks at the booking calendar. It never looks at the door log or the customer card. So it kept the &#x27;no phone, no code&#x27; note open and handed it back to Junyan at 10pm</li><li>This gap was written down three weeks ago and nobody built the fix</li><li>This job teaches the closer to look at the two places it ignores: the customer card before the booking, the door log after it starts. Either one means the problem solved itself</li><li>It only ever reads. It never sets, changes or prints a code. And if the door log shows nobody came in, it leaves the note open and says so louder</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Close access-class work from the panel and the Artist DB — the executor-agnostic close, finished</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#124</div><div class="jhead"><span class="emoji">🗂️</span><h4>A platform guest has no identity until a human types one — and three robots all stop politely at that gap</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A platform guest has no identity until a human types one — and three robots all stop politely at that gap</b></p><h2>Question</h2>
 
-<p>053 promised <i>&quot;I notice what you did&quot;</i>. It notices one thing: a Skedda write.</p>
+<p>Junyan, 2026-09-07, on the xavier case that produced ticket 123:</p>
 
-<p>On 2026-09-04 Junyan handled xavier&#x27;s Studio 693 access by hand — provisioned a</p>
-<p>panel user, captured his phone, replied through the Tagvenue relay. xavier</p>
-<p>disarmed 693 at 14:46:43 Toronto from the keypad, contact <code>248894155</code>, and armed</p>
-<p>away at 15:55:02. His Artist page (<code>3cf7503281c4811c93a7fe3c43c66e1c</code>) gained</p>
-<p>Alarm User ID <code>248894155</code>, a code, and a phone.</p>
+<blockquote>*&quot;So Xavier should have been sorted out directly by the agent not even pass this to</blockquote>
+<blockquote>Junyan. Doorman will sweep and check if all the codes are set up (I think).&quot;*</blockquote>
 
-<p>The queue row saying &quot;no phone, no surname, no access path&quot; sat <code>Proposed</code> through</p>
-<p>all of it, and the desk handed it back to Junyan at 22:00 as an open question.</p>
-<p>Junyan: *&quot;Xavier got in with no issues. I processed everything already. Why was it</p>
-<p>not able to assess this?&quot;<i> Ruling: </i>&quot;I absolutely need these to be checked rather</p>
-<p>than pushed to me.&quot;*</p>
+<p>He is right on both counts, and ticket 123 built the wrong thing first. 123 closes the</p>
+<p><b>note</b> once a human has fixed the problem. This ticket is about the problem never</p>
+<p>needing a human at all.</p>
 
-<p>Because VERIFY (<code>services/event-gate/loop.py</code> <code>verify_row</code>) reads <b>Skedda only</b>,</p>
-<p>for rows with <code>Proof type = booking</code> and a <code>&lt;id&gt; @ &lt;date&gt;</code> ref. Everything else is</p>
-<p><code>unverifiable</code> and — correctly, per the dead-checker guard — left alone forever.</p>
-<p>Ticket 076 recorded this on 2026-08-15 for message-class rows (David Diep).</p>
-<p>Nothing was built. This ticket builds it for the class that strands people at</p>
-<p>doors.</p>
+<p><b>The desk already has two lanes that can provision a renter, and both of them stop at the</p>
+<p>same wall.</b></p>
+
+<p>| Lane | What it can do | Where it stops |</p>
+<p>|---|---|---|</p>
+<p>| <b>The Registrar</b> — <code>booking_sweep.platform_provision</code>, added 2026-09-03 on Junyan&#x27;s ruling in the Lauren Taylor Scott case (ticket 110) | Mints a code on booking for a platform renter <b>even with no phone</b> — &quot;a code needs a person, only sending it needs a number&quot; | <code>platform_artist_card(name)</code> returns <code>&#x27;&#x27;</code> on zero <b>or</b> several matches → <code>platform:no-single-card-to-provision</code>. Nothing is minted. |</p>
+<p>| <b>The Doorman</b> — <code>doorman_armcheck.preflight_provision</code> (A7), granted by Junyan 2026-09-05, <b>LIVE</b> (<code>DOORMAN_PROVISION_LIVE=1</code>) | Probes every renter booked in the next 7 days and <b>re-provisions anyone the panel has lost</b>, through the Registrar&#x27;s own <code>ensure_access</code>, then closes the row | Its closed list requires <i>&quot;a single Artist page and at most one panel user&quot;</i>. Same wall. |</p>
+
+<p>So: <b>both lanes can fix a renter the panel forgot. Neither can fix a renter we cannot</p>
+<p>name.</b> And nothing on the platform path ever creates the card — deliberately, because a</p>
+<p>blind create mints junk cards (the comment at <code>booking_sweep.py:3115</code> says so, and the</p>
+<p><code>Julie Marouze [Gmail]</code> duplicate is the cautionary case).</p>
+
+<h2>The three ways the name → card lookup fails, all live on 2026-09-07</h2>
+
+<p><code>platform_artist_card</code> runs one query: Artist DB <code>Name</code> <b>contains</b> the booking&#x27;s renter</p>
+<p>name, and accepts the result only when exactly one row comes back.</p>
+
+<ol>
+<li>1. <b>No card at all.</b> A brand-new platform guest has none. <b>That was xavier on Sep 4</b> —</li>
+</ol>
+<p>Tagvenue gave a first name only, no card existed, so no code was minted and the desk</p>
+<p>filed <i>&quot;no phone, no surname, no access path&quot;</i> and handed it to Junyan. He provisioned</p>
+<p>by hand, xavier keyed 693 at 14:46:43, and the row sat open all day. That is ticket 123&#x27;s</p>
+<p>whole origin story, one step upstream.</p>
+<ol>
+<li>2. <b>The name does not match a card that exists.</b> The booking title carries the <b>FBS</b></li>
+</ol>
+<p>staffing tag: <code>platform_renter_name</code> returns <code>&quot;Lauren Taylor Scott FBS&quot;</code>, her card is</p>
+<p><code>&quot;Lauren Taylor Scott [Tagvenue]&quot;</code>, and <code>contains &quot;Lauren Taylor Scott FBS&quot;</code> matches</p>
+<p><b>nothing</b>. The tag is appended by the desk&#x27;s own board convention, and it is what</p>
+<p>blinds the lookup. (Verified 2026-09-07: her card exists, carries a phone AND Alarm User</p>
+<p>ID 248968506, and <code>check_access_covers</code> returns <code>allow_permanent</code> — she was fine all</p>
+<p>along, and her gate-1 row was still open three days later.)</p>
+<ol>
+<li>3. <b>The name matches too many.</b> <code>&quot;Jessica&quot;</code> via Giggster hits <b>five</b> Jessica cards</li>
+</ol>
+<p>(<code>Jessica F. [One-Off]</code>, <code>Jessica Firestone [Skedda]</code>, <code>Jessica Lee [Skedda]</code>,</p>
+<p><code>Jessica Thadickal [Peerspace]</code>, <code>Jessica M. [Giggster]</code>). The lane correctly refuses to</p>
+<p>guess — putting a stranger&#x27;s code on a door is the failure it exists to avoid — but the</p>
+<p>refusal is permanent, and her Oct 10 booking is still unprovisioned.</p>
+
+<p>Every step of this is behaving as designed. The chain is correct and still ends with a note</p>
+<p>for Junyan.</p>
 
 <h2>What to build</h2>
 
-<p>A deterministic <b>access-class closer</b> on the event-gate tick (<code>POST /poll</code> or</p>
-<p>the 10-min <code>desk-loop</code>, builder&#x27;s call — name the reason). Two ground-truth reads,</p>
-<p>both already live on <code>alarm-mcp</code>:</p>
+<p><b>Not</b> &quot;match harder&quot;. The refusal to guess is load-bearing and stays. Build the thing</p>
+<p>that is genuinely missing: a <b>deterministic way to give a platform guest an identity</b>,</p>
+<p>and a way to say <i>&quot;these two names are the same person&quot;</i> that a machine can act on.</p>
 
-<p><b>Read 1 — before the booking: the premise is false.</b></p>
-<p>For any open access-class item — an ✅ Actions row <code>Type = Access / PIN</code>, or a</p>
-<p>ticket whose <code>Current Block</code> / gate says no code / no access path — with a booking</p>
-<p>holder resolvable to an Artist page:</p>
+<p>Sketch, for the builder to challenge:</p>
 
 <ul>
-<li>- Artist page carries <code>Alarm User ID</code> <b>and</b> <code>check_access_covers(alarm_user_id,</li>
+<li>- <b>Strip the desk&#x27;s own tags before matching.</b> <code>FBS</code>, <code>[Facilitator: …]</code>, and the platform</li>
 </ul>
-<p>booking_start, booking_end)</code> returns <code>pass</code> or <code>allow_permanent</code></p>
-<p>→ the access problem no longer exists. Close the row <code>Processed</code> with the</p>
-<p>verdict as evidence. <code>dormant_id</code> set → NOT covered, leave it (079&#x27;s ladder).</p>
-
-<p><b>Read 2 — after the booking start: they got in.</b></p>
-<p>For the same items once <code>booking_start</code> has passed:</p>
-
+<p>word are decoration the desk itself appends. Matching on the name the platform actually</p>
+<p>gave is not guessing. This alone would have provisioned Lauren. Cheapest, safest, do it</p>
+<p>first and separately.</p>
 <ul>
-<li>- <code>studio_activity(studio, start-30min, end)</code> shows a keypad <code>disarm</code> whose</li>
+<li>- <b>Create the card when the platform booking is accepted, not when someone needs it.</b></li>
 </ul>
-<p><code>contact_id</code> equals the holder&#x27;s <code>Alarm User ID</code> → they entered. Close</p>
-<p><code>Processed</code>, evidence = the event line (actor, contact id, timestamp).</p>
+<p>A platform booking is a real, paid, accepted booking with a real person behind it. The</p>
+<p>Greeter already files an ACCEPT/DECLINE row per request and the ticket exists per canon</p>
+<p>(&quot;Every platform booking has a ticket&quot;, 2026-08-21). The card is the missing sibling.</p>
+<p>Junk-card risk is the reason it is not done today — so the card must be minted from the</p>
+<p>booking (platform + booking ref + accepted), never from a bare holder string, and must</p>
+<p>carry the platform tag so it is obviously a platform identity.</p>
 <ul>
-<li>- Do NOT use this to bill or to judge departure — that is the overtime lane&#x27;s</li>
+<li>- <b>A first-name collision is a human question, once.</b> Where several cards match, the ask</li>
 </ul>
-<p><code>departure.verdict</code> and its <code>covered</code> rules. This closer answers one question:</p>
-<p><i>did the person get through the door</i>. A single named disarm inside the window</p>
-<p>answers it.</p>
-
-<p><b>Rate and scope.</b> Reads are cheap but not free — one <code>check_access_covers</code> per</p>
-<p>open item per pass, one <code>studio_activity</code> per (studio, window) per pass. Cap the</p>
-<p>lookback at 48 h; older items stay for a human.</p>
-
-<p><b>Never silence a real stall.</b> A row whose booking is in the past with NO named</p>
-<p>disarm is NOT closed. It is left open and the closer appends one line: *&quot;no</p>
-<p>keypad entry by &lt;name&gt; observed &lt;window&gt;; feed covered: &lt;bool&gt;&quot;* — that is the</p>
-<p>signal that someone was stranded, and it must get louder, not quieter.</p>
+<p>is <i>&quot;is this the Jessica who booked in July?&quot;</i> — one disambiguation row that a human</p>
+<p>answers once and the desk then remembers, not a row re-raised every pass forever.</p>
+<ul>
+<li>- <b>Whatever is built must close its own row</b>, on its own read, the way A7 does.</li>
+</ul>
 
 <h2>Hard constraints</h2>
 
 <ul>
-<li>- <b>No code in any transcript, log, or row.</b> Use <code>check_access_covers</code> (verdicts)</li>
+<li>- <b>The refusal to guess stays.</b> A wrong card means a stranger&#x27;s code on a door. Nothing</li>
 </ul>
-<p>and <code>studio_activity</code> (events). Never <code>find_user_codes</code> / <code>get_user_code</code>.</p>
+<p>here may relax <code>platform_artist_card</code>&#x27;s &quot;exactly one match&quot; rule by loosening the <i>match</i>;</p>
+<p>it may only make the <i>inputs</i> honest (tag stripping) or create the missing card from</p>
+<p>evidence strong enough to stand behind.</p>
 <ul>
-<li>- <b>Read-only on the panel.</b> This closer never provisions, grants, arms, or</li>
+<li>- <b>Read-only on the panel except through <code>ensure_access</code>.</b> One writer, borrowed, exactly</li>
 </ul>
-<p>disarms. Provisioning is the Registrar&#x27;s; migration is ticket 122&#x27;s.</p>
+<p>as A7 does it. No second provisioning path.</p>
 <ul>
-<li>- <b>Closes ✅ Actions to Perform rows only</b> — never ⏭️ Next Action (retiring).</li>
+<li>- <b>No code in any row, log, transcript or test.</b> ⚠️ <b>Found while writing this ticket:</b> the</li>
 </ul>
-<p>Ticket-side: append the evidence to <code>Current Block</code>; do not flip <code>Position</code></p>
-<p>unless canon for that ticket type says the gate clears on a machine read</p>
-<p>(<code>CONTEXT.md</code>: machine-readable gates clear on the agent&#x27;s own read).</p>
+<p>Cancelled row <code>3d07503281c4819a91edefed0015957a</code> carries a live 4-digit code <b>in its</p>
+<p>title</b>. It is Cancelled, not deleted. Worth a separate look at how it got there — the</p>
+<p>rule is that digits never enter a row.</p>
 <ul>
-<li>- <b>Shadow first.</b> Logs what it would close, writes nothing. <code>ACCESS_CLOSER_LIVE=1</code></li>
-</ul>
-<p>is Junyan&#x27;s flip.</p>
-<ul>
-<li>- <b>Junyan runs deploys.</b></li>
+<li>- **Shadow first, <code>*_LIVE=1</code> is Junyan&#x27;s flip<b>, the house pattern.</li>
+<li>- </b>Junyan runs deploys.<b></li>
 </ul>
 
 <h2>Acceptance</h2>
 
 <ul>
-<li>- Replay xavier: an Access / PIN row + his Artist page + the 2026-09-04 693 feed</li>
+<li>- Replay Lauren: booking name <code>&quot;Lauren Taylor Scott FBS&quot;</code> resolves to her existing card and</li>
 </ul>
-<p>→ shadow names the row as closable by BOTH reads, with the 14:46:43 disarm as</p>
-<p>Read-2 evidence. Live closes it.</p>
+<p>provisions, with no card created and no human asked.</p>
 <ul>
-<li>- A row whose holder has <code>dormant_id</code> on the panel is NOT closed (Greg Samba&#x27;s</li>
+<li>- Replay xavier: a Tagvenue booking for a first-name-only guest with no card ends the pass</li>
 </ul>
-<p>2026-09-04 shape).</p>
+<p>with a usable identity and a code on the panel, or with ONE disambiguation ask — never</p>
+<p>with &quot;no access path&quot; handed to a human.</p>
 <ul>
-<li>- A past booking with no named disarm is NOT closed and gets the one-line stall</li>
+<li>- Replay Jessica: five matching cards produces exactly one human question, and the answer</li>
 </ul>
-<p>note; a second pass does not append a second line.</p>
+<p>is remembered — a second pass asks nothing.</p>
 <ul>
-<li>- A disarm by a DIFFERENT contact id in the window does not close the row.</li>
-<li>- No test output contains a 4-digit code.</li>
-<li>- RUNTIMES.md, Run Monitor row (if its own job), Plumbing Map entry, and</li>
+<li>- No junk card: a booking with no accepted status, or no resolvable platform person, creates</li>
 </ul>
-<p><code>library/the-loop.md</code> § executor-agnostic close updated to say which classes</p>
-<p>now self-close and from which read.</p>
+<p>nothing.</p>
+<ul>
+<li>- The row that was raised closes on the lane&#x27;s own read.</li>
+<li>- Canon (<code>doorman-access-lifecycle.md</code> and/or <code>the-loop.md</code>), <code>RUNTIMES.md</code>, Plumbing Map</li>
+</ul>
+<p>entry, tests.</p>
 
 <h2>Seam</h2>
 
-<p>Message-class close (ticket 076, the J28 ledger from Cloud Run) stays separate.</p>
-<p>This ticket is access only. It reads the panel; it never writes it.</p>
+<p>Ticket 123 (the access-class closer) stays separate and stays in </b>shadow<b> — it closes</p>
+<p>notes after the fact and it is the wrong layer for this. Note that </b>123 would not have</p>
+<p>caught Lauren&#x27;s row anyway**: the platform gate-1 rows carry no <code>Artist</code> relation, so the</p>
+<p>closer skips them. If this ticket lands well, 123&#x27;s Read 1 has much less to do.</p>
 
-<h2>Progress</h2>
-
-<p><b>2026-09-05 — BUILT, TESTED, PUSHED. SHADOW. Two deploys pending, both Junyan&#x27;s.</b></p>
-
-<p><b>Where it rides and why.</b> <code>services/event-gate/access_closer.py</code> (dc-canon <code>d7278403</code>),</p>
-<p>called from <code>POST /loop</code> after <code>loop.run()</code> — the 10-minute <code>desk-loop</code> tick. It IS the</p>
-<p>VERIFY beat for this class; <code>/poll</code> fires every minute and would query Notion and the</p>
-<p>panel six times as often for rows that change on the hour. Own switches:</p>
-<p><code>ACCESS_CLOSER_LIVE=1</code> (Junyan&#x27;s flip, not set), <code>ACCESS_CLOSER_DISABLED=1</code>. Inert when</p>
-<p><code>NOTION_TOKEN</code> or the alarm base/token is missing. Reports inside desk-loop&#x27;s ledger as</p>
-<p><code>result[&quot;access_closer&quot;]</code> and on the <code>access_closer</code> log tag — no own job, no own Run</p>
-<p>Monitor row.</p>
-
-<p><b>A second door on alarm-mcp.</b> <code>check_access_covers</code> had no plain-HTTP twin (only</p>
-<p><code>/door-history</code> existed for <code>studio_activity</code>), and the Doorman&#x27;s <code>/provision verify_only</code></p>
-<p>probe was rejected because its answer carries the code. So <code>GET /access-covers</code> was added</p>
-<p>(danceannex-alarm-monitor <code>15771f2</code>, <code>hosting/server_http.py</code> + <code>access.covers_answer</code>):</p>
-<p>same resolve ladder, same Step-6 verdict, same <code>dormant_id</code>, records cut to</p>
-<p><code>PUBLIC_RECORD_FIELDS</code>, no write-back. Until alarm-mcp ships, Read 1 gets a 404 →</p>
-<p><code>unverifiable</code> → nothing closes; Read 2 works from the first event-gate pass.</p>
-
-<h3>Acceptance, line by line</h3>
-
-<ul>
-<li>- <b>Replay xavier → shadow names the row closable by BOTH reads, 14:46:43 disarm as</li>
-</ul>
-<p>Read-2 evidence; live closes it.</b> <code>test_xavier_shadow_names_the_row_closable_by_both_reads</code></p>
-<p>feeds the recorded reads (Artist page with id <code>248894155</code>; 693 feed with the keypad</p>
-<p>disarm at <code>18:46:43Z</code> and armed_away at <code>19:55:02Z</code>; <code>/access-covers</code> →</p>
-<p><code>allow_permanent</code>): <code>reads == [&quot;read1&quot;, &quot;read2&quot;]</code>, Read-2 evidence carries the</p>
-<p>timestamp, contact id and actor, <code>writes == []</code>.</p>
-<p><code>test_xavier_live_closes_the_row_processed_with_the_evidence</code>: <code>Status = Processed</code>,</p>
-<p>evidence in Notes and in the ticket&#x27;s Current Block. *Replayed from recorded reads, not</p>
-<p>live — no Notion or alarm token exists on this Mac. The first live shadow pass after</p>
-<p>both deploys is the in-situ replay; look for <code>would close … read1+read2</code> on the</p>
-<p><code>access_closer</code> tag.*</p>
-<ul>
-<li>- <b>Dormant id → NOT closed.</b> <code>test_dormant_id_is_not_covered_and_the_row_stays_open</code>:</li>
-</ul>
-<p><code>dormant_id</code> set, empty feed → <code>closable == []</code>, no writes, log says DORMANT.</p>
-<ul>
-<li>- <b>Past booking, no named disarm → NOT closed, one stall line, second pass silent.</b></li>
-</ul>
-<p><code>test_past_booking_with_no_named_disarm_is_not_closed_and_gets_one_stall_line</code>: one</p>
-<p>PATCH carrying only Notes (no Status), the line reads <code>no keypad entry by xavier xavier</p>
-<p>observed 2026-09-04T18:30:00Z–2026-09-04T20:00:00Z (…); feed covered: false</p>
-<p>[access-closer stall 120230872]</code>; the second pass on the noted row writes nothing.</p>
-<p><code>test_a_failed_feed_read_never_writes_a_stall_line</code> pins the other half: a feed that</p>
-<p>could not be read writes no line.</p>
-<ul>
-<li>- <b>Different contact id → not closed.</b> <code>test_a_disarm_by_a_different_contact_id_does_not_close</code></li>
-</ul>
-<p>(same name, id <code>247640077</code>) → not closable, stall noted. Also: remote-login disarm by</p>
-<p>the right id does not count; a named disarm outside the window does not count.</p>
-<ul>
-<li>- <b>No test output contains a 4-digit code.</b> The Artist page is planted with <code>Alarm Code</li>
-</ul>
-<p>4321</code> and every feed event with a <code>code: 1776</code> field; <code>assert_no_code</code> greps every</p>
-<p>write body, the ledger and every log line in the closing tests. <code>pytest -s | grep -c</p>
-<p>&quot;4321\|1776&quot;</code> → 0. <code>alarm-monitor tests/test_access_covers_http.py</code> pins the server-side</p>
-<p>whitelist the same way.</p>
-<ul>
-<li>- <b>RUNTIMES.md</b> — desk-loop row updated (2026-09-05 paragraph). <b>Run Monitor row</b> — not</li>
-</ul>
-<p>its own job, so none; it reports inside desk-loop&#x27;s ledger. <b>Plumbing Map</b> — entry</p>
-<p>2026-09-05 05:5xZ, newest-first. <b><code>library/the-loop.md</code></b> — new § &quot;Which classes</p>
-<p>self-close, and from which read&quot;: a table of the two classes (booking changes from the</p>
-<p>Skedda read; Access / PIN from Read 1 / Read 2) and the rules the closer carries.</p>
-
-<p><b>Tests.</b> 33 new in <code>test_access_closer.py</code>; event-gate suite 1489 pass. <code>test_wrongroom.py</code></p>
-<p>passed on this tree (the pre-existing failure the brief mentions did not reproduce).</p>
-<p>alarm-monitor: 4 new, 374 pass.</p>
-
-<p><b>Deploy (Junyan), in this order:</b></p>
-
-<p>``<code>bash</p>
-<p>cd ~/DanceAnnex-AlarmMonitor/alarm-monitor &amp;&amp; ./deploy.sh</p>
-<p></code>`<code></p>
-
-<p></code>`<code>bash</p>
-<p>curl -s -o /dev/null -w &quot;%{http_code}\n&quot; -H &quot;Authorization: Bearer $ALARM_TOKEN&quot; &quot;https://alarm-mcp-cfnon4wh3q-uc.a.run.app/access-covers?alarm_user_id=248894155&amp;booking_start=2026-09-04T19:00:00Z&amp;booking_end=2026-09-04T20:00:00Z&quot;</p>
-<p></code>`<code></p>
-
-<p>(expect </code>200<code> with </code>&quot;verdict&quot;: &quot;allow_permanent&quot;<code> and </code>&quot;dormant_id&quot;: null<code>; a </code>404<code> means the old image is still serving)</p>
-
-<p></code>`<code>bash</p>
-<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; services/event-gate/deploy.sh</p>
-<p></code>`<code></p>
-
-<p>(expect </code>code_fingerprint<code> = </code>e617f7051a7b<code>)</p>
-
-<p>Then watch two or three desk-loop passes:</p>
-
-<p></code>`<code>bash</p>
-<p>gcloud logging read &#x27;resource.type=&quot;cloud_run_revision&quot; AND resource.labels.service_name=&quot;event-gate&quot; AND jsonPayload.decision=&quot;access_closer&quot;&#x27; --project danceannex-skedda --limit 20 --format=&#x27;value(jsonPayload.reason)&#x27;</p>
-<p></code>`<code></p>
-
-<p>Flip live only after a shadow pass has named at least one row correctly:</p>
-
-<p></code>`<code>bash</p>
-<p>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --update-env-vars ACCESS_CLOSER_LIVE=1</p>
-<p></code>`<code></p>
-
-<p><b>Not done / out of scope.</b> Message-class close (ticket 076) untouched. A row with no</p>
-<p></code>Artist<code> relation and no holder name in its title is skipped (counted under </code>skipped<code>);</p>
-<p>a row whose Artist page has no </code>Alarm User ID<code> is skipped, not stalled — without an id</p>
-<p>there is no &quot;named&quot; disarm to look for. The </code>alarm-mcp<code> connector needs no reconnect for</p>
-<p>this (HTTP route, not an MCP tool).</p>
-
-<h3>Shadow verdict — 2026-09-07, after two days live in shadow</h3>
-
-<p><b>79 complete passes read. </code>unverifiable<code> 0 on every one, </code>stalls<code> 0, no code in any line.</b></p>
-<p>Deployed 2026-09-05 02:59Z (</code>d7278403<code>, fingerprint </code>e617f7051a7b<code>); alarm-mcp carries the</p>
-<p>twin on image </code>alarm:0905-15771f2<code>.</p>
-
-<p>Nine distinct rows were named closable, four of them by <b>both</b> reads. The four Read-2</p>
-<p>closes, each a keypad disarm whose </code>contact_id<code> equals the holder&#x27;s stored Alarm User ID,</p>
-<p>inside </code>[start − 30 min, end]<code>:</p>
-
-<p>| Row | Holder | Disarm | Studio / booking |</p>
-<p>|---|---|---|---|</p>
-<p>| </code>2ddf9975<code> | Adalia Knight | </code>2026-09-03T13:21:29Z<code>, contact </code>247090649<code> | 693 / 120022310 |</p>
-<p>| </code>a0795bed<code> | Hannah Hyuna Cho | </code>2026-09-06T23:53:02Z<code>, contact </code>247807749<code> | 509B / 120390464 |</p>
-<p>| </code>cab71266<code> | Hannah Hyuna Cho | same event, second row on the same booking | 509B / 120390464 |</p>
-<p>| </code>e8d913ed<code> | Tufan Bhattarai | </code>2026-09-05T11:51:54Z<code>, contact </code>245533823<code> | 901 / 120321072 |</p>
-
-<p>Hannah&#x27;s disarm lands 7 minutes before her 20:00 Toronto start — inside the 30-minute lead,</p>
-<p>which is what the lead is for. The other five rows (</code>3b3f56f5<code> Nina Li, </code>72f3456c<code> and</p>
-<p></code>8a465e16<code> Jia Chian Lee, </code>9589cb8e<code> and </code>ced1aa62<code> Hannah Cho) are Read-1 only: the panel</p>
-<p>returns </code>allow_permanent<code> against a booking still ahead. Two rows are skipped every pass and</p>
-<p>correctly so — one Artist page with no </code>Alarm User ID<code>, one row naming no resolvable holder.</p>
-
-<p><b>One real defect found and fixed (</code>4ac886f25<code>, fingerprint </code>b8dc8ab909b6<code>) — NOT yet deployed.</b></p>
-<p>Two passes (2026-09-05 22:50Z, 2026-09-06 02:40Z) returned </code>{&quot;ok&quot;: false, &quot;error&quot;: &quot;The read</p>
-<p>operation timed out&quot;}<code> and did nothing at all. Cause: </code>socket.timeout<code> <b>is</b> </code>TimeoutError<code></p>
-<p>and is <b>not</b> a </code>urllib.error.URLError<code>, so a urlopen read timeout escaped </code>_alarm_get<code>&#x27;s</p>
-<p>catch, escaped </code>assess()<code> and </code>run()<code>, and aborted the pass from app.py&#x27;s wrapper. One slow</p>
-<p>panel read should cost exactly one row an </code>unverifiable<code> and leave the rest of the pass</p>
-<p>working. Now catches </code>OSError<code>, which covers both, with the </code>HTTPError<code> branch still first.</p>
-<p>Fail-safe before and after — nothing is ever written on a failed read — but a whole-pass</p>
-<p>abort is the loud kind of wrong, and it is exactly the failure this lane&#x27;s own rules exist</p>
-<p>to make small. Pinned by </code>test_a_read_timeout_is_one_unverifiable_row_not_a_dead_pass<code>,</p>
-<p>which asserts the pass survives with </code>ok: true<code>, two </code>unverifiable<code>, and no writes.</p>
-
-<p><b>Recommendation: ready for the flip, after Junyan eyeballs the nine rows.</b> Every Read-2</p>
-<p>close is self-proving — a keypad disarm under the holder&#x27;s own contact id is the person</p>
-<p>getting through the door. The Read-1 closes rest on the panel&#x27;s own </code>allow_permanent<code>. What</p>
-<p>I cannot check from here is whether any of those nine rows is open for a reason the panel</p>
-<p>cannot see. Deploy the timeout fix first, so the live lane degrades one row at a time:</p>
-
-<p></code>`<code>bash</p>
-<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; services/event-gate/deploy.sh</p>
-<p></code>`<code></p>
-
-<p>(expect </code>code_fingerprint<code> = </code>b8dc8ab909b6<code>)</p>
-
-<p></code>`<code>bash</p>
-<p>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --update-env-vars ACCESS_CLOSER_LIVE=1</p>
-<p></code>`<code></p>
-
-<h3>The live regression — 2026-09-07, and what it cost</h3>
-
-<p><b>Flipped live 13:57Z. Two live passes. Both closed the same row, and both were wrong.</p>
-<p>Reverted to shadow 14:1xZ on Junyan&#x27;s flip; row and ticket repaired by hand.</b></p>
-
-<p>The row: </code>3b3f56f5<code> — *&quot;🔑 Studio 901 authorized users — Krista Flynn: release T3b</p>
-<p>follow-up, add her code when she replies (Akira Huang done)&quot;*, on CC ticket</p>
-<p></code>3ce7503281c4811a9709c9ddcd3ed217<code>. Its </code>Artist<code> relation is <b>Nina Li</b>, the account</p>
-<p>holder. The closer resolved the subject from that relation, read Nina Li as</p>
-<p></code>allow_permanent<code>, and closed the row </code>Processed<code> with that verdict as evidence — at</p>
-<p>14:00Z, and again at 14:10Z after the first reopen, because the reasoning that produced</p>
-<p>the close was still true.</p>
-
-<p><b>The row is not about Nina Li.</b> It is the gate on provisioning <b>Krista Flynn&#x27;s</b> code.</p>
-<p>Live read at 10:1x Toronto: Krista&#x27;s Artist page (</code>3ce7503281c4818485e6e8fc1f49e63e<code>)</p>
-<p>carries </code>Alarm User ID<code> and </code>Alarm Display Name<code> both <b>empty</b>. She has no code. T4 went</p>
-<p>out 2026-09-02 telling her she is set up, and her first solo booking is <b>Wed 2026-09-16</b></p>
-<p>(occurrence 120198358), so the code must exist by Sep 15. The row that kept that visible</p>
-<p>was taken off the board by the thing built to stop people being stranded at doors.</p>
-
-<p><b>Every read was true and the close was wrong.</b> Nina Li really is covered. That is the</p>
-<p>whole lesson: both reads key off the <i>resolved holder</i>, so a row about somebody else gets</p>
-<p>a true answer to a question nobody asked. Nothing in the design checked whose row it was —</p>
-<p></code>artist_of<code> returned the </code>Artist<code> relation and </code>assess<code> treated that person as the subject.</p>
-<p>That is false for every authorized-user and facilitator row, where the relation is the</p>
-<p>account holder <b>by construction</b>.</p>
-
-<p><b>One guard held, and it is why this is a reopened row and not a lost ticket.</b> The ticket</p>
-<p>stayed </code>Gate: Staff<code> because a second open ✅ row was linked, so </code>_other_open_actions<code></p>
-<p>returned 1 and </code>Position<code> was left alone.</p>
-
-<p><b>The fix (</code>a3511a24c<code>, fingerprint </code>d321f8915824<code>) — </code>subject_of()<code>, gating BOTH reads</p>
-<p>before either one runs:</b></p>
-
-<ul>
-<li>- A row whose <b>title or basis</b> says </code>authorized user<code> / </code>authorised user<code> / </code>facilitator<code></li>
-</ul>
-<p>is left for a human. Read off the ROW, never the Artist name — otherwise</p>
-<p></code>Adalia Knight [Authorized]<code> could never close her own row (pinned by a test).</p>
-<ul>
-<li>- Otherwise the resolved person&#x27;s <b>name must appear in the row&#x27;s title</b>: first and last</li>
-</ul>
-<p>real token, word boundaries (so </code>Li<code> never matches </code>release<code> — the Krista row&#x27;s own title</p>
-<p>carries &quot;release T3b&quot;), board suffix </code>[Fixed Option]<code> stripped, middle names not required</p>
-<p>(</code>Hannah Hyuna Cho<code> matches a row titled </code>Hannah Cho<code>).</p>
-<ul>
-<li>- <b>Fails closed.</b> A name yielding no checkable token cannot be confirmed and the row stays.</li>
-</ul>
-
-<p>Seven new tests, including the regression with <b>both reads passing and the row still</p>
-<p>untouched</b>, and a replay of the real title, which the guard skips. 1724 pass. xavier,</p>
-<p>Adalia and a Hannah-shaped row still close.</p>
-
-<p><b>What the two shadow days could not tell me, and I should have said louder.</b> Shadow</p>
-<p>proved the <i>reads</i> were right — every disarm matched, every verdict matched, zero</p>
-<p>unverifiable. It could not prove the <i>question</i> was right for a given row, because a wrong</p>
-<p>subject produces a perfectly clean-looking line. I named that gap when I asked Junyan to</p>
-<p>eyeball the nine rows before flipping, and then treated 79 clean passes as if they had</p>
-<p>closed it. They had not. <b>The nine rows needed reading before the flip, not after</b> — and</p>
-<p>one read of that row&#x27;s title would have caught it, because the title says &quot;Krista Flynn&quot;</p>
-<p>and the evidence line says &quot;Nina Li&quot;.</p>
-
-<p><b>State: SHADOW, </code>ACCESS_CLOSER_LIVE=0<code>, fix pushed and NOT yet deployed.</b> Before any</p>
-<p>second flip: deploy </code>d321f8915824<code>, watch shadow passes until the Krista-shaped row shows</p>
-<p>as </code>left for a human<code>, and read every remaining </code>would close` row&#x27;s title against the</p>
-<p>holder named in its evidence line.</p>
+<p>Ticket 122 (window migration) and the Doorman&#x27;s A7 are the neighbours — A7 is the model to</p>
+<p>copy for &quot;sees something off, fixes it, reports it&quot;.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">37</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -6686,6 +6488,403 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>The lesson worth keeping: a Cloud Run environment variable read on one day is not evidence about</p>
 <p>the same service after a deploy, and an absent scheduler job is not evidence that nothing runs the</p>
 <p>work.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#123</span><span class="emoji">🚪</span><span class="done-title">The desk asked Junyan whether a renter got in. The door log already said yes</span><span class="done-date">2026-09-07</span></summary><div class="done-body"><ul class="plain-bullets"><li>Xavier had a booking today. Junyan set up his door code, got his phone number, and replied to him, all by hand</li><li>The door system logged him unlocking Studio 693 at 2:46 and locking up at 3:55, by name. His customer card got his code and number the moment Junyan added them</li><li>The robot that closes open tasks only ever looks at the booking calendar. It never looks at the door log or the customer card. So it kept the &#x27;no phone, no code&#x27; note open and handed it back to Junyan at 10pm</li><li>This gap was written down three weeks ago and nobody built the fix</li><li>This job teaches the closer to look at the two places it ignores: the customer card before the booking, the door log after it starts. Either one means the problem solved itself</li><li>It only ever reads. It never sets, changes or prints a code. And if the door log shows nobody came in, it leaves the note open and says so louder</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Close access-class work from the panel and the Artist DB — the executor-agnostic close, finished</b></p><h2>Question</h2>
+
+<p>053 promised <i>&quot;I notice what you did&quot;</i>. It notices one thing: a Skedda write.</p>
+
+<p>On 2026-09-04 Junyan handled xavier&#x27;s Studio 693 access by hand — provisioned a</p>
+<p>panel user, captured his phone, replied through the Tagvenue relay. xavier</p>
+<p>disarmed 693 at 14:46:43 Toronto from the keypad, contact <code>248894155</code>, and armed</p>
+<p>away at 15:55:02. His Artist page (<code>3cf7503281c4811c93a7fe3c43c66e1c</code>) gained</p>
+<p>Alarm User ID <code>248894155</code>, a code, and a phone.</p>
+
+<p>The queue row saying &quot;no phone, no surname, no access path&quot; sat <code>Proposed</code> through</p>
+<p>all of it, and the desk handed it back to Junyan at 22:00 as an open question.</p>
+<p>Junyan: *&quot;Xavier got in with no issues. I processed everything already. Why was it</p>
+<p>not able to assess this?&quot;<i> Ruling: </i>&quot;I absolutely need these to be checked rather</p>
+<p>than pushed to me.&quot;*</p>
+
+<p>Because VERIFY (<code>services/event-gate/loop.py</code> <code>verify_row</code>) reads <b>Skedda only</b>,</p>
+<p>for rows with <code>Proof type = booking</code> and a <code>&lt;id&gt; @ &lt;date&gt;</code> ref. Everything else is</p>
+<p><code>unverifiable</code> and — correctly, per the dead-checker guard — left alone forever.</p>
+<p>Ticket 076 recorded this on 2026-08-15 for message-class rows (David Diep).</p>
+<p>Nothing was built. This ticket builds it for the class that strands people at</p>
+<p>doors.</p>
+
+<h2>What to build</h2>
+
+<p>A deterministic <b>access-class closer</b> on the event-gate tick (<code>POST /poll</code> or</p>
+<p>the 10-min <code>desk-loop</code>, builder&#x27;s call — name the reason). Two ground-truth reads,</p>
+<p>both already live on <code>alarm-mcp</code>:</p>
+
+<p><b>Read 1 — before the booking: the premise is false.</b></p>
+<p>For any open access-class item — an ✅ Actions row <code>Type = Access / PIN</code>, or a</p>
+<p>ticket whose <code>Current Block</code> / gate says no code / no access path — with a booking</p>
+<p>holder resolvable to an Artist page:</p>
+
+<ul>
+<li>- Artist page carries <code>Alarm User ID</code> <b>and</b> <code>check_access_covers(alarm_user_id,</li>
+</ul>
+<p>booking_start, booking_end)</code> returns <code>pass</code> or <code>allow_permanent</code></p>
+<p>→ the access problem no longer exists. Close the row <code>Processed</code> with the</p>
+<p>verdict as evidence. <code>dormant_id</code> set → NOT covered, leave it (079&#x27;s ladder).</p>
+
+<p><b>Read 2 — after the booking start: they got in.</b></p>
+<p>For the same items once <code>booking_start</code> has passed:</p>
+
+<ul>
+<li>- <code>studio_activity(studio, start-30min, end)</code> shows a keypad <code>disarm</code> whose</li>
+</ul>
+<p><code>contact_id</code> equals the holder&#x27;s <code>Alarm User ID</code> → they entered. Close</p>
+<p><code>Processed</code>, evidence = the event line (actor, contact id, timestamp).</p>
+<ul>
+<li>- Do NOT use this to bill or to judge departure — that is the overtime lane&#x27;s</li>
+</ul>
+<p><code>departure.verdict</code> and its <code>covered</code> rules. This closer answers one question:</p>
+<p><i>did the person get through the door</i>. A single named disarm inside the window</p>
+<p>answers it.</p>
+
+<p><b>Rate and scope.</b> Reads are cheap but not free — one <code>check_access_covers</code> per</p>
+<p>open item per pass, one <code>studio_activity</code> per (studio, window) per pass. Cap the</p>
+<p>lookback at 48 h; older items stay for a human.</p>
+
+<p><b>Never silence a real stall.</b> A row whose booking is in the past with NO named</p>
+<p>disarm is NOT closed. It is left open and the closer appends one line: *&quot;no</p>
+<p>keypad entry by &lt;name&gt; observed &lt;window&gt;; feed covered: &lt;bool&gt;&quot;* — that is the</p>
+<p>signal that someone was stranded, and it must get louder, not quieter.</p>
+
+<h2>Hard constraints</h2>
+
+<ul>
+<li>- <b>No code in any transcript, log, or row.</b> Use <code>check_access_covers</code> (verdicts)</li>
+</ul>
+<p>and <code>studio_activity</code> (events). Never <code>find_user_codes</code> / <code>get_user_code</code>.</p>
+<ul>
+<li>- <b>Read-only on the panel.</b> This closer never provisions, grants, arms, or</li>
+</ul>
+<p>disarms. Provisioning is the Registrar&#x27;s; migration is ticket 122&#x27;s.</p>
+<ul>
+<li>- <b>Closes ✅ Actions to Perform rows only</b> — never ⏭️ Next Action (retiring).</li>
+</ul>
+<p>Ticket-side: append the evidence to <code>Current Block</code>; do not flip <code>Position</code></p>
+<p>unless canon for that ticket type says the gate clears on a machine read</p>
+<p>(<code>CONTEXT.md</code>: machine-readable gates clear on the agent&#x27;s own read).</p>
+<ul>
+<li>- <b>Shadow first.</b> Logs what it would close, writes nothing. <code>ACCESS_CLOSER_LIVE=1</code></li>
+</ul>
+<p>is Junyan&#x27;s flip.</p>
+<ul>
+<li>- <b>Junyan runs deploys.</b></li>
+</ul>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Replay xavier: an Access / PIN row + his Artist page + the 2026-09-04 693 feed</li>
+</ul>
+<p>→ shadow names the row as closable by BOTH reads, with the 14:46:43 disarm as</p>
+<p>Read-2 evidence. Live closes it.</p>
+<ul>
+<li>- A row whose holder has <code>dormant_id</code> on the panel is NOT closed (Greg Samba&#x27;s</li>
+</ul>
+<p>2026-09-04 shape).</p>
+<ul>
+<li>- A past booking with no named disarm is NOT closed and gets the one-line stall</li>
+</ul>
+<p>note; a second pass does not append a second line.</p>
+<ul>
+<li>- A disarm by a DIFFERENT contact id in the window does not close the row.</li>
+<li>- No test output contains a 4-digit code.</li>
+<li>- RUNTIMES.md, Run Monitor row (if its own job), Plumbing Map entry, and</li>
+</ul>
+<p><code>library/the-loop.md</code> § executor-agnostic close updated to say which classes</p>
+<p>now self-close and from which read.</p>
+
+<h2>Seam</h2>
+
+<p>Message-class close (ticket 076, the J28 ledger from Cloud Run) stays separate.</p>
+<p>This ticket is access only. It reads the panel; it never writes it.</p>
+
+<h2>Progress</h2>
+
+<p><b>2026-09-05 — BUILT, TESTED, PUSHED. SHADOW. Two deploys pending, both Junyan&#x27;s.</b></p>
+
+<p><b>Where it rides and why.</b> <code>services/event-gate/access_closer.py</code> (dc-canon <code>d7278403</code>),</p>
+<p>called from <code>POST /loop</code> after <code>loop.run()</code> — the 10-minute <code>desk-loop</code> tick. It IS the</p>
+<p>VERIFY beat for this class; <code>/poll</code> fires every minute and would query Notion and the</p>
+<p>panel six times as often for rows that change on the hour. Own switches:</p>
+<p><code>ACCESS_CLOSER_LIVE=1</code> (Junyan&#x27;s flip, not set), <code>ACCESS_CLOSER_DISABLED=1</code>. Inert when</p>
+<p><code>NOTION_TOKEN</code> or the alarm base/token is missing. Reports inside desk-loop&#x27;s ledger as</p>
+<p><code>result[&quot;access_closer&quot;]</code> and on the <code>access_closer</code> log tag — no own job, no own Run</p>
+<p>Monitor row.</p>
+
+<p><b>A second door on alarm-mcp.</b> <code>check_access_covers</code> had no plain-HTTP twin (only</p>
+<p><code>/door-history</code> existed for <code>studio_activity</code>), and the Doorman&#x27;s <code>/provision verify_only</code></p>
+<p>probe was rejected because its answer carries the code. So <code>GET /access-covers</code> was added</p>
+<p>(danceannex-alarm-monitor <code>15771f2</code>, <code>hosting/server_http.py</code> + <code>access.covers_answer</code>):</p>
+<p>same resolve ladder, same Step-6 verdict, same <code>dormant_id</code>, records cut to</p>
+<p><code>PUBLIC_RECORD_FIELDS</code>, no write-back. Until alarm-mcp ships, Read 1 gets a 404 →</p>
+<p><code>unverifiable</code> → nothing closes; Read 2 works from the first event-gate pass.</p>
+
+<h3>Acceptance, line by line</h3>
+
+<ul>
+<li>- <b>Replay xavier → shadow names the row closable by BOTH reads, 14:46:43 disarm as</li>
+</ul>
+<p>Read-2 evidence; live closes it.</b> <code>test_xavier_shadow_names_the_row_closable_by_both_reads</code></p>
+<p>feeds the recorded reads (Artist page with id <code>248894155</code>; 693 feed with the keypad</p>
+<p>disarm at <code>18:46:43Z</code> and armed_away at <code>19:55:02Z</code>; <code>/access-covers</code> →</p>
+<p><code>allow_permanent</code>): <code>reads == [&quot;read1&quot;, &quot;read2&quot;]</code>, Read-2 evidence carries the</p>
+<p>timestamp, contact id and actor, <code>writes == []</code>.</p>
+<p><code>test_xavier_live_closes_the_row_processed_with_the_evidence</code>: <code>Status = Processed</code>,</p>
+<p>evidence in Notes and in the ticket&#x27;s Current Block. *Replayed from recorded reads, not</p>
+<p>live — no Notion or alarm token exists on this Mac. The first live shadow pass after</p>
+<p>both deploys is the in-situ replay; look for <code>would close … read1+read2</code> on the</p>
+<p><code>access_closer</code> tag.*</p>
+<ul>
+<li>- <b>Dormant id → NOT closed.</b> <code>test_dormant_id_is_not_covered_and_the_row_stays_open</code>:</li>
+</ul>
+<p><code>dormant_id</code> set, empty feed → <code>closable == []</code>, no writes, log says DORMANT.</p>
+<ul>
+<li>- <b>Past booking, no named disarm → NOT closed, one stall line, second pass silent.</b></li>
+</ul>
+<p><code>test_past_booking_with_no_named_disarm_is_not_closed_and_gets_one_stall_line</code>: one</p>
+<p>PATCH carrying only Notes (no Status), the line reads <code>no keypad entry by xavier xavier</p>
+<p>observed 2026-09-04T18:30:00Z–2026-09-04T20:00:00Z (…); feed covered: false</p>
+<p>[access-closer stall 120230872]</code>; the second pass on the noted row writes nothing.</p>
+<p><code>test_a_failed_feed_read_never_writes_a_stall_line</code> pins the other half: a feed that</p>
+<p>could not be read writes no line.</p>
+<ul>
+<li>- <b>Different contact id → not closed.</b> <code>test_a_disarm_by_a_different_contact_id_does_not_close</code></li>
+</ul>
+<p>(same name, id <code>247640077</code>) → not closable, stall noted. Also: remote-login disarm by</p>
+<p>the right id does not count; a named disarm outside the window does not count.</p>
+<ul>
+<li>- <b>No test output contains a 4-digit code.</b> The Artist page is planted with <code>Alarm Code</li>
+</ul>
+<p>4321</code> and every feed event with a <code>code: 1776</code> field; <code>assert_no_code</code> greps every</p>
+<p>write body, the ledger and every log line in the closing tests. <code>pytest -s | grep -c</p>
+<p>&quot;4321\|1776&quot;</code> → 0. <code>alarm-monitor tests/test_access_covers_http.py</code> pins the server-side</p>
+<p>whitelist the same way.</p>
+<ul>
+<li>- <b>RUNTIMES.md</b> — desk-loop row updated (2026-09-05 paragraph). <b>Run Monitor row</b> — not</li>
+</ul>
+<p>its own job, so none; it reports inside desk-loop&#x27;s ledger. <b>Plumbing Map</b> — entry</p>
+<p>2026-09-05 05:5xZ, newest-first. <b><code>library/the-loop.md</code></b> — new § &quot;Which classes</p>
+<p>self-close, and from which read&quot;: a table of the two classes (booking changes from the</p>
+<p>Skedda read; Access / PIN from Read 1 / Read 2) and the rules the closer carries.</p>
+
+<p><b>Tests.</b> 33 new in <code>test_access_closer.py</code>; event-gate suite 1489 pass. <code>test_wrongroom.py</code></p>
+<p>passed on this tree (the pre-existing failure the brief mentions did not reproduce).</p>
+<p>alarm-monitor: 4 new, 374 pass.</p>
+
+<p><b>Deploy (Junyan), in this order:</b></p>
+
+<p>``<code>bash</p>
+<p>cd ~/DanceAnnex-AlarmMonitor/alarm-monitor &amp;&amp; ./deploy.sh</p>
+<p></code>`<code></p>
+
+<p></code>`<code>bash</p>
+<p>curl -s -o /dev/null -w &quot;%{http_code}\n&quot; -H &quot;Authorization: Bearer $ALARM_TOKEN&quot; &quot;https://alarm-mcp-cfnon4wh3q-uc.a.run.app/access-covers?alarm_user_id=248894155&amp;booking_start=2026-09-04T19:00:00Z&amp;booking_end=2026-09-04T20:00:00Z&quot;</p>
+<p></code>`<code></p>
+
+<p>(expect </code>200<code> with </code>&quot;verdict&quot;: &quot;allow_permanent&quot;<code> and </code>&quot;dormant_id&quot;: null<code>; a </code>404<code> means the old image is still serving)</p>
+
+<p></code>`<code>bash</p>
+<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; services/event-gate/deploy.sh</p>
+<p></code>`<code></p>
+
+<p>(expect </code>code_fingerprint<code> = </code>e617f7051a7b<code>)</p>
+
+<p>Then watch two or three desk-loop passes:</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud logging read &#x27;resource.type=&quot;cloud_run_revision&quot; AND resource.labels.service_name=&quot;event-gate&quot; AND jsonPayload.decision=&quot;access_closer&quot;&#x27; --project danceannex-skedda --limit 20 --format=&#x27;value(jsonPayload.reason)&#x27;</p>
+<p></code>`<code></p>
+
+<p>Flip live only after a shadow pass has named at least one row correctly:</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --update-env-vars ACCESS_CLOSER_LIVE=1</p>
+<p></code>`<code></p>
+
+<p><b>Not done / out of scope.</b> Message-class close (ticket 076) untouched. A row with no</p>
+<p></code>Artist<code> relation and no holder name in its title is skipped (counted under </code>skipped<code>);</p>
+<p>a row whose Artist page has no </code>Alarm User ID<code> is skipped, not stalled — without an id</p>
+<p>there is no &quot;named&quot; disarm to look for. The </code>alarm-mcp<code> connector needs no reconnect for</p>
+<p>this (HTTP route, not an MCP tool).</p>
+
+<h3>Shadow verdict — 2026-09-07, after two days live in shadow</h3>
+
+<p><b>79 complete passes read. </code>unverifiable<code> 0 on every one, </code>stalls<code> 0, no code in any line.</b></p>
+<p>Deployed 2026-09-05 02:59Z (</code>d7278403<code>, fingerprint </code>e617f7051a7b<code>); alarm-mcp carries the</p>
+<p>twin on image </code>alarm:0905-15771f2<code>.</p>
+
+<p>Nine distinct rows were named closable, four of them by <b>both</b> reads. The four Read-2</p>
+<p>closes, each a keypad disarm whose </code>contact_id<code> equals the holder&#x27;s stored Alarm User ID,</p>
+<p>inside </code>[start − 30 min, end]<code>:</p>
+
+<p>| Row | Holder | Disarm | Studio / booking |</p>
+<p>|---|---|---|---|</p>
+<p>| </code>2ddf9975<code> | Adalia Knight | </code>2026-09-03T13:21:29Z<code>, contact </code>247090649<code> | 693 / 120022310 |</p>
+<p>| </code>a0795bed<code> | Hannah Hyuna Cho | </code>2026-09-06T23:53:02Z<code>, contact </code>247807749<code> | 509B / 120390464 |</p>
+<p>| </code>cab71266<code> | Hannah Hyuna Cho | same event, second row on the same booking | 509B / 120390464 |</p>
+<p>| </code>e8d913ed<code> | Tufan Bhattarai | </code>2026-09-05T11:51:54Z<code>, contact </code>245533823<code> | 901 / 120321072 |</p>
+
+<p>Hannah&#x27;s disarm lands 7 minutes before her 20:00 Toronto start — inside the 30-minute lead,</p>
+<p>which is what the lead is for. The other five rows (</code>3b3f56f5<code> Nina Li, </code>72f3456c<code> and</p>
+<p></code>8a465e16<code> Jia Chian Lee, </code>9589cb8e<code> and </code>ced1aa62<code> Hannah Cho) are Read-1 only: the panel</p>
+<p>returns </code>allow_permanent<code> against a booking still ahead. Two rows are skipped every pass and</p>
+<p>correctly so — one Artist page with no </code>Alarm User ID<code>, one row naming no resolvable holder.</p>
+
+<p><b>One real defect found and fixed (</code>4ac886f25<code>, fingerprint </code>b8dc8ab909b6<code>) — NOT yet deployed.</b></p>
+<p>Two passes (2026-09-05 22:50Z, 2026-09-06 02:40Z) returned </code>{&quot;ok&quot;: false, &quot;error&quot;: &quot;The read</p>
+<p>operation timed out&quot;}<code> and did nothing at all. Cause: </code>socket.timeout<code> <b>is</b> </code>TimeoutError<code></p>
+<p>and is <b>not</b> a </code>urllib.error.URLError<code>, so a urlopen read timeout escaped </code>_alarm_get<code>&#x27;s</p>
+<p>catch, escaped </code>assess()<code> and </code>run()<code>, and aborted the pass from app.py&#x27;s wrapper. One slow</p>
+<p>panel read should cost exactly one row an </code>unverifiable<code> and leave the rest of the pass</p>
+<p>working. Now catches </code>OSError<code>, which covers both, with the </code>HTTPError<code> branch still first.</p>
+<p>Fail-safe before and after — nothing is ever written on a failed read — but a whole-pass</p>
+<p>abort is the loud kind of wrong, and it is exactly the failure this lane&#x27;s own rules exist</p>
+<p>to make small. Pinned by </code>test_a_read_timeout_is_one_unverifiable_row_not_a_dead_pass<code>,</p>
+<p>which asserts the pass survives with </code>ok: true<code>, two </code>unverifiable<code>, and no writes.</p>
+
+<p><b>Recommendation: ready for the flip, after Junyan eyeballs the nine rows.</b> Every Read-2</p>
+<p>close is self-proving — a keypad disarm under the holder&#x27;s own contact id is the person</p>
+<p>getting through the door. The Read-1 closes rest on the panel&#x27;s own </code>allow_permanent<code>. What</p>
+<p>I cannot check from here is whether any of those nine rows is open for a reason the panel</p>
+<p>cannot see. Deploy the timeout fix first, so the live lane degrades one row at a time:</p>
+
+<p></code>`<code>bash</p>
+<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; services/event-gate/deploy.sh</p>
+<p></code>`<code></p>
+
+<p>(expect </code>code_fingerprint<code> = </code>b8dc8ab909b6<code>)</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --update-env-vars ACCESS_CLOSER_LIVE=1</p>
+<p></code>`<code></p>
+
+<h3>The live regression — 2026-09-07, and what it cost</h3>
+
+<p><b>Flipped live 13:57Z. Two live passes. Both closed the same row, and both were wrong.</p>
+<p>Reverted to shadow 14:1xZ on Junyan&#x27;s flip; row and ticket repaired by hand.</b></p>
+
+<p>The row: </code>3b3f56f5<code> — *&quot;🔑 Studio 901 authorized users — Krista Flynn: release T3b</p>
+<p>follow-up, add her code when she replies (Akira Huang done)&quot;*, on CC ticket</p>
+<p></code>3ce7503281c4811a9709c9ddcd3ed217<code>. Its </code>Artist<code> relation is <b>Nina Li</b>, the account</p>
+<p>holder. The closer resolved the subject from that relation, read Nina Li as</p>
+<p></code>allow_permanent<code>, and closed the row </code>Processed<code> with that verdict as evidence — at</p>
+<p>14:00Z, and again at 14:10Z after the first reopen, because the reasoning that produced</p>
+<p>the close was still true.</p>
+
+<p><b>The row is not about Nina Li.</b> It is the gate on provisioning <b>Krista Flynn&#x27;s</b> code.</p>
+<p>Live read at 10:1x Toronto: Krista&#x27;s Artist page (</code>3ce7503281c4818485e6e8fc1f49e63e<code>)</p>
+<p>carries </code>Alarm User ID<code> and </code>Alarm Display Name<code> both <b>empty</b>. She has no code. T4 went</p>
+<p>out 2026-09-02 telling her she is set up, and her first solo booking is <b>Wed 2026-09-16</b></p>
+<p>(occurrence 120198358), so the code must exist by Sep 15. The row that kept that visible</p>
+<p>was taken off the board by the thing built to stop people being stranded at doors.</p>
+
+<p><b>Every read was true and the close was wrong.</b> Nina Li really is covered. That is the</p>
+<p>whole lesson: both reads key off the <i>resolved holder</i>, so a row about somebody else gets</p>
+<p>a true answer to a question nobody asked. Nothing in the design checked whose row it was —</p>
+<p></code>artist_of<code> returned the </code>Artist<code> relation and </code>assess<code> treated that person as the subject.</p>
+<p>That is false for every authorized-user and facilitator row, where the relation is the</p>
+<p>account holder <b>by construction</b>.</p>
+
+<p><b>One guard held, and it is why this is a reopened row and not a lost ticket.</b> The ticket</p>
+<p>stayed </code>Gate: Staff<code> because a second open ✅ row was linked, so </code>_other_open_actions<code></p>
+<p>returned 1 and </code>Position<code> was left alone.</p>
+
+<p><b>The fix (</code>a3511a24c<code>, fingerprint </code>d321f8915824<code>) — </code>subject_of()<code>, gating BOTH reads</p>
+<p>before either one runs:</b></p>
+
+<ul>
+<li>- A row whose <b>title or basis</b> says </code>authorized user<code> / </code>authorised user<code> / </code>facilitator<code></li>
+</ul>
+<p>is left for a human. Read off the ROW, never the Artist name — otherwise</p>
+<p></code>Adalia Knight [Authorized]<code> could never close her own row (pinned by a test).</p>
+<ul>
+<li>- Otherwise the resolved person&#x27;s <b>name must appear in the row&#x27;s title</b>: first and last</li>
+</ul>
+<p>real token, word boundaries (so </code>Li<code> never matches </code>release<code> — the Krista row&#x27;s own title</p>
+<p>carries &quot;release T3b&quot;), board suffix </code>[Fixed Option]<code> stripped, middle names not required</p>
+<p>(</code>Hannah Hyuna Cho<code> matches a row titled </code>Hannah Cho<code>).</p>
+<ul>
+<li>- <b>Fails closed.</b> A name yielding no checkable token cannot be confirmed and the row stays.</li>
+</ul>
+
+<p>Seven new tests, including the regression with <b>both reads passing and the row still</p>
+<p>untouched</b>, and a replay of the real title, which the guard skips. 1724 pass. xavier,</p>
+<p>Adalia and a Hannah-shaped row still close.</p>
+
+<p><b>What the two shadow days could not tell me, and I should have said louder.</b> Shadow</p>
+<p>proved the <i>reads</i> were right — every disarm matched, every verdict matched, zero</p>
+<p>unverifiable. It could not prove the <i>question</i> was right for a given row, because a wrong</p>
+<p>subject produces a perfectly clean-looking line. I named that gap when I asked Junyan to</p>
+<p>eyeball the nine rows before flipping, and then treated 79 clean passes as if they had</p>
+<p>closed it. They had not. <b>The nine rows needed reading before the flip, not after</b> — and</p>
+<p>one read of that row&#x27;s title would have caught it, because the title says &quot;Krista Flynn&quot;</p>
+<p>and the evidence line says &quot;Nina Li&quot;.</p>
+
+<p><b>State: SHADOW, </code>ACCESS_CLOSER_LIVE=0<code>, fix pushed and NOT yet deployed.</b> Before any</p>
+<p>second flip: deploy </code>d321f8915824<code>, watch shadow passes until the Krista-shaped row shows</p>
+<p>as </code>left for a human<code>, and read every remaining </code>would close<code> row&#x27;s title against the</p>
+<p>holder named in its evidence line.</p>
+
+<h2>CLOSED 2026-09-07 — built, live for 13 minutes, reverted to shadow, and superseded upstream</h2>
+
+<p><b>Junyan&#x27;s call, 2026-09-07.</b> The closer is built, tested (41 tests), documented and</p>
+<p>deployed. It is <b>not live</b>, and it should not be flipped again as-is. Closing the ticket</p>
+<p>with its state named honestly rather than leaving it open to imply work is in flight.</p>
+
+<p><b>What shipped and works.</b> </code>services/event-gate/access_closer.py<code>, riding the </code>desk-loop<code></p>
+<p>tick. Two read-only reads against alarm-mcp — </code>GET /access-covers<code> (a new plain-HTTP twin of</p>
+<p></code>check_access_covers<code>, in danceannex-alarm-monitor </code>15771f2<code>) and </code>GET /door-history<code>. 79</p>
+<p>shadow passes, zero unverifiable, zero stalls, no code ever in a line. Its Read 2 correctly</p>
+<p>recognised four real renters walking through doors — Adalia Knight, Hannah Cho twice on one</p>
+<p>booking, Tufan Bhattarai — each on a keypad disarm under their own contact id.</p>
+
+<p><b>Two defects, both found by running it, both fixed:</b></p>
+
+<ol>
+<li>1. <b>A read timeout killed a whole pass</b> instead of costing one row an </code>unverifiable<code>.</li>
+</ol>
+<p></code>socket.timeout<code> <b>is</b> </code>TimeoutError<code> and is <b>not</b> a </code>urllib.error.URLError<code>. Fixed in</p>
+<p></code>4ac886f25<code> by catching </code>OSError<code>.</p>
+<ol>
+<li>2. <b>It closed the wrong person&#x27;s row, twice</b> (</code>a3511a24c<code>). It resolved a row&#x27;s subject</li>
+</ol>
+<p>from the </code>Artist<code> relation, which on an authorized-user row is the account holder, not the</p>
+<p>person the work is about. Krista Flynn&#x27;s provisioning row was closed on the strength of</p>
+<p>Nina Li&#x27;s </code>allow_permanent<code>. Every read was TRUE; the close was WRONG. Guard added</p>
+<p>(</code>subject_of<code>), row and ticket repaired by hand, lane reverted to shadow.</p>
+
+<p><b>Why it is closed rather than finished.</b> Two things came out of the live run, and both</p>
+<p>point away from this design:</p>
+
+<ul>
+<li>- <b>The wrong layer.</b> This ticket closes a note <i>after</i> a human fixes the problem. Junyan&#x27;s</li>
+</ul>
+<p>reading of the xavier case is that the problem should never have reached him — and the code</p>
+<p>to prevent it already exists in two lanes, both blocked on one identity lookup. That is</p>
+<p><b>ticket 124</b>, and it is upstream of everything here.</p>
+<ul>
+<li>- <b>It does not cover the class that raises the most of these rows.</b> Platform gate-1 rows</li>
+</ul>
+<p>carry no </code>Artist<code> relation, so the closer skips them. Lauren Taylor Scott&#x27;s row sat open</p>
+<p>three days after she was fully provisioned, and this closer would never have touched it.</p>
+<p>It was closed by hand on 2026-09-07 with a live </code>check_access_covers<code> read.</p>
+
+<p><b>State at close.</b> </code>ACCESS_CLOSER_LIVE=0<code>. Fix </code>d321f8915824<code> pushed, <b>not deployed</b>. If</p>
+<p>anyone flips it live in future, the pre-conditions are: deploy that fingerprint, watch shadow</p>
+<p>until a Krista-shaped row logs as <i>left for a human</i>, and read every remaining </code>would close`</p>
+<p>row&#x27;s title against the holder named in its own evidence line. Not before.</p>
+
+<p><b>The lesson worth keeping.</b> Two days of shadow proved the <i>reads</i> were right and could not</p>
+<p>prove the <i>question</i> was right for a given row — a wrong subject produces a perfectly clean</p>
+<p>line. Clean instrument readings are not the same as a correct conclusion, and only one of</p>
+<p>those was ever actually broken.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#104</span><span class="emoji">🗂️</span><span class="done-title">Propose the card merges, with evidence, now that Contact Points can show it</span><span class="done-date">2026-09-04</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>Propose the card merges, with evidence, now that Contact Points can show it</b></p><h2>Question</h2>
 
 <p><b>098</b> deferred the migration until the table existed so</p>
@@ -15134,5 +15333,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-07 12:30 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-07 12:42 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
