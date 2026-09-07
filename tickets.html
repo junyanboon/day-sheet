@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 09:58 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 10:16 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">9</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">8</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">37</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">15</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">68</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">69</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">9</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">8</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -1625,352 +1625,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p></code>move-sweep<code> and </code>greeter-sweep<code> log healthy passes at </code>severity=ERROR<code> because </code>progress_level()<code></p>
 <p>only strips JSON-shaped counters, so their bare </code>errors 0<code> / </code>FAILED 0<code> survives into the prose scan</p>
 <p>and rings on its own zero. Nothing to do here; it lives in </code>app.py<code>, not </code>climate_sweep.py`.</p>
-</div></details></details></div><div class="job"><div class="jnum">#122</div><div class="jhead"><span class="emoji">🔑</span><h4>Six renters&#x27; door codes are set to expire and the robot that should renew them never ran</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Some renters were given door codes that switch off on a date. The rule since August 27 says a robot renews them so nobody is locked out</li><li>Checked the panels tonight: six people are still on expiring codes. Two expire tomorrow at noon</li><li>The robot never renewed anyone. Instead it wrote nine notes asking a person to do it. That is the exact thing the rule was written to stop</li><li>Same lesson as before: a rule written in words for an AI to follow can quietly not happen. Code either runs or fails loudly</li><li>This job turns the rule into code that runs every day, renews the codes, checks its own work, and only asks a person when it has tried three times</li><li>It never changes anyone&#x27;s actual code, never deletes anyone, and never prints a code anywhere</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the window-migration sweep — Doorman Job A0 as code, not prose</b></p><h2>Question</h2>
-
-<p>Canon has said since <b>2026-08-27</b> that temporary Alarm.com access windows are</p>
-<p>migrated to permanent <b>by the Doorman&#x27;s sweep, not filed as a human row</b></p>
-<p>(<code>dc-canon/library/doorman-access-lifecycle.md</code> § Job A0: &quot;MIGRATED to permanent</p>
-<p>BY THIS SWEEP, not filed as a human row … Detection is not repair&quot;).</p>
-
-<p>Live panel reads on 2026-09-04 22:00 Toronto, eight days later:</p>
-
-<p>| Renter | Panel <code>access_type</code> | Window ends (Toronto) |</p>
-<p>|---|---|---|</p>
-<p>| Adalia Knight | temporary | <b>Sat 2026-09-05 12:14</b> |</p>
-<p>| KellyAnn Johnson | temporary | <b>Sat 2026-09-05 12:14</b> |</p>
-<p>| Rebecca Wise | temporary | 2026-09-10 |</p>
-<p>| Francisco Delgado | temporary | 2026-09-14 |</p>
-<p>| Camila Avendano | temporary | 2026-09-17 |</p>
-<p>| Anita Shack | temporary | 2026-12-31 |</p>
-
-<p><b>Job A0 has never executed.</b> Instead, between 2026-08-29 and 2026-08-31 the</p>
-<p>Doorman filed <b>nine ⏭️ Next Action rows</b> asking a human to do the migration —</p>
-<p>the exact &quot;detected but only hand-raised&quot; failure A0 was written to cure, on the</p>
-<p>exact three renters (Knight / Johnson / Delgado) whose windows prompted the rule.</p>
-
-<p>Junyan&#x27;s ruling, 2026-09-04: *&quot;The alarm situation needs to be fixed so the</p>
-<p>doorman takes care of this. Unless there is another agent that does it.&quot;*</p>
-
-<p>There is no other agent. <code>retirement_sweep.py</code> records why prose fails here, in</p>
-<p>its own docstring: *&quot;Job C lived as prose in the Doorman&#x27;s prompt for three weeks</p>
-<p>and never ran … Prose cannot refuse to run, cannot be tested, and cannot be</p>
-<p>diffed.&quot;* Job A0 is the same disease, one job over.</p>
-
-<h2>What to build</h2>
-
-<p><code>alarm_monitor/migration_sweep.py</code> in <code>~/DanceAnnex-AlarmMonitor/alarm-monitor</code>,</p>
-<p>following <code>retirement_sweep.py</code> / <code>code_sweep.py</code> exactly: pure judging function</p>
-<p>+ thin I/O caller + a route in <code>hosting/server_http.py</code> + an MCP tool the Doorman</p>
-<p>calls (Junyan&#x27;s 2026-08-15 ruling: &quot;no duplicates, all under the Doorman&quot;).</p>
-
-<p><b>The rule is already written — port A0 step for step:</b></p>
-
-<ol>
-<li>1. Walk the roster once (<code>code_sweep.sweep()</code> already does the single fetch —</li>
-</ol>
-<p>reuse it). Select every user with <code>access_type = temporary</code> who has any live</p>
-<p>booking or agreement (bookings via <code>alarm_monitor/bookings.py</code>, the existing</p>
-<p>skedda-mcp <code>/bookings-range</code> read on the shared <code>mcp-auth-token</code>).</p>
-<ol>
-<li>2. <code>grant_user_access(user_id, confirm=True)</code> — clears the window on panel sync,</li>
-</ol>
-<p>code untouched, so every How-to-Access already sent stays valid.</p>
-<ol>
-<li>3. Verify on a LATER read: <code>find_access_window</code> must return none/permanent.</li>
-<li>4. Window survives the grant → <code>set_user_access_window(user_id, end=+1 year,</li>
-</ol>
-<p>confirm=True)</code> as the fallback, retry next pass.</p>
-<ol>
-<li>5. Still temporary after <b>3 passes</b> → ONE ✅ Actions to Perform row</li>
-</ol>
-<p>(<code>collection://20df225d-382f-4bb8-9c15-c31571c9f4e0</code>), Type <code>Access / PIN</code>,</p>
-<p><code>Raised by</code> = <code>The Doorman</code>, Human-confirmed, naming the UI</p>
-<p>delete→wait→re-add path. That is the ONLY human case.</p>
-<ol>
-<li>6. Never touch a paused user. Never touch a user with no live booking or</li>
-</ol>
-<p>agreement (dormant stays dormant — 079&#x27;s ladder).</p>
-<ol>
-<li>7. <b>Notify-after</b>: every migration performed SMSes Junyan after the fact</li>
-</ol>
-<p>(the 2026-08-05 fast-track ruling; same path <code>retirement_sweep</code> uses for its</p>
-<p>row). Never approve-before.</p>
-
-<p>Pass count for step 5 must be derived statelessly from the panel and the row</p>
-<p>history, not a state file a cold start loses (ticket 119&#x27;s pattern).</p>
-
-<h2>Hard constraints</h2>
-
-<ul>
-<li>- <b>Codes never go into the sweep&#x27;s AUTOMATED output</b> — Cloud Run logs, 📊</li>
-</ul>
-<p>Workflow Reports rows, ✅ Actions rows, or SMS. <code>judge_claims</code> / <code>code_sweep</code></p>
-<p>show how: counts and names out, never <code>effective_code</code>. Those surfaces are</p>
-<p>retained, shared, and read by people who do not need a code.</p>
-<p><b>This is not a ban on handling codes.</b> Provisioning a user REQUIRES the code</p>
-<p>— <code>create_user</code>, <code>set_code</code> and <code>find_user_codes</code> all take or return one, and</p>
-<p>an operator or agent restoring a deleted renter must read the stored value and</p>
-<p>pass it back. Scoped 2026-09-07 (Junyan), after the blanket reading of this</p>
-<p>rule made the four-renter restore awkward for no security gain: the codes were</p>
-<p>already in the Artist DB, and the sanctioned tool cannot be called without them.</p>
-<ul>
-<li>- <b>Never arm, disarm, or delete a user.</b> Grant and window-set only.</li>
-<li>- <b>Never write to ⏭️ Next Action.</b> That board is retiring (053 replan).</li>
-<li>- <b>Shadow first.</b> Shadow logs what it would migrate and writes nothing.</li>
-</ul>
-<p><code>MIGRATION_SWEEP_LIVE=1</code> is Junyan&#x27;s flip.</p>
-<ul>
-<li>- <b>Junyan runs deploys.</b> alarm-mcp / alarm-events deploy per that repo&#x27;s</li>
-</ul>
-<p><code>deploy.sh</code>; agent gcloud is blocked.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- Shadow pass on the live roster names exactly the six renters above (or fewer</li>
-</ul>
-<p>if some have been hand-migrated) and writes nothing — pinned by a test that</p>
-<p>fails on any write call in shadow.</p>
-<ul>
-<li>- Live pass migrates a renter with a live booking, and a later</li>
-</ul>
-<p><code>find_access_window</code> reads none/permanent.</p>
-<ul>
-<li>- A paused user and a user with no live booking are both skipped, by test.</li>
-<li>- A window that survives the grant gets the 1-year fallback, by test.</li>
-<li>- The 3-pass survivor files ONE <code>Access / PIN</code> row and no more, by test.</li>
-<li>- No test output, log line, or Notion row produced BY THE SWEEP contains a</li>
-</ul>
-<p>4-digit code (pinned by <code>test_no_output_ever_carries_a_four_digit_code</code>).</p>
-<p>Interactive tool calls that provision a user are out of scope for this.</p>
-<ul>
-<li>- RUNTIMES.md row, 🚥 Run Monitor row, Plumbing Map entry, and</li>
-</ul>
-<p><code>doorman-access-lifecycle.md</code> § Job A0 updated to name the runtime.</p>
-
-<h2>Seam</h2>
-
-<p>This ticket owns migration only. Provisioning a NEW user is the Registrar&#x27;s</p>
-<p>(<code>booking_sweep.py</code>). Retirement is Job C (<code>retirement_sweep.py</code>, suspended).</p>
-<p>The nine dead Next Action rows close under 053&#x27;s replan once this lands.</p>
-
-<h2>Progress (2026-09-05) — BUILT, TESTED, PUSHED. SHADOW. Not deployed; Junyan holds the deploy.</h2>
-
-<p><b>Code — <code>danceannex-alarm-monitor</code> <code>9f1e412</code>:</b></p>
-<ul>
-<li>- <code>alarm_monitor/migration_sweep.py</code> — <code>plan()</code> pure + <code>run_sweep()</code> I/O caller, per</li>
-</ul>
-<p><code>retirement_sweep.py</code>&#x27;s shape. Roster once (<code>_roster_rows</code>, the single fetch Job C uses —</p>
-<p><code>code_sweep.sweep()</code> judges code claims and does not return <code>access_type</code>, so the roster</p>
-<p>path is the right reuse); temporary ∧ live-booking-or-agreement (Job C&#x27;s keep rule);</p>
-<p><code>grant_all_access</code> → <code>lookup_access_by_id</code> re-read → <code>set_access_window(+365d)</code> fallback →</p>
-<p>ONE <code>Access / PIN</code> row after 3 passes, deduped against open Doorman rows, linked to the artist.</p>
-<ul>
-<li>- Pass count stateless: each live pass files a 📊 Workflow Reports row, <code>Headline =</li>
-</ul>
-<p>attempted=&lt;ids&gt;</code>; next pass counts prior reports (14-day window). Unreadable history →</p>
-<p>nobody escalates that pass.</p>
-<ul>
-<li>- <code>hosting/server_http.py</code> — <code>GET|POST /migration-sweep</code> (GET shadow always; POST acts only</li>
-</ul>
-<p>with the flag). <code>alarm_monitor/mcp_server.py</code> — tool <code>migration_sweep(write)</code>; both call one</p>
-<p><code>_migration_sweep()</code>.</p>
-<ul>
-<li>- <code>tests/test_migration_sweep.py</code> — 25 tests, <b>368 pass</b>. Pinned: shadow writes nothing</li>
-</ul>
-<p>(every write surface is a recorder); env flip is the only way live; live migrates + texts</p>
-<p>after; paused skipped; unbooked skipped; agreement counts as live; shell skipped; surviving</p>
-<p>window → <code>2027-09-05T02:00:00Z</code> fallback (minute-aligned); 3-pass survivor → ONE row and a</p>
-<p>fifth sighting files nothing; <b>dormant stored id (Greg Samba, 246904876) skipped, no grant,</p>
-<p>no row</b>; unreadable bookings stop the pass; one failed grant does not stop the pass; tainted</p>
-<p>code fields never reach any output.</p>
-
-<p><b>What the live panel says (read from this Mac, 2026-09-05 ~03:30Z, read-only):</b> 165 users,</p>
-<p><b>29 temporary</b> (list in the session scratchpad). The six the ticket names are all there</p>
-<p>with the stated end dates; the other 23 are 30/90-day legacy windows (a Jun 6 batch ending</p>
-<p>Sep 6, an Aug 7 batch ending Sep 7, etc.). The booking-or-agreement filter is what narrows</p>
-<p>29 to the booked few — that is canon&#x27;s rule, unchanged. <b>The full shadow pass could not run</p>
-<p>locally</b>: <code>SKEDDA_HTTP_URL</code> / <code>MCP_AUTH_TOKEN</code> are not on this Mac, and <code>fetch_bookings</code></p>
-<p>correctly refuses rather than reading &quot;no bookings&quot;. First <code>GET /migration-sweep</code> after</p>
-<p>deploy is the acceptance read.</p>
-
-<p><b>Docs:</b> canon § Job A0 names the runtime + changelog line; <code>RUNTIMES.md</code> Cloud Scheduler row;</p>
-<p>🚥 Run Monitor row <code>migration-sweep (Cloud Run — alarm-mcp)</code> created <b>Paused / Unverified</b></p>
-<p>(<code>3d275032-81c4-813c-8c3a-ca82daf7f265</code>); Plumbing Map entry (newest-first).</p>
-
-<p><b>Found on the way, not fixed:</b> <code>retirement_sweep.ACTIONS_DB = 20df225d…</code> is the data-source</p>
-<p>id; <code>notion_api</code> (2022-06-28) 404s on it as <code>parent.database_id</code> (measured). Job C&#x27;s</p>
-<p><code>write=True</code> has never been exercised. Fix is one constant → <code>760a2e655c694b6fbd4a2b185ece0973</code>.</p>
-
-<p><b>Junyan&#x27;s deploy (agent gcloud is blocked):</b></p>
-
-<p>``<code>bash</p>
-<p>cd ~/DanceAnnex-AlarmMonitor/alarm-monitor &amp;&amp; git pull &amp;&amp; ./deploy.sh</p>
-<p></code>`<code></p>
-
-<p></code>`<code>bash</p>
-<p>gcloud run services update alarm-mcp --region us-central1 --update-env-vars MIGRATION_SWEEP_MONITOR_ROW=3d275032-81c4-813c-8c3a-ca82daf7f265</p>
-<p></code>`<code></p>
-
-<p></code>`<code>bash</p>
-<p>gcloud scheduler jobs create http alarm-migration-sweep --location us-central1 --schedule &quot;50 3 <i> </i> *&quot; --time-zone America/Toronto --http-method POST --uri &quot;$(gcloud run services describe alarm-mcp --region us-central1 --format &#x27;value(status.url)&#x27;)/migration-sweep&quot; --headers &quot;Authorization=Bearer $(gcloud secrets versions access latest --secret mcp-auth-token)&quot; --attempt-deadline 900s</p>
-<p></code>`<code></p>
-
-<p>Shadow acceptance read (names only in the body):</p>
-
-<p></code>`<code>bash</p>
-<p>curl -s -H &quot;Authorization: Bearer $(gcloud secrets versions access latest --secret mcp-auth-token)&quot; &quot;$(gcloud run services describe alarm-mcp --region us-central1 --format &#x27;value(status.url)&#x27;)/migration-sweep&quot; | python3 -c &quot;import sys,json; d=json.load(sys.stdin); print(d[&#x27;mode&#x27;], d[&#x27;ran&#x27;], d.get(&#x27;reason&#x27;)); [print(&#x27; &#x27;, c[&#x27;name&#x27;], c[&#x27;action&#x27;], c[&#x27;window_end_local&#x27;]) for c in d.get(&#x27;candidates&#x27;,[])]; print(&#x27;skipped&#x27;, len(d.get(&#x27;skipped&#x27;,[])), &#x27;dormant&#x27;, len(d.get(&#x27;dormant&#x27;,[])))&quot;</p>
-<p></code>`<code></p>
-
-<p>The flip, once the shadow list reads right (this is the production change — Junyan only):</p>
-
-<p></code>`<code>bash</p>
-<p>gcloud run services update alarm-mcp --region us-central1 --update-env-vars MIGRATION_SWEEP_LIVE=1</p>
-<p></code>`<code></p>
-
-<p>Then: reconnect the </code>alarm-mcp<code> connector (tool list is cached), set the 🚥 row Monitoring → Live,</p>
-<p>and add one line to the Doorman prompt: *&quot;Job A0: call </code>migration_sweep(write=true)<code> first and</p>
-<p>report its answer; do not grant, set windows, or file the row yourself.&quot;*</p>
-
-<p><b>Next:</b> deploy → shadow read → flip. The nine dead Next Action rows close under 053&#x27;s replan.</p>
-
-<h3>Update (2026-09-05, after Junyan&#x27;s deploy) — shadow ran on the live service; rule tightened</h3>
-
-<p>Live image </code>0905-3bafee4<code> (contains </code>9f1e412<code> + the retirement id fix). </code>GET /migration-sweep<code> ran:</p>
-<p>shadow, 29 temporary, 1823 bookings read, <b>26 candidates</b> — too many. Cause: Job C&#x27;s keep rule</p>
-<p>counts a booking in the last 30 days, so 16 one-off renters with one past booking qualified.</p>
-<p>Fixed in </code>6845d2a<code>: liveness = an upcoming booking (next 60 days) or a protected status.</p>
-<p>Expected shadow list after redeploy (from tonight&#x27;s evidence): Adalia Knight, Anita Shack,</p>
-<p>Camila Avendano, Dana Hufe, Grace Lim, Rebecca Wise, Sandra To, Tunde Ifafore, Zoey Gould,</p>
-<p>Jana Jedlovska (Authorized User). KellyAnn Johnson has no upcoming booking and is skipped, per</p>
-<p>canon. </code>MIGRATION_SWEEP_MONITOR_ROW<code> is set on the service. <b>Scheduler job </code>alarm-migration-sweep<code></p>
-<p>is not created yet.</b> Not flipped live.</p>
-
-<p><b>Next for Junyan:</b> </code>./deploy.sh<code> again, re-run the shadow read, then the scheduler command and the flip.</p>
-
-<h3>Update (2026-09-06) — live passes reported &quot;migrated&quot; on a read that reverts; fixed, not deployed</h3>
-
-<p></code>MIGRATION_SWEEP_LIVE=1<code> is set. Logs: </code>migrated=10 fallback=0<code> (09-05 07:50Z), </code>migrated=8</p>
-<p>fallback=0<code> (09-06 07:50Z). A shadow pass at 21:07Z the same day listed the same eight with</p>
-<p></code>attempts_before=2<code>, and </code>find_access_window<code> on Grace Lim / Zoey Gould read </code>temporary<code> with the</p>
-<p>ORIGINAL start/end. A read-only roster read from this Mac (163 users) confirms: 19 temporary,</p>
-<p>142 </code>none<code> + Existing/Future, <b>0 </code>permanent<code></b> — a fully granted user reads </code>none<code>.</p>
-
-<p><b>Cause:</b> </code>grant_all_access<code> (already-granted path) PUTs </code>temporarySchedule: null<code>, the immediate</p>
-<p>read-back shows no window, </code>run_sweep<code> re-read the same instant, saw not-temporary, and counted</p>
-<p>&quot;migrated&quot;. Panel sync restores the original window. So the fallback branch never ran and the</p>
-<p>report was false; escalation would only have fired on pass 4 with no fallback ever written.</p>
-
-<p><b>Fix (</code>alarm_monitor/migration_sweep.py<code>, uncommitted in the working tree):</b></p>
-<ul>
-<li>- </code>verified_permanent(read)<code> — a same-pass grant is &quot;migrated&quot; only on </code>access_type == permanent<code>.</li>
-</ul>
-<p>A </code>none<code> read-back → </code>+1y<code> fallback (</code>set_access_window<code>) on the spot, reported as FALLBACK with</p>
-<p></code>fallback_reason<code>, and counted in </code>attempted=<code>.</p>
-<ul>
-<li>- </code>verify_later(record)<code> — a user a prior pass attempted who now reads none/permanent with panel</li>
-</ul>
-<p>access on THIS pass&#x27;s roster is the verified migration; reported once (</code>verified=&lt;ids&gt;<code> in the</p>
-<p>report headline, </code>prior_verified_from_reports<code> dedups). Shadow lists them in </code>verified_later<code></p>
-<p>and announces nothing.</p>
-<ul>
-<li>- 3-pass escalation unchanged; now reachable because every unverified pass counts.</li>
-<li>- Tests: 25 → 31 (</code>RevertingPanel<code> models the measured panel: clear returns 200, read-back</li>
-</ul>
-<p></code>none<code>, window back after sync). Full suite 383 pass.</p>
-
-<p><b>Open question the next passes answer:</b> the </code>+1y<code> fallback goes through the same device-access</p>
-<p>PUT that the clear did. If it also reverts, pass 4 (≈2026-09-09) files one </code>Access / PIN<code> row per</p>
-<p>renter for the UI delete→wait→re-add path — canon&#x27;s only human case. Watch the 09-07 report&#x27;s</p>
-<p>fallback line and </code>find_access_window<code> on Grace Lim (window ends 2026-09-07 19:17Z).</p>
-
-<p><b>Junyan:</b> commit, then</p>
-<p></code>`<code>bash</p>
-<p>cd ~/DanceAnnex-AlarmMonitor/alarm-monitor &amp;&amp; ./deploy.sh</p>
-<p></code>`<code></p>
-
-<h3>Verified on the live service (2026-09-07 03:39Z, after Junyan&#x27;s deploy)</h3>
-
-<p></code>60c0497<code> is live. </code>GET /migration-sweep<code> (shadow, read-only) returns the new </code>verified_later<code></p>
-<p>field, which only the fixed code emits. <b>The diagnosis is confirmed on the panel:</b></p>
-<p></code>find_access_window(&quot;Grace Lim&quot;)<code> reads </code>temporary<code>, window </code>2026-08-07T19:17Z →</p>
-<p>2026-09-07T19:17Z<code> — the ORIGINAL window, untouched, after two live passes each logged her as</p>
-<p>migrated. The old code&#x27;s </code>migrated=<code> count was false for every user it named.</p>
-
-<p><b>Shadow now: 19 temporary, 1815 bookings read, 4 candidates</b>, all </code>attempts_before=2<code>:</p>
-<p>Anita Shack (246904881), Camila Avendano (245938056), Dana Hufe (247262404), Grace Lim</p>
-<p>(247246484). Nothing written.</p>
-
-<p><b>Correction to the 09-06 21:07Z reading.</b> Jana Jedlovska, Sandra To, Tunde Ifafore and Zoey</p>
-<p>Gould are NOT candidates and never were window cases. </code>find_access_window<code> returns <b>no panel</p>
-<p>user at all</b> for Zoey Gould, Sandra To or Tunde Ifafore, and a read-only roster snapshot taken</p>
-<p>from this Mac at 03:27Z (163 users) contains none of them. They sit in the sweep&#x27;s </code>dormant<code></p>
-<p>list — Artist rows carrying an </code>Alarm User ID<code> the panel no longer has. That is the Registrar&#x27;s</p>
-<p>re-provisioning case, out of scope for A0 by design. The dormant list is <b>47 rows</b> and mostly</p>
-<p>old June-era ids with </code>[Skedda]<code> / </code>[Peerspace]<code> suffixes, so this is long-standing Artist DB</p>
-<p>staleness, not a new event. <b>Worth a separate look:</b> if any of those 47 has an upcoming</p>
-<p>booking, they have no code and no access. Job A&#x27;s provision check is the surface that should</p>
-<p>catch it.</p>
-
-<p><b>What the next two passes do, on the current counts:</b></p>
-
-<p>| Pass | What happens |</p>
-<p>|---|---|</p>
-<p>| Sep 7, 07:50Z | grant → read-back not </code>permanent<code> → <b>+1 year fallback written</b> for all 4, counted as pass 3 |</p>
-<p>| Sep 8, 07:50Z | </code>attempts_before=3<code> → no grant, <b>ONE </code>Access / PIN<code> row each</b>, UI delete→wait→re-add |</p>
-
-<p>Grace Lim&#x27;s original window expires <b>today at 19:17Z (15:17 EDT)</b>, about 11 hours after the</p>
-<p>07:50Z pass. Under the old code that pass would have called her &quot;migrated&quot; a third time and let</p>
-<p>her window lapse this afternoon. Under </code>60c0497<code> it writes her a +1 year window instead. That is</p>
-<p>the fix earning its keep, today.</p>
-
-<p><b>The one thing to watch on the Sep 7 report — a real gap if it goes the wrong way.</b> The +1</p>
-<p>year fallback goes through the same device-access PUT that the schedule clear did. If the panel</p>
-<p>reverts the fallback too, then the Sep 8 escalation branch is a problem: it files the row but</p>
-<p>does <b>not</b> re-write the window, so an escalated renter waits for a human with an expired or</p>
-<p>expiring window. Check the Sep 7 report&#x27;s fallback line, then read</p>
-<p></code>find_access_window(&quot;Grace Lim&quot;)<code> — if it shows an end date in Sep 2027, the fallback holds and</p>
-<p>nothing more is needed. <b>If it shows the original date again</b>, the remedy is one change:</p>
-<p>refresh the +1 year window on escalation passes as well, so the door stays open while the human</p>
-<p>row waits. Not made now — it is unnecessary if the fallback holds, and it would leave the repo</p>
-<p>ahead of the deployed image.</p>
-
-<h3>Update (2026-09-07, later) — four renters deleted and restored; two rules corrected</h3>
-
-<p>Junyan deleted Anita Shack, Camila Avendano, Dana Hufe and Grace Lim from the panel (the</p>
-<p>delete half of canon&#x27;s delete→wait→re-add remedy) and asked for them back. Restored with their</p>
-<p>ORIGINAL codes from the Artist DB, Existing + Future, <b>no window</b> — the permanent state on</p>
-<p>this account. Every access message already sent stays valid.</p>
-
-<p>| Renter | New panel id | Verified |</p>
-<p>|---|---|---|</p>
-<p>| Grace Lim | 249102167 | </code>none<code>, 4 panels, E+F, </code>allow_permanent<code> |</p>
-<p>| Camila Avendano | 249102172 | same |</p>
-<p>| Dana Hufe | 249102173 | same |</p>
-<p>| Anita Shack | 249099264 | same — <b>already existed</b>, see below |</p>
-
-<p>All four Artist rows were repointed to the new ids, so none of them became a </code>dormant_id<code> case.</p>
-
-<p><b>The misleading error, now fixed in code.</b> Three </code>create_user<code> attempts for Anita Shack failed</p>
-<p>on *&quot;Code 1179 is still held on the panels by a deleted user (… clears in 2-3 minutes). Wait and</p>
-<p>retry the SAME code&quot;*. She was not deleted. </code>find_user_codes(&quot;Shack&quot;)<code> showed her already on the</p>
-<p>roster as <b>249099264</b>, correctly provisioned with that code and 4 panels — re-added by hand</p>
-<p>before the request. The 422 has two causes that look identical, and the message asserted the</p>
-<p>wrong one as fact, so the advice (&quot;wait and retry&quot;) was advice to loop forever. The create&#x27;s</p>
-<p>rollback worked correctly every time; no duplicate and no codeless shell was left behind.</p>
-
-<p></code>user_codes.set_code<code> now states both causes, keeps the ghost explanation and the never-reassign</p>
-<p>rule, passes the panel&#x27;s own body through (it carries the holder&#x27;s name — blank for a ghost), and</p>
-<p>names </code>find_user_codes<code> as the read that settles it. Four tests added in</p>
-<p></code>tests/test_user_codes.py<code>, one named for this failure. Suite: <b>387 pass</b>.</p>
-
-<p><b>The code-in-transcript rule, scoped not deleted</b> (Junyan: it &quot;doesn&#x27;t make sense&quot;). Rewritten</p>
-<p>above. The half that made sense is kept and still pinned by a test: the SWEEP must never put a</p>
-<p>code into Cloud Run logs, a Reports row, an Actions row, or an SMS — those are retained and</p>
-<p>shared. The half that did not is gone: handling a code to provision somebody is the normal,</p>
-<p>required use of </code>create_user<code> / </code>set_code<code> / </code>find_user_codes<code>, and pretending otherwise only</p>
-<p>made a restore harder while the codes sat in the Artist DB anyway. <b>Not deployed</b> — the error</p>
-<p>text change needs </code>./deploy.sh`.</p>
 </div></details></details></div><div class="job"><div class="jnum">#123</div><div class="jhead"><span class="emoji">🚪</span><h4>The desk asked Junyan whether a renter got in. The door log already said yes</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Xavier had a booking today. Junyan set up his door code, got his phone number, and replied to him, all by hand</li><li>The door system logged him unlocking Studio 693 at 2:46 and locking up at 3:55, by name. His customer card got his code and number the moment Junyan added them</li><li>The robot that closes open tasks only ever looks at the booking calendar. It never looks at the door log or the customer card. So it kept the &#x27;no phone, no code&#x27; note open and handed it back to Junyan at 10pm</li><li>This gap was written down three weeks ago and nobody built the fix</li><li>This job teaches the closer to look at the two places it ignores: the customer card before the booking, the door log after it starts. Either one means the problem solved itself</li><li>It only ever reads. It never sets, changes or prints a code. And if the door log shows nobody came in, it leaves the note open and says so louder</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Close access-class work from the panel and the Artist DB — the executor-agnostic close, finished</b></p><h2>Question</h2>
 
 <p>053 promised <i>&quot;I notice what you did&quot;</i>. It notices one thing: a Skedda write.</p>
@@ -6558,6 +6212,388 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- <b>A real </code>10-min<code> Cadence option</b> on the 🚥 board, shipped together with adding</li>
 </ul>
 <p></code>&quot;10-min&quot;<code> to the clamped-cadence tuple at </code>sentinel_sweep.py:386`.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#122</span><span class="emoji">🔑</span><span class="done-title">Six renters&#x27; door codes are set to expire and the robot that should renew them never ran</span><span class="done-date">2026-09-07</span></summary><div class="done-body"><ul class="plain-bullets"><li>Some renters were given door codes that switch off on a date. The rule since August 27 says a robot renews them so nobody is locked out</li><li>Checked the panels tonight: six people are still on expiring codes. Two expire tomorrow at noon</li><li>The robot never renewed anyone. Instead it wrote nine notes asking a person to do it. That is the exact thing the rule was written to stop</li><li>Same lesson as before: a rule written in words for an AI to follow can quietly not happen. Code either runs or fails loudly</li><li>This job turns the rule into code that runs every day, renews the codes, checks its own work, and only asks a person when it has tried three times</li><li>It never changes anyone&#x27;s actual code, never deletes anyone, and never prints a code anywhere</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the window-migration sweep — Doorman Job A0 as code, not prose</b></p><h2>Question</h2>
+
+<p>Canon has said since <b>2026-08-27</b> that temporary Alarm.com access windows are</p>
+<p>migrated to permanent <b>by the Doorman&#x27;s sweep, not filed as a human row</b></p>
+<p>(<code>dc-canon/library/doorman-access-lifecycle.md</code> § Job A0: &quot;MIGRATED to permanent</p>
+<p>BY THIS SWEEP, not filed as a human row … Detection is not repair&quot;).</p>
+
+<p>Live panel reads on 2026-09-04 22:00 Toronto, eight days later:</p>
+
+<p>| Renter | Panel <code>access_type</code> | Window ends (Toronto) |</p>
+<p>|---|---|---|</p>
+<p>| Adalia Knight | temporary | <b>Sat 2026-09-05 12:14</b> |</p>
+<p>| KellyAnn Johnson | temporary | <b>Sat 2026-09-05 12:14</b> |</p>
+<p>| Rebecca Wise | temporary | 2026-09-10 |</p>
+<p>| Francisco Delgado | temporary | 2026-09-14 |</p>
+<p>| Camila Avendano | temporary | 2026-09-17 |</p>
+<p>| Anita Shack | temporary | 2026-12-31 |</p>
+
+<p><b>Job A0 has never executed.</b> Instead, between 2026-08-29 and 2026-08-31 the</p>
+<p>Doorman filed <b>nine ⏭️ Next Action rows</b> asking a human to do the migration —</p>
+<p>the exact &quot;detected but only hand-raised&quot; failure A0 was written to cure, on the</p>
+<p>exact three renters (Knight / Johnson / Delgado) whose windows prompted the rule.</p>
+
+<p>Junyan&#x27;s ruling, 2026-09-04: *&quot;The alarm situation needs to be fixed so the</p>
+<p>doorman takes care of this. Unless there is another agent that does it.&quot;*</p>
+
+<p>There is no other agent. <code>retirement_sweep.py</code> records why prose fails here, in</p>
+<p>its own docstring: *&quot;Job C lived as prose in the Doorman&#x27;s prompt for three weeks</p>
+<p>and never ran … Prose cannot refuse to run, cannot be tested, and cannot be</p>
+<p>diffed.&quot;* Job A0 is the same disease, one job over.</p>
+
+<h2>What to build</h2>
+
+<p><code>alarm_monitor/migration_sweep.py</code> in <code>~/DanceAnnex-AlarmMonitor/alarm-monitor</code>,</p>
+<p>following <code>retirement_sweep.py</code> / <code>code_sweep.py</code> exactly: pure judging function</p>
+<p>+ thin I/O caller + a route in <code>hosting/server_http.py</code> + an MCP tool the Doorman</p>
+<p>calls (Junyan&#x27;s 2026-08-15 ruling: &quot;no duplicates, all under the Doorman&quot;).</p>
+
+<p><b>The rule is already written — port A0 step for step:</b></p>
+
+<ol>
+<li>1. Walk the roster once (<code>code_sweep.sweep()</code> already does the single fetch —</li>
+</ol>
+<p>reuse it). Select every user with <code>access_type = temporary</code> who has any live</p>
+<p>booking or agreement (bookings via <code>alarm_monitor/bookings.py</code>, the existing</p>
+<p>skedda-mcp <code>/bookings-range</code> read on the shared <code>mcp-auth-token</code>).</p>
+<ol>
+<li>2. <code>grant_user_access(user_id, confirm=True)</code> — clears the window on panel sync,</li>
+</ol>
+<p>code untouched, so every How-to-Access already sent stays valid.</p>
+<ol>
+<li>3. Verify on a LATER read: <code>find_access_window</code> must return none/permanent.</li>
+<li>4. Window survives the grant → <code>set_user_access_window(user_id, end=+1 year,</li>
+</ol>
+<p>confirm=True)</code> as the fallback, retry next pass.</p>
+<ol>
+<li>5. Still temporary after <b>3 passes</b> → ONE ✅ Actions to Perform row</li>
+</ol>
+<p>(<code>collection://20df225d-382f-4bb8-9c15-c31571c9f4e0</code>), Type <code>Access / PIN</code>,</p>
+<p><code>Raised by</code> = <code>The Doorman</code>, Human-confirmed, naming the UI</p>
+<p>delete→wait→re-add path. That is the ONLY human case.</p>
+<ol>
+<li>6. Never touch a paused user. Never touch a user with no live booking or</li>
+</ol>
+<p>agreement (dormant stays dormant — 079&#x27;s ladder).</p>
+<ol>
+<li>7. <b>Notify-after</b>: every migration performed SMSes Junyan after the fact</li>
+</ol>
+<p>(the 2026-08-05 fast-track ruling; same path <code>retirement_sweep</code> uses for its</p>
+<p>row). Never approve-before.</p>
+
+<p>Pass count for step 5 must be derived statelessly from the panel and the row</p>
+<p>history, not a state file a cold start loses (ticket 119&#x27;s pattern).</p>
+
+<h2>Hard constraints</h2>
+
+<ul>
+<li>- <b>Codes never go into the sweep&#x27;s AUTOMATED output</b> — Cloud Run logs, 📊</li>
+</ul>
+<p>Workflow Reports rows, ✅ Actions rows, or SMS. <code>judge_claims</code> / <code>code_sweep</code></p>
+<p>show how: counts and names out, never <code>effective_code</code>. Those surfaces are</p>
+<p>retained, shared, and read by people who do not need a code.</p>
+<p><b>This is not a ban on handling codes.</b> Provisioning a user REQUIRES the code</p>
+<p>— <code>create_user</code>, <code>set_code</code> and <code>find_user_codes</code> all take or return one, and</p>
+<p>an operator or agent restoring a deleted renter must read the stored value and</p>
+<p>pass it back. Scoped 2026-09-07 (Junyan), after the blanket reading of this</p>
+<p>rule made the four-renter restore awkward for no security gain: the codes were</p>
+<p>already in the Artist DB, and the sanctioned tool cannot be called without them.</p>
+<ul>
+<li>- <b>Never arm, disarm, or delete a user.</b> Grant and window-set only.</li>
+<li>- <b>Never write to ⏭️ Next Action.</b> That board is retiring (053 replan).</li>
+<li>- <b>Shadow first.</b> Shadow logs what it would migrate and writes nothing.</li>
+</ul>
+<p><code>MIGRATION_SWEEP_LIVE=1</code> is Junyan&#x27;s flip.</p>
+<ul>
+<li>- <b>Junyan runs deploys.</b> alarm-mcp / alarm-events deploy per that repo&#x27;s</li>
+</ul>
+<p><code>deploy.sh</code>; agent gcloud is blocked.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Shadow pass on the live roster names exactly the six renters above (or fewer</li>
+</ul>
+<p>if some have been hand-migrated) and writes nothing — pinned by a test that</p>
+<p>fails on any write call in shadow.</p>
+<ul>
+<li>- Live pass migrates a renter with a live booking, and a later</li>
+</ul>
+<p><code>find_access_window</code> reads none/permanent.</p>
+<ul>
+<li>- A paused user and a user with no live booking are both skipped, by test.</li>
+<li>- A window that survives the grant gets the 1-year fallback, by test.</li>
+<li>- The 3-pass survivor files ONE <code>Access / PIN</code> row and no more, by test.</li>
+<li>- No test output, log line, or Notion row produced BY THE SWEEP contains a</li>
+</ul>
+<p>4-digit code (pinned by <code>test_no_output_ever_carries_a_four_digit_code</code>).</p>
+<p>Interactive tool calls that provision a user are out of scope for this.</p>
+<ul>
+<li>- RUNTIMES.md row, 🚥 Run Monitor row, Plumbing Map entry, and</li>
+</ul>
+<p><code>doorman-access-lifecycle.md</code> § Job A0 updated to name the runtime.</p>
+
+<h2>Seam</h2>
+
+<p>This ticket owns migration only. Provisioning a NEW user is the Registrar&#x27;s</p>
+<p>(<code>booking_sweep.py</code>). Retirement is Job C (<code>retirement_sweep.py</code>, suspended).</p>
+<p>The nine dead Next Action rows close under 053&#x27;s replan once this lands.</p>
+
+<h2>Progress (2026-09-05) — BUILT, TESTED, PUSHED. SHADOW. Not deployed; Junyan holds the deploy.</h2>
+
+<p><b>Code — <code>danceannex-alarm-monitor</code> <code>9f1e412</code>:</b></p>
+<ul>
+<li>- <code>alarm_monitor/migration_sweep.py</code> — <code>plan()</code> pure + <code>run_sweep()</code> I/O caller, per</li>
+</ul>
+<p><code>retirement_sweep.py</code>&#x27;s shape. Roster once (<code>_roster_rows</code>, the single fetch Job C uses —</p>
+<p><code>code_sweep.sweep()</code> judges code claims and does not return <code>access_type</code>, so the roster</p>
+<p>path is the right reuse); temporary ∧ live-booking-or-agreement (Job C&#x27;s keep rule);</p>
+<p><code>grant_all_access</code> → <code>lookup_access_by_id</code> re-read → <code>set_access_window(+365d)</code> fallback →</p>
+<p>ONE <code>Access / PIN</code> row after 3 passes, deduped against open Doorman rows, linked to the artist.</p>
+<ul>
+<li>- Pass count stateless: each live pass files a 📊 Workflow Reports row, <code>Headline =</li>
+</ul>
+<p>attempted=&lt;ids&gt;</code>; next pass counts prior reports (14-day window). Unreadable history →</p>
+<p>nobody escalates that pass.</p>
+<ul>
+<li>- <code>hosting/server_http.py</code> — <code>GET|POST /migration-sweep</code> (GET shadow always; POST acts only</li>
+</ul>
+<p>with the flag). <code>alarm_monitor/mcp_server.py</code> — tool <code>migration_sweep(write)</code>; both call one</p>
+<p><code>_migration_sweep()</code>.</p>
+<ul>
+<li>- <code>tests/test_migration_sweep.py</code> — 25 tests, <b>368 pass</b>. Pinned: shadow writes nothing</li>
+</ul>
+<p>(every write surface is a recorder); env flip is the only way live; live migrates + texts</p>
+<p>after; paused skipped; unbooked skipped; agreement counts as live; shell skipped; surviving</p>
+<p>window → <code>2027-09-05T02:00:00Z</code> fallback (minute-aligned); 3-pass survivor → ONE row and a</p>
+<p>fifth sighting files nothing; <b>dormant stored id (Greg Samba, 246904876) skipped, no grant,</p>
+<p>no row</b>; unreadable bookings stop the pass; one failed grant does not stop the pass; tainted</p>
+<p>code fields never reach any output.</p>
+
+<p><b>What the live panel says (read from this Mac, 2026-09-05 ~03:30Z, read-only):</b> 165 users,</p>
+<p><b>29 temporary</b> (list in the session scratchpad). The six the ticket names are all there</p>
+<p>with the stated end dates; the other 23 are 30/90-day legacy windows (a Jun 6 batch ending</p>
+<p>Sep 6, an Aug 7 batch ending Sep 7, etc.). The booking-or-agreement filter is what narrows</p>
+<p>29 to the booked few — that is canon&#x27;s rule, unchanged. <b>The full shadow pass could not run</p>
+<p>locally</b>: <code>SKEDDA_HTTP_URL</code> / <code>MCP_AUTH_TOKEN</code> are not on this Mac, and <code>fetch_bookings</code></p>
+<p>correctly refuses rather than reading &quot;no bookings&quot;. First <code>GET /migration-sweep</code> after</p>
+<p>deploy is the acceptance read.</p>
+
+<p><b>Docs:</b> canon § Job A0 names the runtime + changelog line; <code>RUNTIMES.md</code> Cloud Scheduler row;</p>
+<p>🚥 Run Monitor row <code>migration-sweep (Cloud Run — alarm-mcp)</code> created <b>Paused / Unverified</b></p>
+<p>(<code>3d275032-81c4-813c-8c3a-ca82daf7f265</code>); Plumbing Map entry (newest-first).</p>
+
+<p><b>Found on the way, not fixed:</b> <code>retirement_sweep.ACTIONS_DB = 20df225d…</code> is the data-source</p>
+<p>id; <code>notion_api</code> (2022-06-28) 404s on it as <code>parent.database_id</code> (measured). Job C&#x27;s</p>
+<p><code>write=True</code> has never been exercised. Fix is one constant → <code>760a2e655c694b6fbd4a2b185ece0973</code>.</p>
+
+<p><b>Junyan&#x27;s deploy (agent gcloud is blocked):</b></p>
+
+<p>``<code>bash</p>
+<p>cd ~/DanceAnnex-AlarmMonitor/alarm-monitor &amp;&amp; git pull &amp;&amp; ./deploy.sh</p>
+<p></code>`<code></p>
+
+<p></code>`<code>bash</p>
+<p>gcloud run services update alarm-mcp --region us-central1 --update-env-vars MIGRATION_SWEEP_MONITOR_ROW=3d275032-81c4-813c-8c3a-ca82daf7f265</p>
+<p></code>`<code></p>
+
+<p></code>`<code>bash</p>
+<p>gcloud scheduler jobs create http alarm-migration-sweep --location us-central1 --schedule &quot;50 3 <i> </i> *&quot; --time-zone America/Toronto --http-method POST --uri &quot;$(gcloud run services describe alarm-mcp --region us-central1 --format &#x27;value(status.url)&#x27;)/migration-sweep&quot; --headers &quot;Authorization=Bearer $(gcloud secrets versions access latest --secret mcp-auth-token)&quot; --attempt-deadline 900s</p>
+<p></code>`<code></p>
+
+<p>Shadow acceptance read (names only in the body):</p>
+
+<p></code>`<code>bash</p>
+<p>curl -s -H &quot;Authorization: Bearer $(gcloud secrets versions access latest --secret mcp-auth-token)&quot; &quot;$(gcloud run services describe alarm-mcp --region us-central1 --format &#x27;value(status.url)&#x27;)/migration-sweep&quot; | python3 -c &quot;import sys,json; d=json.load(sys.stdin); print(d[&#x27;mode&#x27;], d[&#x27;ran&#x27;], d.get(&#x27;reason&#x27;)); [print(&#x27; &#x27;, c[&#x27;name&#x27;], c[&#x27;action&#x27;], c[&#x27;window_end_local&#x27;]) for c in d.get(&#x27;candidates&#x27;,[])]; print(&#x27;skipped&#x27;, len(d.get(&#x27;skipped&#x27;,[])), &#x27;dormant&#x27;, len(d.get(&#x27;dormant&#x27;,[])))&quot;</p>
+<p></code>`<code></p>
+
+<p>The flip, once the shadow list reads right (this is the production change — Junyan only):</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud run services update alarm-mcp --region us-central1 --update-env-vars MIGRATION_SWEEP_LIVE=1</p>
+<p></code>`<code></p>
+
+<p>Then: reconnect the </code>alarm-mcp<code> connector (tool list is cached), set the 🚥 row Monitoring → Live,</p>
+<p>and add one line to the Doorman prompt: *&quot;Job A0: call </code>migration_sweep(write=true)<code> first and</p>
+<p>report its answer; do not grant, set windows, or file the row yourself.&quot;*</p>
+
+<p><b>Next:</b> deploy → shadow read → flip. The nine dead Next Action rows close under 053&#x27;s replan.</p>
+
+<h3>Update (2026-09-05, after Junyan&#x27;s deploy) — shadow ran on the live service; rule tightened</h3>
+
+<p>Live image </code>0905-3bafee4<code> (contains </code>9f1e412<code> + the retirement id fix). </code>GET /migration-sweep<code> ran:</p>
+<p>shadow, 29 temporary, 1823 bookings read, <b>26 candidates</b> — too many. Cause: Job C&#x27;s keep rule</p>
+<p>counts a booking in the last 30 days, so 16 one-off renters with one past booking qualified.</p>
+<p>Fixed in </code>6845d2a<code>: liveness = an upcoming booking (next 60 days) or a protected status.</p>
+<p>Expected shadow list after redeploy (from tonight&#x27;s evidence): Adalia Knight, Anita Shack,</p>
+<p>Camila Avendano, Dana Hufe, Grace Lim, Rebecca Wise, Sandra To, Tunde Ifafore, Zoey Gould,</p>
+<p>Jana Jedlovska (Authorized User). KellyAnn Johnson has no upcoming booking and is skipped, per</p>
+<p>canon. </code>MIGRATION_SWEEP_MONITOR_ROW<code> is set on the service. <b>Scheduler job </code>alarm-migration-sweep<code></p>
+<p>is not created yet.</b> Not flipped live.</p>
+
+<p><b>Next for Junyan:</b> </code>./deploy.sh<code> again, re-run the shadow read, then the scheduler command and the flip.</p>
+
+<h3>Update (2026-09-06) — live passes reported &quot;migrated&quot; on a read that reverts; fixed, not deployed</h3>
+
+<p></code>MIGRATION_SWEEP_LIVE=1<code> is set. Logs: </code>migrated=10 fallback=0<code> (09-05 07:50Z), </code>migrated=8</p>
+<p>fallback=0<code> (09-06 07:50Z). A shadow pass at 21:07Z the same day listed the same eight with</p>
+<p></code>attempts_before=2<code>, and </code>find_access_window<code> on Grace Lim / Zoey Gould read </code>temporary<code> with the</p>
+<p>ORIGINAL start/end. A read-only roster read from this Mac (163 users) confirms: 19 temporary,</p>
+<p>142 </code>none<code> + Existing/Future, <b>0 </code>permanent<code></b> — a fully granted user reads </code>none<code>.</p>
+
+<p><b>Cause:</b> </code>grant_all_access<code> (already-granted path) PUTs </code>temporarySchedule: null<code>, the immediate</p>
+<p>read-back shows no window, </code>run_sweep<code> re-read the same instant, saw not-temporary, and counted</p>
+<p>&quot;migrated&quot;. Panel sync restores the original window. So the fallback branch never ran and the</p>
+<p>report was false; escalation would only have fired on pass 4 with no fallback ever written.</p>
+
+<p><b>Fix (</code>alarm_monitor/migration_sweep.py<code>, uncommitted in the working tree):</b></p>
+<ul>
+<li>- </code>verified_permanent(read)<code> — a same-pass grant is &quot;migrated&quot; only on </code>access_type == permanent<code>.</li>
+</ul>
+<p>A </code>none<code> read-back → </code>+1y<code> fallback (</code>set_access_window<code>) on the spot, reported as FALLBACK with</p>
+<p></code>fallback_reason<code>, and counted in </code>attempted=<code>.</p>
+<ul>
+<li>- </code>verify_later(record)<code> — a user a prior pass attempted who now reads none/permanent with panel</li>
+</ul>
+<p>access on THIS pass&#x27;s roster is the verified migration; reported once (</code>verified=&lt;ids&gt;<code> in the</p>
+<p>report headline, </code>prior_verified_from_reports<code> dedups). Shadow lists them in </code>verified_later<code></p>
+<p>and announces nothing.</p>
+<ul>
+<li>- 3-pass escalation unchanged; now reachable because every unverified pass counts.</li>
+<li>- Tests: 25 → 31 (</code>RevertingPanel<code> models the measured panel: clear returns 200, read-back</li>
+</ul>
+<p></code>none<code>, window back after sync). Full suite 383 pass.</p>
+
+<p><b>Open question the next passes answer:</b> the </code>+1y<code> fallback goes through the same device-access</p>
+<p>PUT that the clear did. If it also reverts, pass 4 (≈2026-09-09) files one </code>Access / PIN<code> row per</p>
+<p>renter for the UI delete→wait→re-add path — canon&#x27;s only human case. Watch the 09-07 report&#x27;s</p>
+<p>fallback line and </code>find_access_window<code> on Grace Lim (window ends 2026-09-07 19:17Z).</p>
+
+<p><b>Junyan:</b> commit, then</p>
+<p></code>`<code>bash</p>
+<p>cd ~/DanceAnnex-AlarmMonitor/alarm-monitor &amp;&amp; ./deploy.sh</p>
+<p></code>`<code></p>
+
+<h3>Verified on the live service (2026-09-07 03:39Z, after Junyan&#x27;s deploy)</h3>
+
+<p></code>60c0497<code> is live. </code>GET /migration-sweep<code> (shadow, read-only) returns the new </code>verified_later<code></p>
+<p>field, which only the fixed code emits. <b>The diagnosis is confirmed on the panel:</b></p>
+<p></code>find_access_window(&quot;Grace Lim&quot;)<code> reads </code>temporary<code>, window </code>2026-08-07T19:17Z →</p>
+<p>2026-09-07T19:17Z<code> — the ORIGINAL window, untouched, after two live passes each logged her as</p>
+<p>migrated. The old code&#x27;s </code>migrated=<code> count was false for every user it named.</p>
+
+<p><b>Shadow now: 19 temporary, 1815 bookings read, 4 candidates</b>, all </code>attempts_before=2<code>:</p>
+<p>Anita Shack (246904881), Camila Avendano (245938056), Dana Hufe (247262404), Grace Lim</p>
+<p>(247246484). Nothing written.</p>
+
+<p><b>Correction to the 09-06 21:07Z reading.</b> Jana Jedlovska, Sandra To, Tunde Ifafore and Zoey</p>
+<p>Gould are NOT candidates and never were window cases. </code>find_access_window<code> returns <b>no panel</p>
+<p>user at all</b> for Zoey Gould, Sandra To or Tunde Ifafore, and a read-only roster snapshot taken</p>
+<p>from this Mac at 03:27Z (163 users) contains none of them. They sit in the sweep&#x27;s </code>dormant<code></p>
+<p>list — Artist rows carrying an </code>Alarm User ID<code> the panel no longer has. That is the Registrar&#x27;s</p>
+<p>re-provisioning case, out of scope for A0 by design. The dormant list is <b>47 rows</b> and mostly</p>
+<p>old June-era ids with </code>[Skedda]<code> / </code>[Peerspace]<code> suffixes, so this is long-standing Artist DB</p>
+<p>staleness, not a new event. <b>Worth a separate look:</b> if any of those 47 has an upcoming</p>
+<p>booking, they have no code and no access. Job A&#x27;s provision check is the surface that should</p>
+<p>catch it.</p>
+
+<p><b>What the next two passes do, on the current counts:</b></p>
+
+<p>| Pass | What happens |</p>
+<p>|---|---|</p>
+<p>| Sep 7, 07:50Z | grant → read-back not </code>permanent<code> → <b>+1 year fallback written</b> for all 4, counted as pass 3 |</p>
+<p>| Sep 8, 07:50Z | </code>attempts_before=3<code> → no grant, <b>ONE </code>Access / PIN<code> row each</b>, UI delete→wait→re-add |</p>
+
+<p>Grace Lim&#x27;s original window expires <b>today at 19:17Z (15:17 EDT)</b>, about 11 hours after the</p>
+<p>07:50Z pass. Under the old code that pass would have called her &quot;migrated&quot; a third time and let</p>
+<p>her window lapse this afternoon. Under </code>60c0497<code> it writes her a +1 year window instead. That is</p>
+<p>the fix earning its keep, today.</p>
+
+<p><b>The one thing to watch on the Sep 7 report — a real gap if it goes the wrong way.</b> The +1</p>
+<p>year fallback goes through the same device-access PUT that the schedule clear did. If the panel</p>
+<p>reverts the fallback too, then the Sep 8 escalation branch is a problem: it files the row but</p>
+<p>does <b>not</b> re-write the window, so an escalated renter waits for a human with an expired or</p>
+<p>expiring window. Check the Sep 7 report&#x27;s fallback line, then read</p>
+<p></code>find_access_window(&quot;Grace Lim&quot;)<code> — if it shows an end date in Sep 2027, the fallback holds and</p>
+<p>nothing more is needed. <b>If it shows the original date again</b>, the remedy is one change:</p>
+<p>refresh the +1 year window on escalation passes as well, so the door stays open while the human</p>
+<p>row waits. Not made now — it is unnecessary if the fallback holds, and it would leave the repo</p>
+<p>ahead of the deployed image.</p>
+
+<h3>Update (2026-09-07, later) — four renters deleted and restored; two rules corrected</h3>
+
+<p>Junyan deleted Anita Shack, Camila Avendano, Dana Hufe and Grace Lim from the panel (the</p>
+<p>delete half of canon&#x27;s delete→wait→re-add remedy) and asked for them back. Restored with their</p>
+<p>ORIGINAL codes from the Artist DB, Existing + Future, <b>no window</b> — the permanent state on</p>
+<p>this account. Every access message already sent stays valid.</p>
+
+<p>| Renter | New panel id | Verified |</p>
+<p>|---|---|---|</p>
+<p>| Grace Lim | 249102167 | </code>none<code>, 4 panels, E+F, </code>allow_permanent<code> |</p>
+<p>| Camila Avendano | 249102172 | same |</p>
+<p>| Dana Hufe | 249102173 | same |</p>
+<p>| Anita Shack | 249099264 | same — <b>already existed</b>, see below |</p>
+
+<p>All four Artist rows were repointed to the new ids, so none of them became a </code>dormant_id<code> case.</p>
+
+<p><b>The misleading error, now fixed in code.</b> Three </code>create_user<code> attempts for Anita Shack failed</p>
+<p>on *&quot;Code 1179 is still held on the panels by a deleted user (… clears in 2-3 minutes). Wait and</p>
+<p>retry the SAME code&quot;*. She was not deleted. </code>find_user_codes(&quot;Shack&quot;)<code> showed her already on the</p>
+<p>roster as <b>249099264</b>, correctly provisioned with that code and 4 panels — re-added by hand</p>
+<p>before the request. The 422 has two causes that look identical, and the message asserted the</p>
+<p>wrong one as fact, so the advice (&quot;wait and retry&quot;) was advice to loop forever. The create&#x27;s</p>
+<p>rollback worked correctly every time; no duplicate and no codeless shell was left behind.</p>
+
+<p></code>user_codes.set_code<code> now states both causes, keeps the ghost explanation and the never-reassign</p>
+<p>rule, passes the panel&#x27;s own body through (it carries the holder&#x27;s name — blank for a ghost), and</p>
+<p>names </code>find_user_codes<code> as the read that settles it. Four tests added in</p>
+<p></code>tests/test_user_codes.py<code>, one named for this failure. Suite: <b>387 pass</b>.</p>
+
+<p><b>The code-in-transcript rule, scoped not deleted</b> (Junyan: it &quot;doesn&#x27;t make sense&quot;). Rewritten</p>
+<p>above. The half that made sense is kept and still pinned by a test: the SWEEP must never put a</p>
+<p>code into Cloud Run logs, a Reports row, an Actions row, or an SMS — those are retained and</p>
+<p>shared. The half that did not is gone: handling a code to provision somebody is the normal,</p>
+<p>required use of </code>create_user<code> / </code>set_code<code> / </code>find_user_codes<code>, and pretending otherwise only</p>
+<p>made a restore harder while the codes sat in the Artist DB anyway. <b>Not deployed</b> — the error</p>
+<p>text change needs </code>./deploy.sh<code>.</p>
+
+<h2>Closed (2026-09-07) — code shipped, schedule deleted, migration finished by hand</h2>
+
+<p><b>Junyan&#x27;s ruling:</b> *&quot;I deleted it deliberately as it wasn&#x27;t functioning properly. Everything</p>
+<p>has been migrated manually so let&#x27;s just close off this ticket.&quot;*</p>
+
+<p><b>What ran.</b> The scheduler job fired exactly twice, 03:50 Toronto on Sep 5 and Sep 6, and filed</p>
+<p>one 📊 report each time: </code>migrated 10 · fallback 0 · escalated 0 · skipped 19<code>, then</p>
+<p></code>migrated 8 · fallback 0 · escalated 0 · skipped 19<code>. No Actions row was ever filed. The panel</p>
+<p>went from 29 temporary windows to 15.</p>
+
+<p><b>Why it was not functioning.</b> Both passes reported success off the immediate post-grant read.</p>
+<p>On this account that read is an illusion: it shows no window, and the panels restore the original</p>
+<p>start/end within hours. The eight names in the Sep 6 headline are the ten from Sep 5 minus two —</p>
+<p>the sweep was re-migrating people it had already called migrated. </code>60c0497<code> rewrites step 2 so an</p>
+<p>immediate </code>none<code> is a FALLBACK, not a verification, and a later pass&#x27;s roster read is what confirms</p>
+<p>a migration. It is deployed in </code>0907-60c0497-dirty<code> and <b>has never run a pass</b>. If this job is</p>
+<p>ever revived, that is the code path to start from, and the two-pass evidence above is why.</p>
+
+<p><b>Panel state at close</b> (read 2026-09-07, live): 15 windows still temporary, including Rebecca</p>
+<p>Wise ending Thu Sep 10 19:57. Six of the ten from the Sep 4 shadow list read </code>none<code> with four</p>
+<p>panels. Three of the ten — Jana Jedlovska, Sandra To, Zoey Gould — are no longer on the roster at</p>
+<p>all, removed by something outside this sweep, which has no delete path. Recorded here as observed,</p>
+<p>not as an acceptance failure: Junyan states the migration was completed by hand, and the manual</p>
+<p>work is not visible to this ticket.</p>
+
+<p><b>What remains in the tree, deliberately.</b> </code>alarm_monitor/migration_sweep.py<code>, its 27 tests</p>
+<p>(387 pass), the </code>migration_sweep<code> MCP tool, and </code>GET|POST /migration-sweep<code>. All callable on</p>
+<p>demand. </code>MIGRATION_SWEEP_LIVE=1<code> is still set on </code>alarm-mcp<code>, so a POST would act — the only thing</p>
+<p>removed is the schedule.</p>
+
+<p><b>Docs at close.</b> Canon § Job A0 no longer claims a scheduled runtime and carries the</p>
+<p>verification lesson; </code>RUNTIMES.md` row struck through with the deletion and its reason; 🚥 Run</p>
+<p>Monitor row Paused / Disabled; Plumbing Map entry.</p>
+
+<p><b>Seam unchanged.</b> The nine dead ⏭️ Next Action rows still close under 053&#x27;s replan.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#104</span><span class="emoji">🗂️</span><span class="done-title">Propose the card merges, with evidence, now that Contact Points can show it</span><span class="done-date">2026-09-04</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>Propose the card merges, with evidence, now that Contact Points can show it</b></p><h2>Question</h2>
 
 <p><b>098</b> deferred the migration until the table existed so</p>
@@ -15006,5 +15042,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-07 09:58 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-07 10:16 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
