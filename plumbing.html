@@ -1276,6 +1276,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-06 &middot; 22:5xZ</span>
+      <h3>The Deck says why a row is there, and whether it already bounced<span class="kind">NEW SURFACE &middot; the Deck &middot; LIVE</span></h3></summary>
+      <p><strong>The gap.</strong> Every queued row carries its own reason &mdash; the agent that made it writes one into <code>Reasoning</code> &mdash; and none of it reached the card. The reviewer saw a message with no idea who asked for it. Junyan, shown the line for David Garzon&rsquo;s door reminder: <em>&ldquo;This information is enough.&rdquo;</em></p>
+      <p><strong>Two lines under the name.</strong> <code>whyLine()</code> surfaces the OPENING of <code>Reasoning</code>, where every lane puts its rationale before any later stamp &mdash; nothing summarised or re-derived. Bracketed log blocks (<code>[Edited in the Deck &mdash; &hellip;]</code>, <code>[Error &mdash; &hellip;]</code>) are appended, so cutting at the first one keeps the original rationale whole. Garzon&rsquo;s row reads <em>&ldquo;Issue Prevention flagged David as Monday&rsquo;s closing renter in 509A, and he left that door unlocked on July 26&rdquo;</em>; Jesse Dwyre&rsquo;s reads the docket ruling <em>&ldquo;Accept $30/hour&hellip; a one-time 693 offer&rdquo;</em>.</p>
+      <p><strong>The second line is the one that was missing entirely.</strong> <code>failLine()</code> shows the last dispatch failure &mdash; but only on a card that is NOT errored, because an errored card already gets the fuller <code>errorDiagnostic()</code> in the draft pane. It exists for the row that FAILED and is sitting back at Pending Review: Jesse&rsquo;s $30/hour offer bounced at 21:24 (<em>&ldquo;Thread 1a0777f8b7ef13e8 has no inbound message &mdash; every message in it is from us&rdquo;</em>) and the card showed only a grey note about joining email history. The bounce was invisible.</p>
+      <p><strong>Deliberately not a box.</strong> A bordered callout reads as a fault, and most of these rows are working exactly as intended &mdash; the same reasoning that took the red box OFF Giggster rows an hour earlier. One amber line for why, one red line only when a send has already failed.</p>
+      <p><strong>Live.</strong> deck-app <code>f939728</code>, deployed the same minute (version <code>f15d19ec</code>). Extractors run against the two real rows plus an empty row and a <code>$30.00</code> decimal guard, so a price is never mistaken for a sentence end.</p>
+      </details>
+    </li>
+
+      <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-06 &middot; 21:5xZ</span>
       <h3>A Giggster row is a route, not a fault<span class="kind">FAILURE-MODE FIX &middot; the Deck &middot; LIVE</span></h3></summary>
       <p><strong>What it looked like.</strong> A Giggster row on the Deck carried the red <em>Can&rsquo;t dispatch yet</em> box and a Send button reading <em>Fix dispatch first</em> &mdash; asking the reviewer to repair something that cannot exist. Giggster masks the guest&rsquo;s contact and mints no relay, so replies live only inside the Giggster app: <code>greeter_sweep.relay_of</code> returns <code>&quot;&quot;</code> for it and the send engine skips it through <code>isForeignLane_</code>. The row was working exactly as designed and reading as broken.</p>
