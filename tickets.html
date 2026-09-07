@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 12:49 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 12:56 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -185,400 +185,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>sidestep the J30 renderer contest; confirm/renumber at the batched schema review. New capability</p>
 <p>to bind at that review: <b>calendar write (Staff Scheduling)</b> — currently documented in the job</p>
 <p>page only, not in CAPABILITIES; harnesses without it skip (Planner 19:30 backstops).</p>
-</div></details></details></div><div class="job"><div class="jnum">#026</div><div class="jhead"><span class="emoji">🧪</span><h4>Test the emergency line end to end</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Send test emergency texts</li><li>Watch staff actually get paged</li><li>Then retire the old backup check</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Verify the Emergency Call Line Zap end-to-end, then retire the Receptionist 15-min poll</b></p><h2>Question</h2>
-
-<p>Execute ticket 011&#x27;s banked flip checklist (HITL — Junyan texts, Claude verifies + flips):</p>
-
-<ol>
-<li>1. <b>Life-safety path test:</b> Junyan texts a life-safety keyword SMS (e.g. &quot;water leak in 509&quot;)</li>
-</ol>
-<p>from a NON-watchlist number → confirm a 📞 Staff Call Queue row appears (<code>Source</code> = webhook,</p>
-<p>life-safety note) AND the on-call note SMS arrives at 647-932-1050. This path has <b>zero</p>
-<p>verified end-to-end passes</b> since the Zap filters were tightened on 07-15 (the 01:44Z</p>
-<p>water-leak test produced no row — possibly mid-edit, possibly a broken Path A).</p>
-<ol>
-<li>2. <b>Verified-distress path test:</b> a distress keyword (&quot;locked out&quot;, &quot;code not working&quot;) from a</li>
-</ol>
-<p>number on today&#x27;s watchlist → confirm the verified-path queue row.</p>
-<ol>
-<li>3. <b>Soak:</b> a few days of clean JOB 7 §7 episode-sampling results (no wrong-path / duplicate /</li>
-</ol>
-<p>missed-fire defects in the Sweep Feedback stream).</p>
-<ol>
-<li>4. <b>Then flip:</b> retire the 15-min <code>the-receptionist</code> trigger — banner flip on the Receptionist</li>
-</ol>
-<p>library page + heartbeat roster edit. NOTE the poll is also the general quick-answer (Mode-2</p>
-<p>card) surface, which the deterministic Zap does NOT cover — before retiring, decide where</p>
-<p>quick-answer auto-sends move (stay LLM in the 2-hourly triage pass? wait for message-dispatch?).</p>
-<p>If they can&#x27;t move yet, the poll survives at a reduced cadence instead of retiring.</p>
-
-<p>Resolution records: both path tests with evidence, the soak verdict, and what happened to the</p>
-<p>poll (retired / re-cadenced / kept) + where quick-answer cards now live.</p>
-
-<h2>Progress (2026-07-17 evening, live session with Junyan)</h2>
-
-<p><b>Test 1 (life-safety, non-watchlist) = PASSED end-to-end on v20</b> (queue row 10:31 PM + on-call</p>
-<p>note SMS + no echo). Getting there surfaced and fixed five defects in the Emergency Call Line Zap:</p>
-
-<ol>
-<li>1. <b>v17 (Junyan):</b> step-3 filter required Data Type = <code>sms-message</code> (the subscription <i>tag</i>);</li>
-</ol>
-<p>payload value is <code>sms</code> → every SMS ever was filtered. Fixed to <code>contains sms</code>.</p>
-<ol>
-<li>2. <b>v17–18 (Copilot):</b> path keywords were AND&#x27;d in one rule group → no message could ever match.</li>
-</ol>
-<p>Re-grouped to OR.</p>
-<ol>
-<li>3. <b>v18 (Junyan):</b> step-8 (verified path) had a broken staleness rule — <code>Booking Date End is the</li>
-</ol>
-<p>same as Current time</code> (End usually empty; exact-time compare). Deleted; staleness is J29&#x27;s job</p>
-<p>(DB only ever holds today).</p>
-<ol>
-<li>4. <b>v19 (Claude):</b> <b>feedback loop</b> — the actuator&#x27;s note SMS to on-call (a Phone.com extension</li>
-</ol>
-<p>on the same account) re-entered the webhook, matched life-safety keywords (&quot;LIFE-SAFETY&quot;,</p>
-<p>&quot;leak&quot;), created new rows → notes → rows, ~1/min, 10:07–10:19 PM. Contained live by skipping</p>
-<p>echo rows; fixed with two step-3 guard rules: <code>Data From Id does not contain 6479321050</code> AND</p>
-<p><code>Data Message does not contain &quot;Fast-track (real-time webhook)&quot;</code>. Guard verified: post-v19</p>
-<p>note SMS produced no echo.</p>
-<ol>
-<li>5. <b>v20 (Claude):</b> Notion Find still had <code>Successful if no search results = False (halt)</code> →</li>
-</ol>
-<p>life-safety from unknown numbers died at step 2 (the original 07-15/16 failure). Set to True;</p>
-<p>watchlist gating already lives in step 8&#x27;s <code>Zap Search Was Found Status = true</code>.</p>
-
-<p>Also fixed upstream red herring: Phone.com subscription 433266 is ALIVE (earlier 404s were wrong</p>
-<p>API paths — real path is <code>/v4/accounts/2679103/integrations/events/...</code>); listener 304338 intact.</p>
-
-<p><b>Late-session additions (published by Claude):</b></p>
-<ul>
-<li>- <b>v21</b> — On-call Phone on both queue-row create steps → <b>+16477733887</b> (Junyan&#x27;s cell; SMS</li>
-</ul>
-<p>stays the channel, WhatsApp dropped). Junyan&#x27;s first &quot;locked out&quot; attempt never reached</p>
-<p>Phone.com (likely sent to the wrong thread) — that&#x27;s why no response came.</p>
-<ul>
-<li>- <b>v22</b> — <b>Path B renter ack SMS</b>: verified-distress texts now get an immediate automated</li>
-</ul>
-<p>reply from the studio line (&quot;Got you — on-call staff have just been paged…&quot;), mirroring Path</p>
-<p>A&#x27;s ack (which lives in the actuator&#x27;s Send SMS, not this Zap). Step test deliberately skipped</p>
-<p>(sample would have texted a real customer); first live distress text is the real test.</p>
-
-<p><b>Still open before this ticket closes:</b></p>
-<ul>
-<li>- <b>Test 2 (verified-distress from a watchlist number)</b> — still not run: resend</li>
-</ul>
-<p>&quot;locked out, code not working 901&quot; <b>to the main studio number</b>; expect ack SMS + queue row +</p>
-<p>staff note. Junyan&#x27;s temp watchlist row expires with the 07-18 J29 rebuild — re-add before</p>
-<p>testing, or book/test as a real renter. NOTE: Junyan added a</p>
-<p>test-message filter excluding his own number from the bridge call; Test 2 may need different</p>
-<p>wording or another watchlist phone. Temp watchlist row for +16477733887 (booking date 07-17)</p>
-<p>will be archived by J29 on 07-18.</p>
-<ul>
-<li>- <b>Actuator Zap fixes (in Junyan&#x27;s draft, unpublished at session end):</b> map step-6 Update Item</li>
-</ul>
-<p>to the trigger row&#x27;s ID (draft had it HARDCODED to &quot;TEST staff call bridge&quot;); step-5 Make Call</p>
-<p><code>toNumber</code> must be E.164 <code>+16479321050</code> (dashes cause <code>callee_phone_number</code> validation halt —</p>
-<p>currently benign since Dispatch=Note-only, but breaks real Call+Note dispatches); add</p>
-<p><code>Status = Ready</code> to its step-2 filter (belt-and-braces vs the update-retrigger warning); keep</p>
-<p>&quot;Create if doesn&#x27;t exist&quot; OFF.</p>
-<ul>
-<li>- <b>Junyan&#x27;s design direction (revised late session):</b> stays SMS (WhatsApp idea dropped for now);</li>
-</ul>
-<p>destination changed to <b>Junyan&#x27;s cell +16477733887</b> — gate Zap <b>v21</b> (published by Claude)</p>
-<p>writes it as On-call Phone on both create steps. Actuator must (a) map its send-to from the</p>
-<p>row&#x27;s On-call Phone property, and (b) <b>REMOVE the test filter excluding +16477733887</b> — with</p>
-<p>the on-call number now his cell, that filter would silently kill every summon. Loop-safe (cell</p>
-<p>is external to Phone.com). ⚠️ This puts the emergency page on the phone that leaves for Brazil</p>
-<p>Jul 27 — Ela/duty-manager routing is now on the Brazil-coverage critical path.</p>
-<p>Task-usage optimization chosen: move the filter BEFORE the Notion Find (filters are free; the</p>
-<p>Find burns a task on every discarded SMS) + add a coarse keyword pre-screen.</p>
-<ul>
-<li>- Soak (§7 sampling clean for a few days) → then the Receptionist-poll decision (retire vs</li>
-</ul>
-<p>re-cadence; the poll is still the only general quick-answer surface).</p>
-<ul>
-<li>- Skipped echo rows 10:08–10:19 PM remain in the Staff Call Queue as Skipped — leave as evidence</li>
-</ul>
-<p>for the first JOB 7 §7 sampling pass.</p>
-
-<h2>State check (2026-07-18, AFK verification by Claude)</h2>
-
-<ul>
-<li>- <b>Watchlist rebuilt clean by J29 at 05:08Z</b> for 07-18: only Camila Avendano (+16475453483,</li>
-</ul>
-<p>509A 9–11 AM) and Mia Vescarelli (+15872234823, 509A 12–1:45 PM). Junyan&#x27;s temp row</p>
-<p>(+16477733887) archived as predicted → <b>Test 2 needs a fresh temp watchlist row</b> (or a real</p>
-<p>renter&#x27;s cooperation) before texting.</p>
-<ul>
-<li>- <b>Staff Call Queue confirms the 07-17 record exactly</b>: the 10:31 PM life-safety test row is</li>
-</ul>
-<p>Ready (Test 1 evidence intact), echo rows 10:08–10:19 all Skipped, and <b>no rows since</b> — no</p>
-<p>Test 2 attempt, no stray fires overnight. Note: the 10:31 row&#x27;s On-call Phone is still</p>
-<p>647-932-1050 (created pre-v21); v21&#x27;s +16477733887 mapping is not yet evidenced by any row.</p>
-<ul>
-<li>- <b>Soak = 0 days</b>: the first HEAVY-PM JOB 7 §7 episode-sampling pass over the emergency lane</li>
-</ul>
-<p>hasn&#x27;t run yet (Zap fixes landed 07-17 evening). Earliest close remains ~07-20/21 even if</p>
-<p>Test 2 passes today.</p>
-<ul>
-<li>- <b>Actuator draft</b> (row-ID mapping, E.164 toNumber, Status=Ready filter, remove the</li>
-</ul>
-<p>+16477733887 test-exclusion filter): publication not verifiable AFK — Junyan to confirm.</p>
-
-<h2>Quick-answer surface DECIDED (2026-07-18, live with Junyan)</h2>
-
-<p>Junyan&#x27;s 07:53 &quot;locked out&quot; test correctly filtered (temp watchlist row was archived by J29 —</p>
-<p>working as designed) but surfaced the design gap: no instant info reply. Ruled with Junyan:</p>
-
-<ul>
-<li>- <b>The deterministic Zap becomes the quick-answer surface</b> for distress texts — this resolves</li>
-</ul>
-<p>step 4&#x27;s open question; the Receptionist poll&#x27;s Mode-2 card duty moves here.</p>
-<ul>
-<li>- <b>Verified path</b>: queue row + staff note fire FIRST (deterministic, fail-safe), then an LLM</li>
-</ul>
-<p>step (Anthropic app, claude-opus-4-8) composes the renter reply from runtime-fetched HTR</p>
-<p>Fast-Track cards + Artist DB alarm-code lookup. HTR stays source of truth — no hardcoded</p>
-<p>bodies. Prompt rule: only use provided card text, never invent codes; no match → generic</p>
-<p>&quot;staff paged&quot; ack.</p>
-<ul>
-<li>- <b>Unverified distress</b>: pages staff via note-only SMS (no call) + honest verify-first ack.</li>
-</ul>
-<p>NO cards/codes to non-watchlist numbers (Card A rule).</p>
-<ul>
-<li>- <b>Life-safety</b>: unchanged.</li>
-<li>- Temp watchlist row re-added for +16477733887 (page 3a175032-81c4-8189-9a8b-cc4f24ebb1d2,</li>
-</ul>
-<p>booking date 07-18) — Test 2 resend now unblocked.</p>
-
-<p><b>TEST 2 PASSED (2026-07-18 10:08 AM):</b> &quot;locked out, code not working 901&quot; from +16477733887 →</p>
-<p>v22 ack SMS received + verified queue row 14:09:01Z (&quot;watchlist verified&quot; source, Ready) with</p>
-<p>On-call Phone = +16477733887 (first live proof of v21&#x27;s cell mapping). Both keyword path tests</p>
-<p>now green. Staff-note delivery to the cell depends on the actuator&#x27;s test-exclusion filter</p>
-<p>removal — confirm during the build.</p>
-
-<p><b>BUILD SESSION (2026-07-18, Claude in Junyan&#x27;s browser) — unverified path DONE in draft (v23</p>
-<p>candidate), awaiting Junyan&#x27;s review + publish:</b></p>
-
-<ul>
-<li>- Inside Path B (Verified renter distress), after the keyword conditions, added a <b>nested Paths</li>
-</ul>
-<p>split</b>: Path C = <code>Zap Search Was Found Status is true</code> (contains the existing step-10 filter →</p>
-<p>step-11 queue-row create → step-12 v22 ack, all untouched; the filter is now redundant</p>
-<p>belt-and-braces), Path D = <code>is false</code> (NEW unverified lane).</p>
-<ul>
-<li>- <b>Path D step 14</b> — Notion Create Data Source Item → Staff Call Queue: Call = &quot;UNVERIFIED</li>
-</ul>
-<p>distress {Data From Id}&quot;, Issue = {Data Message}, Source = &quot;Phone.com webhook (real-time) —</p>
-<p>UNVERIFIED (not on watchlist)&quot;, Dispatch = <b>Note only</b> (no call, per Junyan&#x27;s ruling),</p>
-<p>Status = Ready, Renter Phone = {Data From Id}, On-call Phone = +16477733887, Staff Note =</p>
-<p>UNVERIFIED warning + the message. Test skipped deliberately (would create a junk row).</p>
-<ul>
-<li>- <b>Path D step 15</b> — Phone.com Send SMS: From = Dance Annex (+16479321050), To = {Data From</li>
-</ul>
-<p>Id}, Text = honest verify-first ack (no codes; &quot;reply with the booking name…&quot;; 911 line;</p>
-<p>staff-notified). Test skipped deliberately (sample would text a real customer).</p>
-<ul>
-<li>- Path C tested green against the morning Test-2 record; Path D condition tested green.</li>
-<li>- Paths still named &quot;Path C&quot;/&quot;Path D&quot; — cosmetic rename left to Junyan if desired.</li>
-</ul>
-
-<p><b>v23 PUBLISHED by Junyan 2026-07-18 + UNVERIFIED PATH LIVE-TESTED, PASS:</b> &quot;locked out, code</p>
-<p>not working 901&quot; from +16477733887 (temp watchlist row already archived → not on watchlist) at</p>
-<p>1:52 PM → verify-first ack received on the cell + Staff Call Queue row 17:52:37Z with every</p>
-<p>field correct (UNVERIFIED title/source, Note only, Ready, On-call = cell, staff-note body).</p>
-<p>A second identical row from 14:41Z shows the lane also caught a live fire minutes after</p>
-<p>publish. Also verified: a non-emergency real SMS (&quot;Hi Ela, can you reply on Slack?&quot;) correctly</p>
-<p>matched NO path — filters behave. Staff-note SMS did NOT arrive — actuator run 1:53:40 PM was <b>Filtered</b>: its step-2 rule</p>
-<p>&quot;Renter Phone does not exactly match +16477733887&quot; (the old test-exclusion) blocked it, exactly</p>
-<p>as the design ruling predicted. Claude removed the rule in the actuator draft (filter now just</p>
-<p><code>Status = Ready</code>); Junyan to publish (v3). Actuator v2 (published by Junyan 07-17 night)</p>
-<p>carries his other draft fixes. Note: old Ready rows won&#x27;t retrigger — test the note leg with a</p>
-<p>fresh distress text after publishing.</p>
-
-<p><b>VERIFIED QUICK-ANSWER LANE (Path E) BUILT + STEP-TESTED (2026-07-18 afternoon, draft v24</p>
-<p>candidate, awaiting Junyan&#x27;s publish):</b></p>
-
-<ul>
-<li>- <b>Step 17 — Notion API Request (Beta)</b>: POST</li>
-</ul>
-<p><code>/v1/data_sources/b0c59a82-0a2b-4e96-9467-89bbd954d8b4/query</code> filtering HTR cards to</p>
-<p><code>Send Mode = Auto-send</code> (runtime fetch — HTR stays source of truth). Tested green. (Old</p>
-<p><code>/v1/databases/{id}/query</code> endpoint is retired on this connection — that was the earlier 400.)</p>
-<ul>
-<li>- <b>Step 18 — Anthropic (Claude) Send Message</b>, model Claude Opus 4.8: System prompt = compose</li>
-</ul>
-<p>one SMS from provided cards + booking info only, never invent codes, 450-char cap, fallback</p>
-<p>&quot;staff will follow up&quot; line. User Message = renter SMS + watchlist Name/Studio (step 2) + step</p>
-<p>17 cards JSON. Step test green — sample SMS was the non-emergency &quot;reply on Slack?&quot; message and</p>
-<p>Claude correctly output the no-match fallback.</p>
-<ul>
-<li>- <b>Step 19 — Phone.com Send SMS</b>: From Dance Annex +16479321050, To = {1. Data From Id}, Text =</li>
-</ul>
-<p>step 18 Response Content Text. Step test sent a real SMS to Junyan&#x27;s cell (status processing).</p>
-<ul>
-<li>- Alarm-code delivery deferred to the spawned J29 task (add Alarm Code column to the watchlist</li>
-</ul>
-<p>build so step 2&#x27;s Find returns it; then add it to the step-18 User Message).</p>
-<ul>
-<li>- Remaining: Junyan publishes (v24) → live test &quot;what are the codes 901&quot; from a</li>
-</ul>
-<p>watchlist-verified number → expect card-based reply in seconds. Also still pending: actuator</p>
-<p>v3 publish + fresh distress text to verify the staff-note leg.</p>
-
-<p><b>ALARM-CODE DELIVERY WIRED (2026-07-18 later, spawned task executed):</b></p>
-<ul>
-<li>- Notion: added &quot;Alarm Code&quot; rich_text column to the Fast-Track Watchlist DS (0038b3be…).</li>
-<li>- Repo junyanboon/desk-correspondence commit 8f4c784: <code>watchlist_build.py</code> now copies the</li>
-</ul>
-<p>matched Artist page&#x27;s Alarm Code onto each watchlist row (alarm_code_of helper; wl_props;</p>
-<p>diff check includes the code). Next scheduled 30-min Action run populates today&#x27;s rows</p>
-<p>(manual gh dispatch was blocked by the session&#x27;s permission classifier — cron covers it).</p>
-<ul>
-<li>- Zap v24 was published by Junyan mid-session (v23 + Path E quick-answer lane, no alarm code).</li>
-<li>- New draft (v25 candidate): step 18 User Message gains &quot;Personal alarm code for this renter</li>
-</ul>
-<p>(from today&#x27;s watchlist; empty means none on file): {2. Properties Alarm Code}&quot;; System</p>
-<p>prompt rule (2) now says use EXACTLY the provided code, never invent; if empty say a staff</p>
-<p>member will text it — the old &quot;check your check-in text&quot; fallback wording is removed.</p>
-<p>Step 18 retested green (sample = non-emergency SMS → correct no-match fallback).</p>
-<ul>
-<li>- Temp watchlist row for +16477733887 re-created with test Alarm Code &quot;7734#&quot; (page</li>
-</ul>
-<p>3a175032-81c4-8158-8803-d878948dc825) to surface the field in Zapier; J29 will archive it</p>
-<p>on its next rebuild — re-add just before any live test.</p>
-<ul>
-<li>- Remaining: Junyan publishes v25, then live-test &quot;what are the codes 901&quot; from a</li>
-</ul>
-<p>watchlist number with a code set — expect the actual code back in seconds.</p>
-
-<p><b>ALARM-CODE QUICK-ANSWER LIVE-TESTED, PASS (2026-07-18 4:48 PM):</b> v25 published by Claude</p>
-<p>(with Junyan&#x27;s intent — he believed it already live). &quot;what are the codes for 901?&quot; from</p>
-<p>+16477733887 with a fresh temp watchlist row (code 7734#) → reply in seconds: &quot;Hi Junyan, here</p>
-<p>are your codes: Door: 5123 / Alarm: 7734#&quot; — card facts + watchlist alarm code, no invented</p>
-<p>data. Zap run 4:48:27 PM Successful.</p>
-<ul>
-<li>- Earlier 4:37 PM test explained: J29&#x27;s 4:02 PM rebuild had archived the temp row (working as</li>
-</ul>
-<p>designed) → Find not found → composed without booking info (v24 wording). LESSON: manual test</p>
-<p>rows die at every :00/:30 rebuild — create immediately before texting.</p>
-<ul>
-<li>- J29 4:02 PM run confirmed the new script live: Mia (7612) and Camila (4822) real alarm codes</li>
-</ul>
-<p>now on the watchlist. Real renters are covered automatically.</p>
-<ul>
-<li>- Junyan&#x27;s intermediate 2nd test produced NO Zap run at all (nothing in history, all statuses)</li>
-</ul>
-<p>— cause unknown (suspected wrong thread); 3rd test fired normally, so the pipe is healthy.</p>
-<ul>
-<li>- NOTE: quick-answer texts (Path E) do NOT create a queue row / staff note — only distress</li>
-</ul>
-<p>keywords (Path B→C) page staff. Staff-note leg (actuator v3, test-exclusion removed) still</p>
-<p>needs its live test: a &quot;locked out&quot; distress text from a watchlist number.</p>
-<ul>
-<li>- Zapier plan task limit reached (pay-per-task overage now active) — further tests cost money.</li>
-</ul>
-
-<p><b>v26 PUBLISHED (2026-07-18 evening) — ACTUATOR RETIRED, PATHS MERGED (Junyan&#x27;s rulings):</b></p>
-<ul>
-<li>- <b>Actuator Zap (370740805) turned OFF.</b> Staff paging now lives INSIDE the Emergency Zap as</li>
-</ul>
-<p>direct Phone.com Send SMS steps (faster — no Notion polling lag — and 1 task instead of 3):</p>
-<p>Path A step 7 &quot;LIFE-SAFETY PAGE…&quot;, Path C step 13 (repurposed from the v22 renter ack) &quot;STAFF</p>
-<p>PAGE - verified renter distress… name/studio/phone/message&quot;, Path D step 16 &quot;STAFF PAGE -</p>
-<p>UNVERIFIED distress…&quot;. All to +16477733887, all embed &quot;Fast-track (real-time webhook)&quot; for</p>
-<p>the echo guard. Queue rows remain as audit records only. Slack DM channel = future add.</p>
-<ul>
-<li>- <b>Path C ≡ Path E merged conceptually</b>: Path E&#x27;s entry condition widened to just</li>
-</ul>
-<p><code>Zap Search Was Found Status = true</code> — EVERY verified-renter message now gets the Claude</p>
-<p>compose (card applies → card reply with codes; else universal &quot;staff will follow up&quot; reply).</p>
-<p>Distress keywords (Path B→C) survive only as the deterministic staff-page trigger.</p>
-<p>Consequence: verified distress texts get staff page + queue row + LLM reply (no more generic</p>
-<p>ack); ordinary verified chatter now gets the universal reply too.</p>
-<ul>
-<li>- Copilot (Zapier) executed the three staff-SMS edits after manual field-mapping proved flaky;</li>
-</ul>
-<p>all mappings verified as real field pills (not literal text) before publish. New-step tests</p>
-<p>skipped deliberately (overage billing); first live distress text is the real test.</p>
-<ul>
-<li>- Also: the &quot;#&quot; in the test alarm code was Claude&#x27;s made-up temp-row value, not system behavior</li>
-</ul>
-<p>— real Artist DB codes (Mia 7612, Camila 4822) have no #.</p>
-
-<p><b>v27 PUBLISHED (2026-07-18 ~10 PM):</b> Slack DM paging (@junyan.boon) added after each staff-page</p>
-<p>SMS in Paths A/C/D (Slack connected in Zapier by Junyan); Path E prompt rule 4 now outputs</p>
-<p>NO_REPLY for chatter (small talk/thanks/confirmations) and a step-24 filter kills the send —</p>
-<p>verified-renter chatter gets silence, per Junyan&#x27;s ruling. Slack steps not yet live-tested</p>
-<p>(⚠️ steps 8/19 Copilot-configured — verify tokens render on first live DM). Remaining live</p>
-<p>battery + all session state handed off to <b>HANDOFF-emergency-line-testing.md</b> (workspace</p>
-<p>root) — testing continues in a fresh session.</p>
-
-<p><b>v27 LIVE BATTERY COMPLETE — ALL FOUR TESTS PASS (2026-07-18 ~9:50–10:40 PM, live with</p>
-<p>Junyan; every run verified in Zap history by Claude):</b></p>
-
-<ol>
-<li>1. <b>Verified distress</b> (9:50:31 PM, temp row live): Path B→C queue row + staff SMS + <b>Slack</li>
-</ol>
-<p>DM step 15 sent, real values</b> (&quot;STAFF PAGE - verified renter distress… Junyan Boon (TEST) /</p>
-<p>901 / +16477733887 / locked out…&quot;); Path E delivered Door 5123 / Alarm 7734 (card + watchlist</p>
-<p>code, no invented data). Cosmetic: step 15&#x27;s DM body lacks &quot; / &quot; separators between values —</p>
-<p>optional 30-second fix.</p>
-<ol>
-<li>2. <b>Chatter silence</b> (9:51:47 PM): Path E ran, Claude output exactly <code>NO_REPLY</code>, <b>step-24</li>
-</ol>
-<p>filter &quot;successfully stopped your run&quot;</b>, step 25 never attempted — silence proven by the</p>
-<p>run, not assumed.</p>
-<ol>
-<li>3. <b>Life-safety</b> (10:02:20 PM): Path A queue row + staff SMS + <b>Slack DM step 8 sent, real</li>
-</ol>
-<p>values</b> (⚠️ Copilot-token risk cleared). Wrinkle: the 10:00 PM J29 rebuild lagged, so step 2</p>
-<p>still FOUND the temp row → Path E also ran and sent a contextual reply (&quot;send a photo of the</p>
-<p>leak&quot;) — correct v27 behavior for a <i>verified</i> sender; the unknown-number life-safety variant</p>
-<p>rests on the 07-17 v20 proof (v27 didn&#x27;t touch step 2).</p>
-<ol>
-<li>4. <b>Unverified distress (bonus, closes the step-19 gap)</b> (10:34:03 PM, rows archived by the</li>
-</ol>
-<p>10:30 rebuild): Path B→D queue row + UNVERIFIED staff SMS + <b>Slack DM step 19 sent, real</p>
-<p>values</b> + verify-first ack, no codes. Both Copilot-configured Slack steps (8, 19) now</p>
-<p>live-proven.</p>
-
-<p>Bonus evidence from real traffic the same hour: two texts from a real customer (+1416…7894 —</p>
-<p>&quot;Everything was great!&quot; and a tapback) matched NO path — correct silence for non-watchlist</p>
-<p>non-emergency chatter.</p>
-
-<p>Anomaly to watch: the 10:00 PM J29 rebuild did not archive the temp rows (3 stale test rows</p>
-<p>were live at 10:15 PM; the 10:30 run cleared them) — GitHub Actions cron drift, not a code</p>
-<p>bug, but manual test rows can outlive their :00/:30 death slot.</p>
-
-<p><b>Remaining before close:</b> soak — a few clean HEAVY-PM JOB 7 §7 sampling days (earliest</p>
-<p>~07-20/21) → then the Receptionist 15-min poll decision. The quick-answer half of that decision</p>
-<p>is already ruled (Path E is the quick-answer surface); what&#x27;s left is confirming nothing in §7</p>
-<p>regresses, then retiring or re-cadencing the poll.</p>
-
-<p><b>FIRST SOAK DEFECT + v28 FIX (2026-07-19 evening, live with Junyan):</b> David Diep (verified,</p>
-<p>509B) texted 3 messages at 5:23 PM asking to swap rooms; Path E replied 3 times — one generic</p>
-<p>fallback (defensible), one <b>reasoning leak</b> (model prefixed &quot;No card addresses a renter not</p>
-<p>seeing their bookings…&quot; to the fallback and the whole thing was SMS&#x27;d), one <b>wrong card</b></p>
-<p>(&quot;that room is cooler&quot; → thermostat instructions). Investigation found the bigger root cause:</p>
-<p><b>step 22&#x27;s Notion card fetch was silently sending NO request body</b> (Zapier&#x27;s Notion API</p>
-<p>Request (Beta) drops the POST body unless a <code>Content-Type: application/json</code> header is set —</p>
-<p>proven by a bogus-property body returning 200) — so ALL 59 HTR cards including Needs-review</p>
-<p>went to Claude on every verified message, ~230K chars/run. That&#x27;s also what <b>drained the</p>
-<p>Anthropic API credits</b> ($6.32 → cap in one day; Junyan topping up). <b>v28 published</p>
-<p>(2026-07-19, by Claude with Junyan&#x27;s approval):</b> (a) step-23 System prompt rebuilt with a</p>
-<p>hard OUTPUT CONTRACT (SMS body or exact NO_REPLY, never commentary) + strict card-match rule</p>
-<p>(shared keyword ≠ match; unsure → fallback); (b) step-22 Content-Type header — filter verified</p>
-<p>working (0 Needs-review in test output; 14 Auto-send cards, ~5× smaller prompt). Defect filed</p>
-<p>in Sweep Feedback (3a375032…8664, Attributed defect / J03 Quick-answer, Status=Applied).</p>
-<p>Design gap banked for 018: Path E has no thread context — multi-text thoughts get per-message</p>
-<p>replies. Soak clock effectively restarts at v28. Editor gotcha learned: script-injected field</p>
-<p>edits (execCommand) do NOT persist in Zapier — type through the real keyboard.</p>
-
-<p><b>Original note (superseded): the verified-path LLM compose</b> — fetch HTR Fast-Track cards +</p>
-<p>Artist DB alarm-code lookup + Anthropic step (claude-opus-4-8) between step 11 and step 12,</p>
-<p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
-<p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
 </div></details></details></div><div class="job"><div class="jnum">#053</div><div class="jhead"><span class="emoji">🔁</span><h4>Build the new way tickets get done — the robot suggests, Junyan says yes or fixes it</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Replan 2026-09-04: the old &#x27;things to do&#x27; board stays and is the ONLY place decisions go — the new list is retired (55 rows closed, now 0)</li><li>Message approvals live only on the Message Queue; alarm codes belong to the doorman; Giggster/Tagvenue replies get their own robot (ticket 121)</li><li>Close path: stop the hourly suggester (Junyan&#x27;s call), land tickets 120–123, repoint the robot at the old board, then measure 7 quiet days</li><li>Each suggestion comes with the proof behind it, so Junyan can decide without digging</li><li>Two moves only: say yes, or rewrite the step to what it should have been, then mark it Ready</li><li>The robot only does steps marked Ready — never one Junyan hasn&#x27;t seen</li><li>After doing it, the robot looks again at the real booking or calendar to check it truly happened</li><li>If Junyan already did the job himself, the robot spots it and ticks it off — no double work</li><li>Steps the robot gets right over and over become automatic; one rewrite and it goes back to asking</li><li>Trying it first on booking changes, the busiest and messiest kind</li><li>IN PROGRESS: the two new lists exist in Notion and the rulebook page is written</li><li>Checked what Skedda&#x27;s robot arm can really do: move, create, cancel and approve bookings — but not change a price</li><li>Junyan ruled: the old to-do board gets finished off first, then retired — no copying rows over</li><li>Junyan ruled: instant bookings and moves run on their own, and he gets a text each time one happens</li><li>BUILT Aug 6: the little sweep that runs every 10 minutes — it checks the real booking for every open step and ticks off whatever already happened</li><li>It cannot touch bookings itself, on purpose: one robot does the work, a different one checks it. A checker that can also change things isn&#x27;t a checker</li><li>Safety rule built in first: if it can&#x27;t reach the booking system, it says &#x27;couldn&#x27;t check&#x27; — it never reads silence as &#x27;the booking is gone&#x27;</li><li>Aug 15 — checked what was actually live: the little 10-minute sweep has been running since Aug 7 and works fine</li><li>But every single one of the 15 steps on the new list was written by a human. The robot had never suggested anything, not once</li><li>The thinking half simply had no robot to run it. The Concierge was supposed to be it, and the Concierge never gets that far — it runs out of time every pass</li><li>BUILT Aug 15: a new small robot, The Loop, that runs every hour and does the two missing parts — suggest the next step, and do the ones marked Ready</li><li>SWITCHED ON Aug 15, first run 8:35am. The one step in the way turned out to be already done — Junyan sent David Diep that text himself back on Aug 7, word for word, at 9:42 at night</li><li>Which found the next problem: the list had no way of ever noticing. It can check a booking for itself, but not a text message — so a step that was finished in five minutes sat looking unfinished for eight days</li><li>Three rules sit above everything in its instructions: only do steps marked Ready, never touch money, and never tick its own work off as done</li><li>Day one, four runs: it wrote its first two suggestions on its own. That was the thing to watch for, and it happened</li><li>It did nothing else, four runs in a row — because nobody has said yes to anything yet. The queue of approved work was empty every time</li><li>And it lost one. It spotted a 15-minute gap in Studio 527 at 8:39am, wrote a careful suggestion, checked again at 9:36 — and the gap came and went at 10:30 with nobody having read it</li><li>Nothing went wrong, which is the point. It refused to act without a yes, refused to nag, refused to tick off its own work. All three rules held and the job was still missed</li><li>What&#x27;s missing: a suggestion with a deadline needs to tap someone on the shoulder, not sit in a list waiting to be found</li><li>It also caught a ticket about to nag a customer to move a booking he had already moved four days ago — and noticed it has no alarm clock watching itself, which is the very problem it was built to fix</li><li>Two suggestions are sitting there now waiting on Junyan — and until one gets a yes or a rewrite, the robot cannot start learning what good looks like</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Next Action queue + the advancement loop — pilot on Booking Changes</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>, which dissolved J01 and ruled that ticket</p>
@@ -1235,271 +841,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>way </code>last_seen.py<code> folds presence? </code>last_seen.py` deliberately keeps only the most recent sighting</p>
 <p>per person, so it does not answer a &quot;what happened in this window&quot; question. Do not build against</p>
 <p>this note; it is a flag, not a spec.</p>
-</div></details></details></div><div class="job"><div class="jnum">#121</div><div class="jhead"><span class="emoji">🦾</span><h4>Give the desk a pair of hands inside Giggster and Tagvenue</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Two booking websites hold conversations we cannot finish. Giggster has no way to send a reply from the desk. Tagvenue forwards messages but blanks out every link</li><li>So a customer&#x27;s reply has sat unsent for 29 days, and a 30-person weekly lead sent us a link twice that nobody has been able to open</li><li>The robot kept asking a person to go log in and look. That is not a task, it is a missing tool</li><li>This job builds the tool: something that can log in, read the whole thread including links, post a reply a human already approved, and close out finished enquiries</li><li>Hard lines: it never sees a password, it never writes its own messages, and it stops dead if the website asks it to prove it is human</li><li>Accepting bookings stays with a person, because accepting charges the customer&#x27;s card</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the platform messenger agent (grokbot) — the desk&#x27;s hands inside Giggster and Tagvenue</b></p><h2>Question</h2>
-
-<p>Two platforms hold conversations the desk cannot finish:</p>
-
-<ul>
-<li>- <b>Giggster has no email relay.</b> A reply composed at the desk exists as a Message</li>
-</ul>
-<p>Queue row and can never leave. Sinéad B.&#x27;s reply has been held at <code>Pending Review</code></p>
-<p>since <b>2026-08-06</b> — 29 days on 2026-09-04.</p>
-<ul>
-<li>- <b>Tagvenue relays inbound mail but strips every link</b> to the literal text</li>
-</ul>
-<p><code>[Visit messenger to view the link]</code>. Sandra Lewis (30-guest weekly-slot lead, enquiry</p>
-<p>u2999101) sent her link twice. Nobody has seen it. Her ticket sits at <code>Gate: Artist</code></p>
-<p>on the assumption we are waiting on her.</p>
-
-<p>The loop&#x27;s response to this gap was to propose &quot;open the dashboard and look&quot; as a</p>
-<p>Next Action row — four times (rows <code>3c17503281c481d899e9e5f2f9775303</code>,</p>
-<p><code>3c17503281c4816498f8c4823f387f55</code>, <code>3c37503281c481a8935bde2c4c1531d0</code>,</p>
-<p><code>3ce7503281c481259e5bc4ac7b1060bb</code>). A proposal nobody can execute is not an action.</p>
-<p>It is a capability gap wearing a task&#x27;s clothes.</p>
-
-<p>Junyan&#x27;s ruling (2026-09-04): <b>fix the platform gap with an agent that can drive the</p>
-<p>platform UI.</b> Working name: <b>grokbot</b>. The runtime is Junyan&#x27;s call — the first turn</p>
-<p>of the build session confirms what &quot;grokbot&quot; means (an xAI Grok-backed agent, a</p>
-<p>browser-driving Claude lane, or something else) before anything is written. Nothing</p>
-<p>in this ticket depends on which; the job is the same.</p>
-
-<h2>What it must do</h2>
-
-<p>Four capabilities, in priority order. Each is a read or a write against the platform&#x27;s</p>
-<p>own web UI, because neither platform has an API surface the desk can reach.</p>
-
-<ol>
-<li>1. <b>Read a messenger thread in full</b>, links included. Tagvenue&#x27;s stripped links are</li>
-</ol>
-<p>the first target. Output goes onto the Sales ticket as a dated block quote — the</p>
-<p>link, its destination, and what it contains. Never into a Next Action row.</p>
-<ol>
-<li>2. <b>Post a reply that a human already approved.</b> The body comes ONLY from a</li>
-</ol>
-<p>📤 Message Queue row at <code>Ready to Send</code> with <code>Channel = Platform - Giggster</code> /</p>
-<p><code>Platform - Tagvenue</code>. The agent never composes. It reads the approved text, posts</p>
-<p>it verbatim, reads the thread back to confirm it landed, then sets the row <code>Sent</code></p>
-<p>with a receipt (thread URL + timestamp). A post that cannot be read back is not</p>
-<p>sent — leave the row and file a Run Error.</p>
-<ol>
-<li>3. <b>Close out an enquiry on the platform</b> once the booking is delivered (Grace Lim&#x27;s</li>
-</ol>
-<p>shape — booked, paid, delivered, enquiry still open). Read-back is the enquiry&#x27;s</p>
-<p>state on the platform after the action.</p>
-<ol>
-<li>4. <b>Accept or decline a booking request</b> — LATER, and gated. Accepting charges the</li>
-</ol>
-<p>guest&#x27;s card. This stays human-only until Junyan rules otherwise in writing, and the</p>
-<p>ticket that builds it is a separate one.</p>
-
-<h2>Hard constraints — these bind the build</h2>
-
-<ul>
-<li>- <b>CREDENTIALS NEVER PASS THROUGH THE AGENT.</b> Junyan&#x27;s workspace <code>CLAUDE.md</code> forbids</li>
-</ul>
-<p>entering passwords into any field. The only permitted path is the password manager</p>
-<p>flow (1Password via <code>request_credentials</code> / <code>autofill_credential</code>) where the agent</p>
-<p>never sees the value. If the chosen runtime cannot do that, the build stops and</p>
-<p>says so. Do not store a session cookie in Secret Manager as a workaround without</p>
-<p>Junyan&#x27;s explicit ruling — the Skedda cookie precedent exists but was ruled</p>
-<p>separately.</p>
-<ul>
-<li>- <b>Never compose, never send unapproved.</b> Capability 2 posts approved text only. The</li>
-</ul>
-<p>Message Queue at <code>Pending Review → Ready to Send</code> is the ONLY review surface for</p>
-<p>outbound (Junyan&#x27;s ruling, 2026-09-04: &quot;approve this message should never be sent</p>
-<p>anywhere other than the message queue&quot;).</p>
-<ul>
-<li>- <b>No off-platform contact info on platform sends</b> — no URL, phone, email, or</li>
-</ul>
-<p>address in any Giggster or Tagvenue message, signature included. An access code</p>
-<p>NEVER travels a platform relay (<code>CLAUDE.md</code> hard rules).</p>
-<ul>
-<li>- <b>Never bypass a CAPTCHA or bot check.</b> If the platform challenges, stop and hand</li>
-</ul>
-<p>to a human.</p>
-<ul>
-<li>- <b>Every action reads back.</b> The pattern is the loop&#x27;s VERIFY beat: the writer and</li>
-</ul>
-<p>the witness are the same read of the platform after the write, and a read that</p>
-<p>disagrees files a mismatch, never a success.</p>
-<ul>
-<li>- <b>Junyan runs deploys</b> if this lands on Cloud Run. Agent gcloud is blocked.</li>
-</ul>
-
-<h2>What already exists — do not rebuild</h2>
-
-<ul>
-<li>- The Message Queue schema, <code>Channel</code> values, <code>Ready to Send</code> → <code>Sent</code> flow, and the</li>
-</ul>
-<p>receipt convention (<code>phonecom:&lt;id&gt;</code> for SMS) — extend the receipt shape for</p>
-<p>platforms, do not invent a parallel queue.</p>
-<ul>
-<li>- <code>send_verifier.py</code> releases FBS auto-send rows under guards. Platform rows are NOT</li>
-</ul>
-<p>in its carve-out and must not be added without a ruling.</p>
-<ul>
-<li>- The Sales ticket <code>Current Block</code> / SOP-step checklist is where a platform read</li>
-</ul>
-<p>lands. Read <code>♟️ Platform — Instant Book or Booking Request</code> SOP</p>
-<p>(<code>3617503281c480de8176c73d80aba61e</code>) for the exact step names.</p>
-<ul>
-<li>- Artist pages carry the per-message Tagvenue relays. The agent reads them, never</li>
-</ul>
-<p>writes contact info from a platform page into the Artist DB without dedup.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- Sandra Lewis&#x27;s link is read and its contents are on ticket</li>
-</ul>
-<p><code>3c97503281c481d7b8bafafc01fee2ff</code> as a dated block. That is the first proof.</p>
-<ul>
-<li>- Sinéad B.&#x27;s held reply (Message Queue row per Action row</li>
-</ul>
-<p><code>3b47503281c48179873ae0dd93f49633</code>) goes out through the agent from <code>Ready to Send</code>,</p>
-<p>is read back in the Giggster thread, and the row reads <code>Sent</code> with a thread receipt.</p>
-<p><b>Junyan flips it to <code>Ready to Send</code> — the agent does not.</b></p>
-<ul>
-<li>- Grace Lim&#x27;s Tagvenue enquiry (Mon 2026-08-10 15:00, Studio 901) is closed on the</li>
-</ul>
-<p>platform and the outcome is on ticket <code>3b57503281c48105a8c3c4e6beb8783f</code>.</p>
-<ul>
-<li>- A test where credentials are requested proves the agent never receives the value.</li>
-<li>- A test where the platform returns a challenge proves the agent stops.</li>
-<li>- RUNTIMES.md row, Run Monitor row if it runs on a schedule, Plumbing Map entry, and</li>
-</ul>
-<p>a Limits register entry that REPLACES the &quot;cannot read platform messenger&quot; limit</p>
-<p>with the tested capability and its date.</p>
-
-<h2>Seam</h2>
-
-<p>This ticket owns the platform hands. It does not own who decides what to send</p>
-<p>(Message Queue + human), nor the Sales SOP steps that call for a platform read. Those</p>
-<p>stay where they are and call this agent. The four dead Next Action rows above close</p>
-<p><code>Won&#x27;t Do</code> under ticket 053&#x27;s replan once this lands — do not close them here.</p>
-
-<h2>Progress (2026-09-04) — DEFINED and TESTED as code; NOT RUN; canon held back by ruling</h2>
-
-<p><b>Runtime confirmed (Junyan, first turn):</b> &quot;grokbot&quot; is an <b>xAI Grok Bot</b> agent. Junyan</p>
-<p>creates it, pastes the definition, and signs in to the platforms himself through Grok</p>
-<p>Bot&#x27;s Agent Computer takeover. That is how the credential constraint is met: there is no</p>
-<p>path by which a password, code or cookie reaches the agent, and the definition makes any</p>
-<p>sign-in form or challenge a hard stop. Junyan: <i>&quot;You don&#x27;t need this&quot;</i> to the 1Password</p>
-<p>question — the password-manager door is not used because no agent in this design types</p>
-<p>a credential at all. Second ruling mid-build: *&quot;Don&#x27;t update the canon page, we need to</p>
-<p>test it first.&quot;* Honoured — nothing was written to <code>dc-canon</code>.</p>
-
-<p><b>Shape (Junyan, mid-build):</b> the Bot polls the Message Queue; a <code>Ready to Send</code> row on</p>
-<p>a platform Channel is posted directly in that platform&#x27;s messenger. Written as skill D.</p>
-
-<p><b>Delivered, all under <b>assets/121-grokbot/</b>:</b></p>
-<ul>
-<li>- <code>DEFINITION-DRAFT.md</code> — paste blocks A–F (identity, instructions, three skills, Auto</li>
-</ul>
-<p>Review rules) and the routine. Harness-neutral in substance; Grok-Bot-shaped in form.</p>
-<ul>
-<li>- <code>protocol.py</code>, <code>guard.py</code>, <code>receipt.py</code>, <code>definition_check.py</code> + tests — <b>29 passed</b>.</li>
-</ul>
-<p>Proofs the ticket asked for: a login form / OTP / CAPTCHA / bot challenge stops the run</p>
-<p>with nothing typed (<code>test_protocol.py</code>); the agent&#x27;s state has no field that could hold</p>
-<p>a credential; the definition text carries every hard rule and no credential-shaped</p>
-<p>string (<code>test_definition.py</code>). Also: <code>Pending Review</code> never posts; an approved body</p>
-<p>carrying a phone / URL / address / access code never posts; read-back mismatch never</p>
-<p>earns a receipt; an identical message already in the thread sets <code>Sent</code> without posting.</p>
-<ul>
-<li>- <code>RUNBOOK.md</code> — setup, the two live rehearsals (R1 credential, R2 challenge), the three</li>
-</ul>
-<p>acceptance runs, go-live, and the paperwork that waits for a pass.</p>
-<ul>
-<li>- <code>send-engine/test_foreign_lane.js</code> + <code>send-engine/proposed-v24-platform-lanes.md</code> —</li>
-</ul>
-<p>the Send Engine change the two new Channel options require. <b>Not applied</b>; the test</p>
-<p>fails on the two new values on purpose until Junyan applies and <code>clasp push</code>es.</p>
-<ul>
-<li>- <code>RUNTIMES.md</code> row (DRAFT, not yet run). Plumbing Map entry <code>2026-09-05 03:1xZ</code>.</li>
-<li>- Receipt shape ruled here: <code>giggster:&lt;conversation-uuid&gt;@&lt;ISO Toronto&gt;</code> /</li>
-</ul>
-<p><code>tagvenue:u&lt;enquiry-id&gt;@&lt;ISO Toronto&gt;</code>, optional <code> already-present</code>.</p>
-
-<p><b>Findings that change the acceptance list:</b></p>
-<ul>
-<li>- <b>Sandra Lewis:</b> her link was already read by Junyan in the messenger on 2026-09-02 —</li>
-</ul>
-<p><b>meditateintoronto.org</b>, Kadampa Meditation Centre Canada (&quot;KMC Canada&quot;). Her</p>
-<p>2026-08-31 reply says her organisation needs time. <b>The desk is not holding her up</b>;</p>
-<p><code>Revisit After = 2026-09-16</code> stands. The grokbot read (4a) is still the first live proof,</p>
-<p>and the block is paste-ready in the runbook if the Bot&#x27;s Notion write fails.</p>
-<ul>
-<li>- <b>Sinéad B.:</b> the held reply answers questions about a <b>2026-08-22</b> booking. The date</li>
-</ul>
-<p>has passed; posting it now fails the temporal check. Recommendation: <code>Will Not Send</code>,</p>
-<p>and prove the Giggster send on a current row Junyan approves. The Action row that</p>
-<p>carried her text is already <code>Processed</code>; her studio (509A vs 901) was never settled.</p>
-<ul>
-<li>- <b>Grace Lim:</b> her Tagvenue enquiry expired <b>2026-08-12 04:13</b> by the platform&#x27;s own</li>
-</ul>
-<p>rule. The close-out&#x27;s expected outcome is <i>state: expired, action: none</i>, recorded on</p>
-<p>the ticket. Next Action row <code>3c37503281c481a8935bde2c4c1531d0</code> untouched (053).</p>
-<ul>
-<li>- <b>Limits register:</b> there is no existing &quot;cannot read platform messenger&quot; row to</li>
-</ul>
-<p>replace — the claim lived in prose and in the four Next Action rows. A new row (text in</p>
-<p>the runbook § 6) goes in when the acceptance sheet has a date to cite.</p>
-
-<p><b>Not done, and why:</b> no Notion write (the harness classifier blocked this session&#x27;s</p>
-<p>Notion API calls after two reads — Sandra&#x27;s block and the register row are paste-ready);</p>
-<p>no Grok Bot run (Junyan&#x27;s account); no canon page (ruling); no Run Monitor row (added the</p>
-<p>day the routine goes on); Send Engine v24 not applied (test-first; the first send does not</p>
-<p>need it). The four dead Next Action rows are left for 053.</p>
-
-<p><b>Next:</b> Junyan works RUNBOOK § 1–4. A passing sheet moves the draft into canon (§ 6) and</p>
-<p>closes this ticket.</p>
-
-<h2>Progress (2026-09-05) — RE-SCOPED by Junyan: read and repair, never send</h2>
-
-<p><b>Rulings (Junyan, 2026-09-05):</b> grokbot is a standalone, bolted-on agent. *&quot;Its job is</p>
-<p>to see the messages and then fix notion message queue and artist database so that we</p>
-<p>can send message properly. It won&#x27;t send any messages.&quot;* Then, narrowed: it fixes only</p>
-<p>the Artist page&#x27;s email/phone (and the contact db); it never touches a queue row, so</p>
-<p>nothing sends by side effect. The text to Junyan goes as one queue SMS row to his own</p>
-<p>card. Giggster: the SMS proxy is an acceptable door. Contact values go into ☎️ Contact</p>
-<p>Points. <i>&quot;Sineads message is will not send.&quot;</i></p>
-
-<p><b>Answers found:</b></p>
-<ul>
-<li>- <b>The queue &quot;hole&quot; is already closed by canon.</b> The queue&#x27;s <code>Email</code>/<code>Phone</code> are</li>
-</ul>
-<p>rollups off the Artist card; relay-addresses.md (2026-08-21) rules the newest usable</p>
-<p>relay is mirrored into the card field when no direct value exists. grokbot writes both</p>
-<p>the Contact Points row and the card field under that precedence. No queue change.</p>
-<ul>
-<li>- <b>Sinéad B. has no queue row.</b> Her text lived in Action row <code>3b47…49633</code> (Processed);</li>
-</ul>
-<p>ticket <code>3b47…3ddaf</code> closed <code>Lost</code> 2026-08-19. Nothing to set.</p>
-<ul>
-<li>- <b>Giggster texts today:</b> the SMS poller logs a <code>(Giggster) &lt;guest&gt;:</code> proxy text as an</li>
-</ul>
-<p>ordinary inbound from an unknown number; nothing files it as a contact point. None</p>
-<p>appear in the last 100 inbound texts. grokbot files it when phonecom-mcp (reads only)</p>
-<p>is attached; a deterministic poller rule is the durable fix — separate ticket.</p>
-<ul>
-<li>- <code>greeter_sweep.py:397</code> (&quot;no email relay&quot;) disagrees with canon&#x27;s 2026-08-26 Giggster</li>
-</ul>
-<p>relay correction — reconcile on the first live case, separate ticket.</p>
-
-<p><b>Delivered (v2, all under <b>assets/121-grokbot/</b>):</b></p>
-<p><code>DEFINITION-DRAFT.md</code> (blocks A–E: identity, instructions, read skill, repair skill,</p>
-<p>text-Junyan skill + Auto Review rules, routine); <code>protocol.py</code> + <code>test_protocol.py</code> —</p>
-<p><b>20 passed</b> (credential never in state; challenge stops with nothing typed; no action</p>
-<p>can type into a platform page; the only outbound is the fixed text to Junyan with no</p>
-<p>guest contact info; direct email/phone never overwritten; Tagvenue relay parsed from the</p>
-<p>mail body with its enquiry id; Giggster proxy requires all three signals); <code>RUNBOOK.md</code></p>
-<p>v2. Deleted: the v1 posting code, receipt module, Send Engine v24 proposal and its test.</p>
-<p>RUNTIMES row and Plumbing Map entry updated. Canon untouched by ruling.</p>
-
-<p><b>Acceptance now:</b> 4a Sandra read + relay filed; 4b the next held Giggster row → door</p>
-<p>filed or one text to Junyan; 4c Grace read only (close-out capability dropped).</p>
 </div></details></details></div><div class="job"><div class="jnum">#121</div><div class="jhead"><span class="emoji">🗂️</span><h4>A retried climate pass writes a duplicate Thermal Log row — key that write</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A retried climate pass writes a duplicate Thermal Log row — key that write</b></p><h2>Question</h2>
 
 <p><code>climate_sweep.thermal_log_row()</code> is an unconditional <code>POST</code> — no key, no existence</p>
@@ -1770,6 +1111,695 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Ticket 122 (window migration) and the Doorman&#x27;s A7 are the neighbours — A7 is the model to</p>
 <p>copy for &quot;sees something off, fixes it, reports it&quot;.</p>
+</div></details></details></div><div class="job"><div class="jnum">#126</div><div class="jhead"><span class="emoji">🧪</span><h4>Test the emergency line end to end</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Send test emergency texts</li><li>Watch staff actually get paged</li><li>Then retire the old backup check</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Verify the Emergency Call Line Zap end-to-end, then retire the Receptionist 15-min poll</b></p><h2>Question</h2>
+
+<p>Execute ticket 011&#x27;s banked flip checklist (HITL — Junyan texts, Claude verifies + flips):</p>
+
+<ol>
+<li>1. <b>Life-safety path test:</b> Junyan texts a life-safety keyword SMS (e.g. &quot;water leak in 509&quot;)</li>
+</ol>
+<p>from a NON-watchlist number → confirm a 📞 Staff Call Queue row appears (<code>Source</code> = webhook,</p>
+<p>life-safety note) AND the on-call note SMS arrives at 647-932-1050. This path has <b>zero</p>
+<p>verified end-to-end passes</b> since the Zap filters were tightened on 07-15 (the 01:44Z</p>
+<p>water-leak test produced no row — possibly mid-edit, possibly a broken Path A).</p>
+<ol>
+<li>2. <b>Verified-distress path test:</b> a distress keyword (&quot;locked out&quot;, &quot;code not working&quot;) from a</li>
+</ol>
+<p>number on today&#x27;s watchlist → confirm the verified-path queue row.</p>
+<ol>
+<li>3. <b>Soak:</b> a few days of clean JOB 7 §7 episode-sampling results (no wrong-path / duplicate /</li>
+</ol>
+<p>missed-fire defects in the Sweep Feedback stream).</p>
+<ol>
+<li>4. <b>Then flip:</b> retire the 15-min <code>the-receptionist</code> trigger — banner flip on the Receptionist</li>
+</ol>
+<p>library page + heartbeat roster edit. NOTE the poll is also the general quick-answer (Mode-2</p>
+<p>card) surface, which the deterministic Zap does NOT cover — before retiring, decide where</p>
+<p>quick-answer auto-sends move (stay LLM in the 2-hourly triage pass? wait for message-dispatch?).</p>
+<p>If they can&#x27;t move yet, the poll survives at a reduced cadence instead of retiring.</p>
+
+<p>Resolution records: both path tests with evidence, the soak verdict, and what happened to the</p>
+<p>poll (retired / re-cadenced / kept) + where quick-answer cards now live.</p>
+
+<h2>Progress (2026-07-17 evening, live session with Junyan)</h2>
+
+<p><b>Test 1 (life-safety, non-watchlist) = PASSED end-to-end on v20</b> (queue row 10:31 PM + on-call</p>
+<p>note SMS + no echo). Getting there surfaced and fixed five defects in the Emergency Call Line Zap:</p>
+
+<ol>
+<li>1. <b>v17 (Junyan):</b> step-3 filter required Data Type = <code>sms-message</code> (the subscription <i>tag</i>);</li>
+</ol>
+<p>payload value is <code>sms</code> → every SMS ever was filtered. Fixed to <code>contains sms</code>.</p>
+<ol>
+<li>2. <b>v17–18 (Copilot):</b> path keywords were AND&#x27;d in one rule group → no message could ever match.</li>
+</ol>
+<p>Re-grouped to OR.</p>
+<ol>
+<li>3. <b>v18 (Junyan):</b> step-8 (verified path) had a broken staleness rule — <code>Booking Date End is the</li>
+</ol>
+<p>same as Current time</code> (End usually empty; exact-time compare). Deleted; staleness is J29&#x27;s job</p>
+<p>(DB only ever holds today).</p>
+<ol>
+<li>4. <b>v19 (Claude):</b> <b>feedback loop</b> — the actuator&#x27;s note SMS to on-call (a Phone.com extension</li>
+</ol>
+<p>on the same account) re-entered the webhook, matched life-safety keywords (&quot;LIFE-SAFETY&quot;,</p>
+<p>&quot;leak&quot;), created new rows → notes → rows, ~1/min, 10:07–10:19 PM. Contained live by skipping</p>
+<p>echo rows; fixed with two step-3 guard rules: <code>Data From Id does not contain 6479321050</code> AND</p>
+<p><code>Data Message does not contain &quot;Fast-track (real-time webhook)&quot;</code>. Guard verified: post-v19</p>
+<p>note SMS produced no echo.</p>
+<ol>
+<li>5. <b>v20 (Claude):</b> Notion Find still had <code>Successful if no search results = False (halt)</code> →</li>
+</ol>
+<p>life-safety from unknown numbers died at step 2 (the original 07-15/16 failure). Set to True;</p>
+<p>watchlist gating already lives in step 8&#x27;s <code>Zap Search Was Found Status = true</code>.</p>
+
+<p>Also fixed upstream red herring: Phone.com subscription 433266 is ALIVE (earlier 404s were wrong</p>
+<p>API paths — real path is <code>/v4/accounts/2679103/integrations/events/...</code>); listener 304338 intact.</p>
+
+<p><b>Late-session additions (published by Claude):</b></p>
+<ul>
+<li>- <b>v21</b> — On-call Phone on both queue-row create steps → <b>+16477733887</b> (Junyan&#x27;s cell; SMS</li>
+</ul>
+<p>stays the channel, WhatsApp dropped). Junyan&#x27;s first &quot;locked out&quot; attempt never reached</p>
+<p>Phone.com (likely sent to the wrong thread) — that&#x27;s why no response came.</p>
+<ul>
+<li>- <b>v22</b> — <b>Path B renter ack SMS</b>: verified-distress texts now get an immediate automated</li>
+</ul>
+<p>reply from the studio line (&quot;Got you — on-call staff have just been paged…&quot;), mirroring Path</p>
+<p>A&#x27;s ack (which lives in the actuator&#x27;s Send SMS, not this Zap). Step test deliberately skipped</p>
+<p>(sample would have texted a real customer); first live distress text is the real test.</p>
+
+<p><b>Still open before this ticket closes:</b></p>
+<ul>
+<li>- <b>Test 2 (verified-distress from a watchlist number)</b> — still not run: resend</li>
+</ul>
+<p>&quot;locked out, code not working 901&quot; <b>to the main studio number</b>; expect ack SMS + queue row +</p>
+<p>staff note. Junyan&#x27;s temp watchlist row expires with the 07-18 J29 rebuild — re-add before</p>
+<p>testing, or book/test as a real renter. NOTE: Junyan added a</p>
+<p>test-message filter excluding his own number from the bridge call; Test 2 may need different</p>
+<p>wording or another watchlist phone. Temp watchlist row for +16477733887 (booking date 07-17)</p>
+<p>will be archived by J29 on 07-18.</p>
+<ul>
+<li>- <b>Actuator Zap fixes (in Junyan&#x27;s draft, unpublished at session end):</b> map step-6 Update Item</li>
+</ul>
+<p>to the trigger row&#x27;s ID (draft had it HARDCODED to &quot;TEST staff call bridge&quot;); step-5 Make Call</p>
+<p><code>toNumber</code> must be E.164 <code>+16479321050</code> (dashes cause <code>callee_phone_number</code> validation halt —</p>
+<p>currently benign since Dispatch=Note-only, but breaks real Call+Note dispatches); add</p>
+<p><code>Status = Ready</code> to its step-2 filter (belt-and-braces vs the update-retrigger warning); keep</p>
+<p>&quot;Create if doesn&#x27;t exist&quot; OFF.</p>
+<ul>
+<li>- <b>Junyan&#x27;s design direction (revised late session):</b> stays SMS (WhatsApp idea dropped for now);</li>
+</ul>
+<p>destination changed to <b>Junyan&#x27;s cell +16477733887</b> — gate Zap <b>v21</b> (published by Claude)</p>
+<p>writes it as On-call Phone on both create steps. Actuator must (a) map its send-to from the</p>
+<p>row&#x27;s On-call Phone property, and (b) <b>REMOVE the test filter excluding +16477733887</b> — with</p>
+<p>the on-call number now his cell, that filter would silently kill every summon. Loop-safe (cell</p>
+<p>is external to Phone.com). ⚠️ This puts the emergency page on the phone that leaves for Brazil</p>
+<p>Jul 27 — Ela/duty-manager routing is now on the Brazil-coverage critical path.</p>
+<p>Task-usage optimization chosen: move the filter BEFORE the Notion Find (filters are free; the</p>
+<p>Find burns a task on every discarded SMS) + add a coarse keyword pre-screen.</p>
+<ul>
+<li>- Soak (§7 sampling clean for a few days) → then the Receptionist-poll decision (retire vs</li>
+</ul>
+<p>re-cadence; the poll is still the only general quick-answer surface).</p>
+<ul>
+<li>- Skipped echo rows 10:08–10:19 PM remain in the Staff Call Queue as Skipped — leave as evidence</li>
+</ul>
+<p>for the first JOB 7 §7 sampling pass.</p>
+
+<h2>State check (2026-07-18, AFK verification by Claude)</h2>
+
+<ul>
+<li>- <b>Watchlist rebuilt clean by J29 at 05:08Z</b> for 07-18: only Camila Avendano (+16475453483,</li>
+</ul>
+<p>509A 9–11 AM) and Mia Vescarelli (+15872234823, 509A 12–1:45 PM). Junyan&#x27;s temp row</p>
+<p>(+16477733887) archived as predicted → <b>Test 2 needs a fresh temp watchlist row</b> (or a real</p>
+<p>renter&#x27;s cooperation) before texting.</p>
+<ul>
+<li>- <b>Staff Call Queue confirms the 07-17 record exactly</b>: the 10:31 PM life-safety test row is</li>
+</ul>
+<p>Ready (Test 1 evidence intact), echo rows 10:08–10:19 all Skipped, and <b>no rows since</b> — no</p>
+<p>Test 2 attempt, no stray fires overnight. Note: the 10:31 row&#x27;s On-call Phone is still</p>
+<p>647-932-1050 (created pre-v21); v21&#x27;s +16477733887 mapping is not yet evidenced by any row.</p>
+<ul>
+<li>- <b>Soak = 0 days</b>: the first HEAVY-PM JOB 7 §7 episode-sampling pass over the emergency lane</li>
+</ul>
+<p>hasn&#x27;t run yet (Zap fixes landed 07-17 evening). Earliest close remains ~07-20/21 even if</p>
+<p>Test 2 passes today.</p>
+<ul>
+<li>- <b>Actuator draft</b> (row-ID mapping, E.164 toNumber, Status=Ready filter, remove the</li>
+</ul>
+<p>+16477733887 test-exclusion filter): publication not verifiable AFK — Junyan to confirm.</p>
+
+<h2>Quick-answer surface DECIDED (2026-07-18, live with Junyan)</h2>
+
+<p>Junyan&#x27;s 07:53 &quot;locked out&quot; test correctly filtered (temp watchlist row was archived by J29 —</p>
+<p>working as designed) but surfaced the design gap: no instant info reply. Ruled with Junyan:</p>
+
+<ul>
+<li>- <b>The deterministic Zap becomes the quick-answer surface</b> for distress texts — this resolves</li>
+</ul>
+<p>step 4&#x27;s open question; the Receptionist poll&#x27;s Mode-2 card duty moves here.</p>
+<ul>
+<li>- <b>Verified path</b>: queue row + staff note fire FIRST (deterministic, fail-safe), then an LLM</li>
+</ul>
+<p>step (Anthropic app, claude-opus-4-8) composes the renter reply from runtime-fetched HTR</p>
+<p>Fast-Track cards + Artist DB alarm-code lookup. HTR stays source of truth — no hardcoded</p>
+<p>bodies. Prompt rule: only use provided card text, never invent codes; no match → generic</p>
+<p>&quot;staff paged&quot; ack.</p>
+<ul>
+<li>- <b>Unverified distress</b>: pages staff via note-only SMS (no call) + honest verify-first ack.</li>
+</ul>
+<p>NO cards/codes to non-watchlist numbers (Card A rule).</p>
+<ul>
+<li>- <b>Life-safety</b>: unchanged.</li>
+<li>- Temp watchlist row re-added for +16477733887 (page 3a175032-81c4-8189-9a8b-cc4f24ebb1d2,</li>
+</ul>
+<p>booking date 07-18) — Test 2 resend now unblocked.</p>
+
+<p><b>TEST 2 PASSED (2026-07-18 10:08 AM):</b> &quot;locked out, code not working 901&quot; from +16477733887 →</p>
+<p>v22 ack SMS received + verified queue row 14:09:01Z (&quot;watchlist verified&quot; source, Ready) with</p>
+<p>On-call Phone = +16477733887 (first live proof of v21&#x27;s cell mapping). Both keyword path tests</p>
+<p>now green. Staff-note delivery to the cell depends on the actuator&#x27;s test-exclusion filter</p>
+<p>removal — confirm during the build.</p>
+
+<p><b>BUILD SESSION (2026-07-18, Claude in Junyan&#x27;s browser) — unverified path DONE in draft (v23</p>
+<p>candidate), awaiting Junyan&#x27;s review + publish:</b></p>
+
+<ul>
+<li>- Inside Path B (Verified renter distress), after the keyword conditions, added a <b>nested Paths</li>
+</ul>
+<p>split</b>: Path C = <code>Zap Search Was Found Status is true</code> (contains the existing step-10 filter →</p>
+<p>step-11 queue-row create → step-12 v22 ack, all untouched; the filter is now redundant</p>
+<p>belt-and-braces), Path D = <code>is false</code> (NEW unverified lane).</p>
+<ul>
+<li>- <b>Path D step 14</b> — Notion Create Data Source Item → Staff Call Queue: Call = &quot;UNVERIFIED</li>
+</ul>
+<p>distress {Data From Id}&quot;, Issue = {Data Message}, Source = &quot;Phone.com webhook (real-time) —</p>
+<p>UNVERIFIED (not on watchlist)&quot;, Dispatch = <b>Note only</b> (no call, per Junyan&#x27;s ruling),</p>
+<p>Status = Ready, Renter Phone = {Data From Id}, On-call Phone = +16477733887, Staff Note =</p>
+<p>UNVERIFIED warning + the message. Test skipped deliberately (would create a junk row).</p>
+<ul>
+<li>- <b>Path D step 15</b> — Phone.com Send SMS: From = Dance Annex (+16479321050), To = {Data From</li>
+</ul>
+<p>Id}, Text = honest verify-first ack (no codes; &quot;reply with the booking name…&quot;; 911 line;</p>
+<p>staff-notified). Test skipped deliberately (sample would text a real customer).</p>
+<ul>
+<li>- Path C tested green against the morning Test-2 record; Path D condition tested green.</li>
+<li>- Paths still named &quot;Path C&quot;/&quot;Path D&quot; — cosmetic rename left to Junyan if desired.</li>
+</ul>
+
+<p><b>v23 PUBLISHED by Junyan 2026-07-18 + UNVERIFIED PATH LIVE-TESTED, PASS:</b> &quot;locked out, code</p>
+<p>not working 901&quot; from +16477733887 (temp watchlist row already archived → not on watchlist) at</p>
+<p>1:52 PM → verify-first ack received on the cell + Staff Call Queue row 17:52:37Z with every</p>
+<p>field correct (UNVERIFIED title/source, Note only, Ready, On-call = cell, staff-note body).</p>
+<p>A second identical row from 14:41Z shows the lane also caught a live fire minutes after</p>
+<p>publish. Also verified: a non-emergency real SMS (&quot;Hi Ela, can you reply on Slack?&quot;) correctly</p>
+<p>matched NO path — filters behave. Staff-note SMS did NOT arrive — actuator run 1:53:40 PM was <b>Filtered</b>: its step-2 rule</p>
+<p>&quot;Renter Phone does not exactly match +16477733887&quot; (the old test-exclusion) blocked it, exactly</p>
+<p>as the design ruling predicted. Claude removed the rule in the actuator draft (filter now just</p>
+<p><code>Status = Ready</code>); Junyan to publish (v3). Actuator v2 (published by Junyan 07-17 night)</p>
+<p>carries his other draft fixes. Note: old Ready rows won&#x27;t retrigger — test the note leg with a</p>
+<p>fresh distress text after publishing.</p>
+
+<p><b>VERIFIED QUICK-ANSWER LANE (Path E) BUILT + STEP-TESTED (2026-07-18 afternoon, draft v24</p>
+<p>candidate, awaiting Junyan&#x27;s publish):</b></p>
+
+<ul>
+<li>- <b>Step 17 — Notion API Request (Beta)</b>: POST</li>
+</ul>
+<p><code>/v1/data_sources/b0c59a82-0a2b-4e96-9467-89bbd954d8b4/query</code> filtering HTR cards to</p>
+<p><code>Send Mode = Auto-send</code> (runtime fetch — HTR stays source of truth). Tested green. (Old</p>
+<p><code>/v1/databases/{id}/query</code> endpoint is retired on this connection — that was the earlier 400.)</p>
+<ul>
+<li>- <b>Step 18 — Anthropic (Claude) Send Message</b>, model Claude Opus 4.8: System prompt = compose</li>
+</ul>
+<p>one SMS from provided cards + booking info only, never invent codes, 450-char cap, fallback</p>
+<p>&quot;staff will follow up&quot; line. User Message = renter SMS + watchlist Name/Studio (step 2) + step</p>
+<p>17 cards JSON. Step test green — sample SMS was the non-emergency &quot;reply on Slack?&quot; message and</p>
+<p>Claude correctly output the no-match fallback.</p>
+<ul>
+<li>- <b>Step 19 — Phone.com Send SMS</b>: From Dance Annex +16479321050, To = {1. Data From Id}, Text =</li>
+</ul>
+<p>step 18 Response Content Text. Step test sent a real SMS to Junyan&#x27;s cell (status processing).</p>
+<ul>
+<li>- Alarm-code delivery deferred to the spawned J29 task (add Alarm Code column to the watchlist</li>
+</ul>
+<p>build so step 2&#x27;s Find returns it; then add it to the step-18 User Message).</p>
+<ul>
+<li>- Remaining: Junyan publishes (v24) → live test &quot;what are the codes 901&quot; from a</li>
+</ul>
+<p>watchlist-verified number → expect card-based reply in seconds. Also still pending: actuator</p>
+<p>v3 publish + fresh distress text to verify the staff-note leg.</p>
+
+<p><b>ALARM-CODE DELIVERY WIRED (2026-07-18 later, spawned task executed):</b></p>
+<ul>
+<li>- Notion: added &quot;Alarm Code&quot; rich_text column to the Fast-Track Watchlist DS (0038b3be…).</li>
+<li>- Repo junyanboon/desk-correspondence commit 8f4c784: <code>watchlist_build.py</code> now copies the</li>
+</ul>
+<p>matched Artist page&#x27;s Alarm Code onto each watchlist row (alarm_code_of helper; wl_props;</p>
+<p>diff check includes the code). Next scheduled 30-min Action run populates today&#x27;s rows</p>
+<p>(manual gh dispatch was blocked by the session&#x27;s permission classifier — cron covers it).</p>
+<ul>
+<li>- Zap v24 was published by Junyan mid-session (v23 + Path E quick-answer lane, no alarm code).</li>
+<li>- New draft (v25 candidate): step 18 User Message gains &quot;Personal alarm code for this renter</li>
+</ul>
+<p>(from today&#x27;s watchlist; empty means none on file): {2. Properties Alarm Code}&quot;; System</p>
+<p>prompt rule (2) now says use EXACTLY the provided code, never invent; if empty say a staff</p>
+<p>member will text it — the old &quot;check your check-in text&quot; fallback wording is removed.</p>
+<p>Step 18 retested green (sample = non-emergency SMS → correct no-match fallback).</p>
+<ul>
+<li>- Temp watchlist row for +16477733887 re-created with test Alarm Code &quot;7734#&quot; (page</li>
+</ul>
+<p>3a175032-81c4-8158-8803-d878948dc825) to surface the field in Zapier; J29 will archive it</p>
+<p>on its next rebuild — re-add just before any live test.</p>
+<ul>
+<li>- Remaining: Junyan publishes v25, then live-test &quot;what are the codes 901&quot; from a</li>
+</ul>
+<p>watchlist number with a code set — expect the actual code back in seconds.</p>
+
+<p><b>ALARM-CODE QUICK-ANSWER LIVE-TESTED, PASS (2026-07-18 4:48 PM):</b> v25 published by Claude</p>
+<p>(with Junyan&#x27;s intent — he believed it already live). &quot;what are the codes for 901?&quot; from</p>
+<p>+16477733887 with a fresh temp watchlist row (code 7734#) → reply in seconds: &quot;Hi Junyan, here</p>
+<p>are your codes: Door: 5123 / Alarm: 7734#&quot; — card facts + watchlist alarm code, no invented</p>
+<p>data. Zap run 4:48:27 PM Successful.</p>
+<ul>
+<li>- Earlier 4:37 PM test explained: J29&#x27;s 4:02 PM rebuild had archived the temp row (working as</li>
+</ul>
+<p>designed) → Find not found → composed without booking info (v24 wording). LESSON: manual test</p>
+<p>rows die at every :00/:30 rebuild — create immediately before texting.</p>
+<ul>
+<li>- J29 4:02 PM run confirmed the new script live: Mia (7612) and Camila (4822) real alarm codes</li>
+</ul>
+<p>now on the watchlist. Real renters are covered automatically.</p>
+<ul>
+<li>- Junyan&#x27;s intermediate 2nd test produced NO Zap run at all (nothing in history, all statuses)</li>
+</ul>
+<p>— cause unknown (suspected wrong thread); 3rd test fired normally, so the pipe is healthy.</p>
+<ul>
+<li>- NOTE: quick-answer texts (Path E) do NOT create a queue row / staff note — only distress</li>
+</ul>
+<p>keywords (Path B→C) page staff. Staff-note leg (actuator v3, test-exclusion removed) still</p>
+<p>needs its live test: a &quot;locked out&quot; distress text from a watchlist number.</p>
+<ul>
+<li>- Zapier plan task limit reached (pay-per-task overage now active) — further tests cost money.</li>
+</ul>
+
+<p><b>v26 PUBLISHED (2026-07-18 evening) — ACTUATOR RETIRED, PATHS MERGED (Junyan&#x27;s rulings):</b></p>
+<ul>
+<li>- <b>Actuator Zap (370740805) turned OFF.</b> Staff paging now lives INSIDE the Emergency Zap as</li>
+</ul>
+<p>direct Phone.com Send SMS steps (faster — no Notion polling lag — and 1 task instead of 3):</p>
+<p>Path A step 7 &quot;LIFE-SAFETY PAGE…&quot;, Path C step 13 (repurposed from the v22 renter ack) &quot;STAFF</p>
+<p>PAGE - verified renter distress… name/studio/phone/message&quot;, Path D step 16 &quot;STAFF PAGE -</p>
+<p>UNVERIFIED distress…&quot;. All to +16477733887, all embed &quot;Fast-track (real-time webhook)&quot; for</p>
+<p>the echo guard. Queue rows remain as audit records only. Slack DM channel = future add.</p>
+<ul>
+<li>- <b>Path C ≡ Path E merged conceptually</b>: Path E&#x27;s entry condition widened to just</li>
+</ul>
+<p><code>Zap Search Was Found Status = true</code> — EVERY verified-renter message now gets the Claude</p>
+<p>compose (card applies → card reply with codes; else universal &quot;staff will follow up&quot; reply).</p>
+<p>Distress keywords (Path B→C) survive only as the deterministic staff-page trigger.</p>
+<p>Consequence: verified distress texts get staff page + queue row + LLM reply (no more generic</p>
+<p>ack); ordinary verified chatter now gets the universal reply too.</p>
+<ul>
+<li>- Copilot (Zapier) executed the three staff-SMS edits after manual field-mapping proved flaky;</li>
+</ul>
+<p>all mappings verified as real field pills (not literal text) before publish. New-step tests</p>
+<p>skipped deliberately (overage billing); first live distress text is the real test.</p>
+<ul>
+<li>- Also: the &quot;#&quot; in the test alarm code was Claude&#x27;s made-up temp-row value, not system behavior</li>
+</ul>
+<p>— real Artist DB codes (Mia 7612, Camila 4822) have no #.</p>
+
+<p><b>v27 PUBLISHED (2026-07-18 ~10 PM):</b> Slack DM paging (@junyan.boon) added after each staff-page</p>
+<p>SMS in Paths A/C/D (Slack connected in Zapier by Junyan); Path E prompt rule 4 now outputs</p>
+<p>NO_REPLY for chatter (small talk/thanks/confirmations) and a step-24 filter kills the send —</p>
+<p>verified-renter chatter gets silence, per Junyan&#x27;s ruling. Slack steps not yet live-tested</p>
+<p>(⚠️ steps 8/19 Copilot-configured — verify tokens render on first live DM). Remaining live</p>
+<p>battery + all session state handed off to <b>HANDOFF-emergency-line-testing.md</b> (workspace</p>
+<p>root) — testing continues in a fresh session.</p>
+
+<p><b>v27 LIVE BATTERY COMPLETE — ALL FOUR TESTS PASS (2026-07-18 ~9:50–10:40 PM, live with</p>
+<p>Junyan; every run verified in Zap history by Claude):</b></p>
+
+<ol>
+<li>1. <b>Verified distress</b> (9:50:31 PM, temp row live): Path B→C queue row + staff SMS + <b>Slack</li>
+</ol>
+<p>DM step 15 sent, real values</b> (&quot;STAFF PAGE - verified renter distress… Junyan Boon (TEST) /</p>
+<p>901 / +16477733887 / locked out…&quot;); Path E delivered Door 5123 / Alarm 7734 (card + watchlist</p>
+<p>code, no invented data). Cosmetic: step 15&#x27;s DM body lacks &quot; / &quot; separators between values —</p>
+<p>optional 30-second fix.</p>
+<ol>
+<li>2. <b>Chatter silence</b> (9:51:47 PM): Path E ran, Claude output exactly <code>NO_REPLY</code>, <b>step-24</li>
+</ol>
+<p>filter &quot;successfully stopped your run&quot;</b>, step 25 never attempted — silence proven by the</p>
+<p>run, not assumed.</p>
+<ol>
+<li>3. <b>Life-safety</b> (10:02:20 PM): Path A queue row + staff SMS + <b>Slack DM step 8 sent, real</li>
+</ol>
+<p>values</b> (⚠️ Copilot-token risk cleared). Wrinkle: the 10:00 PM J29 rebuild lagged, so step 2</p>
+<p>still FOUND the temp row → Path E also ran and sent a contextual reply (&quot;send a photo of the</p>
+<p>leak&quot;) — correct v27 behavior for a <i>verified</i> sender; the unknown-number life-safety variant</p>
+<p>rests on the 07-17 v20 proof (v27 didn&#x27;t touch step 2).</p>
+<ol>
+<li>4. <b>Unverified distress (bonus, closes the step-19 gap)</b> (10:34:03 PM, rows archived by the</li>
+</ol>
+<p>10:30 rebuild): Path B→D queue row + UNVERIFIED staff SMS + <b>Slack DM step 19 sent, real</p>
+<p>values</b> + verify-first ack, no codes. Both Copilot-configured Slack steps (8, 19) now</p>
+<p>live-proven.</p>
+
+<p>Bonus evidence from real traffic the same hour: two texts from a real customer (+1416…7894 —</p>
+<p>&quot;Everything was great!&quot; and a tapback) matched NO path — correct silence for non-watchlist</p>
+<p>non-emergency chatter.</p>
+
+<p>Anomaly to watch: the 10:00 PM J29 rebuild did not archive the temp rows (3 stale test rows</p>
+<p>were live at 10:15 PM; the 10:30 run cleared them) — GitHub Actions cron drift, not a code</p>
+<p>bug, but manual test rows can outlive their :00/:30 death slot.</p>
+
+<p><b>Remaining before close:</b> soak — a few clean HEAVY-PM JOB 7 §7 sampling days (earliest</p>
+<p>~07-20/21) → then the Receptionist 15-min poll decision. The quick-answer half of that decision</p>
+<p>is already ruled (Path E is the quick-answer surface); what&#x27;s left is confirming nothing in §7</p>
+<p>regresses, then retiring or re-cadencing the poll.</p>
+
+<p><b>FIRST SOAK DEFECT + v28 FIX (2026-07-19 evening, live with Junyan):</b> David Diep (verified,</p>
+<p>509B) texted 3 messages at 5:23 PM asking to swap rooms; Path E replied 3 times — one generic</p>
+<p>fallback (defensible), one <b>reasoning leak</b> (model prefixed &quot;No card addresses a renter not</p>
+<p>seeing their bookings…&quot; to the fallback and the whole thing was SMS&#x27;d), one <b>wrong card</b></p>
+<p>(&quot;that room is cooler&quot; → thermostat instructions). Investigation found the bigger root cause:</p>
+<p><b>step 22&#x27;s Notion card fetch was silently sending NO request body</b> (Zapier&#x27;s Notion API</p>
+<p>Request (Beta) drops the POST body unless a <code>Content-Type: application/json</code> header is set —</p>
+<p>proven by a bogus-property body returning 200) — so ALL 59 HTR cards including Needs-review</p>
+<p>went to Claude on every verified message, ~230K chars/run. That&#x27;s also what <b>drained the</p>
+<p>Anthropic API credits</b> ($6.32 → cap in one day; Junyan topping up). <b>v28 published</p>
+<p>(2026-07-19, by Claude with Junyan&#x27;s approval):</b> (a) step-23 System prompt rebuilt with a</p>
+<p>hard OUTPUT CONTRACT (SMS body or exact NO_REPLY, never commentary) + strict card-match rule</p>
+<p>(shared keyword ≠ match; unsure → fallback); (b) step-22 Content-Type header — filter verified</p>
+<p>working (0 Needs-review in test output; 14 Auto-send cards, ~5× smaller prompt). Defect filed</p>
+<p>in Sweep Feedback (3a375032…8664, Attributed defect / J03 Quick-answer, Status=Applied).</p>
+<p>Design gap banked for 018: Path E has no thread context — multi-text thoughts get per-message</p>
+<p>replies. Soak clock effectively restarts at v28. Editor gotcha learned: script-injected field</p>
+<p>edits (execCommand) do NOT persist in Zapier — type through the real keyboard.</p>
+
+<p><b>Original note (superseded): the verified-path LLM compose</b> — fetch HTR Fast-Track cards +</p>
+<p>Artist DB alarm-code lookup + Anthropic step (claude-opus-4-8) between step 11 and step 12,</p>
+<p>rewiring step 12&#x27;s ack body to the composed reply. <b>Blocked on an Anthropic API key in</p>
+<p>Zapier&#x27;s Anthropic connection</b> — Junyan to confirm whether one exists.</p>
+
+
+<h2>Renumbered 026 → 126 (2026-09-07)</h2>
+
+<p>Two tickets shared the number <b>026</b> in this directory. Both 026 tickets were created in the same bulk import (2026-08-19 09:12, identical timestamps) and each had exactly one reference — <code>plain_language.py</code>, on both sides. <b>Nothing separated them</b>, so the tiebreak was arbitrary and is recorded here rather than dressed up as a reason: this file moved, <b>026 — the decision-capture loop</b> kept the number.</p>
+
+<p>Renumbered as part of a sweep after a duplicate number cost real time on 2026-09-07: a card</p>
+<p>reading <b>#122</b> about expiring door codes led an agent to open the <i>other</i> 122 — a logging</p>
+<p>fix — and work the wrong ticket. Six collisions were cleared in the same pass: 026, 076, 087,</p>
+<p>106, 121 and the original 122. Every reference across <code>wayfinder/</code> and <code>day-sheet/</code> was</p>
+<p>rewritten, and a link check now reports <b>0 broken links</b> in this directory.</p>
+
+<p>The rule used throughout: <b>the ticket with fewer external references moves, even when it</p>
+<p>holds the number first.</b> A number is a label; a live document pointing at the wrong ticket is</p>
+<p>a fault.</p>
+</div></details></details></div><div class="job"><div class="jnum">#130</div><div class="jhead"><span class="emoji">🦾</span><h4>Give the desk a pair of hands inside Giggster and Tagvenue</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Two booking websites hold conversations we cannot finish. Giggster has no way to send a reply from the desk. Tagvenue forwards messages but blanks out every link</li><li>So a customer&#x27;s reply has sat unsent for 29 days, and a 30-person weekly lead sent us a link twice that nobody has been able to open</li><li>The robot kept asking a person to go log in and look. That is not a task, it is a missing tool</li><li>This job builds the tool: something that can log in, read the whole thread including links, post a reply a human already approved, and close out finished enquiries</li><li>Hard lines: it never sees a password, it never writes its own messages, and it stops dead if the website asks it to prove it is human</li><li>Accepting bookings stays with a person, because accepting charges the customer&#x27;s card</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the platform messenger agent (grokbot) — the desk&#x27;s hands inside Giggster and Tagvenue</b></p><h2>Question</h2>
+
+<p>Two platforms hold conversations the desk cannot finish:</p>
+
+<ul>
+<li>- <b>Giggster has no email relay.</b> A reply composed at the desk exists as a Message</li>
+</ul>
+<p>Queue row and can never leave. Sinéad B.&#x27;s reply has been held at <code>Pending Review</code></p>
+<p>since <b>2026-08-06</b> — 29 days on 2026-09-04.</p>
+<ul>
+<li>- <b>Tagvenue relays inbound mail but strips every link</b> to the literal text</li>
+</ul>
+<p><code>[Visit messenger to view the link]</code>. Sandra Lewis (30-guest weekly-slot lead, enquiry</p>
+<p>u2999101) sent her link twice. Nobody has seen it. Her ticket sits at <code>Gate: Artist</code></p>
+<p>on the assumption we are waiting on her.</p>
+
+<p>The loop&#x27;s response to this gap was to propose &quot;open the dashboard and look&quot; as a</p>
+<p>Next Action row — four times (rows <code>3c17503281c481d899e9e5f2f9775303</code>,</p>
+<p><code>3c17503281c4816498f8c4823f387f55</code>, <code>3c37503281c481a8935bde2c4c1531d0</code>,</p>
+<p><code>3ce7503281c481259e5bc4ac7b1060bb</code>). A proposal nobody can execute is not an action.</p>
+<p>It is a capability gap wearing a task&#x27;s clothes.</p>
+
+<p>Junyan&#x27;s ruling (2026-09-04): <b>fix the platform gap with an agent that can drive the</p>
+<p>platform UI.</b> Working name: <b>grokbot</b>. The runtime is Junyan&#x27;s call — the first turn</p>
+<p>of the build session confirms what &quot;grokbot&quot; means (an xAI Grok-backed agent, a</p>
+<p>browser-driving Claude lane, or something else) before anything is written. Nothing</p>
+<p>in this ticket depends on which; the job is the same.</p>
+
+<h2>What it must do</h2>
+
+<p>Four capabilities, in priority order. Each is a read or a write against the platform&#x27;s</p>
+<p>own web UI, because neither platform has an API surface the desk can reach.</p>
+
+<ol>
+<li>1. <b>Read a messenger thread in full</b>, links included. Tagvenue&#x27;s stripped links are</li>
+</ol>
+<p>the first target. Output goes onto the Sales ticket as a dated block quote — the</p>
+<p>link, its destination, and what it contains. Never into a Next Action row.</p>
+<ol>
+<li>2. <b>Post a reply that a human already approved.</b> The body comes ONLY from a</li>
+</ol>
+<p>📤 Message Queue row at <code>Ready to Send</code> with <code>Channel = Platform - Giggster</code> /</p>
+<p><code>Platform - Tagvenue</code>. The agent never composes. It reads the approved text, posts</p>
+<p>it verbatim, reads the thread back to confirm it landed, then sets the row <code>Sent</code></p>
+<p>with a receipt (thread URL + timestamp). A post that cannot be read back is not</p>
+<p>sent — leave the row and file a Run Error.</p>
+<ol>
+<li>3. <b>Close out an enquiry on the platform</b> once the booking is delivered (Grace Lim&#x27;s</li>
+</ol>
+<p>shape — booked, paid, delivered, enquiry still open). Read-back is the enquiry&#x27;s</p>
+<p>state on the platform after the action.</p>
+<ol>
+<li>4. <b>Accept or decline a booking request</b> — LATER, and gated. Accepting charges the</li>
+</ol>
+<p>guest&#x27;s card. This stays human-only until Junyan rules otherwise in writing, and the</p>
+<p>ticket that builds it is a separate one.</p>
+
+<h2>Hard constraints — these bind the build</h2>
+
+<ul>
+<li>- <b>CREDENTIALS NEVER PASS THROUGH THE AGENT.</b> Junyan&#x27;s workspace <code>CLAUDE.md</code> forbids</li>
+</ul>
+<p>entering passwords into any field. The only permitted path is the password manager</p>
+<p>flow (1Password via <code>request_credentials</code> / <code>autofill_credential</code>) where the agent</p>
+<p>never sees the value. If the chosen runtime cannot do that, the build stops and</p>
+<p>says so. Do not store a session cookie in Secret Manager as a workaround without</p>
+<p>Junyan&#x27;s explicit ruling — the Skedda cookie precedent exists but was ruled</p>
+<p>separately.</p>
+<ul>
+<li>- <b>Never compose, never send unapproved.</b> Capability 2 posts approved text only. The</li>
+</ul>
+<p>Message Queue at <code>Pending Review → Ready to Send</code> is the ONLY review surface for</p>
+<p>outbound (Junyan&#x27;s ruling, 2026-09-04: &quot;approve this message should never be sent</p>
+<p>anywhere other than the message queue&quot;).</p>
+<ul>
+<li>- <b>No off-platform contact info on platform sends</b> — no URL, phone, email, or</li>
+</ul>
+<p>address in any Giggster or Tagvenue message, signature included. An access code</p>
+<p>NEVER travels a platform relay (<code>CLAUDE.md</code> hard rules).</p>
+<ul>
+<li>- <b>Never bypass a CAPTCHA or bot check.</b> If the platform challenges, stop and hand</li>
+</ul>
+<p>to a human.</p>
+<ul>
+<li>- <b>Every action reads back.</b> The pattern is the loop&#x27;s VERIFY beat: the writer and</li>
+</ul>
+<p>the witness are the same read of the platform after the write, and a read that</p>
+<p>disagrees files a mismatch, never a success.</p>
+<ul>
+<li>- <b>Junyan runs deploys</b> if this lands on Cloud Run. Agent gcloud is blocked.</li>
+</ul>
+
+<h2>What already exists — do not rebuild</h2>
+
+<ul>
+<li>- The Message Queue schema, <code>Channel</code> values, <code>Ready to Send</code> → <code>Sent</code> flow, and the</li>
+</ul>
+<p>receipt convention (<code>phonecom:&lt;id&gt;</code> for SMS) — extend the receipt shape for</p>
+<p>platforms, do not invent a parallel queue.</p>
+<ul>
+<li>- <code>send_verifier.py</code> releases FBS auto-send rows under guards. Platform rows are NOT</li>
+</ul>
+<p>in its carve-out and must not be added without a ruling.</p>
+<ul>
+<li>- The Sales ticket <code>Current Block</code> / SOP-step checklist is where a platform read</li>
+</ul>
+<p>lands. Read <code>♟️ Platform — Instant Book or Booking Request</code> SOP</p>
+<p>(<code>3617503281c480de8176c73d80aba61e</code>) for the exact step names.</p>
+<ul>
+<li>- Artist pages carry the per-message Tagvenue relays. The agent reads them, never</li>
+</ul>
+<p>writes contact info from a platform page into the Artist DB without dedup.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Sandra Lewis&#x27;s link is read and its contents are on ticket</li>
+</ul>
+<p><code>3c97503281c481d7b8bafafc01fee2ff</code> as a dated block. That is the first proof.</p>
+<ul>
+<li>- Sinéad B.&#x27;s held reply (Message Queue row per Action row</li>
+</ul>
+<p><code>3b47503281c48179873ae0dd93f49633</code>) goes out through the agent from <code>Ready to Send</code>,</p>
+<p>is read back in the Giggster thread, and the row reads <code>Sent</code> with a thread receipt.</p>
+<p><b>Junyan flips it to <code>Ready to Send</code> — the agent does not.</b></p>
+<ul>
+<li>- Grace Lim&#x27;s Tagvenue enquiry (Mon 2026-08-10 15:00, Studio 901) is closed on the</li>
+</ul>
+<p>platform and the outcome is on ticket <code>3b57503281c48105a8c3c4e6beb8783f</code>.</p>
+<ul>
+<li>- A test where credentials are requested proves the agent never receives the value.</li>
+<li>- A test where the platform returns a challenge proves the agent stops.</li>
+<li>- RUNTIMES.md row, Run Monitor row if it runs on a schedule, Plumbing Map entry, and</li>
+</ul>
+<p>a Limits register entry that REPLACES the &quot;cannot read platform messenger&quot; limit</p>
+<p>with the tested capability and its date.</p>
+
+<h2>Seam</h2>
+
+<p>This ticket owns the platform hands. It does not own who decides what to send</p>
+<p>(Message Queue + human), nor the Sales SOP steps that call for a platform read. Those</p>
+<p>stay where they are and call this agent. The four dead Next Action rows above close</p>
+<p><code>Won&#x27;t Do</code> under ticket 053&#x27;s replan once this lands — do not close them here.</p>
+
+<h2>Progress (2026-09-04) — DEFINED and TESTED as code; NOT RUN; canon held back by ruling</h2>
+
+<p><b>Runtime confirmed (Junyan, first turn):</b> &quot;grokbot&quot; is an <b>xAI Grok Bot</b> agent. Junyan</p>
+<p>creates it, pastes the definition, and signs in to the platforms himself through Grok</p>
+<p>Bot&#x27;s Agent Computer takeover. That is how the credential constraint is met: there is no</p>
+<p>path by which a password, code or cookie reaches the agent, and the definition makes any</p>
+<p>sign-in form or challenge a hard stop. Junyan: <i>&quot;You don&#x27;t need this&quot;</i> to the 1Password</p>
+<p>question — the password-manager door is not used because no agent in this design types</p>
+<p>a credential at all. Second ruling mid-build: *&quot;Don&#x27;t update the canon page, we need to</p>
+<p>test it first.&quot;* Honoured — nothing was written to <code>dc-canon</code>.</p>
+
+<p><b>Shape (Junyan, mid-build):</b> the Bot polls the Message Queue; a <code>Ready to Send</code> row on</p>
+<p>a platform Channel is posted directly in that platform&#x27;s messenger. Written as skill D.</p>
+
+<p><b>Delivered, all under <b>assets/121-grokbot/</b>:</b></p>
+<ul>
+<li>- <code>DEFINITION-DRAFT.md</code> — paste blocks A–F (identity, instructions, three skills, Auto</li>
+</ul>
+<p>Review rules) and the routine. Harness-neutral in substance; Grok-Bot-shaped in form.</p>
+<ul>
+<li>- <code>protocol.py</code>, <code>guard.py</code>, <code>receipt.py</code>, <code>definition_check.py</code> + tests — <b>29 passed</b>.</li>
+</ul>
+<p>Proofs the ticket asked for: a login form / OTP / CAPTCHA / bot challenge stops the run</p>
+<p>with nothing typed (<code>test_protocol.py</code>); the agent&#x27;s state has no field that could hold</p>
+<p>a credential; the definition text carries every hard rule and no credential-shaped</p>
+<p>string (<code>test_definition.py</code>). Also: <code>Pending Review</code> never posts; an approved body</p>
+<p>carrying a phone / URL / address / access code never posts; read-back mismatch never</p>
+<p>earns a receipt; an identical message already in the thread sets <code>Sent</code> without posting.</p>
+<ul>
+<li>- <code>RUNBOOK.md</code> — setup, the two live rehearsals (R1 credential, R2 challenge), the three</li>
+</ul>
+<p>acceptance runs, go-live, and the paperwork that waits for a pass.</p>
+<ul>
+<li>- <code>send-engine/test_foreign_lane.js</code> + <code>send-engine/proposed-v24-platform-lanes.md</code> —</li>
+</ul>
+<p>the Send Engine change the two new Channel options require. <b>Not applied</b>; the test</p>
+<p>fails on the two new values on purpose until Junyan applies and <code>clasp push</code>es.</p>
+<ul>
+<li>- <code>RUNTIMES.md</code> row (DRAFT, not yet run). Plumbing Map entry <code>2026-09-05 03:1xZ</code>.</li>
+<li>- Receipt shape ruled here: <code>giggster:&lt;conversation-uuid&gt;@&lt;ISO Toronto&gt;</code> /</li>
+</ul>
+<p><code>tagvenue:u&lt;enquiry-id&gt;@&lt;ISO Toronto&gt;</code>, optional <code> already-present</code>.</p>
+
+<p><b>Findings that change the acceptance list:</b></p>
+<ul>
+<li>- <b>Sandra Lewis:</b> her link was already read by Junyan in the messenger on 2026-09-02 —</li>
+</ul>
+<p><b>meditateintoronto.org</b>, Kadampa Meditation Centre Canada (&quot;KMC Canada&quot;). Her</p>
+<p>2026-08-31 reply says her organisation needs time. <b>The desk is not holding her up</b>;</p>
+<p><code>Revisit After = 2026-09-16</code> stands. The grokbot read (4a) is still the first live proof,</p>
+<p>and the block is paste-ready in the runbook if the Bot&#x27;s Notion write fails.</p>
+<ul>
+<li>- <b>Sinéad B.:</b> the held reply answers questions about a <b>2026-08-22</b> booking. The date</li>
+</ul>
+<p>has passed; posting it now fails the temporal check. Recommendation: <code>Will Not Send</code>,</p>
+<p>and prove the Giggster send on a current row Junyan approves. The Action row that</p>
+<p>carried her text is already <code>Processed</code>; her studio (509A vs 901) was never settled.</p>
+<ul>
+<li>- <b>Grace Lim:</b> her Tagvenue enquiry expired <b>2026-08-12 04:13</b> by the platform&#x27;s own</li>
+</ul>
+<p>rule. The close-out&#x27;s expected outcome is <i>state: expired, action: none</i>, recorded on</p>
+<p>the ticket. Next Action row <code>3c37503281c481a8935bde2c4c1531d0</code> untouched (053).</p>
+<ul>
+<li>- <b>Limits register:</b> there is no existing &quot;cannot read platform messenger&quot; row to</li>
+</ul>
+<p>replace — the claim lived in prose and in the four Next Action rows. A new row (text in</p>
+<p>the runbook § 6) goes in when the acceptance sheet has a date to cite.</p>
+
+<p><b>Not done, and why:</b> no Notion write (the harness classifier blocked this session&#x27;s</p>
+<p>Notion API calls after two reads — Sandra&#x27;s block and the register row are paste-ready);</p>
+<p>no Grok Bot run (Junyan&#x27;s account); no canon page (ruling); no Run Monitor row (added the</p>
+<p>day the routine goes on); Send Engine v24 not applied (test-first; the first send does not</p>
+<p>need it). The four dead Next Action rows are left for 053.</p>
+
+<p><b>Next:</b> Junyan works RUNBOOK § 1–4. A passing sheet moves the draft into canon (§ 6) and</p>
+<p>closes this ticket.</p>
+
+<h2>Progress (2026-09-05) — RE-SCOPED by Junyan: read and repair, never send</h2>
+
+<p><b>Rulings (Junyan, 2026-09-05):</b> grokbot is a standalone, bolted-on agent. *&quot;Its job is</p>
+<p>to see the messages and then fix notion message queue and artist database so that we</p>
+<p>can send message properly. It won&#x27;t send any messages.&quot;* Then, narrowed: it fixes only</p>
+<p>the Artist page&#x27;s email/phone (and the contact db); it never touches a queue row, so</p>
+<p>nothing sends by side effect. The text to Junyan goes as one queue SMS row to his own</p>
+<p>card. Giggster: the SMS proxy is an acceptable door. Contact values go into ☎️ Contact</p>
+<p>Points. <i>&quot;Sineads message is will not send.&quot;</i></p>
+
+<p><b>Answers found:</b></p>
+<ul>
+<li>- <b>The queue &quot;hole&quot; is already closed by canon.</b> The queue&#x27;s <code>Email</code>/<code>Phone</code> are</li>
+</ul>
+<p>rollups off the Artist card; relay-addresses.md (2026-08-21) rules the newest usable</p>
+<p>relay is mirrored into the card field when no direct value exists. grokbot writes both</p>
+<p>the Contact Points row and the card field under that precedence. No queue change.</p>
+<ul>
+<li>- <b>Sinéad B. has no queue row.</b> Her text lived in Action row <code>3b47…49633</code> (Processed);</li>
+</ul>
+<p>ticket <code>3b47…3ddaf</code> closed <code>Lost</code> 2026-08-19. Nothing to set.</p>
+<ul>
+<li>- <b>Giggster texts today:</b> the SMS poller logs a <code>(Giggster) &lt;guest&gt;:</code> proxy text as an</li>
+</ul>
+<p>ordinary inbound from an unknown number; nothing files it as a contact point. None</p>
+<p>appear in the last 100 inbound texts. grokbot files it when phonecom-mcp (reads only)</p>
+<p>is attached; a deterministic poller rule is the durable fix — separate ticket.</p>
+<ul>
+<li>- <code>greeter_sweep.py:397</code> (&quot;no email relay&quot;) disagrees with canon&#x27;s 2026-08-26 Giggster</li>
+</ul>
+<p>relay correction — reconcile on the first live case, separate ticket.</p>
+
+<p><b>Delivered (v2, all under <b>assets/121-grokbot/</b>):</b></p>
+<p><code>DEFINITION-DRAFT.md</code> (blocks A–E: identity, instructions, read skill, repair skill,</p>
+<p>text-Junyan skill + Auto Review rules, routine); <code>protocol.py</code> + <code>test_protocol.py</code> —</p>
+<p><b>20 passed</b> (credential never in state; challenge stops with nothing typed; no action</p>
+<p>can type into a platform page; the only outbound is the fixed text to Junyan with no</p>
+<p>guest contact info; direct email/phone never overwritten; Tagvenue relay parsed from the</p>
+<p>mail body with its enquiry id; Giggster proxy requires all three signals); <code>RUNBOOK.md</code></p>
+<p>v2. Deleted: the v1 posting code, receipt module, Send Engine v24 proposal and its test.</p>
+<p>RUNTIMES row and Plumbing Map entry updated. Canon untouched by ruling.</p>
+
+<p><b>Acceptance now:</b> 4a Sandra read + relay filed; 4b the next held Giggster row → door</p>
+<p>filed or one text to Junyan; 4c Grace read only (close-out capability dropped).</p>
+
+
+<h2>Renumbered 121 → 130 (2026-09-07)</h2>
+
+<p>Two tickets shared the number <b>121</b> in this directory. This ticket had <b>one</b> reference against three for <b>121 — thermal log dedupe</b>, and was filed a day later (2026-09-04 21:49 against 2026-09-03 23:31).</p>
+
+<p>Renumbered as part of a sweep after a duplicate number cost real time on 2026-09-07: a card</p>
+<p>reading <b>#122</b> about expiring door codes led an agent to open the <i>other</i> 122 — a logging</p>
+<p>fix — and work the wrong ticket. Six collisions were cleared in the same pass: 026, 076, 087,</p>
+<p>106, 121 and the original 122. Every reference across <code>wayfinder/</code> and <code>day-sheet/</code> was</p>
+<p>rewritten, and a link check now reports <b>0 broken links</b> in this directory.</p>
+
+<p>The rule used throughout: <b>the ticket with fewer external references moves, even when it</p>
+<p>holds the number first.</b> A number is a label; a live document pointing at the wrong ticket is</p>
+<p>a fault.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">37</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -3033,52 +3063,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><code>ava_staff_unavailable</code> rows. Fold the build into 055 lane 3; this ticket keeps the acceptance</p>
 <p>criteria, now tightened: <b>a claim appears on the calendar within a minute and on the FBS Monitor</p>
 <p>within one rebuild cycle</b>, observed live on a real claim.</p>
-</div></details></details></div><div class="job"><div class="jnum">#076</div><div class="jhead"><span class="emoji">🗂️</span><h4>A missing MIRRORS row takes the whole ledger pipeline down — the canon check is a full-run gate</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A missing MIRRORS row takes the whole ledger pipeline down — the canon check is a full-run gate</b></p><h2>Question</h2>
-
-<p>Graduated from <b>066</b>. Twice now, a <b>content gap in canon has</p>
-<p>failed an entire <code>watchlist-refresh</code> run</b>:</p>
-
-<ul>
-<li>- 2026-08-06 — <code>library/the-loop.md</code> had no MIRRORS row (found by <b>062</b>, fixed <code>136896ba</code>).</li>
-<li>- 2026-08-12 — <code>library/job-35-messaging-triage.md</code> had no MIRRORS row; four runs red across an hour.</li>
-</ul>
-
-<p>The mechanism is structural, not accidental. <code>Canon completeness check</code> runs as a step inside</p>
-<p>the same job as the ledger pollers, so <code>exit 1</code> on a <i>documentation bookkeeping</i> problem marks</p>
-<p>the run failed — and while the pollers themselves ran before it and their pushes landed, the</p>
-<p>run&#x27;s red status is what a human or a monitor reads. A missing MIRRORS row is a real defect</p>
-<p>worth surfacing, but it is not a reason to report &quot;the ledger tick failed&quot;.</p>
-
-<p>Decide the shape:</p>
-
-<ol>
-<li>1. <b>Should the canon check gate the run at all</b>, or report separately (its own workflow, its</li>
-</ol>
-<p>own Run Error key, its own cadence)? The J28 pipeline&#x27;s health and canon&#x27;s projection</p>
-<p>completeness are different questions with different owners.</p>
-<ol>
-<li>2. If it stays in the run, should it be <b>non-blocking</b> (<code>continue-on-error</code>, file its own</li>
-</ol>
-<p>distinct Run Error row) so a doc gap never masquerades as a poller failure?</p>
-<ol>
-<li>3. <b>Prevention:</b> a new <code>library/*.md</code> with no MIRRORS row is a predictable authoring slip.</li>
-</ol>
-<p>Should the mapping be enforced at write time (a pre-commit check, or the mirror row created</p>
-<p>with the file) rather than caught hours later by a red tick?</p>
-
-<p>Related, and worth settling in the same conversation: <b>a re-run overwrites a run&#x27;s visible</p>
-<p>conclusion.</b> Run <code>31858026100</code> shows <code>success</code> in <code>gh run list</code> while attempt 1 failed and</p>
-<p>fired the Run Error handler. Anything that audits fleet health by reading <code>conclusion</code> — a</p>
-<p>future invariant, a monitor, a sweep — will undercount failures unless it reads <code>run_attempt</code></p>
-<p>or the attempts endpoint. Name the rule so it lands in canon, not just in a ticket.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- A ruling on whether the canon check blocks the run, and where its failures get reported.</li>
-<li>- A named prevention point for missing MIRRORS rows (write-time vs run-time).</li>
-<li>- The re-run/<code>conclusion</code> measurement rule written into canon so audits stop undercounting.</li>
-</ul>
 </div></details></details></div><div class="job"><div class="jnum">#076</div><div class="jhead"><span class="emoji">📮</span><h4>The list can tick off a booking by itself, but never a text message</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The whole point of the new list is that it doesn&#x27;t care who did the job — it looks at the real booking and ticks it off</li><li>That works for bookings. It does not work for text messages: the proof lives in the message log, which the little sweep cannot reach from the cloud</li><li>Found the hard way — Junyan sent David Diep a text on Aug 7 at 9:42pm and the list still said &#x27;waiting&#x27; eight days later</li><li>That night made the proof for us: the same job had two steps, move the booking and text him. The booking step ticked itself off the next morning. The text step never could</li><li>Nothing was broken. The sweep looked, couldn&#x27;t see proof, and correctly refused to guess. Nothing else ever looked again</li><li>Three ways out, none obviously right: let the sweep reach the message log, or ring a bell when any step sits too long, or stop letting text steps claim a kind of proof nobody can check</li><li>Same shape as the missing thank-yous: the work was done, the notes were honest, and the finishing half was missing</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A Next Action row whose proof is a human mark can never close itself</b></p><h2>Question</h2>
 
 <p>The executor-agnostic close exists to remove the back-capture tax: VERIFY reads ground truth, so</p>
@@ -3969,7 +3953,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>So the acceptance test grows a second half: once recycling is characterised, either backfill</p>
 <p>these 11 as <code>recognition-only</code> keyed on the conversation UUID (never the number alone, per</p>
 <p>100), or record that they can never be filed and close the gap by ruling rather than by data.</p>
-</div></details></details></div><div class="job"><div class="jnum">#104</div><div class="jhead"><span class="emoji">🗂️</span><h4>104-merge-proposals-2026-08-25</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>104-merge-proposals-2026-08-25</b></p><h2>Merge Proposal Sheet — 2026-08-25</h2>
+</div></details></details></div><div class="job"><div class="jnum">#104a</div><div class="jhead"><span class="emoji">🗂️</span><h4>104a-merge-proposals-2026-08-25</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>104a-merge-proposals-2026-08-25</b></p><h2>Merge Proposal Sheet — 2026-08-25</h2>
 
 <p>The one review surface for ticket <b>104</b>. <b>Status 2026-08-25: EXECUTED.</b> All rulings below are done — 20 merges completed, duplicates deleted per Junyan&#x27;s ruling, contact points retargeted. Every row is a proposal with its evidence; Junyan rules by</p>
 <p>writing <code>MERGE</code> / <code>NOT SAME</code> / <code>HOLD</code> in the Ruling column (or telling the desk, which will</p>
@@ -4082,6 +4066,21 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Curate / Tanurina Datta), 6097 (Dina Seddon / Jon Alexander), 6820 (KHAY Karen Andrews /</p>
 <p>Vanessa Vassell), 9176 (KJ McKnight / Ya&#x27;ad Bat-Kol). These belong to the alarm-code</p>
 <p>audit (520-orphan question), not to this pass.</p>
+
+<p>---</p>
+
+<h2>Renamed <code>104-…</code> → <code>104a-…</code> (2026-09-07)</h2>
+
+<p><b>This file is not a ticket.</b> It has no frontmatter and its first line says so: it is the</p>
+<p>review surface for <b>104</b>. It was never a number collision — it was</p>
+<p>an attachment correctly named after its parent.</p>
+
+<p>It still read as a duplicate <code>#104</code> on the board, so it now carries the <code>a</code> suffix, following</p>
+<p>the <code>013b-codex-slack-read.md</code> precedent already in this directory. The association with 104</p>
+<p>is preserved, which renumbering it to 131 would have destroyed.</p>
+
+<p>Found during the 2026-09-07 duplicate-number sweep. Worth keeping: <b>a shared number prefix is</p>
+<p>not automatically a collision</b> — check whether the second file is a ticket before moving it.</p>
 </div></details></details></div><div class="job"><div class="jnum">#105</div><div class="jhead"><span class="emoji">🗂️</span><h4>Teach the send lanes to pick a door — stable-first, reply on the thread&#x27;s own relay</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Teach the send lanes to pick a door — stable-first, reply on the thread&#x27;s own relay</b></p><h2>Question</h2>
 
 <p><b>101</b> made the desk able to <b>find</b> a person by any of</p>
@@ -4120,63 +4119,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Whether the same-day lane, which owns its own sends, follows the same rule or is</li>
 </ul>
 <p>explicitly exempt until <b>089</b> dissolves that seam.</p>
-</div></details></details></div><div class="job"><div class="jnum">#106</div><div class="jhead"><span class="emoji">🗂️</span><h4>Provisioning a renter by hand mints a second card — nothing says one already exists</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Provisioning a renter by hand mints a second card — nothing says one already exists</b></p><h2>Question</h2>
-
-<p><code>alice hamman</code> had two Artist cards on 2026-08-20. The cause, read directly rather than</p>
-<p>assumed:</p>
-
-<p>| card | created | by | carried |</p>
-<p>|---|---|---|---|</p>
-<p>| <code>3c275032…d208c</code> | 03:02Z | Dance Annex Desk CLI (bot) | <code>Company</code>, <code>Product</code> |</p>
-<p>| <code>3c275032…51b98</code> | 14:25Z | <b>Junyan, by hand</b> | alarm code + user id, <code>Permanent Codes</code>, Activity note, the FBS board row, the queued How-to-Access |</p>
-
-<p>Same email, same phone, same <code>Skedda User ID</code>. <b>No lane wrote twice.</b> The desk created</p>
-<p>her card at 3am; a human created a second one eleven hours later while setting up her door</p>
-<p>code, because nothing in that path surfaces the card that already exists.</p>
-
-<p>So: what stops the next one?</p>
-
-<h2>Why it matters more than one merged card</h2>
-
-<p>It cost a real thing. Until the merge, every 30-minute sweep hit her and returned</p>
-<p><code>artist:ambiguous</code> — the sweep correctly refuses to guess between two cards — so <b>her</p>
-<p>booking could not complete on any pass</b>, for eleven hours. A hand-made duplicate is not a</p>
-<p>cosmetic tidiness problem; it stops the deterministic lane dead for that renter.</p>
-
-<p>It is also the class <b>098</b> could not see. That grill</p>
-<p>measured the <i>relay</i> duplicate class (unbounded, platform-driven) and the private-vs-group</p>
-<p>class (bounded). This is a third: <b>human-driven, and invisible to every count we took</b>,</p>
-<p>because both cards look native and share every identifier.</p>
-
-<h2>What has to be decided</h2>
-
-<ul>
-<li>- Where the check belongs. Alarm provisioning is the moment the duplicate got made, but</li>
-</ul>
-<p>the general shape is &quot;a human is about to create an Artist row&quot; — that may be one place</p>
-<p>or several.</p>
-<ul>
-<li>- What it shows. <code>find_artist</code> already answers this exactly (id → contact point → name),</li>
-</ul>
-<p>and would have returned her existing card from the email alone. The question is what</p>
-<p>surface puts that answer in front of a person mid-task without slowing the job — the</p>
-<p><b>077</b> lesson applies: a check nobody reads is not a check.</p>
-<ul>
-<li>- Whether the desk should instead <i>detect</i> the pair after the fact, on a cadence, and</li>
-</ul>
-<p>raise it — cheaper to build, but it means the sweep stays blocked for that renter until</p>
-<p>someone clears it, which is what happened here.</p>
-<ul>
-<li>- Whether this changes the <code>create_artist</code> path at all. The bot behaved correctly</li>
-</ul>
-<p>throughout; nothing about it needs fixing, and a fix aimed at the robot would miss.</p>
-
-<h2>Known count</h2>
-
-<p>Unknown, and worth measuring before designing: how many of the <b>25 duplicate-name sets</b></p>
-<p>are this class (both cards native, shared stable identifiers) rather than the relay class?</p>
-<p><b>104</b> will surface the evidence per pair — this ticket wants</p>
-<p>the split.</p>
 </div></details></details></div><div class="job"><div class="jnum">#108</div><div class="jhead"><span class="emoji">🏠</span><h4>Let the booking robot look after last-minute bookings itself</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>LIVE (deployed Aug 25) — the robot now handles last-minute bookings itself</li><li>Right now the booking robot skips anything starting today or tomorrow</li><li>It was told a second helper would handle those — that helper was never switched on</li><li>So it will stop skipping: it sets up the person, checks their door code, makes the board row, and writes the confirmation</li><li>For last-minute bookings it now sends the messages itself too (Junyan said go, Aug 25): the confirmation and the door-code message go out with no waiting — a switch exists to bring the human check back</li><li>Junyan said yes and it is deployed — a switch exists to put the old skip back if anything looks wrong</li><li>PAUSED the same evening (Aug 25, 4:47pm): in its first few hours it texted nine renters — nothing unsafe, but three regulars got the same code twice, four got first-timer instructions they did not need, and two went out after a human had said do not send</li><li>Why: the robot could only see access texts IT had tagged, so the desk&#x27;s own 141 past access messages were invisible and almost every regular looked like a newcomer</li><li>Three checks were built the same evening and are live: it must be a booking that appeared since the last look, any &#x27;do not send&#x27; for that person that day stops both messages, and the master switch</li><li>The messages are still written for you and wait — Junyan (Aug 25): he will send them himself until he is confident the wording being queued is right, and nothing is owed to the nine renters</li><li>So the pause is deliberate, not an unfinished job — what ends it is reading a few queued pairs and finding the right person, the right code, and no beginner instructions sent to a regular</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The sweep takes the same-day window, record-only — delete the deference branch</b></p><h2>Ruling this implements</h2>
 
 <p><b>107 — Instant bookings fall into the Registrar/same-day-lane deference gap</b>:</p>
@@ -4789,6 +4731,139 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <h2>Fix shape</h2>
 <p>On error: query for an existing open row with the same error signature before filing (the insurance_sweep <code>file_run_error</code> pattern — one open row per raiser); add exponential backoff on Notion 5xx/404 before the seen-mark commits.</p>
+</div></details></details></div><div class="job"><div class="jnum">#127</div><div class="jhead"><span class="emoji">🗂️</span><h4>A missing MIRRORS row takes the whole ledger pipeline down — the canon check is a full-run gate</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A missing MIRRORS row takes the whole ledger pipeline down — the canon check is a full-run gate</b></p><h2>Question</h2>
+
+<p>Graduated from <b>066</b>. Twice now, a <b>content gap in canon has</p>
+<p>failed an entire <code>watchlist-refresh</code> run</b>:</p>
+
+<ul>
+<li>- 2026-08-06 — <code>library/the-loop.md</code> had no MIRRORS row (found by <b>062</b>, fixed <code>136896ba</code>).</li>
+<li>- 2026-08-12 — <code>library/job-35-messaging-triage.md</code> had no MIRRORS row; four runs red across an hour.</li>
+</ul>
+
+<p>The mechanism is structural, not accidental. <code>Canon completeness check</code> runs as a step inside</p>
+<p>the same job as the ledger pollers, so <code>exit 1</code> on a <i>documentation bookkeeping</i> problem marks</p>
+<p>the run failed — and while the pollers themselves ran before it and their pushes landed, the</p>
+<p>run&#x27;s red status is what a human or a monitor reads. A missing MIRRORS row is a real defect</p>
+<p>worth surfacing, but it is not a reason to report &quot;the ledger tick failed&quot;.</p>
+
+<p>Decide the shape:</p>
+
+<ol>
+<li>1. <b>Should the canon check gate the run at all</b>, or report separately (its own workflow, its</li>
+</ol>
+<p>own Run Error key, its own cadence)? The J28 pipeline&#x27;s health and canon&#x27;s projection</p>
+<p>completeness are different questions with different owners.</p>
+<ol>
+<li>2. If it stays in the run, should it be <b>non-blocking</b> (<code>continue-on-error</code>, file its own</li>
+</ol>
+<p>distinct Run Error row) so a doc gap never masquerades as a poller failure?</p>
+<ol>
+<li>3. <b>Prevention:</b> a new <code>library/*.md</code> with no MIRRORS row is a predictable authoring slip.</li>
+</ol>
+<p>Should the mapping be enforced at write time (a pre-commit check, or the mirror row created</p>
+<p>with the file) rather than caught hours later by a red tick?</p>
+
+<p>Related, and worth settling in the same conversation: <b>a re-run overwrites a run&#x27;s visible</p>
+<p>conclusion.</b> Run <code>31858026100</code> shows <code>success</code> in <code>gh run list</code> while attempt 1 failed and</p>
+<p>fired the Run Error handler. Anything that audits fleet health by reading <code>conclusion</code> — a</p>
+<p>future invariant, a monitor, a sweep — will undercount failures unless it reads <code>run_attempt</code></p>
+<p>or the attempts endpoint. Name the rule so it lands in canon, not just in a ticket.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A ruling on whether the canon check blocks the run, and where its failures get reported.</li>
+<li>- A named prevention point for missing MIRRORS rows (write-time vs run-time).</li>
+<li>- The re-run/<code>conclusion</code> measurement rule written into canon so audits stop undercounting.</li>
+</ul>
+
+
+<h2>Renumbered 076 → 127 (2026-09-07)</h2>
+
+<p>Two tickets shared the number <b>076</b> in this directory. This ticket had <b>one</b> reference; <b>076 — human-mark rows never close</b> had two. The cheaper move wins.</p>
+
+<p>Renumbered as part of a sweep after a duplicate number cost real time on 2026-09-07: a card</p>
+<p>reading <b>#122</b> about expiring door codes led an agent to open the <i>other</i> 122 — a logging</p>
+<p>fix — and work the wrong ticket. Six collisions were cleared in the same pass: 026, 076, 087,</p>
+<p>106, 121 and the original 122. Every reference across <code>wayfinder/</code> and <code>day-sheet/</code> was</p>
+<p>rewritten, and a link check now reports <b>0 broken links</b> in this directory.</p>
+
+<p>The rule used throughout: <b>the ticket with fewer external references moves, even when it</p>
+<p>holds the number first.</b> A number is a label; a live document pointing at the wrong ticket is</p>
+<p>a fault.</p>
+</div></details></details></div><div class="job"><div class="jnum">#129</div><div class="jhead"><span class="emoji">🗂️</span><h4>Provisioning a renter by hand mints a second card — nothing says one already exists</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Provisioning a renter by hand mints a second card — nothing says one already exists</b></p><h2>Question</h2>
+
+<p><code>alice hamman</code> had two Artist cards on 2026-08-20. The cause, read directly rather than</p>
+<p>assumed:</p>
+
+<p>| card | created | by | carried |</p>
+<p>|---|---|---|---|</p>
+<p>| <code>3c275032…d208c</code> | 03:02Z | Dance Annex Desk CLI (bot) | <code>Company</code>, <code>Product</code> |</p>
+<p>| <code>3c275032…51b98</code> | 14:25Z | <b>Junyan, by hand</b> | alarm code + user id, <code>Permanent Codes</code>, Activity note, the FBS board row, the queued How-to-Access |</p>
+
+<p>Same email, same phone, same <code>Skedda User ID</code>. <b>No lane wrote twice.</b> The desk created</p>
+<p>her card at 3am; a human created a second one eleven hours later while setting up her door</p>
+<p>code, because nothing in that path surfaces the card that already exists.</p>
+
+<p>So: what stops the next one?</p>
+
+<h2>Why it matters more than one merged card</h2>
+
+<p>It cost a real thing. Until the merge, every 30-minute sweep hit her and returned</p>
+<p><code>artist:ambiguous</code> — the sweep correctly refuses to guess between two cards — so <b>her</p>
+<p>booking could not complete on any pass</b>, for eleven hours. A hand-made duplicate is not a</p>
+<p>cosmetic tidiness problem; it stops the deterministic lane dead for that renter.</p>
+
+<p>It is also the class <b>098</b> could not see. That grill</p>
+<p>measured the <i>relay</i> duplicate class (unbounded, platform-driven) and the private-vs-group</p>
+<p>class (bounded). This is a third: <b>human-driven, and invisible to every count we took</b>,</p>
+<p>because both cards look native and share every identifier.</p>
+
+<h2>What has to be decided</h2>
+
+<ul>
+<li>- Where the check belongs. Alarm provisioning is the moment the duplicate got made, but</li>
+</ul>
+<p>the general shape is &quot;a human is about to create an Artist row&quot; — that may be one place</p>
+<p>or several.</p>
+<ul>
+<li>- What it shows. <code>find_artist</code> already answers this exactly (id → contact point → name),</li>
+</ul>
+<p>and would have returned her existing card from the email alone. The question is what</p>
+<p>surface puts that answer in front of a person mid-task without slowing the job — the</p>
+<p><b>077</b> lesson applies: a check nobody reads is not a check.</p>
+<ul>
+<li>- Whether the desk should instead <i>detect</i> the pair after the fact, on a cadence, and</li>
+</ul>
+<p>raise it — cheaper to build, but it means the sweep stays blocked for that renter until</p>
+<p>someone clears it, which is what happened here.</p>
+<ul>
+<li>- Whether this changes the <code>create_artist</code> path at all. The bot behaved correctly</li>
+</ul>
+<p>throughout; nothing about it needs fixing, and a fix aimed at the robot would miss.</p>
+
+<h2>Known count</h2>
+
+<p>Unknown, and worth measuring before designing: how many of the <b>25 duplicate-name sets</b></p>
+<p>are this class (both cards native, shared stable identifiers) rather than the relay class?</p>
+<p><b>104</b> will surface the evidence per pair — this ticket wants</p>
+<p>the split.</p>
+
+
+<h2>Renumbered 106 → 129 (2026-09-07)</h2>
+
+<p>Two tickets shared the number <b>106</b> in this directory. This ticket had <b>two</b> references against three for <b>106 — deploy the alarm-events listener</b>, and was filed later the same afternoon (17:23 against 17:06).</p>
+
+<p>Renumbered as part of a sweep after a duplicate number cost real time on 2026-09-07: a card</p>
+<p>reading <b>#122</b> about expiring door codes led an agent to open the <i>other</i> 122 — a logging</p>
+<p>fix — and work the wrong ticket. Six collisions were cleared in the same pass: 026, 076, 087,</p>
+<p>106, 121 and the original 122. Every reference across <code>wayfinder/</code> and <code>day-sheet/</code> was</p>
+<p>rewritten, and a link check now reports <b>0 broken links</b> in this directory.</p>
+
+<p>The rule used throughout: <b>the ticket with fewer external references moves, even when it</p>
+<p>holds the number first.</b> A number is a label; a live document pointing at the wrong ticket is</p>
+<p>a fault.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">15</span></h3><div class="job"><div class="jnum">#005</div><div class="jhead"><span class="emoji">💰</span><h4>Track what each job costs</h4></div><span class="pill p-wait">needs 001 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Count runs and time for each job, weekly</li><li>See which jobs cost the most</li><li>Needs the master list (001) first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
@@ -7414,6 +7489,123 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Nothing else referenced this file. </code>plain_language.py` had no entry for it, and no document</p>
 <p>called the logging fix &quot;ticket 122&quot; — the Plumbing Map entry for it cites commits, not a number.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#128</span><span class="emoji">🐌</span><span class="done-title">The Registrar is too slow, and it ran out of time on its very first night</span><span class="done-date">2026-09-07</span></summary><div class="done-body"><ul class="plain-bullets"><li>It was switched on at 10pm and its first unattended run was cut off after exactly five minutes, having not finished</li><li>Two separate time limits were both set to five minutes, so there was no slack anywhere — the first limit it hit was also the last</li><li>Both raised to fifteen minutes, which fixes tonight. It is not the real fix</li><li>The real reason it is slow: it asks the booking calendar for one day at a time, so a two-week look-ahead is fifteen separate requests before it even starts work</li><li>Asking for the whole fortnight in one request would do nearly all of it. The calendar already supports that</li><li>This matters because the run happens every half hour. If a run ever took longer than that, two would overlap — and two copies working at once is exactly what caused the duplicate door codes back in August</li><li>Deliberately NOT fixed by looking at fewer days ahead. That would just mean bookings a week or two out get set up late</li><li>DONE (Aug 25): the one-request fix already went in on Aug 24, and runs now take about 85 seconds against a 15-minute limit</li><li>The last missing piece was simply reporting how long each run took — added, along with a warning if a run ever creeps past ten minutes</li><li>Because of that, looking further ahead is now cheap: 45 days holds 100 bookings against 59 for two weeks, not three times as many</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar reads the Skedda board one day at a time — 15 round-trips per pass, and it already hit a wall</b></p><h2>Problem</h2>
+
+<p><b>The Registrar&#x27;s first unattended pass timed out</b>, 2026-08-20 02:00Z, five minutes after it was</p>
+<p>switched on. HTTP 504, Cloud Scheduler <code>DEADLINE_EXCEEDED</code> at <b>299.97s</b> against a 300s ceiling.</p>
+
+<p>The ceiling had no margin in it: Cloud Run&#x27;s request timeout and the Scheduler attempt deadline were</p>
+<p><b>both 300s</b>, so the first limit hit was also the last. Raised to <b>900s</b> on both (Junyan&#x27;s call,</p>
+<p>same night — <code>event-gate-00049-dc4</code>), which unblocks tonight and buys roughly 3× headroom. That is a</p>
+<p>tuning fix, not a repair.</p>
+
+<p><b>The actual cost is structural.</b> <code>run()</code> walks the horizon a day at a time:</p>
+
+<p>``<code>python</p>
+<p>for offset in range(horizon + 1):</p>
+<p>bookings.extend(skedda_read.bookings_on((now + timedelta(days=offset)).date()))</p>
+<p></code>`<code></p>
+
+<p>With </code>HORIZON_DAYS_DEFAULT = 14<code> that is <b>15 sequential HTTP round-trips</b> before a single booking is</p>
+<p>processed, and every one of them pays the full latency. Per-booking Notion and alarm calls then run on</p>
+<p>top, also serially. Observed pass durations the night it shipped: <b>146s dry → 239s dry → over 300s</p>
+<p>live</b>. A live pass is slower than a dry one because it writes.</p>
+
+<p><b>Why 900s does not close this.</b> Pass duration scales with the board, and the board grows. The lane</p>
+<p>runs every 30 minutes, so the real ceiling is 1800s no matter what the timeout says — past that, passes</p>
+<p>overlap, and <b>overlap breaks the single-writer constraint</b> that 079 learned the hard way from the</p>
+<p>Codex collision (two actors on the same instruction each verify their own write as correct, and nothing</p>
+<p>detects it). This ticket exists so the next wall is seen coming rather than discovered in production.</p>
+
+<h2>Shape (not ruled)</h2>
+
+<ul>
+<li>- <b>The obvious one: read a date RANGE, not a day.</b> skedda-mcp already exposes </code>list_bookings_range<code>,</li>
+</ul>
+<p>and </code>/bookingslists<code> itself takes </code>start<code>/</code>end<code> — </code>bookings_on()<code> builds a one-day window out of a</p>
+<p>two-sided parameter it already has. One request instead of 15 is most of the win for very little code.</p>
+<p>Confirm the response shape and paging behaviour over a 14-day span before assuming it is a drop-in;</p>
+<p>the </code>venueusers<code> side-list must still arrive whole, or holder resolution silently degrades to the</p>
+<p>stripped-read signature.</p>
+<ul>
+<li>- Concurrency on the per-booking calls, if the range read alone is not enough. Bounded — the alarm panel</li>
+</ul>
+<p>is not something to hammer.</p>
+<ul>
+<li>- <b>Whatever is done, keep the stripped-session guard intact.</b> It judges holders across the WHOLE read;</li>
+</ul>
+<p>a change that splits or streams the read must not let it judge a fragment.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A live pass over the full 14-day horizon completes with wide margin (target: well under 300s, so the</li>
+</ul>
+<p>original ceiling would not have been hit).</p>
+<ul>
+<li>- </code>SWEEP_HORIZON_DAYS<code> stays at 14 — the fix is speed, not seeing less. Shrinking the horizon was</li>
+</ul>
+<p>explicitly considered and declined on 2026-08-20, because bookings 8–14 days out would get no</p>
+<p>prerequisites until they drifted closer.</p>
+<ul>
+<li>- Pass duration is reported per pass, so the next approach to the wall is visible before it arrives —</li>
+</ul>
+<p>this pairs with <b>086</b>, which is where a duration would be recorded.</p>
+<ul>
+<li>- RUNTIMES.md + Plumbing Map entries.</li>
+</ul>
+
+<h2>Resolution 2026-08-25 — the structural fix already landed; the missing half was the number</h2>
+
+<p><b>The range read is done.</b> </code>bookings_range(first, last)<code> exists in </code>skedda_read.py<code> and</p>
+<p></code>booking_sweep.run()<code> has called it since <b>2026-08-24</b>, shipped alongside ticket 090:</p>
+
+<p></code>`<code>python</p>
+<p>return skedda_read.bookings_range(now.date(), (now + timedelta(days=horizon)).date())</p>
+<p></code>`<code></p>
+
+<p>One </code>/bookingslists<code> request for the whole window, whatever the span. The 15 sequential</p>
+<p>round-trips this ticket was written about no longer happen, and the horizon stopped being a</p>
+<p>budget question. Measured on 2026-08-25, ten consecutive live passes ran <b>68–96s</b> against a</p>
+<p>900s ceiling — the acceptance target (&quot;well under 300s&quot;) is met with 3× margin, and</p>
+<p></code>SWEEP_HORIZON_DAYS<code> stayed at 14 exactly as required.</p>
+
+<p><b>What was still missing: the duration itself.</b> The acceptance asked for pass duration to be</p>
+<p>reported per pass, and it was not. Without it the next wall gets discovered the way the first</p>
+<p>one was — a 504 at 02:00. Shipped in </code>3b1c3563<code>:</p>
+
+<ul>
+<li>- every summary now carries </code>duration_s<code> and </code>horizon_days<code> (duration is meaningless without</li>
+</ul>
+<p>knowing how far the pass was looking);</p>
+<ul>
+<li>- a pass over </code>SLOW_PASS_S = 600<code> logs </code>SLOW PASS<code> explicitly. 600s is a third of the <b>real</b></li>
+</ul>
+<p>ceiling, which is the 1800s cadence rather than the 900s timeout: past 1800s two passes</p>
+<p>overlap and the single-writer constraint breaks (079, the Codex collision).</p>
+
+<p><b>Consequence for the horizon.</b> Cost now scales with bookings in the window, not days in it.</p>
+<p>Counted 2026-08-25: 14 days holds <b>59 non-recurring</b> bookings, 45 days holds <b>100</b> — 1.7×,</p>
+<p>not 3.2×. A 45-day pass should land near 150s, well inside every ceiling. </code>SWEEP_HORIZON_DAYS=45<code></p>
+<p>is affordable whenever Junyan wants it; that is 110&#x27;s promise, not this ticket&#x27;s, and it stays</p>
+<p>his call.</p>
+
+<p>Status: <b>closed.</b> Remaining: deploy </code>3b1c3563<code> (blocked on approval at time of writing).</p>
+
+
+<h2>Renumbered 087 → 128 (2026-09-07)</h2>
+
+<p>Two tickets shared the number <b>087</b> in this directory. This ticket had <b>one</b> reference against four for <b>087 — the duplicate-send check</b>, and was filed later the same evening (22:14 against 20:47). Both tests point the same way.</p>
+
+<p>Renumbered as part of a sweep after a duplicate number cost real time on 2026-09-07: a card</p>
+<p>reading <b>#122</b> about expiring door codes led an agent to open the <i>other</i> 122 — a logging</p>
+<p>fix — and work the wrong ticket. Six collisions were cleared in the same pass: 026, 076, 087,</p>
+<p>106, 121 and the original 122. Every reference across </code>wayfinder/<code> and </code>day-sheet/` was</p>
+<p>rewritten, and a link check now reports <b>0 broken links</b> in this directory.</p>
+
+<p>The rule used throughout: <b>the ticket with fewer external references moves, even when it</p>
+<p>holds the number first.</b> A number is a label; a live document pointing at the wrong ticket is</p>
+<p>a fault.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#104</span><span class="emoji">🗂️</span><span class="done-title">Propose the card merges, with evidence, now that Contact Points can show it</span><span class="done-date">2026-09-04</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>Propose the card merges, with evidence, now that Contact Points can show it</b></p><h2>Question</h2>
 
 <p><b>098</b> deferred the migration until the table existed so</p>
@@ -7528,7 +7720,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>The pass ran over a <b>full paginated dump</b> of both data sources (1,055 Artist rows, 1,733</p>
 <p>Contact Points rows — not a single SQL query, per the 08-13 staleness gotcha). Output is the</p>
-<p>one-sitting review sheet <b><b>104-merge-proposals-2026-08-25.md</b></b></p>
+<p>one-sitting review sheet <b><b>104a-merge-proposals-2026-08-25.md</b></b></p>
 <p>(also published as a private artifact: https://claude.ai/code/artifact/4334a85a-697f-4dfc-b5c2-791f902504d4): 16 Tier-A pairs (hard shared signal —</p>
 <p>stable contact point, relay, alarm code, or Alarm/Skedda user id — with ≥1 live card), 6</p>
 <p>Tier-B probables (Sindy O./Sindy Ortiz; Carrie Jiang/Sheldon Shannon; four 2026-04-21</p>
@@ -8093,108 +8285,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>plain-language entries for both 118 and 119 rewritten out of future tense.</p>
 
 <p><b>118&#x27;s rollout is complete end to end: shadow → flip → retirement.</b></p>
-</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#087</span><span class="emoji">🐌</span><span class="done-title">The Registrar is too slow, and it ran out of time on its very first night</span><span class="done-date">2026-08-25</span></summary><div class="done-body"><ul class="plain-bullets"><li>It was switched on at 10pm and its first unattended run was cut off after exactly five minutes, having not finished</li><li>Two separate time limits were both set to five minutes, so there was no slack anywhere — the first limit it hit was also the last</li><li>Both raised to fifteen minutes, which fixes tonight. It is not the real fix</li><li>The real reason it is slow: it asks the booking calendar for one day at a time, so a two-week look-ahead is fifteen separate requests before it even starts work</li><li>Asking for the whole fortnight in one request would do nearly all of it. The calendar already supports that</li><li>This matters because the run happens every half hour. If a run ever took longer than that, two would overlap — and two copies working at once is exactly what caused the duplicate door codes back in August</li><li>Deliberately NOT fixed by looking at fewer days ahead. That would just mean bookings a week or two out get set up late</li><li>DONE (Aug 25): the one-request fix already went in on Aug 24, and runs now take about 85 seconds against a 15-minute limit</li><li>The last missing piece was simply reporting how long each run took — added, along with a warning if a run ever creeps past ten minutes</li><li>Because of that, looking further ahead is now cheap: 45 days holds 100 bookings against 59 for two weeks, not three times as many</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar reads the Skedda board one day at a time — 15 round-trips per pass, and it already hit a wall</b></p><h2>Problem</h2>
-
-<p><b>The Registrar&#x27;s first unattended pass timed out</b>, 2026-08-20 02:00Z, five minutes after it was</p>
-<p>switched on. HTTP 504, Cloud Scheduler <code>DEADLINE_EXCEEDED</code> at <b>299.97s</b> against a 300s ceiling.</p>
-
-<p>The ceiling had no margin in it: Cloud Run&#x27;s request timeout and the Scheduler attempt deadline were</p>
-<p><b>both 300s</b>, so the first limit hit was also the last. Raised to <b>900s</b> on both (Junyan&#x27;s call,</p>
-<p>same night — <code>event-gate-00049-dc4</code>), which unblocks tonight and buys roughly 3× headroom. That is a</p>
-<p>tuning fix, not a repair.</p>
-
-<p><b>The actual cost is structural.</b> <code>run()</code> walks the horizon a day at a time:</p>
-
-<p>``<code>python</p>
-<p>for offset in range(horizon + 1):</p>
-<p>bookings.extend(skedda_read.bookings_on((now + timedelta(days=offset)).date()))</p>
-<p></code>`<code></p>
-
-<p>With </code>HORIZON_DAYS_DEFAULT = 14<code> that is <b>15 sequential HTTP round-trips</b> before a single booking is</p>
-<p>processed, and every one of them pays the full latency. Per-booking Notion and alarm calls then run on</p>
-<p>top, also serially. Observed pass durations the night it shipped: <b>146s dry → 239s dry → over 300s</p>
-<p>live</b>. A live pass is slower than a dry one because it writes.</p>
-
-<p><b>Why 900s does not close this.</b> Pass duration scales with the board, and the board grows. The lane</p>
-<p>runs every 30 minutes, so the real ceiling is 1800s no matter what the timeout says — past that, passes</p>
-<p>overlap, and <b>overlap breaks the single-writer constraint</b> that 079 learned the hard way from the</p>
-<p>Codex collision (two actors on the same instruction each verify their own write as correct, and nothing</p>
-<p>detects it). This ticket exists so the next wall is seen coming rather than discovered in production.</p>
-
-<h2>Shape (not ruled)</h2>
-
-<ul>
-<li>- <b>The obvious one: read a date RANGE, not a day.</b> skedda-mcp already exposes </code>list_bookings_range<code>,</li>
-</ul>
-<p>and </code>/bookingslists<code> itself takes </code>start<code>/</code>end<code> — </code>bookings_on()<code> builds a one-day window out of a</p>
-<p>two-sided parameter it already has. One request instead of 15 is most of the win for very little code.</p>
-<p>Confirm the response shape and paging behaviour over a 14-day span before assuming it is a drop-in;</p>
-<p>the </code>venueusers<code> side-list must still arrive whole, or holder resolution silently degrades to the</p>
-<p>stripped-read signature.</p>
-<ul>
-<li>- Concurrency on the per-booking calls, if the range read alone is not enough. Bounded — the alarm panel</li>
-</ul>
-<p>is not something to hammer.</p>
-<ul>
-<li>- <b>Whatever is done, keep the stripped-session guard intact.</b> It judges holders across the WHOLE read;</li>
-</ul>
-<p>a change that splits or streams the read must not let it judge a fragment.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- A live pass over the full 14-day horizon completes with wide margin (target: well under 300s, so the</li>
-</ul>
-<p>original ceiling would not have been hit).</p>
-<ul>
-<li>- </code>SWEEP_HORIZON_DAYS<code> stays at 14 — the fix is speed, not seeing less. Shrinking the horizon was</li>
-</ul>
-<p>explicitly considered and declined on 2026-08-20, because bookings 8–14 days out would get no</p>
-<p>prerequisites until they drifted closer.</p>
-<ul>
-<li>- Pass duration is reported per pass, so the next approach to the wall is visible before it arrives —</li>
-</ul>
-<p>this pairs with <b>086</b>, which is where a duration would be recorded.</p>
-<ul>
-<li>- RUNTIMES.md + Plumbing Map entries.</li>
-</ul>
-
-<h2>Resolution 2026-08-25 — the structural fix already landed; the missing half was the number</h2>
-
-<p><b>The range read is done.</b> </code>bookings_range(first, last)<code> exists in </code>skedda_read.py<code> and</p>
-<p></code>booking_sweep.run()<code> has called it since <b>2026-08-24</b>, shipped alongside ticket 090:</p>
-
-<p></code>`<code>python</p>
-<p>return skedda_read.bookings_range(now.date(), (now + timedelta(days=horizon)).date())</p>
-<p></code>`<code></p>
-
-<p>One </code>/bookingslists<code> request for the whole window, whatever the span. The 15 sequential</p>
-<p>round-trips this ticket was written about no longer happen, and the horizon stopped being a</p>
-<p>budget question. Measured on 2026-08-25, ten consecutive live passes ran <b>68–96s</b> against a</p>
-<p>900s ceiling — the acceptance target (&quot;well under 300s&quot;) is met with 3× margin, and</p>
-<p></code>SWEEP_HORIZON_DAYS<code> stayed at 14 exactly as required.</p>
-
-<p><b>What was still missing: the duration itself.</b> The acceptance asked for pass duration to be</p>
-<p>reported per pass, and it was not. Without it the next wall gets discovered the way the first</p>
-<p>one was — a 504 at 02:00. Shipped in </code>3b1c3563<code>:</p>
-
-<ul>
-<li>- every summary now carries </code>duration_s<code> and </code>horizon_days<code> (duration is meaningless without</li>
-</ul>
-<p>knowing how far the pass was looking);</p>
-<ul>
-<li>- a pass over </code>SLOW_PASS_S = 600<code> logs </code>SLOW PASS<code> explicitly. 600s is a third of the <b>real</b></li>
-</ul>
-<p>ceiling, which is the 1800s cadence rather than the 900s timeout: past 1800s two passes</p>
-<p>overlap and the single-writer constraint breaks (079, the Codex collision).</p>
-
-<p><b>Consequence for the horizon.</b> Cost now scales with bookings in the window, not days in it.</p>
-<p>Counted 2026-08-25: 14 days holds <b>59 non-recurring</b> bookings, 45 days holds <b>100</b> — 1.7×,</p>
-<p>not 3.2×. A 45-day pass should land near 150s, well inside every ceiling. </code>SWEEP_HORIZON_DAYS=45<code></p>
-<p>is affordable whenever Junyan wants it; that is 110&#x27;s promise, not this ticket&#x27;s, and it stays</p>
-<p>his call.</p>
-
-<p>Status: <b>closed.</b> Remaining: deploy </code>3b1c3563` (blocked on approval at time of writing).</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#110</span><span class="emoji">🔑</span><span class="done-title">Give people their door code the moment they book</span><span class="done-date">2026-08-25</span></summary><div class="done-body"><ul class="plain-bullets"><li>Right now you get your code when the robot&#x27;s window reaches your booking — about two weeks before</li><li>That was never a decision; it just fell out of how far ahead the robot looks</li><li>Junyan&#x27;s call (Aug 24): the code should be set up the moment somebody books, however far off the booking is</li><li>Codes do not expire any more, so a code made six months early is simply that person&#x27;s code</li><li>The catch: the robot must set it up ONCE and then leave it alone, or it would be re-checking thousands of old bookings every half hour forever</li><li>The alarm check a week before the booking stays, and that is what catches anything that has gone wrong since</li><li>DECIDED (Aug 25): looking further ahead than two weeks was considered and turned down — Junyan: the code being ready early is an internal detail, not something a renter ever notices</li><li>It would have handed a live door code to 17 more people today, for bookings up to six weeks away, some of whom will cancel and never come — and codes do not expire</li><li>The real win landed anyway: a code is now worked out ONCE and never re-checked, so how far ahead we look is a free choice rather than a cost</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Door access is due when someone books, not when the horizon reaches them</b></p><h2>Ruling (Junyan, 2026-08-24)</h2>
 
 <p>&quot;I want to provision door access the moment someone makes a booking (it&#x27;s not based on the</p>
@@ -12321,8 +12411,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Notion read that this session did not run. Carried explicitly onto <b>046</b>.</p>
 
 <p>Graduated: <b>046 — the probation lane</b> (blocks both builds),</p>
-<p><b>047 — existence + completeness checks</b>,</p>
-<p><b>048 — reconciliation checks</b>.</p>
+<p><b>047 — existence checks</b>,</p>
+<p><b>048 — reconciliation checks</b>,</p>
+<p><b>049 — completeness checks</b>.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#050</span><span class="emoji">🔍</span><span class="done-title">We found out why thank-you messages stopped going out</span><span class="done-date">2026-08-05</span></summary><div class="done-body"><ul class="plain-bullets"><li>The robot was doing its job. It found every finished booking and wrote the thank-you the same hour</li><li>But a thank-you is not sent by the robot. It waits for a person to press send</li><li>Seven of them waited, and nobody pressed send. After one day they can never be sent</li><li>The ones a person did release went out in 15 to 45 minutes, so nothing is broken further down</li><li>The robot shows the waiting list once a night, at 10:50pm. Miss that night and it is never shown again</li><li>One booking was a real miss: Sarra&#x27;s Jul 31 event ended at 11:30pm, after the last check of the day</li><li>The two alarms meant to catch this could never have gone off — they were watching the wrong thing</li><li>The board is clean now. Next: Junyan decides who presses send, or if the robot should just send it</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Responder&#x27;s PBF sweep is missing completed bookings — diagnose it</b></p><h2>Question</h2>
 
 <p>Surfaced 2026-08-05 by the live read on <b>046</b>. <b>Seven bookings</p>
@@ -15498,5 +15589,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-07 12:49 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-07 12:56 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
