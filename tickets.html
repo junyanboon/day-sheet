@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 10:16 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 10:19 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1900,7 +1900,74 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p></code>`<code>bash</p>
 <p>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --update-env-vars ACCESS_CLOSER_LIVE=1</p>
-<p></code>``</p>
+<p></code>`<code></p>
+
+<h3>The live regression — 2026-09-07, and what it cost</h3>
+
+<p><b>Flipped live 13:57Z. Two live passes. Both closed the same row, and both were wrong.</p>
+<p>Reverted to shadow 14:1xZ on Junyan&#x27;s flip; row and ticket repaired by hand.</b></p>
+
+<p>The row: </code>3b3f56f5<code> — *&quot;🔑 Studio 901 authorized users — Krista Flynn: release T3b</p>
+<p>follow-up, add her code when she replies (Akira Huang done)&quot;*, on CC ticket</p>
+<p></code>3ce7503281c4811a9709c9ddcd3ed217<code>. Its </code>Artist<code> relation is <b>Nina Li</b>, the account</p>
+<p>holder. The closer resolved the subject from that relation, read Nina Li as</p>
+<p></code>allow_permanent<code>, and closed the row </code>Processed<code> with that verdict as evidence — at</p>
+<p>14:00Z, and again at 14:10Z after the first reopen, because the reasoning that produced</p>
+<p>the close was still true.</p>
+
+<p><b>The row is not about Nina Li.</b> It is the gate on provisioning <b>Krista Flynn&#x27;s</b> code.</p>
+<p>Live read at 10:1x Toronto: Krista&#x27;s Artist page (</code>3ce7503281c4818485e6e8fc1f49e63e<code>)</p>
+<p>carries </code>Alarm User ID<code> and </code>Alarm Display Name<code> both <b>empty</b>. She has no code. T4 went</p>
+<p>out 2026-09-02 telling her she is set up, and her first solo booking is <b>Wed 2026-09-16</b></p>
+<p>(occurrence 120198358), so the code must exist by Sep 15. The row that kept that visible</p>
+<p>was taken off the board by the thing built to stop people being stranded at doors.</p>
+
+<p><b>Every read was true and the close was wrong.</b> Nina Li really is covered. That is the</p>
+<p>whole lesson: both reads key off the <i>resolved holder</i>, so a row about somebody else gets</p>
+<p>a true answer to a question nobody asked. Nothing in the design checked whose row it was —</p>
+<p></code>artist_of<code> returned the </code>Artist<code> relation and </code>assess<code> treated that person as the subject.</p>
+<p>That is false for every authorized-user and facilitator row, where the relation is the</p>
+<p>account holder <b>by construction</b>.</p>
+
+<p><b>One guard held, and it is why this is a reopened row and not a lost ticket.</b> The ticket</p>
+<p>stayed </code>Gate: Staff<code> because a second open ✅ row was linked, so </code>_other_open_actions<code></p>
+<p>returned 1 and </code>Position<code> was left alone.</p>
+
+<p><b>The fix (</code>a3511a24c<code>, fingerprint </code>d321f8915824<code>) — </code>subject_of()<code>, gating BOTH reads</p>
+<p>before either one runs:</b></p>
+
+<ul>
+<li>- A row whose <b>title or basis</b> says </code>authorized user<code> / </code>authorised user<code> / </code>facilitator<code></li>
+</ul>
+<p>is left for a human. Read off the ROW, never the Artist name — otherwise</p>
+<p></code>Adalia Knight [Authorized]<code> could never close her own row (pinned by a test).</p>
+<ul>
+<li>- Otherwise the resolved person&#x27;s <b>name must appear in the row&#x27;s title</b>: first and last</li>
+</ul>
+<p>real token, word boundaries (so </code>Li<code> never matches </code>release<code> — the Krista row&#x27;s own title</p>
+<p>carries &quot;release T3b&quot;), board suffix </code>[Fixed Option]<code> stripped, middle names not required</p>
+<p>(</code>Hannah Hyuna Cho<code> matches a row titled </code>Hannah Cho<code>).</p>
+<ul>
+<li>- <b>Fails closed.</b> A name yielding no checkable token cannot be confirmed and the row stays.</li>
+</ul>
+
+<p>Seven new tests, including the regression with <b>both reads passing and the row still</p>
+<p>untouched</b>, and a replay of the real title, which the guard skips. 1724 pass. xavier,</p>
+<p>Adalia and a Hannah-shaped row still close.</p>
+
+<p><b>What the two shadow days could not tell me, and I should have said louder.</b> Shadow</p>
+<p>proved the <i>reads</i> were right — every disarm matched, every verdict matched, zero</p>
+<p>unverifiable. It could not prove the <i>question</i> was right for a given row, because a wrong</p>
+<p>subject produces a perfectly clean-looking line. I named that gap when I asked Junyan to</p>
+<p>eyeball the nine rows before flipping, and then treated 79 clean passes as if they had</p>
+<p>closed it. They had not. <b>The nine rows needed reading before the flip, not after</b> — and</p>
+<p>one read of that row&#x27;s title would have caught it, because the title says &quot;Krista Flynn&quot;</p>
+<p>and the evidence line says &quot;Nina Li&quot;.</p>
+
+<p><b>State: SHADOW, </code>ACCESS_CLOSER_LIVE=0<code>, fix pushed and NOT yet deployed.</b> Before any</p>
+<p>second flip: deploy </code>d321f8915824<code>, watch shadow passes until the Krista-shaped row shows</p>
+<p>as </code>left for a human<code>, and read every remaining </code>would close` row&#x27;s title against the</p>
+<p>holder named in its evidence line.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">37</span></h3><div class="job"><div class="jnum">#016</div><div class="jhead"><span class="emoji">🔄</span><h4>Auto-update the support board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A script keeps the day&#x27;s support board fresh</li><li>No robot time needed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FBS AI Support board auto-sync (deterministic, no-persona lane)</b></p><h2>Question</h2>
 
@@ -15042,5 +15109,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-07 10:16 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-07 10:19 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
