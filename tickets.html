@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 12:42 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 12:48 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -6481,13 +6481,109 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ol>
 <li>2. <b>&quot;The </code>alarm-code-mirror<code> scheduler job is missing.&quot;</b> It was never created, by ruling —</li>
 </ol>
-<p></code>RUNTIMES.md<code> says so on the line below this sweep&#x27;s own. The Doorman calls </code>code_mirror` on its</p>
+<p></code>RUNTIMES.md<code> says so on the line below this sweep&#x27;s own. The Doorman calls </code>code_mirror<code> on its</p>
 <p>~06:00 pass instead. It ran 2026-09-07 06:22 Toronto: checked 727, matched 160, corrected 0,</p>
 <p>needs a human 0. Job D is healthy and was never part of this ticket.</p>
 
 <p>The lesson worth keeping: a Cloud Run environment variable read on one day is not evidence about</p>
 <p>the same service after a deploy, and an absent scheduler job is not evidence that nothing runs the</p>
 <p>work.</p>
+
+<h2>The ruling (2026-09-07, later the same day) — Job A0 is deleted, and what replaces it</h2>
+
+<p>The close-out above ends with the schedule deleted and the code kept. Junyan then removed the</p>
+<p>code as well, and ruled on the two renters the sweep would have handled.</p>
+
+<p><b>Junyan:</b> *&quot;Turn off the migration sweep and clear it out. It doesn&#x27;t work properly so you can</p>
+<p>just delete it altogether.&quot;*</p>
+
+<h3>The sweep never granted anyone access</h3>
+
+<p></code>MIGRATION_SWEEP_LIVE<code> was </code>0<code> for the module&#x27;s entire life, so every pass was shadow: it</p>
+<p>planned, wrote nothing, and never touched a window. <b>Deleting it changed no live behaviour.</b></p>
+
+<p>Removed in full, so nothing points at a module that is gone — alarm-monitor </code>c61b4b5<code>:</p>
+
+<p>| Removed | |</p>
+<p>|---|---|</p>
+<p>| </code>alarm_monitor/migration_sweep.py<code> | deleted |</p>
+<p>| </code>tests/test_migration_sweep.py<code> | deleted, 31 collected tests |</p>
+<p>| </code>alarm_monitor/mcp_server.py<code> | the </code>migration_sweep<code> MCP tool and shared </code>_migration_sweep<code> |</p>
+<p>| </code>hosting/server_http.py<code> | </code>GET/POST /migration-sweep<code> |</p>
+<p>| </code>tests/test_retirement_sweep.py<code> | the A0 cross-check assertion |</p>
+<p>| </code>alarm_monitor/retirement_sweep.py<code> | a comment citing the module |</p>
+
+<p>Suite <b>387 → 355 passed</b>. The 32 difference is exactly the removed tests — 31 collected in the</p>
+<p>deleted file plus 1 cross-check, confirmed by collecting both files before removal. No other test</p>
+<p>changed, and </code>mcp_server<code>, </code>retirement_sweep<code> and </code>hosting.server_http<code> all still import.</p>
+
+<h3>THE RULING — delete, do not migrate, when nobody is coming back</h3>
+
+<p><b>Junyan, on Rebecca Wise and Francisco Delgado:</b> *&quot;I deleted them instead. They have no</p>
+<p>upcoming bookings.&quot;*</p>
+
+<p>This narrows the 2026-08-27 rule. Migration is for renters who are <b>still coming back</b>. Access</p>
+<p>nobody needs is <b>removed</b>, not renewed.</p>
+
+<p><b>Verified before recording, not taken on trust.</b> 840 bookings across 2026-09-07 → 2027-01-05:</p>
+
+<p>| Name | Upcoming bookings |</p>
+<p>|---|---|</p>
+<p>| Rebecca Wise | <b>0</b> |</p>
+<p>| Francisco Delgado | <b>0</b> |</p>
+<p>| Adalia Knight <i>(control)</i> | 2 |</p>
+<p>| Anita Shack <i>(control)</i> | 37 |</p>
+
+<p>The controls matter: a zero from a query that matches nothing proves nothing. </code>find_user<code> was</p>
+<p>misleading here — it returned Rebecca even with </code>days_back=0<code>, so the booking list is the</p>
+<p>authority, not the search.</p>
+
+<h3>Panel state when this was written</h3>
+
+<p>| Renter | </code>user_id<code> | Type | Note |</p>
+<p>|---|---|---|---|</p>
+<p>| Adalia Knight | 249076056 | none | permanent |</p>
+<p>| Camila Avendano | 249102172 | none | permanent |</p>
+<p>| Anita Shack | 249099264 | none | permanent |</p>
+<p>| KellyAnn Johnson | <b>249110247</b> | none | re-added by Junyan; new id, 4 systems, code present |</p>
+<p>| Rebecca Wise | 247195424 | <b>temporary</b> | ends Thu 10 Sep 2026, 7:57 PM EDT |</p>
+<p>| Francisco Delgado | 245729826 | <b>temporary</b> | ends Mon 14 Sep 2026, 10:47 AM EDT |</p>
+
+<p>⚠️ <b>Wise and Delgado still read </code>temporary<code> across three separate reads, windows unchanged.</b> The</p>
+<p>deletion had not appeared at the panel. It harms nobody — neither has a booking and both windows</p>
+<p>lapse within a week — but <b>the panel, not the intent, is the record.</b> When KellyAnn was genuinely</p>
+<p>deleted the same tool returned </code>{&quot;result&quot;:[]}<code>, so a real deletion is visible immediately here.</p>
+
+<h3>A third correction, in the same family as the two above</h3>
+
+<p>The removal commit alarm-monitor </code>cd1f54f<code> recorded that the </code>alarm-migration-sweep<code> scheduler job</p>
+<p><b>&quot;never existed&quot;</b>, on the strength of </code>gcloud scheduler jobs list<code> returning nothing matching</p>
+<p>&quot;migration&quot; across </code>us-central1<code>, </code>us-east1<code> and </code>northamerica-northeast1<code>.</p>
+
+<p><b>Wrong.</b> The job existed and fired at 03:50 Toronto on 2026-09-05 and 2026-09-06. Junyan deleted</p>
+<p>it <i>earlier the same day</i> — so the listing was taken <b>after</b> the deletion and proved only that it</p>
+<p>was already gone. Retracted in alarm-monitor </code>5bcb719<code>.</p>
+
+<p>That is the third time in two days this ticket has produced the same error, and the correction</p>
+<p>above already stated the rule: <i>an absent scheduler job is not evidence that nothing runs the work.</i></p>
+<p><b>The conclusion happened to be right and the reason given for it was false, which is worse than a</p>
+<p>wrong conclusion — it teaches the next reader a bad check.</b></p>
+
+<h3>Written to</h3>
+
+<ul>
+<li>- Canon </code>dc-canon/library/doorman-access-lifecycle.md<code> — </code>ed0bf1954<code>. § Job A0 is now marked the</li>
+</ul>
+<p>record of a <b>retired</b> job; the ruling and both corrections are in the change log.</p>
+<ul>
+<li>- Plumbing Map </code>day-sheet/plumbing.html<code> — </code>d53297f<code>, verified in </code>origin/main<code>.</li>
+<li>- alarm-monitor </code>c61b4b5<code> (removal), </code>cd1f54f<code> (wrong), </code>5bcb719` (retraction).</li>
+</ul>
+
+<h3>Left open, deliberately</h3>
+
+<p><b>Nothing migrates a temporary window today.</b> Hand-work is the only path, and nothing watches for</p>
+<p>the next expiring window. That is the accepted state, not an oversight.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#123</span><span class="emoji">🚪</span><span class="done-title">The desk asked Junyan whether a renter got in. The door log already said yes</span><span class="done-date">2026-09-07</span></summary><div class="done-body"><ul class="plain-bullets"><li>Xavier had a booking today. Junyan set up his door code, got his phone number, and replied to him, all by hand</li><li>The door system logged him unlocking Studio 693 at 2:46 and locking up at 3:55, by name. His customer card got his code and number the moment Junyan added them</li><li>The robot that closes open tasks only ever looks at the booking calendar. It never looks at the door log or the customer card. So it kept the &#x27;no phone, no code&#x27; note open and handed it back to Junyan at 10pm</li><li>This gap was written down three weeks ago and nobody built the fix</li><li>This job teaches the closer to look at the two places it ignores: the customer card before the booking, the door log after it starts. Either one means the problem solved itself</li><li>It only ever reads. It never sets, changes or prints a code. And if the door log shows nobody came in, it leaves the note open and says so louder</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Close access-class work from the panel and the Artist DB — the executor-agnostic close, finished</b></p><h2>Question</h2>
 
 <p>053 promised <i>&quot;I notice what you did&quot;</i>. It notices one thing: a Skedda write.</p>
@@ -6878,13 +6974,62 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>State at close.</b> </code>ACCESS_CLOSER_LIVE=0<code>. Fix </code>d321f8915824<code> pushed, <b>not deployed</b>. If</p>
 <p>anyone flips it live in future, the pre-conditions are: deploy that fingerprint, watch shadow</p>
-<p>until a Krista-shaped row logs as <i>left for a human</i>, and read every remaining </code>would close`</p>
+<p>until a Krista-shaped row logs as <i>left for a human</i>, and read every remaining </code>would close<code></p>
 <p>row&#x27;s title against the holder named in its own evidence line. Not before.</p>
 
 <p><b>The lesson worth keeping.</b> Two days of shadow proved the <i>reads</i> were right and could not</p>
 <p>prove the <i>question</i> was right for a given row — a wrong subject produces a perfectly clean</p>
 <p>line. Clean instrument readings are not the same as a correct conclusion, and only one of</p>
 <p>those was ever actually broken.</p>
+
+<h2>DELETED 2026-09-07 — Junyan: <i>&quot;I want you to completely delete the access-class closer&quot;</i></h2>
+
+<p>Done. dc-canon </code>61a601f54<code>, fingerprint </code>979fa6467d78<code>.</p>
+
+<ul>
+<li>- </code>services/event-gate/access_closer.py<code> — <b>deleted</b>.</li>
+<li>- </code>services/event-gate/test_access_closer.py<code> (41 tests) — <b>deleted</b>.</li>
+<li>- Its </code>/loop<code> wiring and import in </code>app.py<code> — <b>removed</b>. The route is now byte-identical</li>
+</ul>
+<p>to what it was before this ticket. 1683 tests pass; </code>import app<code> clean.</p>
+<ul>
+<li>- </code>library/the-loop.md<code> — the two-class table is back to one class (booking changes), with</li>
+</ul>
+<p>a <b>do-not-rebuild note</b> carrying the three findings, because the failure is more useful</p>
+<p>than the code was.</p>
+
+<p><b>Not deleted, deliberately, say the word if it should go:</b></p>
+
+<ul>
+<li>- <b>alarm-mcp </code>GET /access-covers<code></b> (danceannex-alarm-monitor </code>15771f2<code>) — the read-only</li>
+</ul>
+<p>plain-HTTP twin of </code>check_access_covers<code>, plus its 4 tests. It is deployed, returns no</p>
+<p>digits (server-side whitelist), writes nothing, and is useful to any non-MCP caller —</p>
+<p>ticket 124&#x27;s work may well want it. Removing it needs an alarm-mcp deploy.</p>
+<ul>
+<li>- <b></code>ACCESS_CLOSER_LIVE=0<code> on the event-gate service.</b> Inert once this code is gone, but</li>
+</ul>
+<p>it is clutter on </code>gcloud run services describe<code>. Clear it on the next deploy:</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --remove-env-vars ACCESS_CLOSER_LIVE</p>
+<p></code>`<code></p>
+
+<p></code>`<code>bash</p>
+<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; services/event-gate/deploy.sh</p>
+<p></code>`<code></p>
+
+<p>(expect </code>code_fingerprint<code> = </code>979fa6467d78<code>; until this deploys, the live revision still</p>
+<p>carries the closer and still runs it in shadow, which writes nothing)</p>
+
+<p><b>Nothing was needed in </code>RUNTIMES.md<code></b> — a sibling session trimmed it on 2026-09-05 and the</p>
+<p></code>desk-loop<code> row is now a one-liner; the closer&#x27;s paragraph went to</p>
+<p></code>archive/RUNTIMES-2026-09-05-full.md` with the rest.</p>
+
+<p><b>Krista Flynn&#x27;s row stays open and still needs a human.</b> She has no Alarm User ID, she was</p>
+<p>told on 2026-09-02 that she is set up, and her first solo booking is Wed 2026-09-16 — the</p>
+<p>code must exist by Sep 15. Deleting the closer does not touch that; it only means nothing</p>
+<p>will wrongly close it again.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#104</span><span class="emoji">🗂️</span><span class="done-title">Propose the card merges, with evidence, now that Contact Points can show it</span><span class="done-date">2026-09-04</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>Propose the card merges, with evidence, now that Contact Points can show it</b></p><h2>Question</h2>
 
 <p><b>098</b> deferred the migration until the table existed so</p>
@@ -15333,5 +15478,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-07 12:42 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-07 12:48 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
