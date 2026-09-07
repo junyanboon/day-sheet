@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 10:19 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-07 12:30 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -6652,15 +6652,40 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>work is not visible to this ticket.</p>
 
 <p><b>What remains in the tree, deliberately.</b> </code>alarm_monitor/migration_sweep.py<code>, its 27 tests</p>
-<p>(387 pass), the </code>migration_sweep<code> MCP tool, and </code>GET|POST /migration-sweep<code>. All callable on</p>
-<p>demand. </code>MIGRATION_SWEEP_LIVE=1<code> is still set on </code>alarm-mcp<code>, so a POST would act — the only thing</p>
-<p>removed is the schedule.</p>
+<p>(387 pass), the </code>migration_sweep<code> MCP tool, and </code>GET|POST /migration-sweep<code>. All callable on demand, and all</p>
+<p>now INERT: Junyan cleared the live flag on 2026-09-07 (&quot;let&#x27;s can it&quot;), so every surface computes</p>
+<p>and writes nothing. Reviving this needs the flag set again, deliberately.</p>
 
 <p><b>Docs at close.</b> Canon § Job A0 no longer claims a scheduled runtime and carries the</p>
-<p>verification lesson; </code>RUNTIMES.md` row struck through with the deletion and its reason; 🚥 Run</p>
+<p>verification lesson; </code>RUNTIMES.md<code> row struck through with the deletion and its reason; 🚥 Run</p>
 <p>Monitor row Paused / Disabled; Plumbing Map entry.</p>
 
 <p><b>Seam unchanged.</b> The nine dead ⏭️ Next Action rows still close under 053&#x27;s replan.</p>
+
+<h2>Correction (2026-09-07, same day)</h2>
+
+<p>Two claims in the close-out above were wrong when written, and are corrected here rather than</p>
+<p>edited away.</p>
+
+<ol>
+<li>1. <b>&quot;</code>MIGRATION_SWEEP_LIVE=1<code> is still set.&quot;</b> It was not. That reading was taken on 2026-09-05</li>
+</ol>
+<p>(revision </code>alarm-mcp-00082-6d2<code>) and carried forward across a redeploy without being re-checked.</p>
+<p>Revision </code>alarm-mcp-00083-6w9<code>, deployed 2026-09-07, already carried neither migration variable.</p>
+<p>The removal command run on Junyan&#x27;s approval was therefore a no-op that created revision</p>
+<p></code>alarm-mcp-00084-gc9<code>. Harmless, but the risk it was meant to close did not exist.</p>
+<p></code>MIGRATION_SWEEP_MONITOR_ROW<code> is gone too, so a revived pass would neither link its report nor</p>
+<p>stamp the 🚥 row until that is set again.</p>
+<ol>
+<li>2. <b>&quot;The </code>alarm-code-mirror<code> scheduler job is missing.&quot;</b> It was never created, by ruling —</li>
+</ol>
+<p></code>RUNTIMES.md<code> says so on the line below this sweep&#x27;s own. The Doorman calls </code>code_mirror` on its</p>
+<p>~06:00 pass instead. It ran 2026-09-07 06:22 Toronto: checked 727, matched 160, corrected 0,</p>
+<p>needs a human 0. Job D is healthy and was never part of this ticket.</p>
+
+<p>The lesson worth keeping: a Cloud Run environment variable read on one day is not evidence about</p>
+<p>the same service after a deploy, and an absent scheduler job is not evidence that nothing runs the</p>
+<p>work.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#104</span><span class="emoji">🗂️</span><span class="done-title">Propose the card merges, with evidence, now that Contact Points can show it</span><span class="done-date">2026-09-04</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>Propose the card merges, with evidence, now that Contact Points can show it</b></p><h2>Question</h2>
 
 <p><b>098</b> deferred the migration until the table existed so</p>
@@ -15109,5 +15134,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-07 10:19 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-07 12:30 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
