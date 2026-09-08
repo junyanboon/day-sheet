@@ -1276,6 +1276,19 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-08 &middot; 18:1xZ</span>
+      <h3>Three boards, sorted by who closes the row &mdash; the Next Action queue is the bot board, &#9989; Actions is the human board, the Message Queue is the message board<span class="kind">ROUTE CHANGE &middot; the Loop &middot; canon <code>88f73c755</code> &middot; ticket 053 Replan v2</span></h3></summary>
+      <p><strong>The ruling.</strong> Junyan, 2026-09-08: <em>&ldquo;treat next action as the board for bots, Actions to Perform as the board for humans, and message queue as the board for messages.&rdquo;</em> This replaces two earlier designs in four days: 08-05 (Next Action retires &#9989; Actions) and 09-04 (&#9989; Actions is the one decision surface, Next Action retires). The rule under all three boards: <strong>a row lives on the board of whoever will close it, not who raised it.</strong></p>
+      <p><strong>What moves.</strong> Rows a coded sweep executes or verifies go to &#9235;&#65039; Next Action &mdash; including machine-readable gate rows such as Access / PIN, which today sit on &#9989; Actions; ticket 123&rsquo;s closer is retargeted there. Routing is the &#127898;&#65039; Action Classes table, unchanged: <code>Auto-execute = YES</code> &rarr; bot board, <code>Human only</code> &rarr; human board, <code>Message Queue</code> &rarr; Message Queue. No new field.</p>
+      <p><strong>What was measured.</strong> &#9989; Actions took ~470 rows in the 14 days to 09-05 (&asymp;33/day, three times the 08-25 figure). Of 55 open, <strong>33 were alerts</strong> (Desk Invariants 20, Run Error 5, other Review 9) and <strong>6 needed a ruling</strong>. The six were buried &mdash; Greg Samba, Nina Li, Rebecca Wise. Fix: every alert writer keeps <strong>one rolling row</strong> per check; ticket 120 trips on floods.</p>
+      <p><strong>New failure mode, named.</strong> The bot board has no human REVIEW beat. Every bot row therefore carries a <strong>deadline</strong>; a row past it moves to the human board as a Decision with the stall line. Xavier&rsquo;s row (09-04) is the case &mdash; no deadline, no path off the board, eight hours.</p>
+      <p><strong>Mechanics.</strong> The REST API cannot move a page between databases, so a move is create-then-close with <code>Verification = moved &rarr; url</code>; the check-both-boards dedup guard stays. The LLM Loop trigger <code>trig_019ReSFHGqYhhqoXF8Unnf8U</code> stays disabled until <code>loop.py</code> is rewritten (Phase 3). The promotion ladder and counters are retired &mdash; a class changes board by ruling, not by count.</p>
+      <p><strong>Canon.</strong> <code>library/the-loop.md</code>: Surfaces table rewritten, new &sect; &ldquo;Three boards&rdquo;, the 08-25 freeze-then-drain section marked superseded (its do-not-bulk-close lesson kept). Ticket 053 &sect; Replan v2 holds the acceptance table: A earned, B re-earn on the bot board, E/F/G measured over 7 days, C/D dropped.</p>
+      </details>
+    </li>
+
+      <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-08 &middot; 17:0xZ</span>
       <h3>Diana&rsquo;s lights have an answer, and the approval loop that was going to ship it does not exist<span class="kind">ROUTE CHANGE &middot; the Responder &middot; LIVE</span></h3></summary>
       <p><strong>The answer.</strong> The 527 par cans run off a <strong>power bar on the ceiling</strong>. The bar carries a <strong>red switch that is both the on and the off button</strong>. They are not on the wall switches, which is why the main-lights line never covered them. Junyan, 2026-09-08. Diana Leal asked this mid-booking on 2026-09-06 and the desk answered with two held drafts and a 168-second phone call.</p>
