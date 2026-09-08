@@ -1274,6 +1274,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-08 &middot; 14:3xZ</span>
+      <h3><code>Source Email</code> now has one stated format, and all three readers use the same extractor<span class="kind">FORMAT RULE &middot; Send Engine LIVE <code>4f13f4b</code> &middot; Deck <a href="https://github.com/junyanboon/deck-app/pull/8">#8</a> &middot; canon <a href="https://github.com/junyanboon/desk-correspondence/pull/54">#54</a></span></h3></summary>
+      <p><strong>What this closes.</strong> The 2026-09-07 12:3xZ entry left the disagreement open from one side: the engine had learned the Deck&rsquo;s shape, but nothing validated the field at entry and each side still carried a private idea of what it holds. Measured before writing the rule: <strong>393 non-empty values</strong> &mdash; 328 <code>#all/</code>, 63 <code>#inbox/</code>, one <code>gmail:&lt;id&gt;</code>, and two free-text rows (<code>Gmail thread 19f94c&hellip;</code>, <code>Gmail message 19fedb&hellip;</code>) the engine would also have rejected. The defect was a class of three, not a row.</p>
+      <p><strong>The rule, one sentence.</strong> The field must contain exactly one Gmail id &mdash; 16 hex characters with no hex character touching either end. Readers take the first such run (Gmail writes <code>#all/&lt;thread&gt;/&lt;message&gt;</code>, so first = thread). The id may be a message id or a thread id; the engine already resolves one to the other. Everything else in the string is decoration. Tested against every live shape plus <code>#search/&lt;q&gt;/&lt;id&gt;</code> and the thread/message pair: 11 cases, all resolve; empty, a non-Gmail URL and prose yield nothing.</p>
+      <p><strong>Where it lives, word for word.</strong> <code>send-engine/Code.gs</code> <code>gmailIdFrom_()</code>; <code>deck-app/public/index.html</code> <code>gmailHex()</code>; canon <code>library/source-email-format.md</code>. Change one, change all three the same day &mdash; the page says so.</p>
+      <p><strong>Writers produce the canonical form</strong> <code>https://mail.google.com/mail/u/0/#all/&lt;id&gt;</code>, which 391 rows already had. The Deck now <strong>refuses</strong> a <code>Source Email</code> value carrying no id (&ldquo;Not saved &mdash; no Gmail id in that value&rdquo;) and <strong>rewrites</strong> any accepted value into the canonical form before saving, so the field always reads the same in Notion. Four rules travel with it: empty = new email (unchanged); non-empty with no id = Error, row stops for a human; two ids = first; message or thread id, either works.</p>
+      <p><strong>State.</strong> The engine side is <strong>live</strong> (clasp push + <code>4f13f4b</code>). The Deck side is <strong>not deployed</strong>: the Mac&rsquo;s local <code>main</code> holds four unpushed Actions-tab commits that conflict with the merged <a href="https://github.com/junyanboon/deck-app/pull/7">#7</a>, so the change went out as <a href="https://github.com/junyanboon/deck-app/pull/8">#8</a> cut from <code>origin/main</code>, and which tree is actually running at the Deck URL is a question for Junyan before anyone deploys. Canon is <a href="https://github.com/junyanboon/desk-correspondence/pull/54">#54</a>, not merged &mdash; Rule 1.</p>
+      </details>
+    </li>
+
 
       <li class="entry det">
       <details>
