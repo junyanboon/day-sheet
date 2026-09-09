@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-09 10:48 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-09 10:51 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1515,10 +1515,49 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p>rule: unset the flag in </code>event-gate.env<code>, then </code>gh workflow run deploy-event-gate.yml --ref main -f target=hostinger -f mode=update -f reason=&quot;124 back to shadow&quot;<code>.</p>
 
-<p>Also unfinished by design: A7 (</code>preflight_provision`) is not extended to platform bookings — widening a live</p>
+<p>Also unfinished by design: A7 (</code>preflight_provision<code>) is not extended to platform bookings — widening a live</p>
 <p>unattended alarm-write grant is Junyan&#x27;s call.</p>
 
 <p><b>Ruled 2026-09-09 (Junyan): keep it live; Junyan reads the log daily.</b> Return to shadow only if a created card is not a person.</p>
+
+<h3>2026-09-09, later — LIVE confirmed, and the lane was invisible</h3>
+
+<p><b>Mode settled.</b> Root read on </code>srv1948070<code>: </code>/docker/danceannex-mcp/event-gate.env<code> carries</p>
+<p></code>PLATFORM_IDENTITY_LIVE=&#x27;1&#x27;<code> and the running container carries </code>PLATFORM_IDENTITY_LIVE=1<code>.</p>
+<p>File and process agree, so the 03:38Z rebuild picked the file up. <b>The lane is live.</b> The</p>
+<p>flip had also been applied to Cloud Run, which is only the forwarder since 2026-09-08 — that</p>
+<p>copy does nothing, and its convincing-looking </code>/health<code> is what made this take four attempts</p>
+<p>to establish. Hermes could not answer at all (run </code>8bd3cd9a<code>): separate container, no</p>
+<p></code>/docker<code> tree, no Docker socket, no logs, and it refused to guess rather than return a false</p>
+<p>negative.</p>
+
+<p><b>The defect that hid: a pure-read lane that says nothing.</b> 72 hours live produced ZERO</p>
+<p></code>platform identity<code> log lines. Only the three WRITE paths logged. The two rungs that resolve</p>
+<p>a guest quietly returned in silence, and the most common success is the quietest of all — a</p>
+<p>Lauren-shaped booking clears at <b>gate 2</b> and never reaches the ladder. The step strings</p>
+<p>(</code>platform:tags-stripped<code>, </code>identity:single-card<code>) go into the pass result and the sweep never</p>
+<p>logs the result. So &quot;no lines&quot; meant both &quot;it worked&quot; and &quot;it never ran&quot;.</p>
+
+<p><b>Fixed in PR #72</b> (</code>6f0f4c126<code>, branch </code>wf124-log-the-quiet-path<code>, fingerprint after merge</p>
+<p></code>cf77a8475888<code>): three guarded log lines — relay resolve, name resolve naming the raw string</p>
+<p>it stripped from, and the gate entry when tags came off. No digits. 5 tests, <b>1972 pass</b>.</p>
+<p>Opened as a PR, not pushed to main, per </code>dc-canon/CLAUDE.md<code> Rule 1. <b>Junyan merges and</p>
+<p>deploys.</b></p>
+
+<p><b>RUNTIMES.md un-orphaned.</b> The 2026-09-08 rewrite had moved this ticket&#x27;s switch entry into</p>
+<p>the archive while telling agents to read named switches from </code>event-gate.env<code> and naming none.</p>
+<p>The live file now has § <b>Named event-gate switches an agent may read</b> — names, code defaults</p>
+<p>(explicitly not deployed values), and the rule that a switch read off Cloud Run is read off the</p>
+<p>forwarder.</p>
+
+<p><b>Still open, and the only thing between here and closed:</b> the in-situ demonstration. After</p>
+<p>#72 deploys, this is the evidence:</p>
+
+<p></code>`<code>bash</p>
+<p>ssh root@2.25.139.60 &quot;docker logs --since 72h event-gate 2&gt;&amp;1 | grep -i &#x27;platform identity&#x27;&quot;</p>
+<p></code>``</p>
+
+<p>One line read against the booking it names closes ticket 124.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">22</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
@@ -16129,5 +16168,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-09 10:48 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-09 10:51 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
