@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">6</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">95</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">96</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">7</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">6</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -1402,286 +1402,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <h2>Absorbed 2026-09-08 — <b>129-manual-provisioning-mints-duplicates</b></h2>
 
 <p><b>Human-minted duplicates (from 129):</b> a person creating an Artist row by hand bypasses this ladder. Rather than a mid-task warning nobody reads (<b>077</b>&#x27;s lesson), the cheap fix is the sweep that produced <b>104</b>&#x27;s sheet, run on a cadence: two live cards sharing a hard signal (email, phone, Skedda/Alarm user id) raise one keyed Sweep Feedback row with the pair and the evidence. Merges stay human-only. </code>create_artist` does not change — the bot behaved correctly.</p>
-</div></details></details></div><div class="job"><div class="jnum">#130</div><div class="jhead"><span class="emoji">🦾</span><h4>Give the desk a pair of hands inside Giggster and Tagvenue</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Two booking websites hold conversations we cannot finish. Giggster has no way to send a reply from the desk. Tagvenue forwards messages but blanks out every link</li><li>So a customer&#x27;s reply has sat unsent for 29 days, and a 30-person weekly lead sent us a link twice that nobody has been able to open</li><li>The robot kept asking a person to go log in and look. That is not a task, it is a missing tool</li><li>This job builds the tool: something that can log in, read the whole thread including links, post a reply a human already approved, and close out finished enquiries</li><li>Hard lines: it never sees a password, it never writes its own messages, and it stops dead if the website asks it to prove it is human</li><li>Accepting bookings stays with a person, because accepting charges the customer&#x27;s card</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the platform messenger agent (grokbot) — the desk&#x27;s hands inside Giggster and Tagvenue</b></p><h2>Question</h2>
-
-<p>Two platforms hold conversations the desk cannot finish:</p>
-
-<ul>
-<li>- <b>Giggster has no email relay.</b> A reply composed at the desk exists as a Message</li>
-</ul>
-<p>Queue row and can never leave. Sinéad B.&#x27;s reply has been held at <code>Pending Review</code></p>
-<p>since <b>2026-08-06</b> — 29 days on 2026-09-04.</p>
-<ul>
-<li>- <b>Tagvenue relays inbound mail but strips every link</b> to the literal text</li>
-</ul>
-<p><code>[Visit messenger to view the link]</code>. Sandra Lewis (30-guest weekly-slot lead, enquiry</p>
-<p>u2999101) sent her link twice. Nobody has seen it. Her ticket sits at <code>Gate: Artist</code></p>
-<p>on the assumption we are waiting on her.</p>
-
-<p>The loop&#x27;s response to this gap was to propose &quot;open the dashboard and look&quot; as a</p>
-<p>Next Action row — four times (rows <code>3c17503281c481d899e9e5f2f9775303</code>,</p>
-<p><code>3c17503281c4816498f8c4823f387f55</code>, <code>3c37503281c481a8935bde2c4c1531d0</code>,</p>
-<p><code>3ce7503281c481259e5bc4ac7b1060bb</code>). A proposal nobody can execute is not an action.</p>
-<p>It is a capability gap wearing a task&#x27;s clothes.</p>
-
-<p>Junyan&#x27;s ruling (2026-09-04): <b>fix the platform gap with an agent that can drive the</p>
-<p>platform UI.</b> Working name: <b>grokbot</b>. The runtime is Junyan&#x27;s call — the first turn</p>
-<p>of the build session confirms what &quot;grokbot&quot; means (an xAI Grok-backed agent, a</p>
-<p>browser-driving Claude lane, or something else) before anything is written. Nothing</p>
-<p>in this ticket depends on which; the job is the same.</p>
-
-<h2>What it must do</h2>
-
-<p>Four capabilities, in priority order. Each is a read or a write against the platform&#x27;s</p>
-<p>own web UI, because neither platform has an API surface the desk can reach.</p>
-
-<ol>
-<li>1. <b>Read a messenger thread in full</b>, links included. Tagvenue&#x27;s stripped links are</li>
-</ol>
-<p>the first target. Output goes onto the Sales ticket as a dated block quote — the</p>
-<p>link, its destination, and what it contains. Never into a Next Action row.</p>
-<ol>
-<li>2. <b>Post a reply that a human already approved.</b> The body comes ONLY from a</li>
-</ol>
-<p>📤 Message Queue row at <code>Ready to Send</code> with <code>Channel = Platform - Giggster</code> /</p>
-<p><code>Platform - Tagvenue</code>. The agent never composes. It reads the approved text, posts</p>
-<p>it verbatim, reads the thread back to confirm it landed, then sets the row <code>Sent</code></p>
-<p>with a receipt (thread URL + timestamp). A post that cannot be read back is not</p>
-<p>sent — leave the row and file a Run Error.</p>
-<ol>
-<li>3. <b>Close out an enquiry on the platform</b> once the booking is delivered (Grace Lim&#x27;s</li>
-</ol>
-<p>shape — booked, paid, delivered, enquiry still open). Read-back is the enquiry&#x27;s</p>
-<p>state on the platform after the action.</p>
-<ol>
-<li>4. <b>Accept or decline a booking request</b> — LATER, and gated. Accepting charges the</li>
-</ol>
-<p>guest&#x27;s card. This stays human-only until Junyan rules otherwise in writing, and the</p>
-<p>ticket that builds it is a separate one.</p>
-
-<h2>Hard constraints — these bind the build</h2>
-
-<ul>
-<li>- <b>CREDENTIALS NEVER PASS THROUGH THE AGENT.</b> Junyan&#x27;s workspace <code>CLAUDE.md</code> forbids</li>
-</ul>
-<p>entering passwords into any field. The only permitted path is the password manager</p>
-<p>flow (1Password via <code>request_credentials</code> / <code>autofill_credential</code>) where the agent</p>
-<p>never sees the value. If the chosen runtime cannot do that, the build stops and</p>
-<p>says so. Do not store a session cookie in Secret Manager as a workaround without</p>
-<p>Junyan&#x27;s explicit ruling — the Skedda cookie precedent exists but was ruled</p>
-<p>separately.</p>
-<ul>
-<li>- <b>Never compose, never send unapproved.</b> Capability 2 posts approved text only. The</li>
-</ul>
-<p>Message Queue at <code>Pending Review → Ready to Send</code> is the ONLY review surface for</p>
-<p>outbound (Junyan&#x27;s ruling, 2026-09-04: &quot;approve this message should never be sent</p>
-<p>anywhere other than the message queue&quot;).</p>
-<ul>
-<li>- <b>No off-platform contact info on platform sends</b> — no URL, phone, email, or</li>
-</ul>
-<p>address in any Giggster or Tagvenue message, signature included. An access code</p>
-<p>NEVER travels a platform relay (<code>CLAUDE.md</code> hard rules).</p>
-<ul>
-<li>- <b>Never bypass a CAPTCHA or bot check.</b> If the platform challenges, stop and hand</li>
-</ul>
-<p>to a human.</p>
-<ul>
-<li>- <b>Every action reads back.</b> The pattern is the loop&#x27;s VERIFY beat: the writer and</li>
-</ul>
-<p>the witness are the same read of the platform after the write, and a read that</p>
-<p>disagrees files a mismatch, never a success.</p>
-<ul>
-<li>- <b>Junyan runs deploys</b> if this lands on Cloud Run. Agent gcloud is blocked.</li>
-</ul>
-
-<h2>What already exists — do not rebuild</h2>
-
-<ul>
-<li>- The Message Queue schema, <code>Channel</code> values, <code>Ready to Send</code> → <code>Sent</code> flow, and the</li>
-</ul>
-<p>receipt convention (<code>phonecom:&lt;id&gt;</code> for SMS) — extend the receipt shape for</p>
-<p>platforms, do not invent a parallel queue.</p>
-<ul>
-<li>- <code>send_verifier.py</code> releases FBS auto-send rows under guards. Platform rows are NOT</li>
-</ul>
-<p>in its carve-out and must not be added without a ruling.</p>
-<ul>
-<li>- The Sales ticket <code>Current Block</code> / SOP-step checklist is where a platform read</li>
-</ul>
-<p>lands. Read <code>♟️ Platform — Instant Book or Booking Request</code> SOP</p>
-<p>(<code>3617503281c480de8176c73d80aba61e</code>) for the exact step names.</p>
-<ul>
-<li>- Artist pages carry the per-message Tagvenue relays. The agent reads them, never</li>
-</ul>
-<p>writes contact info from a platform page into the Artist DB without dedup.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- Sandra Lewis&#x27;s link is read and its contents are on ticket</li>
-</ul>
-<p><code>3c97503281c481d7b8bafafc01fee2ff</code> as a dated block. That is the first proof.</p>
-<ul>
-<li>- Sinéad B.&#x27;s held reply (Message Queue row per Action row</li>
-</ul>
-<p><code>3b47503281c48179873ae0dd93f49633</code>) goes out through the agent from <code>Ready to Send</code>,</p>
-<p>is read back in the Giggster thread, and the row reads <code>Sent</code> with a thread receipt.</p>
-<p><b>Junyan flips it to <code>Ready to Send</code> — the agent does not.</b></p>
-<ul>
-<li>- Grace Lim&#x27;s Tagvenue enquiry (Mon 2026-08-10 15:00, Studio 901) is closed on the</li>
-</ul>
-<p>platform and the outcome is on ticket <code>3b57503281c48105a8c3c4e6beb8783f</code>.</p>
-<ul>
-<li>- A test where credentials are requested proves the agent never receives the value.</li>
-<li>- A test where the platform returns a challenge proves the agent stops.</li>
-<li>- RUNTIMES.md row, Run Monitor row if it runs on a schedule, Plumbing Map entry, and</li>
-</ul>
-<p>a Limits register entry that REPLACES the &quot;cannot read platform messenger&quot; limit</p>
-<p>with the tested capability and its date.</p>
-
-<h2>Seam</h2>
-
-<p>This ticket owns the platform hands. It does not own who decides what to send</p>
-<p>(Message Queue + human), nor the Sales SOP steps that call for a platform read. Those</p>
-<p>stay where they are and call this agent. The four dead Next Action rows above close</p>
-<p><code>Won&#x27;t Do</code> under ticket 053&#x27;s replan once this lands — do not close them here.</p>
-
-<h2>Progress (2026-09-04) — DEFINED and TESTED as code; NOT RUN; canon held back by ruling</h2>
-
-<p><b>Runtime confirmed (Junyan, first turn):</b> &quot;grokbot&quot; is an <b>xAI Grok Bot</b> agent. Junyan</p>
-<p>creates it, pastes the definition, and signs in to the platforms himself through Grok</p>
-<p>Bot&#x27;s Agent Computer takeover. That is how the credential constraint is met: there is no</p>
-<p>path by which a password, code or cookie reaches the agent, and the definition makes any</p>
-<p>sign-in form or challenge a hard stop. Junyan: <i>&quot;You don&#x27;t need this&quot;</i> to the 1Password</p>
-<p>question — the password-manager door is not used because no agent in this design types</p>
-<p>a credential at all. Second ruling mid-build: *&quot;Don&#x27;t update the canon page, we need to</p>
-<p>test it first.&quot;* Honoured — nothing was written to <code>dc-canon</code>.</p>
-
-<p><b>Shape (Junyan, mid-build):</b> the Bot polls the Message Queue; a <code>Ready to Send</code> row on</p>
-<p>a platform Channel is posted directly in that platform&#x27;s messenger. Written as skill D.</p>
-
-<p><b>Delivered, all under <b>assets/121-grokbot/</b>:</b></p>
-<ul>
-<li>- <code>DEFINITION-DRAFT.md</code> — paste blocks A–F (identity, instructions, three skills, Auto</li>
-</ul>
-<p>Review rules) and the routine. Harness-neutral in substance; Grok-Bot-shaped in form.</p>
-<ul>
-<li>- <code>protocol.py</code>, <code>guard.py</code>, <code>receipt.py</code>, <code>definition_check.py</code> + tests — <b>29 passed</b>.</li>
-</ul>
-<p>Proofs the ticket asked for: a login form / OTP / CAPTCHA / bot challenge stops the run</p>
-<p>with nothing typed (<code>test_protocol.py</code>); the agent&#x27;s state has no field that could hold</p>
-<p>a credential; the definition text carries every hard rule and no credential-shaped</p>
-<p>string (<code>test_definition.py</code>). Also: <code>Pending Review</code> never posts; an approved body</p>
-<p>carrying a phone / URL / address / access code never posts; read-back mismatch never</p>
-<p>earns a receipt; an identical message already in the thread sets <code>Sent</code> without posting.</p>
-<ul>
-<li>- <code>RUNBOOK.md</code> — setup, the two live rehearsals (R1 credential, R2 challenge), the three</li>
-</ul>
-<p>acceptance runs, go-live, and the paperwork that waits for a pass.</p>
-<ul>
-<li>- <code>send-engine/test_foreign_lane.js</code> + <code>send-engine/proposed-v24-platform-lanes.md</code> —</li>
-</ul>
-<p>the Send Engine change the two new Channel options require. <b>Not applied</b>; the test</p>
-<p>fails on the two new values on purpose until Junyan applies and <code>clasp push</code>es.</p>
-<ul>
-<li>- <code>RUNTIMES.md</code> row (DRAFT, not yet run). Plumbing Map entry <code>2026-09-05 03:1xZ</code>.</li>
-<li>- Receipt shape ruled here: <code>giggster:&lt;conversation-uuid&gt;@&lt;ISO Toronto&gt;</code> /</li>
-</ul>
-<p><code>tagvenue:u&lt;enquiry-id&gt;@&lt;ISO Toronto&gt;</code>, optional <code> already-present</code>.</p>
-
-<p><b>Findings that change the acceptance list:</b></p>
-<ul>
-<li>- <b>Sandra Lewis:</b> her link was already read by Junyan in the messenger on 2026-09-02 —</li>
-</ul>
-<p><b>meditateintoronto.org</b>, Kadampa Meditation Centre Canada (&quot;KMC Canada&quot;). Her</p>
-<p>2026-08-31 reply says her organisation needs time. <b>The desk is not holding her up</b>;</p>
-<p><code>Revisit After = 2026-09-16</code> stands. The grokbot read (4a) is still the first live proof,</p>
-<p>and the block is paste-ready in the runbook if the Bot&#x27;s Notion write fails.</p>
-<ul>
-<li>- <b>Sinéad B.:</b> the held reply answers questions about a <b>2026-08-22</b> booking. The date</li>
-</ul>
-<p>has passed; posting it now fails the temporal check. Recommendation: <code>Will Not Send</code>,</p>
-<p>and prove the Giggster send on a current row Junyan approves. The Action row that</p>
-<p>carried her text is already <code>Processed</code>; her studio (509A vs 901) was never settled.</p>
-<ul>
-<li>- <b>Grace Lim:</b> her Tagvenue enquiry expired <b>2026-08-12 04:13</b> by the platform&#x27;s own</li>
-</ul>
-<p>rule. The close-out&#x27;s expected outcome is <i>state: expired, action: none</i>, recorded on</p>
-<p>the ticket. Next Action row <code>3c37503281c481a8935bde2c4c1531d0</code> untouched (053).</p>
-<ul>
-<li>- <b>Limits register:</b> there is no existing &quot;cannot read platform messenger&quot; row to</li>
-</ul>
-<p>replace — the claim lived in prose and in the four Next Action rows. A new row (text in</p>
-<p>the runbook § 6) goes in when the acceptance sheet has a date to cite.</p>
-
-<p><b>Not done, and why:</b> no Notion write (the harness classifier blocked this session&#x27;s</p>
-<p>Notion API calls after two reads — Sandra&#x27;s block and the register row are paste-ready);</p>
-<p>no Grok Bot run (Junyan&#x27;s account); no canon page (ruling); no Run Monitor row (added the</p>
-<p>day the routine goes on); Send Engine v24 not applied (test-first; the first send does not</p>
-<p>need it). The four dead Next Action rows are left for 053.</p>
-
-<p><b>Next:</b> Junyan works RUNBOOK § 1–4. A passing sheet moves the draft into canon (§ 6) and</p>
-<p>closes this ticket.</p>
-
-<h2>Progress (2026-09-05) — RE-SCOPED by Junyan: read and repair, never send</h2>
-
-<p><b>Rulings (Junyan, 2026-09-05):</b> grokbot is a standalone, bolted-on agent. *&quot;Its job is</p>
-<p>to see the messages and then fix notion message queue and artist database so that we</p>
-<p>can send message properly. It won&#x27;t send any messages.&quot;* Then, narrowed: it fixes only</p>
-<p>the Artist page&#x27;s email/phone (and the contact db); it never touches a queue row, so</p>
-<p>nothing sends by side effect. The text to Junyan goes as one queue SMS row to his own</p>
-<p>card. Giggster: the SMS proxy is an acceptable door. Contact values go into ☎️ Contact</p>
-<p>Points. <i>&quot;Sineads message is will not send.&quot;</i></p>
-
-<p><b>Answers found:</b></p>
-<ul>
-<li>- <b>The queue &quot;hole&quot; is already closed by canon.</b> The queue&#x27;s <code>Email</code>/<code>Phone</code> are</li>
-</ul>
-<p>rollups off the Artist card; relay-addresses.md (2026-08-21) rules the newest usable</p>
-<p>relay is mirrored into the card field when no direct value exists. grokbot writes both</p>
-<p>the Contact Points row and the card field under that precedence. No queue change.</p>
-<ul>
-<li>- <b>Sinéad B. has no queue row.</b> Her text lived in Action row <code>3b47…49633</code> (Processed);</li>
-</ul>
-<p>ticket <code>3b47…3ddaf</code> closed <code>Lost</code> 2026-08-19. Nothing to set.</p>
-<ul>
-<li>- <b>Giggster texts today:</b> the SMS poller logs a <code>(Giggster) &lt;guest&gt;:</code> proxy text as an</li>
-</ul>
-<p>ordinary inbound from an unknown number; nothing files it as a contact point. None</p>
-<p>appear in the last 100 inbound texts. grokbot files it when phonecom-mcp (reads only)</p>
-<p>is attached; a deterministic poller rule is the durable fix — separate ticket.</p>
-<ul>
-<li>- <code>greeter_sweep.py:397</code> (&quot;no email relay&quot;) disagrees with canon&#x27;s 2026-08-26 Giggster</li>
-</ul>
-<p>relay correction — reconcile on the first live case, separate ticket.</p>
-
-<p><b>Delivered (v2, all under <b>assets/121-grokbot/</b>):</b></p>
-<p><code>DEFINITION-DRAFT.md</code> (blocks A–E: identity, instructions, read skill, repair skill,</p>
-<p>text-Junyan skill + Auto Review rules, routine); <code>protocol.py</code> + <code>test_protocol.py</code> —</p>
-<p><b>20 passed</b> (credential never in state; challenge stops with nothing typed; no action</p>
-<p>can type into a platform page; the only outbound is the fixed text to Junyan with no</p>
-<p>guest contact info; direct email/phone never overwritten; Tagvenue relay parsed from the</p>
-<p>mail body with its enquiry id; Giggster proxy requires all three signals); <code>RUNBOOK.md</code></p>
-<p>v2. Deleted: the v1 posting code, receipt module, Send Engine v24 proposal and its test.</p>
-<p>RUNTIMES row and Plumbing Map entry updated. Canon untouched by ruling.</p>
-
-<p><b>Acceptance now:</b> 4a Sandra read + relay filed; 4b the next held Giggster row → door</p>
-<p>filed or one text to Junyan; 4c Grace read only (close-out capability dropped).</p>
-
-
-<h2>Renumbered 121 → 130 (2026-09-07)</h2>
-
-<p>Two tickets shared the number <b>121</b> in this directory. This ticket had <b>one</b> reference against three for <b>121 — thermal log dedupe</b>, and was filed a day later (2026-09-04 21:49 against 2026-09-03 23:31).</p>
-
-<p>Renumbered as part of a sweep after a duplicate number cost real time on 2026-09-07: a card</p>
-<p>reading <b>#122</b> about expiring door codes led an agent to open the <i>other</i> 122 — a logging</p>
-<p>fix — and work the wrong ticket. Six collisions were cleared in the same pass: 026, 076, 087,</p>
-<p>106, 121 and the original 122. Every reference across <code>wayfinder/</code> and <code>day-sheet/</code> was</p>
-<p>rewritten, and a link check now reports <b>0 broken links</b> in this directory.</p>
-
-<p>The rule used throughout: <b>the ticket with fewer external references moves, even when it</p>
-<p>holds the number first.</b> A number is a label; a live document pointing at the wrong ticket is</p>
-<p>a fault.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">22</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
@@ -3765,7 +3485,299 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#005</span><span class="emoji">💰</span><span class="done-title">Track what each job costs — folded into the master job list</span><span class="done-date">2026-09-08</span></summary><div class="done-body"><ul class="plain-bullets"><li>CLOSED Sep 8 in the map clean-up: the cost line is one column on the master job list (001), not a project of its own</li><li>Once a week, count runs and minutes per job and write them on that list</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#130</span><span class="emoji">🦾</span><span class="done-title">Give the desk a pair of hands inside Giggster and Tagvenue</span><span class="done-date">2026-09-16</span></summary><div class="done-body"><ul class="plain-bullets"><li>Two booking websites hold conversations we cannot finish. Giggster has no way to send a reply from the desk. Tagvenue forwards messages but blanks out every link</li><li>So a customer&#x27;s reply has sat unsent for 29 days, and a 30-person weekly lead sent us a link twice that nobody has been able to open</li><li>The robot kept asking a person to go log in and look. That is not a task, it is a missing tool</li><li>This job builds the tool: something that can log in, read the whole thread including links, post a reply a human already approved, and close out finished enquiries</li><li>Hard lines: it never sees a password, it never writes its own messages, and it stops dead if the website asks it to prove it is human</li><li>Accepting bookings stays with a person, because accepting charges the customer&#x27;s card</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the platform messenger agent (grokbot) — the desk&#x27;s hands inside Giggster and Tagvenue</b></p><h2>Question</h2>
+
+<p>Two platforms hold conversations the desk cannot finish:</p>
+
+<ul>
+<li>- <b>Giggster has no email relay.</b> A reply composed at the desk exists as a Message</li>
+</ul>
+<p>Queue row and can never leave. Sinéad B.&#x27;s reply has been held at <code>Pending Review</code></p>
+<p>since <b>2026-08-06</b> — 29 days on 2026-09-04.</p>
+<ul>
+<li>- <b>Tagvenue relays inbound mail but strips every link</b> to the literal text</li>
+</ul>
+<p><code>[Visit messenger to view the link]</code>. Sandra Lewis (30-guest weekly-slot lead, enquiry</p>
+<p>u2999101) sent her link twice. Nobody has seen it. Her ticket sits at <code>Gate: Artist</code></p>
+<p>on the assumption we are waiting on her.</p>
+
+<p>The loop&#x27;s response to this gap was to propose &quot;open the dashboard and look&quot; as a</p>
+<p>Next Action row — four times (rows <code>3c17503281c481d899e9e5f2f9775303</code>,</p>
+<p><code>3c17503281c4816498f8c4823f387f55</code>, <code>3c37503281c481a8935bde2c4c1531d0</code>,</p>
+<p><code>3ce7503281c481259e5bc4ac7b1060bb</code>). A proposal nobody can execute is not an action.</p>
+<p>It is a capability gap wearing a task&#x27;s clothes.</p>
+
+<p>Junyan&#x27;s ruling (2026-09-04): <b>fix the platform gap with an agent that can drive the</p>
+<p>platform UI.</b> Working name: <b>grokbot</b>. The runtime is Junyan&#x27;s call — the first turn</p>
+<p>of the build session confirms what &quot;grokbot&quot; means (an xAI Grok-backed agent, a</p>
+<p>browser-driving Claude lane, or something else) before anything is written. Nothing</p>
+<p>in this ticket depends on which; the job is the same.</p>
+
+<h2>What it must do</h2>
+
+<p>Four capabilities, in priority order. Each is a read or a write against the platform&#x27;s</p>
+<p>own web UI, because neither platform has an API surface the desk can reach.</p>
+
+<ol>
+<li>1. <b>Read a messenger thread in full</b>, links included. Tagvenue&#x27;s stripped links are</li>
+</ol>
+<p>the first target. Output goes onto the Sales ticket as a dated block quote — the</p>
+<p>link, its destination, and what it contains. Never into a Next Action row.</p>
+<ol>
+<li>2. <b>Post a reply that a human already approved.</b> The body comes ONLY from a</li>
+</ol>
+<p>📤 Message Queue row at <code>Ready to Send</code> with <code>Channel = Platform - Giggster</code> /</p>
+<p><code>Platform - Tagvenue</code>. The agent never composes. It reads the approved text, posts</p>
+<p>it verbatim, reads the thread back to confirm it landed, then sets the row <code>Sent</code></p>
+<p>with a receipt (thread URL + timestamp). A post that cannot be read back is not</p>
+<p>sent — leave the row and file a Run Error.</p>
+<ol>
+<li>3. <b>Close out an enquiry on the platform</b> once the booking is delivered (Grace Lim&#x27;s</li>
+</ol>
+<p>shape — booked, paid, delivered, enquiry still open). Read-back is the enquiry&#x27;s</p>
+<p>state on the platform after the action.</p>
+<ol>
+<li>4. <b>Accept or decline a booking request</b> — LATER, and gated. Accepting charges the</li>
+</ol>
+<p>guest&#x27;s card. This stays human-only until Junyan rules otherwise in writing, and the</p>
+<p>ticket that builds it is a separate one.</p>
+
+<h2>Hard constraints — these bind the build</h2>
+
+<ul>
+<li>- <b>CREDENTIALS NEVER PASS THROUGH THE AGENT.</b> Junyan&#x27;s workspace <code>CLAUDE.md</code> forbids</li>
+</ul>
+<p>entering passwords into any field. The only permitted path is the password manager</p>
+<p>flow (1Password via <code>request_credentials</code> / <code>autofill_credential</code>) where the agent</p>
+<p>never sees the value. If the chosen runtime cannot do that, the build stops and</p>
+<p>says so. Do not store a session cookie in Secret Manager as a workaround without</p>
+<p>Junyan&#x27;s explicit ruling — the Skedda cookie precedent exists but was ruled</p>
+<p>separately.</p>
+<ul>
+<li>- <b>Never compose, never send unapproved.</b> Capability 2 posts approved text only. The</li>
+</ul>
+<p>Message Queue at <code>Pending Review → Ready to Send</code> is the ONLY review surface for</p>
+<p>outbound (Junyan&#x27;s ruling, 2026-09-04: &quot;approve this message should never be sent</p>
+<p>anywhere other than the message queue&quot;).</p>
+<ul>
+<li>- <b>No off-platform contact info on platform sends</b> — no URL, phone, email, or</li>
+</ul>
+<p>address in any Giggster or Tagvenue message, signature included. An access code</p>
+<p>NEVER travels a platform relay (<code>CLAUDE.md</code> hard rules).</p>
+<ul>
+<li>- <b>Never bypass a CAPTCHA or bot check.</b> If the platform challenges, stop and hand</li>
+</ul>
+<p>to a human.</p>
+<ul>
+<li>- <b>Every action reads back.</b> The pattern is the loop&#x27;s VERIFY beat: the writer and</li>
+</ul>
+<p>the witness are the same read of the platform after the write, and a read that</p>
+<p>disagrees files a mismatch, never a success.</p>
+<ul>
+<li>- <b>Junyan runs deploys</b> if this lands on Cloud Run. Agent gcloud is blocked.</li>
+</ul>
+
+<h2>What already exists — do not rebuild</h2>
+
+<ul>
+<li>- The Message Queue schema, <code>Channel</code> values, <code>Ready to Send</code> → <code>Sent</code> flow, and the</li>
+</ul>
+<p>receipt convention (<code>phonecom:&lt;id&gt;</code> for SMS) — extend the receipt shape for</p>
+<p>platforms, do not invent a parallel queue.</p>
+<ul>
+<li>- <code>send_verifier.py</code> releases FBS auto-send rows under guards. Platform rows are NOT</li>
+</ul>
+<p>in its carve-out and must not be added without a ruling.</p>
+<ul>
+<li>- The Sales ticket <code>Current Block</code> / SOP-step checklist is where a platform read</li>
+</ul>
+<p>lands. Read <code>♟️ Platform — Instant Book or Booking Request</code> SOP</p>
+<p>(<code>3617503281c480de8176c73d80aba61e</code>) for the exact step names.</p>
+<ul>
+<li>- Artist pages carry the per-message Tagvenue relays. The agent reads them, never</li>
+</ul>
+<p>writes contact info from a platform page into the Artist DB without dedup.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Sandra Lewis&#x27;s link is read and its contents are on ticket</li>
+</ul>
+<p><code>3c97503281c481d7b8bafafc01fee2ff</code> as a dated block. That is the first proof.</p>
+<ul>
+<li>- Sinéad B.&#x27;s held reply (Message Queue row per Action row</li>
+</ul>
+<p><code>3b47503281c48179873ae0dd93f49633</code>) goes out through the agent from <code>Ready to Send</code>,</p>
+<p>is read back in the Giggster thread, and the row reads <code>Sent</code> with a thread receipt.</p>
+<p><b>Junyan flips it to <code>Ready to Send</code> — the agent does not.</b></p>
+<ul>
+<li>- Grace Lim&#x27;s Tagvenue enquiry (Mon 2026-08-10 15:00, Studio 901) is closed on the</li>
+</ul>
+<p>platform and the outcome is on ticket <code>3b57503281c48105a8c3c4e6beb8783f</code>.</p>
+<ul>
+<li>- A test where credentials are requested proves the agent never receives the value.</li>
+<li>- A test where the platform returns a challenge proves the agent stops.</li>
+<li>- RUNTIMES.md row, Run Monitor row if it runs on a schedule, Plumbing Map entry, and</li>
+</ul>
+<p>a Limits register entry that REPLACES the &quot;cannot read platform messenger&quot; limit</p>
+<p>with the tested capability and its date.</p>
+
+<h2>Seam</h2>
+
+<p>This ticket owns the platform hands. It does not own who decides what to send</p>
+<p>(Message Queue + human), nor the Sales SOP steps that call for a platform read. Those</p>
+<p>stay where they are and call this agent. The four dead Next Action rows above close</p>
+<p><code>Won&#x27;t Do</code> under ticket 053&#x27;s replan once this lands — do not close them here.</p>
+
+<h2>Progress (2026-09-04) — DEFINED and TESTED as code; NOT RUN; canon held back by ruling</h2>
+
+<p><b>Runtime confirmed (Junyan, first turn):</b> &quot;grokbot&quot; is an <b>xAI Grok Bot</b> agent. Junyan</p>
+<p>creates it, pastes the definition, and signs in to the platforms himself through Grok</p>
+<p>Bot&#x27;s Agent Computer takeover. That is how the credential constraint is met: there is no</p>
+<p>path by which a password, code or cookie reaches the agent, and the definition makes any</p>
+<p>sign-in form or challenge a hard stop. Junyan: <i>&quot;You don&#x27;t need this&quot;</i> to the 1Password</p>
+<p>question — the password-manager door is not used because no agent in this design types</p>
+<p>a credential at all. Second ruling mid-build: *&quot;Don&#x27;t update the canon page, we need to</p>
+<p>test it first.&quot;* Honoured — nothing was written to <code>dc-canon</code>.</p>
+
+<p><b>Shape (Junyan, mid-build):</b> the Bot polls the Message Queue; a <code>Ready to Send</code> row on</p>
+<p>a platform Channel is posted directly in that platform&#x27;s messenger. Written as skill D.</p>
+
+<p><b>Delivered, all under <b>assets/121-grokbot/</b>:</b></p>
+<ul>
+<li>- <code>DEFINITION-DRAFT.md</code> — paste blocks A–F (identity, instructions, three skills, Auto</li>
+</ul>
+<p>Review rules) and the routine. Harness-neutral in substance; Grok-Bot-shaped in form.</p>
+<ul>
+<li>- <code>protocol.py</code>, <code>guard.py</code>, <code>receipt.py</code>, <code>definition_check.py</code> + tests — <b>29 passed</b>.</li>
+</ul>
+<p>Proofs the ticket asked for: a login form / OTP / CAPTCHA / bot challenge stops the run</p>
+<p>with nothing typed (<code>test_protocol.py</code>); the agent&#x27;s state has no field that could hold</p>
+<p>a credential; the definition text carries every hard rule and no credential-shaped</p>
+<p>string (<code>test_definition.py</code>). Also: <code>Pending Review</code> never posts; an approved body</p>
+<p>carrying a phone / URL / address / access code never posts; read-back mismatch never</p>
+<p>earns a receipt; an identical message already in the thread sets <code>Sent</code> without posting.</p>
+<ul>
+<li>- <code>RUNBOOK.md</code> — setup, the two live rehearsals (R1 credential, R2 challenge), the three</li>
+</ul>
+<p>acceptance runs, go-live, and the paperwork that waits for a pass.</p>
+<ul>
+<li>- <code>send-engine/test_foreign_lane.js</code> + <code>send-engine/proposed-v24-platform-lanes.md</code> —</li>
+</ul>
+<p>the Send Engine change the two new Channel options require. <b>Not applied</b>; the test</p>
+<p>fails on the two new values on purpose until Junyan applies and <code>clasp push</code>es.</p>
+<ul>
+<li>- <code>RUNTIMES.md</code> row (DRAFT, not yet run). Plumbing Map entry <code>2026-09-05 03:1xZ</code>.</li>
+<li>- Receipt shape ruled here: <code>giggster:&lt;conversation-uuid&gt;@&lt;ISO Toronto&gt;</code> /</li>
+</ul>
+<p><code>tagvenue:u&lt;enquiry-id&gt;@&lt;ISO Toronto&gt;</code>, optional <code> already-present</code>.</p>
+
+<p><b>Findings that change the acceptance list:</b></p>
+<ul>
+<li>- <b>Sandra Lewis:</b> her link was already read by Junyan in the messenger on 2026-09-02 —</li>
+</ul>
+<p><b>meditateintoronto.org</b>, Kadampa Meditation Centre Canada (&quot;KMC Canada&quot;). Her</p>
+<p>2026-08-31 reply says her organisation needs time. <b>The desk is not holding her up</b>;</p>
+<p><code>Revisit After = 2026-09-16</code> stands. The grokbot read (4a) is still the first live proof,</p>
+<p>and the block is paste-ready in the runbook if the Bot&#x27;s Notion write fails.</p>
+<ul>
+<li>- <b>Sinéad B.:</b> the held reply answers questions about a <b>2026-08-22</b> booking. The date</li>
+</ul>
+<p>has passed; posting it now fails the temporal check. Recommendation: <code>Will Not Send</code>,</p>
+<p>and prove the Giggster send on a current row Junyan approves. The Action row that</p>
+<p>carried her text is already <code>Processed</code>; her studio (509A vs 901) was never settled.</p>
+<ul>
+<li>- <b>Grace Lim:</b> her Tagvenue enquiry expired <b>2026-08-12 04:13</b> by the platform&#x27;s own</li>
+</ul>
+<p>rule. The close-out&#x27;s expected outcome is <i>state: expired, action: none</i>, recorded on</p>
+<p>the ticket. Next Action row <code>3c37503281c481a8935bde2c4c1531d0</code> untouched (053).</p>
+<ul>
+<li>- <b>Limits register:</b> there is no existing &quot;cannot read platform messenger&quot; row to</li>
+</ul>
+<p>replace — the claim lived in prose and in the four Next Action rows. A new row (text in</p>
+<p>the runbook § 6) goes in when the acceptance sheet has a date to cite.</p>
+
+<p><b>Not done, and why:</b> no Notion write (the harness classifier blocked this session&#x27;s</p>
+<p>Notion API calls after two reads — Sandra&#x27;s block and the register row are paste-ready);</p>
+<p>no Grok Bot run (Junyan&#x27;s account); no canon page (ruling); no Run Monitor row (added the</p>
+<p>day the routine goes on); Send Engine v24 not applied (test-first; the first send does not</p>
+<p>need it). The four dead Next Action rows are left for 053.</p>
+
+<p><b>Next:</b> Junyan works RUNBOOK § 1–4. A passing sheet moves the draft into canon (§ 6) and</p>
+<p>closes this ticket.</p>
+
+<h2>Progress (2026-09-05) — RE-SCOPED by Junyan: read and repair, never send</h2>
+
+<p><b>Rulings (Junyan, 2026-09-05):</b> grokbot is a standalone, bolted-on agent. *&quot;Its job is</p>
+<p>to see the messages and then fix notion message queue and artist database so that we</p>
+<p>can send message properly. It won&#x27;t send any messages.&quot;* Then, narrowed: it fixes only</p>
+<p>the Artist page&#x27;s email/phone (and the contact db); it never touches a queue row, so</p>
+<p>nothing sends by side effect. The text to Junyan goes as one queue SMS row to his own</p>
+<p>card. Giggster: the SMS proxy is an acceptable door. Contact values go into ☎️ Contact</p>
+<p>Points. <i>&quot;Sineads message is will not send.&quot;</i></p>
+
+<p><b>Answers found:</b></p>
+<ul>
+<li>- <b>The queue &quot;hole&quot; is already closed by canon.</b> The queue&#x27;s <code>Email</code>/<code>Phone</code> are</li>
+</ul>
+<p>rollups off the Artist card; relay-addresses.md (2026-08-21) rules the newest usable</p>
+<p>relay is mirrored into the card field when no direct value exists. grokbot writes both</p>
+<p>the Contact Points row and the card field under that precedence. No queue change.</p>
+<ul>
+<li>- <b>Sinéad B. has no queue row.</b> Her text lived in Action row <code>3b47…49633</code> (Processed);</li>
+</ul>
+<p>ticket <code>3b47…3ddaf</code> closed <code>Lost</code> 2026-08-19. Nothing to set.</p>
+<ul>
+<li>- <b>Giggster texts today:</b> the SMS poller logs a <code>(Giggster) &lt;guest&gt;:</code> proxy text as an</li>
+</ul>
+<p>ordinary inbound from an unknown number; nothing files it as a contact point. None</p>
+<p>appear in the last 100 inbound texts. grokbot files it when phonecom-mcp (reads only)</p>
+<p>is attached; a deterministic poller rule is the durable fix — separate ticket.</p>
+<ul>
+<li>- <code>greeter_sweep.py:397</code> (&quot;no email relay&quot;) disagrees with canon&#x27;s 2026-08-26 Giggster</li>
+</ul>
+<p>relay correction — reconcile on the first live case, separate ticket.</p>
+
+<p><b>Delivered (v2, all under <b>assets/121-grokbot/</b>):</b></p>
+<p><code>DEFINITION-DRAFT.md</code> (blocks A–E: identity, instructions, read skill, repair skill,</p>
+<p>text-Junyan skill + Auto Review rules, routine); <code>protocol.py</code> + <code>test_protocol.py</code> —</p>
+<p><b>20 passed</b> (credential never in state; challenge stops with nothing typed; no action</p>
+<p>can type into a platform page; the only outbound is the fixed text to Junyan with no</p>
+<p>guest contact info; direct email/phone never overwritten; Tagvenue relay parsed from the</p>
+<p>mail body with its enquiry id; Giggster proxy requires all three signals); <code>RUNBOOK.md</code></p>
+<p>v2. Deleted: the v1 posting code, receipt module, Send Engine v24 proposal and its test.</p>
+<p>RUNTIMES row and Plumbing Map entry updated. Canon untouched by ruling.</p>
+
+<p><b>Acceptance now:</b> 4a Sandra read + relay filed; 4b the next held Giggster row → door</p>
+<p>filed or one text to Junyan; 4c Grace read only (close-out capability dropped).</p>
+
+
+<h2>Renumbered 121 → 130 (2026-09-07)</h2>
+
+<p>Two tickets shared the number <b>121</b> in this directory. This ticket had <b>one</b> reference against three for <b>121 — thermal log dedupe</b>, and was filed a day later (2026-09-04 21:49 against 2026-09-03 23:31).</p>
+
+<p>Renumbered as part of a sweep after a duplicate number cost real time on 2026-09-07: a card</p>
+<p>reading <b>#122</b> about expiring door codes led an agent to open the <i>other</i> 122 — a logging</p>
+<p>fix — and work the wrong ticket. Six collisions were cleared in the same pass: 026, 076, 087,</p>
+<p>106, 121 and the original 122. Every reference across <code>wayfinder/</code> and <code>day-sheet/</code> was</p>
+<p>rewritten, and a link check now reports <b>0 broken links</b> in this directory.</p>
+
+<p>The rule used throughout: <b>the ticket with fewer external references moves, even when it</p>
+<p>holds the number first.</b> A number is a label; a live document pointing at the wrong ticket is</p>
+<p>a fault.</p>
+
+<h2>Progress (2026-09-09) — ON HOLD (Junyan)</h2>
+
+<p>Junyan pasted the brief into Grok Bot on 2026-09-05. The Bot exists (<code>grokbot</code>, three</p>
+<p>skills saved, Auto Review rules pasted, routine NOT created, Gmail connector at</p>
+<p><code>needsAuth</code>). Tests T0–T9 were <b>not run</b>. Junyan then put the work on hold: *&quot;let&#x27;s</p>
+<p>just put a hold on this as I don&#x27;t know if we still need it.&quot;* Nothing is live, nothing</p>
+<p>polls, no Notion write was made by the Bot. It was never entered in the Agent OS Fleet</p>
+<p>Registry and should not be until it runs. To resume: reconnect Gmail in Grok Bot, then</p>
+<p>continue from T0 in <code>assets/121-grokbot/GROKBOT-BRIEF.md</code> (the asset folder keeps the</p>
+<p>old ticket number 121; this ticket was renumbered 130 in the 2026-09-06 map trim). To</p>
+<p>retire: delete the Bot in Grok Bot; no other surface holds state.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#005</span><span class="emoji">💰</span><span class="done-title">Track what each job costs — folded into the master job list</span><span class="done-date">2026-09-08</span></summary><div class="done-body"><ul class="plain-bullets"><li>CLOSED Sep 8 in the map clean-up: the cost line is one column on the master job list (001), not a project of its own</li><li>Once a week, count runs and minutes per job and write them on that list</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
 <p>Build the crude-but-real J26 cost ledger on the Jobs registry spine: per job, runs × pass length (proxy for token spend) plus a self-reported supervision-minutes line, tallied weekly. Framing: <b>subscription headroom + exposure if the subsidy changes</b>, not cash bleed (~$240/mo Claude + $140/mo ChatGPT actual). It also populates the sibling map&#x27;s GO criterion (c). Decide the tally mechanism (likely a weekly scheduled job writing registry rows) and stand it up.</p>
 
