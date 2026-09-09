@@ -1282,6 +1282,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       </details></li>
       <li class="entry det">
       <details>
+      <summary><span class="when">2026-09-09 &middot; 21:1xZ</span>
+      <h3>The guest-identity lane ran for 72 hours and produced no log line at all<span class="kind">FAILURE MODE FIXED &middot; event-gate &middot; MERGED, NOT DEPLOYED</span></h3></summary>
+      <p><strong>The miss.</strong> 72 hours live and <strong>no <code>platform identity</code> line was ever written</strong>. That was not an idle lane. Only the three WRITE paths logged &mdash; create a card, ask the disambiguation question, close the gate-1 row &mdash; and the two paths that resolve someone <em>quietly</em> returned in silence. So &ldquo;no news&rdquo; meant both <em>it worked</em> and <em>it never ran</em>, which is evidence of nothing. Verified on the host the same day: <code>PLATFORM_IDENTITY_LIVE=1</code> in <code>/docker/danceannex-mcp/event-gate.env</code> and on the running container. <strong>The lane was live. It just could not be seen.</strong></p>
+      <p><strong>Fix &mdash; three lines, no digits in any of them.</strong> Rung 1: resolved by the relay&rsquo;s attached <code>Artist</code> relation. Rung 2: resolved to one card by the tag-stripped name, naming the raw string it stripped <em>only when it stripped something</em>. And the gate entry, for when the desk&rsquo;s own tags came off &mdash; a Lauren-shaped booking resolves at gate 2 and never reaches the identity ladder, so that is the only place its success can be seen. Every call is guarded, so a lane that passes no logger still works.</p>
+      <p><strong>Verified before merge, not claimed.</strong> This repo reports <em>no checks</em> on any branch, so the suite was run here: <strong>1972 passed</strong>, matching the PR&rsquo;s own figure. <code>assert_no_code</code> greps every new line and the planted-code grep returns 0 &mdash; no access code can reach a log.</p>
+      <p><strong>State.</strong> <a href="https://github.com/junyanboon/desk-correspondence/pull/72">PR #72</a> merged as <code>38af4090</code> on Junyan&rsquo;s instruction. <strong>It is inert.</strong> Code in <code>services/event-gate/</code> does not run until the <code>deploy-event-gate</code> workflow is triggered by hand, and no deploy was run. Behaviour is otherwise unchanged &mdash; no new reads, no new writes, no change to any verdict.</p>
+      </details>
+    </li>
+      <li class="entry det">
+      <details>
       <summary><span class="when">2026-09-09 &middot; 16:45Z</span>
       <h3>The Planner ended at startup on Sep 8 &mdash; no shifts posted for Sep 9&ndash;11; catch-up pass restored 21 blocks / 23 rows<span class="kind">PLANNER &middot; Hermes cron c2346c8d3d5c (vps, lease codex) &middot; prompt premise defect &middot; RESOLVED 16:43Z</span></h3></summary>
       <p><strong>Asked.</strong> Junyan, 2026-09-09: <em>&ldquo;there are no shifts to claim even though there should be.&rdquo;</em> The Deck and the board were right: the Staff Scheduling calendar held no <code>Need</code> blocks and ☑️ Open Shifts had no rows dated Sep 9 or later.</p>
