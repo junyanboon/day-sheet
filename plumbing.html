@@ -1274,6 +1274,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-09 &middot; 12:56Z</span>
+      <h3>The Deck knows who you are, and takes shift claims &mdash; the Vercel plan is parked<span class="kind">DECK &middot; new writer: Deck &rarr; Staff Scheduling calendar &middot; new route: fbs-monitor build &rarr; open-shifts.json on Pages &rarr; Deck &middot; DEPLOYED (Cloudflare) &middot; CALENDAR SHARE PENDING</span></h3></summary>
+      <p><strong>Asked.</strong> Junyan, 2026-09-09: build the login + shift claiming on the Deck (Cloudflare) rather than the Vercel edition planned on 2026-09-05 (<em>&ldquo;let's just build it there for the time being&rdquo;</em>); the claim must register who is claiming; accounts for Junyan and Ela only for now.</p>
+      <p><strong>Identity.</strong> <code>DECK_STAFF</code> holds one password per person. The password itself says who you are, so the sign-in form is unchanged; the name rides inside the signed cookie and shows under the logo. The shared <code>DECK_PASSWORD</code> still opens the Deck but yields a nameless session, and <code>POST /api/claim</code> refuses it (403 <code>needs_name</code>). Accounts are a JSON edit + <code>wrangler secret put</code>; no user table.</p>
+      <p><strong>Route.</strong> <code>fbs-monitor</code> now commits <code>open-shifts.json</code> with every build (the same rows the public page carried in DATA, nothing new exposed). The Deck&rsquo;s Shifts tab reads it from Pages every minute. Claim writes one named event on the Staff Scheduling calendar (<code>Ela FBS</code>, studio in the description &mdash; the shape <code>build._staff_identity</code> already reads), holds the claim in the <code>CLAIMS</code> KV namespace, and the next board build drops the placeholder. Release deletes the event; only the claimer can.</p>
+      <p><strong>Writer.</strong> Service account <code>deck-shift-claims@danceannex-skedda</code>, RS256 JWT signed in the Worker with WebCrypto, no Google library. <strong>Pending owner action:</strong> share the Staff Scheduling calendar to that address at <em>Make changes to events</em>. Until then every claim answers <code>Calendar insert failed: 404</code> and nothing is recorded &mdash; verified live. The ☑️ Open Shifts Notion board is untouched and still the claim path on the public board.</p>
+      <p><strong>Failure modes.</strong> Shifts tab reads <em>open-shifts.json: HTTP 404</em> = Pages has not published since the change (first build dispatched 12:56Z). 403 from Google = calendar not shared; 404 = wrong calendar id or not shared. The Vercel edition (<code>fbs-monitor/server/</code>) stays in the repo, unconnected, as the port target if the Deck outgrows Cloudflare.</p>
+      </details>
+    </li>
+
 
       <li class="entry human">
       <details>
