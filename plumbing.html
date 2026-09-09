@@ -1274,6 +1274,22 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+<li><strong>2026-09-09 — Routine closure runs independently of the LLM agents.</strong>
+Extended <a href="https://github.com/junyanboon/desk-correspondence/pull/70">PR #70</a>
+on the existing ten-minute reconciliation service: exact paid-invoice observation,
+typed stuck-send alert closure, and final-body-verified message reconciliation for
+already-terminal tickets. No new Concierge job or more frequent Custodian audit.
+Deployed and enabled 2026-09-09 at revision e9a1e82. All 1,967 deployment tests passed; production health and the first live reconciliation pass verified. Both additions run on the existing ten-minute timer.
+SOP-specific terminal adjudication remains with the Custodian pending its own verified port.</li>
+
+      <li class="entry human">
+      <details>
+      <summary><span class="when">2026-09-09</span>
+      <h3>Paid Sales invoices get a deterministic reconciliation read<span class="kind">PR #70 READY &middot; NOT DEPLOYED</span></h3></summary>
+      <p>The existing ten-minute reconcile sweep gains a ticket-side payment check. A Processed invoice Action proves issuance, so the lane reads Gate: Money tickets even after that Action was reconciled. It requires exact invoice ID, Artist identity, CAD amount and live paid/zero-balance evidence, rechecks source records and verifies the resulting In Progress transition. Other obligations and the Sales Stage remain intact.</p>
+      <p>No collection, customer send, terminal close or production flag changed. Payment writes require both existing reconcile live mode and PAYMENT_GATE_LIVE=1. The Custodian remains the independent final reviewer. Focused validation: 36 tests plus 9 subtests passed; live preflight found zero Sales money gates. The accompanying roadmap covers message/access handoffs, cleaning records and predicate-based defect closure.</p>
+      <p><a href="https://github.com/junyanboon/desk-correspondence/pull/70">Implementation and closure roadmap: desk-correspondence #70</a>.</p>
+      </details></li>
       <li class="entry human">
       <details>
       <summary><span class="when">2026-09-09</span>
