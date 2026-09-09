@@ -1274,6 +1274,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-09 &middot; 16:45Z</span>
+      <h3>The Planner ended at startup on Sep 8 &mdash; no shifts posted for Sep 9&ndash;11; catch-up pass restored 21 blocks / 23 rows<span class="kind">PLANNER &middot; Hermes cron c2346c8d3d5c (vps, lease codex) &middot; prompt premise defect &middot; RESOLVED 16:43Z</span></h3></summary>
+      <p><strong>Asked.</strong> Junyan, 2026-09-09: <em>&ldquo;there are no shifts to claim even though there should be.&rdquo;</em> The Deck and the board were right: the Staff Scheduling calendar held no <code>Need</code> blocks and ☑️ Open Shifts had no rows dated Sep 9 or later.</p>
+      <p><strong>Cause.</strong> The 2026-09-08 19:31 pass (transcript <code>cron/output/c2346c8d3d5c/2026-09-08_19-31-28.md</code>) stopped at startup on two premises in its own prompt: (1) &ldquo;fetch RUNTIMES.md from desk-correspondence&rdquo; &mdash; that file has never been in that repo (no git history), earlier runs shrugged, this one halted; (2) the prompt named no VPS write path, so the pass concluded the read-only Notion MCP was a blocker, although Sep 7 wrote fine through <code>bin/notion_write.py</code> + <code>bin/calendar-mcp.py</code>. Run Monitor showed Overdue; nobody was paged because the pass wrote no report either.</p>
+      <p><strong>Fix.</strong> The prompt had already been repaired after the failure (a <em>VPS CAPABILITY DISCOVERY REPAIR &mdash; 2026-09-08</em> paragraph names the write scripts and waives RUNTIMES.md); Hermes refused my duplicate patch, correctly. Catch-up pass sent as a Hermes task (<code>failover/hermes-tasks/planner-catchup-2026-09-09.txt</code>): T1&ndash;T4 for Sep 9&ndash;11, T5 skipped so the 19:30 pass sends the staff messages once. Its commit step tripped Hermes&rsquo; Tirith scanner (a <code>python -c</code> one-liner); Junyan approved it once via <code>POST /v1/runs/&lt;id&gt;/approval</code>. Receipt: coverage_blocks_created=21, open_shift_touchpoints_created=23 (Sep 9: 5 / Sep 10: 10 / Sep 11: 8), FBS_created=0 (all 16 bookings already queued), source skedda-mcp, no fallback. Report: The Planner &mdash; Sep 09 (catch-up), Completed 12:42 Toronto; Run Monitor heartbeat stamped.</p>
+      <p><strong>Failure modes to watch.</strong> A Planner pass that ends at startup writes no report, so the only signal is the Run Monitor row going Overdue and the Shifts tab going empty the next morning. The Tirith gate on <code>python -c</code> in the commit step will recur every catch-up until that step is a named script; the scheduled cron is not gated the same way. Hermes&rsquo; own claim: the scheduled 19:30 pass tonight runs on the repaired prompt.</p>
+      </details>
+    </li>
+
 <li><strong>2026-09-09 — Routine closure runs independently of the LLM agents.</strong>
 Extended <a href="https://github.com/junyanboon/desk-correspondence/pull/70">PR #70</a>
 on the existing ten-minute reconciliation service: exact paid-invoice observation,
