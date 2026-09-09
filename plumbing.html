@@ -1274,6 +1274,23 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+
+      <li class="entry llm">
+      <details>
+      <summary><span class="when">2026-09-09 &middot; 0x:xxZ</span>
+      <h3>A website-form submission opens a ticket &mdash; seven never did<span class="kind">CANON &middot; CONCIERGE JOB 2 &middot; RULING &middot; PR #61 OPEN</span></h3></summary>
+      <p><strong>dc-canon PR <a href="https://github.com/junyanboon/desk-correspondence/pull/61">#61</a>, branch <code>claude/form-opens-ticket</code>. Follow-up to #53 (invariant M, live on Hostinger as of <code>7dd3875</code>).</strong> Canon only; nothing to deploy.</p>
+      <p><strong>Ruling (Junyan, 2026-09-08): every <code>[FORM] &hellip;</code> submission is a customer inbound and opens a ticket.</strong> Until now none did. The mail is our own Notion automation writing to <code>info@danceannex.ca</code>; it carries no Gmail user label and <code>gmail_pull.py</code> files it as an <em>outbound</em>, so the Concierge&rsquo;s label sweep never saw it and no lane classified it. Seven real submissions between 2026-08-07 and 2026-09-06 produced zero tickets. Six were answered by SMS off the Responder&rsquo;s draft, with no ticket behind the reply.</p>
+      <ul>
+        <li><strong>Find</strong> &mdash; every Concierge pass adds <code>subject:"[FORM]" newer_than:&lt;n&gt;d</code> beside the label sweep; dedup on <code>[form:&lt;gmail id&gt;]</code> in the Situation.</li>
+        <li><strong>Route</strong> &mdash; <code>Subsidized Rate</code> &rarr; Sales inquiry at Leads, <strong>plus a separate booking ticket when the body names a concrete slot</strong> (Jesse&rsquo;s named 693 &middot; Sep 13 &middot; 11:00&ndash;13:15: two tickets). <code>Change My Plan</code> (Pause / Cancel) &rarr; Customer Care via the Mapping page, human gate at the end.</li>
+        <li><strong>Artist first</strong> &mdash; match body email + phone, create the card when missing; a one-time rate ruling goes on the card.</li>
+        <li><strong>Reply</strong> &mdash; outbound-first, no <code>Source Email</code>, fresh subject (invariant M). Concierge owns it while the ticket is live; the Responder drafts on the ping-pong second pass.</li>
+        <li><strong>Backfill once</strong> &mdash; the seven named submissions get their ticket minted from the notification, backdated; an already-resolved one lands at Review with the outcome recorded.</li>
+      </ul>
+      <p><strong>Also in the PR: the deploy docs caught up with the Hostinger cutover.</strong> Production moved to the VPS on 2026-09-08 and Cloud Run is a forwarder now (<code>EVENT_GATE_FORWARD_URL</code> + <code>hostinger_forward.py</code>) &mdash; its <code>/health</code> reports whatever Hostinger runs. The workflow&rsquo;s defaults (<code>hostinger</code> + <code>stage</code>) deploy nothing by themselves, and <code>activate</code> refuses any SHA but the one staged (<em>&ldquo;Cutover must be prepared for this exact revision&rdquo;</em>). During #53&rsquo;s deploy a session followed the old <code>CLAUDE.md</code> Rule 2, staged an image, redeployed the forwarder, and believed it had shipped. Rule 2 and the event-gate README now give the pin-a-branch &rarr; stage &rarr; activate &rarr; confirm sequence.</p>
+      </details>
+    </li>
       <li class="entry det">
       <details>
       <summary><span class="when">2026-09-08 &middot; 19:0xZ</span>
