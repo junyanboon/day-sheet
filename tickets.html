@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-09 10:19 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-09 10:24 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -930,9 +930,17 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>The open question, not yet ruled:</b> does a Review row&#x27;s evidence need to outlive the source that</p>
 <p>would answer it — i.e. does the relay&#x27;s frame get folded into something durable at capture time, the</p>
-<p>way </code>last_seen.py<code> folds presence? </code>last_seen.py` deliberately keeps only the most recent sighting</p>
+<p>way </code>last_seen.py<code> folds presence? </code>last_seen.py<code> deliberately keeps only the most recent sighting</p>
 <p>per person, so it does not answer a &quot;what happened in this window&quot; question. Do not build against</p>
 <p>this note; it is a flag, not a spec.</p>
+
+<h2>2026-09-09 — NOT deployed on Cloud Run, on purpose; the listener&#x27;s home changed under this ticket</h2>
+
+<p>Checked before deploying. Since this ticket was written, Junyan&#x27;s branch </code>codex/hostinger-ledger<code> (commits 58f4617 → 7372215, 2026-09-08) moved the alarm ledger off GCS onto a shared VPS ledger API with fail-closed generation checks, and its </code>deploy.sh<code> now deploys </code>alarm-events<code> with <b></code>ALARM_EVENTS_DISABLED=true<code></b> during the migration — &quot;Support shared-ledger cutover and disable the old listener together&quot;. </code>hosting/README-vps.md<code> on that branch says the cutover must &quot;keep one websocket listener and one schedule executor&quot;, and the migration is already in motion: the live Cloud Run </code>alarm-mcp<code> runs image </code>hostinger-36b88d9<code> from that branch and carries </code>LEDGER_API_URL<code> + </code>LEDGER_API_TOKEN<code>.</p>
+
+<p>Creating the </code>alarm-events<code> singleton on Cloud Run now would put a second websocket writer beside whatever listener the VPS migration stands up — exactly the race the three scaling flags exist to prevent. So the step-1 create command in this ticket is <b>void until Junyan says where the one listener lives</b> (Cloud Run with the ledger API, or a container on the VPS beside event-gate).</p>
+
+<p><b>Decision for Junyan:</b> which host owns the single alarm websocket listener after the ledger cutover? Then this ticket&#x27;s step 2 (healthz) and step 4 (fbs-monitor reads </code>/door-history`) apply to that host. The four blind consumers (Alarms tab, Doorman Job C, Timekeeper identity, departure rule) stay blind until then.</p>
 </div></details></details></div><div class="job"><div class="jnum">#121</div><div class="jhead"><span class="emoji">🔁</span><h4>Retried runs must not write the same row twice — three fixes in one</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Retries were switched on for every cloud lane on Sep 4; the climate log was the one that could double-write</li><li>Also here: the door-transition checker that re-raises fixed tickets (114), and the document intake that filed seven identical errors in 52 seconds (117)</li><li>One pattern for all three: key every write, and if the check itself fails, assume it was written and skip</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>&quot;Key every retried write — Thermal Log, IPR tight-transition, DocIntake errors&quot;</b></p><h2>Question</h2>
 
 <p><code>climate_sweep.thermal_log_row()</code> is an unconditional <code>POST</code> — no key, no existence</p>
@@ -1401,7 +1409,31 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <h2>Absorbed 2026-09-08 — <b>129-manual-provisioning-mints-duplicates</b></h2>
 
-<p><b>Human-minted duplicates (from 129):</b> a person creating an Artist row by hand bypasses this ladder. Rather than a mid-task warning nobody reads (<b>077</b>&#x27;s lesson), the cheap fix is the sweep that produced <b>104</b>&#x27;s sheet, run on a cadence: two live cards sharing a hard signal (email, phone, Skedda/Alarm user id) raise one keyed Sweep Feedback row with the pair and the evidence. Merges stay human-only. </code>create_artist` does not change — the bot behaved correctly.</p>
+<p><b>Human-minted duplicates (from 129):</b> a person creating an Artist row by hand bypasses this ladder. Rather than a mid-task warning nobody reads (<b>077</b>&#x27;s lesson), the cheap fix is the sweep that produced <b>104</b>&#x27;s sheet, run on a cadence: two live cards sharing a hard signal (email, phone, Skedda/Alarm user id) raise one keyed Sweep Feedback row with the pair and the evidence. Merges stay human-only. </code>create_artist<code> does not change — the bot behaved correctly.</p>
+
+<h2>2026-09-09 — the code is live on the VPS; the flag state on the VPS is unread</h2>
+
+<p>Checked before deploying: live event-gate on Hostinger reports </code>git_sha 5d0ffd6<code>, fingerprint </code>615b2a7409a4<code>, identical to repo HEAD, which contains </code>1aff56586<code>. So </code>platform_identity.py<code> is running. The deploy step is done.</p>
+
+<p>Two things this session could not read, because both need a root shell on the VPS (Hermes runs as uid 10000 and cannot see </code>/docker/danceannex-mcp<code> either — mailbox 2026-09-09 01:23Z):</p>
+
+<ol>
+<li>1. <b>Whether the lane is shadow or live on the VPS.</b> The old Cloud Run forwarder carries </code>PLATFORM_IDENTITY_LIVE=1<code>, but the authoritative env is the root-only </code>/docker/danceannex-mcp/event-gate.env<code>. If the cutover copied the Cloud Run env, this lane may already be creating cards <b>without the &quot;would create&quot; read the ticket insists on.</b> Check first:</li>
+</ol>
+
+<p></code>`<code>bash</p>
+<p>ssh root@2.25.139.60 &#x27;grep -E &quot;^PLATFORM_IDENTITY_LIVE=&quot; /docker/danceannex-mcp/event-gate.env&#x27;</p>
+<p></code>`<code></p>
+
+<ol>
+<li>2. <b>The shadow / live lines.</b> </code>gcloud logging read<code> no longer applies; the container log does:</li>
+</ol>
+
+<p></code>`<code>bash</p>
+<p>ssh root@2.25.139.60 &#x27;docker logs event-gate --since 48h 2&gt;&amp;1 | grep -i &quot;platform identity&quot;&#x27;</p>
+<p></code>`<code></p>
+
+<p>If the flag is unset: read two or three passes&#x27; </code>would-create<code> lines against their bookings, then set it in </code>event-gate.env<code> and apply with the </code>deploy-event-gate<code> workflow (</code>target=hostinger mode=update<code>). If the flag is already </code>1`: read what it created, and revert to shadow if any card is not a person.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">22</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
@@ -2661,6 +2693,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <h2>Absorbed 2026-09-08 — <b>095-job4-detection-layer</b></h2>
 
 <p><b>JOB 4 detection (from 095), second slice after this lane goes live:</b> mechanical detection — Processed Action rows, new images on parked tickets, new <code>#desk-drops</code> past the cursor — moves to the tick and emits a flag queue; resumption stays agentic but reads only that queue. Acceptance per <b>035</b>: the agent pass is <i>seen</i> consuming the queue; zero-pass reporting and a Run Error row; Plumbing Map entry.</p>
+
+<h2>2026-09-09 — first slice is LIVE; deployed 2026-09-07 by another session</h2>
+
+<p>Checked before deploying, and there was nothing left to deploy. Sweep Feedback row <code>3d07503281c481ff80a2fa0d39b219c7</code> records the fix end to end on 2026-09-07: PR #31 merged at <code>0f81148f</code>, <code>RECONCILE_SWEEP_LIVE=1</code>, a 10-minute scheduler, and Run Monitor row <code>3d47503281c4814e8aaae142b9a571bb</code> created Paused then flipped Live after a real pass stamped <code>Self-heartbeat</code>. Successive capped passes reconciled 182 mechanical rows. Today the row shows <code>Monitoring = Live</code>, <code>Self-heartbeat = 2026-09-09T14:20Z</code>, and the live event-gate (<code>git_sha 5d0ffd6</code>, fingerprint <code>615b2a7409a4</code>) equals repo HEAD, so the code running is this code.</p>
+
+<p><b>One stale fact to fix, not code:</b> the Run Monitor <code>Runtime</code> text still names a Cloud Scheduler job. Every Cloud Scheduler job was deleted 2026-09-08 20:04Z and event-gate runs on the Hostinger VPS; the caller is now a VPS timer nobody can see from a Hermes shell or a Mac session (Hermes mailbox 2026-09-09 01:23Z). The lane is alive (heartbeats prove it) but its monitor row lies about <i>who</i> ticks it. Rewrite <code>Runtime</code> when the VPS timer name is known.</p>
+
+<p><b>What this ticket still owns:</b> the second slice — steps 4–6 (strand backstop, orphan-gate audit, PBF off-queue backstop) and the JOB 4 detection layer absorbed from 095. 035&#x27;s test for the first slice is met.</p>
 </div></details></details></div><div class="job"><div class="jnum">#096</div><div class="jhead"><span class="emoji">🗂️</span><h4>Gmail files some mail away before anyone sees it, and nobody reads those piles</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The robot that sorts email looks in the inbox. But Gmail&#x27;s own filters grab some mail first and file it straight into a folder — it never lands in the inbox at all</li><li>So the sorter never sees it. Not a bug in the sorter: it is looking where the mail is not</li><li>We have quietly known this twice and patched it twice, one folder at a time. Once in July for signed agreements, once in August for booking notices — that second folder had 18,000 messages nobody had ever read</li><li>Those two are the only folders the sorter checks. Every other filter that skips the inbox is still a blind spot</li><li>We measured it instead of guessing: 262 recent messages across seven folders, and not one of them ever passed through the inbox</li><li>The clearest cases are insurance (3 messages nobody has opened) and accounting (8). Unread proves it — the sorter marks things read when it handles them</li><li>Good news: the messages ARE in our records. This is not about losing them. It is that nothing acts on them</li><li>What needs deciding: for each folder, either name what should handle it, or write down &#x27;this is noise and here is why&#x27;. Both answers close the hole. Having no answer is the problem</li><li>And a rule so the next filter someone adds cannot quietly make a new blind spot</li><li>One folder is its own question: the alarm folder holds 45,000 messages, and the alarm panels are now read directly. That mail may not matter at all any more</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Auto-filed mail is invisible to the inbox sweep — the hole has been patched one label at a time</b></p><h2>Question</h2>
 
 <p>Junyan, 2026-08-20, pointing at <code>Artist Care - Insurance</code>: *&quot;There are actually multiple holes.</p>
@@ -3170,6 +3210,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <h2>Absorbed 2026-09-08 — <b>109-platform-mirror-caller</b></h2>
 
 <p><b>From 109, still owed here:</b> Tagvenue price parsing is UNVERIFIED (flagged in code) — it rides with this ticket&#x27;s Peerspace/Tagvenue shape verification.</p>
+
+<h2>2026-09-09 — <code>/release-booking</code> is deployed</h2>
+
+<p>Checked before deploying: the live skedda-mcp answers <b>401</b> on <code>POST /release-booking</code> (and on <code>/mirror-booking</code>) while an unknown route answers <b>404</b>, so the route is present and behind the token. The live <code>skedda:latest</code> image is dated after the 2026-09-06 <code>mirror-booking</code> commit, which is the last change to <code>hosting/server_http.py</code>. No rebuild needed.</p>
+
+<p><b>Still owed, unchanged:</b> one supervised release before the lane runs cancellations unattended; booking <i>changes</i> (<code>/update-booking</code> with the three guards and a read-back); Peerspace and Tagvenue cancellation shapes; Tagvenue price parsing (from 109).</p>
+
+<p><b>Repo note:</b> the <code>skedda-cli</code> working tree carries uncommitted changes that are byte-identical to branch <code>codex/hostinger-session-refresh</code> (the client reads the Skedda session from the VPS over SSH). Do not run <code>./deploy.sh</code> from that tree until that branch is merged or the change is stashed — the image would ship uncommitted code.</p>
 </div></details></details></div><div class="job"><div class="jnum">#116</div><div class="jhead"><span class="emoji">🚫</span><h4>The tracker fills in &#x27;arrived on time&#x27; for renters who never arrived</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A booking with no door signal later gets stamped as arrived exactly at the booked start</li><li>That can accuse a renter of forgetting to arm — or hide a real no-show. Aug 26 near-miss: Daniel was flagged a no-show and had in fact attended</li><li>Fix: a missing arrival stays blank; every reader treats blank as &#x27;no signal&#x27;, not &#x27;on time&#x27;</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>booking-state.json backfills a null arrival to the booked start</b></p><h2>116 — booking-state.json backfills a null arrival to the booked start hours later</h2>
 
 <p><b>Filed:</b> 2026-08-27, from Actions board row 3c975032-81c4-81a4 (The Timekeeper, 2026-08-27). Row closed to this ticket at the plate-clearing sitting.</p>
@@ -15996,5 +16044,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-09 10:19 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-09 10:24 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
