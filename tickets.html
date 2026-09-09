@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-09 10:51 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-09 10:52 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -785,6 +785,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- <code>disabled</code> is visibly distinct from <code>healthy</code> on whatever surface the monitor reads.</li>
 <li>- RUNTIMES.md + Plumbing Map entries; the 082 row updated to point here.</li>
 </ul>
+
+<p><b>2026-09-09 — watched by the daily <code>desk-watch</code> scheduled task (09:30 Toronto, this Mac).</b> It replaced <code>shadow-lane-review</code> and <code>hta-verified-week-check</code>, which read Cloud Run logs that went dark on 2026-09-08. Junyan does not do this check by hand; the routine reports and files at most one Decision row.</p>
 </div></details></details></div><div class="job"><div class="jnum">#106</div><div class="jhead"><span class="emoji">🔔</span><h4>Put the names back on who unlocked each studio</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Since Aug 20 the alarm page shows every unlock with a blank where the person&#x27;s name used to be</li><li>The old alarm emails were the only thing that ever said who — and those are gone for good</li><li>The replacement is already written and tested: it reads the alarm company&#x27;s live feed and gets the name, the door opening, and the exact second</li><li>It just needs to be switched on, which means starting a small always-on service — a real cost, so Junyan decides</li><li>One catch worth knowing: arming the alarm isn&#x27;t leaving. People arm, then open the door to walk out — so the door event is the true leaving time</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Deploy alarm-events and give the boards back the name on every arm/disarm</b></p><h2>Question</h2>
 
 <p>Since 2026-08-20 every arm/disarm on the FBS Monitor&#x27;s Alarms tab renders without an</p>
@@ -1555,9 +1557,11 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p></code>`<code>bash</p>
 <p>ssh root@2.25.139.60 &quot;docker logs --since 72h event-gate 2&gt;&amp;1 | grep -i &#x27;platform identity&#x27;&quot;</p>
-<p></code>``</p>
+<p></code>`<code></p>
 
 <p>One line read against the booking it names closes ticket 124.</p>
+
+<p><b>2026-09-09 — watched by the daily </code>desk-watch<code> scheduled task (09:30 Toronto, this Mac).</b> It replaced </code>shadow-lane-review<code> and </code>hta-verified-week-check`, which read Cloud Run logs that went dark on 2026-09-08. Junyan does not do this check by hand; the routine reports and files at most one Decision row.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">22</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
@@ -3342,6 +3346,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Still owed, unchanged:</b> one supervised release before the lane runs cancellations unattended; booking <i>changes</i> (<code>/update-booking</code> with the three guards and a read-back); Peerspace and Tagvenue cancellation shapes; Tagvenue price parsing (from 109).</p>
 
 <p><b>Repo note:</b> the <code>skedda-cli</code> working tree carries uncommitted changes that are byte-identical to branch <code>codex/hostinger-session-refresh</code> (the client reads the Skedda session from the VPS over SSH). Do not run <code>./deploy.sh</code> from that tree until that branch is merged or the change is stashed — the image would ship uncommitted code.</p>
+
+<p><b>2026-09-09 — watched by the daily <code>desk-watch</code> scheduled task (09:30 Toronto, this Mac).</b> It replaced <code>shadow-lane-review</code> and <code>hta-verified-week-check</code>, which read Cloud Run logs that went dark on 2026-09-08. Junyan does not do this check by hand; the routine reports and files at most one Decision row.</p>
 </div></details></details></div><div class="job"><div class="jnum">#116</div><div class="jhead"><span class="emoji">🚫</span><h4>The tracker fills in &#x27;arrived on time&#x27; for renters who never arrived</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A booking with no door signal later gets stamped as arrived exactly at the booked start</li><li>That can accuse a renter of forgetting to arm — or hide a real no-show. Aug 26 near-miss: Daniel was flagged a no-show and had in fact attended</li><li>Fix: a missing arrival stays blank; every reader treats blank as &#x27;no signal&#x27;, not &#x27;on time&#x27;</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>booking-state.json backfills a null arrival to the booked start</b></p><h2>116 — booking-state.json backfills a null arrival to the booked start hours later</h2>
 
 <p><b>Filed:</b> 2026-08-27, from Actions board row 3c975032-81c4-81a4 (The Timekeeper, 2026-08-27). Row closed to this ticket at the plate-clearing sitting.</p>
@@ -16168,5 +16174,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-09 10:51 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-09 10:52 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
