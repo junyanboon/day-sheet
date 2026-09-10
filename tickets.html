@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-09 23:17 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-09 23:45 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">23</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">96</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">97</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">6</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">5</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -1076,537 +1076,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <h2>Absorbed 2026-09-08 — <b>117-docintake-error-path-guard</b></h2>
 
 <p><b>DocIntake error path (from 117):</b> on error, look for an open row with the same error signature before filing (the </code>insurance_sweep<code> </code>file_run_error<code> pattern — one open row per raiser), plus exponential backoff on Notion 5xx/404 before the seen-mark commits. Evidence: seven identical rows in 52 s on 2026-08-26. <b>Separable check:</b> confirm Enrico Casertano&#x27;s signed Long Term Rental Agreement (gmail </code>19fd99917be09490`, 2026-08-06) is filed in 📎 Docs; the Artist row reflects it, the PDF may not.</p>
-</div></details></details></div><div class="job"><div class="jnum">#124</div><div class="jhead"><span class="emoji">🪪</span><h4>A booking-site guest has no card until a human types one — the robots all stop there</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Built and tested Sep 7 (44 new tests). It looks the guest up four ways, and only creates a card from an accepted booking</li><li>Waiting on Junyan&#x27;s deploy, then two or three watch-only passes, then the switch-on</li><li>Read the &#x27;would create&#x27; lines BEFORE switching on — the risk is a card made for a booking whose title is not a person</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A platform guest has no identity until a human types one — and three robots all stop politely at that gap</b></p><h2>Question</h2>
-
-<p>Junyan, 2026-09-07, on the xavier case that produced ticket 123:</p>
-
-<blockquote>*&quot;So Xavier should have been sorted out directly by the agent not even pass this to</blockquote>
-<blockquote>Junyan. Doorman will sweep and check if all the codes are set up (I think).&quot;*</blockquote>
-
-<p>He is right on both counts, and ticket 123 built the wrong thing first. 123 closes the</p>
-<p><b>note</b> once a human has fixed the problem. This ticket is about the problem never</p>
-<p>needing a human at all.</p>
-
-<p><b>The desk already has two lanes that can provision a renter, and both of them stop at the</p>
-<p>same wall.</b></p>
-
-<p>| Lane | What it can do | Where it stops |</p>
-<p>|---|---|---|</p>
-<p>| <b>The Registrar</b> — <code>booking_sweep.platform_provision</code>, added 2026-09-03 on Junyan&#x27;s ruling in the Lauren Taylor Scott case (ticket 110) | Mints a code on booking for a platform renter <b>even with no phone</b> — &quot;a code needs a person, only sending it needs a number&quot; | <code>platform_artist_card(name)</code> returns <code>&#x27;&#x27;</code> on zero <b>or</b> several matches → <code>platform:no-single-card-to-provision</code>. Nothing is minted. |</p>
-<p>| <b>The Doorman</b> — <code>doorman_armcheck.preflight_provision</code> (A7), granted by Junyan 2026-09-05, <b>LIVE</b> (<code>DOORMAN_PROVISION_LIVE=1</code>) | Probes every renter booked in the next 7 days and <b>re-provisions anyone the panel has lost</b>, through the Registrar&#x27;s own <code>ensure_access</code>, then closes the row | Its closed list requires <i>&quot;a single Artist page and at most one panel user&quot;</i>. Same wall. |</p>
-
-<p>So: <b>both lanes can fix a renter the panel forgot. Neither can fix a renter we cannot</p>
-<p>name.</b> And nothing on the platform path ever creates the card — deliberately, because a</p>
-<p>blind create mints junk cards (the comment at <code>booking_sweep.py:3115</code> says so, and the</p>
-<p><code>Julie Marouze [Gmail]</code> duplicate is the cautionary case).</p>
-
-<h2>The three ways the name → card lookup fails, all live on 2026-09-07</h2>
-
-<p><code>platform_artist_card</code> runs one query: Artist DB <code>Name</code> <b>contains</b> the booking&#x27;s renter</p>
-<p>name, and accepts the result only when exactly one row comes back.</p>
-
-<ol>
-<li>1. <b>No card at all.</b> A brand-new platform guest has none. <b>That was xavier on Sep 4</b> —</li>
-</ol>
-<p>Tagvenue gave a first name only, no card existed, so no code was minted and the desk</p>
-<p>filed <i>&quot;no phone, no surname, no access path&quot;</i> and handed it to Junyan. He provisioned</p>
-<p>by hand, xavier keyed 693 at 14:46:43, and the row sat open all day. That is ticket 123&#x27;s</p>
-<p>whole origin story, one step upstream.</p>
-<ol>
-<li>2. <b>The name does not match a card that exists.</b> The booking title carries the <b>FBS</b></li>
-</ol>
-<p>staffing tag: <code>platform_renter_name</code> returns <code>&quot;Lauren Taylor Scott FBS&quot;</code>, her card is</p>
-<p><code>&quot;Lauren Taylor Scott [Tagvenue]&quot;</code>, and <code>contains &quot;Lauren Taylor Scott FBS&quot;</code> matches</p>
-<p><b>nothing</b>. The tag is appended by the desk&#x27;s own board convention, and it is what</p>
-<p>blinds the lookup. (Verified 2026-09-07: her card exists, carries a phone AND Alarm User</p>
-<p>ID 248968506, and <code>check_access_covers</code> returns <code>allow_permanent</code> — she was fine all</p>
-<p>along, and her gate-1 row was still open three days later.)</p>
-<ol>
-<li>3. <b>The name matches too many.</b> <code>&quot;Jessica&quot;</code> via Giggster hits <b>five</b> Jessica cards</li>
-</ol>
-<p>(<code>Jessica F. [One-Off]</code>, <code>Jessica Firestone [Skedda]</code>, <code>Jessica Lee [Skedda]</code>,</p>
-<p><code>Jessica Thadickal [Peerspace]</code>, <code>Jessica M. [Giggster]</code>). The lane correctly refuses to</p>
-<p>guess — putting a stranger&#x27;s code on a door is the failure it exists to avoid — but the</p>
-<p>refusal is permanent, and her Oct 10 booking is still unprovisioned.</p>
-
-<p>Every step of this is behaving as designed. The chain is correct and still ends with a note</p>
-<p>for Junyan.</p>
-
-<h2>What to build</h2>
-
-<p><b>Not</b> &quot;match harder&quot;. The refusal to guess is load-bearing and stays. Build the thing</p>
-<p>that is genuinely missing: a <b>deterministic way to give a platform guest an identity</b>,</p>
-<p>and a way to say <i>&quot;these two names are the same person&quot;</i> that a machine can act on.</p>
-
-<p>Sketch, for the builder to challenge:</p>
-
-<ul>
-<li>- <b>Strip the desk&#x27;s own tags before matching.</b> <code>FBS</code>, <code>[Facilitator: …]</code>, and the platform</li>
-</ul>
-<p>word are decoration the desk itself appends. Matching on the name the platform actually</p>
-<p>gave is not guessing. This alone would have provisioned Lauren. Cheapest, safest, do it</p>
-<p>first and separately.</p>
-<ul>
-<li>- <b>Create the card when the platform booking is accepted, not when someone needs it.</b></li>
-</ul>
-<p>A platform booking is a real, paid, accepted booking with a real person behind it. The</p>
-<p>Greeter already files an ACCEPT/DECLINE row per request and the ticket exists per canon</p>
-<p>(&quot;Every platform booking has a ticket&quot;, 2026-08-21). The card is the missing sibling.</p>
-<p>Junk-card risk is the reason it is not done today — so the card must be minted from the</p>
-<p>booking (platform + booking ref + accepted), never from a bare holder string, and must</p>
-<p>carry the platform tag so it is obviously a platform identity.</p>
-<ul>
-<li>- <b>A first-name collision is a human question, once.</b> Where several cards match, the ask</li>
-</ul>
-<p>is <i>&quot;is this the Jessica who booked in July?&quot;</i> — one disambiguation row that a human</p>
-<p>answers once and the desk then remembers, not a row re-raised every pass forever.</p>
-<ul>
-<li>- <b>Whatever is built must close its own row</b>, on its own read, the way A7 does.</li>
-</ul>
-
-<h2>Hard constraints</h2>
-
-<ul>
-<li>- <b>The refusal to guess stays.</b> A wrong card means a stranger&#x27;s code on a door. Nothing</li>
-</ul>
-<p>here may relax <code>platform_artist_card</code>&#x27;s &quot;exactly one match&quot; rule by loosening the <i>match</i>;</p>
-<p>it may only make the <i>inputs</i> honest (tag stripping) or create the missing card from</p>
-<p>evidence strong enough to stand behind.</p>
-<ul>
-<li>- <b>Read-only on the panel except through <code>ensure_access</code>.</b> One writer, borrowed, exactly</li>
-</ul>
-<p>as A7 does it. No second provisioning path.</p>
-<ul>
-<li>- <b>No code in any row, log, transcript or test.</b> ⚠️ <b>Found while writing this ticket:</b> the</li>
-</ul>
-<p>Cancelled row <code>3d07503281c4819a91edefed0015957a</code> carries a live 4-digit code <b>in its</p>
-<p>title</b>. It is Cancelled, not deleted. Worth a separate look at how it got there — the</p>
-<p>rule is that digits never enter a row.</p>
-<ul>
-<li>- **Shadow first, <code>*_LIVE=1</code> is Junyan&#x27;s flip<b>, the house pattern.</li>
-<li>- </b>Junyan runs deploys.<b></li>
-</ul>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- Replay Lauren: booking name <code>&quot;Lauren Taylor Scott FBS&quot;</code> resolves to her existing card and</li>
-</ul>
-<p>provisions, with no card created and no human asked.</p>
-<ul>
-<li>- Replay xavier: a Tagvenue booking for a first-name-only guest with no card ends the pass</li>
-</ul>
-<p>with a usable identity and a code on the panel, or with ONE disambiguation ask — never</p>
-<p>with &quot;no access path&quot; handed to a human.</p>
-<ul>
-<li>- Replay Jessica: five matching cards produces exactly one human question, and the answer</li>
-</ul>
-<p>is remembered — a second pass asks nothing.</p>
-<ul>
-<li>- No junk card: a booking with no accepted status, or no resolvable platform person, creates</li>
-</ul>
-<p>nothing.</p>
-<ul>
-<li>- The row that was raised closes on the lane&#x27;s own read.</li>
-<li>- Canon (<code>doorman-access-lifecycle.md</code> and/or <code>the-loop.md</code>), <code>RUNTIMES.md</code>, Plumbing Map</li>
-</ul>
-<p>entry, tests.</p>
-
-<h2>Seam</h2>
-
-<p>Ticket 123 (the access-class closer) stays separate and stays in </b>shadow<b> — it closes</p>
-<p>notes after the fact and it is the wrong layer for this. Note that </b>123 would not have</p>
-<p>caught Lauren&#x27;s row anyway<b>: the platform gate-1 rows carry no <code>Artist</code> relation, so the</p>
-<p>closer skips them. If this ticket lands well, 123&#x27;s Read 1 has much less to do.</p>
-
-<p>Ticket 122 (window migration) and the Doorman&#x27;s A7 are the neighbours — A7 is the model to</p>
-<p>copy for &quot;sees something off, fixes it, reports it&quot;.</p>
-
-<h2>Progress</h2>
-
-<p></b>2026-09-07 — BUILT, TESTED, PUSHED. SHADOW. One deploy pending, Junyan&#x27;s.<b></p>
-
-<p>dc-canon <code>1aff56586</code>, fingerprint <code>e61c1fc5052a</code>. New</p>
-<p><code>services/event-gate/platform_identity.py</code>, called from the booking sweep&#x27;s platform gate</p>
-<p>(<code>booking_sweep.process</code>). </b>44 new tests; the event-gate suite is 1727 pass.<b></p>
-
-<p></b>The refusal to guess is untouched.<b> <code>platform_artist_card</code>&#x27;s &quot;exactly one match&quot; rule is</p>
-<p>not widened, not re-ranked, and not narrowed by platform. What changed is the INPUT to it,</p>
-<p>and whether a card exists at all. A property test pins the safety argument directly: the</p>
-<p>string handed to the lookup is never LONGER than the raw one</p>
-<p>(<code>test_a_stripped_name_is_never_LONGER_than_the_raw_one</code>).</p>
-
-<h3>The ladder, highest evidence first</h3>
-
-<ol>
-<li>1. </b>Relay** — this booking&#x27;s own relay row in ☎️ Contact Points carries an <code>Artist</code></li>
-</ol>
-<p>relation. That relation is a human&#x27;s own statement that two names are one person. It is</p>
-<p>also the memory for rung 4. No new table, no new field, no new writer:</p>
-<p><code>record_relay_contact_point</code>&#x27;s docstring already says *&quot;<code>Guest Label</code> carries the hint</p>
-<p>for the human who attaches the card.&quot;*</p>
-<ol>
-<li>2. <b>Name, desk tags stripped</b> — <code>FBS</code>, <code>[Facilitator: …]</code> and the platform tag come off</li>
-</ol>
-<p>before matching.</p>
-<ol>
-<li>3. <b>Create from the accepted booking</b> — zero cards plus a real accepted platform booking</li>
-</ol>
-<p>mints ONE card, <code>&quot;&lt;name&gt; [&lt;Platform&gt;]&quot;</code>, through <code>create_artist</code>.</p>
-<ol>
-<li>4. <b>Several cards → one keyed ask</b> — keyed by person and platform, not by booking.</li>
-</ol>
-
-<h3>Acceptance, line by line</h3>
-
-<ul>
-<li>- <b>Replay Lauren: <code>&quot;Lauren Taylor Scott FBS&quot;</code> resolves to her existing card and provisions,</li>
-</ul>
-<p>no card created, no human asked.</b></p>
-<p><code>test_lauren_resolves_to_her_existing_card_with_no_card_created_and_nobody_asked</code> —</p>
-<p>verdict <code>how == &quot;name&quot;</code>, <code>artist_id == &quot;lauren&quot;</code>, <code>identity:tags-stripped</code> in the steps,</p>
-<p><code>notion.created == []</code>.</p>
-<p><code>test_lauren_reaches_gate_2_and_the_row_that_sat_open_three_days_closes</code> runs it end to</p>
-<p>end through <code>process</code>: because the tag is gone, <code>platform_artist</code> now finds her phone, so</p>
-<p><b>gate 2 runs and gate 1 never fires</b> — which is what &quot;provisions with no human asked&quot;</p>
-<p>means for her, since her code was already on the panel. Her row closes in the same pass.</p>
-<p>*Replayed from her recorded shape, not live — there is no Notion or alarm token on this</p>
-<p>Mac. The first live shadow pass is the in-situ replay.*</p>
-<ul>
-<li>- <b>Replay xavier: a first-name-only Tagvenue guest with no card ends with a usable identity</li>
-</ul>
-<p>and a code on the panel, never &quot;no access path&quot; handed to a human.</b></p>
-<p><code>test_xavier_live_gets_an_identity_and_a_code_and_no_human_is_asked</code> — <code>identity:card-created</code></p>
-<p>and <code>platform:access-provisioned</code> in the steps, <code>ensure_access</code> called against the fresh</p>
-<p>card (<code>[(&quot;xavier&quot;, &quot;new-1&quot;)]</code>), the card labelled <code>xavier [Tagvenue]</code>.</p>
-<p><code>test_xavier_in_shadow_names_the_card_it_would_create_and_writes_nothing</code> pins the shadow</p>
-<p>half: verdict <code>would-create</code>, <code>notion.writes == []</code>, one log line naming the card.</p>
-<p><code>test_the_phone_ask_still_rides_for_xavier_because_a_code_is_not_a_channel</code> pins that the</p>
-<p>gate-1 row and the phone ask still happen and that the basis still says the code must</p>
-<p>never travel the relay — provisioning him does not make him textable.</p>
-<ul>
-<li>- <b>Replay Jessica: five cards → exactly one human question, and the answer is remembered.</b></li>
-</ul>
-<p><code>test_five_jessicas_produce_no_guess_and_no_card</code> (<code>ambiguous</code>, <code>artist_id == &quot;&quot;</code>, nothing</p>
-<p>created). <code>test_the_giggster_jessica_is_NOT_quietly_preferred</code> pins the tempting wrong fix</p>
-<p>— <code>Jessica M. [Giggster]</code> is the only Giggster Jessica and that is not evidence she is</p>
-<p>THIS Jessica. <code>test_exactly_one_question_is_asked_and_a_second_pass_asks_nothing</code> (one</p>
-<p>POST, second call returns <code>existing</code>). <code>test_the_ask_is_keyed_by_person_not_by_booking</code></p>
-<p>(her Oct 10 and her next booking are one question).</p>
-<p><code>test_the_answer_is_remembered_and_the_next_pass_asks_nothing</code> — with the relation</p>
-<p>attached, rung 1 returns <code>relay</code>/<code>j4</code> and nothing is created or asked.</p>
-<p><code>test_two_cards_on_one_relay_is_reported_not_resolved</code> keeps 098&#x27;s rule.</p>
-<ul>
-<li>- <b>No junk card.</b> <code>test_a_booking_with_no_id_behind_the_name_creates_nothing</code></li>
-</ul>
-<p>(<code>no-evidence</code>). <code>test_a_bare_holder_string_never_becomes_a_card</code>, parameterised over a</p>
-<p>phone number, a relay address and a Giggster conversation UUID.</p>
-<p><code>test_a_title_that_is_only_the_desk_tag_creates_nothing</code>. Nine more shapes in</p>
-<p><code>test_a_name_a_person_could_not_stand_behind_never_becomes_a_card</code>.</p>
-<p><code>test_a_create_failure_resolves_to_nothing_and_never_raises</code>.</p>
-<ul>
-<li>- <b>The row that was raised closes on the lane&#x27;s own read.</b> <code>close_gate1_row</code>, called from</li>
-</ul>
-<p>both gates. It closes only when BOTH halves of the row&#x27;s premise are false — one card AND</p>
-<p>a phone on file. <code>test_a_resolved_guest_with_STILL_no_phone_is_annotated_not_closed</code></p>
-<p>asserts the write carries <b>no <code>Status</code></b>; <code>test_a_second_pass_appends_no_second_line</code>;</p>
-<p><code>test_a_row_a_human_already_processed_is_never_rewritten</code>; <code>test_no_identity_closes_nothing</code>;</p>
-<p><code>test_a_notion_failure_while_closing_never_raises</code>.</p>
-<p><code>test_both_key_shapes_are_checked_because_stripping_changed_the_key</code> pins the subtle part:</p>
-<p>stripping the tags CHANGES the residue key, and Lauren&#x27;s real open row is under the other</p>
-<p>one.</p>
-<ul>
-<li>- <b>No code in any row, log, transcript or test.</b> Every planted Artist card carries a code</li>
-</ul>
-<p>and the Notion fake plants two more. <code>assert_no_code</code> greps every write body, every log</p>
-<p>line and every step list. <code>row_writes()</code> excludes the Artist card&#x27;s own <code>Alarm Code</code></p>
-<p>mirror, which is canon (<code>doorman-access-lifecycle.md</code>: the field exists because the HTA</p>
-<p>quotes it) and is not a row. <code>pytest -s | grep -c &quot;4321\|1776\|8140&quot;</code> → <b>0</b>.</p>
-<ul>
-<li>- <b>Canon</b> — <code>library/doorman-access-lifecycle.md</code>, new § &quot;Platform identity — how a guest</li>
-</ul>
-<p>we cannot name gets one&quot;, plus a change-log line. <b>RUNTIMES.md</b> — the <code>booking-sweep</code></p>
-<p>row carries both switches and what they gate. <b>Plumbing Map</b> — <code>day-sheet/plumbing.html</code>,</p>
-<p>newest-first, 2026-09-07 17:2xZ. <b>Tests</b> — 44.</p>
-
-<h3>Deploy (Junyan)</h3>
-
-<p>``<code>bash</p>
-<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; services/event-gate/deploy.sh</p>
-<p></code>`<code></p>
-
-<p>(expect </code>code_fingerprint<code> = </code>e61c1fc5052a<code>)</p>
-
-<p>Then watch two or three booking-sweep passes for the shadow lines:</p>
-
-<p></code>`<code>bash</p>
-<p>gcloud logging read &#x27;resource.type=&quot;cloud_run_revision&quot; AND resource.labels.service_name=&quot;event-gate&quot; AND textPayload:&quot;platform identity&quot;&#x27; --project danceannex-skedda --limit 20 --format=&#x27;value(textPayload)&#x27;</p>
-<p></code>`<code></p>
-
-<p>Flip live only after a shadow pass has named a card it would create, and you have read that</p>
-<p>name against the booking it came from:</p>
-
-<p></code>`<code>bash</p>
-<p>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --update-env-vars PLATFORM_IDENTITY_LIVE=1</p>
-<p></code>`<code></p>
-
-<p><b>Read the &quot;would create&quot; lines before the flip, not after.</b> That is the one thing ticket</p>
-<p>123 got wrong: two clean shadow days proved the READS were right and could not prove the</p>
-<p>QUESTION was right for a given row. Here the equivalent risk is a card minted for a booking</p>
-<p>whose title is not a person. The junk filter is the guard, but a name it accepts is still</p>
-<p>only as good as the title behind it.</p>
-
-<h3>Not done, and why</h3>
-
-<ul>
-<li>- <b>A7 is not extended to platform bookings.</b> </code>preflight_provision<code> keys off</li>
-</ul>
-<p></code>booking[&quot;holder&quot;]<code>, and a platform mirror has none, so it never sees them. Widening a</p>
-<p>LIVE unattended alarm-write grant to a new class of booking is Junyan&#x27;s ruling to make,</p>
-<p>not mine — the grant text in </code>autonomy.md<code> names its closed list deliberately. Worth</p>
-<p>asking for: A7 is the pass that would have caught Lauren&#x27;s three-day-open row from the</p>
-<p>other side.</p>
-<ul>
-<li>- <b>Ticket 123 is moot, not shadowed.</b> The brief said to leave its closer in shadow. It was</li>
-</ul>
-<p><b>deleted</b> by Junyan earlier the same day (dc-canon </code>61a601f54<code>), so there is nothing to</p>
-<p>flip. Nothing here depends on it.</p>
-
-<h3>The code-in-a-title finding — corrected, and a real defect behind it</h3>
-
-<p><b>The row named in this ticket is a false positive.</b> </code>3d07503281c4819a91edefed0015957a<code> is</p>
-<p>Lauren&#x27;s own gate-1 row. Its title is</p>
-<p></code>PLATFORM booking (gate 1) — Lauren Taylor Scott via Tagvenue: 509B Sep 04 16:00, NO phone on file [sweep:platform:tagvenue:Lauren Taylor Scott:2026-09-04]<code>,</p>
-<p>and the only four-digit group in it is the <b>year</b> inside its own residue key. Confirmed</p>
-<p>against the 2026-09-03 desk-state snapshot of that exact row</p>
-<p>(</code>desk-store/correspondence/repo/desk-state/2026-09-03.json<code>, </code>actions_pending[35]<code>). No</p>
-<p>digits are quoted anywhere in it. I could not re-read the live row — there is no Notion</p>
-<p>token on this Mac — so a hand-edit at cancel time cannot be ruled out, but nothing wrote a</p>
-<p>code into it.</p>
-
-<p>*(Worth noting for this ticket: that row&#x27;s key carries the CLEAN name, so on Sep 3 the board</p>
-<p>title had no </code>FBS<code> tag and the desk added it later. Both key shapes really do occur, which is</p>
-<p>why </code>gate1_keys<code> checks both.)*</p>
-
-<p><b>The class of defect is real, and the path is live.</b> A sweep of every Actions title in the</p>
-<p>desk-state archive found <b>eight rows whose titles quote a live alarm code</b>, dated</p>
-<p>2026-08-04 to 2026-08-14. <b>Every one was written by an LLM lane:</b> The Planner</p>
-<p>(</code>3b27503281c4814dac00c9dce918c20f<code>), The Concierge (three, including</p>
-<p></code>3ba7503281c4816c8ff2fd124316de1f<code> and </code>3bb7503281c481c49b82f4d33cc4948c<code>), the <b>LLM</p>
-<p>Doorman</b> (two, </code>3bb7503281c481839e6dc85e467d9fb0<code> and </code>3bb7503281c48198855de6f72cd09a1a<code>),</p>
-<p>The Custodian (</code>3bc7503281c481f3b614e50de99d4343<code>) and The Analyst</p>
-<p>(</code>3bc7503281c4817c9a0ec0b9e847b977<code>). Digits withheld here on purpose.</p>
-
-<p><b>No deterministic writer can do this.</b> Every title-building call in </code>services/<code> was read:</p>
-<p>the only code-shaped field any Python lane puts in a title is </code>Message Code<code>, which is a</p>
-<p>message identifier (</code>HTA-sweep-0906-…<code>), never a PIN.</p>
-
-<p><b>All five of those LLM lanes still run</b> (RUNTIMES.md: Concierge 2-hourly, Custodian</p>
-<p>02:35/09:35, Planner 19:30, Analyst 04:06, Doorman cloud 04:00/06:00), and every one can</p>
-<p>still file an Actions row from a prompt. <b>The fix belongs in the prompts, not in code</b> —</p>
-<p>one line in the shared frame saying a code never enters a row title or basis, and a</p>
-<p>deterministic guard is possible too: </code>lane_common.action_row<code> and </code>booking_sweep.residue<code></p>
-<p>could refuse a title carrying a bare four-digit group. Neither is in this ticket&#x27;s scope and</p>
-<p>neither is built. Filing it is the next step.</p>
-
-<h2>Absorbed 2026-09-08 — <b>129-manual-provisioning-mints-duplicates</b></h2>
-
-<p><b>Human-minted duplicates (from 129):</b> a person creating an Artist row by hand bypasses this ladder. Rather than a mid-task warning nobody reads (<b>077</b>&#x27;s lesson), the cheap fix is the sweep that produced <b>104</b>&#x27;s sheet, run on a cadence: two live cards sharing a hard signal (email, phone, Skedda/Alarm user id) raise one keyed Sweep Feedback row with the pair and the evidence. Merges stay human-only. </code>create_artist<code> does not change — the bot behaved correctly.</p>
-
-<h2>2026-09-09 — the code is live on the VPS; the flag state on the VPS is unread</h2>
-
-<p>Checked before deploying: live event-gate on Hostinger reports </code>git_sha 5d0ffd6<code>, fingerprint </code>615b2a7409a4<code>, identical to repo HEAD, which contains </code>1aff56586<code>. So </code>platform_identity.py<code> is running. The deploy step is done.</p>
-
-<p>Two things this session could not read, because both need a root shell on the VPS (Hermes runs as uid 10000 and cannot see </code>/docker/danceannex-mcp<code> either — mailbox 2026-09-09 01:23Z):</p>
-
-<ol>
-<li>1. <b>Whether the lane is shadow or live on the VPS.</b> The old Cloud Run forwarder carries </code>PLATFORM_IDENTITY_LIVE=1<code>, but the authoritative env is the root-only </code>/docker/danceannex-mcp/event-gate.env<code>. If the cutover copied the Cloud Run env, this lane may already be creating cards <b>without the &quot;would create&quot; read the ticket insists on.</b> Check first:</li>
-</ol>
-
-<p></code>`<code>bash</p>
-<p>ssh root@2.25.139.60 &#x27;grep -E &quot;^PLATFORM_IDENTITY_LIVE=&quot; /docker/danceannex-mcp/event-gate.env&#x27;</p>
-<p></code>`<code></p>
-
-<ol>
-<li>2. <b>The shadow / live lines.</b> </code>gcloud logging read<code> no longer applies; the container log does:</li>
-</ol>
-
-<p></code>`<code>bash</p>
-<p>ssh root@2.25.139.60 &#x27;docker logs event-gate --since 48h 2&gt;&amp;1 | grep -i &quot;platform identity&quot;&#x27;</p>
-<p></code>`<code></p>
-
-<p>If the flag is unset: read two or three passes&#x27; </code>would-create<code> lines against their bookings, then set it in </code>event-gate.env<code> and apply with the </code>deploy-event-gate<code> workflow (</code>target=hostinger mode=update<code>). If the flag is already </code>1<code>: read what it created, and revert to shadow if any card is not a person.</p>
-
-<h3>2026-09-09 — deployed, and the mode is UNVERIFIED</h3>
-
-<p><b>The code is in production.</b> </code>event-gate.srv1948070.hstgr.cloud/health<code> reports</p>
-<p></code>git_sha 5d0ffd6<code> / </code>code_fingerprint 615b2a7409a4<code>, started 2026-09-09T03:38:47Z. I rebuilt</p>
-<p>that fingerprint from commit </code>5d0ffd61a<code> and it matches, and </code>platform_identity.py<code> is in</p>
-<p>that tree. So the ladder is shipped.</p>
-
-<p><b>Whether it is LIVE or SHADOW is not known, and this is the honest state.</b></p>
-
-<ul>
-<li>- </code>PLATFORM_IDENTITY_LIVE=1<code> IS set on the Cloud Run service. <b>That is the forwarder.</b></li>
-</ul>
-<p>Production moved to Hostinger on 2026-09-08; per </code>dc-canon/CLAUDE.md<code> Rule 2, Cloud Run</p>
-<p>only relays and its </code>/health<code> reports whatever Hostinger is running. A switch set there</p>
-<p>changes nothing a renter sees. If the flip was run against Cloud Run after the migration,</p>
-<p>it landed on the wrong box.</p>
-<ul>
-<li>- The authority is </code>/docker/danceannex-mcp/event-gate.env<code> on the Hostinger host plus the</li>
-</ul>
-<p>running container. <b>Neither is reachable from any agent surface.</b> Hermes was asked</p>
-<p>(run </code>8bd3cd9a<code>, read-only, nothing changed) and reported that it is a separate container</p>
-<p>on that VPS with no </code>/docker<code> tree, no Docker socket at </code>/var/run/docker.sock<code> or</p>
-<p></code>/run/docker.sock<code>, and no container logs — so it declined to answer rather than return a</p>
-<p>false negative. Correct call.</p>
-<ul>
-<li>- The container was rebuilt at 03:38Z today. Whether an env var set earlier survived depends</li>
-</ul>
-<p>on whether that deploy preserved </code>env_file<code>, so the file and the process could legitimately</p>
-<p>disagree. That is exactly the comparison nobody can currently make.</p>
-
-<p><b>Three commands, root on srv1948070, read-only:</b></p>
-
-<p></code>`<code>bash</p>
-<p>grep -E &#x27;^PLATFORM_IDENTITY_(LIVE|DISABLED)=&#x27; /docker/danceannex-mcp/event-gate.env</p>
-<p></code>`<code></p>
-
-<p></code>`<code>bash</p>
-<p>docker inspect -f &#x27;{{range .Config.Env}}{{println .}}{{end}}&#x27; event-gate | grep PLATFORM_IDENTITY_</p>
-<p></code>`<code></p>
-
-<p></code>`<code>bash</p>
-<p>docker logs --since 72h event-gate | grep -i &#x27;platform identity&#x27;</p>
-<p></code>`<code></p>
-
-<p><b>Also fixed today.</b> The RUNTIMES.md rewrite of 2026-09-08 replaced the per-job inventory,</p>
-<p>which stranded this ticket&#x27;s switch documentation in</p>
-<p></code>archive/RUNTIMES-before-fleet-registry-2026-09-08.md<code>. The live RUNTIMES.md now carries a</p>
-<p><b>§ Named event-gate switches an agent may read</b> — the switch names, their code defaults, and</p>
-<p>the rule that a switch read off Cloud Run is read off the forwarder and means nothing. That</p>
-<p>section is the gap that let this happen: the file told agents to read named switches from</p>
-<p></code>event-gate.env<code> and named none of them.</p>
-
-<p><b>Ticket status: the build is complete; the acceptance is argued, not demonstrated.</b> All</p>
-<p>three replays pass against recorded shapes in 44 tests. No live pass has been observed doing</p>
-<p>any of them, and until the mode is known, a clean absence of </code>platform identity<code> log lines is</p>
-<p>not evidence either way. Close it when the third command above returns lines and one of them</p>
-<p>has been read against the booking it names.</p>
-
-<h2>2026-09-09 (later) — Junyan read the VPS: the lane is LIVE, and has not yet acted</h2>
-
-<p></code>PLATFORM_IDENTITY_LIVE=&#x27;1&#x27;<code> in </code>/docker/danceannex-mcp/event-gate.env<code>. The flag went live with the</p>
-<p>Hostinger cutover (the Cloud Run env it was copied from carried it, under a </code>-dirty<code> deploy) — not after</p>
-<p>the &quot;would create&quot; read this ticket required. </code>docker logs event-gate --since 48h | grep -i &quot;platform identity&quot;<code></p>
-<p>returned nothing, and that is explained, not alarming: the container was recreated at 03:38Z today, so its</p>
-<p>log covers ~11 hours; the one platform booking in that window (Best O., Peerspace, FBS row 04:00Z) already</p>
-<p>had a card and resolved on rungs 1–2, which log nothing. Rungs 3 and 4 write a </code>platform identity: created card<code></p>
-<p>/ </code>asked<code> line on stdout (</code>log_request<code> → JSON on stdout), so the grep is the right instrument.</p>
-
-<p><b>Ruling needed from Junyan, two options:</b></p>
-<ul>
-<li>- <b>Keep live, watch daily</b> (cheaper; a junk card is visible in the log line and deletable):</li>
-</ul>
-<p></code>`<code>bash</p>
-<p>ssh root@2.25.139.60 &#x27;docker logs event-gate --since 24h 2&gt;&amp;1 | grep -i &quot;platform identity&quot;&#x27;</p>
-<p></code>`<code></p>
-<ul>
-<li>- <b>Return to shadow</b> until one </code>would create<code> line has been read against its booking, per this ticket&#x27;s own</li>
-</ul>
-<p>rule: unset the flag in </code>event-gate.env<code>, then </code>gh workflow run deploy-event-gate.yml --ref main -f target=hostinger -f mode=update -f reason=&quot;124 back to shadow&quot;<code>.</p>
-
-<p>Also unfinished by design: A7 (</code>preflight_provision<code>) is not extended to platform bookings — widening a live</p>
-<p>unattended alarm-write grant is Junyan&#x27;s call.</p>
-
-<p><b>Ruled 2026-09-09 (Junyan): keep it live; Junyan reads the log daily.</b> Return to shadow only if a created card is not a person.</p>
-
-<h3>2026-09-09, later — LIVE confirmed, and the lane was invisible</h3>
-
-<p><b>Mode settled.</b> Root read on </code>srv1948070<code>: </code>/docker/danceannex-mcp/event-gate.env<code> carries</p>
-<p></code>PLATFORM_IDENTITY_LIVE=&#x27;1&#x27;<code> and the running container carries </code>PLATFORM_IDENTITY_LIVE=1<code>.</p>
-<p>File and process agree, so the 03:38Z rebuild picked the file up. <b>The lane is live.</b> The</p>
-<p>flip had also been applied to Cloud Run, which is only the forwarder since 2026-09-08 — that</p>
-<p>copy does nothing, and its convincing-looking </code>/health<code> is what made this take four attempts</p>
-<p>to establish. Hermes could not answer at all (run </code>8bd3cd9a<code>): separate container, no</p>
-<p></code>/docker<code> tree, no Docker socket, no logs, and it refused to guess rather than return a false</p>
-<p>negative.</p>
-
-<p><b>The defect that hid: a pure-read lane that says nothing.</b> 72 hours live produced ZERO</p>
-<p></code>platform identity<code> log lines. Only the three WRITE paths logged. The two rungs that resolve</p>
-<p>a guest quietly returned in silence, and the most common success is the quietest of all — a</p>
-<p>Lauren-shaped booking clears at <b>gate 2</b> and never reaches the ladder. The step strings</p>
-<p>(</code>platform:tags-stripped<code>, </code>identity:single-card<code>) go into the pass result and the sweep never</p>
-<p>logs the result. So &quot;no lines&quot; meant both &quot;it worked&quot; and &quot;it never ran&quot;.</p>
-
-<p><b>Fixed in PR #72</b> (</code>6f0f4c126<code>, branch </code>wf124-log-the-quiet-path<code>, fingerprint after merge</p>
-<p></code>cf77a8475888<code>): three guarded log lines — relay resolve, name resolve naming the raw string</p>
-<p>it stripped from, and the gate entry when tags came off. No digits. 5 tests, <b>1972 pass</b>.</p>
-<p>Opened as a PR, not pushed to main, per </code>dc-canon/CLAUDE.md<code> Rule 1. <b>Junyan merges and</p>
-<p>deploys.</b></p>
-
-<p><b>RUNTIMES.md un-orphaned.</b> The 2026-09-08 rewrite had moved this ticket&#x27;s switch entry into</p>
-<p>the archive while telling agents to read named switches from </code>event-gate.env<code> and naming none.</p>
-<p>The live file now has § <b>Named event-gate switches an agent may read</b> — names, code defaults</p>
-<p>(explicitly not deployed values), and the rule that a switch read off Cloud Run is read off the</p>
-<p>forwarder.</p>
-
-<p><b>Still open, and the only thing between here and closed:</b> the in-situ demonstration. After</p>
-<p>#72 deploys, this is the evidence:</p>
-
-<p></code>`<code>bash</p>
-<p>ssh root@2.25.139.60 &quot;docker logs --since 72h event-gate 2&gt;&amp;1 | grep -i &#x27;platform identity&#x27;&quot;</p>
-<p></code>`<code></p>
-
-<p>One line read against the booking it names closes ticket 124.</p>
-
-<p><b>2026-09-09 — watched by the daily </code>desk-watch<code> scheduled task (09:30 Toronto, this Mac).</b> It replaced </code>shadow-lane-review<code> and </code>hta-verified-week-check<code>, which read Cloud Run logs that went dark on 2026-09-08. Junyan does not do this check by hand; the routine reports and files at most one Decision row.</p>
-
-<h3>2026-09-10 — both remaining fixes built (PR #88)</h3>
-
-<p><b>The code-in-title finding is closed as a build, not a note.</b> The sweep that produced &quot;eight</p>
-<p>rows&quot; was titles only; re-run across every title AND Basis in the desk-state archive it is</p>
-<p><b>ten</b>, over 1223 strings. </code>lane_common.scrub_code<code> redacts any 4-digit group written beside</p>
-<p>the word for it, and both shared row writers run it. It <b>redacts, never refuses</b> — dropping</p>
-<p>an access row would trade a leak for a renter at a locked door. Tuned on the real archive:</p>
-<p>10 changed, 0 false positives; dates, times, studio numbers and booking ids all survive.</p>
-<p>Canon </code>autonomy.md<code> now carries the incident and names the guard, because the rule it already</p>
-<p>stated was ignored ten times by five lanes.</p>
-
-<p><b>Gate 2 was still silent</b> after PR #72 — an established platform renter clears there, never</p>
-<p>reaches the ladder, and has no tag to strip. All six platform bookings in the current window</p>
-<p>are that shape, so #72 would have demonstrated nothing. Fixed in the same PR.</p>
-
-<p>21 new tests, 2064 pass. PR #88, </code>8e6a0e442<code>, fingerprint </code>3b7af44d34ee<code>. Junyan merges and</p>
-<p>deploys.</p>
-
-<h3>2026-09-10 — two owner rulings supersede this ticket&#x27;s code constraints</h3>
-
-<p>This ticket was written with the constraint <b>&quot;No code in any row, log, transcript or test&quot;</b></p>
-<p>and <b>&quot;an access code NEVER travels a platform relay&quot;</b>. Junyan withdrew both on 2026-09-10.</p>
-
-<ul>
-<li>- <b>Codes may be written anywhere</b> — *&quot;It&#x27;s fine to write alarm digits… Agents can write codes</li>
-</ul>
-<p>without restrictions.&quot;* The </code>scrub_code<code> guard from PR #88 was removed the same day and canon</p>
-<p>says not to rebuild it.</p>
-<ul>
-<li>- <b>A code may travel a platform relay</b>, in a human-approved message AND in the unattended</li>
-</ul>
-<p>platform first-booking send — *&quot;Codes are low risk items so we are not worried. It can easily</p>
-<p>be rotated out.&quot;*</p>
-
-<p>PR #90, </code>ab019009d<code>, fingerprint </code>edaee6ed1dc7<code>, deployed and verified 03:15:32Z.</p>
-
-<p><b>What this changes for this ticket&#x27;s own lane.</b> The gate-1 row&#x27;s whole shape assumed a code</p>
-<p>could not reach a platform guest until a phone number arrived. That is no longer true: the</p>
-<p>number ask still rides, but for REACH, not safety. A follow-on question worth its own ticket —</p>
-<p><b>should gate 1 now send the code through the relay itself, rather than only asking for a</p>
-<p>number?</b> That would close the xavier case end to end without a human at any step. Not built,</p>
-<p>not ruled on. </code>platform_identity.py<code> itself is unaffected: it handles identity, never digits.</p>
-
-<p><b>Unchanged:</b> which lanes may send unattended (still the two carve-outs), and </code>arm<code>/</code>disarm`.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">23</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
@@ -4188,6 +3657,623 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>continue from T0 in <code>assets/121-grokbot/GROKBOT-BRIEF.md</code> (the asset folder keeps the</p>
 <p>old ticket number 121; this ticket was renumbered 130 in the 2026-09-06 map trim). To</p>
 <p>retire: delete the Bot in Grok Bot; no other surface holds state.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#124</span><span class="emoji">🪪</span><span class="done-title">A booking-site guest has no card until a human types one — the robots all stop there</span><span class="done-date">2026-09-10</span></summary><div class="done-body"><ul class="plain-bullets"><li>Built and tested Sep 7 (44 new tests). It looks the guest up four ways, and only creates a card from an accepted booking</li><li>Waiting on Junyan&#x27;s deploy, then two or three watch-only passes, then the switch-on</li><li>Read the &#x27;would create&#x27; lines BEFORE switching on — the risk is a card made for a booking whose title is not a person</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A platform guest has no identity until a human types one — and three robots all stop politely at that gap</b></p><h2>Question</h2>
+
+<p>Junyan, 2026-09-07, on the xavier case that produced ticket 123:</p>
+
+<blockquote>*&quot;So Xavier should have been sorted out directly by the agent not even pass this to</blockquote>
+<blockquote>Junyan. Doorman will sweep and check if all the codes are set up (I think).&quot;*</blockquote>
+
+<p>He is right on both counts, and ticket 123 built the wrong thing first. 123 closes the</p>
+<p><b>note</b> once a human has fixed the problem. This ticket is about the problem never</p>
+<p>needing a human at all.</p>
+
+<p><b>The desk already has two lanes that can provision a renter, and both of them stop at the</p>
+<p>same wall.</b></p>
+
+<p>| Lane | What it can do | Where it stops |</p>
+<p>|---|---|---|</p>
+<p>| <b>The Registrar</b> — <code>booking_sweep.platform_provision</code>, added 2026-09-03 on Junyan&#x27;s ruling in the Lauren Taylor Scott case (ticket 110) | Mints a code on booking for a platform renter <b>even with no phone</b> — &quot;a code needs a person, only sending it needs a number&quot; | <code>platform_artist_card(name)</code> returns <code>&#x27;&#x27;</code> on zero <b>or</b> several matches → <code>platform:no-single-card-to-provision</code>. Nothing is minted. |</p>
+<p>| <b>The Doorman</b> — <code>doorman_armcheck.preflight_provision</code> (A7), granted by Junyan 2026-09-05, <b>LIVE</b> (<code>DOORMAN_PROVISION_LIVE=1</code>) | Probes every renter booked in the next 7 days and <b>re-provisions anyone the panel has lost</b>, through the Registrar&#x27;s own <code>ensure_access</code>, then closes the row | Its closed list requires <i>&quot;a single Artist page and at most one panel user&quot;</i>. Same wall. |</p>
+
+<p>So: <b>both lanes can fix a renter the panel forgot. Neither can fix a renter we cannot</p>
+<p>name.</b> And nothing on the platform path ever creates the card — deliberately, because a</p>
+<p>blind create mints junk cards (the comment at <code>booking_sweep.py:3115</code> says so, and the</p>
+<p><code>Julie Marouze [Gmail]</code> duplicate is the cautionary case).</p>
+
+<h2>The three ways the name → card lookup fails, all live on 2026-09-07</h2>
+
+<p><code>platform_artist_card</code> runs one query: Artist DB <code>Name</code> <b>contains</b> the booking&#x27;s renter</p>
+<p>name, and accepts the result only when exactly one row comes back.</p>
+
+<ol>
+<li>1. <b>No card at all.</b> A brand-new platform guest has none. <b>That was xavier on Sep 4</b> —</li>
+</ol>
+<p>Tagvenue gave a first name only, no card existed, so no code was minted and the desk</p>
+<p>filed <i>&quot;no phone, no surname, no access path&quot;</i> and handed it to Junyan. He provisioned</p>
+<p>by hand, xavier keyed 693 at 14:46:43, and the row sat open all day. That is ticket 123&#x27;s</p>
+<p>whole origin story, one step upstream.</p>
+<ol>
+<li>2. <b>The name does not match a card that exists.</b> The booking title carries the <b>FBS</b></li>
+</ol>
+<p>staffing tag: <code>platform_renter_name</code> returns <code>&quot;Lauren Taylor Scott FBS&quot;</code>, her card is</p>
+<p><code>&quot;Lauren Taylor Scott [Tagvenue]&quot;</code>, and <code>contains &quot;Lauren Taylor Scott FBS&quot;</code> matches</p>
+<p><b>nothing</b>. The tag is appended by the desk&#x27;s own board convention, and it is what</p>
+<p>blinds the lookup. (Verified 2026-09-07: her card exists, carries a phone AND Alarm User</p>
+<p>ID 248968506, and <code>check_access_covers</code> returns <code>allow_permanent</code> — she was fine all</p>
+<p>along, and her gate-1 row was still open three days later.)</p>
+<ol>
+<li>3. <b>The name matches too many.</b> <code>&quot;Jessica&quot;</code> via Giggster hits <b>five</b> Jessica cards</li>
+</ol>
+<p>(<code>Jessica F. [One-Off]</code>, <code>Jessica Firestone [Skedda]</code>, <code>Jessica Lee [Skedda]</code>,</p>
+<p><code>Jessica Thadickal [Peerspace]</code>, <code>Jessica M. [Giggster]</code>). The lane correctly refuses to</p>
+<p>guess — putting a stranger&#x27;s code on a door is the failure it exists to avoid — but the</p>
+<p>refusal is permanent, and her Oct 10 booking is still unprovisioned.</p>
+
+<p>Every step of this is behaving as designed. The chain is correct and still ends with a note</p>
+<p>for Junyan.</p>
+
+<h2>What to build</h2>
+
+<p><b>Not</b> &quot;match harder&quot;. The refusal to guess is load-bearing and stays. Build the thing</p>
+<p>that is genuinely missing: a <b>deterministic way to give a platform guest an identity</b>,</p>
+<p>and a way to say <i>&quot;these two names are the same person&quot;</i> that a machine can act on.</p>
+
+<p>Sketch, for the builder to challenge:</p>
+
+<ul>
+<li>- <b>Strip the desk&#x27;s own tags before matching.</b> <code>FBS</code>, <code>[Facilitator: …]</code>, and the platform</li>
+</ul>
+<p>word are decoration the desk itself appends. Matching on the name the platform actually</p>
+<p>gave is not guessing. This alone would have provisioned Lauren. Cheapest, safest, do it</p>
+<p>first and separately.</p>
+<ul>
+<li>- <b>Create the card when the platform booking is accepted, not when someone needs it.</b></li>
+</ul>
+<p>A platform booking is a real, paid, accepted booking with a real person behind it. The</p>
+<p>Greeter already files an ACCEPT/DECLINE row per request and the ticket exists per canon</p>
+<p>(&quot;Every platform booking has a ticket&quot;, 2026-08-21). The card is the missing sibling.</p>
+<p>Junk-card risk is the reason it is not done today — so the card must be minted from the</p>
+<p>booking (platform + booking ref + accepted), never from a bare holder string, and must</p>
+<p>carry the platform tag so it is obviously a platform identity.</p>
+<ul>
+<li>- <b>A first-name collision is a human question, once.</b> Where several cards match, the ask</li>
+</ul>
+<p>is <i>&quot;is this the Jessica who booked in July?&quot;</i> — one disambiguation row that a human</p>
+<p>answers once and the desk then remembers, not a row re-raised every pass forever.</p>
+<ul>
+<li>- <b>Whatever is built must close its own row</b>, on its own read, the way A7 does.</li>
+</ul>
+
+<h2>Hard constraints</h2>
+
+<ul>
+<li>- <b>The refusal to guess stays.</b> A wrong card means a stranger&#x27;s code on a door. Nothing</li>
+</ul>
+<p>here may relax <code>platform_artist_card</code>&#x27;s &quot;exactly one match&quot; rule by loosening the <i>match</i>;</p>
+<p>it may only make the <i>inputs</i> honest (tag stripping) or create the missing card from</p>
+<p>evidence strong enough to stand behind.</p>
+<ul>
+<li>- <b>Read-only on the panel except through <code>ensure_access</code>.</b> One writer, borrowed, exactly</li>
+</ul>
+<p>as A7 does it. No second provisioning path.</p>
+<ul>
+<li>- <b>No code in any row, log, transcript or test.</b> ⚠️ <b>Found while writing this ticket:</b> the</li>
+</ul>
+<p>Cancelled row <code>3d07503281c4819a91edefed0015957a</code> carries a live 4-digit code <b>in its</p>
+<p>title</b>. It is Cancelled, not deleted. Worth a separate look at how it got there — the</p>
+<p>rule is that digits never enter a row.</p>
+<ul>
+<li>- **Shadow first, <code>*_LIVE=1</code> is Junyan&#x27;s flip<b>, the house pattern.</li>
+<li>- </b>Junyan runs deploys.<b></li>
+</ul>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Replay Lauren: booking name <code>&quot;Lauren Taylor Scott FBS&quot;</code> resolves to her existing card and</li>
+</ul>
+<p>provisions, with no card created and no human asked.</p>
+<ul>
+<li>- Replay xavier: a Tagvenue booking for a first-name-only guest with no card ends the pass</li>
+</ul>
+<p>with a usable identity and a code on the panel, or with ONE disambiguation ask — never</p>
+<p>with &quot;no access path&quot; handed to a human.</p>
+<ul>
+<li>- Replay Jessica: five matching cards produces exactly one human question, and the answer</li>
+</ul>
+<p>is remembered — a second pass asks nothing.</p>
+<ul>
+<li>- No junk card: a booking with no accepted status, or no resolvable platform person, creates</li>
+</ul>
+<p>nothing.</p>
+<ul>
+<li>- The row that was raised closes on the lane&#x27;s own read.</li>
+<li>- Canon (<code>doorman-access-lifecycle.md</code> and/or <code>the-loop.md</code>), <code>RUNTIMES.md</code>, Plumbing Map</li>
+</ul>
+<p>entry, tests.</p>
+
+<h2>Seam</h2>
+
+<p>Ticket 123 (the access-class closer) stays separate and stays in </b>shadow<b> — it closes</p>
+<p>notes after the fact and it is the wrong layer for this. Note that </b>123 would not have</p>
+<p>caught Lauren&#x27;s row anyway<b>: the platform gate-1 rows carry no <code>Artist</code> relation, so the</p>
+<p>closer skips them. If this ticket lands well, 123&#x27;s Read 1 has much less to do.</p>
+
+<p>Ticket 122 (window migration) and the Doorman&#x27;s A7 are the neighbours — A7 is the model to</p>
+<p>copy for &quot;sees something off, fixes it, reports it&quot;.</p>
+
+<h2>Progress</h2>
+
+<p></b>2026-09-07 — BUILT, TESTED, PUSHED. SHADOW. One deploy pending, Junyan&#x27;s.<b></p>
+
+<p>dc-canon <code>1aff56586</code>, fingerprint <code>e61c1fc5052a</code>. New</p>
+<p><code>services/event-gate/platform_identity.py</code>, called from the booking sweep&#x27;s platform gate</p>
+<p>(<code>booking_sweep.process</code>). </b>44 new tests; the event-gate suite is 1727 pass.<b></p>
+
+<p></b>The refusal to guess is untouched.<b> <code>platform_artist_card</code>&#x27;s &quot;exactly one match&quot; rule is</p>
+<p>not widened, not re-ranked, and not narrowed by platform. What changed is the INPUT to it,</p>
+<p>and whether a card exists at all. A property test pins the safety argument directly: the</p>
+<p>string handed to the lookup is never LONGER than the raw one</p>
+<p>(<code>test_a_stripped_name_is_never_LONGER_than_the_raw_one</code>).</p>
+
+<h3>The ladder, highest evidence first</h3>
+
+<ol>
+<li>1. </b>Relay** — this booking&#x27;s own relay row in ☎️ Contact Points carries an <code>Artist</code></li>
+</ol>
+<p>relation. That relation is a human&#x27;s own statement that two names are one person. It is</p>
+<p>also the memory for rung 4. No new table, no new field, no new writer:</p>
+<p><code>record_relay_contact_point</code>&#x27;s docstring already says *&quot;<code>Guest Label</code> carries the hint</p>
+<p>for the human who attaches the card.&quot;*</p>
+<ol>
+<li>2. <b>Name, desk tags stripped</b> — <code>FBS</code>, <code>[Facilitator: …]</code> and the platform tag come off</li>
+</ol>
+<p>before matching.</p>
+<ol>
+<li>3. <b>Create from the accepted booking</b> — zero cards plus a real accepted platform booking</li>
+</ol>
+<p>mints ONE card, <code>&quot;&lt;name&gt; [&lt;Platform&gt;]&quot;</code>, through <code>create_artist</code>.</p>
+<ol>
+<li>4. <b>Several cards → one keyed ask</b> — keyed by person and platform, not by booking.</li>
+</ol>
+
+<h3>Acceptance, line by line</h3>
+
+<ul>
+<li>- <b>Replay Lauren: <code>&quot;Lauren Taylor Scott FBS&quot;</code> resolves to her existing card and provisions,</li>
+</ul>
+<p>no card created, no human asked.</b></p>
+<p><code>test_lauren_resolves_to_her_existing_card_with_no_card_created_and_nobody_asked</code> —</p>
+<p>verdict <code>how == &quot;name&quot;</code>, <code>artist_id == &quot;lauren&quot;</code>, <code>identity:tags-stripped</code> in the steps,</p>
+<p><code>notion.created == []</code>.</p>
+<p><code>test_lauren_reaches_gate_2_and_the_row_that_sat_open_three_days_closes</code> runs it end to</p>
+<p>end through <code>process</code>: because the tag is gone, <code>platform_artist</code> now finds her phone, so</p>
+<p><b>gate 2 runs and gate 1 never fires</b> — which is what &quot;provisions with no human asked&quot;</p>
+<p>means for her, since her code was already on the panel. Her row closes in the same pass.</p>
+<p>*Replayed from her recorded shape, not live — there is no Notion or alarm token on this</p>
+<p>Mac. The first live shadow pass is the in-situ replay.*</p>
+<ul>
+<li>- <b>Replay xavier: a first-name-only Tagvenue guest with no card ends with a usable identity</li>
+</ul>
+<p>and a code on the panel, never &quot;no access path&quot; handed to a human.</b></p>
+<p><code>test_xavier_live_gets_an_identity_and_a_code_and_no_human_is_asked</code> — <code>identity:card-created</code></p>
+<p>and <code>platform:access-provisioned</code> in the steps, <code>ensure_access</code> called against the fresh</p>
+<p>card (<code>[(&quot;xavier&quot;, &quot;new-1&quot;)]</code>), the card labelled <code>xavier [Tagvenue]</code>.</p>
+<p><code>test_xavier_in_shadow_names_the_card_it_would_create_and_writes_nothing</code> pins the shadow</p>
+<p>half: verdict <code>would-create</code>, <code>notion.writes == []</code>, one log line naming the card.</p>
+<p><code>test_the_phone_ask_still_rides_for_xavier_because_a_code_is_not_a_channel</code> pins that the</p>
+<p>gate-1 row and the phone ask still happen and that the basis still says the code must</p>
+<p>never travel the relay — provisioning him does not make him textable.</p>
+<ul>
+<li>- <b>Replay Jessica: five cards → exactly one human question, and the answer is remembered.</b></li>
+</ul>
+<p><code>test_five_jessicas_produce_no_guess_and_no_card</code> (<code>ambiguous</code>, <code>artist_id == &quot;&quot;</code>, nothing</p>
+<p>created). <code>test_the_giggster_jessica_is_NOT_quietly_preferred</code> pins the tempting wrong fix</p>
+<p>— <code>Jessica M. [Giggster]</code> is the only Giggster Jessica and that is not evidence she is</p>
+<p>THIS Jessica. <code>test_exactly_one_question_is_asked_and_a_second_pass_asks_nothing</code> (one</p>
+<p>POST, second call returns <code>existing</code>). <code>test_the_ask_is_keyed_by_person_not_by_booking</code></p>
+<p>(her Oct 10 and her next booking are one question).</p>
+<p><code>test_the_answer_is_remembered_and_the_next_pass_asks_nothing</code> — with the relation</p>
+<p>attached, rung 1 returns <code>relay</code>/<code>j4</code> and nothing is created or asked.</p>
+<p><code>test_two_cards_on_one_relay_is_reported_not_resolved</code> keeps 098&#x27;s rule.</p>
+<ul>
+<li>- <b>No junk card.</b> <code>test_a_booking_with_no_id_behind_the_name_creates_nothing</code></li>
+</ul>
+<p>(<code>no-evidence</code>). <code>test_a_bare_holder_string_never_becomes_a_card</code>, parameterised over a</p>
+<p>phone number, a relay address and a Giggster conversation UUID.</p>
+<p><code>test_a_title_that_is_only_the_desk_tag_creates_nothing</code>. Nine more shapes in</p>
+<p><code>test_a_name_a_person_could_not_stand_behind_never_becomes_a_card</code>.</p>
+<p><code>test_a_create_failure_resolves_to_nothing_and_never_raises</code>.</p>
+<ul>
+<li>- <b>The row that was raised closes on the lane&#x27;s own read.</b> <code>close_gate1_row</code>, called from</li>
+</ul>
+<p>both gates. It closes only when BOTH halves of the row&#x27;s premise are false — one card AND</p>
+<p>a phone on file. <code>test_a_resolved_guest_with_STILL_no_phone_is_annotated_not_closed</code></p>
+<p>asserts the write carries <b>no <code>Status</code></b>; <code>test_a_second_pass_appends_no_second_line</code>;</p>
+<p><code>test_a_row_a_human_already_processed_is_never_rewritten</code>; <code>test_no_identity_closes_nothing</code>;</p>
+<p><code>test_a_notion_failure_while_closing_never_raises</code>.</p>
+<p><code>test_both_key_shapes_are_checked_because_stripping_changed_the_key</code> pins the subtle part:</p>
+<p>stripping the tags CHANGES the residue key, and Lauren&#x27;s real open row is under the other</p>
+<p>one.</p>
+<ul>
+<li>- <b>No code in any row, log, transcript or test.</b> Every planted Artist card carries a code</li>
+</ul>
+<p>and the Notion fake plants two more. <code>assert_no_code</code> greps every write body, every log</p>
+<p>line and every step list. <code>row_writes()</code> excludes the Artist card&#x27;s own <code>Alarm Code</code></p>
+<p>mirror, which is canon (<code>doorman-access-lifecycle.md</code>: the field exists because the HTA</p>
+<p>quotes it) and is not a row. <code>pytest -s | grep -c &quot;4321\|1776\|8140&quot;</code> → <b>0</b>.</p>
+<ul>
+<li>- <b>Canon</b> — <code>library/doorman-access-lifecycle.md</code>, new § &quot;Platform identity — how a guest</li>
+</ul>
+<p>we cannot name gets one&quot;, plus a change-log line. <b>RUNTIMES.md</b> — the <code>booking-sweep</code></p>
+<p>row carries both switches and what they gate. <b>Plumbing Map</b> — <code>day-sheet/plumbing.html</code>,</p>
+<p>newest-first, 2026-09-07 17:2xZ. <b>Tests</b> — 44.</p>
+
+<h3>Deploy (Junyan)</h3>
+
+<p>``<code>bash</p>
+<p>cd ~/Documents/Claude\ Workspace/dc-canon &amp;&amp; services/event-gate/deploy.sh</p>
+<p></code>`<code></p>
+
+<p>(expect </code>code_fingerprint<code> = </code>e61c1fc5052a<code>)</p>
+
+<p>Then watch two or three booking-sweep passes for the shadow lines:</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud logging read &#x27;resource.type=&quot;cloud_run_revision&quot; AND resource.labels.service_name=&quot;event-gate&quot; AND textPayload:&quot;platform identity&quot;&#x27; --project danceannex-skedda --limit 20 --format=&#x27;value(textPayload)&#x27;</p>
+<p></code>`<code></p>
+
+<p>Flip live only after a shadow pass has named a card it would create, and you have read that</p>
+<p>name against the booking it came from:</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud run services update event-gate --region us-central1 --project danceannex-skedda --update-env-vars PLATFORM_IDENTITY_LIVE=1</p>
+<p></code>`<code></p>
+
+<p><b>Read the &quot;would create&quot; lines before the flip, not after.</b> That is the one thing ticket</p>
+<p>123 got wrong: two clean shadow days proved the READS were right and could not prove the</p>
+<p>QUESTION was right for a given row. Here the equivalent risk is a card minted for a booking</p>
+<p>whose title is not a person. The junk filter is the guard, but a name it accepts is still</p>
+<p>only as good as the title behind it.</p>
+
+<h3>Not done, and why</h3>
+
+<ul>
+<li>- <b>A7 is not extended to platform bookings.</b> </code>preflight_provision<code> keys off</li>
+</ul>
+<p></code>booking[&quot;holder&quot;]<code>, and a platform mirror has none, so it never sees them. Widening a</p>
+<p>LIVE unattended alarm-write grant to a new class of booking is Junyan&#x27;s ruling to make,</p>
+<p>not mine — the grant text in </code>autonomy.md<code> names its closed list deliberately. Worth</p>
+<p>asking for: A7 is the pass that would have caught Lauren&#x27;s three-day-open row from the</p>
+<p>other side.</p>
+<ul>
+<li>- <b>Ticket 123 is moot, not shadowed.</b> The brief said to leave its closer in shadow. It was</li>
+</ul>
+<p><b>deleted</b> by Junyan earlier the same day (dc-canon </code>61a601f54<code>), so there is nothing to</p>
+<p>flip. Nothing here depends on it.</p>
+
+<h3>The code-in-a-title finding — corrected, and a real defect behind it</h3>
+
+<p><b>The row named in this ticket is a false positive.</b> </code>3d07503281c4819a91edefed0015957a<code> is</p>
+<p>Lauren&#x27;s own gate-1 row. Its title is</p>
+<p></code>PLATFORM booking (gate 1) — Lauren Taylor Scott via Tagvenue: 509B Sep 04 16:00, NO phone on file [sweep:platform:tagvenue:Lauren Taylor Scott:2026-09-04]<code>,</p>
+<p>and the only four-digit group in it is the <b>year</b> inside its own residue key. Confirmed</p>
+<p>against the 2026-09-03 desk-state snapshot of that exact row</p>
+<p>(</code>desk-store/correspondence/repo/desk-state/2026-09-03.json<code>, </code>actions_pending[35]<code>). No</p>
+<p>digits are quoted anywhere in it. I could not re-read the live row — there is no Notion</p>
+<p>token on this Mac — so a hand-edit at cancel time cannot be ruled out, but nothing wrote a</p>
+<p>code into it.</p>
+
+<p>*(Worth noting for this ticket: that row&#x27;s key carries the CLEAN name, so on Sep 3 the board</p>
+<p>title had no </code>FBS<code> tag and the desk added it later. Both key shapes really do occur, which is</p>
+<p>why </code>gate1_keys<code> checks both.)*</p>
+
+<p><b>The class of defect is real, and the path is live.</b> A sweep of every Actions title in the</p>
+<p>desk-state archive found <b>eight rows whose titles quote a live alarm code</b>, dated</p>
+<p>2026-08-04 to 2026-08-14. <b>Every one was written by an LLM lane:</b> The Planner</p>
+<p>(</code>3b27503281c4814dac00c9dce918c20f<code>), The Concierge (three, including</p>
+<p></code>3ba7503281c4816c8ff2fd124316de1f<code> and </code>3bb7503281c481c49b82f4d33cc4948c<code>), the <b>LLM</p>
+<p>Doorman</b> (two, </code>3bb7503281c481839e6dc85e467d9fb0<code> and </code>3bb7503281c48198855de6f72cd09a1a<code>),</p>
+<p>The Custodian (</code>3bc7503281c481f3b614e50de99d4343<code>) and The Analyst</p>
+<p>(</code>3bc7503281c4817c9a0ec0b9e847b977<code>). Digits withheld here on purpose.</p>
+
+<p><b>No deterministic writer can do this.</b> Every title-building call in </code>services/<code> was read:</p>
+<p>the only code-shaped field any Python lane puts in a title is </code>Message Code<code>, which is a</p>
+<p>message identifier (</code>HTA-sweep-0906-…<code>), never a PIN.</p>
+
+<p><b>All five of those LLM lanes still run</b> (RUNTIMES.md: Concierge 2-hourly, Custodian</p>
+<p>02:35/09:35, Planner 19:30, Analyst 04:06, Doorman cloud 04:00/06:00), and every one can</p>
+<p>still file an Actions row from a prompt. <b>The fix belongs in the prompts, not in code</b> —</p>
+<p>one line in the shared frame saying a code never enters a row title or basis, and a</p>
+<p>deterministic guard is possible too: </code>lane_common.action_row<code> and </code>booking_sweep.residue<code></p>
+<p>could refuse a title carrying a bare four-digit group. Neither is in this ticket&#x27;s scope and</p>
+<p>neither is built. Filing it is the next step.</p>
+
+<h2>Absorbed 2026-09-08 — <b>129-manual-provisioning-mints-duplicates</b></h2>
+
+<p><b>Human-minted duplicates (from 129):</b> a person creating an Artist row by hand bypasses this ladder. Rather than a mid-task warning nobody reads (<b>077</b>&#x27;s lesson), the cheap fix is the sweep that produced <b>104</b>&#x27;s sheet, run on a cadence: two live cards sharing a hard signal (email, phone, Skedda/Alarm user id) raise one keyed Sweep Feedback row with the pair and the evidence. Merges stay human-only. </code>create_artist<code> does not change — the bot behaved correctly.</p>
+
+<h2>2026-09-09 — the code is live on the VPS; the flag state on the VPS is unread</h2>
+
+<p>Checked before deploying: live event-gate on Hostinger reports </code>git_sha 5d0ffd6<code>, fingerprint </code>615b2a7409a4<code>, identical to repo HEAD, which contains </code>1aff56586<code>. So </code>platform_identity.py<code> is running. The deploy step is done.</p>
+
+<p>Two things this session could not read, because both need a root shell on the VPS (Hermes runs as uid 10000 and cannot see </code>/docker/danceannex-mcp<code> either — mailbox 2026-09-09 01:23Z):</p>
+
+<ol>
+<li>1. <b>Whether the lane is shadow or live on the VPS.</b> The old Cloud Run forwarder carries </code>PLATFORM_IDENTITY_LIVE=1<code>, but the authoritative env is the root-only </code>/docker/danceannex-mcp/event-gate.env<code>. If the cutover copied the Cloud Run env, this lane may already be creating cards <b>without the &quot;would create&quot; read the ticket insists on.</b> Check first:</li>
+</ol>
+
+<p></code>`<code>bash</p>
+<p>ssh root@2.25.139.60 &#x27;grep -E &quot;^PLATFORM_IDENTITY_LIVE=&quot; /docker/danceannex-mcp/event-gate.env&#x27;</p>
+<p></code>`<code></p>
+
+<ol>
+<li>2. <b>The shadow / live lines.</b> </code>gcloud logging read<code> no longer applies; the container log does:</li>
+</ol>
+
+<p></code>`<code>bash</p>
+<p>ssh root@2.25.139.60 &#x27;docker logs event-gate --since 48h 2&gt;&amp;1 | grep -i &quot;platform identity&quot;&#x27;</p>
+<p></code>`<code></p>
+
+<p>If the flag is unset: read two or three passes&#x27; </code>would-create<code> lines against their bookings, then set it in </code>event-gate.env<code> and apply with the </code>deploy-event-gate<code> workflow (</code>target=hostinger mode=update<code>). If the flag is already </code>1<code>: read what it created, and revert to shadow if any card is not a person.</p>
+
+<h3>2026-09-09 — deployed, and the mode is UNVERIFIED</h3>
+
+<p><b>The code is in production.</b> </code>event-gate.srv1948070.hstgr.cloud/health<code> reports</p>
+<p></code>git_sha 5d0ffd6<code> / </code>code_fingerprint 615b2a7409a4<code>, started 2026-09-09T03:38:47Z. I rebuilt</p>
+<p>that fingerprint from commit </code>5d0ffd61a<code> and it matches, and </code>platform_identity.py<code> is in</p>
+<p>that tree. So the ladder is shipped.</p>
+
+<p><b>Whether it is LIVE or SHADOW is not known, and this is the honest state.</b></p>
+
+<ul>
+<li>- </code>PLATFORM_IDENTITY_LIVE=1<code> IS set on the Cloud Run service. <b>That is the forwarder.</b></li>
+</ul>
+<p>Production moved to Hostinger on 2026-09-08; per </code>dc-canon/CLAUDE.md<code> Rule 2, Cloud Run</p>
+<p>only relays and its </code>/health<code> reports whatever Hostinger is running. A switch set there</p>
+<p>changes nothing a renter sees. If the flip was run against Cloud Run after the migration,</p>
+<p>it landed on the wrong box.</p>
+<ul>
+<li>- The authority is </code>/docker/danceannex-mcp/event-gate.env<code> on the Hostinger host plus the</li>
+</ul>
+<p>running container. <b>Neither is reachable from any agent surface.</b> Hermes was asked</p>
+<p>(run </code>8bd3cd9a<code>, read-only, nothing changed) and reported that it is a separate container</p>
+<p>on that VPS with no </code>/docker<code> tree, no Docker socket at </code>/var/run/docker.sock<code> or</p>
+<p></code>/run/docker.sock<code>, and no container logs — so it declined to answer rather than return a</p>
+<p>false negative. Correct call.</p>
+<ul>
+<li>- The container was rebuilt at 03:38Z today. Whether an env var set earlier survived depends</li>
+</ul>
+<p>on whether that deploy preserved </code>env_file<code>, so the file and the process could legitimately</p>
+<p>disagree. That is exactly the comparison nobody can currently make.</p>
+
+<p><b>Three commands, root on srv1948070, read-only:</b></p>
+
+<p></code>`<code>bash</p>
+<p>grep -E &#x27;^PLATFORM_IDENTITY_(LIVE|DISABLED)=&#x27; /docker/danceannex-mcp/event-gate.env</p>
+<p></code>`<code></p>
+
+<p></code>`<code>bash</p>
+<p>docker inspect -f &#x27;{{range .Config.Env}}{{println .}}{{end}}&#x27; event-gate | grep PLATFORM_IDENTITY_</p>
+<p></code>`<code></p>
+
+<p></code>`<code>bash</p>
+<p>docker logs --since 72h event-gate | grep -i &#x27;platform identity&#x27;</p>
+<p></code>`<code></p>
+
+<p><b>Also fixed today.</b> The RUNTIMES.md rewrite of 2026-09-08 replaced the per-job inventory,</p>
+<p>which stranded this ticket&#x27;s switch documentation in</p>
+<p></code>archive/RUNTIMES-before-fleet-registry-2026-09-08.md<code>. The live RUNTIMES.md now carries a</p>
+<p><b>§ Named event-gate switches an agent may read</b> — the switch names, their code defaults, and</p>
+<p>the rule that a switch read off Cloud Run is read off the forwarder and means nothing. That</p>
+<p>section is the gap that let this happen: the file told agents to read named switches from</p>
+<p></code>event-gate.env<code> and named none of them.</p>
+
+<p><b>Ticket status: the build is complete; the acceptance is argued, not demonstrated.</b> All</p>
+<p>three replays pass against recorded shapes in 44 tests. No live pass has been observed doing</p>
+<p>any of them, and until the mode is known, a clean absence of </code>platform identity<code> log lines is</p>
+<p>not evidence either way. Close it when the third command above returns lines and one of them</p>
+<p>has been read against the booking it names.</p>
+
+<h2>2026-09-09 (later) — Junyan read the VPS: the lane is LIVE, and has not yet acted</h2>
+
+<p></code>PLATFORM_IDENTITY_LIVE=&#x27;1&#x27;<code> in </code>/docker/danceannex-mcp/event-gate.env<code>. The flag went live with the</p>
+<p>Hostinger cutover (the Cloud Run env it was copied from carried it, under a </code>-dirty<code> deploy) — not after</p>
+<p>the &quot;would create&quot; read this ticket required. </code>docker logs event-gate --since 48h | grep -i &quot;platform identity&quot;<code></p>
+<p>returned nothing, and that is explained, not alarming: the container was recreated at 03:38Z today, so its</p>
+<p>log covers ~11 hours; the one platform booking in that window (Best O., Peerspace, FBS row 04:00Z) already</p>
+<p>had a card and resolved on rungs 1–2, which log nothing. Rungs 3 and 4 write a </code>platform identity: created card<code></p>
+<p>/ </code>asked<code> line on stdout (</code>log_request<code> → JSON on stdout), so the grep is the right instrument.</p>
+
+<p><b>Ruling needed from Junyan, two options:</b></p>
+<ul>
+<li>- <b>Keep live, watch daily</b> (cheaper; a junk card is visible in the log line and deletable):</li>
+</ul>
+<p></code>`<code>bash</p>
+<p>ssh root@2.25.139.60 &#x27;docker logs event-gate --since 24h 2&gt;&amp;1 | grep -i &quot;platform identity&quot;&#x27;</p>
+<p></code>`<code></p>
+<ul>
+<li>- <b>Return to shadow</b> until one </code>would create<code> line has been read against its booking, per this ticket&#x27;s own</li>
+</ul>
+<p>rule: unset the flag in </code>event-gate.env<code>, then </code>gh workflow run deploy-event-gate.yml --ref main -f target=hostinger -f mode=update -f reason=&quot;124 back to shadow&quot;<code>.</p>
+
+<p>Also unfinished by design: A7 (</code>preflight_provision<code>) is not extended to platform bookings — widening a live</p>
+<p>unattended alarm-write grant is Junyan&#x27;s call.</p>
+
+<p><b>Ruled 2026-09-09 (Junyan): keep it live; Junyan reads the log daily.</b> Return to shadow only if a created card is not a person.</p>
+
+<h3>2026-09-09, later — LIVE confirmed, and the lane was invisible</h3>
+
+<p><b>Mode settled.</b> Root read on </code>srv1948070<code>: </code>/docker/danceannex-mcp/event-gate.env<code> carries</p>
+<p></code>PLATFORM_IDENTITY_LIVE=&#x27;1&#x27;<code> and the running container carries </code>PLATFORM_IDENTITY_LIVE=1<code>.</p>
+<p>File and process agree, so the 03:38Z rebuild picked the file up. <b>The lane is live.</b> The</p>
+<p>flip had also been applied to Cloud Run, which is only the forwarder since 2026-09-08 — that</p>
+<p>copy does nothing, and its convincing-looking </code>/health<code> is what made this take four attempts</p>
+<p>to establish. Hermes could not answer at all (run </code>8bd3cd9a<code>): separate container, no</p>
+<p></code>/docker<code> tree, no Docker socket, no logs, and it refused to guess rather than return a false</p>
+<p>negative.</p>
+
+<p><b>The defect that hid: a pure-read lane that says nothing.</b> 72 hours live produced ZERO</p>
+<p></code>platform identity<code> log lines. Only the three WRITE paths logged. The two rungs that resolve</p>
+<p>a guest quietly returned in silence, and the most common success is the quietest of all — a</p>
+<p>Lauren-shaped booking clears at <b>gate 2</b> and never reaches the ladder. The step strings</p>
+<p>(</code>platform:tags-stripped<code>, </code>identity:single-card<code>) go into the pass result and the sweep never</p>
+<p>logs the result. So &quot;no lines&quot; meant both &quot;it worked&quot; and &quot;it never ran&quot;.</p>
+
+<p><b>Fixed in PR #72</b> (</code>6f0f4c126<code>, branch </code>wf124-log-the-quiet-path<code>, fingerprint after merge</p>
+<p></code>cf77a8475888<code>): three guarded log lines — relay resolve, name resolve naming the raw string</p>
+<p>it stripped from, and the gate entry when tags came off. No digits. 5 tests, <b>1972 pass</b>.</p>
+<p>Opened as a PR, not pushed to main, per </code>dc-canon/CLAUDE.md<code> Rule 1. <b>Junyan merges and</p>
+<p>deploys.</b></p>
+
+<p><b>RUNTIMES.md un-orphaned.</b> The 2026-09-08 rewrite had moved this ticket&#x27;s switch entry into</p>
+<p>the archive while telling agents to read named switches from </code>event-gate.env<code> and naming none.</p>
+<p>The live file now has § <b>Named event-gate switches an agent may read</b> — names, code defaults</p>
+<p>(explicitly not deployed values), and the rule that a switch read off Cloud Run is read off the</p>
+<p>forwarder.</p>
+
+<p><b>Still open, and the only thing between here and closed:</b> the in-situ demonstration. After</p>
+<p>#72 deploys, this is the evidence:</p>
+
+<p></code>`<code>bash</p>
+<p>ssh root@2.25.139.60 &quot;docker logs --since 72h event-gate 2&gt;&amp;1 | grep -i &#x27;platform identity&#x27;&quot;</p>
+<p></code>`<code></p>
+
+<p>One line read against the booking it names closes ticket 124.</p>
+
+<p><b>2026-09-09 — watched by the daily </code>desk-watch<code> scheduled task (09:30 Toronto, this Mac).</b> It replaced </code>shadow-lane-review<code> and </code>hta-verified-week-check<code>, which read Cloud Run logs that went dark on 2026-09-08. Junyan does not do this check by hand; the routine reports and files at most one Decision row.</p>
+
+<h3>2026-09-10 — both remaining fixes built (PR #88)</h3>
+
+<p><b>The code-in-title finding is closed as a build, not a note.</b> The sweep that produced &quot;eight</p>
+<p>rows&quot; was titles only; re-run across every title AND Basis in the desk-state archive it is</p>
+<p><b>ten</b>, over 1223 strings. </code>lane_common.scrub_code<code> redacts any 4-digit group written beside</p>
+<p>the word for it, and both shared row writers run it. It <b>redacts, never refuses</b> — dropping</p>
+<p>an access row would trade a leak for a renter at a locked door. Tuned on the real archive:</p>
+<p>10 changed, 0 false positives; dates, times, studio numbers and booking ids all survive.</p>
+<p>Canon </code>autonomy.md<code> now carries the incident and names the guard, because the rule it already</p>
+<p>stated was ignored ten times by five lanes.</p>
+
+<p><b>Gate 2 was still silent</b> after PR #72 — an established platform renter clears there, never</p>
+<p>reaches the ladder, and has no tag to strip. All six platform bookings in the current window</p>
+<p>are that shape, so #72 would have demonstrated nothing. Fixed in the same PR.</p>
+
+<p>21 new tests, 2064 pass. PR #88, </code>8e6a0e442<code>, fingerprint </code>3b7af44d34ee<code>. Junyan merges and</p>
+<p>deploys.</p>
+
+<h3>2026-09-10 — two owner rulings supersede this ticket&#x27;s code constraints</h3>
+
+<p>This ticket was written with the constraint <b>&quot;No code in any row, log, transcript or test&quot;</b></p>
+<p>and <b>&quot;an access code NEVER travels a platform relay&quot;</b>. Junyan withdrew both on 2026-09-10.</p>
+
+<ul>
+<li>- <b>Codes may be written anywhere</b> — *&quot;It&#x27;s fine to write alarm digits… Agents can write codes</li>
+</ul>
+<p>without restrictions.&quot;* The </code>scrub_code<code> guard from PR #88 was removed the same day and canon</p>
+<p>says not to rebuild it.</p>
+<ul>
+<li>- <b>A code may travel a platform relay</b>, in a human-approved message AND in the unattended</li>
+</ul>
+<p>platform first-booking send — *&quot;Codes are low risk items so we are not worried. It can easily</p>
+<p>be rotated out.&quot;*</p>
+
+<p>PR #90, </code>ab019009d<code>, fingerprint </code>edaee6ed1dc7<code>, deployed and verified 03:15:32Z.</p>
+
+<p><b>What this changes for this ticket&#x27;s own lane.</b> The gate-1 row&#x27;s whole shape assumed a code</p>
+<p>could not reach a platform guest until a phone number arrived. That is no longer true: the</p>
+<p>number ask still rides, but for REACH, not safety. A follow-on question worth its own ticket —</p>
+<p><b>should gate 1 now send the code through the relay itself, rather than only asking for a</p>
+<p>number?</b> That would close the xavier case end to end without a human at any step. Not built,</p>
+<p>not ruled on. </code>platform_identity.py<code> itself is unaffected: it handles identity, never digits.</p>
+
+<p><b>Unchanged:</b> which lanes may send unattended (still the two carve-outs), and </code>arm<code>/</code>disarm<code>.</p>
+
+<h2>CLOSED 2026-09-10 — built, live, and the gap it named is gone</h2>
+
+<p><b>Junyan&#x27;s call.</b> The three lanes that all stopped politely at the same wall now get past it,</p>
+<p>and the wall itself — &quot;a guest we cannot name is a guest nobody can provision&quot; — is gone.</p>
+
+<p><b>What shipped.</b> </code>services/event-gate/platform_identity.py<code>, called from the booking sweep&#x27;s</p>
+<p>platform gate. A four-rung ladder, highest evidence first: the relay&#x27;s attached card → the</p>
+<p>tag-stripped name → a card minted from the accepted booking → one keyed human question,</p>
+<p>answered once and remembered. <b>The &quot;exactly one match&quot; rule was never touched</b> — not</p>
+<p>widened, not re-ranked, not narrowed by platform. Only the input to it changed, and whether a</p>
+<p>card exists at all.</p>
+
+<p><b>Live and verified.</b> </code>PLATFORM_IDENTITY_LIVE=1<code> in </code>/docker/danceannex-mcp/event-gate.env<code></p>
+<p>AND on the running container. Production </code>ab01900<code> / </code>edaee6ed1dc7<code>.</p>
+
+<p><b>Acceptance.</b> All three replays pass against recorded shapes; no junk card is creatable from</p>
+<p>a bare string; the gate-1 row closes on the lane&#x27;s own read, and only on a whole premise. 49</p>
+<p>tests in </code>test_platform_identity.py<code>.</p>
+
+<h3>What this ticket actually cost, and what it taught</h3>
+
+<p>Three defects were found by shipping it, not by writing it:</p>
+
+<ol>
+<li>1. <b>A pure-read lane was invisible.</b> 72 hours live, zero log lines, because only the three</li>
+</ol>
+<p>WRITE paths logged. &quot;No news&quot; meant both &quot;it worked&quot; and &quot;it never ran&quot;. Fixed in PR #72.</p>
+<ol>
+<li>2. <b>The fix missed the common case.</b> Gate 2 — an established renter with a card and a phone —</li>
+</ol>
+<p>still logged nothing, and all six platform bookings in the window were that shape. Found by</p>
+<p>reading who was actually booked, not by re-reading the code. Fixed in PR #88.</p>
+<ol>
+<li>3. <b>The mode could not be verified at all.</b> Production had moved to Hostinger; the live flag</li>
+</ol>
+<p>had been set on the Cloud Run forwarder, which does nothing; Hermes has no host access. It</p>
+<p>took four attempts and a root SSH to answer &quot;is this on?&quot;. RUNTIMES.md now names every</p>
+<p>event-gate switch and says a switch read off Cloud Run means nothing.</p>
+
+<p><b>The lesson worth keeping: silence is not the same as nothing happening.</b> Ticket 123 closed</p>
+<p>because clean instrument readings are not a correct conclusion. This is its mirror — a lane</p>
+<p>whose success looks identical to its absence cannot be verified by anyone, including the person</p>
+<p>who built it. Both failures are about mistaking the absence of a signal for the presence of a</p>
+<p>fact.</p>
+
+<h3>The code-hygiene finding, and how it ended</h3>
+
+<p>The ticket flagged a Cancelled row carrying &quot;a live 4-digit code in its title&quot;. <b>That was a</p>
+<p>false positive</b> — the digits are the year inside the row&#x27;s own residue key. But the sweep it</p>
+<p>prompted found <b>ten real ones</b> across 1223 rows, all written by LLM lanes, and a guard was</p>
+<p>built and shipped to redact them.</p>
+
+<p><b>Junyan withdrew the whole rule the same day</b> (2026-09-10): codes may be written anywhere,</p>
+<p>and may travel a platform relay, human-approved and unattended alike. *&quot;Codes are low risk</p>
+<p>items so we are not worried. It can easily be rotated out.&quot;* The guard was removed, canon was</p>
+<p>rewritten in nine places, and canon now says <b>not to rebuild it</b> — because those ten rows are</p>
+<p>still in the archive and would otherwise be re-filed as a defect forever.</p>
+
+<h3>Deliberately not built</h3>
+
+<ul>
+<li>- <b>A7 is not extended to platform bookings.</b> It keys off </code>booking[&quot;holder&quot;]<code>, which a platform</li>
+</ul>
+<p>mirror has none of. Widening a live unattended alarm-write grant to a new class of booking is</p>
+<p>Junyan&#x27;s ruling to make.</p>
+<ul>
+<li>- <b>Gate 1 does not send the code through the relay</b>, even though it now may. Asked directly,</li>
+</ul>
+<p>Junyan: *&quot;I don&#x27;t want to as we want their phone number so we can keep communicating with</p>
+<p>them outside of the platform.&quot;* The phone ask acquires a CHANNEL; it was never an access</p>
+<p>step. Recorded in canon (PR #93) precisely because this session proposed deleting it.</p>
+
+<h3>Still owed, and it is small</h3>
+
+<p><b>No live pass has yet been observed resolving a real guest.</b> The acceptance is argued from 49</p>
+<p>tests against recorded shapes. With PR #88 deployed the evidence finally exists to be read:</p>
+
+<p></code>`<code>bash</p>
+<p>ssh root@2.25.139.60 &quot;docker logs event-gate 2&gt;&amp;1 | grep -i &#x27;platform identity&#x27;&quot;</p>
+<p></code>``</p>
+
+<p>Six platform bookings sit in the window — Natascha M (×2), Best O., Jia L., Sol R. via</p>
+<p>Peerspace, Matthew Jadd via Tagvenue. One line read against the booking it names is the</p>
+<p>in-situ replay. Closing the ticket rather than holding it open for that: the lane is live,</p>
+<p>instrumented and documented, and a booking arriving is not work.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#005</span><span class="emoji">💰</span><span class="done-title">Track what each job costs — folded into the master job list</span><span class="done-date">2026-09-08</span></summary><div class="done-body"><ul class="plain-bullets"><li>CLOSED Sep 8 in the map clean-up: the cost line is one column on the master job list (001), not a project of its own</li><li>Once a week, count runs and minutes per job and write them on that list</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the J26 cost ledger on the Jobs registry</b></p><h2>Question</h2>
 
 <p>Build the crude-but-real J26 cost ledger on the Jobs registry spine: per job, runs × pass length (proxy for token spend) plus a self-reported supervision-minutes line, tallied weekly. Framing: <b>subscription headroom + exposure if the subsidy changes</b>, not cash bleed (~$240/mo Claude + $140/mo ChatGPT actual). It also populates the sibling map&#x27;s GO criterion (c). Decide the tally mechanism (likely a weekly scheduled job writing registry rows) and stand it up.</p>
@@ -16407,5 +16493,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-09 23:17 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-09 23:45 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
