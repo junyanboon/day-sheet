@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-10 18:16 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-10 19:36 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3658,7 +3658,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>2026-09-09 — watched by the daily <code>desk-watch</code> scheduled task (09:30 Toronto, this Mac).</b> It replaced <code>shadow-lane-review</code> and <code>hta-verified-week-check</code>, which read Cloud Run logs that went dark on 2026-09-08. Junyan does not do this check by hand; the routine reports and files at most one Decision row.</p>
 
-<h2>Progress — 2026-09-10, built and pushed; PR #106 open, shadow</h2>
+<h2>Progress — 2026-09-10, merged and DEPLOYED (shadow); the flag flip is next</h2>
 
 <p><b>The ground moved under this ticket, and the design follows the ground, not the text above.</b></p>
 <p>Cloud Scheduler and Cloud Run are gone as runtimes (2026-09-08): the sweep is</p>
@@ -3745,21 +3745,17 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><a href="https://github.com/junyanboon/desk-correspondence/pull/106" target="_blank" rel="noopener">PR #106</a>, dc-canon <code>a68149cde</code>:</p>
 <p><code>booking_sweep.file_heartbeat</code> + call at the end of <code>run()</code>, the route&#x27;s disabled branch in</p>
 <p><code>app.py</code>, <code>test_registrar_heartbeat.py</code> (13 tests; 2205 pass), README env-var list, canon.</p>
-<p><b>Not merged, not deployed</b> — dc-canon Rule 1.</p>
+<p><b>Merged and deployed on Junyan&#x27;s instruction, 2026-09-10 23:36Z.</b> main <code>f1ce785</code>; deploy run</p>
+<p><a href="https://github.com/junyanboon/desk-correspondence/actions/runs/34542823878" target="_blank" rel="noopener">34542823878</a>,</p>
+<p><code>target=hostinger mode=update</code>; <code>/health</code> reports <code>git_sha f1ce785</code>, fingerprint <code>b05abb801e95</code>,</p>
+<p>started 23:36:13Z. The pinned <code>deploy/&lt;sha&gt;</code> branch was deleted. Heartbeat is in SHADOW; the</p>
+<p>first shadow line is expected on the 00:00Z pass.</p>
 
-<h3>Paste-ready, after Junyan merges</h3>
+<h3>Still to do — the live flip (Junyan)</h3>
+
+<p>Two passes after 23:36Z, read-only:</p>
 
 <p>``<code>bash</p>
-<p>cd &quot;/Users/jboon/Documents/Claude Workspace/dc-canon&quot; &amp;&amp; git fetch -q origin &amp;&amp; SHA=$(git rev-parse origin/main) &amp;&amp; git push origin &quot;$SHA:refs/heads/deploy/$SHA&quot; &amp;&amp; gh workflow run deploy-event-gate.yml --ref &quot;deploy/$SHA&quot; -f target=hostinger -f mode=update -f reason=&quot;086 registrar heartbeat (shadow)&quot; &amp;&amp; echo &quot;$SHA&quot;</p>
-<p></code>`<code></p>
-
-<p></code>`<code>bash</p>
-<p>curl -s https://event-gate.srv1948070.hstgr.cloud/health</p>
-<p></code>`<code></p>
-
-<p>Then two passes later, read-only:</p>
-
-<p></code>`<code>bash</p>
 <p>ssh -o BatchMode=yes root@2.25.139.60 &#x27;docker logs event-gate --since 70m 2&gt;&amp;1 | grep -i &quot;registrar heartbeat&quot;&#x27;</p>
 <p></code>`<code></p>
 
@@ -16621,5 +16617,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-10 18:16 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-10 19:36 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
