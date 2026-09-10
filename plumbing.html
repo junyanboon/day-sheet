@@ -1275,6 +1275,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 
+      <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-10 &middot; 05:0xZ</span>
+      <h3>Deck claims and booking-update chips went blank &mdash; the free KV tier&rsquo;s 1,000 <code>list</code> calls a day were spent by the 60&nbsp;s polls<span class="kind">DECK &middot; deck-app &middot; KV &middot; FIXED (deploy pending)</span></h3></summary>
+      <p><strong>What broke.</strong> Cloudflare mailed a 50% warning on the Workers KV free tier. The account analytics name the cause: the <code>CLAIMS</code> namespace of <code>dance-annex-deck</code> went from zero to 914 <code>list</code> calls on 2026-09-09 (the night the Shifts claims feature shipped) and past 1,000 by 04:00Z on 09-10. Before that the whole account used about 96 a day (desk-webhook <code>/status</code>). <code>/api/claims</code> and <code>/api/booking-updates</code> each ran one <code>list</code> per 60&nbsp;s poll per open Deck tab &mdash; 2,880 a day for a single tab. Reads (100,000 a day) and writes (1,000) were never close.</p>
+      <p><strong>What a 429 blocked.</strong> Only the two read polls. <code>/api/claims</code> threw, so the page kept its last-known claims from localStorage and showed no new claims by anyone else until 00:00Z. <code>/api/booking-updates</code> threw, so every booking card lost its update chip (pending / decision / done) and the updater showed a status error. Claiming, releasing, filing a booking update, the 15-minute coverage cron, and the Notion stamps all use <code>get</code>/<code>put</code>/<code>delete</code> and kept working. Nothing was lost; a claim made during the outage was stored and appears once reads recover.</p>
+      <p><strong>The fix.</strong> <code>src/kv_index.js</code>: each key family keeps one JSON index of key names (<code>index:claims</code>, <code>index:bu:&lt;day&gt;</code>). A poll is one <code>get</code> for the index plus one <code>get</code> per key, so it draws on the 100,000 read allowance. Writers append to the index after storing the value; readers drop keys that expired. KV has no atomic append, so the index rebuilds itself from a real <code>list</code> when missing or older than an hour &mdash; about 48 lists a day for both families, well under the cap. Test: five polls, a claim, five more polls, an expiry &mdash; exactly one <code>list</code>. 46 tests pass. Commit in <code>deck-app</code>; <strong>deploy blocked by the session&rsquo;s permission classifier and left for Junyan</strong> (<code>npm run deploy</code>).</p>
+      <p><strong>Not chosen.</strong> Slowing the polls (still fails with three tabs) and the $5 Workers Paid plan (raises the cap to 1M; still a fair fallback if another namespace starts listing).</p>
+      </details>
+    </li>
+
       <li class="entry human">
       <details>
       <summary><span class="when">2026-09-10 &middot; 03:3xZ</span>
