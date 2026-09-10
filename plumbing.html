@@ -1274,6 +1274,12 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry det"><details>
+      <summary><span class="when">2026-09-10</span><h3>Booking updater: the change shows on the departure time; Missing chip retired<span class="kind">DEPLOYED &middot; deck-app &middot; both editions</span></h3></summary>
+      <p>Junyan reviewed the first live cards and chose option C of three (Mobbin-referenced: Instacart&rsquo;s struck price + &ldquo;Replacement chosen&rdquo;). A filed change now draws on the card&rsquo;s arrival/departure line: old end struck through, new end in the state colour, one word after it &mdash; amber <em>pending</em> while the Concierge has the row, purple <em>extended</em> / <em>moved</em> once the row is Processed, red <em>decision</em> when the row&rsquo;s Notes carry a &ldquo;Decision needed&rdquo; line. A studio change reads &ldquo;&rarr; 527&rdquo; or &ldquo;+ 527&rdquo;. Problem and urgent rows show only the word. When a real departure was observed the time stays and only the word is added.</p>
+      <p><strong>Removed.</strong> The right-column &ldquo;Update &middot; sent&rdquo; chip, and the template&rsquo;s red &ldquo;Missing&rdquo; chip (the red border, red verdict glyph and &ldquo;no arrival&rdquo; already say it). Both are build-time strips; the pinned fbs-monitor templates are unchanged. The right column keeps the studio, the EOB/AVA cluster and the Update pill.</p>
+      <p><strong>Plumbing.</strong> <code>POST /api/booking-update</code> records now carry a <code>target</code> (new end, new start, or room + keep-both). <code>GET /api/booking-updates</code> reads each row&rsquo;s Notes and sets <code>decision</code> when the Concierge has appended &ldquo;Decision needed&rdquo; (canon: JOB 4 &sect; Marks the card reads). No Notion schema change. 40 tests pass.</p>
+      </details></li>
       <li class="entry det">
       <details>
       <summary><span class="when">2026-09-10 &middot; 02:50Z</span>
