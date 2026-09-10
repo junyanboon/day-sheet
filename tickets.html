@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-09 17:19 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-09 22:24 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -101,7 +101,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="stats">
 <div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">23</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">8</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">96</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
@@ -1942,6 +1942,37 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Shared front rails (debate blocker B3):</b> both writers — rules stage and Triager — call the same stub-creation code and write one shared audit log; no duplicated rails. Acceptance: first stub format live with its test recorded (N real historical mails parsed, fields checked against human-made tickets) and zero duplicate tickets across both writers over a week. Gated on <b>068</b> shadow diffs and on 053&#x27;s Phase 4.</p>
 
 <p><b>Disposition contract (from <b>060</b>):</b> every inbound the Triager reads gets a recorded disposition — ticket stub, routed, or an explicit <i>declined</i> with a reason. Declining to act must be visible from outside the pass; the detector for &quot;message with no disposition after N hours&quot; rides <b>046</b>&#x27;s lane.</p>
+
+<h2>Absorbed 2026-09-09 — JOB 35, the second doorway (was ticket 132)</h2>
+
+<p><b>JOB 35 (📨 Inbound Messages — WhatsApp and Instagram DMs) has no destination anywhere on this</p>
+<p>map.</b> It was added 2026-08-12, a week after <b>018</b> named a destination</p>
+<p>for every job it knew about, so the dissolution plan never covered it. Cut as its own ticket</p>
+<p>2026-09-09 and folded here the same day: <b>it needs no new decision, so it is a scope line, not a</p>
+<p>ticket.</b> Canon (<code>concierge-orchestration.md</code> step 4) already settles it — *&quot;it is the same work</p>
+<p>through a second doorway&quot;* — so JOB 35 takes JOB 2&#x27;s split. Intake here, everything downstream to</p>
+<p><b>053</b>. No third lane.</p>
+
+<p>Two things are genuinely different at this doorway and the build must answer them:</p>
+
+<ul>
+<li>- <b>These replies expire.</b> Meta allows a free-form reply only within <b>24 hours</b> of the artist&#x27;s</li>
+</ul>
+<p>last message. A row deferred across passes can reach a state where it *cannot be answered at</p>
+<p>all*, while still reading as a deferral. Email has no equivalent. This is the same shape as</p>
+<p>053&#x27;s open finding — <i>a time-critical proposal has no path to a reviewer inside its own window</i></p>
+<p>— arriving from a second direction, so fix them together or not at all.</p>
+<ul>
+<li>- <b>The who-is-this rail is weaker here.</b> The front rail resolves the sender against the Artist DB</li>
+</ul>
+<p>deterministically before the LLM sees the message. An email address or phone number resolves</p>
+<p>through ☎️ Contact Points. <b>An Instagram handle does not.</b> Either Contact Points gains a handle</p>
+<p><code>Source</code>, or this doorway&#x27;s rail is stated out loud as weaker rather than inheriting a guarantee</p>
+<p>it does not have.</p>
+
+<p>The capture worker stays as it is — deterministic, writing 📨 rows since 2026-08-11. Only the</p>
+<p>reading half moves. <b>Acceptance:</b> <code>concierge-orchestration.md</code> step 4 is deleted in the same</p>
+<p>change that makes the above true.</p>
 </div></details></details></div><div class="job"><div class="jnum">#068</div><div class="jhead"><span class="emoji">📮</span><h4>A mail sorter made of simple rules — no AI needed for the boring mail</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A rules list sorts business email the moment it arrives: known shapes get labelled instantly</li><li>Only the confusing leftovers wait for a smart robot to look at them</li><li>It runs in the cloud next to the emergency line, with its own off switch</li><li>First it runs in practice mode — labels only, old Gmail filters stay on — so we can check it agrees with them</li><li>Because it uses no AI, it keeps working even when we run out of tokens</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the mail-rules router on event-gate — shadow mode first</b></p><h2>Question</h2>
 
 <p>Build slice 1 of the triage redesign (<b>decisions of record</b>, decisions 2/4/5/6-rung-1): a deterministic</p>
@@ -3452,7 +3483,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- JOB 7 has a ruling backed by what 053&#x27;s passes actually caught.</li>
 </ul>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">8</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">7</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
 <p><b>The end-state is already ruled</b> (<b>018</b> §5, Junyan: *&quot;because the</p>
 <p>responder&#x27;s scope is so narrow I&#x27;m okay folding it in — worst case scenario I would just draft the</p>
@@ -3738,61 +3769,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- If tracked: one COI observed going in, and one deliberately-expiring date observed raising a row</li>
 </ul>
 <p>ahead of the lapse, not on it.</p>
-</div></details></details></div><div class="job"><div class="jnum">#132</div><div class="jhead"><span class="emoji">💬</span><h4>Nobody has said who reads the WhatsApp and Instagram messages after the Concierge goes</h4></div><span class="pill p-wait">needs 054 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>It was added a week after the retirement plan was written, so the plan never covered it</li><li>It goes where the email messages go — same work, second doorway, no new robot</li><li>Two real differences: these replies expire after 24 hours, and an Instagram handle cannot be looked up the way an email address can</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 35 messaging triage — the second doorway has no destination</b></p><h2>Question</h2>
-
-<p><b>018</b> dissolved the Concierge and named a destination for every job</p>
-<p>it knew about. <b>JOB 35 was added 2026-08-12, a week after that ruling</b>, and appears in</p>
-<p><b>zero tickets on this map</b> (checked 2026-09-09). It is one of two jobs with nowhere to go.</p>
-
-<p>Standing lesson from <b>035</b>: *a retirement is not done until every</p>
-<p>step of the retired job names its new owner.* This ticket names it.</p>
-
-<h2>What it does today</h2>
-
-<p>Triage every unprocessed row in 📨 Inbound Messages — inbound WhatsApp and Instagram DMs.</p>
-<p>Canon (<code>concierge-orchestration.md</code> step 4) puts it directly under JOB 2 and says why:</p>
-<p><b>&quot;it is the same work through a second doorway.&quot;</b></p>
-
-<h2>The destination follows from 018, and does not need a new ruling</h2>
-
-<p>JOB 2 splits into the <b>Triager</b> (<b>054</b>, intake: read, stub, SOP-route, log,</p>
-<p>stop) and the <b>Loop</b> (<b>053</b>, everything downstream). If</p>
-<p>JOB 35 is the same work through a second doorway, it takes the same split. No third lane.</p>
-
-<h2>What is genuinely different, and must be designed</h2>
-
-<ol>
-<li>1. <b>These replies expire.</b> Meta allows a free-form reply only within <b>24 hours</b> of the</li>
-</ol>
-<p>artist&#x27;s last message. Canon already flags this: a row deferred across passes can reach a</p>
-<p>state where it <i>cannot be answered at all</i>. The email lane has no equivalent. The Triager</p>
-<p>needs a freshness field on the stub and the Loop needs an expiry-aware ordering, or this</p>
-<p>lane silently loses the ability to act while looking healthy. This is the same shape as</p>
-<p>053&#x27;s open finding — *a time-critical proposal has no path to a reviewer inside its own</p>
-<p>window* — arriving from a second direction, so fix them together or not at all.</p>
-<ol>
-<li>2. <b>The who-is-this rail does not work the same way.</b> 054&#x27;s rail resolves the sender against</li>
-</ol>
-<p>the Artist DB deterministically <i>before</i> the LLM sees the message. An email address or phone</p>
-<p>number resolves through ☎️ Contact Points. <b>An Instagram handle does not.</b> Either Contact</p>
-<p>Points gains a handle <code>Source</code>, or this doorway&#x27;s rail is weaker than the email one and the</p>
-<p>ticket must say so out loud rather than inherit a guarantee it does not have.</p>
-<ol>
-<li>3. <b>Whose capture writes the rows.</b> The capture worker has been writing 📨 Inbound Messages</li>
-</ol>
-<p>rows since 2026-08-11 and is deterministic. It stays. Only the reading half moves.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- 054&#x27;s Triager reads 📨 Inbound Messages as a second input, with the handle-resolution gap</li>
-</ul>
-<p>either closed in Contact Points or stated as a named weaker rail.</p>
-<ul>
-<li>- A row that cannot be answered inside Meta&#x27;s window is visible as that, not as a deferral.</li>
-<li>- <code>concierge-orchestration.md</code> step 4 is deleted in the same change that makes the above true.</li>
-</ul>
-</div></details></details></div><div class="job"><div class="jnum">#133</div><div class="jhead"><span class="emoji">🌅</span><h4>The morning catch-up job has no new owner, and it may not be needed at all</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>It reads the overnight reports and finishes the work before anyone sees them</li><li>The new Loop re-reads the real records every hour, which is the same move — so this job may simply die rather than move</li><li>Careful: the 8:45 Morning Text reads a marker only this job writes. Move it without the marker and the text goes quiet, which looks exactly like a clean night</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 34 overnight handoff — no destination, and it may not survive the loop</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#133</div><div class="jhead"><span class="emoji">🌅</span><h4>The morning catch-up job has no new owner, and it now writes a note nobody reads</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>It reads the overnight reports and finishes the work before anyone sees them</li><li>The new Loop re-reads the real records every hour, which is the same move — so this job may simply die rather than move</li><li>The 8:45 morning text is switched off, and it was the only thing reading the note this job leaves behind</li><li>The manuals still say that text is running. That needs correcting now, whatever happens to the job</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 34 overnight handoff — no destination, and it may not survive the loop</b></p><h2>Question</h2>
 
 <p>The second job with nowhere to go. Like <b>132</b>, JOB 34</p>
 <p>post-dates <b>018</b> and appears in <b>zero tickets</b> on this map</p>
@@ -3822,14 +3799,34 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>already calls out as a system-health finding rather than evidence its domain is clear. A</p>
 <p>missing report is an absence, and absences are exactly what a ground-truth read cannot see.</p>
 
-<h2>The hard dependency nobody has looked at</h2>
+<h2>The dependency I got backwards — corrected 2026-09-09</h2>
 
-<p><code>services/event-gate/morning_text.py</code> texts the verdict at 08:45 by reading the</p>
-<p><b><code>NW-HANDOFF-V1</code> marker</b> in the shared rolling report. JOB 34 is the marker&#x27;s only writer.</p>
-<p><b>Move or delete JOB 34 without moving the marker contract and the Morning Text goes quiet or</p>
-<p>lies</b> — and a Morning Text that says nothing looks identical to a clean night. That is</p>
-<p><b>124</b>&#x27;s quiet-path disease and 035&#x27;s failed-report disease in</p>
-<p>one place.</p>
+<p><b>This section first read as a warning: do not move JOB 34 without moving the Morning Text&#x27;s</p>
+<p>marker contract, or the 08:45 text goes quiet.</b> Junyan corrected it the same day: <b>the Morning</p>
+<p>Text has been decommissioned.</b> So the trap is not &quot;you might break it&quot;. It is the opposite, and</p>
+<p>it is worse.</p>
+
+<p><code>services/event-gate/morning_text.py</code> was the <b>only</b> reader of the <code>NW-HANDOFF-V1</code> marker.</p>
+<p>Checked against <code>origin/main</code> 2026-09-09: the marker appears in exactly three places in the repo —</p>
+<p><code>library/concierge-orchestration.md</code> (the spec for the job that WRITES it), <code>morning_text.py</code>, and</p>
+<p>that file&#x27;s test. A workspace-wide search finds no other reader, and there is no Night Watch</p>
+<p>publisher on <code>main</code> to have inherited it.</p>
+
+<p><b>So JOB 34 currently writes a marker nothing reads.</b> Half of its purpose — carry the overnight</p>
+<p>verdict to a human — already has no delivery path. Not since the retirement; since whenever the</p>
+<p>text stopped.</p>
+
+<p>⚠️ <b>And canon still says otherwise.</b> <code>concierge-orchestration.md</code> on <code>main</code> reads, verbatim:</p>
+<p>*&quot;The Morning Text (08:45, <code>services/event-gate/morning_text.py</code>) reads the marker and texts the</p>
+<p>verdict.&quot;* <code>app.py</code> still imports <code>morning_text</code> and serves <code>run_morning_text</code>. <b>A retired lane</p>
+<p>that canon still describes as live is how the next agent inherits a false premise</b> — the exact</p>
+<p>shape <b>035</b> recorded and this map keeps re-learning. Fix canon</p>
+<p>whether or not JOB 34 moves.</p>
+
+<p><b>The replacement surface is already ruled, and it is not a text.</b> Junyan, 2026-09-02, on the</p>
+<p>08:45 SMS: <i>&quot;my eyes totally glaze over. I&#x27;m thinking maybe just links to reports are better.&quot;</i></p>
+<p>The Daily Report was to own the surface. So the open question is not who writes the marker. It is</p>
+<p>whether the report needs an overnight verdict at all, and if so what computes it.</p>
 
 <h2>What to decide</h2>
 
@@ -3838,15 +3835,19 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ol>
 <p>against real overnight reports before designing anything.</p>
 <ol>
-<li>2. If yes: what owns <b>missing-report detection</b>, which the loop structurally cannot do?</li>
-<li>3. Either way: what writes <code>NW-HANDOFF-V1</code>, and what does the Morning Text say when the writer</li>
+<li>2. If yes: what owns <b>missing-report detection</b>, which the loop structurally cannot do? An</li>
 </ol>
-<p>is gone?</p>
+<p>absence is precisely what a ground-truth read cannot see.</p>
+<ol>
+<li>3. Does the Daily Report want an overnight verdict on it, or did that need die with the text? If</li>
+</ol>
+<p>it died, <code>NW-HANDOFF-V1</code> and its writer are deleted, not rehomed.</p>
 
 <h2>Acceptance</h2>
 
-<p>A ruling recorded on this map, and the Morning Text&#x27;s marker has a named writer in the same</p>
-<p>change. Not &quot;the loop probably covers it&quot;.</p>
+<p>A ruling recorded on this map. And in the same change, <code>concierge-orchestration.md</code> stops</p>
+<p>describing the Morning Text as a live reader — that correction is due now regardless of the</p>
+<p>ruling, because it is currently false. Not &quot;the loop probably covers it&quot;.</p>
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
@@ -16361,5 +16362,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-09 17:19 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-09 22:24 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
