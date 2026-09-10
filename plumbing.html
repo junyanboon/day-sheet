@@ -1274,6 +1274,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-10 &middot; 02:50Z</span>
+      <h3>Coverage watch: a moved booking now moves its placeholder and the claimed shift with it, and the person is told on Slack<span class="kind">DECK &middot; new writer: Worker cron &rarr; Staff Scheduling calendar, Notion Open Shifts, Slack DM &middot; every 15 min &middot; LIVE 60c894a+</span></h3></summary>
+      <p><strong>Asked.</strong> Junyan, 2026-09-09: <em>&ldquo;when people move their bookings the need FBS needs to shift as well &hellip; we need a way to check bookings as they move and then inform staff when their shift changes.&rdquo;</em> Ruling: auto-move the person&rsquo;s block and inform them; channel = Slack DM.</p>
+      <p><strong>Gap it closes.</strong> The Planner&rsquo;s nightly diff already moved <code>Need</code> blocks, once a day, and by canon never touched staff-named blocks. So a booking moved through the Registrar&rsquo;s 5-minute move lane sat with stale coverage until 19:30, and a claimed shift stayed at the old time with nobody told. Verified today: Aris Wu&rsquo;s Thursday 509B booking had already left the calendar hours after the catch-up pass posted its blocks.</p>
+      <p><strong>Route.</strong> The Deck Worker (Cloudflare, cron */15) reads the five studio calendars + Staff Scheduling through the <code>deck-shift-claims</code> service account (Junyan shared the studio calendars read-only today). Pure engine <code>src/coverage.js</code>, runner <code>src/coverage_run.js</code>, 13 engine tests on real title shapes. Match is renter + studio + date &mdash; exact-title matching flagged 8 live bookings as &ldquo;gone&rdquo; in the first dry run because the Planner (from Skedda) and the Google mirror punctuate the same booking differently (<code>Anita Shack &mdash; Qi Gong</code> vs <code>Anita Shack: Qi Gong</code>). Move = patch placeholder + named block + re-key the Deck claim + Notion row Date + Slack DM. Drop = two consecutive sightings, then remove + DM with where the booking went. Beyond the Planner&rsquo;s 3-day window a jump is a drop, not a move (a claim is not carried two weeks ahead unasked). Past windows are never touched. Ambiguity (hand-made block matching two placeholders at one time) &rarr; desk DM, no guess.</p>
+      <p><strong>Slack.</strong> Reuses the fleet&rsquo;s <code>desk_drops</code> bot token (Secret Manager <code>slack-drop-sweep-token</code>, scopes incl. <code>chat:write</code>; DM to a user id verified 2026-09-09). Staff ids: Junyan, Ela, Donny; KyJah and Stefan are not in the workspace. Internal staff notices only &mdash; never a customer message.</p>
+      <p><strong>Kill switch.</strong> <code>COVERAGE_MODE=off</code> in <code>wrangler.jsonc</code> + deploy; <code>dry</code> plans without writing. Last plan: <code>GET /api/coverage/last</code>. Dry runs before go-live: 19 placeholders matched, 0 moves, 2 pending drops (Aris Wu Sep 11, booking now Sep 25), 0 flags.</p>
+      </details>
+    </li>
+
 
       <li class="entry det">
       <details>
