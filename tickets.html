@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 08:21 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 11:15 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">23</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">21</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">100</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">101</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">5</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -725,6 +725,74 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <h2>Absorbed 2026-09-08 — <b>073-human-gate-intake</b></h2>
 
 <p><b>Human-gate mail intake (from 073), after Phase 4:</b> mail that must stop at Junyan — money above routine, legal/insurance, government/bank senders, LLM-flagged consequential novelty — lands on <b>✅ Actions to Perform</b> (<code>For = Junyan</code>, with <code>Basis</code> and a deadline), never on the bot board. A hot deterministic subset (chargeback, government deadline) also fires one SMS via the existing phone.com path. REVIEW happens in-session (Junyan&#x27;s ruling). The staleness half is already this ticket&#x27;s stall path (Correction 2, criterion F) — do not build a second one. Gated on <b>068</b> so the classes arrive labelled.</p>
+</div></details></details></div><div class="job"><div class="jnum">#054</div><div class="jhead"><span class="emoji">📬</span><h4>A small helper whose only job is opening the mail</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Reads the message, starts a ticket, picks the right procedure, writes it down, stops</li><li>It does not answer, does not fix, does not decide — that&#x27;s the new loop&#x27;s job</li><li>Before it even looks: a program works out who the sender is and whether we already handled this</li><li>The old mail job did far too much, which is why things went to the wrong place</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Triager — stub + route, and nothing else</b></p><h2>Question</h2>
+
+<p>Graduated from <b>018</b>. JOB 2 is too big (Junyan). Split off the intake</p>
+<p>half as <b>one small AI core with one job</b>: read inbound, create the ticket stub, SOP-route it, log</p>
+<p>the correspondence, stop.</p>
+
+<p>Deliberately excluded — these are the loop&#x27;s (<b>052</b>) or nobody&#x27;s:</p>
+<p>no advancement, no drafting, no gates, no money, no lifecycle. &quot;Keep it very clean&quot; (Junyan).</p>
+
+<p><b>Rails in front</b> (the Codex five-lanes shape Junyan endorsed — one small AI core boxed in by</p>
+<p>checks that cannot forget):</p>
+<ul>
+<li>- <b>who-is-this stamp</b> — resolve the sender against the Artist DB deterministically before the LLM</li>
+</ul>
+<p>sees the message; dedup at the same moment</p>
+<ul>
+<li>- <b>already-done check</b> — the J28 thread + open tickets, so an inbound that is already handled</li>
+</ul>
+<p>never reaches the core</p>
+
+<p><b>Rails behind:</b> the routing decision is checked against the 🗺️ SOP Routing table structurally</p>
+<p>(WHO-before-WHAT, whole-table read, disambiguation cell — F3/F4&#x27;s fix surface from</p>
+<p><b>017</b>), and a no-clear-match parks + files rather than guessing.</p>
+
+<p>Inbox hygiene (label/archive/audit log) stays with this lane — it is intake state, and two writers</p>
+<p>there corrupt the audit invariants.</p>
+
+<p>Sequencing: <b>052</b> pilots on tickets today&#x27;s JOB 2 already makes,</p>
+<p>so this is parallel work, not a blocker.</p>
+
+<h2>Absorbed 2026-09-08 — <b>072-rules-stub-rung</b></h2>
+
+<p><b>Amendment applied on paper (2026-09-08, from 072 / <b>068</b>):</b> the Triager owns the <b>residue partition only</b> — its query excludes every label the rules stage applied. Known machine-format mail (Skedda notifications, form submissions) gets its ticket stub from the deterministic rules stage (rung 3), not from the Triager.</p>
+
+<p><b>Shared front rails (debate blocker B3):</b> both writers — rules stage and Triager — call the same stub-creation code and write one shared audit log; no duplicated rails. Acceptance: first stub format live with its test recorded (N real historical mails parsed, fields checked against human-made tickets) and zero duplicate tickets across both writers over a week. Gated on <b>068</b> shadow diffs and on 053&#x27;s Phase 4.</p>
+
+<p><b>Disposition contract (from <b>060</b>):</b> every inbound the Triager reads gets a recorded disposition — ticket stub, routed, or an explicit <i>declined</i> with a reason. Declining to act must be visible from outside the pass; the detector for &quot;message with no disposition after N hours&quot; rides <b>046</b>&#x27;s lane.</p>
+
+<h2>Absorbed 2026-09-09 — JOB 35, the second doorway (was ticket 132)</h2>
+
+<p><b>JOB 35 (📨 Inbound Messages — WhatsApp and Instagram DMs) has no destination anywhere on this</p>
+<p>map.</b> It was added 2026-08-12, a week after <b>018</b> named a destination</p>
+<p>for every job it knew about, so the dissolution plan never covered it. Cut as its own ticket</p>
+<p>2026-09-09 and folded here the same day: <b>it needs no new decision, so it is a scope line, not a</p>
+<p>ticket.</b> Canon (<code>concierge-orchestration.md</code> step 4) already settles it — *&quot;it is the same work</p>
+<p>through a second doorway&quot;* — so JOB 35 takes JOB 2&#x27;s split. Intake here, everything downstream to</p>
+<p><b>053</b>. No third lane.</p>
+
+<p>Two things are genuinely different at this doorway and the build must answer them:</p>
+
+<ul>
+<li>- <b>These replies expire.</b> Meta allows a free-form reply only within <b>24 hours</b> of the artist&#x27;s</li>
+</ul>
+<p>last message. A row deferred across passes can reach a state where it *cannot be answered at</p>
+<p>all*, while still reading as a deferral. Email has no equivalent. This is the same shape as</p>
+<p>053&#x27;s open finding — <i>a time-critical proposal has no path to a reviewer inside its own window</i></p>
+<p>— arriving from a second direction, so fix them together or not at all.</p>
+<ul>
+<li>- <b>The who-is-this rail is weaker here.</b> The front rail resolves the sender against the Artist DB</li>
+</ul>
+<p>deterministically before the LLM sees the message. An email address or phone number resolves</p>
+<p>through ☎️ Contact Points. <b>An Instagram handle does not.</b> Either Contact Points gains a handle</p>
+<p><code>Source</code>, or this doorway&#x27;s rail is stated out loud as weaker rather than inheriting a guarantee</p>
+<p>it does not have.</p>
+
+<p>The capture worker stays as it is — deterministic, writing 📨 rows since 2026-08-11. Only the</p>
+<p>reading half moves. <b>Acceptance:</b> <code>concierge-orchestration.md</code> step 4 is deleted in the same</p>
+<p>change that makes the above true.</p>
 </div></details></details></div><div class="job"><div class="jnum">#106</div><div class="jhead"><span class="emoji">🔔</span><h4>Put the names back on who unlocked each studio</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Since Aug 20 the alarm page shows every unlock with a blank where the person&#x27;s name used to be</li><li>The old alarm emails were the only thing that ever said who — and those are gone for good</li><li>The replacement is already written and tested: it reads the alarm company&#x27;s live feed and gets the name, the door opening, and the exact second</li><li>It just needs to be switched on, which means starting a small always-on service — a real cost, so Junyan decides</li><li>One catch worth knowing: arming the alarm isn&#x27;t leaving. People arm, then open the door to walk out — so the door event is the true leaving time</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Deploy alarm-events and give the boards back the name on every arm/disarm</b></p><h2>Question</h2>
 
 <p>Since 2026-08-20 every arm/disarm on the FBS Monitor&#x27;s Alarms tab renders without an</p>
@@ -1015,7 +1083,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>DocIntake error path (from 117):</b> on error, look for an open row with the same error signature before filing (the </code>insurance_sweep<code> </code>file_run_error<code> pattern — one open row per raiser), plus exponential backoff on Notion 5xx/404 before the seen-mark commits. Evidence: seven identical rows in 52 s on 2026-08-26. <b>Separable check:</b> confirm Enrico Casertano&#x27;s signed Long Term Rental Agreement (gmail </code>19fd99917be09490`, 2026-08-06) is filed in 📎 Docs; the Artist row reflects it, the PDF may not.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">23</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">21</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
 <p>Junyan&#x27;s Main Focus window today):</p>
@@ -1314,74 +1382,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>row, an end time &gt; 1 h old, and no PBF row in any status</b> — a <i>queueing</i> miss, not a release miss.</p>
 <p>A held PBF sitting on the Deck for a week is not a defect. Until U ships, the Desk Watch task</p>
 <p>carries the same line (<b>136</b>).</p>
-</div></details></details></div><div class="job"><div class="jnum">#054</div><div class="jhead"><span class="emoji">📬</span><h4>A small helper whose only job is opening the mail</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Reads the message, starts a ticket, picks the right procedure, writes it down, stops</li><li>It does not answer, does not fix, does not decide — that&#x27;s the new loop&#x27;s job</li><li>Before it even looks: a program works out who the sender is and whether we already handled this</li><li>The old mail job did far too much, which is why things went to the wrong place</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Triager — stub + route, and nothing else</b></p><h2>Question</h2>
-
-<p>Graduated from <b>018</b>. JOB 2 is too big (Junyan). Split off the intake</p>
-<p>half as <b>one small AI core with one job</b>: read inbound, create the ticket stub, SOP-route it, log</p>
-<p>the correspondence, stop.</p>
-
-<p>Deliberately excluded — these are the loop&#x27;s (<b>052</b>) or nobody&#x27;s:</p>
-<p>no advancement, no drafting, no gates, no money, no lifecycle. &quot;Keep it very clean&quot; (Junyan).</p>
-
-<p><b>Rails in front</b> (the Codex five-lanes shape Junyan endorsed — one small AI core boxed in by</p>
-<p>checks that cannot forget):</p>
-<ul>
-<li>- <b>who-is-this stamp</b> — resolve the sender against the Artist DB deterministically before the LLM</li>
-</ul>
-<p>sees the message; dedup at the same moment</p>
-<ul>
-<li>- <b>already-done check</b> — the J28 thread + open tickets, so an inbound that is already handled</li>
-</ul>
-<p>never reaches the core</p>
-
-<p><b>Rails behind:</b> the routing decision is checked against the 🗺️ SOP Routing table structurally</p>
-<p>(WHO-before-WHAT, whole-table read, disambiguation cell — F3/F4&#x27;s fix surface from</p>
-<p><b>017</b>), and a no-clear-match parks + files rather than guessing.</p>
-
-<p>Inbox hygiene (label/archive/audit log) stays with this lane — it is intake state, and two writers</p>
-<p>there corrupt the audit invariants.</p>
-
-<p>Sequencing: <b>052</b> pilots on tickets today&#x27;s JOB 2 already makes,</p>
-<p>so this is parallel work, not a blocker.</p>
-
-<h2>Absorbed 2026-09-08 — <b>072-rules-stub-rung</b></h2>
-
-<p><b>Amendment applied on paper (2026-09-08, from 072 / <b>068</b>):</b> the Triager owns the <b>residue partition only</b> — its query excludes every label the rules stage applied. Known machine-format mail (Skedda notifications, form submissions) gets its ticket stub from the deterministic rules stage (rung 3), not from the Triager.</p>
-
-<p><b>Shared front rails (debate blocker B3):</b> both writers — rules stage and Triager — call the same stub-creation code and write one shared audit log; no duplicated rails. Acceptance: first stub format live with its test recorded (N real historical mails parsed, fields checked against human-made tickets) and zero duplicate tickets across both writers over a week. Gated on <b>068</b> shadow diffs and on 053&#x27;s Phase 4.</p>
-
-<p><b>Disposition contract (from <b>060</b>):</b> every inbound the Triager reads gets a recorded disposition — ticket stub, routed, or an explicit <i>declined</i> with a reason. Declining to act must be visible from outside the pass; the detector for &quot;message with no disposition after N hours&quot; rides <b>046</b>&#x27;s lane.</p>
-
-<h2>Absorbed 2026-09-09 — JOB 35, the second doorway (was ticket 132)</h2>
-
-<p><b>JOB 35 (📨 Inbound Messages — WhatsApp and Instagram DMs) has no destination anywhere on this</p>
-<p>map.</b> It was added 2026-08-12, a week after <b>018</b> named a destination</p>
-<p>for every job it knew about, so the dissolution plan never covered it. Cut as its own ticket</p>
-<p>2026-09-09 and folded here the same day: <b>it needs no new decision, so it is a scope line, not a</p>
-<p>ticket.</b> Canon (<code>concierge-orchestration.md</code> step 4) already settles it — *&quot;it is the same work</p>
-<p>through a second doorway&quot;* — so JOB 35 takes JOB 2&#x27;s split. Intake here, everything downstream to</p>
-<p><b>053</b>. No third lane.</p>
-
-<p>Two things are genuinely different at this doorway and the build must answer them:</p>
-
-<ul>
-<li>- <b>These replies expire.</b> Meta allows a free-form reply only within <b>24 hours</b> of the artist&#x27;s</li>
-</ul>
-<p>last message. A row deferred across passes can reach a state where it *cannot be answered at</p>
-<p>all*, while still reading as a deferral. Email has no equivalent. This is the same shape as</p>
-<p>053&#x27;s open finding — <i>a time-critical proposal has no path to a reviewer inside its own window</i></p>
-<p>— arriving from a second direction, so fix them together or not at all.</p>
-<ul>
-<li>- <b>The who-is-this rail is weaker here.</b> The front rail resolves the sender against the Artist DB</li>
-</ul>
-<p>deterministically before the LLM sees the message. An email address or phone number resolves</p>
-<p>through ☎️ Contact Points. <b>An Instagram handle does not.</b> Either Contact Points gains a handle</p>
-<p><code>Source</code>, or this doorway&#x27;s rail is stated out loud as weaker rather than inheriting a guarantee</p>
-<p>it does not have.</p>
-
-<p>The capture worker stays as it is — deterministic, writing 📨 rows since 2026-08-11. Only the</p>
-<p>reading half moves. <b>Acceptance:</b> <code>concierge-orchestration.md</code> step 4 is deleted in the same</p>
-<p>change that makes the above true.</p>
 </div></details></details></div><div class="job"><div class="jnum">#068</div><div class="jhead"><span class="emoji">📮</span><h4>A mail sorter made of simple rules — no AI needed for the boring mail</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A rules list sorts business email the moment it arrives: known shapes get labelled instantly</li><li>Only the confusing leftovers wait for a smart robot to look at them</li><li>It runs in the cloud next to the emergency line, with its own off switch</li><li>First it runs in practice mode — labels only, old Gmail filters stay on — so we can check it agrees with them</li><li>Because it uses no AI, it keeps working even when we run out of tokens</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the mail-rules router on event-gate — shadow mode first</b></p><h2>Question</h2>
 
 <p>Build slice 1 of the triage redesign (<b>decisions of record</b>, decisions 2/4/5/6-rung-1): a deterministic</p>
@@ -2807,47 +2807,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- The invariant fires on a deliberately un-stamped block.</li>
 <li>- Plumbing Map entry for the retry path and the invariant.</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#136</div><div class="jhead"><span class="emoji">🙏</span><h4>Build it: the good-to-go robot drafts the thank-you text when a booking ends</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Every 5 minutes: booking ended, not cancelled, not a no-show, got an access text, no thank-you yet → draft one and hold it for Junyan</li><li>Never sends on its own. Never makes a second one for the same booking</li><li>Same day: remove the thank-you job from the Responder and the overtime version from the Timekeeper, delete the one-day rule everywhere</li><li>Junyan&#x27;s morning read lists any finished booking that should have a draft and does not</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move PBF queueing onto the GTG sweep — queued at booking end, held, no HTA means no PBF</b></p><h2>Task</h2>
-
-<p>Execute the <b>052</b> ruling. Code lives in</p>
-<p><code>dc-canon/services/event-gate/</code>; canon in <code>dc-canon/library/</code>. No LLM in the path.</p>
-
-<p><b>Code — <code>gtg_sweep.py</code> (every 5 min):</b> add a PBF step. For every FBS-board row where the Skedda</p>
-<p>end time has passed, <code>Booking Status</code> ∉ {Cancelled, Missed Booking}, an HTA row exists for the</p>
-<p>booking (<code>HTA-sweep-…</code> / How-to-Access, any status), and <b>no PBF row exists in any status</b> for</p>
-<p>this artist + booking date: queue <code>PBF — &lt;name&gt; &lt;date&gt;</code> at <b><code>Pending Review</code></b>, body from the</p>
-<p>💬 How to Respond PBF row (standard vs platform variant by renter source, verbatim per</p>
-<p><code>response-resolver.md</code>), <code>Send After</code> blank, Reasoning naming the booking and the HTA row. Never</p>
-<p><code>Ready to Send</code>. Never a second row (one renter, one message — 2026-09-06). Report</p>
-<p><code>PBF: N queued · M found</code> in the pass ledger every pass, including zeros. Do <b>not</b> wait on</p>
-<p><code>Booking Status = Complete</code>; the booking-sweep still owns that flip. Kill switch</p>
-<p><code>PBF_STEP_DISABLED=1</code>. Tests in <code>test_gtg_sweep.py</code>.</p>
-
-<p><b>Canon edits, same day the step ships (0-day cutover, Junyan):</b></p>
-<ul>
-<li>- <code>the-responder.md</code> — delete the PBF half of Scope &quot;PBF initial sends&quot; and of step 7; the no-show</li>
-</ul>
-<p>text stays. Delete the 1-day expiry sentence. Rewrite line 244: a regular gets <b>no</b> PBF.</p>
-<ul>
-<li>- <code>overtime_sweep.py</code> / Timekeeper canon — remove the overtime PBF variant duty.</li>
-<li>- <code>job-1-adt-alarm.md:91</code> and any &quot;PBF expires after 1 day&quot; prose (049 §U wording) — the rule is</li>
-</ul>
-<p>dropped; a held PBF has no deadline.</p>
-<ul>
-<li>- <code>autonomy.md</code> — record that the GTG sweep queues PBFs held-only; <code>send_verifier.py</code> keeps</li>
-</ul>
-<p>excluding PBF.</p>
-<ul>
-<li>- <code>services/event-gate/README.md</code> — GTG sweep section gains the PBF step.</li>
-<li>- Plumbing Map <code>day-sheet/plumbing.html</code> change-log entry (route moved: Responder → GTG sweep).</li>
-</ul>
-
-<p><b>Desk Watch line (Junyan&#x27;s Mac, 09:30):</b> add to the <code>desk-watch</code> prompt: list bookings with an</p>
-<p>HTA row, end time &gt; 1 h ago, and no PBF row in any status. Retire the line when 046&#x27;s check U</p>
-<p>carries the same rule.</p>
-
-<p><b>Done when:</b> one real booking ends, its PBF appears on the Deck within 5 min at Pending Review,</p>
-<p>the Responder&#x27;s next pass reports the PBF half gone, and the day-sheet board says so.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">7</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -3991,6 +3950,77 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p>(desk-watch § E flagged it as &quot;086&#x27;s fix&quot;). It is not — that is a text field on another row.</p>
 <p>Not touched here; one line for whoever next edits that row.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#136</span><span class="emoji">🙏</span><span class="done-title">Built and live: the good-to-go robot drafts the thank-you text when a booking ends</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE Sep 11, live since 10:50am Toronto. Every 5 minutes it looks for bookings that just ended, had an access text, and have no thank-you yet, then drafts one and holds it for Junyan</li><li>Its first passes ran clean: nothing new to draft yet (yesterday&#x27;s thank-yous were already there), no errors</li><li>Same hour: the Responder&#x27;s thank-you job was deleted from its instructions, the one-day expiry rule is gone, and the Timekeeper no longer rewrites the overtime version</li><li>Junyan&#x27;s morning read now lists any finished booking that should have a draft and does not. The first real draft from the new robot is what to look for tomorrow</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move PBF queueing onto the GTG sweep — queued at booking end, held, no HTA means no PBF</b></p><h2>Task</h2>
+
+<p>Execute the <b>052</b> ruling. Code lives in</p>
+<p><code>dc-canon/services/event-gate/</code>; canon in <code>dc-canon/library/</code>. No LLM in the path.</p>
+
+<p><b>Code — <code>gtg_sweep.py</code> (every 5 min):</b> add a PBF step. For every FBS-board row where the Skedda</p>
+<p>end time has passed, <code>Booking Status</code> ∉ {Cancelled, Missed Booking}, an HTA row exists for the</p>
+<p>booking (<code>HTA-sweep-…</code> / How-to-Access, any status), and <b>no PBF row exists in any status</b> for</p>
+<p>this artist + booking date: queue <code>PBF — &lt;name&gt; &lt;date&gt;</code> at <b><code>Pending Review</code></b>, body from the</p>
+<p>💬 How to Respond PBF row (standard vs platform variant by renter source, verbatim per</p>
+<p><code>response-resolver.md</code>), <code>Send After</code> blank, Reasoning naming the booking and the HTA row. Never</p>
+<p><code>Ready to Send</code>. Never a second row (one renter, one message — 2026-09-06). Report</p>
+<p><code>PBF: N queued · M found</code> in the pass ledger every pass, including zeros. Do <b>not</b> wait on</p>
+<p><code>Booking Status = Complete</code>; the booking-sweep still owns that flip. Kill switch</p>
+<p><code>PBF_STEP_DISABLED=1</code>. Tests in <code>test_gtg_sweep.py</code>.</p>
+
+<p><b>Canon edits, same day the step ships (0-day cutover, Junyan):</b></p>
+<ul>
+<li>- <code>the-responder.md</code> — delete the PBF half of Scope &quot;PBF initial sends&quot; and of step 7; the no-show</li>
+</ul>
+<p>text stays. Delete the 1-day expiry sentence. Rewrite line 244: a regular gets <b>no</b> PBF.</p>
+<ul>
+<li>- <code>overtime_sweep.py</code> / Timekeeper canon — remove the overtime PBF variant duty.</li>
+<li>- <code>job-1-adt-alarm.md:91</code> and any &quot;PBF expires after 1 day&quot; prose (049 §U wording) — the rule is</li>
+</ul>
+<p>dropped; a held PBF has no deadline.</p>
+<ul>
+<li>- <code>autonomy.md</code> — record that the GTG sweep queues PBFs held-only; <code>send_verifier.py</code> keeps</li>
+</ul>
+<p>excluding PBF.</p>
+<ul>
+<li>- <code>services/event-gate/README.md</code> — GTG sweep section gains the PBF step.</li>
+<li>- Plumbing Map <code>day-sheet/plumbing.html</code> change-log entry (route moved: Responder → GTG sweep).</li>
+</ul>
+
+<p><b>Desk Watch line (Junyan&#x27;s Mac, 09:30):</b> add to the <code>desk-watch</code> prompt: list bookings with an</p>
+<p>HTA row, end time &gt; 1 h ago, and no PBF row in any status. Retire the line when 046&#x27;s check U</p>
+<p>carries the same rule.</p>
+
+<p><b>Done when:</b> one real booking ends, its PBF appears on the Deck within 5 min at Pending Review,</p>
+<p>the Responder&#x27;s next pass reports the PBF half gone, and the day-sheet board says so.</p>
+
+
+<h2>Done 2026-09-11 — live at 14:50Z, first passes clean</h2>
+
+<ul>
+<li>- <b>Code:</b> <code>gtg_sweep.py</code> gained <code>pbf_step</code> (+251 lines) and 14 tests; the full event-gate suite</li>
+</ul>
+<p>passes (2226). dc-canon commit <code>74f738ac9</code>, deployed to Hostinger inside SHA <code>283a5ad</code></p>
+<p>(workflow run 34612402059, 14:49Z; <code>/health</code> started 14:50:08Z).</p>
+<ul>
+<li>- <b>Live evidence:</b> the container log shows the ledger line every 5 minutes from 15:00Z:</li>
+</ul>
+<p><code>pbf: 0 queued · 4 found</code> — the four are yesterday&#x27;s Responder-authored rows, correctly seen</p>
+<p>as &quot;spoken for&quot; by the cross-status dedup; skips name the bookings. No errors.</p>
+<ul>
+<li>- <b>Canon:</b> <code>the-responder.md</code> — PBF half of the Scope bullet and of step 7 removed, the 1-day</li>
+</ul>
+<p>expiry sentence removed, &quot;a regular gets a PBF after every session&quot; corrected to &quot;a regular</p>
+<p>gets NO PBF&quot;. <code>autonomy.md</code> bullet added. <code>overtime_sweep.py</code> no longer names a PBF overtime</p>
+<p>re-queue. Event-gate README section added. Plumbing Map entry (day-sheet <code>10fdff2</code>).</p>
+<ul>
+<li>- <b>Desk Watch § G</b> added to the task prompt: lists any booking with an HTA, an end time</li>
+</ul>
+<p>older than an hour, and no PBF row — until 046&#x27;s check U carries the rule.</p>
+<ul>
+<li>- <b>Not verified yet:</b> a first <i>new</i> PBF from the sweep on the Deck. Every booking that ended</li>
+</ul>
+<p>before 14:50Z already had a Responder row; the first booking to end after that is the proof.</p>
+<p>Desk Watch § G reads it tomorrow morning. The Responder&#x27;s next pass should also report the</p>
+<p>PBF half gone — its canon is git-first, so that depends on Hermes pulling <code>main</code>.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#124</span><span class="emoji">🪪</span><span class="done-title">A booking-site guest has no card until a human types one — the robots all stop there</span><span class="done-date">2026-09-10</span></summary><div class="done-body"><ul class="plain-bullets"><li>Built and tested Sep 7 (44 new tests). It looks the guest up four ways, and only creates a card from an accepted booking</li><li>Waiting on Junyan&#x27;s deploy, then two or three watch-only passes, then the switch-on</li><li>Read the &#x27;would create&#x27; lines BEFORE switching on — the risk is a card made for a booking whose title is not a person</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A platform guest has no identity until a human types one — and three robots all stop politely at that gap</b></p><h2>Question</h2>
 
 <p>Junyan, 2026-09-07, on the xavier case that produced ticket 123:</p>
@@ -16832,5 +16862,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 08:21 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 11:15 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
