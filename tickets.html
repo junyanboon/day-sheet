@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 14:18 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 16:06 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -859,6 +859,61 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Unrelated local artifact, not a break:</b> <code>scripts/test_jobs_registry.py</code> fails on this Mac</p>
 <p>because <code>registry/</code> is outside the local sparse-checkout cone. The file is in the repo; CI has</p>
 <p>the full tree.</p>
+
+<h3>Phase 3 — LIVE IN SHADOW and verified, 2026-09-11 evening</h3>
+
+<p>The lane runs every 5 minutes on its own systemd timer and has filed 17 passes. Steady state:</p>
+
+<p>``<code></p>
+<p>shadow · scanned 67 · acted 0 · already 53 · conversation 10 · no-rule 4</p>
+<p></code>`<code></p>
+
+<p><b>The write path is proven.</b> 53 threads carry their </code>rules/&lt;id&gt;<code> shadow label, applied by the</p>
+<p>lane itself with the </code>gmail.modify<code> credential. Rule hits at first sweep: github-run-failed 33,</p>
+<p>github-pr-run-failed 2, telus-armed-away 5, telus-disarmed 5, telus-panel-camera-images 8. Zero</p>
+<p>errors across every pass. Board: <a href="https://app.notion.com/p/3d87503281c48150b909d5a99df5c921" target="_blank" rel="noopener">mail-rules (event-gate)</a>,</p>
+<p></code>Monitoring<code> flipped <b>Paused → Live</b> once a real pass had filed a real report, per the</p>
+<p>drop-sweep enrollment rule.</p>
+
+<p><b>Three defects found by reading the numbers rather than trusting them</b>, each fixed and each</p>
+<p>now pinned by a test:</p>
+
+<ol>
+<li>1. <b></code>acted 0<code> on the first pass</b> — the sweep was scoped to </code>in:inbox<code> while Gmail filters</li>
+</ol>
+<p>auto-file the target mail straight past the inbox. Measured: 19 Telus threads in two days,</p>
+<p><b>not one ever in the inbox</b>. The query now derives from the rules themselves —</p>
+<p></code>(in:inbox) OR ((from:…) newer_than:2d)<code> — so adding a rule widens the sweep to its sender.</p>
+<p>This is ticket <b>096</b> biting a second lane.</p>
+<ol>
+<li>2. <b>No board surface at all</b> — </code>_file_report()<code> returned silently whenever </code>MONITOR_ROW<code> was</li>
+</ol>
+<p>unset, and it was unset. A healthy pass and a dead lane produced identical evidence: nothing.</p>
+<p>Hermes found it while trying to answer whether the write path worked. The row id is now baked</p>
+<p>into the module, and a pass with no board sets </code>ok=False<code> and says &quot;unobservable&quot;.</p>
+<ol>
+<li>3. <b>The sweep could never reach its backlog</b> — 8 consecutive passes relabelled the identical 53</li>
+</ol>
+<p>threads. Re-applying a label is a no-op at Gmail but still burned one of the capped slots, so</p>
+<p>the lane spun on the newest 60 forever: ~15,000 pointless calls a day. Already-sorted threads</p>
+<p>now cost no call. Then the cap itself: <b>67 threads matched against a ceiling of 60</b>, so 7</p>
+<p>were permanently invisible while the pass reported a confident </code>scanned 60<code>. Ceiling raised to</p>
+<p>200, and <b>a pass that reaches its ceiling now fails loudly</b> rather than looking complete.</p>
+
+<p>All three share one shape, and it is the shape this whole effort exists to remove: *a wrong state</p>
+<p>that looks exactly like a healthy one.*</p>
+
+<p><b>Remaining on this ticket</b> (nothing is filed away yet — the lane only labels):</p>
+
+<p>| Step | Owner | State |</p>
+<p>|---|---|---|</p>
+<p>| Read a shadow window ≥1 day, sample what each rule caught | human | running |</p>
+<p>| Promote the first rule </code>Provisional → Full<code> | human, on evidence, as a repo edit | open |</p>
+<p>| Flip </code>MAIL_RULES_LIVE=1<code> | root, separately approved | open |</p>
+<p>| Phase 4 — one week, zero duplicate tickets across both writers | — | open |</p>
+
+<p><b>Not this ticket:</b> </code>junyanboon/send-engine` PR #7 (merged + deployed, natural-run verification</p>
+<p>pending) belongs to the send-engine work, not to 054.</p>
 </div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 11 out of the who&#x27;s-in-today ticket. Junyan ruled the same day: the program finds the booking, the thinking robot decides</li><li>Built Sep 11: every ten minutes a program reads the booking board and writes one to-do card for each booking that needs a call — still unmarked after it ended, a first-timer who hasn&#x27;t shown up, a goodbye text to cancel for a no-show, a finished booking with no thank-you text queued</li><li>The program never marks a booking itself. A wrong &#x27;no-show&#x27; mark would text a renter who was actually there</li><li>It&#x27;s on the server but not switched on: Junyan activates it, wires the ten-minute timer, reads a few days of dry-run output, then flips it live</li><li>The old chore comes off the robot&#x27;s list only once the cards are seen being worked — the July lesson</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
 
 <p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
@@ -17367,5 +17422,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 14:18 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 16:06 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
