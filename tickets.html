@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-10 19:36 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 07:36 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3595,7 +3595,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>continue from T0 in <code>assets/121-grokbot/GROKBOT-BRIEF.md</code> (the asset folder keeps the</p>
 <p>old ticket number 121; this ticket was renumbered 130 in the 2026-09-06 map trim). To</p>
 <p>retire: delete the Bot in Grok Bot; no other surface holds state.</p>
-</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#086</span><span class="emoji">💓</span><span class="done-title">If The Registrar ever stops, nobody would notice</span><span class="done-date">2026-09-10</span></summary><div class="done-body"><ul class="plain-bullets"><li>The Registrar tells us when something goes wrong, and when it needs a person. It says nothing when everything is fine</li><li>That sounds sensible until it stops running. A paused job, a broken address, or an off-switch someone flipped during an emergency and forgot — all of those look exactly like a quiet night</li><li>The cost is real: renters book directly, get no record, no door code, no board row, and nobody finds out until someone is standing at a locked door</li><li>The fix is a check-in every pass, including the passes where it found nothing. The nothing-found pass is the whole point — it is what proves the program is still breathing</li><li>Then the run monitor can say &#x27;The Registrar has not checked in&#x27; the same way it does for the other agents</li><li>One thing to get right: &#x27;switched off on purpose&#x27; must look different from &#x27;fine&#x27;. Otherwise a forgotten off-switch reads as good news</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar has no heartbeat — a silent stall is invisible</b></p><h2>Problem</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#086</span><span class="emoji">💓</span><span class="done-title">If The Registrar ever stops, nobody would notice</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>The Registrar tells us when something goes wrong, and when it needs a person. It says nothing when everything is fine</li><li>That sounds sensible until it stops running. A paused job, a broken address, or an off-switch someone flipped during an emergency and forgot — all of those look exactly like a quiet night</li><li>The cost is real: renters book directly, get no record, no door code, no board row, and nobody finds out until someone is standing at a locked door</li><li>The fix is a check-in every pass, including the passes where it found nothing. The nothing-found pass is the whole point — it is what proves the program is still breathing</li><li>Then the run monitor can say &#x27;The Registrar has not checked in&#x27; the same way it does for the other agents</li><li>One thing to get right: &#x27;switched off on purpose&#x27; must look different from &#x27;fine&#x27;. Otherwise a forgotten off-switch reads as good news</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Registrar has no heartbeat — a silent stall is invisible</b></p><h2>Problem</h2>
 
 <p>The Registrar went live 2026-08-20 01:34Z (<b>082</b>) with <b>no run-monitor</p>
 <p>row</b>, because it has nothing to put in one. It writes on <b>failure</b> (<code>_file_run_error</code> →</p>
@@ -3748,8 +3748,13 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Merged and deployed on Junyan&#x27;s instruction, 2026-09-10 23:36Z.</b> main <code>f1ce785</code>; deploy run</p>
 <p><a href="https://github.com/junyanboon/desk-correspondence/actions/runs/34542823878" target="_blank" rel="noopener">34542823878</a>,</p>
 <p><code>target=hostinger mode=update</code>; <code>/health</code> reports <code>git_sha f1ce785</code>, fingerprint <code>b05abb801e95</code>,</p>
-<p>started 23:36:13Z. The pinned <code>deploy/&lt;sha&gt;</code> branch was deleted. Heartbeat is in SHADOW; the</p>
-<p>first shadow line is expected on the 00:00Z pass.</p>
+<p>started 23:36:13Z. The pinned <code>deploy/&lt;sha&gt;</code> branch was deleted. Heartbeat is in SHADOW.</p>
+
+<p><b>Shadow verified 2026-09-11 11:36Z</b> (read-only <code>docker logs</code> on the VPS): every pass since deploy</p>
+<p>logs <code>registrar heartbeat (shadow): would stamp Self-heartbeat (scanned 220 · skipped 64 ·</p>
+<p>deferred 0 · residue 1 · errors 0)</code> — 10:32Z, 11:02Z, 11:32Z read directly. <code>skipped 64</code> is the</p>
+<p>busy-pass count the first test run caught; in live mode that pass stamps. Remaining: the flag</p>
+<p>flip and the row&#x27;s <code>Monitoring → Live</code>, Junyan&#x27;s call.</p>
 
 <h3>Still to do — the live flip (Junyan)</h3>
 
@@ -16617,5 +16622,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-10 19:36 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 07:36 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
