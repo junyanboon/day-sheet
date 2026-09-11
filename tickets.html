@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 17:25 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 19:32 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -967,10 +967,55 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>inbox, so it reaches that 09-09/09-10 residue and labels it. Nothing further to build.</p>
 
 <p><b>The promotion candidate this makes obvious:</b> </code>github-run-failed<code> is the strongest first</p>
-<p></code>Provisional → Full` case on the board. One sender, one literal subject, 37 threads, zero</p>
+<p></code>Provisional → Full<code> case on the board. One sender, one literal subject, 37 threads, zero</p>
 <p>ambiguity, no human content possible, and the underlying workflow fault is already fixed so</p>
 <p>ongoing volume is small. Promotion adds mark-read and archive. Still a human call on a shadow</p>
 <p>window, not something to slip in.</p>
+
+<h3>LIVE — 2026-09-11 21:30Z. Phase 3 complete; only the waiting period remains.</h3>
+
+<p>Codex set </code>MAIL_RULES_LIVE=1<code> between 21:25 and 21:30. The lane has run every 5 minutes since</p>
+<p>18:40 with <b>zero errors across all 78 passes</b>, and the write path is now exercised in both</p>
+<p>directions:</p>
+
+<p>| Pass | Result |</p>
+<p>|---|---|</p>
+<p>| 21:30 | </code>LIVE · scanned 64 · acted 28<code> — </code>github-run-failed:labelled 26<code>, </code>github-pr-run-failed:labelled 2<code> |</p>
+<p>| 21:35 | </code>acted 1<code> |</p>
+<p>| 21:40 | </code>github-run-failed:filed 1<code> — <b>the first archive</b>, the promotion taking effect |</p>
+<p>| 21:45 → | </code>acted 0<code> — caught up |</p>
+
+<p></code>github-run-failed<code> is </code>Full<code>; the other eight rules remain </code>Provisional<code> and label only.</p>
+
+<p><b>A mistake of mine worth recording, because it is the same trap in a third disguise.</b> I read the</p>
+<p>Run Monitor row, saw a last-edited stamp two hours old, and reported the lane as stopped for two</p>
+<p>hours. The read had returned <b>cached content</b>; the lane was running the whole time. What made</p>
+<p>the wrong conclusion plausible was that </code>acted 0 · already 5x<code> for two hours looks like silence</p>
+<p>unless you are reading <i>pass presence</i> rather than <i>rule hits</i>. Twice today a wrong state wore a</p>
+<p>healthy face; this time a healthy state wore a dead one. <b>Check a second source before declaring</p>
+<p>an outage.</b></p>
+
+<p>Consequence fixed in code: the lane now stamps </code>Self-heartbeat<code> <b>as well as</b> filing its report,</p>
+<p>so Health cannot depend on one signal. The stamp is withheld on a failed pass — a heartbeat must</p>
+<p>mean the lane did its job, not that the process answered — and a stamp failure never fails a pass</p>
+<p>that did real work.</p>
+
+<p><b>Remaining: phase 4 only</b> — 7 days, zero duplicate tickets across the two writers, then close.</p>
+<p>That is a waiting period, not work. Everything buildable on this ticket is built, deployed and</p>
+<p>proven in production.</p>
+
+<p><b>Two open items, neither blocking:</b></p>
+<ul>
+<li>- The Telus rules are still </code>Provisional<code> and those threads sit <b>unread</b> — that is the visible</li>
+</ul>
+<p>pile (~50 unread on </code>Artist Care - ADT<code>). Promoting them is the next evidence-based call.</p>
+<ul>
+<li>- Deploy run 34649547375 failed with </code>ssh: connect to host 2.25.139.60 port 22: Connection timed</li>
+</ul>
+<p>out` while the host was healthy and reachable throughout (a TCP connect from inside the VPS</p>
+<p>container to :22 succeeded, and every other lane kept firing). A GitHub runner address being</p>
+<p>blocked — fail2ban is the obvious suspect — fits the evidence. <b>Unconfirmed, needs a root</p>
+<p>shell, and it will recur if that is the cause.</b></p>
 </div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 11 out of the who&#x27;s-in-today ticket. Junyan ruled the same day: the program finds the booking, the thinking robot decides</li><li>Built Sep 11: every ten minutes a program reads the booking board and writes one to-do card for each booking that needs a call — still unmarked after it ended, a first-timer who hasn&#x27;t shown up, a goodbye text to cancel for a no-show, a finished booking with no thank-you text queued</li><li>The program never marks a booking itself. A wrong &#x27;no-show&#x27; mark would text a renter who was actually there</li><li>It&#x27;s on the server but not switched on: Junyan activates it, wires the ten-minute timer, reads a few days of dry-run output, then flips it live</li><li>The old chore comes off the robot&#x27;s list only once the cards are seen being worked — the July lesson</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
 
 <p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
@@ -17479,5 +17524,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 17:25 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 19:32 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
