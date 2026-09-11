@@ -1274,6 +1274,13 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+    <li class="entry llm"><details>
+      <summary><span class="when">2026-09-11 &middot; 21:xxZ</span>
+      <h3>The Responder opens the mail &mdash; JOB 2 email intake leaves the Concierge<span class="kind">RESPONDER &middot; CONCIERGE &middot; Hermes crons &middot; wayfinder 054</span></h3></summary>
+      <p><strong>What moved.</strong> Email intake (read the inbox, decide what each message is, open the ticket stub, label / mark read / archive, write the Email Triage Audit Log) used to be JOB 2 on the Concierge&rsquo;s 2-hourly pass, and that pass kept claiming completion with threads left behind. The Responder&rsquo;s 30-minute pass already read every inbound and skipped ticket-forming mail once for the Concierge to pick up &mdash; that hand-off is where mail fell through. Now the Responder is the single reader: one recorded disposition per message (<code>stub</code> / <code>routed</code> / <code>reply</code> / <code>declined &mdash; reason</code> / <code>parked</code>), stops at the stub, owns inbox hygiene. The Concierge advances the stubs and no longer touches the inbox.</p>
+      <p><strong>Route.</strong> Gmail inbox + J28 ledger &rarr; Responder (Hermes cron <code>5575c9d71d65</code>, :20/:50, 07:20&ndash;00:20) &rarr; ticket stub / held reply / audit row &rarr; Concierge advances. Canon: dc-canon <code>534c05e8d</code> (<code>the-responder.md</code> &sect; Intake, <code>concierge-orchestration.md</code> step 3, <code>job-2-triage.md</code> owner line). Hermes edits both cron prompts (task file <code>hermes-tasks/2026-09-11-responder-intake-cutover.txt</code>).</p>
+      <p><strong>Failure mode to watch.</strong> Hard cutover, no shadow (Junyan). If the Responder prompt is not widened before its next fire, nobody opens the mail: the Concierge has stopped and the Responder still refuses tickets. Check the first two Responder reports for an <code>intake:</code> line. Rules-stage labels and machine-mail stubs (was ticket 068) come later as the front rail.</p>
+    </details></li>
     <li class="entry det"><details>
       <summary><span class="when">2026-09-11 &middot; 19:xxZ</span>
       <h3>The thank-you text (PBF) moves off the Responder onto the GTG sweep &mdash; queued at booking end, held, no HTA means no PBF<span class="kind">REGISTRAR &middot; gtg_sweep.py &middot; RESPONDER &middot; wayfinder 052/136</span></h3></summary>

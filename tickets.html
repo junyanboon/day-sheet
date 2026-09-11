@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 11:15 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 11:20 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">21</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">20</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">101</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">102</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -725,7 +725,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <h2>Absorbed 2026-09-08 — <b>073-human-gate-intake</b></h2>
 
 <p><b>Human-gate mail intake (from 073), after Phase 4:</b> mail that must stop at Junyan — money above routine, legal/insurance, government/bank senders, LLM-flagged consequential novelty — lands on <b>✅ Actions to Perform</b> (<code>For = Junyan</code>, with <code>Basis</code> and a deadline), never on the bot board. A hot deterministic subset (chargeback, government deadline) also fires one SMS via the existing phone.com path. REVIEW happens in-session (Junyan&#x27;s ruling). The staleness half is already this ticket&#x27;s stall path (Correction 2, criterion F) — do not build a second one. Gated on <b>068</b> so the classes arrive labelled.</p>
-</div></details></details></div><div class="job"><div class="jnum">#054</div><div class="jhead"><span class="emoji">📬</span><h4>A small helper whose only job is opening the mail</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Reads the message, starts a ticket, picks the right procedure, writes it down, stops</li><li>It does not answer, does not fix, does not decide — that&#x27;s the new loop&#x27;s job</li><li>Before it even looks: a program works out who the sender is and whether we already handled this</li><li>The old mail job did far too much, which is why things went to the wrong place</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Triager — stub + route, and nothing else</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#054</div><div class="jhead"><span class="emoji">📬</span><h4>The reply-writer robot now opens the mail too</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>RULED Sep 11 (Junyan): the mail-opening job goes to the reply-writer robot (the Responder), which already reads every message that comes in</li><li>Before, the reply robot skipped any message that needed a ticket and waited for the main desk robot to open it. That hand-off is where mail got lost</li><li>Now one robot reads each message once and writes down what it did with it: opened a ticket, passed it to an open ticket, wrote a reply, ignored it (with a reason), or parked it for Junyan</li><li>It opens the ticket and stops. The main desk robot still does the follow-through on every ticket</li><li>The main desk robot no longer touches the inbox at all — that was the job it kept failing at</li><li>Switched over the same day, no practice run — Junyan said we need this working now</li><li>The simple-rules mail sorter (was ticket 068) becomes a later step of this one: it will file the boring machine mail before the robot ever sees it</li><li>WhatsApp and Instagram messages stay with the main desk robot for now</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Responder opens the mail — intake moves off the Concierge (was: Build the Triager)</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>. JOB 2 is too big (Junyan). Split off the intake</p>
 <p>half as <b>one small AI core with one job</b>: read inbound, create the ticket stub, SOP-route it, log</p>
@@ -793,6 +793,68 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>The capture worker stays as it is — deterministic, writing 📨 rows since 2026-08-11. Only the</p>
 <p>reading half moves. <b>Acceptance:</b> <code>concierge-orchestration.md</code> step 4 is deleted in the same</p>
 <p>change that makes the above true.</p>
+
+<h2>RESOLUTION — 2026-09-11 (grilled with Junyan): the Triager IS the Responder</h2>
+
+<p><b>Why now:</b> the Concierge is failing at JOB 2 today (39 threads left while a pass claimed</p>
+<p>completion). Both gates on this ticket were unmet — no rules stage exists, the loop has not</p>
+<p>reached Phase 4 — and Junyan ruled: no shadow, implement now.</p>
+
+<p><b>Ruled:</b></p>
+<ul>
+<li>- <b>One inbound reader, not two.</b> The Responder already reads every new inbound and skipped</li>
+</ul>
+<p>ticket-forming mail once (ping-pong). That skip is where mail fell through. It now records ONE</p>
+<p>disposition per message — <code>stub</code> / <code>routed</code> / <code>reply</code> / <code>declined — reason</code> / <code>parked</code> — in the</p>
+<p>Email Triage Audit Log, stops at the ticket stub, and owns inbox hygiene. Canon:</p>
+<p><code>the-responder.md</code> § 📬 Intake (dc-canon, this date).</p>
+<ul>
+<li>- <b>The Concierge keeps advancing the stubs</b> (JOB 3 / JOB 4 / due follow-ups / held</li>
+</ul>
+<p>confirmations). JOB 2 is retired from its pass — <code>concierge-orchestration.md</code> step 3.</p>
+<p>The loop&#x27;s paused executor changes nothing here.</p>
+<ul>
+<li>- <b>No shadow.</b> Hard cutover in one canon commit; the Hermes cron prompts for both lanes</li>
+</ul>
+<p>follow (task file in <code>hermes-tasks/</code>).</p>
+<ul>
+<li>- <b>Rules stage (068) folds in as phase 2</b> — deterministic labels + stubs for machine-format</li>
+</ul>
+<p>mail on event-gate; then the Responder&#x27;s inbox query excludes its labels and reads residue only.</p>
+<p>068&#x27;s scope and acceptance carry over unchanged.</p>
+<ul>
+<li>- <b>Keep the pass small:</b> intake loads <code>job-2-triage.md</code>; reply rules load only on a <code>reply</code>.</li>
+<li>- <b>No-match:</b> <code>job-2-triage.md</code> § Don&#x27;t guess + ONE rolling ✅ Action row (<code>📬 Intake — parked</li>
+</ul>
+<p>mail</code>), never one per message.</p>
+<ul>
+<li>- <b>Email only first.</b> JOB 35 (WhatsApp / Instagram) stays with the Concierge; cut its own</li>
+</ul>
+<p>ticket when the 24 h expiry and the Instagram-handle rail have an answer.</p>
+<ul>
+<li>- <b>Map seam:</b> this map owns intake; self-improving-desk keeps reply voice and the scorecard.</li>
+<li>- <b>Cadence:</b> the Responder&#x27;s 30 min on the ledger floor. A poller push is a follow-up only if</li>
+</ul>
+<p>latency hurts.</p>
+
+<p><b>Phases:</b></p>
+<ol>
+<li>1. Canon cutover — DONE 2026-09-11 (dc-canon, three pages). Hermes edits the two cron</li>
+</ol>
+<p>prompts (Responder boundary widened to intake; Concierge drops JOB 2) — task sent this session.</p>
+<ol>
+<li>2. Verify: first two Responder passes report <code>intake: …</code> lines and the audit log shows</li>
+</ol>
+<p>dispositions; the Concierge pass reports <code>JOB 2: retired → Responder</code>. Desk Watch carries</p>
+<p>the check for three days.</p>
+<ol>
+<li>3. Rules stage (from 068): wire probe → rules file → <code>/mail-rules</code> route + kill switch → labels</li>
+</ol>
+<p>and machine-format stubs live → Responder query excludes rules labels.</p>
+<ol>
+<li>4. Close when phase 3&#x27;s residue partition is live and one week shows zero duplicate tickets</li>
+</ol>
+<p>across both writers.</p>
 </div></details></details></div><div class="job"><div class="jnum">#106</div><div class="jhead"><span class="emoji">🔔</span><h4>Put the names back on who unlocked each studio</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Since Aug 20 the alarm page shows every unlock with a blank where the person&#x27;s name used to be</li><li>The old alarm emails were the only thing that ever said who — and those are gone for good</li><li>The replacement is already written and tested: it reads the alarm company&#x27;s live feed and gets the name, the door opening, and the exact second</li><li>It just needs to be switched on, which means starting a small always-on service — a real cost, so Junyan decides</li><li>One catch worth knowing: arming the alarm isn&#x27;t leaving. People arm, then open the door to walk out — so the door event is the true leaving time</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Deploy alarm-events and give the boards back the name on every arm/disarm</b></p><h2>Question</h2>
 
 <p>Since 2026-08-20 every arm/disarm on the FBS Monitor&#x27;s Alarms tab renders without an</p>
@@ -1083,7 +1145,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>DocIntake error path (from 117):</b> on error, look for an open row with the same error signature before filing (the </code>insurance_sweep<code> </code>file_run_error<code> pattern — one open row per raiser), plus exponential backoff on Notion 5xx/404 before the seen-mark commits. Evidence: seven identical rows in 52 s on 2026-08-26. <b>Separable check:</b> confirm Enrico Casertano&#x27;s signed Long Term Rental Agreement (gmail </code>19fd99917be09490`, 2026-08-06) is filed in 📎 Docs; the Artist row reflects it, the PDF may not.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">21</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">20</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
 <p>Junyan&#x27;s Main Focus window today):</p>
@@ -1382,53 +1444,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>row, an end time &gt; 1 h old, and no PBF row in any status</b> — a <i>queueing</i> miss, not a release miss.</p>
 <p>A held PBF sitting on the Deck for a week is not a defect. Until U ships, the Desk Watch task</p>
 <p>carries the same line (<b>136</b>).</p>
-</div></details></details></div><div class="job"><div class="jnum">#068</div><div class="jhead"><span class="emoji">📮</span><h4>A mail sorter made of simple rules — no AI needed for the boring mail</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A rules list sorts business email the moment it arrives: known shapes get labelled instantly</li><li>Only the confusing leftovers wait for a smart robot to look at them</li><li>It runs in the cloud next to the emergency line, with its own off switch</li><li>First it runs in practice mode — labels only, old Gmail filters stay on — so we can check it agrees with them</li><li>Because it uses no AI, it keeps working even when we run out of tokens</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the mail-rules router on event-gate — shadow mode first</b></p><h2>Question</h2>
-
-<p>Build slice 1 of the triage redesign (<b>decisions of record</b>, decisions 2/4/5/6-rung-1): a deterministic</p>
-<p>rules stage that reads the business inbox and applies labels, running in <b>shadow</b></p>
-<p>next to the live Gmail filters.</p>
-
-<p>Scope:</p>
-
-<ol>
-<li>1. <b>Wire probe first</b> (064 ceremony): confirm from event-gate&#x27;s harness that a</li>
-</ol>
-<p>Gmail API read+label round-trip works with a <code>gmail.modify</code>-scoped refresh token</p>
-<p>before building anything on it.</p>
-<ol>
-<li>2. <b>Rules file</b> in dc-canon (one file, versioned; schema decided here — each rule</li>
-</ol>
-<p>carries match pattern, action, the 🗺️ SOP Routing row id it cites, maturity</p>
-<p>[Provisional/Full], committed-date + evidence per 064).</p>
-<ol>
-<li>3. <b><code>/mail-rules/&lt;token&gt;</code> route on event-gate</b>, own Cloud Scheduler tick (1–5 min),</li>
-</ol>
-<p>own <code>MAIL_DISABLED</code> kill switch, OAuth token in Secret Manager (skedda-cookie</p>
-<p>pattern). Idempotent by message id.</p>
-<ol>
-<li>4. <b>Shadow mode:</b> label-only (distinct <code>rules/</code> label namespace), never archive,</li>
-</ol>
-<p>never stub, filters stay live. Log every decision for the 069 diff.</p>
-<ol>
-<li>5. <b>Register in the 001 jobs registry</b>: <code>produces</code> (labelled mail + decision log),</li>
-</ol>
-<p><code>verify_within</code>, <code>owner_since</code>.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- Wire probe recorded (date + method) on the CAPABILITIES page.</li>
-<li>- Rules stage running on its own tick ≥1 business day, decision log populated,</li>
-</ul>
-<p>zero writes outside the <code>rules/</code> label namespace.</p>
-<ul>
-<li>- Kill switch verified: one tick with <code>MAIL_DISABLED=1</code> does nothing and says so.</li>
-<li>- RUNTIMES.md updated (new route + scheduler job).</li>
-</ul>
-
-<h2>Absorbed 2026-09-08 — <b>071-mail-digest-page</b></h2>
-
-<p><b>Mail Digest page (from 071):</b> one deterministic page per day in the <b>019</b> pattern — sender · subject · one machine-extracted line per digest-class item, plus per-rule hit counts and a freshness stamp. Strictly an audit trail, never an action surface. Venue still to rule: own Pages repo vs a tab — but <b>not</b> a tab on the day-sheet action surfaces (awareness and action stay separate; the Day Sheet was removed from the tabs by ruling 2026-08-01). Acceptance: two consecutive real days populated, complete on a day with zero LLM passes.</p>
 </div></details></details></div><div class="job"><div class="jnum">#076</div><div class="jhead"><span class="emoji">📮</span><h4>The list can tick off a booking by itself, but never a text message</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The whole point of the new list is that it doesn&#x27;t care who did the job — it looks at the real booking and ticks it off</li><li>That works for bookings. It does not work for text messages: the proof lives in the message log, which the little sweep cannot reach from the cloud</li><li>Found the hard way — Junyan sent David Diep a text on Aug 7 at 9:42pm and the list still said &#x27;waiting&#x27; eight days later</li><li>That night made the proof for us: the same job had two steps, move the booking and text him. The booking step ticked itself off the next morning. The text step never could</li><li>Nothing was broken. The sweep looked, couldn&#x27;t see proof, and correctly refused to guess. Nothing else ever looked again</li><li>Three ways out, none obviously right: let the sweep reach the message log, or ring a bell when any step sits too long, or stop letting text steps claim a kind of proof nobody can check</li><li>Same shape as the missing thank-yous: the work was done, the notes were honest, and the finishing half was missing</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A Next Action row whose proof is a human mark can never close itself</b></p><h2>Question</h2>
 
 <p>The executor-agnostic close exists to remove the back-capture tax: VERIFY reads ground truth, so</p>
@@ -3585,6 +3600,60 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Build + canon edits are <b>136</b>. Downstream notes left on</p>
 <p><b>046</b> (check U&#x27;s rule) and <b>056</b></p>
 <p>(PBF initial sends leave the Responder&#x27;s class list before the fold).</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#068</span><span class="emoji">📮</span><span class="done-title">A mail sorter made of simple rules — now a step inside the mail-opener ticket (054)</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>CLOSED Sep 11: nothing built here yet; the whole plan moved into ticket 054 as its later step</li><li>A rules list sorts business email the moment it arrives: known shapes get labelled instantly</li><li>Only the confusing leftovers wait for a smart robot to look at them</li><li>It runs in the cloud next to the emergency line, with its own off switch</li><li>First it runs in practice mode — labels only, old Gmail filters stay on — so we can check it agrees with them</li><li>Because it uses no AI, it keeps working even when we run out of tokens</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the mail-rules router on event-gate — shadow mode first</b></p><h2>Question</h2>
+
+<p>Build slice 1 of the triage redesign (<b>decisions of record</b>, decisions 2/4/5/6-rung-1): a deterministic</p>
+<p>rules stage that reads the business inbox and applies labels, running in <b>shadow</b></p>
+<p>next to the live Gmail filters.</p>
+
+<p>Scope:</p>
+
+<ol>
+<li>1. <b>Wire probe first</b> (064 ceremony): confirm from event-gate&#x27;s harness that a</li>
+</ol>
+<p>Gmail API read+label round-trip works with a <code>gmail.modify</code>-scoped refresh token</p>
+<p>before building anything on it.</p>
+<ol>
+<li>2. <b>Rules file</b> in dc-canon (one file, versioned; schema decided here — each rule</li>
+</ol>
+<p>carries match pattern, action, the 🗺️ SOP Routing row id it cites, maturity</p>
+<p>[Provisional/Full], committed-date + evidence per 064).</p>
+<ol>
+<li>3. <b><code>/mail-rules/&lt;token&gt;</code> route on event-gate</b>, own Cloud Scheduler tick (1–5 min),</li>
+</ol>
+<p>own <code>MAIL_DISABLED</code> kill switch, OAuth token in Secret Manager (skedda-cookie</p>
+<p>pattern). Idempotent by message id.</p>
+<ol>
+<li>4. <b>Shadow mode:</b> label-only (distinct <code>rules/</code> label namespace), never archive,</li>
+</ol>
+<p>never stub, filters stay live. Log every decision for the 069 diff.</p>
+<ol>
+<li>5. <b>Register in the 001 jobs registry</b>: <code>produces</code> (labelled mail + decision log),</li>
+</ol>
+<p><code>verify_within</code>, <code>owner_since</code>.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Wire probe recorded (date + method) on the CAPABILITIES page.</li>
+<li>- Rules stage running on its own tick ≥1 business day, decision log populated,</li>
+</ul>
+<p>zero writes outside the <code>rules/</code> label namespace.</p>
+<ul>
+<li>- Kill switch verified: one tick with <code>MAIL_DISABLED=1</code> does nothing and says so.</li>
+<li>- RUNTIMES.md updated (new route + scheduler job).</li>
+</ul>
+
+<h2>Absorbed 2026-09-08 — <b>071-mail-digest-page</b></h2>
+
+<p><b>Mail Digest page (from 071):</b> one deterministic page per day in the <b>019</b> pattern — sender · subject · one machine-extracted line per digest-class item, plus per-rule hit counts and a freshness stamp. Strictly an audit trail, never an action surface. Venue still to rule: own Pages repo vs a tab — but <b>not</b> a tab on the day-sheet action surfaces (awareness and action stay separate; the Day Sheet was removed from the tabs by ruling 2026-08-01). Acceptance: two consecutive real days populated, complete on a day with zero LLM passes.</p>
+
+<h2>Closed 2026-09-11 — folded into <b>054</b> as its phase 3</h2>
+
+<p>Junyan ruled the Triager IS the Responder (054 resolution, this date). The rules stage stays</p>
+<p>exactly as scoped above — deterministic, event-gate, own tick, own kill switch, shadow-then-live</p>
+<p>per filter — but it is the front rail of one reader, so it lives on that reader&#x27;s ticket. Scope,</p>
+<p>acceptance and the absorbed Mail Digest page carry over unchanged. Nothing was built here.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#075</span><span class="emoji">🗓️</span><span class="done-title">Claimed shifts never reached the calendar — and renters were told nobody was coming</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>When staff claim a shift, it is supposed to appear on the staff calendar within the hour</li><li>That step sits last in a long list, so the robot kept running out of room and dropping it</li><li>Worse: the morning &#x27;is someone on shift?&#x27; text is worked out once at 4:45am and never checked again</li><li>So on Aug 14 three renters were told no staff were coming, when Ela had already claimed those shifts</li><li>Fix: give the calendar step its own small helper that also re-checks those texts after every claim</li><li>UPGRADED Aug 15 (Junyan): a claimed shift should appear on the calendar and the studio monitor page IMMEDIATELY — so the copier moves to the every-minute program, not an hourly robot</li><li>Good news found checking: the monitor page already reads that same calendar — one write feeds both. One thing to measure first: how fast Google actually serves calendar updates to the page</li><li>And make it speak up every run, even a quiet one — silence is how this went unnoticed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>J31 starves at the tail of the pass, and nothing re-reads an AVA after the Host builds it</b></p><h2>Question</h2>
 
 <p>Two defects that share one victim. On 2026-08-14 they combined to text three renters</p>
@@ -16862,5 +16931,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 11:15 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 11:20 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
