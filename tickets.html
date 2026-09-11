@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 12:35 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 13:13 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">19</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">18</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">106</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">3</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -866,8 +866,106 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- <b>Phase 2 evidence (2026-09-11, read from Notion Workflow Reports):</b> Responder 11:50 pass <code>Completed</code> — <code>intake: 3 seen · 0 stub · 0 routed · 1 reply · 2 declined · 0 parked</code>, three threads labelled + read + archived (Gmail grant works on the VPS). Concierge 11:10 pass — <code>JOB 2: skipped · RETIRED … Responder owns intake</code>; it refused a 63-message &quot;mailbox checkpoint&quot; a Codex prototype had injected into its prompt, citing canon. <b>Gap found:</b> <code>3 seen</code> was the 3-hour ledger window; <code>in:inbox</code> held 31 threads, 29 older than 4 h, untouched. Fixed in canon <code>58c995613</code>: intake = the whole inbox, window bounds drafting only, backlog oldest-first ≥15/pass, <code>deferred: N (oldest &lt;age&gt;)</code> on the report line. Next check: the first pass after 58c995613 must report <code>seen</code> ≈ inbox count and a falling backlog. Scheduler fault (Codex-repaired) is separate and logged in CODEX-HANDOFF.md.</li>
 <li>- <b>Phase 2 VERIFIED 2026-09-11 12:20 Toronto (first pass under canon 58c995613; Hermes read-back run_ad9561c9):</b> Responder exec <code>9f9c6c73…</code> Completed — <code>intake: 33 seen · 0 stub · 5 routed · 0 reply · 28 declined · 0 parked · deferred: 0</code>; 33 Email Triage Audit Log rows, Outcome Completed ×33, Labeled 33 / Archived 33, one Session id; <code>in:inbox</code> → 0 threads at 16:35Z (backlog reached back to 09-08). Concierge exec <code>afa26621…</code> Completed — <code>JOB 2: retired → Responder · stubs advanced: 1</code>, zero Gmail calls in its tool audit. Lease Log carries both prompt edits with shas and the verifying exec ids. Scheduler shim confirmed at <code>hermes_cron_incident.py:29</code>, gateway pid 7337 since 12:02. Phase 2 done; Desk Watch Section H watches 09-12 → 09-14. Next: phase 3 (rules stage).</li>
 </ul>
+</div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 11 out of the who&#x27;s-in-today ticket. Junyan ruled the same day: the program finds the booking, the thinking robot decides</li><li>Built Sep 11: every ten minutes a program reads the booking board and writes one to-do card for each booking that needs a call — still unmarked after it ended, a first-timer who hasn&#x27;t shown up, a goodbye text to cancel for a no-show, a finished booking with no thank-you text queued</li><li>The program never marks a booking itself. A wrong &#x27;no-show&#x27; mark would text a renter who was actually there</li><li>It&#x27;s on the server but not switched on: Junyan activates it, wires the ten-minute timer, reads a few days of dry-run output, then flips it live</li><li>The old chore comes off the robot&#x27;s list only once the cards are seen being worked — the July lesson</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
+
+<p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
+<p><b>093</b> on the assumption that the FAST-TRACK retirement and the</p>
+<p>JOB 1 remainder deletion were one canon pass. They are not: FAST-TRACK&#x27;s owners were all live and</p>
+<p>seen acting; the JOB 1 remainder&#x27;s are not.</p>
+
+<p><b>The remainder</b> (<code>concierge-orchestration.md</code> step 5, <code>job-1-adt-alarm.md</code> Steps 4 / 4.5 / 4.7 / 5):</p>
+<p>the judgment half of <code>Booking Status</code> — <code>Missed Booking</code> (multi-studio read, continuity-chain rule),</p>
+<p>arrival-without-departure, yesterday&#x27;s stragglers and the end-time completeness sweep — the</p>
+<p>pre-send EOB cancel for a likely no-show (4.7), and the &quot;Complete + PBF Unsent next day&quot; flag (5).</p>
+
+<p><b>What is observed today, and what is not:</b></p>
+
+<ul>
+<li>- <code>fbs-monitor/build.py sync_booking_status()</code> (every ~15 min) flips the ONE unambiguous case —</li>
+</ul>
+<p>arrived AND departed AND end passed → <code>Complete</code> — and by its own docstring leaves every judgment</p>
+<p>flip to the Concierge. Cover for part of Step 4 only.</p>
+<ul>
+<li>- Invariants T (GTG booking, no arrival signal) and U (HTA row, end &gt; 1 h old, no PBF row — the</li>
+</ul>
+<p>2026-09-11 rule from <b>052</b>) are <b>not built</b>; <code>invariants.py</code></p>
+<p>carries A–E, G–I, K. The PBF line is a Desk Watch human read (<b>136</b>).</p>
+<ul>
+<li>- Nothing deterministic classifies a no-show or a straggler. 4.7&#x27;s EOB cancel has no code owner</li>
+</ul>
+<p>either (<code>eob_timing.py</code> is a live-authority check for existing rows, not a no-show detector).</p>
+
+<p><b>Decide, per step, one of two things:</b> (a) name the code lane that covers it and observe it</p>
+<p>acting — T and U on the 046 roster, <code>sync_booking_status</code> extended to the straggler case, or a</p>
+<p>new event-gate check — or (b) rule it stays LLM work, but as a <b>flagged verb</b> (a <code>Next Action</code></p>
+<p>row the tick raises: &quot;classify this booking&quot;) rather than a self-scanning Concierge step, the</p>
+<p>shape <b>094</b> chose for JOB 4&#x27;s resumption residue.</p>
+
+<h2>Progress 2026-09-11 — ruled and BUILT; deployment staged; canon retirement waits on observation</h2>
+
+<p><b>Ruling (Junyan, in session):</b> <i>code detects, the LLM classifies.</i> Option (a)+(b) as one shape —</p>
+<p>a deterministic detector on the gate, every finding a flagged verb the Concierge works, no</p>
+<p>auto-flip of <code>Missed Booking</code> (a wrong flip is the Responder&#x27;s &quot;we missed you&quot; auto-send).</p>
+
+<p><b>Built — dc-canon <code>a0b5c4e99</code> on <code>main</code>:</b> <code>services/event-gate/job1_flags.py</code> + route</p>
+<p><code>POST /job1-flags</code> (<code>app.py</code>), README section, 31 tests (suite 2318 green). Four kinds, one ⏩</p>
+<p>Next Action row each (<code>Raised by = Desk Invariants</code>, key <code>[job1:&lt;kind&gt;:&lt;board row id&gt;]</code> in</p>
+<p><code>Basis</code> for dedup): <code>classify</code> (Step 4 / 4.5 — unclassified ≥ 45 min past end), <code>no-arrival</code></p>
+<p>(invariant T — first-timer path, start + 20, no disarm), <code>eob-no-show</code> (Step 4.7 — inside end − 90</p>
+<p>… end − 15, EOB undecided, carries <code>Deadline</code>), <code>pbf-missing</code> (invariant U, 052/136 rule — end +</p>
+<p>60, HTA row exists, no PBF row any status). Never writes <code>Booking Status</code>, the queue, or a message.</p>
+<p>Shadow by default; <code>JOB1_FLAGS_LIVE=1</code> writes; one <code>Run Error</code> row on failure, lane-titled.</p>
+<p>This also gives the retired first-timer watch (092) its new home — invariant T is the check, the</p>
+<p>proactive text is not rebuilt.</p>
+
+<p><b>Deployment:</b> image <code>a0b5c4e99…</code> <b>staged and verified</b> on the Hostinger host (deploy run</p>
+<p>34626272940; the first attempt timed out on SSH from the runner, retry succeeded). <b>Activation</p>
+<p>is Junyan&#x27;s</b> — the session&#x27;s activate call was blocked as a production container swap:</p>
+<p><code>gh workflow run deploy-event-gate --ref deploy/a0b5c4e99a053b9d6db26ea8c8df60b4c2c4f2e0 -f target=hostinger -f mode=activate</code>,</p>
+<p>then <code>/health</code> shows <code>git_sha a0b5c4e</code>, then delete the <code>deploy/…</code> branch.</p>
+
+<p><b>Owner checklist to reach acceptance (in order):</b></p>
+<ol>
+<li>1. Activate (above). Route is shadow: reads everything, writes nothing.</li>
+<li>2. Wire the host timer <code>danceannex-job1-flags</code> (every 10 min, path <code>/job1-flags</code>) —</li>
+</ol>
+<p><code>hosting/README-hostinger.md</code> → Scheduling. Hermes cannot.</p>
+<ol>
+<li>3. Read shadow <code>job1-shadow: would flag …</code> lines for a few days against the board (Desk Watch</li>
+</ol>
+<p>task carries the line). Every would-flag should be a booking the Concierge would otherwise</p>
+<p>have had to find by scanning.</p>
+<ol>
+<li>4. Create the 🚥 Run Monitor row (<code>Paused</code>), set <code>JOB1_FLAGS_MONITOR_ROW</code>, flip</li>
+</ol>
+<p><code>JOB1_FLAGS_LIVE=1</code> (Junyan&#x27;s flip).</p>
+<ol>
+<li>5. <b>Once rows are seen being worked</b> — a <code>classify</code> row closes with a real status flip, a</li>
+</ol>
+<p><code>pbf-missing</code> row closes with a queued PBF — retire orchestration step 5, give</p>
+<p><code>job-1-adt-alarm.md</code> its ⛔ RETIRED header (Steps 4 / 4.5 / 4.7 / 5 / 6 named to their cover;</p>
+<p>Step 1 enrichment stays), Plumbing Map entry, close this ticket. Step 6 (mark alarm emails</p>
+<p>read) is deleted with no cover: the feed is a backup and an absent email is never evidence.</p>
+
+<p>Ticket stays <b>open</b> (035&#x27;s test): the build is done; the retirement is not earned yet.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- JOB 1&#x27;s remainder is removed from <code>concierge-orchestration.md</code> step 5 and the job page carries a</li>
+</ul>
+<p>⛔ RETIRED header — <b>only after</b> each deleted step&#x27;s cover is seen acting</p>
+<p>(<b>035</b>&#x27;s test), or is ruled into the flagged-verb shape.</p>
+<ul>
+<li>- Every deleted step names its covering mechanism in the retired page (no orphans).</li>
+<li>- Invariants T and U, if they are the cover, are live on the gate and have produced at least one</li>
+</ul>
+<p>real finding or one clean pass with a heartbeat.</p>
+<ul>
+<li>- Plumbing Map entry.</li>
+</ul>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">19</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">18</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
 <p>Junyan&#x27;s Main Focus window today):</p>
@@ -2327,56 +2425,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- The invariant fires on a deliberately un-stamped block.</li>
 <li>- Plumbing Map entry for the retry path and the invariant.</li>
-</ul>
-</div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore — delete it only once its replacement is seen working</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 11 out of the who&#x27;s-in-today ticket, which had swallowed this on the guess that both were one edit. They weren&#x27;t</li><li>The leftover chore is the judgment half of marking bookings: who never showed, who arrived but hasn&#x27;t left, yesterday&#x27;s stragglers, cancelling a goodbye text for a no-show, and flagging a missing thank-you text</li><li>Today a program only handles the easy case (arrived, left, time&#x27;s up → done). Nothing automatic spots a no-show or a straggler, and the two safety checks meant to cover this aren&#x27;t built yet</li><li>Decide per piece: either build and watch the program that covers it, or rule it stays thinking-robot work — but as a flagged item, not a chore the robot hunts for</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
-
-<p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
-<p><b>093</b> on the assumption that the FAST-TRACK retirement and the</p>
-<p>JOB 1 remainder deletion were one canon pass. They are not: FAST-TRACK&#x27;s owners were all live and</p>
-<p>seen acting; the JOB 1 remainder&#x27;s are not.</p>
-
-<p><b>The remainder</b> (<code>concierge-orchestration.md</code> step 5, <code>job-1-adt-alarm.md</code> Steps 4 / 4.5 / 4.7 / 5):</p>
-<p>the judgment half of <code>Booking Status</code> — <code>Missed Booking</code> (multi-studio read, continuity-chain rule),</p>
-<p>arrival-without-departure, yesterday&#x27;s stragglers and the end-time completeness sweep — the</p>
-<p>pre-send EOB cancel for a likely no-show (4.7), and the &quot;Complete + PBF Unsent next day&quot; flag (5).</p>
-
-<p><b>What is observed today, and what is not:</b></p>
-
-<ul>
-<li>- <code>fbs-monitor/build.py sync_booking_status()</code> (every ~15 min) flips the ONE unambiguous case —</li>
-</ul>
-<p>arrived AND departed AND end passed → <code>Complete</code> — and by its own docstring leaves every judgment</p>
-<p>flip to the Concierge. Cover for part of Step 4 only.</p>
-<ul>
-<li>- Invariants T (GTG booking, no arrival signal) and U (HTA row, end &gt; 1 h old, no PBF row — the</li>
-</ul>
-<p>2026-09-11 rule from <b>052</b>) are <b>not built</b>; <code>invariants.py</code></p>
-<p>carries A–E, G–I, K. The PBF line is a Desk Watch human read (<b>136</b>).</p>
-<ul>
-<li>- Nothing deterministic classifies a no-show or a straggler. 4.7&#x27;s EOB cancel has no code owner</li>
-</ul>
-<p>either (<code>eob_timing.py</code> is a live-authority check for existing rows, not a no-show detector).</p>
-
-<p><b>Decide, per step, one of two things:</b> (a) name the code lane that covers it and observe it</p>
-<p>acting — T and U on the 046 roster, <code>sync_booking_status</code> extended to the straggler case, or a</p>
-<p>new event-gate check — or (b) rule it stays LLM work, but as a <b>flagged verb</b> (a <code>Next Action</code></p>
-<p>row the tick raises: &quot;classify this booking&quot;) rather than a self-scanning Concierge step, the</p>
-<p>shape <b>094</b> chose for JOB 4&#x27;s resumption residue.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- JOB 1&#x27;s remainder is removed from <code>concierge-orchestration.md</code> step 5 and the job page carries a</li>
-</ul>
-<p>⛔ RETIRED header — <b>only after</b> each deleted step&#x27;s cover is seen acting</p>
-<p>(<b>035</b>&#x27;s test), or is ruled into the flagged-verb shape.</p>
-<ul>
-<li>- Every deleted step names its covering mechanism in the retired page (no orphans).</li>
-<li>- Invariants T and U, if they are the cover, are live on the gate and have produced at least one</li>
-</ul>
-<p>real finding or one clean pass with a heartbeat.</p>
-<ul>
-<li>- Plumbing Map entry.</li>
 </ul>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">7</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
@@ -17181,5 +17229,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 12:35 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 13:13 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
