@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 07:44 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 08:03 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">23</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">99</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">5</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -189,6 +189,57 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <h2>Absorbed 2026-09-08 — <b>005-cost-ledger</b></h2>
 
 <p><b>J26 cost line (from 005):</b> each registry row carries a cost line — runs × pass length as the token proxy, plus a self-reported supervision-minutes line — tallied weekly by one scheduled job that writes back to the registry. Crude and real beats precise and absent. This also feeds the sibling map&#x27;s GO criterion (c).</p>
+</div></details></details></div><div class="job"><div class="jnum">#052</div><div class="jhead"><span class="emoji">✋</span><h4>Decide who presses send on a thank-you message</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A thank-you dies if nobody releases it within one day</li><li>Right now it is shown to a person once a night and never again</li><li>Choice 1: let the robot just send it, like it already does for the we-missed-you text</li><li>Choice 2: keep the check, but nag before the day runs out</li><li>Choice 3: show the waiting list every pass instead of once a night</li><li>Junyan&#x27;s call. Worth noting: we already auto-send to people who did NOT show up</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A held PBF has 24h to be released or it dies — who releases it, and what happens when nobody does</b></p><h2>Question</h2>
+
+<p>Graduated from <b>050</b>, which found that the Responder&#x27;s PBF</p>
+<p>sweep works: it finds every completed booking on its own day and queues the PBF within the hour.</p>
+<p><b>Seven PBFs still died between 2026-07-31 and 2026-08-04 — every one of them sitting at</p>
+<p><code>Pending Review</code>, correctly drafted, never released.</b></p>
+
+<p>Two canon rules meet here and, together, guarantee losses:</p>
+
+<ul>
+<li>- <b>Every PBF is held</b> — <code>the-responder.md</code> Scope and AUTONOMY: nothing this lane composes leaves</li>
+</ul>
+<p><code>Pending Review</code>, and a human releases it.</p>
+<ul>
+<li>- <b>A PBF more than 1 day past its booking is never sent</b> (Junyan, 2026-08-05).</li>
+</ul>
+
+<p>So a held PBF has <b>≤24h of shelf life</b>, and the only thing that surfaces it is the courtesy-reply</p>
+<p>approval block on the Responder&#x27;s <b>22:50 pass</b>. One appearance, one night. Miss that night and the</p>
+<p>message is dead — and no later pass re-surfaces it, because the cross-status dedup (correctly) sees</p>
+<p>a row already exists and reports <code>found · deduped</code> forever.</p>
+
+<p>Decide the release policy. The candidates, with what each costs:</p>
+
+<ol>
+<li>1. <b>Auto-send the PBF</b>, as the no-show &quot;we missed you&quot; text already does. The precedent exists and</li>
+</ol>
+<p>the confidence gate is the same one: <code>Booking Status = Complete</code>, set upstream by Concierge JOB 1</p>
+<p>Step 4, which the desk already trusts to auto-send on. Cheapest, and it removes the human from a</p>
+<p>message class with no per-case judgment in it. Cost: a wrong <code>Complete</code> flip now reaches a</p>
+<p>customer unreviewed.</p>
+<ol>
+<li>2. <b>Keep the hold, add a deadline escalation</b> — an unreleased PBF pages before its window closes</li>
+</ol>
+<p>rather than after. Rides <b>042</b>&#x27;s ladder. Cost: another thing</p>
+<p>to read, which is precisely what failed here; and it still needs a human awake inside 24h.</p>
+<ol>
+<li>3. <b>Re-surface every pass, not once a night.</b> Cheapest change to the current shape, but it turns</li>
+</ol>
+<p>the approval block into a repeating list — and the 2026-08-03 ping-pong lesson says a line</p>
+<p>repeated on consecutive passes is a dropped ball wearing a uniform, not a fix.</p>
+
+<p><b>Junyan&#x27;s call, and it is the shape of the fix, not a detail of it</b> — 050 established the</p>
+<p>mechanism, so this ticket is the ruling and the canon edit that follows it, nothing more.</p>
+
+<p>Note the asymmetry worth putting to him directly: the no-show text — sent to someone who did <i>not</i></p>
+<p>show up — auto-sends today, while the thank-you to someone who did is held. If the risk model</p>
+<p>justifies the first, it is hard to argue it forbids the second.</p>
+
+<p>Related but not this ticket: <b>049</b>&#x27;s check U detects an unresolved</p>
+<p>PBF after the fact. Detection is settled; this is about preventing the loss in the first place.</p>
 </div></details></details></div><div class="job"><div class="jnum">#053</div><div class="jhead"><span class="emoji">🔁</span><h4>Build the new way tickets get done — the robot suggests, Junyan says yes or fixes it</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Replan 2026-09-08: three lists, sorted by who finishes the job — robots finish the Next Action list, Junyan finishes the Actions to Perform list, messages live on the Message Queue</li><li>A job type only goes on the robot list after Junyan has ruled it safe (already written in the Action Classes table); a robot job that sits past its deadline moves to Junyan&#x27;s list with a note</li><li>Junyan&#x27;s list was 60% alarms (33 of 55 open) burying the 6 real decisions — each alarm writer now keeps ONE rolling row; ticket 120 catches floods</li><li>Close path: keep the hourly suggester off, land tickets 120–123, add deadlines + the escalate path, then measure 7 quiet days on both lists</li><li>Each suggestion comes with the proof behind it, so Junyan can decide without digging</li><li>Two moves only: say yes, or rewrite the step to what it should have been, then mark it Ready</li><li>The robot only does steps marked Ready — never one Junyan hasn&#x27;t seen</li><li>After doing it, the robot looks again at the real booking or calendar to check it truly happened</li><li>If Junyan already did the job himself, the robot spots it and ticks it off — no double work</li><li>Steps the robot gets right over and over become automatic; one rewrite and it goes back to asking</li><li>Trying it first on booking changes, the busiest and messiest kind</li><li>IN PROGRESS: the two new lists exist in Notion and the rulebook page is written</li><li>Checked what Skedda&#x27;s robot arm can really do: move, create, cancel and approve bookings — but not change a price</li><li>Junyan ruled: the old to-do board gets finished off first, then retired — no copying rows over</li><li>Junyan ruled: instant bookings and moves run on their own, and he gets a text each time one happens</li><li>BUILT Aug 6: the little sweep that runs every 10 minutes — it checks the real booking for every open step and ticks off whatever already happened</li><li>It cannot touch bookings itself, on purpose: one robot does the work, a different one checks it. A checker that can also change things isn&#x27;t a checker</li><li>Safety rule built in first: if it can&#x27;t reach the booking system, it says &#x27;couldn&#x27;t check&#x27; — it never reads silence as &#x27;the booking is gone&#x27;</li><li>Aug 15 — checked what was actually live: the little 10-minute sweep has been running since Aug 7 and works fine</li><li>But every single one of the 15 steps on the new list was written by a human. The robot had never suggested anything, not once</li><li>The thinking half simply had no robot to run it. The Concierge was supposed to be it, and the Concierge never gets that far — it runs out of time every pass</li><li>BUILT Aug 15: a new small robot, The Loop, that runs every hour and does the two missing parts — suggest the next step, and do the ones marked Ready</li><li>SWITCHED ON Aug 15, first run 8:35am. The one step in the way turned out to be already done — Junyan sent David Diep that text himself back on Aug 7, word for word, at 9:42 at night</li><li>Which found the next problem: the list had no way of ever noticing. It can check a booking for itself, but not a text message — so a step that was finished in five minutes sat looking unfinished for eight days</li><li>Three rules sit above everything in its instructions: only do steps marked Ready, never touch money, and never tick its own work off as done</li><li>Day one, four runs: it wrote its first two suggestions on its own. That was the thing to watch for, and it happened</li><li>It did nothing else, four runs in a row — because nobody has said yes to anything yet. The queue of approved work was empty every time</li><li>And it lost one. It spotted a 15-minute gap in Studio 527 at 8:39am, wrote a careful suggestion, checked again at 9:36 — and the gap came and went at 10:30 with nobody having read it</li><li>Nothing went wrong, which is the point. It refused to act without a yes, refused to nag, refused to tick off its own work. All three rules held and the job was still missed</li><li>What&#x27;s missing: a suggestion with a deadline needs to tap someone on the shoulder, not sit in a list waiting to be found</li><li>It also caught a ticket about to nag a customer to move a booking he had already moved four days ago — and noticed it has no alarm clock watching itself, which is the very problem it was built to fix</li><li>Two suggestions are sitting there now waiting on Junyan — and until one gets a yes or a rewrite, the robot cannot start learning what good looks like</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Next Action queue + the advancement loop — pilot on Booking Changes</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>, which dissolved J01 and ruled that ticket</p>
@@ -1015,7 +1066,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>DocIntake error path (from 117):</b> on error, look for an open row with the same error signature before filing (the </code>insurance_sweep<code> </code>file_run_error<code> pattern — one open row per raiser), plus exponential backoff on Notion 5xx/404 before the seen-mark commits. Evidence: seven identical rows in 52 s on 2026-08-26. <b>Separable check:</b> confirm Enrico Casertano&#x27;s signed Long Term Rental Agreement (gmail </code>19fd99917be09490`, 2026-08-06) is filed in 📎 Docs; the Artist row reflects it, the PDF may not.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">23</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">22</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
 <p>Junyan&#x27;s Main Focus window today):</p>
@@ -1306,57 +1357,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <h2>Absorbed 2026-09-08 — <b>049-completeness-invariants</b></h2>
 
 <p><b>Cohort S, T, U (from 049):</b> every <code>[Unpaid]</code> booking has a Money Request Queue row including the prior-day back-check (S; filter <code>Type</code>, the queue shares a data source with ✅ Actions; JOB 32 never derives a price) · a GTG booking with no arrival signal is surfaced (T) · a <code>Complete</code> booking with <code>PBF = Unsent</code> past <b>1 day</b> is surfaced (U — Junyan&#x27;s 2026-08-05 ruling; <code>Sent</code> and <code>Will Not Send</code> both clear it; escalation text must never read as &quot;send the missing PBF&quot;). <b>Canon obligation when U ships:</b> delete JOB 1 Step 5&#x27;s prose flag or give it this query. <b>052</b> decides the cure U detects.</p>
-</div></details></details></div><div class="job"><div class="jnum">#052</div><div class="jhead"><span class="emoji">✋</span><h4>Decide who presses send on a thank-you message</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>A thank-you dies if nobody releases it within one day</li><li>Right now it is shown to a person once a night and never again</li><li>Choice 1: let the robot just send it, like it already does for the we-missed-you text</li><li>Choice 2: keep the check, but nag before the day runs out</li><li>Choice 3: show the waiting list every pass instead of once a night</li><li>Junyan&#x27;s call. Worth noting: we already auto-send to people who did NOT show up</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A held PBF has 24h to be released or it dies — who releases it, and what happens when nobody does</b></p><h2>Question</h2>
-
-<p>Graduated from <b>050</b>, which found that the Responder&#x27;s PBF</p>
-<p>sweep works: it finds every completed booking on its own day and queues the PBF within the hour.</p>
-<p><b>Seven PBFs still died between 2026-07-31 and 2026-08-04 — every one of them sitting at</p>
-<p><code>Pending Review</code>, correctly drafted, never released.</b></p>
-
-<p>Two canon rules meet here and, together, guarantee losses:</p>
-
-<ul>
-<li>- <b>Every PBF is held</b> — <code>the-responder.md</code> Scope and AUTONOMY: nothing this lane composes leaves</li>
-</ul>
-<p><code>Pending Review</code>, and a human releases it.</p>
-<ul>
-<li>- <b>A PBF more than 1 day past its booking is never sent</b> (Junyan, 2026-08-05).</li>
-</ul>
-
-<p>So a held PBF has <b>≤24h of shelf life</b>, and the only thing that surfaces it is the courtesy-reply</p>
-<p>approval block on the Responder&#x27;s <b>22:50 pass</b>. One appearance, one night. Miss that night and the</p>
-<p>message is dead — and no later pass re-surfaces it, because the cross-status dedup (correctly) sees</p>
-<p>a row already exists and reports <code>found · deduped</code> forever.</p>
-
-<p>Decide the release policy. The candidates, with what each costs:</p>
-
-<ol>
-<li>1. <b>Auto-send the PBF</b>, as the no-show &quot;we missed you&quot; text already does. The precedent exists and</li>
-</ol>
-<p>the confidence gate is the same one: <code>Booking Status = Complete</code>, set upstream by Concierge JOB 1</p>
-<p>Step 4, which the desk already trusts to auto-send on. Cheapest, and it removes the human from a</p>
-<p>message class with no per-case judgment in it. Cost: a wrong <code>Complete</code> flip now reaches a</p>
-<p>customer unreviewed.</p>
-<ol>
-<li>2. <b>Keep the hold, add a deadline escalation</b> — an unreleased PBF pages before its window closes</li>
-</ol>
-<p>rather than after. Rides <b>042</b>&#x27;s ladder. Cost: another thing</p>
-<p>to read, which is precisely what failed here; and it still needs a human awake inside 24h.</p>
-<ol>
-<li>3. <b>Re-surface every pass, not once a night.</b> Cheapest change to the current shape, but it turns</li>
-</ol>
-<p>the approval block into a repeating list — and the 2026-08-03 ping-pong lesson says a line</p>
-<p>repeated on consecutive passes is a dropped ball wearing a uniform, not a fix.</p>
-
-<p><b>Junyan&#x27;s call, and it is the shape of the fix, not a detail of it</b> — 050 established the</p>
-<p>mechanism, so this ticket is the ruling and the canon edit that follows it, nothing more.</p>
-
-<p>Note the asymmetry worth putting to him directly: the no-show text — sent to someone who did <i>not</i></p>
-<p>show up — auto-sends today, while the thank-you to someone who did is held. If the risk model</p>
-<p>justifies the first, it is hard to argue it forbids the second.</p>
-
-<p>Related but not this ticket: <b>049</b>&#x27;s check U detects an unresolved</p>
-<p>PBF after the fact. Detection is settled; this is about preventing the loss in the first place.</p>
 </div></details></details></div><div class="job"><div class="jnum">#054</div><div class="jhead"><span class="emoji">📬</span><h4>A small helper whose only job is opening the mail</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Reads the message, starts a ticket, picks the right procedure, writes it down, stops</li><li>It does not answer, does not fix, does not decide — that&#x27;s the new loop&#x27;s job</li><li>Before it even looks: a program works out who the sender is and whether we already handled this</li><li>The old mail job did far too much, which is why things went to the wrong place</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Triager — stub + route, and nothing else</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>. JOB 2 is too big (Junyan). Split off the intake</p>
@@ -3746,7 +3746,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>2026-09-09 — watched by the daily <code>desk-watch</code> scheduled task (09:30 Toronto, this Mac).</b> It replaced <code>shadow-lane-review</code> and <code>hta-verified-week-check</code>, which read Cloud Run logs that went dark on 2026-09-08. Junyan does not do this check by hand; the routine reports and files at most one Decision row.</p>
 
-<h2>Progress — 2026-09-10, merged and DEPLOYED (shadow); the flag flip is next</h2>
+<h2>Progress — 2026-09-11, LIVE: the row is stamped every pass and the Sentinel judges it</h2>
 
 <p><b>The ground moved under this ticket, and the design follows the ground, not the text above.</b></p>
 <p>Cloud Scheduler and Cloud Run are gone as runtimes (2026-09-08): the sweep is</p>
@@ -3841,12 +3841,19 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Shadow verified 2026-09-11 11:36Z</b> (read-only <code>docker logs</code> on the VPS): every pass since deploy</p>
 <p>logs <code>registrar heartbeat (shadow): would stamp Self-heartbeat (scanned 220 · skipped 64 ·</p>
 <p>deferred 0 · residue 1 · errors 0)</code> — 10:32Z, 11:02Z, 11:32Z read directly. <code>skipped 64</code> is the</p>
-<p>busy-pass count the first test run caught; in live mode that pass stamps. Remaining: the flag</p>
-<p>flip and the row&#x27;s <code>Monitoring → Live</code>, Junyan&#x27;s call.</p>
+<p>busy-pass count the first test run caught; in live mode that pass stamps. <b>LIVE 2026-09-11 (Junyan: &quot;flip it live&quot;).</b> <code>REGISTRAR_HEARTBEAT_LIVE=1</code> set in</p>
+<p><code>/docker/danceannex-mcp/event-gate.env</code> (backup <code>event-gate.env.bak-086-&lt;stamp&gt;</code> beside it), deploy</p>
+<p>run <a href="https://github.com/junyanboon/desk-correspondence/actions/runs/34595352430" target="_blank" rel="noopener">34595352430</a></p>
+<p><code>mode=update</code> at main <code>b4f3fee</code>, started 11:43:42Z, flag confirmed inside the running container</p>
+<p>with <code>docker exec … env</code>. First real stamp 12:02:21Z: <code>registrar heartbeat: stamp Self-heartbeat</p>
+<p>(scanned 220 · skipped 64 · deferred 0 · residue 1 · errors 0)</code>. Read back on the row:</p>
+<p><code>Self-heartbeat</code> 12:00Z, <code>Runtime state</code> Live. <code>Monitoring</code> flipped to <b>Live</b>. The Sentinel</p>
+<p>now judges the Registrar, stale after 75 min, window 0–24. Every acceptance line above is now</p>
+<p>proven on the live host, not only in tests. <b>Closed.</b></p>
 
-<h3>Still to do — the live flip (Junyan)</h3>
+<h3>How the live flip was checked (kept for the next lane)</h3>
 
-<p>Two passes after 23:36Z, read-only:</p>
+<p>Read-only:</p>
 
 <p>``<code>bash</p>
 <p>ssh -o BatchMode=yes root@2.25.139.60 &#x27;docker logs event-gate --since 70m 2&gt;&amp;1 | grep -i &quot;registrar heartbeat&quot;&#x27;</p>
@@ -16710,5 +16717,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 07:44 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 08:03 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
