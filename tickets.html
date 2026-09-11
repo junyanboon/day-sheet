@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 11:44 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 11:57 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">20</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">102</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">103</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">5</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -864,162 +864,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- <b>Verification blocked — every Hermes cron pass fails at completion since 11:16 Toronto</b>, unrelated to this ticket: a <code>concierge_completion</code> prototype installer (whose own <code>install.py</code> refuses to install) patched <code>/opt/hermes/cron/scheduler.py:7313</code> to import <code>normalize_cron_result</code> from <code>cron.hermes_cron_incident</code>, which never defined it. The &quot;before&quot; backup was taken after the edit (byte-identical). Hermes cannot fix it: <code>/opt/hermes</code> is root-owned, Hermes runs as uid 10000, no sudo, no git. <b>Needs Junyan with root on the VPS</b> — three-line shim, then one scheduled fire verifies. Hermes filed DEFECT + NEEDS-JUNYAN lines.</li>
 <li>- Not yet produced: first <code>intake:</code> line, audit-row count, Concierge <code>JOB 2: retired</code> line, lease Log lines.</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#106</div><div class="jhead"><span class="emoji">🔔</span><h4>Put the names back on who unlocked each studio</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Since Aug 20 the alarm page shows every unlock with a blank where the person&#x27;s name used to be</li><li>The old alarm emails were the only thing that ever said who — and those are gone for good</li><li>The replacement is already written and tested: it reads the alarm company&#x27;s live feed and gets the name, the door opening, and the exact second</li><li>It just needs to be switched on, which means starting a small always-on service — a real cost, so Junyan decides</li><li>One catch worth knowing: arming the alarm isn&#x27;t leaving. People arm, then open the door to walk out — so the door event is the true leaving time</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Deploy alarm-events and give the boards back the name on every arm/disarm</b></p><h2>Question</h2>
-
-<p>Since 2026-08-20 every arm/disarm on the FBS Monitor&#x27;s Alarms tab renders without an</p>
-<p>actor. That is not a rendering fault — today&#x27;s edition reports <code>armFeed: panel ok</code></p>
-<p>with six of eight events carrying <code>name: &quot;&quot;</code> straight from the source. The ADT/TELUS</p>
-<p>email feed was the only thing that ever named a person, and Junyan retired it</p>
-<p>permanently the same day. The panel ledger behind <code>GET /arm-history</code> records <b>when</b>,</p>
-<p>never <b>who</b>; only remote arms made through alarm-mcp still carry a name.</p>
-
-<p><b>The replacement is already built and is not deployed.</b> alarm-mcp commit <code>a800fcc</code></p>
-<p>(&quot;Studio activity from the websocket&quot;) added <code>alarm_monitor/door_events.py</code> +</p>
-<p><code>event_listener.py</code>, exposed as the <code>studio_activity</code> MCP tool and</p>
-<p><code>GET /door-history</code>. It carries more than the ADT emails ever did: actor name <b>and</b></p>
-<p>a stable <code>ew_contact_id</code>, plus door open/close and motion, at second precision. Proven</p>
-<p>on live frames — a keypad arm reads <code>ew=Anneka+K&amp;ew_contact_id=247640077</code>.</p>
-
-<p>So this ticket is only the flip, and one consumer change.</p>
-
-<h2>The order</h2>
-
-<ol>
-<li>1. <b>Create the <code>alarm-events</code> service — once, by hand.</b> The exact command is in</li>
-</ol>
-<p><code>deploy.sh</code>, which deliberately <i>skips</i> this service until it exists. Three flags</p>
-<p>are load-bearing and none is a cost knob:</p>
-<p><code>--no-cpu-throttling</code> (Cloud Run throttles CPU between requests and this container</p>
-<p>is nothing but between-requests work — without it the socket stalls and dies),</p>
-<p><code>--min-instances=1</code> (nothing ever calls this service; at min 0 it never runs),</p>
-<p><code>--max-instances=1</code> (two instances = two websockets racing on one GCS object).</p>
-<p>It cannot live inside alarm-mcp: that service is min-0, CPU-throttled and maxScale 20.</p>
-<ol>
-<li>2. <b>Verify.</b> <code>/healthz</code> returns 503 while the socket is down, so a green healthz is</li>
-</ol>
-<p>the proof the listener is actually connected — not that the container started.</p>
-<ol>
-<li>3. <b>Prove it on a real event</b> before anything consumes it: one keypad arm should come</li>
-</ol>
-<p>back with both the actor name and the contact id. A remote arm carries no name and is</p>
-<p>resolved by joining <code>lid=</code> to the login frame; those are marked <code>remote_login</code> and are</p>
-<p><b>excluded from renter attribution</b> — pressing a button in the app is not being in</p>
-<p>the building.</p>
-<ol>
-<li>4. <b>Point fbs-monitor at it.</b> The alarms tab joins the name back on; <code>build.py</code>&#x27;s</li>
-</ol>
-<p><code>enrich_arm_names()</code> already exists for exactly this shape and currently has nothing</p>
-<p>to attach. <code>/arm-history</code> <b>stays on</b> as the polling backstop — a websocket has no</p>
-<p>replay, and it is immune to socket gaps in a way the socket is not.</p>
-<ol>
-<li>5. <b>Correct the paper trail.</b> The Plumbing Map entry of 2026-08-20 18:55Z and</li>
-</ol>
-<p>fbs-monitor&#x27;s own Alarms-tab note both still say the way back is capturing the</p>
-<p>browser&#x27;s network call. That was superseded the same day.</p>
-
-<h2>Paste-ready runbook (assembled 2026-08-20, from repo config — not live gcloud reads)</h2>
-
-<p>All values verified against <code>hosting/README-gcp.md</code>, <code>deploy.sh</code>, <code>server_events.py</code>,</p>
-<p>and RUNTIMES.md. Session gcloud is blocked for the agent, so Junyan runs these.</p>
-
-<p><b>Step 1 — build the image from <code>a800fcc</code> and deploy alarm-mcp on it</b> (the listener</p>
-<p>ships in the same image; this also gets alarm-mcp the new <code>/door-history</code> route):</p>
-
-<p>``<code>bash</p>
-<p>cd ~/DanceAnnex-AlarmMonitor/alarm-monitor &amp;&amp; ./deploy.sh</p>
-<p></code>`<code></p>
-
-<p>Note the tag it prints (</code>alarm:&lt;MMDD&gt;-a800fcc<code>). It will end by saying alarm-events</p>
-<p>does not exist yet — expected.</p>
-
-<p><b>Step 2 — create alarm-events, once</b> (substitute the tag from step 1):</p>
-
-<p></code>`<code>bash</p>
-<p>gcloud run deploy alarm-events   --image us-central1-docker.pkg.dev/danceannex-skedda/skedda/alarm:&lt;TAG&gt;   --region us-central1 --project danceannex-skedda   --command python --args hosting/server_events.py   --min-instances=1 --max-instances=1 --no-cpu-throttling   --no-allow-unauthenticated   --service-account 249118612005-compute@developer.gserviceaccount.com   --set-env-vars WATCHDOG_LEDGER_BUCKET=danceannex-alarm-watchdog   --set-secrets ALARMDOTCOM_USERNAME=alarm-username:latest,ALARMDOTCOM_PASSWORD=alarm-password:latest,ALARMDOTCOM_MFA_TOKEN=alarm-mfa-token:latest</p>
-<p></code>`<code></p>
-
-<p>The service refuses to start without the bucket or the credentials (fails loud by</p>
-<p>design), so a mis-binding shows up immediately in the revision logs, not as silence.</p>
-
-<p><b>Step 3 — verify the socket, not the container:</b></p>
-
-<p></code>`<code>bash</p>
-<p>curl -s -o /dev/null -w &quot;%{http_code}\n&quot; -H &quot;Authorization: Bearer $(gcloud auth print-identity-token)&quot;   https://$(gcloud run services describe alarm-events --region us-central1 --project danceannex-skedda --format=&#x27;value(status.url)&#x27; | sed &#x27;s|https://||&#x27;)/healthz</p>
-<p></code>`<code></p>
-
-<p>200 = listening; 503 = socket down (the initial login retries with backoff — give it</p>
-<p>up to ~5 minutes before digging). Then arm/disarm one studio from a keypad and confirm</p>
-<p>the event lands with a name via the </code>studio_activity<code> MCP tool or </code>GET /door-history<code></p>
-<p>on alarm-mcp.</p>
-
-<p><b>Step 4 — hand back to the agent:</b> fbs-monitor wiring (alarms tab joins names from</p>
-<p></code>/door-history<code>; </code>/arm-history<code> stays as backstop) is agent work, ~1h, after step 3</p>
-<p>proves a named keypad event.</p>
-
-<h2>Constraints that are already ruled — do not re-open</h2>
-
-<ul>
-<li>- <b>No browser, and no </code>selectSystem<code>.</b> The Aug-18 &quot;history is locked to one system&quot;</li>
-</ul>
-<p>finding stands, but it only ever applied to the </code>activity/historyEvents<code> REST API;</p>
-<p>the websocket takes no unit parameter. Junyan ruled the capture goes through the MCP</p>
-<p>path, and it did.</p>
-<ul>
-<li>- <b>Arming is not leaving.</b> Anneka armed 509A at 19:30:37 and opened the door at</li>
-</ul>
-<p>19:30:49 — the exit door event is the departure time, not the arm. Anything computing</p>
-<p>occupancy from this feed inherits that correction.</p>
-<ul>
-<li>- <b>Never bill off a socket.</b> No replay means a gap is invisible from inside; </code>covered<code></li>
-</ul>
-<p>must be checked before any overtime is computed, and an uncovered window goes to a</p>
-<p>Review row, never to a charge.</p>
-
-<h2>Why it is its own ticket</h2>
-
-<p>Creating an always-on Cloud Run service is a production flip with a standing cost, and</p>
-<p>Junyan confirms those. It is also the only step between a relay that works and four</p>
-<p>consumers still reading blanks: the Alarms tab, the Doorman&#x27;s suspended Job C retirement</p>
-<p>sweep (its 30-day presence evidence has no source), the Timekeeper&#x27;s identity</p>
-<p>ambiguities, and Junyan&#x27;s departure rule.</p>
-
-<h2>Seam</h2>
-
-<p>The night-ops rebuild map owns the evidence-source design and already logs this build;</p>
-<p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
-<p>Ops Lead&#x27;s use of it here.</p>
-
-
-<h2>Inherited 2026-09-07 from the close of <b>021</b> — the 3-day evidence horizon</h2>
-
-<p>021 was closed as superseded (no panel-snapshot store is needed). One finding does not close with</p>
-<p>it, and lands here because this ticket owns the named-event feed:</p>
-
-<p><b>Every named source expires at ~3 days, and the hole-free one covers one studio.</b> </code>door_events.py<code></p>
-<p>retains 72 hours. </code>panel_history.py<code> is a clean REST record but is <b>Studio 901 only</b> — the API is</p>
-<p>locked to unitId 110267422 and every documented switch endpoint 404s or 500s (verified twice,</p>
-<p>2026-08-18 and 2026-09-04). So Studios other than 901 have <b>no hole-free arm/disarm record beyond</p>
-<p>72 hours</b>.</p>
-
-<p>The cost is already on the record: Janet Zamora&#x27;s 901 booking ran 19:30–22:30 on 2026-08-31 and the</p>
-<p>panel armed at 22:52. The Timekeeper correctly refused to charge and filed a Review row reading</p>
-<p>&quot;Named studio_activity read for Studio 901, 2026-08-31 22:30–23:00&quot;. By the time a human reached it</p>
-<p>the window had aged out. That one was rescued by hand from the Alarm.com portal, and only because</p>
-<p>it was 901.</p>
-
-<p><b>The open question, not yet ruled:</b> does a Review row&#x27;s evidence need to outlive the source that</p>
-<p>would answer it — i.e. does the relay&#x27;s frame get folded into something durable at capture time, the</p>
-<p>way </code>last_seen.py<code> folds presence? </code>last_seen.py<code> deliberately keeps only the most recent sighting</p>
-<p>per person, so it does not answer a &quot;what happened in this window&quot; question. Do not build against</p>
-<p>this note; it is a flag, not a spec.</p>
-
-<h2>2026-09-09 — NOT deployed on Cloud Run, on purpose; the listener&#x27;s home changed under this ticket</h2>
-
-<p>Checked before deploying. Since this ticket was written, Junyan&#x27;s branch </code>codex/hostinger-ledger<code> (commits 58f4617 → 7372215, 2026-09-08) moved the alarm ledger off GCS onto a shared VPS ledger API with fail-closed generation checks, and its </code>deploy.sh<code> now deploys </code>alarm-events<code> with <b></code>ALARM_EVENTS_DISABLED=true<code></b> during the migration — &quot;Support shared-ledger cutover and disable the old listener together&quot;. </code>hosting/README-vps.md<code> on that branch says the cutover must &quot;keep one websocket listener and one schedule executor&quot;, and the migration is already in motion: the live Cloud Run </code>alarm-mcp<code> runs image </code>hostinger-36b88d9<code> from that branch and carries </code>LEDGER_API_URL<code> + </code>LEDGER_API_TOKEN<code>.</p>
-
-<p>Creating the </code>alarm-events<code> singleton on Cloud Run now would put a second websocket writer beside whatever listener the VPS migration stands up — exactly the race the three scaling flags exist to prevent. So the step-1 create command in this ticket is <b>void until Junyan says where the one listener lives</b> (Cloud Run with the ledger API, or a container on the VPS beside event-gate).</p>
-
-<p><b>Decision for Junyan:</b> which host owns the single alarm websocket listener after the ledger cutover? Then this ticket&#x27;s step 2 (healthz) and step 4 (fbs-monitor reads </code>/door-history`) apply to that host. The four blind consumers (Alarms tab, Doorman Job C, Timekeeper identity, departure rule) stay blind until then.</p>
 </div></details></details></div><div class="job"><div class="jnum">#121</div><div class="jhead"><span class="emoji">🔁</span><h4>Retried runs must not write the same row twice — three fixes in one</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Retries were switched on for every cloud lane on Sep 4; the climate log was the one that could double-write</li><li>Also here: the door-transition checker that re-raises fixed tickets (114), and the document intake that filed seven identical errors in 52 seconds (117)</li><li>One pattern for all three: key every write, and if the check itself fails, assume it was written and skip</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>&quot;Key every retried write — Thermal Log, IPR tight-transition, DocIntake errors&quot;</b></p><h2>Question</h2>
 
 <p><code>climate_sweep.thermal_log_row()</code> is an unconditional <code>POST</code> — no key, no existence</p>
@@ -4028,6 +3872,200 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p>(desk-watch § E flagged it as &quot;086&#x27;s fix&quot;). It is not — that is a text field on another row.</p>
 <p>Not touched here; one line for whoever next edits that row.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#106</span><span class="emoji">🔔</span><span class="done-title">The names are back on who unlocked each studio</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>Done Sept 11. Since Aug 20 the alarm page showed every unlock with a blank where the person&#x27;s name used to be — the old alarm emails were the only thing that ever said who, and those are gone for good</li><li>The replacement reads the alarm company&#x27;s live feed and gets the name, the door opening, and the exact second</li><li>It was switched on during the Sept 8 move to the new server, so it runs there — not on Google — and the alarm page has been showing names since</li><li>Checked today: Jia Chian Lee, 509B, Sept 10 at 6:28pm — name and all</li><li>One catch worth knowing: arming the alarm isn&#x27;t leaving. People arm, then open the door to walk out — so the door event is the true leaving time</li><li>Still open elsewhere: the feed only remembers 3 days, so a question about last week may have no answer left</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Deploy alarm-events and give the boards back the name on every arm/disarm</b></p><h2>Question</h2>
+
+<p>Since 2026-08-20 every arm/disarm on the FBS Monitor&#x27;s Alarms tab renders without an</p>
+<p>actor. That is not a rendering fault — today&#x27;s edition reports <code>armFeed: panel ok</code></p>
+<p>with six of eight events carrying <code>name: &quot;&quot;</code> straight from the source. The ADT/TELUS</p>
+<p>email feed was the only thing that ever named a person, and Junyan retired it</p>
+<p>permanently the same day. The panel ledger behind <code>GET /arm-history</code> records <b>when</b>,</p>
+<p>never <b>who</b>; only remote arms made through alarm-mcp still carry a name.</p>
+
+<p><b>The replacement is already built and is not deployed.</b> alarm-mcp commit <code>a800fcc</code></p>
+<p>(&quot;Studio activity from the websocket&quot;) added <code>alarm_monitor/door_events.py</code> +</p>
+<p><code>event_listener.py</code>, exposed as the <code>studio_activity</code> MCP tool and</p>
+<p><code>GET /door-history</code>. It carries more than the ADT emails ever did: actor name <b>and</b></p>
+<p>a stable <code>ew_contact_id</code>, plus door open/close and motion, at second precision. Proven</p>
+<p>on live frames — a keypad arm reads <code>ew=Anneka+K&amp;ew_contact_id=247640077</code>.</p>
+
+<p>So this ticket is only the flip, and one consumer change.</p>
+
+<h2>The order</h2>
+
+<ol>
+<li>1. <b>Create the <code>alarm-events</code> service — once, by hand.</b> The exact command is in</li>
+</ol>
+<p><code>deploy.sh</code>, which deliberately <i>skips</i> this service until it exists. Three flags</p>
+<p>are load-bearing and none is a cost knob:</p>
+<p><code>--no-cpu-throttling</code> (Cloud Run throttles CPU between requests and this container</p>
+<p>is nothing but between-requests work — without it the socket stalls and dies),</p>
+<p><code>--min-instances=1</code> (nothing ever calls this service; at min 0 it never runs),</p>
+<p><code>--max-instances=1</code> (two instances = two websockets racing on one GCS object).</p>
+<p>It cannot live inside alarm-mcp: that service is min-0, CPU-throttled and maxScale 20.</p>
+<ol>
+<li>2. <b>Verify.</b> <code>/healthz</code> returns 503 while the socket is down, so a green healthz is</li>
+</ol>
+<p>the proof the listener is actually connected — not that the container started.</p>
+<ol>
+<li>3. <b>Prove it on a real event</b> before anything consumes it: one keypad arm should come</li>
+</ol>
+<p>back with both the actor name and the contact id. A remote arm carries no name and is</p>
+<p>resolved by joining <code>lid=</code> to the login frame; those are marked <code>remote_login</code> and are</p>
+<p><b>excluded from renter attribution</b> — pressing a button in the app is not being in</p>
+<p>the building.</p>
+<ol>
+<li>4. <b>Point fbs-monitor at it.</b> The alarms tab joins the name back on; <code>build.py</code>&#x27;s</li>
+</ol>
+<p><code>enrich_arm_names()</code> already exists for exactly this shape and currently has nothing</p>
+<p>to attach. <code>/arm-history</code> <b>stays on</b> as the polling backstop — a websocket has no</p>
+<p>replay, and it is immune to socket gaps in a way the socket is not.</p>
+<ol>
+<li>5. <b>Correct the paper trail.</b> The Plumbing Map entry of 2026-08-20 18:55Z and</li>
+</ol>
+<p>fbs-monitor&#x27;s own Alarms-tab note both still say the way back is capturing the</p>
+<p>browser&#x27;s network call. That was superseded the same day.</p>
+
+<h2>Paste-ready runbook (assembled 2026-08-20, from repo config — not live gcloud reads)</h2>
+
+<p>All values verified against <code>hosting/README-gcp.md</code>, <code>deploy.sh</code>, <code>server_events.py</code>,</p>
+<p>and RUNTIMES.md. Session gcloud is blocked for the agent, so Junyan runs these.</p>
+
+<p><b>Step 1 — build the image from <code>a800fcc</code> and deploy alarm-mcp on it</b> (the listener</p>
+<p>ships in the same image; this also gets alarm-mcp the new <code>/door-history</code> route):</p>
+
+<p>``<code>bash</p>
+<p>cd ~/DanceAnnex-AlarmMonitor/alarm-monitor &amp;&amp; ./deploy.sh</p>
+<p></code>`<code></p>
+
+<p>Note the tag it prints (</code>alarm:&lt;MMDD&gt;-a800fcc<code>). It will end by saying alarm-events</p>
+<p>does not exist yet — expected.</p>
+
+<p><b>Step 2 — create alarm-events, once</b> (substitute the tag from step 1):</p>
+
+<p></code>`<code>bash</p>
+<p>gcloud run deploy alarm-events   --image us-central1-docker.pkg.dev/danceannex-skedda/skedda/alarm:&lt;TAG&gt;   --region us-central1 --project danceannex-skedda   --command python --args hosting/server_events.py   --min-instances=1 --max-instances=1 --no-cpu-throttling   --no-allow-unauthenticated   --service-account 249118612005-compute@developer.gserviceaccount.com   --set-env-vars WATCHDOG_LEDGER_BUCKET=danceannex-alarm-watchdog   --set-secrets ALARMDOTCOM_USERNAME=alarm-username:latest,ALARMDOTCOM_PASSWORD=alarm-password:latest,ALARMDOTCOM_MFA_TOKEN=alarm-mfa-token:latest</p>
+<p></code>`<code></p>
+
+<p>The service refuses to start without the bucket or the credentials (fails loud by</p>
+<p>design), so a mis-binding shows up immediately in the revision logs, not as silence.</p>
+
+<p><b>Step 3 — verify the socket, not the container:</b></p>
+
+<p></code>`<code>bash</p>
+<p>curl -s -o /dev/null -w &quot;%{http_code}\n&quot; -H &quot;Authorization: Bearer $(gcloud auth print-identity-token)&quot;   https://$(gcloud run services describe alarm-events --region us-central1 --project danceannex-skedda --format=&#x27;value(status.url)&#x27; | sed &#x27;s|https://||&#x27;)/healthz</p>
+<p></code>`<code></p>
+
+<p>200 = listening; 503 = socket down (the initial login retries with backoff — give it</p>
+<p>up to ~5 minutes before digging). Then arm/disarm one studio from a keypad and confirm</p>
+<p>the event lands with a name via the </code>studio_activity<code> MCP tool or </code>GET /door-history<code></p>
+<p>on alarm-mcp.</p>
+
+<p><b>Step 4 — hand back to the agent:</b> fbs-monitor wiring (alarms tab joins names from</p>
+<p></code>/door-history<code>; </code>/arm-history<code> stays as backstop) is agent work, ~1h, after step 3</p>
+<p>proves a named keypad event.</p>
+
+<h2>Constraints that are already ruled — do not re-open</h2>
+
+<ul>
+<li>- <b>No browser, and no </code>selectSystem<code>.</b> The Aug-18 &quot;history is locked to one system&quot;</li>
+</ul>
+<p>finding stands, but it only ever applied to the </code>activity/historyEvents<code> REST API;</p>
+<p>the websocket takes no unit parameter. Junyan ruled the capture goes through the MCP</p>
+<p>path, and it did.</p>
+<ul>
+<li>- <b>Arming is not leaving.</b> Anneka armed 509A at 19:30:37 and opened the door at</li>
+</ul>
+<p>19:30:49 — the exit door event is the departure time, not the arm. Anything computing</p>
+<p>occupancy from this feed inherits that correction.</p>
+<ul>
+<li>- <b>Never bill off a socket.</b> No replay means a gap is invisible from inside; </code>covered<code></li>
+</ul>
+<p>must be checked before any overtime is computed, and an uncovered window goes to a</p>
+<p>Review row, never to a charge.</p>
+
+<h2>Why it is its own ticket</h2>
+
+<p>Creating an always-on Cloud Run service is a production flip with a standing cost, and</p>
+<p>Junyan confirms those. It is also the only step between a relay that works and four</p>
+<p>consumers still reading blanks: the Alarms tab, the Doorman&#x27;s suspended Job C retirement</p>
+<p>sweep (its 30-day presence evidence has no source), the Timekeeper&#x27;s identity</p>
+<p>ambiguities, and Junyan&#x27;s departure rule.</p>
+
+<h2>Seam</h2>
+
+<p>The night-ops rebuild map owns the evidence-source design and already logs this build;</p>
+<p>this ticket owns only the deploy and the fbs-monitor wiring. Do not re-specify the</p>
+<p>Ops Lead&#x27;s use of it here.</p>
+
+
+<h2>Inherited 2026-09-07 from the close of <b>021</b> — the 3-day evidence horizon</h2>
+
+<p>021 was closed as superseded (no panel-snapshot store is needed). One finding does not close with</p>
+<p>it, and lands here because this ticket owns the named-event feed:</p>
+
+<p><b>Every named source expires at ~3 days, and the hole-free one covers one studio.</b> </code>door_events.py<code></p>
+<p>retains 72 hours. </code>panel_history.py<code> is a clean REST record but is <b>Studio 901 only</b> — the API is</p>
+<p>locked to unitId 110267422 and every documented switch endpoint 404s or 500s (verified twice,</p>
+<p>2026-08-18 and 2026-09-04). So Studios other than 901 have <b>no hole-free arm/disarm record beyond</p>
+<p>72 hours</b>.</p>
+
+<p>The cost is already on the record: Janet Zamora&#x27;s 901 booking ran 19:30–22:30 on 2026-08-31 and the</p>
+<p>panel armed at 22:52. The Timekeeper correctly refused to charge and filed a Review row reading</p>
+<p>&quot;Named studio_activity read for Studio 901, 2026-08-31 22:30–23:00&quot;. By the time a human reached it</p>
+<p>the window had aged out. That one was rescued by hand from the Alarm.com portal, and only because</p>
+<p>it was 901.</p>
+
+<p><b>The open question, not yet ruled:</b> does a Review row&#x27;s evidence need to outlive the source that</p>
+<p>would answer it — i.e. does the relay&#x27;s frame get folded into something durable at capture time, the</p>
+<p>way </code>last_seen.py<code> folds presence? </code>last_seen.py<code> deliberately keeps only the most recent sighting</p>
+<p>per person, so it does not answer a &quot;what happened in this window&quot; question. Do not build against</p>
+<p>this note; it is a flag, not a spec.</p>
+
+<h2>2026-09-09 — NOT deployed on Cloud Run, on purpose; the listener&#x27;s home changed under this ticket</h2>
+
+<p>Checked before deploying. Since this ticket was written, Junyan&#x27;s branch </code>codex/hostinger-ledger<code> (commits 58f4617 → 7372215, 2026-09-08) moved the alarm ledger off GCS onto a shared VPS ledger API with fail-closed generation checks, and its </code>deploy.sh<code> now deploys </code>alarm-events<code> with <b></code>ALARM_EVENTS_DISABLED=true<code></b> during the migration — &quot;Support shared-ledger cutover and disable the old listener together&quot;. </code>hosting/README-vps.md<code> on that branch says the cutover must &quot;keep one websocket listener and one schedule executor&quot;, and the migration is already in motion: the live Cloud Run </code>alarm-mcp<code> runs image </code>hostinger-36b88d9<code> from that branch and carries </code>LEDGER_API_URL<code> + </code>LEDGER_API_TOKEN<code>.</p>
+
+<p>Creating the </code>alarm-events<code> singleton on Cloud Run now would put a second websocket writer beside whatever listener the VPS migration stands up — exactly the race the three scaling flags exist to prevent. So the step-1 create command in this ticket is <b>void until Junyan says where the one listener lives</b> (Cloud Run with the ledger API, or a container on the VPS beside event-gate).</p>
+
+<p><b>Decision for Junyan:</b> which host owns the single alarm websocket listener after the ledger cutover? Then this ticket&#x27;s step 2 (healthz) and step 4 (fbs-monitor reads </code>/door-history<code>) apply to that host. The four blind consumers (Alarms tab, Doorman Job C, Timekeeper identity, departure rule) stay blind until then.</p>
+
+<h2>CLOSED 2026-09-11 — done, on Hostinger, not Cloud Run; the 09-09 &quot;decision for Junyan&quot; was already answered</h2>
+
+<p>Read the state before acting. The listener&#x27;s host question posed on 2026-09-09 was settled the day before</p>
+<p>it was asked: Codex&#x27;s cloud-to-hostinger migration (2026-09-08, </code>Agent Fleet/work/cloud-to-hostinger/phase-progress.json<code>)</p>
+<p>records *&quot;Alarm MCP and singleton alarm-events now run on Hostinger with all four verified production</p>
+<p>ledgers in SQLite shared API&quot;<i> and </i>&quot;Google alarm listener disabled&quot;*. Verified live today:</p>
+
+<ul>
+<li>- <b>Cloud Run:</b> </code>alarm-events<code> does not exist (</code>gcloud run services describe<code> → not found). </code>alarm-mcp<code></li>
+</ul>
+<p>stays up for external clients on </code>alarm:hostinger-36b88d9<code> with </code>LEDGER_API_URL=https://ledger-api.srv1948070.hstgr.cloud<code></p>
+<p>and </code>LEDGER_API_TOKEN<code> bound — one ledger, one writer.</p>
+<ul>
+<li>- <b>The socket is live and named.</b> </code>last_seen<code> reads </code>covers_since 2026-08-24<code>, </code>gaps: []<code>, and</li>
+</ul>
+<p></code>Jia Chian Lee · contact 249008967 · armed_away 509B · 2026-09-10 22:28Z<code> — a keypad arm with name</p>
+<p>and stable contact id (step 3&#x27;s proof). </code>studio_activity<code> shows the ledger accumulating since the</p>
+<p>09-08 cutover with only the known ~10s/5.5min server-side flaps.</p>
+<ul>
+<li>- <b>fbs-monitor already consumes it</b> (step 4). </code>build.py<code> derives </code>/door-history<code> from </code>ALARM_HISTORY_URL<code></li>
+</ul>
+<p>(repointed to Hostinger 09-08; rebuild 34278240319 green, &quot;no history fallback warnings&quot;). Today&#x27;s</p>
+<p></code>index.html<code> has </code>armFeed: panel ok · doors ok<code>, and its arm events carry </code>&quot;source&quot;: &quot;doors&quot;<code> with names</p>
+<p>(51 name fields, 0 empty). </code>/arm-history<code> remains the polling backstop, as ruled.</p>
+<ul>
+<li>- <b>Paper trail corrected</b> (step 5): the Plumbing Map&#x27;s 2026-08-20 18:55Z entry now carries a</li>
+</ul>
+<p>superseded note pointing at the websocket path. fbs-monitor&#x27;s template has no stale browser note.</p>
+
+<p>The three scaling flags were never a Cloud Run question; they were a &quot;one socket&quot; rule, and the VPS</p>
+<p>singleton satisfies it. The </code>codex/hostinger-ledger<code> branch (5 commits ahead of </code>main<code>, unmerged) still</p>
+<p>holds the deploy script that disables the Cloud Run listener; merging it is housekeeping, not this ticket.</p>
+
+<p><b>Not closed with this ticket — moved to the map&#x27;s fog:</b> the 3-day evidence horizon inherited from 021.</p>
+<p></code>door_events.py<code> keeps 72h, </code>panel_history.py` is Studio 901 only, so a Review row can outlive its</p>
+<p>evidence for every other studio (the Janet Zamora case). The night-ops rebuild map owns the</p>
+<p>evidence-source design; this map keeps the flag.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#136</span><span class="emoji">🙏</span><span class="done-title">Built and live: the good-to-go robot drafts the thank-you text when a booking ends</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE Sep 11, live since 10:50am Toronto. Every 5 minutes it looks for bookings that just ended, had an access text, and have no thank-you yet, then drafts one and holds it for Junyan</li><li>Its first passes ran clean: nothing new to draft yet (yesterday&#x27;s thank-yous were already there), no errors</li><li>Same hour: the Responder&#x27;s thank-you job was deleted from its instructions, the one-day expiry rule is gone, and the Timekeeper no longer rewrites the overtime version</li><li>Junyan&#x27;s morning read now lists any finished booking that should have a draft and does not. The first real draft from the new robot is what to look for tomorrow</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move PBF queueing onto the GTG sweep — queued at booking end, held, no HTA means no PBF</b></p><h2>Task</h2>
 
 <p>Execute the <b>052</b> ruling. Code lives in</p>
@@ -16940,5 +16978,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 11:44 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 11:57 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
