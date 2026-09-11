@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 13:17 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 13:27 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,97 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">18</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">19</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">106</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">107</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
-
-<p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
-
-<p>Stand up the <b>Jobs registry</b> in the owned store: a structured file set (or equivalent) where each desk job (J01–J29, T1 excluded) is a first-class entity with — at minimum — job id, name, one accountable owner, executing persona/runtime (relation), SOP link, cadence, scoreability, scorecard line (J17 placeholder), and cost line (J26 placeholder). Re-point persona pages to <i>reference</i> their job bundle rather than describe jobs inline, fixing the persona-vs-job conflation. Seed rows from the Job Board artifact. Confirm the schema with Junyan before creating (batched review, per his style); building is in-scope for this ticket.</p>
-
-<p><b>J29 banked 2026-07-15 (session 2): Watchlist freshness</b> — &quot;the fast-track gate always reflects</p>
-<p>who is verifiably booked in the space right now.&quot; Motivated by the emergency lane going live</p>
-<p>(ticket 011): the Watchlist DB gates Path B and must stay fresh intraday (last-minute bookings).</p>
-<p>Two lanes: (a) scheduled rebuild from the 5 calendars ∪ FBS board; (b) <b>append-at-source</b> —</p>
-<p>whichever actor fast-tracks a same-day booking appends the row in the same action. End-state:</p>
-<p>deterministic script writing <code>desk-store/watchlist/YYYY-MM-DD.json</code> (canon) + syncing the Notion</p>
-<p>DB (the Zap&#x27;s projection). <b>Owner persona DELIBERATELY UNASSIGNED</b> — Junyan: the Concierge is</p>
-<p>too bloated to inherit it by default; the runtime assignment waits on the job-distribution view</p>
-<p>(session-2 artifact) so the call is made against the whole load picture. (Note: ruling 4&#x27;s &quot;no</p>
-<p>J29&quot; meant no standing <i>SkillOpt</i> job — the number was never assigned; no conflict.)</p>
-
-<p><b>Renderer-job scope note 2026-07-16 (Junyan-approved):</b> register the <b>published-board renderer as ONE job, not one per board</b> — outputs: the watchlist build, the tabbed Day Sheet + desk-state snapshot (ticket 019), the Ops-lead FBS board (ticket 020), and the night-watch page including the absorbed Opener &quot;Waiting on You&quot; digest (007 ruling). One shared cadence (15-min GitHub Action), one failure mode, one cost line — that&#x27;s the granularity the registry scores and bills at. <b>ID collision to settle at schema review:</b> J29 above is banked as <i>Watchlist freshness</i>, which is broader than rendering (its append-at-source lane is a write-path rule, not a render). Either <b>broaden J29</b> to &quot;published boards &amp; watchlist freshness&quot; (the rendering lane absorbs the boards; append-at-source stays a distinct rule inside it) or <b>mint J30</b> for the renderer and keep J29 pure — Junyan picks at the batched schema review. Also at that review: <b>name the renderer job&#x27;s accountable owner</b> (the Ops lead <i>processes</i> the Waiting-on-You queue on the morning shift, but owning &quot;boards render correctly and on time&quot; is a separate hat — and J29&#x27;s persona is deliberately unassigned pending the job-distribution view), and settle a <b>convention for minting new job IDs</b> — the desk is still evolving past J28.</p>
-
-<h2>Handoff verification — REQUIRED schema, added 2026-08-05 (Junyan)</h2>
-
-<p>The registry must answer <i>&quot;is this job&#x27;s owner actually doing it?&quot;</i>, not just <i>&quot;who owns it?&quot;</i>. Ruled</p>
-<p>into this ticket rather than a separate effort — the registry is where it belongs, because the field</p>
-<p>is the fix.</p>
-
-<p><b>Why it&#x27;s mandatory rather than nice-to-have.</b> This map has now found the same failure three</p>
-<p>times: the Vicky lockout (detection fired, nothing re-checked before she arrived), the dead</p>
-<p>invariants checker (v2 written, never swapped in, stale page read as health for 5 days), and the PBF</p>
-<p>sweep (<b>050</b> — the job moved owner on 07-31 and stopped</p>
-<p>being done the same day, for 5 days). <b>The third is the one that proves the gap</b>, because</p>
-<p>everything upstream of it was done correctly: the handoff was deliberate, the owner was named per</p>
-<p>035&#x27;s standing lesson, the new owner&#x27;s procedure was sound, and it carried <i>two</i> written tripwires —</p>
-<p>JOB 1 Step 5&#x27;s &quot;still Unsent the next day means the sweep is broken&quot; and the Responder&#x27;s own pass</p>
-<p>ledger. <b>Neither was read.</b> The signal existed and had no listener — the same disease as the</p>
-<p>checker&#x27;s stale page, one level up.</p>
-
-<p>So the missing thing is not naming and not detection. It is that <b>a handoff has no acceptance</p>
-<p>test</b>: no point in the process forces the question &quot;is the new owner producing what the old owner</p>
-<p>produced?&quot;. Three fixes were weighed (a written handoff checklist; one invariant per handoff; a</p>
-<p>registry field). Junyan chose the registry — the checklist is one more rule needing a reader, which</p>
-<p>is precisely what failed here, and a check per handoff grows the roster without bound.</p>
-
-<p><b>Add to every job&#x27;s schema:</b></p>
-
-<ul>
-<li>- <b><code>produces</code></b> — the job&#x27;s observable output, stated so a machine can look for it: a named</li>
-</ul>
-<p>artifact, a DB row class, a queue row, a report line. A job whose output cannot be named this way</p>
-<p>is a schema smell worth raising at the review, not a field to leave blank.</p>
-<ul>
-<li>- <b><code>last_verified_producing</code></b> — timestamp of the last confirmed sighting of that output.</li>
-<li>- <b><code>verify_within</code></b> — how long the job may go without producing before that silence is a defect.</li>
-</ul>
-<p>Per-job, because cadences differ wildly (a 30-min sweep and a 10th/25th Accountant run are not</p>
-<p>the same silence).</p>
-<ul>
-<li>- <b><code>owner_since</code></b> — when the current owner took it. Makes a handoff a dated event the registry can</li>
-</ul>
-<p>reason about, rather than a fact with no history.</p>
-
-<p><b>The check that makes the fields real</b> (otherwise this is just more unread prose): a job whose</p>
-<p><code>last_verified_producing</code> is older than its <code>verify_within</code> is a <b>defect</b>, escalating like any</p>
-<p>other. It joins the invariant roster through <b>046</b>&#x27;s probation lane</p>
-<p>like everything else — provisional first, human-marked real-or-noise, graduating on 5 clean days.</p>
-
-<p><b>Sharper rule at a handoff:</b> when <code>owner_since</code> changes, <code>verify_within</code> is halved for the first</p>
-<p>two cycles. The PBF leak began on the <i>first day</i> under the new owner — that is exactly when a job</p>
-<p>is least proven and most deserves a short leash.</p>
-
-<p><b>Junyan&#x27;s framing (2026-08-05): build it quickly, don&#x27;t gold-plate it.</b> Four fields and one</p>
-<p>check. Do not let this grow into a handoff-workflow subsystem.</p>
-
-<p><b>J31 minted provisionally 2026-07-21 — Claimed-shift mirror.</b> Junyan asked for near-real-time</p>
-<p>reflection of Open Shifts claims on Staff Scheduling, connected to a ticker as an operating-library</p>
-<p>job. Built as <code>library/job-31-claimed-shift-mirror.md</code> (git canon) + Notion projection</p>
-<p>(3a475032-81c4-813c-8ff8-f11f423d562a), wired as hourly step 6 on The Concierge. ID chosen to</p>
-<p>sidestep the J30 renderer contest; confirm/renumber at the batched schema review. New capability</p>
-<p>to bind at that review: <b>calendar write (Staff Scheduling)</b> — currently documented in the job</p>
-<p>page only, not in CAPABILITIES; harnesses without it skip (Planner 19:30 backstops).</p>
-
-<h2>Absorbed 2026-09-08 — <b>005-cost-ledger</b></h2>
-
-<p><b>J26 cost line (from 005):</b> each registry row carries a cost line — runs × pass length as the token proxy, plus a self-reported supervision-minutes line — tallied weekly by one scheduled job that writes back to the registry. Crude and real beats precise and absent. This also feeds the sibling map&#x27;s GO criterion (c).</p>
-</div></details></details></div><div class="job"><div class="jnum">#053</div><div class="jhead"><span class="emoji">🔁</span><h4>Build the new way tickets get done — the robot suggests, Junyan says yes or fixes it</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Replan 2026-09-08: three lists, sorted by who finishes the job — robots finish the Next Action list, Junyan finishes the Actions to Perform list, messages live on the Message Queue</li><li>A job type only goes on the robot list after Junyan has ruled it safe (already written in the Action Classes table); a robot job that sits past its deadline moves to Junyan&#x27;s list with a note</li><li>Junyan&#x27;s list was 60% alarms (33 of 55 open) burying the 6 real decisions — each alarm writer now keeps ONE rolling row; ticket 120 catches floods</li><li>Close path: keep the hourly suggester off, land tickets 120–123, add deadlines + the escalate path, then measure 7 quiet days on both lists</li><li>Each suggestion comes with the proof behind it, so Junyan can decide without digging</li><li>Two moves only: say yes, or rewrite the step to what it should have been, then mark it Ready</li><li>The robot only does steps marked Ready — never one Junyan hasn&#x27;t seen</li><li>After doing it, the robot looks again at the real booking or calendar to check it truly happened</li><li>If Junyan already did the job himself, the robot spots it and ticks it off — no double work</li><li>Steps the robot gets right over and over become automatic; one rewrite and it goes back to asking</li><li>Trying it first on booking changes, the busiest and messiest kind</li><li>IN PROGRESS: the two new lists exist in Notion and the rulebook page is written</li><li>Checked what Skedda&#x27;s robot arm can really do: move, create, cancel and approve bookings — but not change a price</li><li>Junyan ruled: the old to-do board gets finished off first, then retired — no copying rows over</li><li>Junyan ruled: instant bookings and moves run on their own, and he gets a text each time one happens</li><li>BUILT Aug 6: the little sweep that runs every 10 minutes — it checks the real booking for every open step and ticks off whatever already happened</li><li>It cannot touch bookings itself, on purpose: one robot does the work, a different one checks it. A checker that can also change things isn&#x27;t a checker</li><li>Safety rule built in first: if it can&#x27;t reach the booking system, it says &#x27;couldn&#x27;t check&#x27; — it never reads silence as &#x27;the booking is gone&#x27;</li><li>Aug 15 — checked what was actually live: the little 10-minute sweep has been running since Aug 7 and works fine</li><li>But every single one of the 15 steps on the new list was written by a human. The robot had never suggested anything, not once</li><li>The thinking half simply had no robot to run it. The Concierge was supposed to be it, and the Concierge never gets that far — it runs out of time every pass</li><li>BUILT Aug 15: a new small robot, The Loop, that runs every hour and does the two missing parts — suggest the next step, and do the ones marked Ready</li><li>SWITCHED ON Aug 15, first run 8:35am. The one step in the way turned out to be already done — Junyan sent David Diep that text himself back on Aug 7, word for word, at 9:42 at night</li><li>Which found the next problem: the list had no way of ever noticing. It can check a booking for itself, but not a text message — so a step that was finished in five minutes sat looking unfinished for eight days</li><li>Three rules sit above everything in its instructions: only do steps marked Ready, never touch money, and never tick its own work off as done</li><li>Day one, four runs: it wrote its first two suggestions on its own. That was the thing to watch for, and it happened</li><li>It did nothing else, four runs in a row — because nobody has said yes to anything yet. The queue of approved work was empty every time</li><li>And it lost one. It spotted a 15-minute gap in Studio 527 at 8:39am, wrote a careful suggestion, checked again at 9:36 — and the gap came and went at 10:30 with nobody having read it</li><li>Nothing went wrong, which is the point. It refused to act without a yes, refused to nag, refused to tick off its own work. All three rules held and the job was still missed</li><li>What&#x27;s missing: a suggestion with a deadline needs to tap someone on the shoulder, not sit in a list waiting to be found</li><li>It also caught a ticket about to nag a customer to move a booking he had already moved four days ago — and noticed it has no alarm clock watching itself, which is the very problem it was built to fix</li><li>Two suggestions are sitting there now waiting on Junyan — and until one gets a yes or a rewrite, the robot cannot start learning what good looks like</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Next Action queue + the advancement loop — pilot on Booking Changes</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">3</span></h3><div class="job"><div class="jnum">#053</div><div class="jhead"><span class="emoji">🔁</span><h4>Build the new way tickets get done — the robot suggests, Junyan says yes or fixes it</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Replan 2026-09-08: three lists, sorted by who finishes the job — robots finish the Next Action list, Junyan finishes the Actions to Perform list, messages live on the Message Queue</li><li>A job type only goes on the robot list after Junyan has ruled it safe (already written in the Action Classes table); a robot job that sits past its deadline moves to Junyan&#x27;s list with a note</li><li>Junyan&#x27;s list was 60% alarms (33 of 55 open) burying the 6 real decisions — each alarm writer now keeps ONE rolling row; ticket 120 catches floods</li><li>Close path: keep the hourly suggester off, land tickets 120–123, add deadlines + the escalate path, then measure 7 quiet days on both lists</li><li>Each suggestion comes with the proof behind it, so Junyan can decide without digging</li><li>Two moves only: say yes, or rewrite the step to what it should have been, then mark it Ready</li><li>The robot only does steps marked Ready — never one Junyan hasn&#x27;t seen</li><li>After doing it, the robot looks again at the real booking or calendar to check it truly happened</li><li>If Junyan already did the job himself, the robot spots it and ticks it off — no double work</li><li>Steps the robot gets right over and over become automatic; one rewrite and it goes back to asking</li><li>Trying it first on booking changes, the busiest and messiest kind</li><li>IN PROGRESS: the two new lists exist in Notion and the rulebook page is written</li><li>Checked what Skedda&#x27;s robot arm can really do: move, create, cancel and approve bookings — but not change a price</li><li>Junyan ruled: the old to-do board gets finished off first, then retired — no copying rows over</li><li>Junyan ruled: instant bookings and moves run on their own, and he gets a text each time one happens</li><li>BUILT Aug 6: the little sweep that runs every 10 minutes — it checks the real booking for every open step and ticks off whatever already happened</li><li>It cannot touch bookings itself, on purpose: one robot does the work, a different one checks it. A checker that can also change things isn&#x27;t a checker</li><li>Safety rule built in first: if it can&#x27;t reach the booking system, it says &#x27;couldn&#x27;t check&#x27; — it never reads silence as &#x27;the booking is gone&#x27;</li><li>Aug 15 — checked what was actually live: the little 10-minute sweep has been running since Aug 7 and works fine</li><li>But every single one of the 15 steps on the new list was written by a human. The robot had never suggested anything, not once</li><li>The thinking half simply had no robot to run it. The Concierge was supposed to be it, and the Concierge never gets that far — it runs out of time every pass</li><li>BUILT Aug 15: a new small robot, The Loop, that runs every hour and does the two missing parts — suggest the next step, and do the ones marked Ready</li><li>SWITCHED ON Aug 15, first run 8:35am. The one step in the way turned out to be already done — Junyan sent David Diep that text himself back on Aug 7, word for word, at 9:42 at night</li><li>Which found the next problem: the list had no way of ever noticing. It can check a booking for itself, but not a text message — so a step that was finished in five minutes sat looking unfinished for eight days</li><li>Three rules sit above everything in its instructions: only do steps marked Ready, never touch money, and never tick its own work off as done</li><li>Day one, four runs: it wrote its first two suggestions on its own. That was the thing to watch for, and it happened</li><li>It did nothing else, four runs in a row — because nobody has said yes to anything yet. The queue of approved work was empty every time</li><li>And it lost one. It spotted a 15-minute gap in Studio 527 at 8:39am, wrote a careful suggestion, checked again at 9:36 — and the gap came and went at 10:30 with nobody having read it</li><li>Nothing went wrong, which is the point. It refused to act without a yes, refused to nag, refused to tick off its own work. All three rules held and the job was still missed</li><li>What&#x27;s missing: a suggestion with a deadline needs to tap someone on the shoulder, not sit in a list waiting to be found</li><li>It also caught a ticket about to nag a customer to move a booking he had already moved four days ago — and noticed it has no alarm clock watching itself, which is the very problem it was built to fix</li><li>Two suggestions are sitting there now waiting on Junyan — and until one gets a yes or a rewrite, the robot cannot start learning what good looks like</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Next Action queue + the advancement loop — pilot on Booking Changes</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>, which dissolved J01 and ruled that ticket</p>
 <p>advancement is a <b>loop</b>, not a job. This ticket builds it and runs the pilot. It is the head of</p>
@@ -965,7 +882,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Plumbing Map entry.</li>
 </ul>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">18</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">19</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
 <p>Junyan&#x27;s Main Focus window today):</p>
@@ -2426,6 +2343,24 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- The invariant fires on a deliberately un-stamped block.</li>
 <li>- Plumbing Map entry for the retry path and the invariant.</li>
 </ul>
+</div></details></details></div><div class="job"><div class="jnum">#138</div><div class="jhead"><span class="emoji">🗂️</span><h4>Registry schema review — rule on the eight questions the Jobs registry surfaced</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Registry schema review — rule on the eight questions the Jobs registry surfaced</b></p><h2>Question</h2>
+
+<p><b>001</b> built the Jobs registry (<code>registry/jobs.json</code> on <code>junyanboon/desk-correspondence</code>, branch <code>claude/001-jobs-registry</code>, PR open) and ran its check once. Seeding 62 rows with one owner each exposed structural facts that only Junyan can rule on. One batched review, his style. Each answer is a one-line edit to the registry; none needs new code.</p>
+
+<ol>
+<li>1. <b>The Loop&#x27;s agent half is unowned.</b> PROPOSE / EXECUTE (the hourly <code>:35</code> Hermes cron) is paused since 2026-09-08 with &quot;canon/prompt mismatch; queue not read&quot;; no report for three days; the Custodian flags it every night; <b>053</b> is still open. Who owns proposing and executing Next Action rows now — a repaired Loop, the Concierge, or nobody (and then the board is human-only until 053 resumes)?</li>
+<li>2. <b>Two runtimes on one job, three times.</b> Timekeeper: Hermes cron 04:00 and the <code>overtime-sweep</code> timer 04:10 both fired today. Bookkeeper: Hermes 06:00 and <code>bookkeeper-sweep</code> 06:00 both fired. Doorman arm-check: Hermes 04:00 and <code>doorman-armcheck</code> 04:00. One owner each; which one, and does the other get paused or deleted?</li>
+<li>3. <b>A dead second runtime.</b> Hermes cron <code>The Analyst</code> (<code>9f3b8b431c78</code>) last ran 2026-09-07 and is still enabled while <code>analyst-sweep</code> writes the Issues Report daily. Pause it, or delete it?</li>
+<li>4. <b>Twelve code lanes have no heartbeat</b>, so the only evidence they produce is &quot;the timer fired&quot;: gtg, move, extension, holds, credit, wrongroom, desk-invariants, event-gate-poll, feedback-drain, dupe-report, overnight-verifier, skedda-refresh. A Run Monitor row plus a <code>Self-heartbeat</code> stamp each (the 086 pattern) is the fix. Do all twelve get one, or only the ones that touch a renter (gtg, move, extension, event-gate-poll)?</li>
+<li>5. <b>The Host fires but does not produce.</b> Its report says &quot;itinerary ABSENT&quot; on 09-10 and 09-11; PR #49 (template creation) is merged and not deployed. Deploy it, and should the Host row&#x27;s evidence become the itinerary page itself rather than the report?</li>
+<li>6. <b><code>fast-track</code> still runs every pass</b> although J02 was dissolved on 2026-07-15 and <b>092</b> retired the who&#x27;s-in-today list. Does the job still exist? If not, the Concierge&#x27;s step 2 and the ledger line go.</li>
+<li>7. <b><code>watchlist-refresh</code> carries three jobs</b> (J29 watchlist, J28 ledger pulls, the canon mirror) on one GitHub Action with one cadence and one failure mode. The 2026-07-16 renderer rule says one job; the Job Board says two. One row or three?</li>
+<li>8. <b>Minting rule and J29/J30.</b> Proposed: stop minting J-numbers; a new job is keyed by its ledger key or lane name and <code>board_id</code> keeps the Job Board number (the two numberings already collide: Board J01 is canon JOB 2). J32/J33 stay as ledger keys; J31 is retired. J29 stays &quot;watchlist freshness&quot; unless Junyan broadens it to the renderer job.</li>
+</ol>
+
+<p>Also to confirm, both registry decisions taken without a ruling: the handoff leash is the longer of two cycles and <b>two days</b> (two cycles of a 30-minute lane is one hour); and <code>fleet</code> evidence is never judged tighter than 30 minutes (the collector runs every 15).</p>
+
+<p><b>Resolves with:</b> eight lines of rulings applied to <code>registry/jobs.json</code> in the same session, and the check re-run.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">7</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -3094,6 +3029,129 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>continue from T0 in <code>assets/121-grokbot/GROKBOT-BRIEF.md</code> (the asset folder keeps the</p>
 <p>old ticket number 121; this ticket was renumbered 130 in the 2026-09-06 map trim). To</p>
 <p>retire: delete the Bot in Grok Bot; no other surface holds state.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#001</span><span class="emoji">📋</span><span class="done-title">Make one master list of every robot job — and check the owners actually do them</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>BUILT 2026-09-11 — the registry exists, and the check that asks &quot;is the owner still doing it?&quot; ran once and found two silent jobs</h2>
+
+<p>Junyan&#x27;s prompt for this session: <i>&quot;there are agents dropping tasks I believe and we need to make sure that everyone is doing their job.&quot;</i> That is exactly the 2026-08-05 handoff-verification ruling below, so the build went straight at it.</p>
+
+<p><b>What shipped</b> (<a href="https://github.com/junyanboon/desk-correspondence/pull/116" target="_blank" rel="noopener">PR #116</a> on <code>junyanboon/desk-correspondence</code>, branch <code>claude/001-jobs-registry</code>, <b>not merged</b> — repo rule 1):</p>
+
+<ul>
+<li>- <code>registry/jobs.json</code> — canon, git only, no Notion projection (so the canon completeness check is untouched). <b>62 rows</b>: every live desk job and code lane, each with one accountable owner, <code>owner_since</code>, <code>produces</code>, <code>verify_within_min</code>, a Toronto window, a J26 cost line (runs/day × pass minutes; supervision minutes empty), the Job Board number as <code>board_id</code>, and the <b>evidence</b> the check reads: <code>ledger</code> (a <code>LEDGER-V1 job=&lt;key&gt; state=ran</code> line in the owner run&#x27;s newest report), <code>report</code> (a titled Workflow Report), <code>heartbeat</code> (the Run Monitor row), <code>repo_file</code> (a poller commit), <code>fleet</code> (the Fleet Registry&#x27;s last fire — fired-only, flagged as a smell), or <code>none</code>.</li>
+<li>- <code>scripts/jobs_registry.py</code> — <code>validate</code>, <code>render</code> (→ <code>registry/jobs.md</code>), <code>check</code>. The one check: a live job whose last verified <b>output</b> is older than its <code>verify_within_min</code> is STALE. Halved for the first two cycles <b>or two days</b> after <code>owner_since</code> changes (two cycles of a 30-min lane is one hour, which protects nothing; the PBF leak began on day one — registry decision, confirm at the review). Off-hours silence is not a defect unless a whole window was missed. A live job with no observable output is UNVERIFIABLE. Writes nothing to Notion, pages nobody. 10 offline tests.</li>
+<li>- <code>registry/README.md</code> — schema, evidence types, the proposed <b>ID minting rule</b> (stop minting J-numbers; key on the ledger key or lane name; <code>board_id</code> keeps the Job Board number — the two numberings collide, Board J01 = canon JOB 2), and the eight open questions.</li>
+<li>- <b>Desk Watch section J</b> (the Mac task, from 2026-09-12): runs the check every morning, reports STALE and UNVERIFIABLE rows in plain words, and names a job silent two mornings running as <code>REGISTRY: &lt;job&gt; silent N days</code>. That is the listener the ruling asked for; when 046&#x27;s probation lane exists, STALE moves there.</li>
+</ul>
+
+<p><b>First live run, 2026-09-11 13:23 Toronto — 51 OK · 2 STALE · 1 UNVERIFIABLE · 8 not live:</b></p>
+
+<p>| Job | Owner | Finding |</p>
+<p>|---|---|---|</p>
+<p>| <code>deadline-worklist</code> | The Concierge | partial on the 12:10 pass; last full run 10:10 (halved leash: new job since 09-10) |</p>
+<p>| <code>job-7-self-heal</code> | The Concierge | no full HEAVY-PM run found since 09-09; 09-10 was <code>partial since=1</code> |</p>
+<p>| <code>desk-watch</code> | Mac task | no observable output inside canon |</p>
+
+<p><b>What the seeding itself surfaced</b> (the registry&#x27;s open questions, carried by <b>138</b>):</p>
+
+<ol>
+<li>1. <b>The Loop&#x27;s agent half (PROPOSE / EXECUTE) has had no owner since 2026-09-08</b> — Run Monitor Paused, no report for three days, the Custodian flags it nightly. A dropped job, not a stale one.</li>
+<li>2. <b>Two runtimes on one job</b>: Timekeeper (Hermes 04:00 + <code>overtime-sweep</code> 04:10), Bookkeeper (Hermes 06:00 + <code>bookkeeper-sweep</code> 06:00), Doorman arm-check (Hermes + <code>doorman-armcheck</code>). Both fired today in each case.</li>
+<li>3. <b>A dead second runtime</b>: Hermes cron <code>The Analyst</code> last ran 2026-09-07, still enabled, while <code>analyst-sweep</code> produces the report.</li>
+<li>4. <b>Twelve code lanes have no heartbeat</b> (<code>fleet</code> evidence only): gtg, move, extension, holds, credit, wrongroom, desk-invariants, event-gate-poll, feedback-drain, dupe-report, overnight-verifier, skedda-refresh.</li>
+<li>5. <b>The Host fires and files a report but not the itinerary</b> (&quot;itinerary ABSENT&quot; 09-10 and 09-11; PR #49 merged, not deployed) — the report evidence passes while the real output is missing. The check cannot see this yet; the row&#x27;s note says so.</li>
+<li>6. <code>fast-track</code> is still ledgered every pass although J02 was dissolved (07-15) and 092 retired the who&#x27;s-in-today list (09-11).</li>
+<li>7. <code>watchlist-refresh</code> carries three jobs on one Action (J29, J28 pulls, canon mirror).</li>
+<li>8. The minting rule, and J29 vs the renderer job.</li>
+</ol>
+
+<p><b>The strongest evidence that Junyan&#x27;s worry was right</b> came from reading two days of ledgers side by side: on 2026-09-10 the Concierge&#x27;s JOB 2 lines read &quot;30 seen 30 triaged 0 deferred&quot; on pass after pass while the Mechanic counted 34 threads sitting 41 h in the inbox. The doer&#x27;s ledger said clean; the independent check said backlog. 054&#x27;s cutover fixed the owner; this registry is what makes the next such gap visible per job rather than per pass.</p>
+
+<p><b>Not built, on purpose</b> (Junyan: four fields and one check, don&#x27;t gold-plate): the weekly J26 writer, any Notion projection, any paging, the J17 score line (its landing place is the <code>score</code> field).</p>
+
+<p><b>Settled in this ticket&#x27;s body but still the review&#x27;s to confirm</b>: J29 vs J30 for the renderer; the renderer job&#x27;s accountable owner; JOB 31 / 32 / 33 provisional numbers (31 is retired since 075; 32 and 33 stay as ledger keys).</p>
+
+<h2>Question</h2>
+
+<p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
+
+<p>Stand up the <b>Jobs registry</b> in the owned store: a structured file set (or equivalent) where each desk job (J01–J29, T1 excluded) is a first-class entity with — at minimum — job id, name, one accountable owner, executing persona/runtime (relation), SOP link, cadence, scoreability, scorecard line (J17 placeholder), and cost line (J26 placeholder). Re-point persona pages to <i>reference</i> their job bundle rather than describe jobs inline, fixing the persona-vs-job conflation. Seed rows from the Job Board artifact. Confirm the schema with Junyan before creating (batched review, per his style); building is in-scope for this ticket.</p>
+
+<p><b>J29 banked 2026-07-15 (session 2): Watchlist freshness</b> — &quot;the fast-track gate always reflects</p>
+<p>who is verifiably booked in the space right now.&quot; Motivated by the emergency lane going live</p>
+<p>(ticket 011): the Watchlist DB gates Path B and must stay fresh intraday (last-minute bookings).</p>
+<p>Two lanes: (a) scheduled rebuild from the 5 calendars ∪ FBS board; (b) <b>append-at-source</b> —</p>
+<p>whichever actor fast-tracks a same-day booking appends the row in the same action. End-state:</p>
+<p>deterministic script writing <code>desk-store/watchlist/YYYY-MM-DD.json</code> (canon) + syncing the Notion</p>
+<p>DB (the Zap&#x27;s projection). <b>Owner persona DELIBERATELY UNASSIGNED</b> — Junyan: the Concierge is</p>
+<p>too bloated to inherit it by default; the runtime assignment waits on the job-distribution view</p>
+<p>(session-2 artifact) so the call is made against the whole load picture. (Note: ruling 4&#x27;s &quot;no</p>
+<p>J29&quot; meant no standing <i>SkillOpt</i> job — the number was never assigned; no conflict.)</p>
+
+<p><b>Renderer-job scope note 2026-07-16 (Junyan-approved):</b> register the <b>published-board renderer as ONE job, not one per board</b> — outputs: the watchlist build, the tabbed Day Sheet + desk-state snapshot (ticket 019), the Ops-lead FBS board (ticket 020), and the night-watch page including the absorbed Opener &quot;Waiting on You&quot; digest (007 ruling). One shared cadence (15-min GitHub Action), one failure mode, one cost line — that&#x27;s the granularity the registry scores and bills at. <b>ID collision to settle at schema review:</b> J29 above is banked as <i>Watchlist freshness</i>, which is broader than rendering (its append-at-source lane is a write-path rule, not a render). Either <b>broaden J29</b> to &quot;published boards &amp; watchlist freshness&quot; (the rendering lane absorbs the boards; append-at-source stays a distinct rule inside it) or <b>mint J30</b> for the renderer and keep J29 pure — Junyan picks at the batched schema review. Also at that review: <b>name the renderer job&#x27;s accountable owner</b> (the Ops lead <i>processes</i> the Waiting-on-You queue on the morning shift, but owning &quot;boards render correctly and on time&quot; is a separate hat — and J29&#x27;s persona is deliberately unassigned pending the job-distribution view), and settle a <b>convention for minting new job IDs</b> — the desk is still evolving past J28.</p>
+
+<h2>Handoff verification — REQUIRED schema, added 2026-08-05 (Junyan)</h2>
+
+<p>The registry must answer <i>&quot;is this job&#x27;s owner actually doing it?&quot;</i>, not just <i>&quot;who owns it?&quot;</i>. Ruled</p>
+<p>into this ticket rather than a separate effort — the registry is where it belongs, because the field</p>
+<p>is the fix.</p>
+
+<p><b>Why it&#x27;s mandatory rather than nice-to-have.</b> This map has now found the same failure three</p>
+<p>times: the Vicky lockout (detection fired, nothing re-checked before she arrived), the dead</p>
+<p>invariants checker (v2 written, never swapped in, stale page read as health for 5 days), and the PBF</p>
+<p>sweep (<b>050</b> — the job moved owner on 07-31 and stopped</p>
+<p>being done the same day, for 5 days). <b>The third is the one that proves the gap</b>, because</p>
+<p>everything upstream of it was done correctly: the handoff was deliberate, the owner was named per</p>
+<p>035&#x27;s standing lesson, the new owner&#x27;s procedure was sound, and it carried <i>two</i> written tripwires —</p>
+<p>JOB 1 Step 5&#x27;s &quot;still Unsent the next day means the sweep is broken&quot; and the Responder&#x27;s own pass</p>
+<p>ledger. <b>Neither was read.</b> The signal existed and had no listener — the same disease as the</p>
+<p>checker&#x27;s stale page, one level up.</p>
+
+<p>So the missing thing is not naming and not detection. It is that <b>a handoff has no acceptance</p>
+<p>test</b>: no point in the process forces the question &quot;is the new owner producing what the old owner</p>
+<p>produced?&quot;. Three fixes were weighed (a written handoff checklist; one invariant per handoff; a</p>
+<p>registry field). Junyan chose the registry — the checklist is one more rule needing a reader, which</p>
+<p>is precisely what failed here, and a check per handoff grows the roster without bound.</p>
+
+<p><b>Add to every job&#x27;s schema:</b></p>
+
+<ul>
+<li>- <b><code>produces</code></b> — the job&#x27;s observable output, stated so a machine can look for it: a named</li>
+</ul>
+<p>artifact, a DB row class, a queue row, a report line. A job whose output cannot be named this way</p>
+<p>is a schema smell worth raising at the review, not a field to leave blank.</p>
+<ul>
+<li>- <b><code>last_verified_producing</code></b> — timestamp of the last confirmed sighting of that output.</li>
+<li>- <b><code>verify_within</code></b> — how long the job may go without producing before that silence is a defect.</li>
+</ul>
+<p>Per-job, because cadences differ wildly (a 30-min sweep and a 10th/25th Accountant run are not</p>
+<p>the same silence).</p>
+<ul>
+<li>- <b><code>owner_since</code></b> — when the current owner took it. Makes a handoff a dated event the registry can</li>
+</ul>
+<p>reason about, rather than a fact with no history.</p>
+
+<p><b>The check that makes the fields real</b> (otherwise this is just more unread prose): a job whose</p>
+<p><code>last_verified_producing</code> is older than its <code>verify_within</code> is a <b>defect</b>, escalating like any</p>
+<p>other. It joins the invariant roster through <b>046</b>&#x27;s probation lane</p>
+<p>like everything else — provisional first, human-marked real-or-noise, graduating on 5 clean days.</p>
+
+<p><b>Sharper rule at a handoff:</b> when <code>owner_since</code> changes, <code>verify_within</code> is halved for the first</p>
+<p>two cycles. The PBF leak began on the <i>first day</i> under the new owner — that is exactly when a job</p>
+<p>is least proven and most deserves a short leash.</p>
+
+<p><b>Junyan&#x27;s framing (2026-08-05): build it quickly, don&#x27;t gold-plate it.</b> Four fields and one</p>
+<p>check. Do not let this grow into a handoff-workflow subsystem.</p>
+
+<p><b>J31 minted provisionally 2026-07-21 — Claimed-shift mirror.</b> Junyan asked for near-real-time</p>
+<p>reflection of Open Shifts claims on Staff Scheduling, connected to a ticker as an operating-library</p>
+<p>job. Built as <code>library/job-31-claimed-shift-mirror.md</code> (git canon) + Notion projection</p>
+<p>(3a475032-81c4-813c-8ff8-f11f423d562a), wired as hourly step 6 on The Concierge. ID chosen to</p>
+<p>sidestep the J30 renderer contest; confirm/renumber at the batched schema review. New capability</p>
+<p>to bind at that review: <b>calendar write (Staff Scheduling)</b> — currently documented in the job</p>
+<p>page only, not in CAPABILITIES; harnesses without it skip (Planner 19:30 backstops).</p>
+
+<h2>Absorbed 2026-09-08 — <b>005-cost-ledger</b></h2>
+
+<p><b>J26 cost line (from 005):</b> each registry row carries a cost line — runs × pass length as the token proxy, plus a self-reported supervision-minutes line — tallied weekly by one scheduled job that writes back to the registry. Crude and real beats precise and absent. This also feeds the sibling map&#x27;s GO criterion (c).</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#052</span><span class="emoji">✋</span><span class="done-title">Decided: the thank-you text is drafted by the 5-minute good-to-go robot, right when a booking ends</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>CLOSED Sep 11. Since Aug 5, 137 thank-yous were drafted: 77 went out, 60 did not</li><li>The August ones died unseen. The later ones Junyan rejected on purpose (already spoke to them, or a regular)</li><li>So the real problems were: the draft came too late, and regulars were getting drafted at all</li><li>Junyan&#x27;s rulings: never auto-send. Draft it the moment the booking ends, not the day before. No new robot: the 5-minute good-to-go robot does it</li><li>One skip rule: if a renter never got an access text, they get no thank-you. That covers regulars</li><li>Drafts no longer expire after a day. They wait on the board until Junyan sends or rejects them</li><li>The Responder stops drafting thank-yous the day this ships. The Timekeeper drops its overtime version</li><li>Build ticket: 136</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>A held PBF has 24h to be released or it dies — who releases it, and what happens when nobody does</b></p><h2>Question</h2>
 
 <p>Graduated from <b>050</b>, which found that the Responder&#x27;s PBF</p>
@@ -17231,5 +17289,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 13:17 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 13:27 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
