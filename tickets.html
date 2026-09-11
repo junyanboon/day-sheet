@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 12:16 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 12:32 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -102,7 +102,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">19</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">105</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">106</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1651,81 +1651,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Depends on:</b> the alarm-mcp redeploy 085 is waiting on (Junyan&#x27;s flip) — the code changes can</p>
 <p>be written before it, but nothing is verifiable until the service carries <code>identity.py</code>.</p>
-</div></details></details></div><div class="job"><div class="jnum">#092</div><div class="jhead"><span class="emoji">📋</span><h4>The who&#x27;s-in-today list rebuilds itself all day</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Split off Aug 19 from the big busywork ticket</li><li>Junyan: it needs to stay right through the day, depending on who is actually in the studio</li><li>Today&#x27;s renters and first-timers can be worked out from the booking board and the studio calendars — that&#x27;s just looking things up, no thinking</li><li>The only part that needs thinking is what to DO when one of them writes in, and a different robot already owns that</li><li>Not done until the new list is seen doing the job — naming a new owner isn&#x27;t the same as watching it work</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FAST-TRACK who&#x27;s-in-today list becomes a deterministic renderer</b></p><h2>Question</h2>
-
-<p>Split out of <b>055</b> (lane 2) 2026-08-19, which delivered its</p>
-<p>alarm-watch lane and was closed to its actual scope.</p>
-
-<p>Junyan: <i>&quot;needs to be kept up to date throughout the day depending on who&#x27;s in the studio.&quot;</i></p>
-<p>Today&#x27;s occupants + first-timers derive from the FBS board and the studio calendars — the</p>
-<p><b>019</b> renderer pattern. The list is <b>data</b>; only <i>acting</i> on someone</p>
-<p>who writes in needs judgment, and that is intake&#x27;s job.</p>
-
-<p>Build the renderer, retire the Concierge&#x27;s FAST-TRACK step in canon in the same change.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- The list is rebuilt deterministically through the day, no LLM in the path.</li>
-<li>- Canon&#x27;s FAST-TRACK step names the renderer as its new owner.</li>
-<li>- <b>035</b>&#x27;s test applied: the new owner is <b>seen</b> acting before</li>
-</ul>
-<p>the retirement counts as done — not merely named.</p>
-<ul>
-<li>- The lane reports its own result including zero, and files a <code>Run Error</code> row if it cannot run.</li>
-<li>- Plumbing Map entry.</li>
-</ul>
-
-<p>---</p>
-
-<h2>Progress 2026-09-04 — the RENDERER IS BUILT AND LIVE; what is left is the RETIREMENT</h2>
-
-<p>Junyan, reading a recommendation to start this ticket: *&quot;I thought it&#x27;s already been built and</p>
-<p>done.&quot;* He was right, and the ticket was stale.</p>
-
-<p><b>Built and live:</b> <code>dc-canon/scripts/watchlist_build.py</code> — *&quot;J29 watchlist freshness —</p>
-<p>deterministic rebuild of the fast-track gate&quot;* — rebuilds the <b>Fast-Track Watchlist DB — Today</b></p>
-<p>(<code>0038b3be-51a3-491e-91e5-93c2a7309b2b</code>) and runs as the <b><code>watchlist-refresh</code></b> dispatcher every</p>
-<p>15 minutes. It is real enough to have gone dark and been noticed: the 2026-08-22 Sweep Feedback</p>
-<p>row records a 9h15m outage after 20+ consecutive failures. It also carries a 🚥 Run Monitor row.</p>
-<p>The watchlist-gated quick answers left too — <code>services/event-gate/cards.py</code> has been their sole</p>
-<p>owner since the Receptionist retired 2026-08-01 (036).</p>
-
-<p>So acceptance line 1 (<i>&quot;rebuilt deterministically through the day, no LLM in the path&quot;</i>) is <b>met</b>.</p>
-
-<p><b>What is NOT met, and it is 035&#x27;s lesson exactly:</b> canon still names the Concierge as FAST-TRACK&#x27;s</p>
-<p>owner, and the job is still step 2 of every hourly pass in <code>concierge-orchestration.md</code>. The build</p>
-<p>happened; the retirement never did.</p>
-
-<p><b>And canon was actively WRONG about the neighbouring lane — fixed 2026-09-04, dc-canon <code>b5043d2a</code>.</b></p>
-<p><code>library/fast-track.md</code> described <code>send-engine/SameDay.gs</code> as running the same-day access lane</p>
-<p>automatically, and told the reader: <i>&quot;if the board row and a <code>HTA-sameday-</i></code> queue row already</p>
-<p>exist, the lane has it — do not duplicate.&quot;* <b>SameDay.gs was never installed</b> ([107], closed</p>
-<p>2026-08-21) and RUNTIMES.md reads <b>do-not-install</b> (089 retires it) — so those artifacts could</p>
-<p>never exist and the deference pointed at nothing. <code>library/autonomy.md</code> was worse: it granted that</p>
-<p>phantom lane the desk&#x27;s <b>only unattended alarm-code send</b>. Both corrected — the booking sweep owns</p>
-<p>the window ([108], deployed 2026-08-25) and <b>composes-and-holds</b> the confirmation + HTA pair at</p>
-<p>Pending Review under <code>SWEEP_SAMEDAY_HOLD=1</code>; a human sends both. There is now no unattended</p>
-<p>code-send grant anywhere on the desk.</p>
-
-<p><b>Remaining scope, much smaller than this ticket was written for:</b></p>
-
-<ul>
-<li>- Retire the Concierge&#x27;s FAST-TRACK step in <code>concierge-orchestration.md</code> (step 2) and re-head</li>
-</ul>
-<p><code>library/fast-track.md</code> as the renderer&#x27;s spec plus the residual human judgement.</p>
-<ul>
-<li>- Name what stays with the LLM: acting on a fast-track match is triage&#x27;s job and does not move.</li>
-<li>- Apply 035&#x27;s test to the retirement itself — the renderer is already <b>seen</b> acting, so this is</li>
-</ul>
-<p>the cheap half.</p>
-<ul>
-<li>- Plumbing Map entry for the retirement.</li>
-</ul>
-
-<h2>Absorbed 2026-09-08 — <b>093-job1-remainder-deletion</b></h2>
-
-<p><b>JOB 1 remainder — delete, do not rehome (from 093):</b> once the FAST-TRACK step is out, remove JOB 1 (PBF reconcile, straggler sweep, board reconciliation) from canon and <code>concierge-orchestration.md</code> with no stub. For each deleted step name the covering mechanism or land it on the <b>046</b> roster; <i>observe</i> invariant U covering the deleted work before the deletion commits (<b>035</b>&#x27;s test).</p>
 </div></details></details></div><div class="job"><div class="jnum">#096</div><div class="jhead"><span class="emoji">🗂️</span><h4>Gmail files some mail away before anyone sees it, and nobody reads those piles</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The robot that sorts email looks in the inbox. But Gmail&#x27;s own filters grab some mail first and file it straight into a folder — it never lands in the inbox at all</li><li>So the sorter never sees it. Not a bug in the sorter: it is looking where the mail is not</li><li>We have quietly known this twice and patched it twice, one folder at a time. Once in July for signed agreements, once in August for booking notices — that second folder had 18,000 messages nobody had ever read</li><li>Those two are the only folders the sorter checks. Every other filter that skips the inbox is still a blind spot</li><li>We measured it instead of guessing: 262 recent messages across seven folders, and not one of them ever passed through the inbox</li><li>The clearest cases are insurance (3 messages nobody has opened) and accounting (8). Unread proves it — the sorter marks things read when it handles them</li><li>Good news: the messages ARE in our records. This is not about losing them. It is that nothing acts on them</li><li>What needs deciding: for each folder, either name what should handle it, or write down &#x27;this is noise and here is why&#x27;. Both answers close the hole. Having no answer is the problem</li><li>And a rule so the next filter someone adds cannot quietly make a new blind spot</li><li>One folder is its own question: the alarm folder holds 45,000 messages, and the alarm panels are now read directly. That mail may not matter at all any more</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Auto-filed mail is invisible to the inbox sweep — the hole has been patched one label at a time</b></p><h2>Question</h2>
 
 <p>Junyan, 2026-08-20, pointing at <code>Artist Care - Insurance</code>: *&quot;There are actually multiple holes.</p>
@@ -2401,6 +2326,56 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- The invariant fires on a deliberately un-stamped block.</li>
 <li>- Plumbing Map entry for the retry path and the invariant.</li>
+</ul>
+</div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore — delete it only once its replacement is seen working</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 11 out of the who&#x27;s-in-today ticket, which had swallowed this on the guess that both were one edit. They weren&#x27;t</li><li>The leftover chore is the judgment half of marking bookings: who never showed, who arrived but hasn&#x27;t left, yesterday&#x27;s stragglers, cancelling a goodbye text for a no-show, and flagging a missing thank-you text</li><li>Today a program only handles the easy case (arrived, left, time&#x27;s up → done). Nothing automatic spots a no-show or a straggler, and the two safety checks meant to cover this aren&#x27;t built yet</li><li>Decide per piece: either build and watch the program that covers it, or rule it stays thinking-robot work — but as a flagged item, not a chore the robot hunts for</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
+
+<p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
+<p><b>093</b> on the assumption that the FAST-TRACK retirement and the</p>
+<p>JOB 1 remainder deletion were one canon pass. They are not: FAST-TRACK&#x27;s owners were all live and</p>
+<p>seen acting; the JOB 1 remainder&#x27;s are not.</p>
+
+<p><b>The remainder</b> (<code>concierge-orchestration.md</code> step 5, <code>job-1-adt-alarm.md</code> Steps 4 / 4.5 / 4.7 / 5):</p>
+<p>the judgment half of <code>Booking Status</code> — <code>Missed Booking</code> (multi-studio read, continuity-chain rule),</p>
+<p>arrival-without-departure, yesterday&#x27;s stragglers and the end-time completeness sweep — the</p>
+<p>pre-send EOB cancel for a likely no-show (4.7), and the &quot;Complete + PBF Unsent next day&quot; flag (5).</p>
+
+<p><b>What is observed today, and what is not:</b></p>
+
+<ul>
+<li>- <code>fbs-monitor/build.py sync_booking_status()</code> (every ~15 min) flips the ONE unambiguous case —</li>
+</ul>
+<p>arrived AND departed AND end passed → <code>Complete</code> — and by its own docstring leaves every judgment</p>
+<p>flip to the Concierge. Cover for part of Step 4 only.</p>
+<ul>
+<li>- Invariants T (GTG booking, no arrival signal) and U (HTA row, end &gt; 1 h old, no PBF row — the</li>
+</ul>
+<p>2026-09-11 rule from <b>052</b>) are <b>not built</b>; <code>invariants.py</code></p>
+<p>carries A–E, G–I, K. The PBF line is a Desk Watch human read (<b>136</b>).</p>
+<ul>
+<li>- Nothing deterministic classifies a no-show or a straggler. 4.7&#x27;s EOB cancel has no code owner</li>
+</ul>
+<p>either (<code>eob_timing.py</code> is a live-authority check for existing rows, not a no-show detector).</p>
+
+<p><b>Decide, per step, one of two things:</b> (a) name the code lane that covers it and observe it</p>
+<p>acting — T and U on the 046 roster, <code>sync_booking_status</code> extended to the straggler case, or a</p>
+<p>new event-gate check — or (b) rule it stays LLM work, but as a <b>flagged verb</b> (a <code>Next Action</code></p>
+<p>row the tick raises: &quot;classify this booking&quot;) rather than a self-scanning Concierge step, the</p>
+<p>shape <b>094</b> chose for JOB 4&#x27;s resumption residue.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- JOB 1&#x27;s remainder is removed from <code>concierge-orchestration.md</code> step 5 and the job page carries a</li>
+</ul>
+<p>⛔ RETIRED header — <b>only after</b> each deleted step&#x27;s cover is seen acting</p>
+<p>(<b>035</b>&#x27;s test), or is ruled into the flagged-verb shape.</p>
+<ul>
+<li>- Every deleted step names its covering mechanism in the retired page (no orphans).</li>
+<li>- Invariants T and U, if they are the cover, are live on the gate and have produced at least one</li>
+</ul>
+<p>real finding or one clean pass with a heartbeat.</p>
+<ul>
+<li>- Plumbing Map entry.</li>
 </ul>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">7</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
@@ -3599,6 +3574,137 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p>(desk-watch § E flagged it as &quot;086&#x27;s fix&quot;). It is not — that is a text field on another row.</p>
 <p>Not touched here; one line for whoever next edits that row.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#092</span><span class="emoji">📋</span><span class="done-title">The who&#x27;s-in-today list rebuilds itself all day — and the old chore is finally crossed off</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>CLOSED Sep 11. The list had been rebuilding itself every 15 minutes for weeks; what was missing was crossing the chore off the desk robot&#x27;s list. That is now done</li><li>Before crossing it off, we checked the program was actually running that day: six clean runs in a row. Naming a new owner is not the same as watching it work</li><li>Who does each piece now: the program keeps the list; the mail-reading robot spots same-day requests; the booking program builds the same-day access texts (a person still presses send); the quick-answer cards and the emergency line handle &#x27;I can&#x27;t get in&#x27;</li><li>One small thing was dropped on purpose and written down: the desk robot used to text a first-timer &#x27;everything okay getting in?&#x27; if they hadn&#x27;t shown up ten minutes after start. Nobody does that now. If Junyan wants it back, it belongs with the arrival-checker, not the desk robot</li><li>The leftover-chore deletion that had been folded in here did NOT happen — its replacement isn&#x27;t running yet. It got its own ticket (137) so the map doesn&#x27;t pretend</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>FAST-TRACK who&#x27;s-in-today list becomes a deterministic renderer</b></p><h2>RESOLUTION — 2026-09-11: the FAST-TRACK step is off the Concierge pass; the renderer was seen acting first</h2>
+
+<p><b>Done — canon, dc-canon <code>a82081b5c</code> on <code>main</code> (the runtime reads GitHub main):</b></p>
+
+<ul>
+<li>- <code>library/concierge-orchestration.md</code> step 2 is now a ⛔ RETIRED line. It names the owners: the</li>
+</ul>
+<p><code>watchlist-refresh</code> renderer for the who&#x27;s-in-today list, The Responder&#x27;s intake ([054]) for the</p>
+<p>inbox scan, the booking sweep ([108]) for the same-day chain, the event-gate cards and summons</p>
+<p>for quick answers and can&#x27;t-get-in. The pass no longer scans for fast-track matches, runs no</p>
+<p>first-timer watch, and <code>first_timer_pings</code> is retired from the state file. Report line every</p>
+<p>pass: <code>FAST-TRACK: retired → watchlist-refresh</code>.</p>
+<ul>
+<li>- <code>library/fast-track.md</code> is re-headed as the retired page: an owner table with the evidence each</li>
+</ul>
+<p>owner is acting, the disposition of each first-timer check, the surviving hard rules, and the</p>
+<p>Registrar&#x27;s canonical confirmation + HTA card kept live (the booking sweep still reads it). The</p>
+<p>old text is folded under <code>&lt;details&gt;</code> for the record.</p>
+<ul>
+<li>- Cross-references updated in <code>job-2-triage.md</code>, <code>the-custodian.md</code>, <code>job-1-adt-alarm.md</code>,</li>
+</ul>
+<p><code>doorman-access-lifecycle.md</code>.</p>
+<ul>
+<li>- Plumbing Map entry on <code>day-sheet/plumbing.html</code>.</li>
+</ul>
+
+<p><b>035&#x27;s test, applied before the prose changed.</b> <code>watchlist-refresh</code> on 2026-09-11: six consecutive</p>
+<p><code>success</code> runs 15:00–16:15Z (<code>gh run list --workflow=watchlist.yml</code>), latest canon commit</p>
+<p><code>fb9558be0</code> (16:17Z). The renderer reports its own result, files a <code>Run Error</code> row when it cannot</p>
+<p>run (the 2026-08-20 rule in <code>qa-review.yml</code>), and carries a 🚥 Run Monitor row. Acceptance lines</p>
+<p>1–4 met; line 5 (Plumbing Map) done with this close.</p>
+
+<p><b>What stays with the LLM, named:</b> acting on a renter who writes in. The Responder classifies and</p>
+<p>stubs; the Concierge advances the stub before any discretionary work, and the Brandy Honore Pierre</p>
+<p>rule still binds that advancement. Nothing else of the step survives as a Concierge job.</p>
+
+<p><b>One check retired without a new home, stated plainly:</b> the proactive &quot;everything okay getting in?&quot;</p>
+<p>text at start + 10 min with no disarm. No lane sends an unprompted text on a missing disarm; a</p>
+<p>no-show resolves through the next-day classification and the Responder&#x27;s &quot;we missed you&quot; text. If</p>
+<p>it is wanted back it is invariant T&#x27;s escalation text (046 cohort), not a Concierge step — parked</p>
+<p>as fog on the map. The pre-arrival HTA check goes to the Desk Watch line until an existence check</p>
+<p>on the 046 roster carries it.</p>
+
+<p><b>NOT done — the absorbed <b>093</b> half, and why.</b> 093 was folded in</p>
+<p>on 2026-09-08 on the assumption that one canon pass clears both retirements. The evidence says</p>
+<p>otherwise. The JOB 1 remainder (straggler sweep, board reconciliation, the PBF flag) has <b>no</p>
+<p>observed deterministic cover today</b>: <code>fbs-monitor/build.py sync_booking_status()</code> flips only the</p>
+<p>unambiguous case (arrived AND departed AND end passed → <code>Complete</code>) and its own docstring leaves</p>
+<p>no-shows, arrival-without-departure and everything already terminal to the Concierge; invariants</p>
+<p>T and U are not built (<code>invariants.py</code> carries A–E, G–I, K), and the PBF line is carried by the</p>
+<p>Desk Watch task ([136]) as a human read. Deleting the remainder now would be the 07-25 orphaned-jobs</p>
+<p>failure again. Re-cut as <b>137</b> with the exact gap, so the map</p>
+<p>does not carry a deletion it cannot yet make. JOB 1 remainder stays at orchestration step 5.</p>
+
+<p>---</p>
+
+<h2>Question</h2>
+
+<p>Split out of <b>055</b> (lane 2) 2026-08-19, which delivered its</p>
+<p>alarm-watch lane and was closed to its actual scope.</p>
+
+<p>Junyan: <i>&quot;needs to be kept up to date throughout the day depending on who&#x27;s in the studio.&quot;</i></p>
+<p>Today&#x27;s occupants + first-timers derive from the FBS board and the studio calendars — the</p>
+<p><b>019</b> renderer pattern. The list is <b>data</b>; only <i>acting</i> on someone</p>
+<p>who writes in needs judgment, and that is intake&#x27;s job.</p>
+
+<p>Build the renderer, retire the Concierge&#x27;s FAST-TRACK step in canon in the same change.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- The list is rebuilt deterministically through the day, no LLM in the path.</li>
+<li>- Canon&#x27;s FAST-TRACK step names the renderer as its new owner.</li>
+<li>- <b>035</b>&#x27;s test applied: the new owner is <b>seen</b> acting before</li>
+</ul>
+<p>the retirement counts as done — not merely named.</p>
+<ul>
+<li>- The lane reports its own result including zero, and files a <code>Run Error</code> row if it cannot run.</li>
+<li>- Plumbing Map entry.</li>
+</ul>
+
+<p>---</p>
+
+<h2>Progress 2026-09-04 — the RENDERER IS BUILT AND LIVE; what is left is the RETIREMENT</h2>
+
+<p>Junyan, reading a recommendation to start this ticket: *&quot;I thought it&#x27;s already been built and</p>
+<p>done.&quot;* He was right, and the ticket was stale.</p>
+
+<p><b>Built and live:</b> <code>dc-canon/scripts/watchlist_build.py</code> — *&quot;J29 watchlist freshness —</p>
+<p>deterministic rebuild of the fast-track gate&quot;* — rebuilds the <b>Fast-Track Watchlist DB — Today</b></p>
+<p>(<code>0038b3be-51a3-491e-91e5-93c2a7309b2b</code>) and runs as the <b><code>watchlist-refresh</code></b> dispatcher every</p>
+<p>15 minutes. It is real enough to have gone dark and been noticed: the 2026-08-22 Sweep Feedback</p>
+<p>row records a 9h15m outage after 20+ consecutive failures. It also carries a 🚥 Run Monitor row.</p>
+<p>The watchlist-gated quick answers left too — <code>services/event-gate/cards.py</code> has been their sole</p>
+<p>owner since the Receptionist retired 2026-08-01 (036).</p>
+
+<p>So acceptance line 1 (<i>&quot;rebuilt deterministically through the day, no LLM in the path&quot;</i>) is <b>met</b>.</p>
+
+<p><b>What is NOT met, and it is 035&#x27;s lesson exactly:</b> canon still names the Concierge as FAST-TRACK&#x27;s</p>
+<p>owner, and the job is still step 2 of every hourly pass in <code>concierge-orchestration.md</code>. The build</p>
+<p>happened; the retirement never did.</p>
+
+<p><b>And canon was actively WRONG about the neighbouring lane — fixed 2026-09-04, dc-canon <code>b5043d2a</code>.</b></p>
+<p><code>library/fast-track.md</code> described <code>send-engine/SameDay.gs</code> as running the same-day access lane</p>
+<p>automatically, and told the reader: <i>&quot;if the board row and a <code>HTA-sameday-</i></code> queue row already</p>
+<p>exist, the lane has it — do not duplicate.&quot;* <b>SameDay.gs was never installed</b> ([107], closed</p>
+<p>2026-08-21) and RUNTIMES.md reads <b>do-not-install</b> (089 retires it) — so those artifacts could</p>
+<p>never exist and the deference pointed at nothing. <code>library/autonomy.md</code> was worse: it granted that</p>
+<p>phantom lane the desk&#x27;s <b>only unattended alarm-code send</b>. Both corrected — the booking sweep owns</p>
+<p>the window ([108], deployed 2026-08-25) and <b>composes-and-holds</b> the confirmation + HTA pair at</p>
+<p>Pending Review under <code>SWEEP_SAMEDAY_HOLD=1</code>; a human sends both. There is now no unattended</p>
+<p>code-send grant anywhere on the desk.</p>
+
+<p><b>Remaining scope, much smaller than this ticket was written for:</b></p>
+
+<ul>
+<li>- Retire the Concierge&#x27;s FAST-TRACK step in <code>concierge-orchestration.md</code> (step 2) and re-head</li>
+</ul>
+<p><code>library/fast-track.md</code> as the renderer&#x27;s spec plus the residual human judgement.</p>
+<ul>
+<li>- Name what stays with the LLM: acting on a fast-track match is triage&#x27;s job and does not move.</li>
+<li>- Apply 035&#x27;s test to the retirement itself — the renderer is already <b>seen</b> acting, so this is</li>
+</ul>
+<p>the cheap half.</p>
+<ul>
+<li>- Plumbing Map entry for the retirement.</li>
+</ul>
+
+<h2>Absorbed 2026-09-08 — <b>093-job1-remainder-deletion</b></h2>
+
+<p><b>JOB 1 remainder — delete, do not rehome (from 093):</b> once the FAST-TRACK step is out, remove JOB 1 (PBF reconcile, straggler sweep, board reconciliation) from canon and <code>concierge-orchestration.md</code> with no stub. For each deleted step name the covering mechanism or land it on the <b>046</b> roster; <i>observe</i> invariant U covering the deleted work before the deletion commits (<b>035</b>&#x27;s test).</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#094</span><span class="emoji">✅</span><span class="done-title">The reconciling chore is now a program, and the rest of it is just more program — no more decisions to make</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>CLOSED Sep 11. Junyan ruled: the rest is plain code, nothing left to decide. The reconciling chore leaves the main desk robot for good, and most of the &#x27;notice when staff finish something&#x27; chore goes with it, because looking at what actually happened is the same work</li><li>The first piece has been running every ten minutes since Sep 7 — it has cleared 182 rows and reports a heartbeat every pass</li><li>What is left to build: close a ticket when its message really went out, catch stragglers, spot a ticket stuck at a gate nobody can see, notice a thank-you text sent by hand, and notice when staff mark a task done or drop a screenshot. All of it is looking at lists and ticking boxes. A written build plan sits with the ticket</li><li>The one part that stays with a thinking robot: reading what a screenshot says and carrying on from there. That robot now works from a flag list instead of hunting for the work itself</li><li>The rulebook pages for these chores get their &#x27;retired&#x27; stamp only once the new program is seen doing the job — the lesson from July, when jobs were retired before anyone owned them</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 3&#x27;s mechanical reconcile moves to the event-gate tick</b></p><h2>Progress</h2>
 
 <p><b>First slice BUILT 2026-09-01 — shadow-ready, awaiting Junyan&#x27;s deploy.</b> dc-canon</p>
@@ -17064,5 +17170,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 12:16 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 12:32 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
