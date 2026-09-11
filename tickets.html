@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 12:14 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 12:16 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">20</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">19</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">104</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">105</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -863,9 +863,10 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Hermes edited both cron prompts in a clean gap at 15:32Z: Responder <code>5575c9d71d65</code> sha <code>8681328c…</code> → <code>7aae9a1b…</code> (intake grant + Gmail hygiene tools moved here); Concierge <code>c800b4952ca3</code> <code>6607bc93…</code> → <code>63a263c2…</code> (hygiene grant removed, JOB 2 retired line, ordering clause fixed). Backup <code>cron/jobs.json.bak-ticket054-20260911T153205Z</code>. Schedules, executors, lease untouched.</li>
 <li>- <b>Verification blocked — every Hermes cron pass fails at completion since 11:16 Toronto</b>, unrelated to this ticket: a <code>concierge_completion</code> prototype installer (whose own <code>install.py</code> refuses to install) patched <code>/opt/hermes/cron/scheduler.py:7313</code> to import <code>normalize_cron_result</code> from <code>cron.hermes_cron_incident</code>, which never defined it. The &quot;before&quot; backup was taken after the edit (byte-identical). Hermes cannot fix it: <code>/opt/hermes</code> is root-owned, Hermes runs as uid 10000, no sudo, no git. <b>Needs Junyan with root on the VPS</b> — three-line shim, then one scheduled fire verifies. Hermes filed DEFECT + NEEDS-JUNYAN lines.</li>
 <li>- Not yet produced: first <code>intake:</code> line, audit-row count, Concierge <code>JOB 2: retired</code> line, lease Log lines.</li>
+<li>- <b>Phase 2 evidence (2026-09-11, read from Notion Workflow Reports):</b> Responder 11:50 pass <code>Completed</code> — <code>intake: 3 seen · 0 stub · 0 routed · 1 reply · 2 declined · 0 parked</code>, three threads labelled + read + archived (Gmail grant works on the VPS). Concierge 11:10 pass — <code>JOB 2: skipped · RETIRED … Responder owns intake</code>; it refused a 63-message &quot;mailbox checkpoint&quot; a Codex prototype had injected into its prompt, citing canon. <b>Gap found:</b> <code>3 seen</code> was the 3-hour ledger window; <code>in:inbox</code> held 31 threads, 29 older than 4 h, untouched. Fixed in canon <code>58c995613</code>: intake = the whole inbox, window bounds drafting only, backlog oldest-first ≥15/pass, <code>deferred: N (oldest &lt;age&gt;)</code> on the report line. Next check: the first pass after 58c995613 must report <code>seen</code> ≈ inbox count and a falling backlog. Scheduler fault (Codex-repaired) is separate and logged in CODEX-HANDOFF.md.</li>
 </ul>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">20</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">19</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
 <p>Junyan&#x27;s Main Focus window today):</p>
@@ -1725,147 +1726,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <h2>Absorbed 2026-09-08 — <b>093-job1-remainder-deletion</b></h2>
 
 <p><b>JOB 1 remainder — delete, do not rehome (from 093):</b> once the FAST-TRACK step is out, remove JOB 1 (PBF reconcile, straggler sweep, board reconciliation) from canon and <code>concierge-orchestration.md</code> with no stub. For each deleted step name the covering mechanism or land it on the <b>046</b> roster; <i>observe</i> invariant U covering the deleted work before the deletion commits (<b>035</b>&#x27;s test).</p>
-</div></details></details></div><div class="job"><div class="jnum">#094</div><div class="jhead"><span class="emoji">✅</span><h4>The reconciling chore becomes a program that runs every ten minutes</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Split off Aug 19 from the big busywork ticket — the biggest of the pieces</li><li>Junyan ruled Aug 15 that all four dropped chores matter: when they get missed, each one causes real problems. So none can be deleted</li><li>We read it closely: closing the loop after messages send and charges land is all looking at lists and ticking boxes. No thinking in it</li><li>The one wordy step has a tidy replacement — a ticket sitting at a gate with no open task and nothing waiting for review is a stuck ticket, and that&#x27;s checkable</li><li>Where it isn&#x27;t sure, it raises a hand instead of guessing. That rule is written down and tested</li><li>It reports every run, including the quiet ones. A chore that only speaks up when something&#x27;s wrong is how a real problem reaches nobody</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 3&#x27;s mechanical reconcile moves to the event-gate tick</b></p><h2>Progress</h2>
-
-<p><b>First slice BUILT 2026-09-01 — shadow-ready, awaiting Junyan&#x27;s deploy.</b> dc-canon</p>
-<p><code>206b33052</code>: <code>services/event-gate/reconcile_sweep.py</code> on <code>POST /reconcile-sweep</code>, its own</p>
-<p>Cloud Scheduler job at a 10-minute cadence beside <code>/loop</code>, own <code>RECONCILE_SWEEP_DISABLED</code></p>
-<p>kill switch, own <code>Run Error</code> row. Step 2&#x27;s four mechanical branches are code&#x27;s; step 2&#x27;s</p>
-<p><code>Sent</code>-with-a-linked-ticket branch and steps 4/5/6 remain the agent pass&#x27;s.</p>
-
-<p><b>The bright line, and why it is drawn there.</b> The lane never ticks <code>Reconciled</code> on a row</p>
-<p>carrying a <code>Customer Care Ticket</code> or <code>Sales Ticket</code> relation. Canon calls a bare</p>
-<p><code>Reconciled</code> with no log/close a known bug pattern, and it is <i>worse</i> than leaving the row,</p>
-<p>because the Sent-to-reconcile view filters on <code>Reconciled = unchecked</code> — a wrongly</p>
-<p>reconciled row drops out of every view forever. <b>Leaving a row is how this lane flags it:</b></p>
-<p>the queue view IS the agent pass&#x27;s worklist, so ambiguity needs no separate flag surface.</p>
-<p>A status the lane does not positively recognise — including <code>Error</code>, which canon&#x27;s branch</p>
-<p>table never covered — is left untouched by the same rule. Three tests pin it.</p>
-
-<p><b>The stuck-send branch files a board row as well as leaving the checkbox.</b> It is the</p>
-<p>safety-critical one (a customer message that silently never dispatched), and the standing</p>
-<p>rule is that every needs-a-human surface is generated FROM the Actions board — a log line</p>
-<p>depends on somebody reading logs. <code>Type = Review</code>, <code>For = Ops Lead</code>, deduped by Message</p>
-<p>Code. A 20-minute grace window keeps a dispatch in flight from being reported as a failure.</p>
-
-<p><b>Two canon property names were stale, found by reading the live schema rather than the</p>
-<p>prose.</b> The send-time property is <b><code>Send After</code></b>, not &quot;Time to Send&quot;; and there is no</p>
-<p><b><code>Scheduled</code></b> status — the live options are exactly Pending Review / Error / Ready to</p>
-<p>Send / Will Not Send / Sent. Code written from canon&#x27;s prose would have compared against a</p>
-<p>property that does not exist and silently never found a stuck send. <code>Status</code> is also a</p>
-<p>Notion <i>status</i>-type property, so filters take <code>{&quot;status&quot;: …}</code>, not <code>{&quot;select&quot;: …}</code>.</p>
-
-<p><b>Lane 1&#x27;s third defect pre-empted:</b> <code>Reconcile Sweep</code> was added to the ✅ Actions</p>
-<p><code>Raised by</code> select <b>before</b> anything needed it, and the write was verified to have kept</p>
-<p>all twenty pre-existing options with their original option ids. The failure path is</p>
-<p>covered by tests — a failed run files exactly one <code>Run Error</code> row, does not duplicate while</p>
-<p>one is open, and carries this lane&#x27;s <code>Raised by</code>.</p>
-
-<p><b>Verified vs merely written.</b> <i>Proven:</i> 21 lane tests + the full auth/relay/insurance</p>
-<p>suites (73) pass; a real bug was caught and fixed in the process (the live path queried the</p>
-<p>Actions board on every tick even with nothing to flag, which broke the zero-pass</p>
-<p>assertion); the existing <code>test_app_auth</code> route registry caught the new route and now lists</p>
-<p>it; the live 22-row working set was re-read at 2026-09-01 ~20:10Z and matches the ticket&#x27;s</p>
-<p>evidence exactly (5 mechanical, 3 ticket-linked, 11 pending, 3 future sends, zero stuck),</p>
-<p>and the shadow test replays that exact set; the schema write was verified by re-fetch.</p>
-<p><i>Written but NOT proven:</i> the lane has never executed against the live board — no shadow</p>
-<p>pass has run, so <b>035&#x27;s test is not yet met and this ticket stays open.</b> Everything past</p>
-<p>the unit boundary (the <code>Reconciled</code> checkbox PATCH, the <code>created_time</code> filter shape, the</p>
-<p>stuck-send row actually landing) is unexercised until Junyan deploys.</p>
-
-<p><b>Deliberately not done:</b> no deploy (agent deploys are blocked on this map); nothing</p>
-<p>flipped live — the lane ships in shadow and <code>RECONCILE_SWEEP_LIVE=1</code> is a separate</p>
-<p>human-approved flip; no trigger enabled or disabled; no queue row&#x27;s <code>Status</code> touched and no</p>
-<p>message sent; steps 4/5/6 (strand backstop, orphan-gate audit, PBF off-queue backstop) not</p>
-<p>started — the ticket&#x27;s own sizing read says land the message-reconcile branch first.</p>
-
-<p><b>Next:</b> deploy in shadow, compare a few passes&#x27; counts against the Sent-to-reconcile</p>
-<p>view, flip live, see it act (035), then take steps 4–6 as the second slice.</p>
-
-<h2>Question</h2>
-
-<p>Split out of <b>055</b> (lane 5) 2026-08-19, where it arrived via</p>
-<p>Junyan&#x27;s 2026-08-15 capacity ruling: walked through the four chronically-dropped jobs, he ruled</p>
-<p><b>all four essential</b> — *&quot;they all seem really important; when they are missed they each cause</p>
-<p>problems.&quot;* Right-sizing by deletion is dead; the fix is to take the mechanical work off the</p>
-<p>LLM pass.</p>
-
-<p><b>The principle: code finds the work, the LLM only does flagged work.</b> Starvation exists because</p>
-<p>scanning competes with judging inside one budget. Move every scan to the tick and the LLM pass</p>
-<p>starts from a worklist — it cannot starve on finding, only on doing, and a growing flag queue is</p>
-<p>visible in a way a skipped scan never was.</p>
-
-<p><b>The sizing read (canon, 2026-08-15): JOB 3 is mostly mechanical.</b> Message reconcile, strand</p>
-<p>backstop, money reconcile and collection detection are all view-reads + status branches +</p>
-<p>checkbox/<code>Position</code> writes. The HTR learning loop is already retired (the <code>Drafted Body</code> diff</p>
-<p>field was deleted 2026-07-29). The one prose-shaped step — the orphan-gate audit&#x27;s *&quot;Current Block</p>
-<p>names a staff task&quot;* — has a structured equivalent the tick already uses on the new board:</p>
-<p><code>Position = Gate:*</code> with no open linked Action row and no Pending-Review queue row = orphan.</p>
-
-<p><b>Rule: where the structured read is ambiguous, the code flags the row for an agent instead of</p>
-<p>deciding</b> — same contract as <code>unverifiable</code>. Never guesses.</p>
-
-<p>Lands on the <code>event-gate</code> tick at a 10-minute cadence, beside <code>/loop</code>.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- The mechanical steps run on the tick; canon&#x27;s JOB 3 names the tick as their owner.</li>
-<li>- Ambiguity produces a flag for the agent pass, never a guess — pinned by test.</li>
-<li>- Reporting per the standing rule: <b>a zero pass reports zero</b>; a <code>Run Error</code> row files if the</li>
-</ul>
-<p>lane cannot run.</p>
-<ul>
-<li>- <b>035</b>&#x27;s test: the new owner is <b>seen</b> acting before the</li>
-</ul>
-<p>retirement counts as done.</p>
-<ul>
-<li>- Plumbing Map entry.</li>
-</ul>
-
-<p>---</p>
-
-<h2>Progress 2026-09-04 — BUILT, NOT DEPLOYED. The desk noticed before we did.</h2>
-
-<p>Lane built 2026-09-01, dc-canon <code>206b33052</code>: <code>services/event-gate/reconcile_sweep.py</code> on</p>
-<p><code>POST /reconcile-sweep</code>, kill switch <code>RECONCILE_SWEEP_DISABLED</code>, own <code>Run Error</code> row, <b>ships in</p>
-<p>shadow</b> (<code>RECONCILE_SWEEP_LIVE=1</code> is the separate human flip). 21 lane tests; the whole event-gate</p>
-<p>suite passes. <code>Reconcile Sweep</code> was added to the ✅ Actions <code>Raised by</code> select <b>before</b> deploy —</p>
-<p>lane 1&#x27;s third defect (the lane failed AND its failure report failed) not repeated.</p>
-
-<p><b>Two canon corrections shipped with it, and they matter more than the code.</b> Written faithfully</p>
-<p>from canon&#x27;s prose, this lane would have been blind: the send-time property is <b><code>Send After</code></b>, not</p>
-<p>&quot;Time to Send&quot;, and there is <b>no <code>Scheduled</code> status</b> (live options are exactly Pending Review /</p>
-<p>Error / Ready to Send / Will Not Send / Sent). A stuck-send check comparing against a property that</p>
-<p>does not exist finds a stuck send <b>never</b> and reports clean every time — silence and health</p>
-<p>identical, the failure this whole lane exists to end. <code>Error</code> is also a live status the branch table</p>
-<p>never covered; absence from the table is ambiguity, not permission, so it goes to the agent bucket.</p>
-
-<p><b>Still open because it has never run.</b> 035&#x27;s test is not met — the <code>Reconciled</code> PATCH, the date</p>
-<p>filter shape, and a stuck-send row actually landing are all unexercised.</p>
-
-<p><b>The board raised it itself on 2026-09-03 20:23Z</b> (Sweep Feedback <code>3d07503281c481ff80a2fa0d39b219c7</code>,</p>
-<p><code>J24 Run monitoring</code>): *&quot;reconcile-sweep (10-min lane) shows no sign of running and has NO Run</p>
-<p>Monitor row — 30 rows sit unreconciled since Sep 2, including six Will Not Send rows its own</p>
-<p>contract says are pure code.&quot;* Both halves are fair. <b>Add the 🚥 Run Monitor row as part of the</p>
-<p>deploy, not after it</b> — a lane with no monitor row is exactly what the Sep 1 session put The Loop</p>
-<p>on the board to stop, and shipping this one without it repeats the mistake in the same week.</p>
-
-<p>Deploy is Junyan&#x27;s (agent deploys blocked): <code>services/event-gate/deploy.sh</code>, then a 10-minute</p>
-<p>Cloud Scheduler job, then read shadow counts (<code>reconcilable</code> / <code>for_agent</code> / <code>stuck</code>) against the</p>
-<p>live view before the <code>RECONCILE_SWEEP_LIVE=1</code> flip.</p>
-
-<h2>Absorbed 2026-09-08 — <b>095-job4-detection-layer</b></h2>
-
-<p><b>JOB 4 detection (from 095), second slice after this lane goes live:</b> mechanical detection — Processed Action rows, new images on parked tickets, new <code>#desk-drops</code> past the cursor — moves to the tick and emits a flag queue; resumption stays agentic but reads only that queue. Acceptance per <b>035</b>: the agent pass is <i>seen</i> consuming the queue; zero-pass reporting and a Run Error row; Plumbing Map entry.</p>
-
-<h2>2026-09-09 — first slice is LIVE; deployed 2026-09-07 by another session</h2>
-
-<p>Checked before deploying, and there was nothing left to deploy. Sweep Feedback row <code>3d07503281c481ff80a2fa0d39b219c7</code> records the fix end to end on 2026-09-07: PR #31 merged at <code>0f81148f</code>, <code>RECONCILE_SWEEP_LIVE=1</code>, a 10-minute scheduler, and Run Monitor row <code>3d47503281c4814e8aaae142b9a571bb</code> created Paused then flipped Live after a real pass stamped <code>Self-heartbeat</code>. Successive capped passes reconciled 182 mechanical rows. Today the row shows <code>Monitoring = Live</code>, <code>Self-heartbeat = 2026-09-09T14:20Z</code>, and the live event-gate (<code>git_sha 5d0ffd6</code>, fingerprint <code>615b2a7409a4</code>) equals repo HEAD, so the code running is this code.</p>
-
-<p><b>One stale fact to fix, not code:</b> the Run Monitor <code>Runtime</code> text still names a Cloud Scheduler job. Every Cloud Scheduler job was deleted 2026-09-08 20:04Z and event-gate runs on the Hostinger VPS; the caller is now a VPS timer nobody can see from a Hermes shell or a Mac session (Hermes mailbox 2026-09-09 01:23Z). The lane is alive (heartbeats prove it) but its monitor row lies about <i>who</i> ticks it. Rewrite <code>Runtime</code> when the VPS timer name is known.</p>
-
-<p><b>What this ticket still owns:</b> the second slice — steps 4–6 (strand backstop, orphan-gate audit, PBF off-queue backstop) and the JOB 4 detection layer absorbed from 095. 035&#x27;s test for the first slice is met.</p>
 </div></details></details></div><div class="job"><div class="jnum">#096</div><div class="jhead"><span class="emoji">🗂️</span><h4>Gmail files some mail away before anyone sees it, and nobody reads those piles</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The robot that sorts email looks in the inbox. But Gmail&#x27;s own filters grab some mail first and file it straight into a folder — it never lands in the inbox at all</li><li>So the sorter never sees it. Not a bug in the sorter: it is looking where the mail is not</li><li>We have quietly known this twice and patched it twice, one folder at a time. Once in July for signed agreements, once in August for booking notices — that second folder had 18,000 messages nobody had ever read</li><li>Those two are the only folders the sorter checks. Every other filter that skips the inbox is still a blind spot</li><li>We measured it instead of guessing: 262 recent messages across seven folders, and not one of them ever passed through the inbox</li><li>The clearest cases are insurance (3 messages nobody has opened) and accounting (8). Unread proves it — the sorter marks things read when it handles them</li><li>Good news: the messages ARE in our records. This is not about losing them. It is that nothing acts on them</li><li>What needs deciding: for each folder, either name what should handle it, or write down &#x27;this is noise and here is why&#x27;. Both answers close the hole. Having no answer is the problem</li><li>And a rule so the next filter someone adds cannot quietly make a new blind spot</li><li>One folder is its own question: the alarm folder holds 45,000 messages, and the alarm panels are now read directly. That mail may not matter at all any more</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Auto-filed mail is invisible to the inbox sweep — the hole has been patched one label at a time</b></p><h2>Question</h2>
 
 <p>Junyan, 2026-08-20, pointing at <code>Artist Care - Insurance</code>: *&quot;There are actually multiple holes.</p>
@@ -3739,6 +3599,206 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p>(desk-watch § E flagged it as &quot;086&#x27;s fix&quot;). It is not — that is a text field on another row.</p>
 <p>Not touched here; one line for whoever next edits that row.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#094</span><span class="emoji">✅</span><span class="done-title">The reconciling chore is now a program, and the rest of it is just more program — no more decisions to make</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>CLOSED Sep 11. Junyan ruled: the rest is plain code, nothing left to decide. The reconciling chore leaves the main desk robot for good, and most of the &#x27;notice when staff finish something&#x27; chore goes with it, because looking at what actually happened is the same work</li><li>The first piece has been running every ten minutes since Sep 7 — it has cleared 182 rows and reports a heartbeat every pass</li><li>What is left to build: close a ticket when its message really went out, catch stragglers, spot a ticket stuck at a gate nobody can see, notice a thank-you text sent by hand, and notice when staff mark a task done or drop a screenshot. All of it is looking at lists and ticking boxes. A written build plan sits with the ticket</li><li>The one part that stays with a thinking robot: reading what a screenshot says and carrying on from there. That robot now works from a flag list instead of hunting for the work itself</li><li>The rulebook pages for these chores get their &#x27;retired&#x27; stamp only once the new program is seen doing the job — the lesson from July, when jobs were retired before anyone owned them</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 3&#x27;s mechanical reconcile moves to the event-gate tick</b></p><h2>Progress</h2>
+
+<p><b>First slice BUILT 2026-09-01 — shadow-ready, awaiting Junyan&#x27;s deploy.</b> dc-canon</p>
+<p><code>206b33052</code>: <code>services/event-gate/reconcile_sweep.py</code> on <code>POST /reconcile-sweep</code>, its own</p>
+<p>Cloud Scheduler job at a 10-minute cadence beside <code>/loop</code>, own <code>RECONCILE_SWEEP_DISABLED</code></p>
+<p>kill switch, own <code>Run Error</code> row. Step 2&#x27;s four mechanical branches are code&#x27;s; step 2&#x27;s</p>
+<p><code>Sent</code>-with-a-linked-ticket branch and steps 4/5/6 remain the agent pass&#x27;s.</p>
+
+<p><b>The bright line, and why it is drawn there.</b> The lane never ticks <code>Reconciled</code> on a row</p>
+<p>carrying a <code>Customer Care Ticket</code> or <code>Sales Ticket</code> relation. Canon calls a bare</p>
+<p><code>Reconciled</code> with no log/close a known bug pattern, and it is <i>worse</i> than leaving the row,</p>
+<p>because the Sent-to-reconcile view filters on <code>Reconciled = unchecked</code> — a wrongly</p>
+<p>reconciled row drops out of every view forever. <b>Leaving a row is how this lane flags it:</b></p>
+<p>the queue view IS the agent pass&#x27;s worklist, so ambiguity needs no separate flag surface.</p>
+<p>A status the lane does not positively recognise — including <code>Error</code>, which canon&#x27;s branch</p>
+<p>table never covered — is left untouched by the same rule. Three tests pin it.</p>
+
+<p><b>The stuck-send branch files a board row as well as leaving the checkbox.</b> It is the</p>
+<p>safety-critical one (a customer message that silently never dispatched), and the standing</p>
+<p>rule is that every needs-a-human surface is generated FROM the Actions board — a log line</p>
+<p>depends on somebody reading logs. <code>Type = Review</code>, <code>For = Ops Lead</code>, deduped by Message</p>
+<p>Code. A 20-minute grace window keeps a dispatch in flight from being reported as a failure.</p>
+
+<p><b>Two canon property names were stale, found by reading the live schema rather than the</p>
+<p>prose.</b> The send-time property is <b><code>Send After</code></b>, not &quot;Time to Send&quot;; and there is no</p>
+<p><b><code>Scheduled</code></b> status — the live options are exactly Pending Review / Error / Ready to</p>
+<p>Send / Will Not Send / Sent. Code written from canon&#x27;s prose would have compared against a</p>
+<p>property that does not exist and silently never found a stuck send. <code>Status</code> is also a</p>
+<p>Notion <i>status</i>-type property, so filters take <code>{&quot;status&quot;: …}</code>, not <code>{&quot;select&quot;: …}</code>.</p>
+
+<p><b>Lane 1&#x27;s third defect pre-empted:</b> <code>Reconcile Sweep</code> was added to the ✅ Actions</p>
+<p><code>Raised by</code> select <b>before</b> anything needed it, and the write was verified to have kept</p>
+<p>all twenty pre-existing options with their original option ids. The failure path is</p>
+<p>covered by tests — a failed run files exactly one <code>Run Error</code> row, does not duplicate while</p>
+<p>one is open, and carries this lane&#x27;s <code>Raised by</code>.</p>
+
+<p><b>Verified vs merely written.</b> <i>Proven:</i> 21 lane tests + the full auth/relay/insurance</p>
+<p>suites (73) pass; a real bug was caught and fixed in the process (the live path queried the</p>
+<p>Actions board on every tick even with nothing to flag, which broke the zero-pass</p>
+<p>assertion); the existing <code>test_app_auth</code> route registry caught the new route and now lists</p>
+<p>it; the live 22-row working set was re-read at 2026-09-01 ~20:10Z and matches the ticket&#x27;s</p>
+<p>evidence exactly (5 mechanical, 3 ticket-linked, 11 pending, 3 future sends, zero stuck),</p>
+<p>and the shadow test replays that exact set; the schema write was verified by re-fetch.</p>
+<p><i>Written but NOT proven:</i> the lane has never executed against the live board — no shadow</p>
+<p>pass has run, so <b>035&#x27;s test is not yet met and this ticket stays open.</b> Everything past</p>
+<p>the unit boundary (the <code>Reconciled</code> checkbox PATCH, the <code>created_time</code> filter shape, the</p>
+<p>stuck-send row actually landing) is unexercised until Junyan deploys.</p>
+
+<p><b>Deliberately not done:</b> no deploy (agent deploys are blocked on this map); nothing</p>
+<p>flipped live — the lane ships in shadow and <code>RECONCILE_SWEEP_LIVE=1</code> is a separate</p>
+<p>human-approved flip; no trigger enabled or disabled; no queue row&#x27;s <code>Status</code> touched and no</p>
+<p>message sent; steps 4/5/6 (strand backstop, orphan-gate audit, PBF off-queue backstop) not</p>
+<p>started — the ticket&#x27;s own sizing read says land the message-reconcile branch first.</p>
+
+<p><b>Next:</b> deploy in shadow, compare a few passes&#x27; counts against the Sent-to-reconcile</p>
+<p>view, flip live, see it act (035), then take steps 4–6 as the second slice.</p>
+
+<h2>Question</h2>
+
+<p>Split out of <b>055</b> (lane 5) 2026-08-19, where it arrived via</p>
+<p>Junyan&#x27;s 2026-08-15 capacity ruling: walked through the four chronically-dropped jobs, he ruled</p>
+<p><b>all four essential</b> — *&quot;they all seem really important; when they are missed they each cause</p>
+<p>problems.&quot;* Right-sizing by deletion is dead; the fix is to take the mechanical work off the</p>
+<p>LLM pass.</p>
+
+<p><b>The principle: code finds the work, the LLM only does flagged work.</b> Starvation exists because</p>
+<p>scanning competes with judging inside one budget. Move every scan to the tick and the LLM pass</p>
+<p>starts from a worklist — it cannot starve on finding, only on doing, and a growing flag queue is</p>
+<p>visible in a way a skipped scan never was.</p>
+
+<p><b>The sizing read (canon, 2026-08-15): JOB 3 is mostly mechanical.</b> Message reconcile, strand</p>
+<p>backstop, money reconcile and collection detection are all view-reads + status branches +</p>
+<p>checkbox/<code>Position</code> writes. The HTR learning loop is already retired (the <code>Drafted Body</code> diff</p>
+<p>field was deleted 2026-07-29). The one prose-shaped step — the orphan-gate audit&#x27;s *&quot;Current Block</p>
+<p>names a staff task&quot;* — has a structured equivalent the tick already uses on the new board:</p>
+<p><code>Position = Gate:*</code> with no open linked Action row and no Pending-Review queue row = orphan.</p>
+
+<p><b>Rule: where the structured read is ambiguous, the code flags the row for an agent instead of</p>
+<p>deciding</b> — same contract as <code>unverifiable</code>. Never guesses.</p>
+
+<p>Lands on the <code>event-gate</code> tick at a 10-minute cadence, beside <code>/loop</code>.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- The mechanical steps run on the tick; canon&#x27;s JOB 3 names the tick as their owner.</li>
+<li>- Ambiguity produces a flag for the agent pass, never a guess — pinned by test.</li>
+<li>- Reporting per the standing rule: <b>a zero pass reports zero</b>; a <code>Run Error</code> row files if the</li>
+</ul>
+<p>lane cannot run.</p>
+<ul>
+<li>- <b>035</b>&#x27;s test: the new owner is <b>seen</b> acting before the</li>
+</ul>
+<p>retirement counts as done.</p>
+<ul>
+<li>- Plumbing Map entry.</li>
+</ul>
+
+<p>---</p>
+
+<h2>Progress 2026-09-04 — BUILT, NOT DEPLOYED. The desk noticed before we did.</h2>
+
+<p>Lane built 2026-09-01, dc-canon <code>206b33052</code>: <code>services/event-gate/reconcile_sweep.py</code> on</p>
+<p><code>POST /reconcile-sweep</code>, kill switch <code>RECONCILE_SWEEP_DISABLED</code>, own <code>Run Error</code> row, <b>ships in</p>
+<p>shadow</b> (<code>RECONCILE_SWEEP_LIVE=1</code> is the separate human flip). 21 lane tests; the whole event-gate</p>
+<p>suite passes. <code>Reconcile Sweep</code> was added to the ✅ Actions <code>Raised by</code> select <b>before</b> deploy —</p>
+<p>lane 1&#x27;s third defect (the lane failed AND its failure report failed) not repeated.</p>
+
+<p><b>Two canon corrections shipped with it, and they matter more than the code.</b> Written faithfully</p>
+<p>from canon&#x27;s prose, this lane would have been blind: the send-time property is <b><code>Send After</code></b>, not</p>
+<p>&quot;Time to Send&quot;, and there is <b>no <code>Scheduled</code> status</b> (live options are exactly Pending Review /</p>
+<p>Error / Ready to Send / Will Not Send / Sent). A stuck-send check comparing against a property that</p>
+<p>does not exist finds a stuck send <b>never</b> and reports clean every time — silence and health</p>
+<p>identical, the failure this whole lane exists to end. <code>Error</code> is also a live status the branch table</p>
+<p>never covered; absence from the table is ambiguity, not permission, so it goes to the agent bucket.</p>
+
+<p><b>Still open because it has never run.</b> 035&#x27;s test is not met — the <code>Reconciled</code> PATCH, the date</p>
+<p>filter shape, and a stuck-send row actually landing are all unexercised.</p>
+
+<p><b>The board raised it itself on 2026-09-03 20:23Z</b> (Sweep Feedback <code>3d07503281c481ff80a2fa0d39b219c7</code>,</p>
+<p><code>J24 Run monitoring</code>): *&quot;reconcile-sweep (10-min lane) shows no sign of running and has NO Run</p>
+<p>Monitor row — 30 rows sit unreconciled since Sep 2, including six Will Not Send rows its own</p>
+<p>contract says are pure code.&quot;* Both halves are fair. <b>Add the 🚥 Run Monitor row as part of the</p>
+<p>deploy, not after it</b> — a lane with no monitor row is exactly what the Sep 1 session put The Loop</p>
+<p>on the board to stop, and shipping this one without it repeats the mistake in the same week.</p>
+
+<p>Deploy is Junyan&#x27;s (agent deploys blocked): <code>services/event-gate/deploy.sh</code>, then a 10-minute</p>
+<p>Cloud Scheduler job, then read shadow counts (<code>reconcilable</code> / <code>for_agent</code> / <code>stuck</code>) against the</p>
+<p>live view before the <code>RECONCILE_SWEEP_LIVE=1</code> flip.</p>
+
+<h2>Absorbed 2026-09-08 — <b>095-job4-detection-layer</b></h2>
+
+<p><b>JOB 4 detection (from 095), second slice after this lane goes live:</b> mechanical detection — Processed Action rows, new images on parked tickets, new <code>#desk-drops</code> past the cursor — moves to the tick and emits a flag queue; resumption stays agentic but reads only that queue. Acceptance per <b>035</b>: the agent pass is <i>seen</i> consuming the queue; zero-pass reporting and a Run Error row; Plumbing Map entry.</p>
+
+<h2>2026-09-09 — first slice is LIVE; deployed 2026-09-07 by another session</h2>
+
+<p>Checked before deploying, and there was nothing left to deploy. Sweep Feedback row <code>3d07503281c481ff80a2fa0d39b219c7</code> records the fix end to end on 2026-09-07: PR #31 merged at <code>0f81148f</code>, <code>RECONCILE_SWEEP_LIVE=1</code>, a 10-minute scheduler, and Run Monitor row <code>3d47503281c4814e8aaae142b9a571bb</code> created Paused then flipped Live after a real pass stamped <code>Self-heartbeat</code>. Successive capped passes reconciled 182 mechanical rows. Today the row shows <code>Monitoring = Live</code>, <code>Self-heartbeat = 2026-09-09T14:20Z</code>, and the live event-gate (<code>git_sha 5d0ffd6</code>, fingerprint <code>615b2a7409a4</code>) equals repo HEAD, so the code running is this code.</p>
+
+<p><b>One stale fact to fix, not code:</b> the Run Monitor <code>Runtime</code> text still names a Cloud Scheduler job. Every Cloud Scheduler job was deleted 2026-09-08 20:04Z and event-gate runs on the Hostinger VPS; the caller is now a VPS timer nobody can see from a Hermes shell or a Mac session (Hermes mailbox 2026-09-09 01:23Z). The lane is alive (heartbeats prove it) but its monitor row lies about <i>who</i> ticks it. Rewrite <code>Runtime</code> when the VPS timer name is known.</p>
+
+<p><b>What this ticket still owns:</b> the second slice — steps 4–6 (strand backstop, orphan-gate audit, PBF off-queue backstop) and the JOB 4 detection layer absorbed from 095. 035&#x27;s test for the first slice is met.</p>
+
+<h2>RESOLVED 2026-09-11 — Junyan&#x27;s ruling: the rest is pure code, no ruling left</h2>
+
+<p><b>The ruling.</b> *&quot;JOB 3&#x27;s mechanical reconcile moves to the event-gate tick — pure code, no</p>
+<p>ruling needed. Removes JOB 3. Most of JOB 4 handback dies with it, because reading ground</p>
+<p>truth is the same work.&quot;* That closes the wayfinder question. The first slice has been live</p>
+<p>since 2026-09-07 (heartbeat <code>2026-09-11T16:10Z</code> on Run Monitor row</p>
+<p><code>3d47503281c4814e8aaae142b9a571bb</code>); everything this ticket still owed is a build, not a</p>
+<p>decision, so it leaves the map as a hand-off.</p>
+
+<p><b>What &quot;removes JOB 3&quot; means, step by step (canon <code>job-3-reconcile.md</code>):</b></p>
+
+<ul>
+<li>- Step 2, four mechanical branches — <b>done</b>, <code>reconcile_sweep.py</code>, live.</li>
+<li>- Step 2, <code>Sent</code> <b>with</b> a linked ticket — the tick reads the ground truth (row <code>Status =</li>
+</ul>
+<p>Sent</code>) and, where the ticket&#x27;s Current Block is the release gate (&quot;awaiting send/release of</p>
+<p>this reply&quot;), sets <code>Position = Review</code>, clears the block, ticks <code>Reconciled</code>. Any other</p>
+<p>block wording → flag, never guess. This is <b>053</b>&#x27;s VERIFY</p>
+<p>beat applied to message-class rows; it also retires the <code>Sent</code>-branch worklist the LLM</p>
+<p>pass has been starving on since Aug 11.</p>
+<ul>
+<li>- Step 4 strand backstop, step 5 orphan-gate audit (<code>Position = Gate:*</code> with no open Action</li>
+</ul>
+<p>row and no Pending-Review queue row), step 6 PBF off-queue backstop, and the money</p>
+<p>reconcile / collection detection half — all view reads + status branches + one-field</p>
+<p>writes. Tick.</p>
+<ul>
+<li>- Nothing of JOB 3 stays on the Concierge pass. The Concierge keeps only what the tick</li>
+</ul>
+<p><b>flags</b> (a ticket whose block it could not read), which arrives as a <code>Next Action</code> row,</p>
+<p>not as a scan.</p>
+
+<p><b>What &quot;most of JOB 4 dies&quot; means (canon <code>job-4-handback.md</code>):</b> detection — Processed</p>
+<p>Action rows, a new image on a parked ticket with no &quot;✅ screenshot read&quot; note, a <code>Status =</p>
+<p>New</code> row in 📸 Desk Drops — is reading ground truth, the same read the tick already makes.</p>
+<p>Tick. The residue is <i>resumption</i>: reading the screenshot&#x27;s content and re-walking the SOP</p>
+<p>from the first unchecked step. That is judgment, and it survives — <b>but as a flagged row</p>
+<p>worked by The Loop&#x27;s agent half, not as a Concierge job that self-scans.</b> JOB 4 as a job is</p>
+<p>gone; a &quot;resume this ticket&quot; verb remains. (Assumption stated, since the ruling says &quot;most&quot;:</p>
+<p>if Junyan meant resumption dies too, the change is one line in the spec.)</p>
+
+<p><b>Gate on the canon retirement — <b>035</b> still binds.</b> JOB 3 /</p>
+<p>JOB 4 leave <code>concierge-orchestration.md</code> and the two job pages get their ⛔ RETIRED header</p>
+<p>the way JOB 2 did on 2026-09-11 — <b>only once the second slice is seen acting</b> (its Run</p>
+<p>Monitor row heartbeats, a <code>Sent</code>-with-ticket row closes by code, a Processed Action row</p>
+<p>produces a flag). Retiring the prose before the code runs is the 07-25 orphaned-jobs</p>
+<p>failure again. Not done this session: no code shipped here.</p>
+
+<p><b>Hand-off:</b> <b>assets/094-second-slice-build-spec.md</b></p>
+<p>— scope, the branch table for each step, the flag contract, tests, the Run Monitor and</p>
+<p>Desk Watch entries, and the canon edits that land with the code. Deploy is Junyan&#x27;s / the</p>
+<p>VPS timer&#x27;s, as before. One housekeeping item rides along: the Run Monitor row&#x27;s <code>Runtime</code></p>
+<p>text still names a deleted Cloud Scheduler job; rewrite it with the VPS timer name.</p>
+
+<p><b>Effect on the map:</b> JOB 3 and JOB 4 leave the &quot;remaining shell&quot; list in *Not yet</p>
+<p>specified* → Persona runtime consolidation; the Concierge shell now holds JOB 34, JOB 0,</p>
+<p>JOB 5 flags, JOB 7, JOB 32, JOB 33 and stub advancement. <b>133</b></p>
+<p>is untouched.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#106</span><span class="emoji">🔔</span><span class="done-title">The names are back on who unlocked each studio</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>Done Sept 11. Since Aug 20 the alarm page showed every unlock with a blank where the person&#x27;s name used to be — the old alarm emails were the only thing that ever said who, and those are gone for good</li><li>The replacement reads the alarm company&#x27;s live feed and gets the name, the door opening, and the exact second</li><li>It was switched on during the Sept 8 move to the new server, so it runs there — not on Google — and the alarm page has been showing names since</li><li>Checked today: Jia Chian Lee, 509B, Sept 10 at 6:28pm — name and all</li><li>One catch worth knowing: arming the alarm isn&#x27;t leaving. People arm, then open the door to walk out — so the door event is the true leaving time</li><li>Still open elsewhere: the feed only remembers 3 days, so a question about last week may have no answer left</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Deploy alarm-events and give the boards back the name on every arm/disarm</b></p><h2>Question</h2>
 
 <p>Since 2026-08-20 every arm/disarm on the FBS Monitor&#x27;s Alarms tab renders without an</p>
@@ -17004,5 +17064,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 12:14 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 12:16 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
