@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 11:57 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 12:13 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">20</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">103</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">104</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">3</span></h3><div class="job"><div class="jnum">#001</div><div class="jhead"><span class="emoji">📋</span><h4>Make one master list of every robot job — and check the owners actually do them</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>Question</h2>
 
 <p><b>(Re-scoped 2026-07-15: canon moves to the owned local workspace store, not a Notion DB — Junyan&#x27;s full-canon-off-Notion ruling, see <b>data-sovereignty-wayfinder</b>. Cloud runtimes read it via the pushed mirror; the store format/redaction is settled by the sibling&#x27;s architecture ticket — coordinate before building, don&#x27;t create new Notion canon.)</b></p>
 
@@ -864,139 +864,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- <b>Verification blocked — every Hermes cron pass fails at completion since 11:16 Toronto</b>, unrelated to this ticket: a <code>concierge_completion</code> prototype installer (whose own <code>install.py</code> refuses to install) patched <code>/opt/hermes/cron/scheduler.py:7313</code> to import <code>normalize_cron_result</code> from <code>cron.hermes_cron_incident</code>, which never defined it. The &quot;before&quot; backup was taken after the edit (byte-identical). Hermes cannot fix it: <code>/opt/hermes</code> is root-owned, Hermes runs as uid 10000, no sudo, no git. <b>Needs Junyan with root on the VPS</b> — three-line shim, then one scheduled fire verifies. Hermes filed DEFECT + NEEDS-JUNYAN lines.</li>
 <li>- Not yet produced: first <code>intake:</code> line, audit-row count, Concierge <code>JOB 2: retired</code> line, lease Log lines.</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#121</div><div class="jhead"><span class="emoji">🔁</span><h4>Retried runs must not write the same row twice — three fixes in one</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Retries were switched on for every cloud lane on Sep 4; the climate log was the one that could double-write</li><li>Also here: the door-transition checker that re-raises fixed tickets (114), and the document intake that filed seven identical errors in 52 seconds (117)</li><li>One pattern for all three: key every write, and if the check itself fails, assume it was written and skip</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>&quot;Key every retried write — Thermal Log, IPR tight-transition, DocIntake errors&quot;</b></p><h2>Question</h2>
-
-<p><code>climate_sweep.thermal_log_row()</code> is an unconditional <code>POST</code> — no key, no existence</p>
-<p>check, no dedup fragment:</p>
-
-<p>``<code>python</p>
-<p>def thermal_log_row(now, studio, kind, entry, notes):</p>
-<p>_notion(&quot;POST&quot;, &quot;/pages&quot;, {</p>
-<p>&quot;parent&quot;: {&quot;type&quot;: &quot;data_source_id&quot;, &quot;data_source_id&quot;: THERMAL_LOG_DS},</p>
-<p>&quot;properties&quot;: { ... &quot;When&quot;: {&quot;date&quot;: {&quot;start&quot;: now...isoformat(...)}} },</p>
-<p>})</p>
-<p></code>`<code></p>
-
-<p>It is called once per studio per pass at </code>climate_sweep.py:1055<code>. <b>As of 2026-09-04</p>
-<p>the </code>climate-sweep<code> Cloud Scheduler job has </code>retryCount=2<code></b>, so a pass that does its</p>
-<p>work and then returns a 5xx — or times out after the writes land — is retried 30s</p>
-<p>later and writes <b>a second row per studio for the same moment</b>.</p>
-
-<p>This is the one accepted cost of the fleet-wide retry change made that night (see the</p>
-<p>Plumbing Map entry <i>&quot;SENTINEL-SWEEP IS DOWN&quot;</i>, and the </code>sentinel-sweep<code> row in</p>
-<p></code>RUNTIMES.md<code>). It was judged worth shipping: a missed climate pass on a hot afternoon</p>
-<p>costs a renter a warm room, a duplicate log row costs nothing anyone will notice</p>
-<p><i>today</i>. This ticket is the follow-up that stops it costing something later.</p>
-
-<p><b>Why it is not purely cosmetic.</b> </code>recent_observations()<code> (</code>climate_sweep.py:281<code>)</p>
-<p>reads <i>&quot;Recent Kind=observation Thermal Log rows, newest first, per studio&quot;</i>, and the</p>
-<p>Sunday Thermal Model re-fit (step 9b, clamped to 25% per parameter) learns from that</p>
-<p>history. Duplicated rows weight a duplicated moment twice in whatever the re-fit</p>
-<p>averages. Small, and clamped — but it is a measurement feeding a control loop, and</p>
-<p>nobody would choose to double-count it.</p>
-
-<p><b>Not hypothetical, and not only about retries.</b> Any repeat of a pass duplicates</p>
-<p>these rows. The retry config just made repeats routine instead of rare.</p>
-
-<h2>What to build</h2>
-
-<p>Key the write and check before inserting, in the shape the same module already uses</p>
-<p>for feedback rows — </code>file_feedback(..., dedup_fragment=...)<code> at </code>climate_sweep.py:762<code></p>
-<p>queries </code>_open_feedback(fragment)<code> first and patches instead of creating. Copy that</p>
-<p>pattern rather than inventing a second one.</p>
-
-<p>Suggested key: </code>(studio, kind, pass timestamp truncated to the minute)<code> — the pass is</p>
-<p>hourly, so minute granularity cannot collide across real passes but does collapse a</p>
-<p>retry with its original. Put the key in a queryable place; </code>Entry<code> (title) is the</p>
-<p>obvious one, matching how ✅ Actions rows carry </code>[key]<code> in the title.</p>
-
-<p><b>Fail closed, like the treasurer does.</b> </code>treasurer_sweep._already_filed()<code> is the</p>
-<p>reference:</p>
-
-<p></code>`<code>python</p>
-<p>except Exception:</p>
-<p>return True  # &quot;could not check&quot; must not become &quot;not filed&quot;</p>
-<p></code>`<code></p>
-
-<p>A Notion read that errors must mean &quot;assume written, skip&quot; — never &quot;write again&quot;. The</p>
-<p>failure this ticket exists to prevent is a duplicate; a lost log row on a Notion blip</p>
-<p>is strictly the lesser harm.</p>
-
-<h2>Constraints</h2>
-
-<ul>
-<li>- <b>Junyan runs deploys.</b> Agent </code>gcloud<code> is blocked (this bit during the retry work</li>
-</ul>
-<p>on 2026-09-04 — some </code>scheduler jobs update<code> calls went through, most were refused).</p>
-<p>Deliver code, tests, the Plumbing Map entry, and paste-ready deploy commands.</p>
-<ul>
-<li>- <b>Do not touch the SDM command path.</b> Thermostat commands are naturally idempotent</li>
-</ul>
-<p>— </code>&quot;cool to 23.0°C&quot;<code> twice lands in the same place — and that half is not broken.</p>
-<ul>
-<li>- <b>Do not remove </code>climate-sweep<code>&#x27;s retries</b> as a workaround. The retries are the fix</li>
-</ul>
-<p>for a real outage; this is the small debt they created, and the debt is the thing to</p>
-<p>pay.</p>
-<ul>
-<li>- <b>Plumbing Map entry is part of done</b> — </code>day-sheet/plumbing.html<code>, newest-first, per</li>
-</ul>
-<p></code>CLAUDE.md<code>. Amend or supersede the 2026-09-04 03:09Z entry&#x27;s *&quot;one real wart, left</p>
-<p>deliberately unfixed&quot;* paragraph so the map stops describing a fixed thing as open.</p>
-<ul>
-<li>- Ships with the module&#x27;s existing flag discipline; no new env var unless the build</li>
-</ul>
-<p>genuinely needs one.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- Running the same pass twice with the same </code>now<code> writes <b>one</b> row per studio, not two.</li>
-<li>- Running two genuinely different passes (different hours) writes <b>two</b> rows — the</li>
-</ul>
-<p>dedupe must not swallow real history.</p>
-<ul>
-<li>- A Notion read failure during the dedupe check results in <b>no write</b>, and is logged.</li>
-<li>- The Sunday re-fit&#x27;s input for a replayed hour is unchanged by the replay.</li>
-<li>- No change to any SDM command, and no change to the decision text in </code>notes<code>.</li>
-<li>- Full event-gate suite green.</li>
-</ul>
-
-<h2>Why now</h2>
-
-<p>Nothing is on fire. The retry change on 2026-09-04 converted a rare duplicate into a</p>
-<p>routine one, and this is the smallest correct answer to that. Worth doing before the</p>
-<p>next Sunday re-fit runs against a week that contains retried passes.</p>
-
-<h2>Evidence banked (2026-09-04)</h2>
-
-<ul>
-<li>- </code>climate-sweep<code> schedule </code>10 3,9-23 <i> </i> *<code> America/Toronto, </code>attemptDeadline 300s<code>,</li>
-</ul>
-<p>now </code>retryCount=2 minBackoff=30s maxBackoff=120s<code>.</p>
-<ul>
-<li>- The six outward-acting lanes were code-read before retries went on them. Five needed</li>
-</ul>
-<p>nothing: </code>booking_sweep<code> is idempotent by its own header, </code>greeter_sweep:936<code> gates</p>
-<p>every action on </code>if lane_common.filed_action(key) or _queue_key_exists(key): continue<code></p>
-<p><i>before</i> the SMS, and the three treasurer lanes never write to Stripe (read-only key,</p>
-<p></code>stripe_read.py<code>) with every row keyed. <b></code>climate_sweep<code> was the only one with a gap,</p>
-<p>and this is it.</b></p>
-<ul>
-<li>- ⚠️ Related but out of scope, noticed the same night and now <b>split out as its own ticket</b> —</li>
-</ul>
-<p><b>125 — the alarm that always rings, again</b>. </code>extension-sweep<code>,</p>
-<p></code>move-sweep<code> and </code>greeter-sweep<code> log healthy passes at </code>severity=ERROR<code> because </code>progress_level()<code></p>
-<p>only strips JSON-shaped counters, so their bare </code>errors 0<code> / </code>FAILED 0<code> survives into the prose scan</p>
-<p>and rings on its own zero. Nothing to do here; it lives in </code>app.py<code>, not </code>climate_sweep.py<code>.</p>
-
-<h2>Absorbed 2026-09-08 — <b>114-ipr-tight-transition-dedup</b></h2>
-
-<p><b>IPR tight-transition detector (from 114):</b> before creating, query for an existing ticket keyed on </code>(studio, date, transition pair)<code> regardless of terminal state; a resolved match suppresses re-creation. Same </code>[key]<code> convention as the moved-after-send sweep.</p>
-
-<h2>Absorbed 2026-09-08 — <b>117-docintake-error-path-guard</b></h2>
-
-<p><b>DocIntake error path (from 117):</b> on error, look for an open row with the same error signature before filing (the </code>insurance_sweep<code> </code>file_run_error<code> pattern — one open row per raiser), plus exponential backoff on Notion 5xx/404 before the seen-mark commits. Evidence: seven identical rows in 52 s on 2026-08-26. <b>Separable check:</b> confirm Enrico Casertano&#x27;s signed Long Term Rental Agreement (gmail </code>19fd99917be09490`, 2026-08-06) is filed in 📎 Docs; the Artist row reflects it, the PDF may not.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">20</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
@@ -4066,6 +3933,165 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p></code>door_events.py<code> keeps 72h, </code>panel_history.py` is Studio 901 only, so a Review row can outlive its</p>
 <p>evidence for every other studio (the Janet Zamora case). The night-ops rebuild map owns the</p>
 <p>evidence-source design; this map keeps the flag.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#121</span><span class="emoji">🔁</span><span class="done-title">Retried runs must not write the same row twice — three fixes in one</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>Done Sep 11. The climate log now stamps each row with the studio, the kind, and the hour, and looks for that stamp before it writes — a retry finds it and stops</li><li>The door-transition checker already skipped tickets a human had closed; now a failed lookup skips the pair for that pass instead of crashing it. The document intake files one open error row per problem, not seven, and re-reads a Notion 404 twice before trusting it</li><li>If any of the three checks cannot be read, nothing is written — a missing row is cheaper than a double one. Junyan still has to deploy: one GitHub workflow run and one clasp push</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>&quot;Key every retried write — Thermal Log, IPR tight-transition, DocIntake errors&quot;</b></p><h2>Question</h2>
+
+<p><code>climate_sweep.thermal_log_row()</code> is an unconditional <code>POST</code> — no key, no existence</p>
+<p>check, no dedup fragment:</p>
+
+<p>``<code>python</p>
+<p>def thermal_log_row(now, studio, kind, entry, notes):</p>
+<p>_notion(&quot;POST&quot;, &quot;/pages&quot;, {</p>
+<p>&quot;parent&quot;: {&quot;type&quot;: &quot;data_source_id&quot;, &quot;data_source_id&quot;: THERMAL_LOG_DS},</p>
+<p>&quot;properties&quot;: { ... &quot;When&quot;: {&quot;date&quot;: {&quot;start&quot;: now...isoformat(...)}} },</p>
+<p>})</p>
+<p></code>`<code></p>
+
+<p>It is called once per studio per pass at </code>climate_sweep.py:1055<code>. <b>As of 2026-09-04</p>
+<p>the </code>climate-sweep<code> Cloud Scheduler job has </code>retryCount=2<code></b>, so a pass that does its</p>
+<p>work and then returns a 5xx — or times out after the writes land — is retried 30s</p>
+<p>later and writes <b>a second row per studio for the same moment</b>.</p>
+
+<p>This is the one accepted cost of the fleet-wide retry change made that night (see the</p>
+<p>Plumbing Map entry <i>&quot;SENTINEL-SWEEP IS DOWN&quot;</i>, and the </code>sentinel-sweep<code> row in</p>
+<p></code>RUNTIMES.md<code>). It was judged worth shipping: a missed climate pass on a hot afternoon</p>
+<p>costs a renter a warm room, a duplicate log row costs nothing anyone will notice</p>
+<p><i>today</i>. This ticket is the follow-up that stops it costing something later.</p>
+
+<p><b>Why it is not purely cosmetic.</b> </code>recent_observations()<code> (</code>climate_sweep.py:281<code>)</p>
+<p>reads <i>&quot;Recent Kind=observation Thermal Log rows, newest first, per studio&quot;</i>, and the</p>
+<p>Sunday Thermal Model re-fit (step 9b, clamped to 25% per parameter) learns from that</p>
+<p>history. Duplicated rows weight a duplicated moment twice in whatever the re-fit</p>
+<p>averages. Small, and clamped — but it is a measurement feeding a control loop, and</p>
+<p>nobody would choose to double-count it.</p>
+
+<p><b>Not hypothetical, and not only about retries.</b> Any repeat of a pass duplicates</p>
+<p>these rows. The retry config just made repeats routine instead of rare.</p>
+
+<h2>What to build</h2>
+
+<p>Key the write and check before inserting, in the shape the same module already uses</p>
+<p>for feedback rows — </code>file_feedback(..., dedup_fragment=...)<code> at </code>climate_sweep.py:762<code></p>
+<p>queries </code>_open_feedback(fragment)<code> first and patches instead of creating. Copy that</p>
+<p>pattern rather than inventing a second one.</p>
+
+<p>Suggested key: </code>(studio, kind, pass timestamp truncated to the minute)<code> — the pass is</p>
+<p>hourly, so minute granularity cannot collide across real passes but does collapse a</p>
+<p>retry with its original. Put the key in a queryable place; </code>Entry<code> (title) is the</p>
+<p>obvious one, matching how ✅ Actions rows carry </code>[key]<code> in the title.</p>
+
+<p><b>Fail closed, like the treasurer does.</b> </code>treasurer_sweep._already_filed()<code> is the</p>
+<p>reference:</p>
+
+<p></code>`<code>python</p>
+<p>except Exception:</p>
+<p>return True  # &quot;could not check&quot; must not become &quot;not filed&quot;</p>
+<p></code>`<code></p>
+
+<p>A Notion read that errors must mean &quot;assume written, skip&quot; — never &quot;write again&quot;. The</p>
+<p>failure this ticket exists to prevent is a duplicate; a lost log row on a Notion blip</p>
+<p>is strictly the lesser harm.</p>
+
+<h2>Constraints</h2>
+
+<ul>
+<li>- <b>Junyan runs deploys.</b> Agent </code>gcloud<code> is blocked (this bit during the retry work</li>
+</ul>
+<p>on 2026-09-04 — some </code>scheduler jobs update<code> calls went through, most were refused).</p>
+<p>Deliver code, tests, the Plumbing Map entry, and paste-ready deploy commands.</p>
+<ul>
+<li>- <b>Do not touch the SDM command path.</b> Thermostat commands are naturally idempotent</li>
+</ul>
+<p>— </code>&quot;cool to 23.0°C&quot;<code> twice lands in the same place — and that half is not broken.</p>
+<ul>
+<li>- <b>Do not remove </code>climate-sweep<code>&#x27;s retries</b> as a workaround. The retries are the fix</li>
+</ul>
+<p>for a real outage; this is the small debt they created, and the debt is the thing to</p>
+<p>pay.</p>
+<ul>
+<li>- <b>Plumbing Map entry is part of done</b> — </code>day-sheet/plumbing.html<code>, newest-first, per</li>
+</ul>
+<p></code>CLAUDE.md<code>. Amend or supersede the 2026-09-04 03:09Z entry&#x27;s *&quot;one real wart, left</p>
+<p>deliberately unfixed&quot;* paragraph so the map stops describing a fixed thing as open.</p>
+<ul>
+<li>- Ships with the module&#x27;s existing flag discipline; no new env var unless the build</li>
+</ul>
+<p>genuinely needs one.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Running the same pass twice with the same </code>now<code> writes <b>one</b> row per studio, not two.</li>
+<li>- Running two genuinely different passes (different hours) writes <b>two</b> rows — the</li>
+</ul>
+<p>dedupe must not swallow real history.</p>
+<ul>
+<li>- A Notion read failure during the dedupe check results in <b>no write</b>, and is logged.</li>
+<li>- The Sunday re-fit&#x27;s input for a replayed hour is unchanged by the replay.</li>
+<li>- No change to any SDM command, and no change to the decision text in </code>notes<code>.</li>
+<li>- Full event-gate suite green.</li>
+</ul>
+
+<h2>Why now</h2>
+
+<p>Nothing is on fire. The retry change on 2026-09-04 converted a rare duplicate into a</p>
+<p>routine one, and this is the smallest correct answer to that. Worth doing before the</p>
+<p>next Sunday re-fit runs against a week that contains retried passes.</p>
+
+<h2>Evidence banked (2026-09-04)</h2>
+
+<ul>
+<li>- </code>climate-sweep<code> schedule </code>10 3,9-23 <i> </i> *<code> America/Toronto, </code>attemptDeadline 300s<code>,</li>
+</ul>
+<p>now </code>retryCount=2 minBackoff=30s maxBackoff=120s<code>.</p>
+<ul>
+<li>- The six outward-acting lanes were code-read before retries went on them. Five needed</li>
+</ul>
+<p>nothing: </code>booking_sweep<code> is idempotent by its own header, </code>greeter_sweep:936<code> gates</p>
+<p>every action on </code>if lane_common.filed_action(key) or _queue_key_exists(key): continue<code></p>
+<p><i>before</i> the SMS, and the three treasurer lanes never write to Stripe (read-only key,</p>
+<p></code>stripe_read.py<code>) with every row keyed. <b></code>climate_sweep<code> was the only one with a gap,</p>
+<p>and this is it.</b></p>
+<ul>
+<li>- ⚠️ Related but out of scope, noticed the same night and now <b>split out as its own ticket</b> —</li>
+</ul>
+<p><b>125 — the alarm that always rings, again</b>. </code>extension-sweep<code>,</p>
+<p></code>move-sweep<code> and </code>greeter-sweep<code> log healthy passes at </code>severity=ERROR<code> because </code>progress_level()<code></p>
+<p>only strips JSON-shaped counters, so their bare </code>errors 0<code> / </code>FAILED 0<code> survives into the prose scan</p>
+<p>and rings on its own zero. Nothing to do here; it lives in </code>app.py<code>, not </code>climate_sweep.py<code>.</p>
+
+<h2>Absorbed 2026-09-08 — <b>114-ipr-tight-transition-dedup</b></h2>
+
+<p><b>IPR tight-transition detector (from 114):</b> before creating, query for an existing ticket keyed on </code>(studio, date, transition pair)<code> regardless of terminal state; a resolved match suppresses re-creation. Same </code>[key]<code> convention as the moved-after-send sweep.</p>
+
+<h2>Absorbed 2026-09-08 — <b>117-docintake-error-path-guard</b></h2>
+
+<p><b>DocIntake error path (from 117):</b> on error, look for an open row with the same error signature before filing (the </code>insurance_sweep<code> </code>file_run_error<code> pattern — one open row per raiser), plus exponential backoff on Notion 5xx/404 before the seen-mark commits. Evidence: seven identical rows in 52 s on 2026-08-26. <b>Separable check:</b> confirm Enrico Casertano&#x27;s signed Long Term Rental Agreement (gmail </code>19fd99917be09490<code>, 2026-08-06) is filed in 📎 Docs; the Artist row reflects it, the PDF may not.</p>
+
+<h2>Resolution — CLOSED 2026-09-11 (Claude)</h2>
+
+<p>All three writers are keyed, checked before the write, and fail closed. Code is committed; <b>deploy is Junyan&#x27;s</b> (two commands below). Plumbing Map entry <i>&quot;Retried runs no longer write the same row twice — three keyed writes&quot;</i> (2026-09-11) is filed and the 09-04 wart paragraph is marked fixed.</p>
+
+<p><b>1 — Thermal Log</b> (dc-canon </code>0dce06bf3<code>, </code>climate_sweep.py<code>). </code>thermal_log_row()<code> now builds </code>[climate:&lt;studio&gt;:&lt;kind&gt;:&lt;YYYY-MM-DDTHH&gt;]<code>, appends it to the Entry title, and queries for it before the POST; returns </code>created<code> / </code>existing<code> / </code>unchecked<code>. <b>Deviation from the suggested key:</b> the hour, not the minute. A retry&#x27;s </code>now<code> is taken fresh, 30–120 s after a 300 s deadline, so it lands minutes after the original; a minute key would not collapse it. Passes are hourly, so distinct passes never share a key. </code>recent_observations()<code> filters on the </code>SDM reading — <code> prefix and does not see the bracket key. Six tests, including a full live pass run twice in one hour that files one decision row per studio.</p>
+
+<p><b>2 — IPR tight-transition (from 114).</b> Already status-blind since </code>f637a7c68<code> (2026-09-07): </code>_transition_ticket(key)<code> queries the Customer Care DB in any state, and </code>test_existing_transition_ticket_is_reused_status_blind<code> pins it. </code>queue_messages<code> and </code>action_row<code> were status-blind before that. The remaining gap was fail-open by exception: a failed lookup raised out of the pass. </code>ensure_transition_ticket<code> now returns </code>unchecked<code> and </code>file_findings<code> skips that finding for the pass, writing no draft and no Review row. One test.</p>
+
+<p><b>3 — DocIntake (from 117)</b> (send-engine </code>3f75cfe<code>, </code>DocIntake.gs<code>). </code>docRaise_<code> calls </code>docAlreadyRaised_<code> (Status = Pending Review, Raised by = Other, Request equals headline) and skips on a hit or an unreadable check. New </code>docNotion_<code> wrapper re-reads a 404 at 2 s then 4 s (2 retries) before throwing; all 13 Notion calls in the lane route through it. </code>notionFetch_<code> in </code>Code.gs<code> is untouched. The seen-mark still commits before the work — that is deliberate and is the filing-side dedup; the backoff shrinks the window where a transient 404 loses a message. </code>test_doc_intake.js<code> (8 checks) loads the real </code>.gs<code> in a vm sandbox. </code>DocIntake.js<code> is a gitignored local mirror and was updated too.</p>
+
+<p><b>Separable check:</b> Enrico Casertano&#x27;s signed Long Term Rental Agreement IS in 📎 Docs — </code>20260901-20261231_Enrico Casertano_Fixed Option+Bookings.pdf<code> (row </code>3b575032-81c4-8155<code>, Dropbox Sign 2026-08-07), alongside his insurance certificate and booking summary. Nothing to file.</p>
+
+<p><b>Acceptance:</b> same hour twice → one row per studio ✔; different hours → two rows ✔; check fails → no write, logged ✔; re-fit input unchanged (decision rows are not its input; observation rows untouched) ✔; no SDM change, no </code>notes<code> text change ✔; suite 2252 green ✔.</p>
+
+<p><b>Deploy (Junyan):</b></p>
+
+<p></code>`<code>bash</p>
+<p>cd &quot;/Users/jboon/Documents/Claude Workspace/dc-canon&quot; &amp;&amp; gh workflow run deploy-event-gate.yml --ref main -f target=hostinger -f mode=update -f reason=&quot;121 keyed writes&quot;</p>
+<p></code>`<code></p>
+
+<p></code>`<code>bash</p>
+<p>cd &quot;/Users/jboon/Documents/Claude Workspace/send-engine&quot; &amp;&amp; clasp push</p>
+<p></code>`<code></p>
+
+<p><b>Fog surfaced:</b> the Sunday re-fit reads <i>observation</i> rows, written by the separate </code>sdm-logger` job. Whether that job keys its writes was not read here; it sits on the map under Not yet specified.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#136</span><span class="emoji">🙏</span><span class="done-title">Built and live: the good-to-go robot drafts the thank-you text when a booking ends</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE Sep 11, live since 10:50am Toronto. Every 5 minutes it looks for bookings that just ended, had an access text, and have no thank-you yet, then drafts one and holds it for Junyan</li><li>Its first passes ran clean: nothing new to draft yet (yesterday&#x27;s thank-yous were already there), no errors</li><li>Same hour: the Responder&#x27;s thank-you job was deleted from its instructions, the one-day expiry rule is gone, and the Timekeeper no longer rewrites the overtime version</li><li>Junyan&#x27;s morning read now lists any finished booking that should have a draft and does not. The first real draft from the new robot is what to look for tomorrow</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Move PBF queueing onto the GTG sweep — queued at booking end, held, no HTA means no PBF</b></p><h2>Task</h2>
 
 <p>Execute the <b>052</b> ruling. Code lives in</p>
@@ -16978,5 +17004,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 11:57 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 12:13 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
