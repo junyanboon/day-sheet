@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 13:38 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 13:55 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -828,6 +828,37 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Next, in order:</b> (1) settle the token; (2) deploy + one hand-run, read the headline;</p>
 <p>(3) enable the 5-minute timer; (4) read a shadow window and promote the first rule to <code>Full</code>;</p>
 <p>(5) then phase 4 — one week, zero duplicate tickets across both writers.</p>
+
+<h3>Phase 3 rollout state — 2026-09-11, end of session</h3>
+
+<p>| # | Step | State |</p>
+<p>|---|---|---|</p>
+<p>| 1 | Gmail credential | <b>ANSWERED.</b> The existing <code>gmail-rw</code> pair is narrow — <code>gmail.modify</code> + <code>gmail.settings.basic</code>, correct mailbox, a genuinely distinct credential from the read-only triplet (different <code>client_id</code>, different refresh token). Junyan ruled reuse. <code>gmail.modify</code> cannot permanently delete; that needs <code>mail.google.com</code>. <b>Remaining manual step, root-only:</b> set <code>MAIL_RULES_GMAIL_CLIENT_ID</code> / <code>_SECRET</code> / <code>_REFRESH_TOKEN</code> in <code>/docker/danceannex-mcp/event-gate.env</code>. |</p>
+<p>| 2 | Deploy | <b>Code already on the host incidentally</b> — <code>/health</code> <code>git_sha 68134ee</code> contains build commit <code>7417104fb</code>, confirmed by <code>git merge-base --is-ancestor</code>, not by reading shas. <b>But a redeploy is now a prerequisite:</b> the <code>MAIL_RULES_GMAIL_*</code> names postdate that build, so setting them against it is silently ignored. |</p>
+<p>| 3 | systemd timer | Not installed. Root-only. Do it after 1 and 2, never before — a lane failing every 5 min teaches nobody anything. |</p>
+<p>| 4 | Read shadow, promote first rule | Blocked on 3. |</p>
+<p>| 5 | Phase 4 — one week, zero duplicate tickets | Blocked on 4. |</p>
+
+<p><b>Design change made this session:</b> the lane reads <code>MAIL_RULES_GMAIL_*</code> first and falls back to</p>
+<p>the shared <code>GMAIL_*</code>. Reuse must not widen the shared token — the Greeter and the other reading</p>
+<p>lanes use it and need no write at all. The write credential is now held by exactly the one lane</p>
+<p>that writes.</p>
+
+<p><b>Evidence correction:</b> ~85 of the 300 sampled threads were one workflow (<code>watchlist-refresh</code>)</p>
+<p>failing every 15 min, and <b>Junyan had already fixed it on 2026-09-09 23:12</b> — green every run</p>
+<p>since. The sample caught a dead burst. The GitHub rule still stands on the class, not the count;</p>
+<p>its ongoing rate is unmeasured and must be re-measured from a clean window before promotion to</p>
+<p><code>Full</code>. Machine-format share excluding that burst: <b>~95% of ~215 threads</b> — the headline holds.</p>
+
+<p><b>Caveat still open (diagnostic only):</b> nobody has confirmed which credential event-gate itself</p>
+<p>currently carries. The probe ran inside the Hermes container, which has no path to the env file.</p>
+<p>Closing it needs root: sha256 the value and compare against read-only</p>
+<p><code>b132dc5f…</code> / write-capable <code>868bbd95…</code>. Setting the <code>MAIL_RULES_GMAIL_*</code> triplet makes the lane</p>
+<p>correct either way.</p>
+
+<p><b>Unrelated local artifact, not a break:</b> <code>scripts/test_jobs_registry.py</code> fails on this Mac</p>
+<p>because <code>registry/</code> is outside the local sparse-checkout cone. The file is in the repo; CI has</p>
+<p>the full tree.</p>
 </div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 11 out of the who&#x27;s-in-today ticket. Junyan ruled the same day: the program finds the booking, the thinking robot decides</li><li>Built Sep 11: every ten minutes a program reads the booking board and writes one to-do card for each booking that needs a call — still unmarked after it ended, a first-timer who hasn&#x27;t shown up, a goodbye text to cancel for a no-show, a finished booking with no thank-you text queued</li><li>The program never marks a booking itself. A wrong &#x27;no-show&#x27; mark would text a renter who was actually there</li><li>It&#x27;s on the server but not switched on: Junyan activates it, wires the ten-minute timer, reads a few days of dry-run output, then flips it live</li><li>The old chore comes off the robot&#x27;s list only once the cards are seen being worked — the July lesson</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
 
 <p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
@@ -17336,5 +17367,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 13:38 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 13:55 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
