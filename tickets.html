@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 11:20 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 11:44 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -846,7 +846,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>2. Verify: first two Responder passes report <code>intake: …</code> lines and the audit log shows</li>
 </ol>
 <p>dispositions; the Concierge pass reports <code>JOB 2: retired → Responder</code>. Desk Watch carries</p>
-<p>the check for three days.</p>
+<p>the check for three days — Section H added to the <code>desk-watch</code> scheduled task 2026-09-11 (09-12 → 09-14).</p>
 <ol>
 <li>3. Rules stage (from 068): wire probe → rules file → <code>/mail-rules</code> route + kill switch → labels</li>
 </ol>
@@ -855,6 +855,15 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>4. Close when phase 3&#x27;s residue partition is live and one week shows zero duplicate tickets</li>
 </ol>
 <p>across both writers.</p>
+
+<h2>Build log — 2026-09-11 (session 1; ticket stays OPEN — phase 2 blocked on a VPS root fix)</h2>
+
+<ul>
+<li>- Canon cut over: dc-canon <code>534c05e8d</code>. Boards + Plumbing Map pushed. Desk Watch Section H added (09-12 → 09-14).</li>
+<li>- Hermes edited both cron prompts in a clean gap at 15:32Z: Responder <code>5575c9d71d65</code> sha <code>8681328c…</code> → <code>7aae9a1b…</code> (intake grant + Gmail hygiene tools moved here); Concierge <code>c800b4952ca3</code> <code>6607bc93…</code> → <code>63a263c2…</code> (hygiene grant removed, JOB 2 retired line, ordering clause fixed). Backup <code>cron/jobs.json.bak-ticket054-20260911T153205Z</code>. Schedules, executors, lease untouched.</li>
+<li>- <b>Verification blocked — every Hermes cron pass fails at completion since 11:16 Toronto</b>, unrelated to this ticket: a <code>concierge_completion</code> prototype installer (whose own <code>install.py</code> refuses to install) patched <code>/opt/hermes/cron/scheduler.py:7313</code> to import <code>normalize_cron_result</code> from <code>cron.hermes_cron_incident</code>, which never defined it. The &quot;before&quot; backup was taken after the edit (byte-identical). Hermes cannot fix it: <code>/opt/hermes</code> is root-owned, Hermes runs as uid 10000, no sudo, no git. <b>Needs Junyan with root on the VPS</b> — three-line shim, then one scheduled fire verifies. Hermes filed DEFECT + NEEDS-JUNYAN lines.</li>
+<li>- Not yet produced: first <code>intake:</code> line, audit-row count, Concierge <code>JOB 2: retired</code> line, lease Log lines.</li>
+</ul>
 </div></details></details></div><div class="job"><div class="jnum">#106</div><div class="jhead"><span class="emoji">🔔</span><h4>Put the names back on who unlocked each studio</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Since Aug 20 the alarm page shows every unlock with a blank where the person&#x27;s name used to be</li><li>The old alarm emails were the only thing that ever said who — and those are gone for good</li><li>The replacement is already written and tested: it reads the alarm company&#x27;s live feed and gets the name, the door opening, and the exact second</li><li>It just needs to be switched on, which means starting a small always-on service — a real cost, so Junyan decides</li><li>One catch worth knowing: arming the alarm isn&#x27;t leaving. People arm, then open the door to walk out — so the door event is the true leaving time</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Deploy alarm-events and give the boards back the name on every arm/disarm</b></p><h2>Question</h2>
 
 <p>Since 2026-08-20 every arm/disarm on the FBS Monitor&#x27;s Alarms tab renders without an</p>
@@ -16931,5 +16940,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 11:20 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 11:44 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
