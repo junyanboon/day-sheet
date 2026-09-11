@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 17:23 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 17:25 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -937,9 +937,40 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Telus needs no action: already-correct threads cost no call, which is the already-sorted check</p>
 <p>doing its job.</p>
 
-<p><b>Still open after this:</b> promote the first rule </code>Provisional → Full` (the step that actually</p>
+<p><b>Still open after this:</b> promote the first rule </code>Provisional → Full<code> (the step that actually</p>
 <p>files mail away and marks it read — a repo edit, on evidence, human decision), then phase 4&#x27;s</p>
 <p>week with zero duplicate tickets across both writers, then close.</p>
+
+<h3>The GitHub labelling gap — diagnosed 2026-09-11, and it is NOT a broken filter</h3>
+
+<p>Checked the mailbox&#x27;s Gmail filters: <b>the connector returns &quot;No filters found.&quot;</b> That is either</p>
+<p>true or the same false-empty this connector is documented to give for </code>label:<code> queries, so it is</p>
+<p>not evidence on its own. Two observations decide the shape of the problem:</p>
+
+<ul>
+<li>- <b>Telus mail arrives labelled </code>Artist Care - ADT<code>, archived, and still UNREAD.</b> No lane</li>
+</ul>
+<p>produces that combination — every lane that archives also marks read. Label + skip-inbox +</p>
+<p>leave-unread is the exact signature of a Gmail filter. So a filter almost certainly exists that</p>
+<p>the connector cannot see. <b>Unresolved; it belongs to <b>069</b></b>,</p>
+<p>which is now unblocked since 068 closed.</p>
+<ul>
+<li>- <b>The GitHub gap has a different and simpler cause.</b> Every GitHub thread carrying</li>
+</ul>
+<p></code>Junyan - Maintenance<code> arrived TODAY after 17:00Z — that is, after the Responder took over</p>
+<p>intake at 12:20. The ~24 unlabelled ones are all from 09-09 and 09-10: <b>mail that arrived</p>
+<p>during the window when the Concierge was failing at JOB 2 and left 39 threads unprocessed.</b></p>
+<p>It is outage residue, not a filter fault, and the new intake owner is already labelling this</p>
+<p>class correctly.</p>
+
+<p><b>So the fix is the go-live flip already handed to Codex</b> — the lane sweeps by sender, not by</p>
+<p>inbox, so it reaches that 09-09/09-10 residue and labels it. Nothing further to build.</p>
+
+<p><b>The promotion candidate this makes obvious:</b> </code>github-run-failed<code> is the strongest first</p>
+<p></code>Provisional → Full` case on the board. One sender, one literal subject, 37 threads, zero</p>
+<p>ambiguity, no human content possible, and the underlying workflow fault is already fixed so</p>
+<p>ongoing volume is small. Promotion adds mark-read and archive. Still a human call on a shadow</p>
+<p>window, not something to slip in.</p>
 </div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 11 out of the who&#x27;s-in-today ticket. Junyan ruled the same day: the program finds the booking, the thinking robot decides</li><li>Built Sep 11: every ten minutes a program reads the booking board and writes one to-do card for each booking that needs a call — still unmarked after it ended, a first-timer who hasn&#x27;t shown up, a goodbye text to cancel for a no-show, a finished booking with no thank-you text queued</li><li>The program never marks a booking itself. A wrong &#x27;no-show&#x27; mark would text a renter who was actually there</li><li>It&#x27;s on the server but not switched on: Junyan activates it, wires the ten-minute timer, reads a few days of dry-run output, then flips it live</li><li>The old chore comes off the robot&#x27;s list only once the cards are seen being worked — the July lesson</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
 
 <p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
@@ -17448,5 +17479,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 17:23 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 17:25 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
