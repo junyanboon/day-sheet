@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 13:27 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 13:28 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -642,7 +642,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <h2>Absorbed 2026-09-08 — <b>073-human-gate-intake</b></h2>
 
 <p><b>Human-gate mail intake (from 073), after Phase 4:</b> mail that must stop at Junyan — money above routine, legal/insurance, government/bank senders, LLM-flagged consequential novelty — lands on <b>✅ Actions to Perform</b> (<code>For = Junyan</code>, with <code>Basis</code> and a deadline), never on the bot board. A hot deterministic subset (chargeback, government deadline) also fires one SMS via the existing phone.com path. REVIEW happens in-session (Junyan&#x27;s ruling). The staleness half is already this ticket&#x27;s stall path (Correction 2, criterion F) — do not build a second one. Gated on <b>068</b> so the classes arrive labelled.</p>
-</div></details></details></div><div class="job"><div class="jnum">#054</div><div class="jhead"><span class="emoji">📬</span><h4>The reply-writer robot now opens the mail too</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>RULED Sep 11 (Junyan): the mail-opening job goes to the reply-writer robot (the Responder), which already reads every message that comes in</li><li>Before, the reply robot skipped any message that needed a ticket and waited for the main desk robot to open it. That hand-off is where mail got lost</li><li>Now one robot reads each message once and writes down what it did with it: opened a ticket, passed it to an open ticket, wrote a reply, ignored it (with a reason), or parked it for Junyan</li><li>It opens the ticket and stops. The main desk robot still does the follow-through on every ticket</li><li>The main desk robot no longer touches the inbox at all — that was the job it kept failing at</li><li>Switched over the same day, no practice run — Junyan said we need this working now</li><li>The simple-rules mail sorter (was ticket 068) becomes a later step of this one: it will file the boring machine mail before the robot ever sees it</li><li>WhatsApp and Instagram messages stay with the main desk robot for now</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Responder opens the mail — intake moves off the Concierge (was: Build the Triager)</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#054</div><div class="jhead"><span class="emoji">📬</span><h4>The reply-writer robot now opens the mail too</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>RULED Sep 11 (Junyan): the mail-opening job goes to the reply-writer robot (the Responder), which already reads every message that comes in</li><li>Before, the reply robot skipped any message that needed a ticket and waited for the main desk robot to open it. That hand-off is where mail got lost</li><li>Now one robot reads each message once and writes down what it did with it: opened a ticket, passed it to an open ticket, wrote a reply, ignored it (with a reason), or parked it for Junyan</li><li>It opens the ticket and stops. The main desk robot still does the follow-through on every ticket</li><li>The main desk robot no longer touches the inbox at all — that was the job it kept failing at</li><li>Switched over the same day, no practice run — Junyan said we need this working now</li><li>Sep 11: the simple-rules mail sorter is BUILT (it was ticket 068, now a step of this one) — a small program that files the boring machine mail before the robot ever sees it</li><li>We counted what actually arrives: out of 300 emails over four days, about 290 were sent by a machine and only about 10 were typed by a person</li><li>A quarter of ALL the studio&#x27;s email is one broken job complaining every 15 minutes. That one is worth fixing on its own</li><li>It starts with nine rules and every one is on probation: it can only put a sticker on the mail, it cannot file anything away yet. A person reads the stickers first and then gives a rule permission</li><li>Ten kinds of mail are deliberately left alone. The big one is text-message alerts: they all look identical from the outside, and inside one of them might be somebody locked out asking for the door code</li><li>STUCK: the program needs permission to put stickers on mail, and the key it was given can only read. Junyan decides which key it gets</li><li>WhatsApp and Instagram messages stay with the main desk robot for now</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The Responder opens the mail — intake moves off the Concierge (was: Build the Triager)</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>. JOB 2 is too big (Junyan). Split off the intake</p>
 <p>half as <b>one small AI core with one job</b>: read inbound, create the ticket stub, SOP-route it, log</p>
@@ -783,6 +783,51 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- <b>Phase 2 evidence (2026-09-11, read from Notion Workflow Reports):</b> Responder 11:50 pass <code>Completed</code> — <code>intake: 3 seen · 0 stub · 0 routed · 1 reply · 2 declined · 0 parked</code>, three threads labelled + read + archived (Gmail grant works on the VPS). Concierge 11:10 pass — <code>JOB 2: skipped · RETIRED … Responder owns intake</code>; it refused a 63-message &quot;mailbox checkpoint&quot; a Codex prototype had injected into its prompt, citing canon. <b>Gap found:</b> <code>3 seen</code> was the 3-hour ledger window; <code>in:inbox</code> held 31 threads, 29 older than 4 h, untouched. Fixed in canon <code>58c995613</code>: intake = the whole inbox, window bounds drafting only, backlog oldest-first ≥15/pass, <code>deferred: N (oldest &lt;age&gt;)</code> on the report line. Next check: the first pass after 58c995613 must report <code>seen</code> ≈ inbox count and a falling backlog. Scheduler fault (Codex-repaired) is separate and logged in CODEX-HANDOFF.md.</li>
 <li>- <b>Phase 2 VERIFIED 2026-09-11 12:20 Toronto (first pass under canon 58c995613; Hermes read-back run_ad9561c9):</b> Responder exec <code>9f9c6c73…</code> Completed — <code>intake: 33 seen · 0 stub · 5 routed · 0 reply · 28 declined · 0 parked · deferred: 0</code>; 33 Email Triage Audit Log rows, Outcome Completed ×33, Labeled 33 / Archived 33, one Session id; <code>in:inbox</code> → 0 threads at 16:35Z (backlog reached back to 09-08). Concierge exec <code>afa26621…</code> Completed — <code>JOB 2: retired → Responder · stubs advanced: 1</code>, zero Gmail calls in its tool audit. Lease Log carries both prompt edits with shas and the verifying exec ids. Scheduler shim confirmed at <code>hermes_cron_incident.py:29</code>, gateway pid 7337 since 12:02. Phase 2 done; Desk Watch Section H watches 09-12 → 09-14. Next: phase 3 (rules stage).</li>
 </ul>
+
+<h2>Build log — 2026-09-11 (session 1, phase 3): the rules stage is BUILT, and blocked on a credential</h2>
+
+<p><b>Built and merged</b> (dc-canon <code>7417104fb</code>, canon note <code>68134ee5d</code>): <code>services/event-gate/mail_rules.py</code>,</p>
+<p><code>mail_rules.json</code>, <code>test_mail_rules.py</code> (42 tests), the <code>/mail-rules</code> route + <code>MAIL_RULES_DISABLED</code></p>
+<p>kill switch, and <code>hosting/INSTALL-mail-rules.md</code>. Full suite <b>2373 passed</b>.</p>
+
+<p><b>Evidence it was written from</b> — a 300-thread corpus, 2026-09-07 16:36 → 09-11 17:11 Toronto:</p>
+<p><b>~97% of thread volume is machine-format; ~3% was typed by a person.</b> Three senders are two</p>
+<p>thirds of everything (GitHub ~32%, Skedda ~21%, phone.com ~17%), and a single literal —</p>
+<p><code>Run failed: watchlist-refresh - main</code> — is ~85 of those 300 threads: one workflow retrying</p>
+<p>every 15 minutes, not 85 events. <b>That failing workflow is its own defect, worth a ticket.</b></p>
+
+<p><b>Design, and how it differs from the 2026-08-12 plan.</b> Two premises had gone stale and are</p>
+<p>corrected in the build: Cloud Scheduler is gone (event-gate is on Hostinger; the tick is a</p>
+<p>systemd pair on the host, root-only, so Hermes cannot install it), and the residue-partition</p>
+<p>query is unnecessary — <b>an archived thread is simply not in the inbox</b>, so the Responder needs</p>
+<p>no label exclusion. The hard guards, each pinned by a test: a thread with more than one message</p>
+<p>is a conversation and is never touched; a rule matches only when every clause matches; shadow</p>
+<p>writes nothing outside the <code>rules/</code> namespace; a missing desk label is an error, never an</p>
+<p>invention; the wrong mailbox refuses rather than reporting a quiet zero. Metadata only, never a</p>
+<p>body. No outbound path and no ticket path exist in the lane.</p>
+
+<p><b>Nine rules, every one <code>Provisional</code></b> — label only, no archive power even when live. GitHub</p>
+<p>Actions failures ×2, Telus arm/disarm ×3 + panel camera, Cloudflare KV alerts, Dropbox Sign</p>
+<p>viewed + daily summary. Promotion to <code>Full</code> is a human edit with the evidence written into the</p>
+<p>rule. <b>Ten classes deliberately excluded</b>, reasons in <code>_excluded</code>, each pinned by a test that</p>
+<p>fails if a future rule ever catches them. First among them <code>no-reply@phone.com</code>: in one 14-day</p>
+<p>window that single machine subject carried a lockout asking for a door code, an alarm left in an</p>
+<p>unknown state, insurance documents, a lost child&#x27;s watch and Junyan&#x27;s own staff instructions,</p>
+<p>alongside dozens of tapbacks. It also carries Tagvenue and Giggster guests. No subject-level rule</p>
+<p>can separate those.</p>
+
+<p><b>BLOCKED — the wire probe (064 ceremony) says stop.</b> event-gate&#x27;s Gmail credential is</p>
+<p><code>calendar.readonly drive gmail.readonly</code>. <b>No write scope</b>, so the lane cannot label anything,</p>
+<p>shadow included. A write-capable pair already exists in the same secret store</p>
+<p>(<code>gmail-rw-client.json</code> / <code>gmail-rw-token.json</code> — what the Hermes Gmail MCP used for the</p>
+<p>Responder&#x27;s own 12:20 archive calls). Supplying it to event-gate vs minting a fresh one is a</p>
+<p>credential blast-radius decision, <b>Junyan&#x27;s call</b>. Caveat recorded: the probe ran from the</p>
+<p>Hermes container, not the event-gate host, so re-run <code>tokeninfo</code> on the host to bind it.</p>
+<p>Do NOT install the timer first — a lane failing every five minutes teaches nobody anything.</p>
+
+<p><b>Next, in order:</b> (1) settle the token; (2) deploy + one hand-run, read the headline;</p>
+<p>(3) enable the 5-minute timer; (4) read a shadow window and promote the first rule to <code>Full</code>;</p>
+<p>(5) then phase 4 — one week, zero duplicate tickets across both writers.</p>
 </div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 11 out of the who&#x27;s-in-today ticket. Junyan ruled the same day: the program finds the booking, the thinking robot decides</li><li>Built Sep 11: every ten minutes a program reads the booking board and writes one to-do card for each booking that needs a call — still unmarked after it ended, a first-timer who hasn&#x27;t shown up, a goodbye text to cancel for a no-show, a finished booking with no thank-you text queued</li><li>The program never marks a booking itself. A wrong &#x27;no-show&#x27; mark would text a renter who was actually there</li><li>It&#x27;s on the server but not switched on: Junyan activates it, wires the ten-minute timer, reads a few days of dry-run output, then flips it live</li><li>The old chore comes off the robot&#x27;s list only once the cards are seen being worked — the July lesson</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
 
 <p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
@@ -17289,5 +17334,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 13:27 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 13:28 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
