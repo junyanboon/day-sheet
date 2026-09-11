@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 13:55 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 14:18 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -834,7 +834,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>| # | Step | State |</p>
 <p>|---|---|---|</p>
 <p>| 1 | Gmail credential | <b>ANSWERED.</b> The existing <code>gmail-rw</code> pair is narrow — <code>gmail.modify</code> + <code>gmail.settings.basic</code>, correct mailbox, a genuinely distinct credential from the read-only triplet (different <code>client_id</code>, different refresh token). Junyan ruled reuse. <code>gmail.modify</code> cannot permanently delete; that needs <code>mail.google.com</code>. <b>Remaining manual step, root-only:</b> set <code>MAIL_RULES_GMAIL_CLIENT_ID</code> / <code>_SECRET</code> / <code>_REFRESH_TOKEN</code> in <code>/docker/danceannex-mcp/event-gate.env</code>. |</p>
-<p>| 2 | Deploy | <b>Code already on the host incidentally</b> — <code>/health</code> <code>git_sha 68134ee</code> contains build commit <code>7417104fb</code>, confirmed by <code>git merge-base --is-ancestor</code>, not by reading shas. <b>But a redeploy is now a prerequisite:</b> the <code>MAIL_RULES_GMAIL_*</code> names postdate that build, so setting them against it is silently ignored. |</p>
+<p>| 2 | Deploy | <b>DONE and VERIFIED 2026-09-11 18:16:22Z</b> (run 34632237349). <code>/health</code> reports <code>git_sha b2a152c</code>, fingerprint <code>e9aab66ac573</code>, and <code>started</code> moved past the prior 17:34:15Z — same host, new process, not the 2026-09-08 stale-answer trap. <code>git merge-base --is-ancestor 1166b0c81 b2a152c</code> → rc 0, so the running build carries the <code>MAIL_RULES_GMAIL_*</code> names. <code>/mail-rules</code> is mounted as POST, read from <code>/openapi.json</code> without calling the route. ⚠️ <b>This proves the code is deployed, not that the credential is set</b> — a route can be live and uncredentialed at once, and that is exactly step 1. Prior note: <b>code was already on the host incidentally</b> — <code>/health</code> <code>git_sha 68134ee</code> contains build commit <code>7417104fb</code>, confirmed by <code>git merge-base --is-ancestor</code>, not by reading shas. <b>But a redeploy is now a prerequisite:</b> the <code>MAIL_RULES_GMAIL_*</code> names postdate that build, so setting them against it is silently ignored. |</p>
 <p>| 3 | systemd timer | Not installed. Root-only. Do it after 1 and 2, never before — a lane failing every 5 min teaches nobody anything. |</p>
 <p>| 4 | Read shadow, promote first rule | Blocked on 3. |</p>
 <p>| 5 | Phase 4 — one week, zero duplicate tickets | Blocked on 4. |</p>
@@ -17367,5 +17367,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 13:55 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 14:18 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
