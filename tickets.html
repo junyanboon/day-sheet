@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 19:32 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 23:15 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -639,6 +639,111 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p>Plumbing Map entry. Not yet done — waits on Junyan&#x27;s say-so for the canon edit.</p>
 
+<h2>2026-09-11 — is the queue live? Partly. And the pilot class could not close at all.</h2>
+
+<p>Asked to verify the board before Phase 4 measurement starts. <b>Verdict: partially live.</b> The board</p>
+<p>exists and only bots write to it, which is the 09-08 ruling working. Everything downstream of that</p>
+<p>was broken.</p>
+
+<p><b>Junyan re-confirmed the ruling this session:</b> *&quot;we set the next action board for the bots and the</p>
+<p>actions to perform db for humans.&quot;* So the 2026-09-04 Phase 3 instruction to repoint</p>
+<p>REVIEW/EXECUTE/VERIFY at ✅ Actions to Perform <b>is dead</b> — Replan v2 supersedes it, the bot board</p>
+<p>is closed by a coded sweep, and the tick reading ⏭️ Next Action is correct. That work does not</p>
+<p>need doing. What is still owed from Phase 3 is the <code>Deadline</code> field, the escalate-on-expiry path,</p>
+<p>the rolling-row helper, and VERIFY reading every proof source.</p>
+
+<h3>Measured, 2026-09-11</h3>
+
+<p>| | |</p>
+<p>|---|---|</p>
+<p>| ⏭️ Next Action data source | <code>ddad960e-b850-4524-b04b-2522a21ac2f4</code>, 137 rows |</p>
+<p>| Created in 7 days | 15 — Loop 9, Doorman 3, Concierge 2, Responder 1, <b>zero <code>Raised by = Human</code></b> |</p>
+<p>| Newest row | 2026-09-09 20:16 UTC — nothing on 09-10 or 09-11 |</p>
+<p>| Open, past <code>Deadline</code> | <b>5</b>, by 1.0 / 1.2 / 3.2 / 4.4 / 5.2 days |</p>
+<p>| ✅ Actions new rows/day | 40–63 every day for a week. Criterion E wants <b>under 5</b> |</p>
+<p>| Open rows per writer | Other 24, Desk Invariants 13, Concierge 5, Custodian 4. Criterion G wants <b>1</b> |</p>
+
+<p>Deployed sha <code>844c81b</code>, contained in main (<code>merge-base --is-ancestor</code>), <code>loop.py</code> byte-identical to</p>
+<p>main at that point.</p>
+
+<h3>Two monitors, and the wrong one is green</h3>
+
+<p><code>desk-loop (Cloud Run)</code> reads 🟢 On time, heartbeat fresh, and its own <code>Produces</code> field says</p>
+<p><b>&quot;No report row.&quot;</b> That row belongs to the <i>witness</i>. The row for the half that FILLS the board —</p>
+<p><code>The Loop</code> — reads <b>Monitoring: Paused</b>, last heartbeat 2026-09-08 20:36, and its last Workflow</p>
+<p>Report is <i>The Loop — Rolling Daily 2026-09-08</i>. Three silent days, alarm switched off. The</p>
+<p>RemoteTrigger <code>trig_019ReSFHGqYhhqoXF8Unnf8U</code> reads <code>enabled: false</code>, last fired 2026-09-04.</p>
+
+<p><b>This is <b>068</b>&#x27;s shape again and worse.</b> There the lane had no board</p>
+<p>surface; here it has one and it is muted. Also: the tick stamps its heartbeat <b>above the fast</p>
+<p>exit</b>, so green proves the queue was <i>readable</i>, never that it <i>drained</i>.</p>
+
+<h3>THE FIND — Booking move could never close, and neither could Instant booking approval</h3>
+
+<p><code>expects_absence</code> matched <code>cancel|release|no longer|delete</code> against the class name <b>and its</p>
+<p><code>Verify by</code> prose</b>. That prose describes the read, and for a move it legitimately says *&quot;the old</p>
+<p>date <b>no longer</b> returns it.&quot;* So the tick concluded a Booking move should leave the booking GONE,</p>
+<p>found it present after the move, and returned <code>no-match</code> forever. Two of the four <code>Auto-execute</code></p>
+<p>classes, including <b>the pilot class</b>. Live from 2026-09-06 09:24 (<code>33d334073</code>) to 2026-09-11.</p>
+
+<p>It shipped with <b>no test</b>. The commit that added the guard added none, and the suite had nothing</p>
+<p>on <code>expects_absence</code> at all.</p>
+
+<p>Fixed in PR <a href="https://github.com/junyanboon/desk-correspondence/pull/137" target="_blank" rel="noopener">#137</a>: match the class</p>
+<p><b>name</b> only, which is correct for all ten live classes. Tests pin the ten names verbatim and both</p>
+<p>broken classes by their real <code>Verify by</code> text; all three fail on the pre-fix code. 2505 pass.</p>
+<p>Same PR answers <b>076</b> — see Answer 4 there.</p>
+
+<p><b>Clearing the board would not have fixed this.</b> Criterion F would have failed again on the next</p>
+<p>booking move, for a reason nobody was looking at.</p>
+
+<h3>The five stale rows, cleared (Junyan approved in session)</h3>
+
+<p>Checked against Skedda, the Message Queue and <code>threads/</code> before closing. <b>Not one was live work.</b></p>
+
+<p>| Row | Close | Evidence |</p>
+<p>|---|---|---|</p>
+<p>| Zoe Young confirmation | <code>Done</code> | Queue row <code>Sent</code>, 2026-09-09 23:55Z, receipt <code>phonecom:260070937</code> |</p>
+<p>| Kyle FitzGerald 527 | <code>Done</code> | Skedda <code>119123959</code> reads 15:00–17:30; confirmed by SMS Sep 7 07:33 |</p>
+<p>| Natascha / Sorina | <code>Won&#x27;t Do</code> | Bookings past; held row already <code>Will Not Send</code>; her own reply <i>&quot;It was great&quot;</i> |</p>
+<p>| Hayden DiMarco | <code>Won&#x27;t Do</code> | Ran 12:00–13:30 unchanged, no notice ever sent; CC ticket already <code>Done</code> |</p>
+<p>| Kyle FitzGerald 509A | <code>Won&#x27;t Do</code> | Ran unchanged; Analyst decision row already <code>Cancelled</code> |</p>
+
+<p>Two were <b>finished days earlier and could not say so</b> — Zoe&#x27;s because her <code>Booking ref</code> is prose</p>
+<p>that <code>BOOKING_REF_RX</code> cannot parse (and her <code>Proof target</code> names the wrong window, 14:00–16:00</p>
+<p>against an actual 10:30–12:30), Kyle&#x27;s because of the absence bug. Three were real misses, and every</p>
+<p>other surface had already closed them. <b>The bot board was showing five alarms and all five were</p>
+<p>noise.</b> Board now reads 0 past deadline, 5 open, every one with a future deadline — criterion F&#x27;s</p>
+<p>clock can start.</p>
+
+<h3>Still owed, and one of them is blocking</h3>
+
+<ol>
+<li>1. <b>The stall path is not built.</b> No escalate-on-expiry exists anywhere in <code>event-gate</code>, and</li>
+</ol>
+<p>✅ Actions to Perform <b>has no <code>Deadline</code> property at all</b>. Correction 2 has no target field.</p>
+<p>Written this session and refused by the sandbox, because it creates rows on a production board —</p>
+<p>needs Junyan&#x27;s go-ahead.</p>
+<ol>
+<li>2. <b>The rolling-row helper</b> (<code>lane_common.py</code>) for criteria E and G. Biggest targets are named:</li>
+</ol>
+<p><i>Overnight verification</i> holds 9 open rows and <i>Desk Invariants</i> 13, which is 22 of the 56.</p>
+<p>24 open rows read <code>Raised by = Other</code> and <b>every one names itself in its own title</b>.</p>
+<ol>
+<li>3. <b><code>End state</code> as a field</b> on 🎚️ Action Classes rather than a regex over prose. The name-only</li>
+</ol>
+<p>match is correct today; it is still prose. Refused by the sandbox as a schema change.</p>
+<ol>
+<li>4. <b>Publish the tick&#x27;s ledger counts to the monitor row</b>, so green means draining, not readable.</li>
+<li>5. Three open rows carry no <code>Action class</code>, so every ladder effect on them is a silent no-op.</li>
+</ol>
+
+<p><b>The one thing blocking Phase 4 is (1).</b> Criterion F is *&quot;no bot-board row past its deadline for</p>
+<p>7 consecutive days&quot;*, and nothing moves an expired row anywhere. Of the five rows open tonight,</p>
+<p><b>none can close itself</b>: two Doorman rows have no parseable <code>Booking ref</code> and no <code>Proof type</code>,</p>
+<p>two message rows read <code>Will Not Send</code>, one is an <code>account</code> proof with no verifier. They will all</p>
+<p>expire, and today that means they simply sit.</p>
+
 <h2>Absorbed 2026-09-08 — <b>073-human-gate-intake</b></h2>
 
 <p><b>Human-gate mail intake (from 073), after Phase 4:</b> mail that must stop at Junyan — money above routine, legal/insurance, government/bank senders, LLM-flagged consequential novelty — lands on <b>✅ Actions to Perform</b> (<code>For = Junyan</code>, with <code>Basis</code> and a deadline), never on the bot board. A hot deterministic subset (chargeback, government deadline) also fires one SMS via the existing phone.com path. REVIEW happens in-session (Junyan&#x27;s ruling). The staleness half is already this ticket&#x27;s stall path (Correction 2, criterion F) — do not build a second one. Gated on <b>068</b> so the classes arrive labelled.</p>
@@ -769,9 +874,11 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ol>
 <p>and machine-format stubs live → Responder query excludes rules labels.</p>
 <ol>
-<li>4. Close when phase 3&#x27;s residue partition is live and one week shows zero duplicate tickets</li>
+<li>4. ~~Close when phase 3&#x27;s residue partition is live and one week shows zero duplicate tickets</li>
 </ol>
-<p>across both writers.</p>
+<p>across both writers.~~ <b>REWRITTEN 2026-09-11 — see &quot;The close condition was unmeasurable&quot;</p>
+<p>below.</b> Close when the daily misfile audit reports <b>zero misfiles for 7 consecutive days</b>,</p>
+<p>with at least one day&#x27;s cases sampled by a human.</p>
 
 <h2>Build log — 2026-09-11 (session 1; ticket stays OPEN — phase 2 blocked on a VPS root fix)</h2>
 
@@ -1012,11 +1119,47 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- Deploy run 34649547375 failed with </code>ssh: connect to host 2.25.139.60 port 22: Connection timed</li>
 </ul>
-<p>out` while the host was healthy and reachable throughout (a TCP connect from inside the VPS</p>
+<p>out<code> while the host was healthy and reachable throughout (a TCP connect from inside the VPS</p>
 <p>container to :22 succeeded, and every other lane kept firing). A GitHub runner address being</p>
 <p>blocked — fail2ban is the obvious suspect — fits the evidence. <b>Unconfirmed, needs a root</p>
 <p>shell, and it will recur if that is the cause.</b></p>
-</div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 11 out of the who&#x27;s-in-today ticket. Junyan ruled the same day: the program finds the booking, the thinking robot decides</li><li>Built Sep 11: every ten minutes a program reads the booking board and writes one to-do card for each booking that needs a call — still unmarked after it ended, a first-timer who hasn&#x27;t shown up, a goodbye text to cancel for a no-show, a finished booking with no thank-you text queued</li><li>The program never marks a booking itself. A wrong &#x27;no-show&#x27; mark would text a renter who was actually there</li><li>It&#x27;s on the server but not switched on: Junyan activates it, wires the ten-minute timer, reads a few days of dry-run output, then flips it live</li><li>The old chore comes off the robot&#x27;s list only once the cards are seen being worked — the July lesson</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
+
+
+<h3>The close condition was unmeasurable, and is now rewritten — 2026-09-11</h3>
+
+<p><b>The old one could never fail.</b> It read &quot;one week shows zero duplicate tickets across both</p>
+<p>writers&quot;. There is only ONE ticket writer: the Responder. The rules stage creates no tickets at</p>
+<p>all — rung 3 (machine-format stubs) was deliberately not built, because this lane reads message</p>
+<p><b>metadata only, never a body</b>, and every ticket-forming machine class needs the body. So the</p>
+<p>number that condition watches is structurally always zero. A test that cannot fail is not a test.</p>
+
+<p><b>Rung 3 is dropped from this ticket, not deferred inside it.</b> Three reasons: the lane as built</p>
+<p>cannot do it without giving up its own safety property; a second ticket writer reintroduces the</p>
+<p>two-writers-one-job seam this whole effort exists to remove (the same reasoning that merged the</p>
+<p>Triager into the Responder); and the original justification — machine mail overwhelming the</p>
+<p>reading pass — is now false, since the Responder clears the inbox to zero and the rules stage</p>
+<p>strips the noise ahead of it. <b>If stubs are ever wanted, they are a different lane and a new</p>
+<p>ticket.</b></p>
+
+<p><b>The replacement is measurable because it can fail.</b> A daily audit (</code>audit()<code> in </code>mail_rules.py<code>,</p>
+<p>dc-canon </code>2335dadd5<code>) re-reads what the lane has sorted and asks the only honest question: <b>did a</p>
+<p>human take any of it back?</b> The lane cannot mark its own homework — it filed a thread <i>because</i></p>
+<p>the thread matched, so re-checking the match proves nothing. Three signals, each a deliberate</p>
+<p>human act:</p>
+
+<p>| Signal | What it means |</p>
+<p>|---|---|</p>
+<p>| </code>conversation<code> | the thread grew past one message — every rule is keyed to single-message machine notifications, so a second message means a person replied, or it was never that class |</p>
+<p>| </code>starred<code> | somebody marked it by hand; nothing automated stars mail |</p>
+<p>| </code>un-archived<code> | back in the inbox after a </code>Full` rule archived it — only a person does that |</p>
+
+<p>No signal is the <i>absence</i> of something. Counting quiet as success is how a check becomes</p>
+<p>decoration. It runs once a day off the clock (no cursor to go stale), <b>reports and never</p>
+<p>repairs</b> — a misfile is a rule needing a human decision, not something to paper over on the next</p>
+<p>tick — and its counts land in the pass headline with the cases in a table on the daily report.</p>
+
+<p><b>New close condition:</b> zero misfiles for 7 consecutive days, with at least one day&#x27;s cases read</p>
+<p>by a human. That can fail, which is the point.</p></div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 11 out of the who&#x27;s-in-today ticket. Junyan ruled the same day: the program finds the booking, the thinking robot decides</li><li>Built Sep 11: every ten minutes a program reads the booking board and writes one to-do card for each booking that needs a call — still unmarked after it ended, a first-timer who hasn&#x27;t shown up, a goodbye text to cancel for a no-show, a finished booking with no thank-you text queued</li><li>The program never marks a booking itself. A wrong &#x27;no-show&#x27; mark would text a renter who was actually there</li><li>It&#x27;s on the server but not switched on: Junyan activates it, wires the ten-minute timer, reads a few days of dry-run output, then flips it live</li><li>The old chore comes off the robot&#x27;s list only once the cards are seen being worked — the July lesson</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
 
 <p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
 <p><b>093</b> on the assumption that the FAST-TRACK retirement and the</p>
@@ -1476,6 +1619,69 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Whatever is chosen, the <code>unverifiable</code> guard survives intact — a failed read must still never</li>
 </ul>
 <p>close or flag a row.</p>
+
+<h2>Answer 4 — 2026-09-11: the premise is wrong for a QUEUED message</h2>
+
+<p>All three candidates above turn on the same assumption: <b>the proof lives in the J28 ledger, and</p>
+<p>the ledger is unreachable.</b> That is true for a message sent by hand, which is the case the ticket</p>
+<p>was cut from (David Diep, typed into a phone at 9:42 PM). It is <b>not</b> true for a message that went</p>
+<p>through the queue.</p>
+
+<p>A queued message&#x27;s receipt is <code>Sent At</code> + <code>Dispatch Receipt</code> on its own ✉️ Message Queue row, in</p>
+<p>the same Notion workspace the tick already reads on every pass. No ledger, no venue decision, no</p>
+<p>new connector, and no dependency on <b>043</b>&#x27;s</p>
+<p><code>INV_LEDGER_URL</code> fog. The ticket has been waiting since 2026-08-15 on a question it did not need</p>
+<p>answered.</p>
+
+<p><b>Built and merged</b> (PR <a href="https://github.com/junyanboon/desk-correspondence/pull/137" target="_blank" rel="noopener">#137</a>):</p>
+<p><code>verify_message_queue</code> in <code>loop.py</code> reads the queue row named in <code>Proof target</code>, and a <code>human_mark</code></p>
+<p>row that names one is routed to it. That is what the Manual Help class already demands of such a</p>
+<p>row — <i>&quot;a Manual Help proposal must name its own ground-truth read.&quot;</i> Three refusals kept:</p>
+
+<ul>
+<li>- only <code>Sent</code> <b>with a timestamp</b> closes the row;</li>
+<li>- <code>Will Not Send</code> returns <code>unverifiable</code> with the reason — a suppressed notice is a human&#x27;s</li>
+</ul>
+<p><code>Won&#x27;t Do</code>, and the tick must never record it as <code>Done</code>;</p>
+<ul>
+<li>- a failed read returns <code>unverifiable</code>, never a mismatch. The <b>045</b></li>
+</ul>
+<p>guard is intact, as the third acceptance line requires.</p>
+
+<p>The words &quot;Message Queue&quot; before the id are load-bearing. Artist ids, ticket ids and SOP ids share</p>
+<p>the 32-hex shape and sit in the same <code>Proof target</code> prose; a bare match reads the wrong page. This</p>
+<p>is the same class of defect as Zoe Young&#x27;s row below — a proof written as prose rather than as a</p>
+<p>keyed field.</p>
+
+<p><b>Verified read-only against the live board the same session.</b> The two open rows carrying a queue</p>
+<p>id resolved to real reads (<code>7fa47ebd</code>, <code>98dd3822</code>) instead of *&quot;Proof type &#x27;human_mark&#x27; has no</p>
+<p>deterministic verifier&quot;*. <b>Both read <code>Will Not Send</code></b> — so the fix moved them from <i>unreadable</i></p>
+<p>to <i>readable and correctly refused</i>, which is the honest outcome and not a close.</p>
+
+<h3>What this does NOT answer, so the ticket stays open</h3>
+
+<ul>
+<li>- <b>The hand-sent case — the original David Diep shape.</b> A message typed by hand has no queue row.</li>
+</ul>
+<p>Its proof is the phone.com record or the ledger. Note that <code>event-gate</code> <b>already reaches</p>
+<p>phone.com</b> in six of its own modules (<code>poller.py</code>, <code>inbound.py</code>, <code>closing_reminder.py</code>,</p>
+<p><code>move_sweep.py</code>, <code>artist_ensure.py</code>, <code>booking_sweep.py</code>), so candidate 1&#x27;s venue problem is</p>
+<p>narrower than the ticket assumed here too — but that verifier is not built.</p>
+<ul>
+<li>- <b>Acceptance line 2</b> (<i>no row sits open past its <code>Deadline</code> without something saying so</i>) is</li>
+</ul>
+<p>untouched. That is 053&#x27;s stall path, still unbuilt.</p>
+<ul>
+<li>- Candidate 3 — banning <code>human_mark</code> where a machine record exists — is now the cheaper rule it</li>
+</ul>
+<p>always was, and worth ruling on: a row whose send goes through the queue should carry a queue</p>
+<p>reference, not a human mark.</p>
+
+<p><b>Measured finding worth keeping:</b> on 2026-09-11 the bot board held five open rows and <b>not one</p>
+<p>of them could close itself</b> — two Doorman rows with no parseable <code>Booking ref</code> and no <code>Proof type</code>,</p>
+<p>two message rows reading <code>Will Not Send</code>, and one <code>account</code> proof type with no verifier at all. The</p>
+<p>disease this ticket names is not one proof type. It is that a proposal may state a proof the tick</p>
+<p>has no way to read, and nothing checks that at propose time.</p>
 </div></details></details></div><div class="job"><div class="jnum">#083</div><div class="jhead"><span class="emoji">👻</span><h4>Empty leftover door-code entries make the system think it has the wrong person</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>When someone gets a door code, an empty placeholder entry is sometimes left behind under their name</li><li>The system then sees two entries with one name and stops, saying &#x27;I cannot tell which of these is you&#x27;</li><li>That blocks real renters whose code is perfectly fine — it happened to Hanano (five leftovers) and Hannah (three)</li><li>The fix: ignore anything with no code on it. An empty entry opens no door, so it is not a second person</li><li>Two entries that BOTH open doors still stop the system — that one is a genuine mix-up and a human should look</li><li>Fix it in one place so every robot that uses door codes gets it at once</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Make /provision ignore codeless shells instead of calling them ambiguous</b></p><h2>Question</h2>
 
 <p>Ruled 2026-08-18 (in <b>081</b>, where it was specified but not built —</p>
@@ -17524,5 +17730,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 19:32 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-11 23:15 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
