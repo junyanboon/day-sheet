@@ -1274,6 +1274,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+
+      <li class="entry det">
+      <details>
+      <summary><span class="when">2026-09-14 &middot; 21:3xZ</span>
+      <h3>Deck claims poll: one KV read instead of one per claim &mdash; reads had reached 59% of the free tier&rsquo;s daily allowance<span class="kind">DECK &middot; deck-app &middot; KV &middot; COMMITTED (deploy pending)</span></h3></summary>
+      <p><strong>What the numbers said.</strong> Four days after the list fix (09-10 entry) the <code>CLAIMS</code> namespace does 43&ndash;49 <code>list</code> calls a day against 1,000 &mdash; fixed. But reads ran 15,295 / 58,790 / 47,042 / 45,730 on 09-11 to 09-14 against a 100,000 cap. Cause: 34 stored claims, and each poll read the index and then every claim key, about 35 reads a minute per open tab. One tab all day used half the allowance; two tabs would pass it. A read 429 is worse than the list one was &mdash; reads sit under claiming, releasing, booking updates and the coverage cron, so all of it would stop until 00:00Z.</p>
+      <p><strong>The change.</strong> <code>src/kv_index.js</code>: the index document now carries the records, not just the key names. A poll is one <code>get</code>. Writers <code>indexSet</code>/<code>indexRemove</code> on claim, release, booking update, coverage cancel and coverage rename. The hourly rebuild (one <code>list</code> plus one <code>get</code> per key) reconciles expiry and lost same-second writes; the derived-key probe from 09-10 is kept. An index from before this change is filled once on first read. Expected: about 3,000 reads a day per open tab. 170 tests. Commit in <code>deck-app</code>, pushed; deploy is Junyan&rsquo;s (<code>npm run deploy</code>).</p>
+      <p><strong>Decision recorded.</strong> Junyan, 2026-09-14: stay on the free tier. The $5 Workers Paid plan stays the fallback if another namespace starts listing or reads climb again.</p>
+      </details>
+    </li>
     <li class="entry det"><details>
       <summary><span class="when">2026-09-11 &middot; late evening</span>
       <h3>ONE BOARD &mdash; &#9197;&#65039; Next Action retires; every action row lives on &#9989; Actions to Perform &middot; LIVE, DRAINED, BOARD DECOMMISSIONED<span class="kind">&#9989; ACTIONS &middot; EVENT-GATE &middot; /reconcile-sweep &middot; desk-loop (draining) &middot; wayfinder 053</span></h3></summary>
