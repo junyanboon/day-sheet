@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-14 17:24 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-14 17:26 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1329,7 +1329,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>|---|---|</p>
 <p>| </code>conversation<code> | the thread grew past one message — every rule is keyed to single-message machine notifications, so a second message means a person replied, or it was never that class |</p>
 <p>| </code>starred<code> | somebody marked it by hand; nothing automated stars mail |</p>
-<p>| </code>un-archived<code> | back in the inbox after a </code>Full` rule archived it — only a person does that |</p>
+<p>| </code>un-archived<code> | back in the inbox after a </code>Full<code> rule archived it — only a person does that |</p>
 
 <p>No signal is the <i>absence</i> of something. Counting quiet as success is how a check becomes</p>
 <p>decoration. It runs once a day off the clock (no cursor to go stale), <b>reports and never</p>
@@ -1337,7 +1337,36 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>tick — and its counts land in the pass headline with the cases in a table on the daily report.</p>
 
 <p><b>New close condition:</b> zero misfiles for 7 consecutive days, with at least one day&#x27;s cases read</p>
-<p>by a human. That can fail, which is the point.</p></div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 11 out of the who&#x27;s-in-today ticket. Junyan ruled the same day: the program finds the booking, the thinking robot decides</li><li>Built Sep 11: every ten minutes a program reads the booking board and writes one to-do card for each booking that needs a call — still unmarked after it ended, a first-timer who hasn&#x27;t shown up, a goodbye text to cancel for a no-show, a finished booking with no thank-you text queued</li><li>The program never marks a booking itself. A wrong &#x27;no-show&#x27; mark would text a renter who was actually there</li><li>It&#x27;s on the server but not switched on: Junyan activates it, wires the ten-minute timer, reads a few days of dry-run output, then flips it live</li><li>The old chore comes off the robot&#x27;s list only once the cards are seen being worked — the July lesson</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
+<p>by a human. That can fail, which is the point.</p>
+<h3>Phase 4 — audit clock, 2026-09-14: two clean days, one lost to a missed tick, trigger fixed</h3>
+
+<p><b>Audit results so far</b> (Workflow Reports, </code>Mail Rules — &lt;date&gt;<code>, the 09:00 pass):</p>
+
+<p>| Day | Audit line | Clock |</p>
+<p>|---|---|---|</p>
+<p>| 2026-09-12 | </code>audit 20 checked, 0 misfiled<code> | day 1 clean |</p>
+<p>| 2026-09-13 | </code>audit 8 checked, 0 misfiled<code> | day 2 clean |</p>
+<p>| 2026-09-14 | <b>no audit</b> — the report goes 08:55 → 09:05; the 09:00 tick did not run | hole, not a pass |</p>
+
+<p><b>The defect was the trigger, not the audit.</b> </code>audit_due()<code> fired only inside 09:00–09:04 Toronto,</p>
+<p>so one skipped five-minute tick cost the whole day. Why that tick was skipped is not confirmed:</p>
+<p>other gaps in the day line up with container restarts from deploys (15:01Z, 17:01Z, 20:48Z), but</p>
+<p>no deploy ran near 13:00Z.</p>
+
+<p><b>Fix — dc-canon </code>bfd13abd2<code>, deployed run </code>34897427096<code>, </code>/health<code> </code>git_sha bfd13ab<code> (containment</p>
+<p>by </code>merge-base --is-ancestor<code>).</b> The audit now fires on the first pass at or after 09:00 that has</p>
+<p>not yet audited that day, tracked by an in-memory last-audit date. A container restart forgets the</p>
+<p>marker and audits once more that day — harmless, the audit is read-only — whereas a gap is exactly</p>
+<p>the failure the audit exists to prevent. Two new tests (missed-tick case; once-a-day guard);</p>
+<p>suite 127 green. First run under the new trigger: 2026-09-15 09:00 Toronto.</p>
+
+<p>Also confirmed this session: the Toronto-midnight report fix (</code>75546d391`) is on the host — report</p>
+<p>pages now open at 04:00Z. The sorter itself ran clean all three days, zero errors, filing GitHub</p>
+<p>run-failure notices as they arrived.</p>
+
+<p><b>Clock: 2 of 7. Day 3 is a hole; the count continues from 09-15 if clean, and restarts only on a</p>
+<p>misfile.</b></p>
+</div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 11 out of the who&#x27;s-in-today ticket. Junyan ruled the same day: the program finds the booking, the thinking robot decides</li><li>Built Sep 11: every ten minutes a program reads the booking board and writes one to-do card for each booking that needs a call — still unmarked after it ended, a first-timer who hasn&#x27;t shown up, a goodbye text to cancel for a no-show, a finished booking with no thank-you text queued</li><li>The program never marks a booking itself. A wrong &#x27;no-show&#x27; mark would text a renter who was actually there</li><li>It&#x27;s on the server but not switched on: Junyan activates it, wires the ten-minute timer, reads a few days of dry-run output, then flips it live</li><li>The old chore comes off the robot&#x27;s list only once the cards are seen being worked — the July lesson</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
 
 <p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
 <p><b>093</b> on the assumption that the FAST-TRACK retirement and the</p>
@@ -18090,5 +18119,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-14 17:24 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-14 17:26 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
