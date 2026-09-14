@@ -1276,6 +1276,12 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
 
       <li class="entry det">
+    <details>
+      <summary><span class="when">2026-09-14 &middot; 21:25Z</span>
+      <h3>Mail-rules daily audit &mdash; one missed tick no longer loses the day<span class="kind">EVENT-GATE &middot; /mail-rules &middot; wayfinder 054 phase 4</span></h3></summary>
+      <p><strong>What happened.</strong> The daily misfile audit fired only inside 09:00&ndash;09:04 Toronto. On 2026-09-14 the 09:00 tick did not run (report goes 08:55 &rarr; 09:05), so the day had no audit and ticket 054&rsquo;s seven-day clock lost a day. Days 1 and 2 (09-12: 20 checked, 0 misfiled; 09-13: 8 checked, 0 misfiled) stand.</p>
+      <p><strong>Failure mode changed.</strong> The audit now runs on the first pass at or after 09:00 that has not yet audited that day, tracked by an in-memory last-audit date. A container restart forgets the marker and audits once more that day &mdash; harmless, the audit is read-only and only reports. dc-canon <code>bfd13abd2</code>, deploy run <code>34897427096</code>, <code>/health</code> <code>git_sha bfd13ab</code> by <code>merge-base --is-ancestor</code>. First run under the new trigger: 2026-09-15 09:00 Toronto. Remaining unexplained: why the 13:00Z tick was skipped &mdash; other gaps that day line up with deploy restarts, this one does not.</p>
+    </details>
       <details>
       <summary><span class="when">2026-09-14 &middot; 21:3xZ</span>
       <h3>Deck claims poll: one KV read instead of one per claim &mdash; reads had reached 59% of the free tier&rsquo;s daily allowance<span class="kind">DECK &middot; deck-app &middot; KV &middot; COMMITTED (deploy pending)</span></h3></summary>
