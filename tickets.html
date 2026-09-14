@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-11 23:15 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-14 17:24 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,9 +100,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">19</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">107</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">108</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -639,6 +639,174 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p>Plumbing Map entry. Not yet done — waits on Junyan&#x27;s say-so for the canon edit.</p>
 
+<h2>2026-09-11 evening — ONE BOARD. ⏭️ Next Action retires (Junyan: &quot;Let&#x27;s do one board then.&quot;)</h2>
+
+<p>Asked, after the section below: *&quot;Can you look and see if it makes sense to have the next</p>
+<p>action db if this is already happening and working.&quot;* Measured, then ruled the same evening.</p>
+
+<h3>The evidence that decided it</h3>
+
+<p>| Feature the bot board was built for | Ever used, all 138 rows |</p>
+<p>|---|---|</p>
+<p>| Reviewer rewrites a proposal, the diff becomes SOP feedback | <b>1 row</b> |</p>
+<p>| Promotion ladder (<code>Promotion N</code> on the ten classes) | <b>0 of 10</b> set |</p>
+<p>| Handback (<code>Blocked by</code> / <code>Continuation</code>) | 5 rows |</p>
+<p>| A bot executed the action (<code>Executed by = Agent</code>) | 26, all August pilot; executor off since 09-04 |</p>
+<p>| Machine VERIFY closed the row | <b>66</b>, 30 of them work a human did |</p>
+
+<p>The last line is the one real thing, and <code>stale_sweep.py</code> had rebuilt it on the human board the</p>
+<p>same morning. The split never kept Junyan&#x27;s pile clean either: of 56 open human-board rows,</p>
+<p>40 were <code>For = Ops Lead</code>, nine were one &quot;Overnight verification&quot; per lane per night, thirteen the</p>
+<p>same Desk Invariants defect filed three runs running. What sorts the pile is <code>For</code> and the</p>
+<p>rolling-row rule, and the Deck already piles by <code>For</code>. Neither needs a second board. The ruling</p>
+<p>had flipped three times (08-05, 09-04, 09-08) — nobody had a stable reason for two.</p>
+
+<p><b>Ruled: one board, ✅ Actions to Perform. Who closes a row is a FIELD, not a board.</b></p>
+
+<h3>Executed the same night</h3>
+
+<ul>
+<li>- <b>Schema</b> (done, 23:35 Toronto, via the Notion connector): <code>Deadline</code>, <code>Proof type</code></li>
+</ul>
+<p>(<code>booking_present</code> / <code>booking_absent</code> / <code>message_queue</code> / <code>paid</code> / <code>ticket_terminal</code> /</p>
+<p><code>ops-check</code> / <code>human_mark</code>), <code>Executed by</code>, <code>Verified</code>, <code>Verified at</code> on ✅ Actions to Perform.</p>
+<ul>
+<li>- <b>Canon</b> (six files): <code>the-loop.md</code> § &quot;One board&quot; supersedes the 09-08 three-board ruling</li>
+</ul>
+<p>(kept for the record); <code>action-board-routing.md</code> and <code>automatic-operational-closure.md</code> —</p>
+<p>both written earlier the same day, routing Analyst/Timekeeper checks TO the bot board — carry a</p>
+<p>superseding header; <code>job-4-handback.md</code> now tells the Concierge to close review rows to</p>
+<p><code>Processed</code> (<code>Done</code> is not a status on this board); <code>autonomy.md</code>, <code>house-rules.md</code>.</p>
+<p><b>This is the Timekeeper&#x27;s, Analyst&#x27;s and Concierge&#x27;s instruction change</b> — they file</p>
+<p>through <code>action_routing.py</code> in code and read canon for the rest. Of twenty live cloud</p>
+<p>prompts, only The Loop (already off) names the bot board.</p>
+<ul>
+<li>- <b>Code</b> — PR <a href="https://github.com/junyanboon/desk-correspondence/pull/139" target="_blank" rel="noopener">#139</a>, 2546 tests:</li>
+</ul>
+<p><code>proof.py</code> (new, the shared booking/queue readers); <code>stale_sweep.py</code> becomes THE closer</p>
+<p>(<code>Proof type</code> dispatch, the ops-check processor on the reconcile tick, the criterion-F</p>
+<p>deadline mark as a dated <code>Ask</code> never a Status, executor-agnostic fields on every close, and</p>
+<p><b><code>migrate_analyst</code> deleted</b> — it moved human-board rows <i>to</i> the bot board);</p>
+<p><code>action_routing.py</code> targets ✅ (contract in <code>Verify by</code>, key in the title, a legacy row is</p>
+<p><b>armed in place</b>, never cancelled and re-created); <code>job1_flags.py</code>, <code>invariants.py</code>,</p>
+<p><code>day_sheet_build.py</code> repointed; <code>loop.py</code> delegates its readers and keeps draining the old</p>
+<p>board.</p>
+<ul>
+<li>- <b>Collision, ported.</b> While this was being built Codex merged <code>d0caf1ec8</code> — a third contract</li>
+</ul>
+<p>kind, <code>booking-message-review</code>, reserved for the Concierge. Ported onto the one board:</p>
+<p><code>process</code> returns <code>concierge</code>, no coded close, no expiry; its module files and inventories</p>
+<p>on ✅.</p>
+
+<h3>2026-09-12 00:xx — merged, deployed, drained, DECOMMISSIONED</h3>
+
+<ul>
+<li>- <b>Merged</b> #139 as <code>81cad6f0b</code>; <b>deployed</b> (run <code>34672132160</code>); <code>/health</code> reads</li>
+</ul>
+<p><code>git_sha 81cad6f</code>, fingerprint <code>15fa2402c380</code>, started 04:07:26Z — containment by</p>
+<p><code>merge-base --is-ancestor</code>, not by eye. Read-only pass of the deployed closer over every live</p>
+<p>open ✅ row: all 24 <code>leave</code>, no false closes, no errors, no Run Error rows.</p>
+<ul>
+<li>- <b>Drained</b> all six open bot-board rows, one attended write per row through the Notion</li>
+</ul>
+<p>connector (the batch script was refused by the sandbox and not worked around). Create, read</p>
+<p>back, then close the source <code>Won&#x27;t Do</code> with <code>Verification = moved → &lt;url&gt;</code>. Three Doorman</p>
+<p>rows → <code>Type = Access / PIN</code>, <code>For = Ops Lead</code>, <code>human_mark</code>, their <code>check_access_covers</code></p>
+<p>target in <code>Verify by</code>. Two Loop rows → <code>Type = Decision</code>, <b><code>For = Junyan</code></b>, because both</p>
+<p>held queue rows read <code>Will Not Send</code> — a human ruling, not a bot close. <code>Raised by = The Loop</code></p>
+<p>is not an option on ✅ and no option was added for a retiring lane; those two carry <code>Other</code></p>
+<p>with the true raiser as the first line of Notes. The Analyst row&#x27;s ✅ twin had been</p>
+<p><b>Cancelled by the old code at 22:36 as &quot;rerouted to Next Actions&quot;</b> — reopened by hand</p>
+<p>(a bot&#x27;s routing cancellation, not a ruling) and armed with the typed contract; <code>bot_contract</code></p>
+<p>parses and binds, <code>process()</code> dry-run reads it.</p>
+<ul>
+<li>- <b>Decommissioned</b>: ⏭️ Next Action at <b>0 open rows</b>, renamed *&quot;⏭️ Next Action — RETIRED</li>
+</ul>
+<p>2026-09-12&quot;* with the ruling in its description; kept, not trashed, as the audit record of</p>
+<p>the pilot. 🚥 rows <code>desk-loop (Cloud Run)</code> and <code>The Loop</code> set <code>Runtime state = Disabled</code>,</p>
+<p><code>Monitoring = Not reporting</code>, so no one reads a green light off a dead lane again.</p>
+
+<h3>2026-09-12 11:28Z — switches flipped (Junyan: &quot;Merge and deploy and flip the switches&quot;)</h3>
+
+<ul>
+<li>- <b>PR <a href="https://github.com/junyanboon/desk-correspondence/pull/142" target="_blank" rel="noopener">#142</a> merged</b> as</li>
+</ul>
+<p><code>02aedfa68</code> and deployed; <code>/health</code> reads <code>git_sha 02aedfa</code> by containment. It carries the</p>
+<p>two defects the drain surfaced: a <code>human_mark</code> row takes no prose shortcut (the two moved</p>
+<p>Decisions name an <b>archived</b> queue page, and the prose path had raised</p>
+<p><code>ValueError(&#x27;archived source&#x27;)</code> every tick), and a row the old code cancelled as</p>
+<p><i>&quot;Agent-owned check moved to&quot;</i> is re-armed by <code>file_bot</code> instead of treated as closed work.</p>
+<ul>
+<li>- <b>Flags set on the host</b> via the documented root route (HERMES-ACCESS.md § 2c), in</li>
+</ul>
+<p><code>/docker/danceannex-mcp/event-gate.env</code>, backup <code>event-gate.env.bak-053-20260912T112851Z</code>,</p>
+<p>append-only, dated comment: <code>STALE_SWEEP_LIVE=1</code>, <code>LOOP_DISABLED=1</code>,</p>
+<p><code>LOOP_DS_NEXT_RETIRED=1</code>. <code>RECONCILE_SWEEP_LIVE=1</code> was already present. Only the</p>
+<p><code>event-gate</code> container was recreated (<code>docker compose -f compose.json up -d event-gate</code>);</p>
+<p>all five read back from inside the container; <code>/health</code> healthy, same sha, <code>started</code></p>
+<p>11:28:53Z. <b>The closer is live.</b> The old tick answers <code>disabled</code>.</p>
+
+<h3>Phase 4 — measured on one board (<code>scripts/phase4_measure.py</code>, read-only)</h3>
+
+<p>The criteria re-read for one board: <b>E</b> = fewer than 5 new <code>For = Junyan</code> rows/day for</p>
+<p>3 consecutive days (bot-closable rows are not his pile); <b>F</b> = zero Pending Review rows</p>
+<p>carrying a <code>Proof type</code> past their <code>Deadline</code>, 7 consecutive days; <b>G</b> = at most one open row</p>
+<p>per (writer, check), where a check is the <code>[lane:…]</code> key or the title with stamps and subjects</p>
+<p>stripped.</p>
+
+<p><b>Day 1 — 2026-09-12 07:34 Toronto</b></p>
+
+<p>| | |</p>
+<p>|---|---|</p>
+<p>| E, new <code>For = Junyan</code> rows/day, Sep 6→12 | 18 · 6 · 14 · 13 · 11 · 20 · 6 — streak 0, <b>not yet</b> |</p>
+<p>| F, typed open rows past deadline | 0 of 0 — <b>holds</b> (the six typed rows are <code>Ruled</code>, not Pending Review, so they will re-enter when the Concierge hands them back) |</p>
+<p>| G, (writer, check) groups with &gt;1 open row | <b>4, all one writer</b>: Overnight verification — doorman ×3, timekeeper ×3, host ×3, custodian ×2 — <b>fails</b> |</p>
+<p>| <code>Raised by = Other</code> open rows | 15 of 27 |</p>
+
+<p><b>So &quot;what&#x27;s left&quot; is one writer.</b> The <i>Overnight verification</i> lane (&quot;Independent overnight</p>
+<p>verifier&quot;, writes with the shared Desk CLI token, <code>Raised by = Other</code>, <code>For = Junyan</code>, one row</p>
+<p>per lane per night with the stamp in the title, 24 rows in 5 days, 12 open) is the only</p>
+<p>violator of G and the largest single contributor to E.</p>
+
+<p><b>Found and fixed as a handoff (2026-09-12 07:5x Toronto).</b> It is <code>Agent Fleet/overnight-verifier</code></p>
+<p>(<code>verifier/publish.py</code>), a systemd lane on the VPS every 15 min under</p>
+<p><code>/opt/danceannex-overnight-verifier/current</code>. It keyed each Review row by lane <b>and</p>
+<p>occurrence</b>, so a failed night stayed open forever and the next night added a row. Branch</p>
+<p><code>claude/overnight-verifier-lane-rows</code> on <code>agent-fleet</code> (<code>51d6b9a4</code>, 47 tests): one row per</p>
+<p>lane, marker <code>overnight-verifier:&lt;lane&gt;</code>, title <code>[overnight:&lt;lane&gt;]</code>, Notes carry the latest</p>
+<p>night plus a count of earlier unverified nights, closes when the latest night passes, reopens</p>
+<p>on a new failure, a human&#x27;s close stands 24 h. <code>For = Ops Lead</code> (out of Junyan&#x27;s pile),</p>
+<p><code>Raised by</code> from <code>VERIFIER_RAISED_BY</code> — the ✅ board gained an <b>&quot;Overnight Verifier&quot;</b> option</p>
+<p>tonight. <b>Not deployed by me</b>: the deployed release is ahead of git and Codex had uncommitted</p>
+<p>edits to that exact file at 07:38Z. Handed off in <code>CODEX-HANDOFF.md</code> with the migration note</p>
+<p>(the 12 old per-night rows must be closed by hand on the first release). Once released, G</p>
+<p>holds and E drops by 3–7 rows a day. Two corrections to the list above: <b>ticket 123&#x27;s closer is</p>
+<p>not owed</b> (Junyan deleted it on 2026-09-07 with a do-not-rebuild note in <code>the-loop.md</code>; the</p>
+<p>three moved Doorman rows stay <code>human_mark</code>, <code>For = Ops Lead</code>); and <b>Desk Invariants already</p>
+<p>keeps one row per defect and updates it in place</b> (<code>board_escalations</code> / <code>bump_run_count</code>),</p>
+<p>so its rows are distinct defects, not a flood.</p>
+
+<p><b>Day 1, second reading — 2026-09-12 14:24 Toronto</b> (run inside the <code>event-gate</code> container:</p>
+<p><code>docker exec event-gate python3 /tmp/phase4_measure.py</code>, no local token needed)</p>
+
+<p>| | |</p>
+<p>|---|---|</p>
+<p>| E, new <code>For = Junyan</code> rows/day, Sep 6→12 | 18 · 6 · 13 · 13 · 8 · 18 · 9 — streak 0, <b>not yet</b> |</p>
+<p>| F, typed open rows past deadline | 0 of 12 (0 without a Deadline) — <b>holds</b>, day 1 of 7 |</p>
+<p>| G, (writer, check) groups with &gt;1 open row | 0 of 28 — <b>holds</b> |</p>
+<p>| <code>Raised by = Other</code> open rows | 6 of 28 |</p>
+
+<p><b>The verifier handoff is released.</b> <code>/opt/danceannex-overnight-verifier/current</code> now points at</p>
+<p><code>release-20260912-lane-rows-01a095ef</code> (Codex, same day). Three open rows carry</p>
+<p><code>Raised by = Overnight Verifier</code>, one per lane, and the twelve old per-night rows are gone from</p>
+<p>the open set, which is why G flipped from 4 groups to 0 between the two readings. E still</p>
+<p>fails on its own terms: 9 new <code>For = Junyan</code> rows today, against a bar of 5.</p>
+
+<p><b>Criterion F is now measured on the one board</b>: a bot-closable row past its <code>Deadline</code> gets</p>
+<p>a dated <code>Deadline passed …</code> line in <code>Ask</code> and stays visible. The Correction-2 stall path is dead</p>
+<p>by design — there is nothing to move a row to. Rule that never bends: <b>no writer is repointed</p>
+<p>before the closer that will close its rows is deployed.</b></p>
+
 <h2>2026-09-11 — is the queue live? Partly. And the pilot class could not close at all.</h2>
 
 <p>Asked to verify the board before Phase 4 measurement starts. <b>Verdict: partially live.</b> The board</p>
@@ -693,6 +861,16 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>name</b> only, which is correct for all ten live classes. Tests pin the ten names verbatim and both</p>
 <p>broken classes by their real <code>Verify by</code> text; all three fail on the pre-fix code. 2505 pass.</p>
 <p>Same PR answers <b>076</b> — see Answer 4 there.</p>
+
+<p><b>LIVE 2026-09-12 03:15Z</b> on Junyan&#x27;s go-ahead. Squash-merged as <code>12203ec</code>, deployed to Hostinger</p>
+<p>(run <code>34669810183</code>). <code>/health</code> reads <code>git_sha 12203ec</code>, fingerprint <code>44256a87c84e</code> (was</p>
+<p><code>aeba1a941468</code>), <code>started 03:15:20Z</code> — confirmed by <code>merge-base --is-ancestor</code> against both the</p>
+<p>merge commit and <code>origin/main</code>, never by eye, per the deploy script&#x27;s own warning that a stale</p>
+<p><code>git_sha</code> is the tell of a different host answering. <b>Verified on the live board after the</p>
+<p>deploy:</b> <code>expects_absence</code> reads False for Booking move and for Instant booking request approval,</p>
+<p>True for Booking cancel / release; and Kyle&#x27;s row — the one that sat 3.2 days — returns <code>match</code></p>
+<p>against its real class and the real Skedda payload where the old rule returned <code>no-match</code>. First</p>
+<p>live tick on the new code is 08:00 Toronto, since the lane does not run overnight.</p>
 
 <p><b>Clearing the board would not have fixed this.</b> Criterion F would have failed again on the next</p>
 <p>booking move, for a reason nobody was looking at.</p>
@@ -1258,7 +1436,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Plumbing Map entry.</li>
 </ul>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">19</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">22</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
 <p>Junyan&#x27;s Main Focus window today):</p>
@@ -2800,6 +2978,127 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Also to confirm, both registry decisions taken without a ruling: the handoff leash is the longer of two cycles and <b>two days</b> (two cycles of a 30-minute lane is one hour); and <code>fleet</code> evidence is never judged tighter than 30 minutes (the collector runs every 15).</p>
 
 <p><b>Resolves with:</b> eight lines of rulings applied to <code>registry/jobs.json</code> in the same session, and the check re-run.</p>
+
+<h2>Added 2026-09-14 by <b>139</b></h2>
+
+<ol>
+<li>9. <b>Two receivers not on the registry.</b> The Astra migration built <b>Ops Executor</b> (typed Ops execution with feature flags) and <b>Mechanic</b> (technical recovery). Both have merged PRs. Registry rows, or fold them into existing lanes?</li>
+</ol>
+</div></details></details></div><div class="job"><div class="jnum">#140</div><div class="jhead"><span class="emoji">⚖️</span><h4>Nine places where the new code and your earlier rulings disagree — one sit-down to pick</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Door codes, booking changes, staff requests, thank-you sends, the morning catch-up, ticket advancement: each now has two owners on paper</li><li>One line per answer. The losing path gets switched off or deleted afterwards</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Rule the Astra conflicts — nine rows where deployed code and a map ruling disagree</b></p><h2>Question</h2>
+
+<p>The <b>139 crosswalk</b> found nine places where code</p>
+<p>the Astra migration deployed disagrees with a ruling already on this map. Rule 2 of 139 says the</p>
+<p>map wins, but rule 2 also says a row goes to review when keeping the deployed code is cheaper</p>
+<p>than undoing it. One batched session, Junyan&#x27;s style. Each answer is one line.</p>
+
+<ol>
+<li>1. <b>Attendance board, two builders</b> (row 3). PR264 removes a clock-only attendance writer.</li>
+</ol>
+<p><b>137</b> built invariants T/U on the same board on 09-11.</p>
+<p>Deploy PR264, drop it, or merge the two?</p>
+<ol>
+<li>2. <b>Door codes, second writer</b> (row 4). Astra&#x27;s Ops Executor can create and change codes on</li>
+</ol>
+<p>owner authority. The map&#x27;s single writer for codes is the Doorman plus the Registrar sweep</p>
+<p>(<b>123</b>). Keep Ops Executor&#x27;s code path off, or make it the one</p>
+<p>attended write path and retire the alarm-mcp attended writes?</p>
+<ol>
+<li>3. <b>Booking changes, four owners</b> (rows 5 and 11). PR192 splits one ticket class across</li>
+</ol>
+<p>Registrar, Responder, Mechanic and Ops Lead. <b>053</b> put the</p>
+<p>class on the one board. Which is the owner of record?</p>
+<ol>
+<li>4. <b>Staff requests and unclear rules</b> (rows 6 and 13). Astra built an unattended Ops route</li>
+</ol>
+<p>that executes an Ops Lead reply. The map folds these into <code>/fixer</code> and the one board. Keep</p>
+<p>the Ops route off, or let it run for a bounded class?</p>
+<ol>
+<li>5. <b>JOB 7 partial retirement</b> (row 7). PR261 retired five assignment gaps by code. 134 said</li>
+</ol>
+<p>JOB 7 gets ruled from what the loop catches, not by reasoning. Accept PR261 as that evidence?</p>
+<ol>
+<li>6. <b>Reply dispatch, second path</b> (row 10). Two new tokens and a managed-activation flag sit</li>
+</ol>
+<p>beside the send engine (<b>029</b>). One send path or two?</p>
+<ol>
+<li>7. <b>Completion reporting</b> (rows 15 and 20). Astra&#x27;s &quot;Report what actually finished&quot; system is</li>
+</ol>
+<p>built, not deployed. <b>133</b> says the loop&#x27;s</p>
+<p>ground-truth VERIFY may make JOB 34 and this system unnecessary. Freeze it, or finish it?</p>
+<ol>
+<li>8. <b>Ticket advancement, second lane</b> (row 18). A Responder extension advances tickets, off in</li>
+</ol>
+<p>production. <b>094</b> put advancement on the tick and the loop.</p>
+<p>Which lane survives?</p>
+<ol>
+<li>9. <b>Admin steps by Ops Executor</b> (row 21). Filing, notes, contact completion. Fourth executor</li>
+</ol>
+<p>for ticket steps, or the right home for the parts that are not judgment?</p>
+
+<p>Also confirm: Ops Executor and Mechanic go onto the Jobs registry as lanes</p>
+<p>(<b>138</b> gets two more lines).</p>
+
+<p><b>Resolves with:</b> nine one-line rulings recorded here, each conflict&#x27;s losing code path marked</p>
+<p>off or deleted in a follow-up task ticket, and the crosswalk&#x27;s Verdict column updated.</p>
+</div></details></details></div><div class="job"><div class="jnum">#141</div><div class="jhead"><span class="emoji">✂️</span><h4>Cut the Concierge&#x27;s instructions down to the chores it still owns</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Six chores are marked retired inside the prompt but the text is still read every hour. That is the bloat</li><li>Three more chores have working robots now and can go. Money, door and message chores stay until seen working</li><li>Waits on ticket 142: no point trimming a prompt that is not running</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Trim the Concierge prompt — delete the retired blocks and the cut-now rows</b></p><h2>Task</h2>
+
+<p>The saved Concierge prompt (<code>audit-live-prompt.txt</code> snapshot, 2026-09-13) still carries nine</p>
+<p>job blocks. Six are marked retired inside the text: JOB 1, 2, 5, 7, 33 and the FAST-TRACK</p>
+<p>residue. The pass reads all of it every hour. That is the bloat Junyan named on 2026-09-14.</p>
+
+<p>Rule 3 of <b>139</b> adds three cut-now rows whose receivers are</p>
+<p>deployed and on: booking moves (PR192), stuck-job recovery (PRs 184/188/194/195), and the</p>
+<p>unpaid-booking scan (PR199).</p>
+
+<p>Do, Claude-side, one PR:</p>
+
+<ol>
+<li>1. Edit <code>library/concierge-orchestration.md</code> in <code>junyanboon/desk-correspondence</code>. Delete the</li>
+</ol>
+<p>retired blocks. Do not summarise them. A one-line pointer to the receiver is enough.</p>
+<ol>
+<li>2. Regenerate the saved prompt on the VPS from canon. Do not hand-edit the VPS copy.</li>
+<li>3. Add one Desk Watch line per cut-now row: &quot;did the receiver act today?&quot;</li>
+<li>4. Keep every hard-stop block (money, access, physical, policy, review-required sends) until</li>
+</ol>
+<p><b>140</b> rules them.</p>
+
+<p>Blocked by 142 because a prompt edit is wasted if the runtime is not firing this week.</p>
+
+<p><b>Resolves with:</b> the PR merged, the VPS prompt regenerated, and one natural pass whose report</p>
+<p>lists only the surviving blocks.</p>
+</div></details></details></div><div class="job"><div class="jnum">#142</div><div class="jhead"><span class="emoji">🔌</span><h4>Is the Concierge running at all this week, and what is Astra for</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The Concierge runs on Codex, and Codex is out of tokens until Sep 20. First job: check whether it fired after noon on Sep 14</li><li>If not, you pick: switch Hermes to Claude, turn the Claude trigger back on, or run the desk by hand for a week</li><li>Engineering moves to Claude. What Astra does after Sep 20 — nothing, run the pass only, or bounded coding under this map — is your call</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Astra&#x27;s role, and whether the Concierge is firing at all this week</b></p><h2>Question</h2>
+
+<p>Two facts landed together on 2026-09-14. The Concierge runs as a <b>Codex Scheduled Task on the</p>
+<p>VPS</b> since the 08-28 failover. Junyan&#x27;s Codex/Astra tokens are <b>exhausted until 2026-09-20</b>.</p>
+<p>If the task draws on that pool, the desk has no Concierge this week and no prompt edit fixes it.</p>
+
+<p>Junyan also ruled the same day: <b>engineering moves to Claude.</b> Astra ran the 09-12 to 09-14</p>
+<p>migration and produced 20 PRs in two days with no link to this map. What it should do next is</p>
+<p>not settled.</p>
+
+<p>Decide:</p>
+
+<ol>
+<li>1. <b>Is the Concierge firing?</b> One Run Monitor read for 09-14 passes after 12:10. Fact, found</li>
+</ol>
+<p>by the session, not asked of Junyan.</p>
+<ol>
+<li>2. <b>If not, what runs the desk until 09-20?</b> Options: swap the Hermes provider to Claude</li>
+</ol>
+<p>(<code>hermes-provider claude</code>, a provider swap, never a lease flip per HERMES-ACCESS § 2b);</p>
+<p>re-enable the Claude RemoteTrigger; or accept a week of attended-only desk with <code>/fixer</code></p>
+<p>and <code>process-studio-tickets</code>.</p>
+<ol>
+<li>3. <b>Astra&#x27;s standing role.</b> Options: (a) none, retire the Codex lane when tokens return;</li>
+</ol>
+<p>(b) runtime only, Astra runs the Concierge pass but writes no code; (c) bounded engineering</p>
+<p>under this map, one ticket per task, PRs reviewed Claude-side before merge. The</p>
+<p><b>Codex backup map</b> owns token-exhaustion failover and must agree.</p>
+
+<p><b>Resolves with:</b> the runtime fact recorded, the this-week ruling applied (any trigger or</p>
+<p>provider change needs Junyan&#x27;s explicit go), and Astra&#x27;s role written into this map&#x27;s Notes</p>
+<p>and the Codex backup map.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">7</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -3468,6 +3767,67 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>continue from T0 in <code>assets/121-grokbot/GROKBOT-BRIEF.md</code> (the asset folder keeps the</p>
 <p>old ticket number 121; this ticket was renumbered 130 in the 2026-09-06 map trim). To</p>
 <p>retire: delete the Bot in Grok Bot; no other surface holds state.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#139</span><span class="emoji">🗺️</span><span class="done-title">Two teams were fixing the Concierge without knowing about each other — now there is one list</span><span class="done-date">2026-09-14</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE Sep 14. Over two days a second helper (Astra, on Codex) moved 21 Concierge chores to other robots and kept its own progress page</li><li>This map is the one list now. 4 of those moves agree with earlier rulings, 4 are new and accepted, 9 clash with something you already ruled</li><li>The clashes go to one sit-down (ticket 140). The prompt trim is ticket 141. Whether the Concierge even runs this week is ticket 142</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Reconcile the Astra migration into the map — 21 rows, one crosswalk</b></p><h2>Task</h2>
+
+<p>Between 2026-09-12 and 2026-09-14 a separate effort, run on GPT Astra through Codex tasks,</p>
+<p>moved 21 Concierge duties onto other receivers (Registrar, Responder, Ops Executor, Doorman,</p>
+<p>code lanes) and tracked them on a progress page outside this map:</p>
+<p><code>/Users/jboon/Documents/Concierge Runs/migration-progress/index.html</code> (source <code>progress.json</code>,</p>
+<p>coverage audit <code>coverage-audit.md</code>, saved live prompt <code>audit-live-prompt.txt</code>). About 20 PRs</p>
+<p>merged across desk-correspondence, Ops, Skedda and the Deck. The map&#x27;s last edit before this</p>
+<p>ticket was 2026-09-12. Neither side referenced the other.</p>
+
+<p>Rulings taken while cutting this ticket (Junyan, 2026-09-14):</p>
+
+<ol>
+<li>1. <b>Fold, do not keep two trackers.</b> After this ticket the progress page is evidence, not a</li>
+</ol>
+<p>source of truth. Every live row lives here or nowhere.</p>
+<ol>
+<li>2. <b>Map rulings win over Astra rows.</b> Astra&#x27;s deployed code is evidence of what exists. It</li>
+</ol>
+<p>carries no authority. Where deployed code makes a ruling cheaper to keep than to undo, that</p>
+<p>row goes to a batched review instead of a silent overwrite.</p>
+<ol>
+<li>3. <b>Cut the pass now for low-risk duties; hold on proof for hard stops.</b> A Concierge step</li>
+</ol>
+<p>whose receiver is deployed AND switched on leaves the prompt at once, with a Desk Watch</p>
+<p>line for the gap. Money, access, physical work, policy and review-required sends keep the</p>
+<p>&quot;seen acting&quot; rule from <b>137</b>.</p>
+<ol>
+<li>4. <b>Freeze the Codex migration tasks.</b> No new PRs, no deploys from that lane. Astra tokens</li>
+</ol>
+<p>are exhausted until 2026-09-20, so the freeze holds itself.</p>
+<ol>
+<li>5. <b>Engineering moves to Claude.</b> Astra&#x27;s future role is an open decision, not a given</li>
+</ol>
+<p>(new ticket, cut on resolution).</p>
+<ol>
+<li>6. <b>Cost rule.</b> One bounded read per question. No broad audit, no polling.</li>
+</ol>
+
+<p><b>Resolves with:</b> a crosswalk asset that maps each of the 21 rows to an existing ticket, an</p>
+<p>existing ruling, new fog, or a named conflict; the map&#x27;s Notes corrected (runtime line is</p>
+<p>stale); new tickets cut for the conflicts that need Junyan; the progress page marked</p>
+<p>superseded.</p>
+
+<h2>Answer — 2026-09-14</h2>
+
+<p>Crosswalk: <b>assets/139-astra-crosswalk-2026-09-14.md</b>.</p>
+
+<p>Of 21 rows: 4 agree with an existing ruling (rows 1, 2, 9, 14), 4 are new lanes accepted as</p>
+<p>built (stuck-job recovery, invoice evidence, prepaid hours, overtime waiver), 1 is out of the</p>
+<p>migration&#x27;s scope (row 19), and <b>9 conflict with a map ruling</b> (attendance board, door codes,</p>
+<p>booking changes, staff requests and unclear rules, JOB 7, reply dispatch, completion reporting,</p>
+<p>ticket advancement, admin steps). Conflicts go to <b>140</b>, one</p>
+<p>batched session.</p>
+
+<p>Two facts the map lacked: the Concierge is a Codex Scheduled Task on the VPS (Notes corrected),</p>
+<p>and the saved prompt still carries six retired job blocks as live text. The trim is</p>
+<p><b>141</b>. The runtime question, and Astra&#x27;s role now that</p>
+<p>engineering moves to Claude, is <b>142</b>.</p>
+
+<p>The progress page is superseded. It stays on disk as evidence. No live system was touched.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#001</span><span class="emoji">📋</span><span class="done-title">Make one master list of every robot job — and check the owners actually do them</span><span class="done-date">2026-09-11</span></summary><div class="done-body"><ul class="plain-bullets"><li>List all the jobs in one place</li><li>Say who owns each job</li><li>Add a spot for a score and a cost</li><li>NEW: also write down what each job should produce, and when we last saw it produce it</li><li>Because three times now, a job moved to a new owner and quietly stopped getting done</li><li>Saying who owns it is not the same as checking they do it. That is the hole this fills</li><li>If a job has not produced anything for too long, that is a fault — same as any other</li><li>And right after a job changes hands, we watch it twice as closely for a while</li><li>Four new boxes and one check. Junyan&#x27;s rule: keep it small, do not build a whole system</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Jobs registry in the operating library</b></p><h2>BUILT 2026-09-11 — the registry exists, and the check that asks &quot;is the owner still doing it?&quot; ran once and found two silent jobs</h2>
 
 <p>Junyan&#x27;s prompt for this session: <i>&quot;there are agents dropping tasks I believe and we need to make sure that everyone is doing their job.&quot;</i> That is exactly the 2026-08-05 handoff-verification ruling below, so the build went straight at it.</p>
@@ -17730,5 +18090,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-11 23:15 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-14 17:24 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
