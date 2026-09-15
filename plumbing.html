@@ -1277,6 +1277,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
       <li class="entry det">
     <details>
+      <summary><span class="when">2026-09-15 &middot; 21:10Z</span>
+      <h3>Decision: the Apps Script send engine stays on Google; Cloud Run retirement inventory<span class="kind">APPS SCRIPT &middot; CLOUD RUN &middot; FLEET REGISTRY &middot; desk PR #306</span></h3></summary>
+      <p><strong>Ruling (Junyan, 2026-09-15).</strong> The &ldquo;Message Queue Send Engine&rdquo; Apps Script project is not part of the Hostinger migration and is not being moved. It has no billing account and no credit expiry, gets Gmail / Drive / OCR for free, and carries the send guards. Written in <code>RUNTIMES.md</code> &sect; &ldquo;Apps Script stays on Google&rdquo; and <code>CODEX-HANDOFF.md</code> 2026-09-15 21:10Z.</p>
+      <p><strong>What still called Cloud Run</strong> (<code>danceannex-skedda</code>; Cloud Logging since 2026-09-09): only Apps Script <code>PlatformMirror</code> &rarr; <code>skedda-mcp /mirror-booking</code>, because Script Properties <code>SKEDDA_HTTP_URL</code> and <code>ALARM_HTTP_URL</code> still name the Cloud Run hosts (<code>EOB_GATE_URL</code> is already Hostinger). One 97-call burst from the VPS to <code>alarm-mcp</code> on 09-14 was a one-off; Hermes&rsquo; live config, crons and scripts hold no <code>.run.app</code> host. Cloud Scheduler is empty. The Phone.com inbound path never depended on it (Hostinger <code>event-gate-poll</code> pulls every minute).</p>
+      <p><strong>Route change pending Junyan&rsquo;s hands.</strong> Set the two properties to <code>https://skedda-mcp.srv1948070.hstgr.cloud</code> / <code>https://alarm-mcp.srv1948070.hstgr.cloud</code>, run <code>platformMirrorPreflight</code> (HTTP 400 PASS; a 401 means <code>SKEDDA_HTTP_TOKEN</code> must take the Hostinger value). Then the four Cloud Run services lose public invoker for a week and are deleted. Docs repointed: desk PR #306, <code>event-gate-webhook-url.txt</code>, <code>skedda-cli/deploy.sh</code>, cold-standby <code>STALE-ADDRESSES.md</code>.</p>
+      <p><strong>Failure mode closed (partly).</strong> The Fleet Registry never observed Apps Script; the only signal was Google&rsquo;s daily failure email (~15:48 Toronto). New registry source <code>apps-script</code> (<code>agent-os-control-map/scripts/apps-script-fleet.mjs</code>) reads the Apps Script API run list with the clasp login. The current token lacks the <code>script.processes</code> scope, so the source shows a <code>lastError</code> until Junyan re-runs <code>clasp login</code> with that scope. A visible gap, not a green row.</p>
+    </details>
+  </li>
+
+      <li class="entry det">
+    <details>
       <summary><span class="when">2026-09-15 &middot; 21:40Z</span>
       <h3>Deck: a released message shows under Scheduled at once; a release that does not hold is marked &#9888; Rebounded<span class="kind">DECK UI &middot; deck-app <code>e8dbdc4</code>, LIVE 21:50Z</span></h3></summary>
       <p><strong>Failure mode.</strong> After Send or Approve the Deck hid the card and waited for its once-a-minute poll to bring the row back as Ready to Send. Notion&rsquo;s query lags the write, and a rebuild is skipped while the reader is typing, so the row reached the Scheduled section one to three minutes after release and, in between, was in neither section. If the release had silently not held, nothing said so.</p>
