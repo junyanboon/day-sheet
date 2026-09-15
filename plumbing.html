@@ -1277,6 +1277,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
       <li class="entry det">
     <details>
+      <summary><span class="when">2026-09-15 &middot; 21:10Z</span>
+      <h3>Send engine: main() no longer skips its minute behind the Gmail and document ticks<span class="kind">SEND-ENGINE main &middot; send-engine <code>7018502</code>, committed; clasp push PENDING (permission held for Junyan)</span></h3></summary>
+      <p><strong>Failure mode.</strong> Deck releases went out 4&ndash;9 minutes later on 2026-09-15, one or two rows per minute when several were released together (16:08Z batch of four: Sent At 16:13, 16:14, 16:17, 16:18). The engine is built to drain every due row within one minute. All five timed entry points &mdash; <code>main</code> (1 min), <code>sameDayTick</code> (1 min, Gmail search of up to 40 threads), <code>platformMirrorTick</code>, <code>notifyInbound</code> (5 min) and <code>docIntakeTick</code> (works up to 270 s) &mdash; took the one project-wide <code>LockService.getScriptLock()</code>, and <code>main</code> gave up after a 5 s <code>tryLock</code>. Whenever another tick held the lock, the dispatch pass did nothing until the next minute.</p>
+      <p><strong>Route change &mdash; <code>takeScriptLock_</code> in <code>Code.gs</code> (v25).</strong> <code>main</code> alone keeps the script lock (its overlap guard, spec item 10). The other four ticks share the <em>user</em> lock, a separate mutex in the same project, so they still serialize among themselves and never block a dispatch pass. No cadence, trigger, enabled flag or lease changed. All 10 local test files pass.</p>
+      <p><strong>Deploy state.</strong> Before editing, a clasp pull showed the live project equal to origin/main <code>3a6f5c3</code> (17 files) and the local folder 35 commits behind; local was fast-forwarded first. Commit <code>7018502</code> is on origin/main. The live push is <code>clasp push</code> from <code>send-engine/</code>, held for Junyan by the auto-mode classifier. Until it runs, the live engine is still v24 and the lag stays.</p>
+      <p><strong>Verify after push.</strong> Release two or three rows within a minute and expect Sent At within about one minute of release for all of them. In the Apps Script Executions page, <code>main</code> should log <code>engine v25</code>.</p>
+    </details>
+  </li>
+
+      <li class="entry det">
+    <details>
       <summary><span class="when">2026-09-15 &middot; 20:05Z</span>
       <h3>Insurance: hand-filed certificates get their dates back; per-event renters are checked after the booking<span class="kind">SEND-ENGINE docIntakeTick &middot; EVENT-GATE /insurance-sweep &middot; send-engine #13, desk #305, LIVE 19:51Z / 20:05Z</span></h3></summary>
       <p><strong>What had happened.</strong> Ivanka Moskaliuk emailed her certificate on 2026-04-10; it was filed by hand the next day as a &#128206; Docs row with the PDF but no Effective From/To, and her Artist card never got an Insurance Valid Until. The direct-email intake lane (live 2026-09-11) searches only 14 days of mail, and 150 of 162 Certificate of Insurance rows were undated. Separately, per-event renters (Justin Blayney, Anastasia Markevitch; <code>Insurance Model = Per-event (Duuo)</code>) send a certificate on the booking day, often from a broker: intake raised a policy-model review for each one, and the monthly sweep asked about bookings up to 30 days ahead using Duuo mail only.</p>
