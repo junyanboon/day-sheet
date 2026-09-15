@@ -1277,6 +1277,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
       <li class="entry det">
     <details>
+      <summary><span class="when">2026-09-15 &middot; 16:26Z</span>
+      <h3>Renewal notices &mdash; the Treasurer queues held renewal SMS on its 1st and 15th passes<span class="kind">EVENT-GATE &middot; /treasurer-sweep &middot; PR #301 + #302 merged, LIVE 16:26Z</span></h3></summary>
+      <p><strong>Ruling.</strong> Junyan, 2026-09-15, canon <code>library/the-treasurer.md</code> &rarr; Renewals. Run by hand first on the five renters on that day&rsquo;s renewal outlook (4 held SMS queued, outlook Action row Processed).</p>
+      <p><strong>LIVE 2026-09-15 16:26Z.</strong> Merged as <code>c3660a296</code>, deployed on Junyan&rsquo;s &ldquo;merge and deploy&rdquo; (run <code>34993739516</code>, hostinger / update, pinned branch deleted after). <code>/health</code> reads <code>git_sha c3660a2</code>, <code>started 16:26:53Z</code>.</p>
+      <p><strong>Route change.</strong> New message route inside the existing <code>/treasurer-sweep</code> (1st and 15th; no new route, no new timer): <code>renewal_notices.py</code> queues an SMS row at <code>Pending Review</code> (never Ready to Send, no Send After), <code>Raised by = The Treasurer</code>, body from the live &#128172; How to Respond card &ldquo;Renewal notice &mdash; 1AP/AAP&hellip;&rdquo; or &ldquo;&hellip; Fixed Option&hellip;&rdquo;, for each Active membership renter without Renew whose notice day (1AP/AAP end &minus; 15 d, Fixed Option end &minus; 45 d) falls before the next pass. Key <code>[treasurer:renewal-notice:&lt;id8&gt;:&lt;end&gt;]</code>, once per term. An open Sales ticket, or a non-per-event Fixed Option renter with blank/short insurance, gets an Action row for the Ops Lead instead of a message.</p>
+      <p><strong>Switch.</strong> On whenever the Treasurer is live (Junyan: low risk). <code>TREASURER_RENEWALS=off</code> stops it; <code>=shadow</code> logs only. First scheduled pass using it: 2026-10-01.</p>
+      <p><strong>Failure mode after.</strong> Fenced inside the pass: a failure logs and cannot sink the money pass. A missing or ambiguous How to Respond card files one blocked Action row and queues nothing. Nothing sends without a staff release.</p>
+    </details>
+  </li>
+
+      <li class="entry det">
+    <details>
       <summary><span class="when">2026-09-15 &middot; 03:xxZ</span>
       <h3>Missed Booking is a card, never a write &mdash; <code>board_status.py</code> files it, <code>job1_flags.py</code> retires<span class="kind">EVENT-GATE &middot; /reconcile-sweep &middot; wayfinder 137 / 143 &middot; PR #287 merged, LIVE 03:15Z</span></h3></summary>
       <p><strong>Ruling.</strong> Junyan, 2026-09-14: code writes In Studio and Complete; <code>Missed Booking</code> is never written by code. The 09-13 transfer that let <code>board_status.py</code> write it is withdrawn.</p>
@@ -6469,7 +6481,7 @@ f_analystsweep:["analyst-sweep","04:06 America/Toronto · SHADOW · scheduler jo
 f_hostsweep:["host-sweep","04:05 America/Toronto · SHADOW","event-gate /host-sweep — the Host's tier ladder as rules. Job created and ENABLED 2026-09-02 14:53Z. Shadow: logs what tier it would assign, board untouched.","ok"],
 f_overtime:["overtime-sweep","04:10 America/Toronto · SHADOW","event-gate /overtime-sweep — finds bookings that ran over. Job created and ENABLED 2026-09-02 14:53Z. The Skedda extra-time booking and the CC ticket stay with the LLM Timekeeper.","ok"],
 f_bookkeepersweep:["bookkeeper-sweep","06:00 America/Toronto · SHADOW","event-gate /bookkeeper-sweep — the daily money pass as rules, calendar read through a shared-calendar credential rather than a secret. Job created and ENABLED 2026-09-02 16:44Z.","ok"],
-f_treasurersweep:["treasurer-sweep","1st · 15th · Mondays 08:00 · SHADOW","event-gate /treasurer-sweep, read-only Stripe key (it cannot charge). 1st = monthly reconcile, 15th = mid-month check-in, Mondays = card-health dunning check (that job NOT YET CREATED). Also cleans the ⌛ Time Slot Board monthly. Side-by-side with the LLM Treasurer on Oct 1.","ok"],
+f_treasurersweep:["treasurer-sweep","1st · 15th · Mondays 08:00 · SHADOW","event-gate /treasurer-sweep, read-only Stripe key (it cannot charge). 1st = monthly reconcile, 15th = mid-month check-in, both = renewal notices (held SMS, 2026-09-15), Mondays = card-health dunning check (that job NOT YET CREATED). Also cleans the ⌛ Time Slot Board monthly. Side-by-side with the LLM Treasurer on Oct 1.","ok"],
 f_climate:["climate-sweep","hourly :10 (09–23 + 03) · LIVE, commanding","event-gate /climate-sweep — the deterministic Weatherman, in command since 2026-08-31. The LLM Weatherman trigger was DISABLED 2026-09-02; this is the only thermostat controller.","ok"],
 f_greeter:["greeter-sweep","every 5 min, 24/7 · DEPLOY PENDING","event-gate /greeter-sweep — platform booking mail (Giggster, Peerspace…) answered within 5 minutes, and since the 2026-09-02 ruling a platform request is accepted by default: the Greeter holds the room on Skedda. Code is on main; scheduler job not yet created.","ok"],
 f_eventgate:["event-gate","every 1 min · LIVE","Emergency SMS lane — pure rules, no AI, never sleeps. Polls phone.com every minute (no webhook exists); the Twilio backup line rides the same lane. Since 2026-09-02 the same poll also writes every inbound text into the 📬 Correspondence Log at once (corr_log.py), so the Deck sees the message before the reply is drafted.","ok"],
