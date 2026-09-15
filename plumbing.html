@@ -1277,6 +1277,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
       <li class="entry det">
     <details>
+      <summary><span class="when">2026-09-15 &middot; 21:40Z</span>
+      <h3>Deck: a released message shows under Scheduled at once; a release that does not hold is marked &#9888; Rebounded<span class="kind">DECK UI &middot; deck-app <code>e8dbdc4</code>, committed; <code>npm run deploy</code> PENDING (permission held for Junyan)</span></h3></summary>
+      <p><strong>Failure mode.</strong> After Send or Approve the Deck hid the card and waited for its once-a-minute poll to bring the row back as Ready to Send. Notion&rsquo;s query lags the write, and a rebuild is skipped while the reader is typing, so the row reached the Scheduled section one to three minutes after release and, in between, was in neither section. If the release had silently not held, nothing said so.</p>
+      <p><strong>Route change &mdash; <code>sources/deck.html</code>.</strong> On a confirmed release (deck-release write or direct SMS approve) the row is added locally as Ready to Send and rendered under Scheduled immediately; the copy survives a reload for ten minutes. Each queue poll reconciles: Ready to Send or Sent on the server confirms and drops the local copy; Error / Needs Fix, or the old status still present after a three-minute grace, marks the row <b>Rebounded</b>. A rebounded row has its decided mark cleared so it returns to the deck, carries a &#9888; Rebounded badge on its title in the deck, in Scheduled and in Message repairs, and raises a toast naming the recipient. Nothing about sending changed: the Send Engine still reads Notion, not the Deck.</p>
+      <p><strong>Deploy state.</strong> Commit <code>e8dbdc4</code> on deck-app main, 186 tests pass (3 new in <code>test/optimistic-release.test.js</code>). The live worker still runs the previous build until <code>npm run deploy</code> is run from <code>deck-app/</code>.</p>
+    </details>
+  </li>
+
+      <li class="entry det">
+    <details>
       <summary><span class="when">2026-09-15 &middot; 20:40Z</span>
       <h3>Registrar extension lane: multi-date asks go to Actions, "by 15 minutes" is a duration, and it texts on-call only when it booked something<span class="kind">EVENT-GATE /extension-sweep &middot; desk PR #304, NOT MERGED, NOT LIVE &middot; SKEDDA-MCP create_booking 422 open (Hermes)</span></h3></summary>
       <p><strong>What had happened.</strong> Zoey Gould emailed at 10:30 Toronto: extend Studio 527 by 15 minutes (&ldquo;e.g. until 7:45pm&rdquo;) on Sep 20, 27, Oct 4, 18, 25, and charge &ldquo;the extra 1.25 hours&rdquo;. The lane parsed <code>('both', ('until', 15, 0, None), ('plus', 75))</code>: <code>_UNTIL_RE</code> read &ldquo;by 15&rdquo; as 15:00 and stopped at the first match, and <code>_PLUS_RE</code> missed &ldquo;extend our booking by&rdquo; and took the five-date total as the per-booking length. It filed a Review row and texted on-call &ldquo;needs you&rdquo; for an ask it could never book alone.</p>
