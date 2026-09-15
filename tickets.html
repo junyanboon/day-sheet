@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-14 22:35 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-14 22:49 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1525,6 +1525,15 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>real finding or one clean pass with a heartbeat.</p>
 <ul>
 <li>- Plumbing Map entry.</li>
+</ul>
+
+<h2>Done this session (2026-09-15)</h2>
+
+<ul>
+<li>- Build cut: <b>143</b>. Lock fault cut: <b>144</b>.</li>
+<li>- Desk Watch Section I rewritten for the new shape (silent-booking check, code-wrote-Missed-Booking breach check, 137 status line).</li>
+<li>- Map Decisions so far entry added; tickets board rendered and pushed (day-sheet <code>9ffc48f</code>).</li>
+<li>- Nothing changed on the host, in canon, or in event-gate code.</li>
 </ul>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">23</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
@@ -3260,7 +3269,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- <code>job1_flags.py</code> gone; <code>/health</code> shows the deployed sha; suite green.</li>
 <li>- 137&#x27;s close checks (its ruling 7) can then be run.</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#144</div><div class="jhead"><span class="emoji">🔒</span><h4>The end-of-day review locks a file too long and trips the ten-minute sweep</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sep 15. The review holds a lock for its whole run. When the next sweep starts before it ends, the sweep fails and files a &#x27;could not run&#x27; note every ten minutes</li><li>Fix: hold the lock only while writing, and stop two sweeps from overlapping</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>end-of-day review holds a SQLite lock for its whole pass and stalls the reconcile sweep</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#144</div><div class="jhead"><span class="emoji">🔒</span><h4>The end-of-day review locks a file too long and trips the ten-minute sweep</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sep 15. The review holds a lock for its whole run. When the next sweep starts before it ends, the sweep fails and files a &#x27;could not run&#x27; note every ten minutes</li><li>Fix: hold the lock only while writing, and stop two sweeps from overlapping</li><li>Sep 15: the fix is written and tested (3,824 checks pass). The review now locks the file only for the moment it writes, and a second sweep that starts early simply waits for the next turn instead of failing. Waiting on Junyan to merge and push it to the server, then one clean day with no &#x27;could not run&#x27; notes</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>end-of-day review holds a SQLite lock for its whole pass and stalls the reconcile sweep</b></p><h2>Question</h2>
 
 <p>Found 2026-09-15 while reading 137&#x27;s host log. <code>end_of_day_review.run</code> (JOB33 live mode) opens</p>
 <p><code>/var/lib/eventgate/job33.sqlite3</code> with <code>timeout=1</code> and <code>BEGIN IMMEDIATE</code>, then holds the write</p>
@@ -3279,6 +3288,20 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Two overlapping passes: the second defers, neither errors.</li>
 <li>- 24 h with no &quot;Reconcile sweep could not run&quot; row.</li>
 </ul>
+
+<h2>Progress</h2>
+
+<ul>
+<li>- <b>2026-09-15 — built, not deployed.</b> dc-canon <a href="https://github.com/junyanboon/desk-correspondence/pull/286" target="_blank" rel="noopener">PR #286</a></li>
+</ul>
+<p>(branch <code>claude/144-job33-lock</code>). <code>end_of_day_review.run</code> now takes the journal lock only around the</p>
+<p>day-list insert and each day&#x27;s stamp; a locked journal returns <code>{&#x27;skipped&#x27;:&#x27;deferred&#x27;,&#x27;deferred&#x27;:True}</code></p>
+<p>before the read, or marks the day&#x27;s stamp <code>deferred</code> at the write (the next pass re-selects the day).</p>
+<p><code>end_of_day_review.LOCK</code> defers an overlapping in-process pass. <code>app.py</code> gets <code>RECONCILE_SWEEP_LOCK</code></p>
+<p>on <code>/reconcile-sweep</code> (the <code>board_status.LOCK</code> pattern); a second pass answers <code>{&quot;ok&quot;: true,</p>
+<p>&quot;deferred&quot;: true}</code>. 7 tests; full suite 3824 green. <code>board_status.py</code> / <code>job1_flags.py</code> untouched (143).</p>
+<p>Left: Junyan merges and deploys (<code>target=hostinger mode=update</code>, pinned <code>deploy/&lt;sha&gt;</code>), then the</p>
+<p>24 h no-&quot;could not run&quot;-row check — add it to Desk Watch once deployed.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">7</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -18355,5 +18378,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-14 22:35 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-14 22:49 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
