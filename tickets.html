@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-14 18:47 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-14 22:35 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">21</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">23</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">109</div><div class="l">✅ Finished</div></div>
 </div>
@@ -1366,7 +1366,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Clock: 2 of 7. Day 3 is a hole; the count continues from 09-15 if clean, and restarts only on a</p>
 <p>misfile.</b></p>
-</div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 11 out of the who&#x27;s-in-today ticket. Junyan ruled the same day: the program finds the booking, the thinking robot decides</li><li>Built Sep 11: every ten minutes a program reads the booking board and writes one to-do card for each booking that needs a call — still unmarked after it ended, a first-timer who hasn&#x27;t shown up, a goodbye text to cancel for a no-show, a finished booking with no thank-you text queued</li><li>The program never marks a booking itself. A wrong &#x27;no-show&#x27; mark would text a renter who was actually there</li><li>It&#x27;s on the server but not switched on: Junyan activates it, wires the ten-minute timer, reads a few days of dry-run output, then flips it live</li><li>The old chore comes off the robot&#x27;s list only once the cards are seen being worked — the July lesson</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Sep 11: Junyan ruled the program finds the booking, the thinking robot decides. Built the same day, never switched on</li><li>Sep 13: a different program took over the whole chore and was allowed to mark a renter as a no-show by itself. The old chore was cut from the robot&#x27;s list before anyone saw the new program work</li><li>Sep 14/15: Junyan took that back. A program may mark &#x27;in studio&#x27; and &#x27;done&#x27;. A no-show is never marked by a program: it writes a card, the Ops Lead reads it, and once the &#x27;we missed you&#x27; text is queued the job is done</li><li>Checked on the server: the new program is running, reads 2 bookings a pass, has written nothing. Both bookings had no arrival on record, so refusing was right</li><li>Still open. Closes once the card path is built (ticket 143), one real card is worked, and three quiet days pass on the daily watch</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
 
 <p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
 <p><b>093</b> on the assumption that the FAST-TRACK retirement and the</p>
@@ -1449,13 +1449,75 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Ticket stays <b>open</b> (035&#x27;s test): the build is done; the retirement is not earned yet.</p>
 
+<h2>Progress 2026-09-14 — the 09-13 transfer is found, and Junyan re-rules</h2>
+
+<p><b>Found:</b> after this ticket was built, the Astra lane moved the work under a different design.</p>
+<p>dc-canon <code>a264942c4</code> (09-13) retired JOB 1 from <code>concierge-orchestration.md</code> and</p>
+<p><code>job-1-adt-alarm.md</code> before any cover was seen acting. <code>board_status.py</code> (merged, deployed in</p>
+<p><code>94bcac4</code>) takes In Studio / Complete / <b>Missed Booking</b> writes behind <code>BOARD_RECONCILE_MODE</code>,</p>
+<p><code>RECONCILE_SWEEP_LIVE</code> and <code>BOARD_STATUS_OWNER=reconcile</code>. <code>job1_flags.run()</code> returns</p>
+<p><code>retired</code> when <code>BOARD_STATUS_OWNER=reconcile</code>. PR264 merged although the</p>
+<p><b>139 crosswalk</b> row 3 said Hold.</p>
+
+<p><b>Observed (Notion read, 09-12…09-14):</b> 31 board rows: 28 Complete, 1 Cancelled, 2 Upcoming,</p>
+<p>0 In Studio, 0 Missed Booking. 0 <code><b>job1:</code> rows ever filed, so the 137 lane never went live.</p>
+<p>The reconcile sweep filed 12 &quot;Specialized reconciliation incomplete&quot; + 2 &quot;stale sweep</p>
+<p>source/readback failed&quot; rows on 09-14 (15:44Z–23:32Z). The &quot;we missed you&quot; draft is held at</p>
+<p>Pending Review by canon (<code>the-responder.md</code>), so <code>Missed Booking</code> is not send authority; the</p>
+<p><code>job1_flags.py</code> comment that says otherwise is stale. Host flag values are <b>unknown</b>: Hermes has</p>
+<p>no route to the host, and Junyan&#x27;s first readback ran on the Mac (no Docker there), so its</p>
+<p>&quot;unset&quot; lines are not evidence.</p>
+
+<p><b>Rulings (Junyan, in session):</b></p>
+<ol>
+<li>1. <b>Split.</b> Code writes In Studio and Complete. <code>Missed Booking</code> is never written by code —</li>
+</ol>
+<p>it stays a flagged card that someone classifies.</p>
+<ol>
+<li>2. Junyan approved the 09-13 transfer at the time and <b>withdraws it</b>, after the Astra mess.</li>
+</ol>
+<p>The automatic <code>Missed Booking</code> write goes; ruling 1 governs.</p>
+<ol>
+<li>3. <b>Canon stays retired.</b> JOB 1 does not return to the Concierge (&quot;Concierge already doesn&#x27;t</li>
+</ol>
+<p>function properly. I need to create a system that works as soon as possible&quot;). A Desk Watch</p>
+<p>line covers the gap until the cover is seen acting.</p>
+
+<p><b>Host readback (Junyan, 2026-09-15 01:23–01:27Z, reconcile-sweep log):</b> <code>board_mode: live</code>,</p>
+<p>attendance <code>live: true</code>, <code>checked: 2, written: 0, errors: 2</code> on every pass; <code>alarm_context</code></p>
+<p>ok; <code>end_of_day</code> fails <code>OperationalError: database is locked</code>; the sweep ends</p>
+<p><code>Specialized reconciliation incomplete</code>. So <code>board_status.py</code> is live and has written nothing.</p>
+
+<p><b>Round 2 rulings (Junyan, in session):</b></p>
+<ol>
+<li>4. <b>One program.</b> <code>board_status.py</code> files the card. Where its evidence reads no-show, and where</li>
+</ol>
+<p>a booking is still unresolved hours after its end, it files a ✅ Actions to Perform card with</p>
+<p>the evidence instead of writing the status. <code>job1_flags.py</code> retires.</p>
+<ol>
+<li>5. <b>Ops Lead works the card</b> (<code>For = Ops Lead</code>, next-day <code>Deadline</code>). The only downstream action</li>
+</ol>
+<p>is a message: once the &quot;we missed you&quot; message is queued, everyone has done their job. If Ops</p>
+<p>Lead decides not to send, that is of no consequence. So the card&#x27;s proof is the queued Message</p>
+<p>Queue row (<code>Proof type = message_queue</code>) or Ops Lead&#x27;s decline, and the sweep can close it.</p>
+<ol>
+<li>6. Of the other 09-11 kinds: <code>pbf-missing</code> deleted (<code>followup_coverage.py</code> covers it),</li>
+</ol>
+<p><code>no-arrival</code> deleted (nobody texts on it), <code>eob-no-show</code> moves into the same card path.</p>
+<ol>
+<li>7. <b>137 closes when:</b> the host readback shows the writer set up correctly; one live pass</li>
+</ol>
+<p>writes ≥ 1 Complete with readback; ≥ 1 Missed Booking card is filed and closed; three days of</p>
+<p>Desk Watch show no booking left Upcoming &gt; 2 h past end without a card. Then <code>job1_flags.py</code></p>
+<p>goes, the stale comment goes with it, and the Plumbing Map gets its entry.</p>
+
 <h2>Acceptance</h2>
 
 <ul>
 <li>- JOB 1&#x27;s remainder is removed from <code>concierge-orchestration.md</code> step 5 and the job page carries a</li>
 </ul>
 <p>⛔ RETIRED header — <b>only after</b> each deleted step&#x27;s cover is seen acting</p>
-<p>(<b>035</b>&#x27;s test), or is ruled into the flagged-verb shape.</p>
+<p>([035</b>&#x27;s test), or is ruled into the flagged-verb shape.</p>
 <ul>
 <li>- Every deleted step names its covering mechanism in the retired page (no orphans).</li>
 <li>- Invariants T and U, if they are the cover, are live on the gate and have produced at least one</li>
@@ -1465,7 +1527,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Plumbing Map entry.</li>
 </ul>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">21</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">23</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
 <p>Junyan&#x27;s Main Focus window today):</p>
@@ -3152,6 +3214,71 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Resolves with:</b> the PR merged, the VPS prompt regenerated, and one natural pass whose report</p>
 <p>lists only the surviving blocks.</p>
+</div></details></details></div><div class="job"><div class="jnum">#143</div><div class="jhead"><span class="emoji">🃏</span><h4>The attendance program writes a card for a no-show instead of marking it</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Build ticket from 137. The program that marks bookings done also writes a to-do card when a booking looks like a no-show, or sits unresolved two hours past its end</li><li>It also takes over the one time-critical check: cancel the goodbye text before it goes to a likely no-show</li><li>The Sep 11 card program is deleted once its shared pieces move over</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>board_status.py files the Missed Booking card, and job1_flags.py retires</b></p><h2>Question</h2>
+
+<p>Build the shape <b>137</b> ruled on 2026-09-14/15 (Junyan):</p>
+<p>code writes In Studio and Complete; <code>Missed Booking</code> is never written by code. One program reads</p>
+<p>the board and files the card.</p>
+
+<p><b>Change <code>services/event-gate/board_status.py</code></b> (dc-canon, live on the 10-min <code>/reconcile-sweep</code>):</p>
+
+<ol>
+<li>1. Where <code>decide()</code> returns <code>Missed Booking</code>, do NOT patch <code>Booking Status</code>. File one ✅ Actions</li>
+</ol>
+<p>to Perform card: <code>For = Ops Lead</code>, <code>Deadline</code> = next day, <code>Proof type = message_queue</code>,</p>
+<p><code>Booking ref</code> parseable, key in the title (<code>[attend:&lt;board row id&gt;]</code> — the dedup shape from</p>
+<p><code>job1_flags.py</code>), and the <code>decide()</code> reason plus the five-studio evidence in the body. The card</p>
+<p>closes when the Responder&#x27;s &quot;we missed you&quot; row is in the Message Queue, or when Ops Lead marks</p>
+<p>it won&#x27;t-send (<code>stale_sweep.py</code> closer).</p>
+<ol>
+<li>2. File the same card for a booking still <code>Upcoming</code> ≥ 2 h past its end with no decision (the</li>
+</ol>
+<p><code>deferred</code> list), so an unresolved booking is never silent.</p>
+<ol>
+<li>3. Port <code>eob-no-show</code> from <code>job1_flags.py</code> (inside end − 90 … end − 15, EOB row undecided, no</li>
+</ol>
+<p>disarm) as a third card kind with <code>Deadline</code> = the EOB send time.</p>
+<ol>
+<li>4. Move <code>DS_BOARD</code>, <code>DS_QUEUE</code>, <code>fields</code>, <code>TZ</code> out of <code>job1_flags.py</code> into a shared module</li>
+</ol>
+<p>(<code>board_status.py</code>, <code>end_of_day_review.py</code>, <code>followup_coverage.py</code> import them). Delete</p>
+<p><code>job1_flags.py</code>, its tests, the <code>/job1-flags</code> route, <code>JOB1_FLAGS_*</code> env reads, the README</p>
+<p>section, and the stale &quot;Missed Booking is the Responder&#x27;s auto-send authorization&quot; comment.</p>
+<ol>
+<li>5. Tests for each card kind and for &quot;no status write on a no-show&quot;. Keep the write cap and the</li>
+</ol>
+<p>single-writer check as they are.</p>
+
+<p>No switch changes: the writer stays <code>live</code>. Deploy through the normal event-gate workflow; canon</p>
+<p><code>job-1-adt-alarm.md</code> receiving-lane bullet updated to say Missed Booking is a card, not a write.</p>
+<p>Plumbing Map entry.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A no-show produces a card and no status write (test + one real card on the board).</li>
+<li>- <code>job1_flags.py</code> gone; <code>/health</code> shows the deployed sha; suite green.</li>
+<li>- 137&#x27;s close checks (its ruling 7) can then be run.</li>
+</ul>
+</div></details></details></div><div class="job"><div class="jnum">#144</div><div class="jhead"><span class="emoji">🔒</span><h4>The end-of-day review locks a file too long and trips the ten-minute sweep</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sep 15. The review holds a lock for its whole run. When the next sweep starts before it ends, the sweep fails and files a &#x27;could not run&#x27; note every ten minutes</li><li>Fix: hold the lock only while writing, and stop two sweeps from overlapping</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>end-of-day review holds a SQLite lock for its whole pass and stalls the reconcile sweep</b></p><h2>Question</h2>
+
+<p>Found 2026-09-15 while reading 137&#x27;s host log. <code>end_of_day_review.run</code> (JOB33 live mode) opens</p>
+<p><code>/var/lib/eventgate/job33.sqlite3</code> with <code>timeout=1</code> and <code>BEGIN IMMEDIATE</code>, then holds the write</p>
+<p>lock across Notion reads, publishing and routing. When one <code>/reconcile-sweep</code> pass overlaps the</p>
+<p>next, the next fails <code>OperationalError: database is locked</code>, the sweep ends</p>
+<p><code>Specialized reconciliation incomplete</code>, and a &quot;Reconcile sweep could not run&quot; row lands on ✅</p>
+<p>Actions to Perform every 10 min (12+ on 09-14). The route in <code>app.py</code> has no overlap guard.</p>
+
+<p>Fix: take the lock only around the write, or skip the end-of-day domain with a <code>deferred</code> result</p>
+<p>when the lock is held; add an overlap guard on the route like <code>board_status.LOCK</code>. Test for the</p>
+<p>overlap. Not a 137 item; it blocks 137&#x27;s close checks only because the sweep must run clean.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Two overlapping passes: the second defers, neither errors.</li>
+<li>- 24 h with no &quot;Reconcile sweep could not run&quot; row.</li>
+</ul>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">7</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -18228,5 +18355,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-14 18:47 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-14 22:35 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
