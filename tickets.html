@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-16 13:04 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-16 13:30 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1360,12 +1360,49 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>the failure the audit exists to prevent. Two new tests (missed-tick case; once-a-day guard);</p>
 <p>suite 127 green. First run under the new trigger: 2026-09-15 09:00 Toronto.</p>
 
-<p>Also confirmed this session: the Toronto-midnight report fix (</code>75546d391`) is on the host — report</p>
+<p>Also confirmed this session: the Toronto-midnight report fix (</code>75546d391<code>) is on the host — report</p>
 <p>pages now open at 04:00Z. The sorter itself ran clean all three days, zero errors, filing GitHub</p>
 <p>run-failure notices as they arrived.</p>
 
 <p><b>Clock: 2 of 7. Day 3 is a hole; the count continues from 09-15 if clean, and restarts only on a</p>
 <p>misfile.</b></p>
+
+<h3>Phase 4 — 2026-09-16: the audit was blind for two days; fixed, clock still at 2 of 7</h3>
+
+<p>| Day | Audit line | Counts? |</p>
+<p>|---|---|---|</p>
+<p>| 2026-09-15 | </code>audit 0 checked, 0 misfiled<code> — <b>13 times</b> | no — blind |</p>
+<p>| 2026-09-16 | </code>audit 0 checked, 0 misfiled<code> | no — blind |</p>
+
+<p><b>Cause, a design flaw in the audit itself.</b> </code>audit()<code> finds this lane&#x27;s work by its </code>rules/&lt;id&gt;<code></p>
+<p>fingerprint label, but live mode wrote only the shared desk label. The 09-12 and 09-13 audits were</p>
+<p>still reading shadow-era threads; once those aged past the 2-day lookback, the audit found nothing,</p>
+<p>and &quot;0 checked, 0 misfiled&quot; read exactly like a clean day. This is the check-that-cannot-fail the</p>
+<p>rewritten close condition was meant to rule out, reintroduced one layer down.</p>
+
+<p><b>Why 13 runs on 09-15:</b> the last-audit date lived only in process memory, and that day&#x27;s many</p>
+<p>deploys restarted the container repeatedly.</p>
+
+<p><b>Fix — dc-canon </code>347dd021a<code>, deploy run </code>35126108391<code>.</b></p>
+<ul>
+<li>- Live mode writes the fingerprint alongside the desk label. Threads filed before the fix gain it on</li>
+</ul>
+<p>their next pass (action </code>marked<code>), so the first pass after deploy shows a burst of </code>marked<code> hits.</p>
+<ul>
+<li>- An audit that checks 0 threads while the same pass saw already-sorted mail is an <b>error</b>, not a</li>
+</ul>
+<p>clean day. Known edge: a day whose only sorted mail is a Provisional thread older than the 2-day</p>
+<p>lookback could raise this falsely; read the error before counting it as a fault.</p>
+<ul>
+<li>- The last-audit date is saved to </code>/var/lib/eventgate/mail-rules-audit.json` (mounted volume), so a</li>
+</ul>
+<p>restart no longer re-audits. Unwritable state falls back to memory and logs it.</p>
+<ul>
+<li>- Suite 3,964 green.</li>
+</ul>
+
+<p><b>Clock: 2 of 7.</b> Days 3–5 (09-14 missed, 09-15 and 09-16 blind) do not count. Counting resumes at</p>
+<p>the first audit after the fix that checks more than zero threads.</p>
 </div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Sep 11: Junyan ruled the program finds the booking, the thinking robot decides. Built the same day, never switched on</li><li>Sep 13: a different program took over the whole chore and was allowed to mark a renter as a no-show by itself. The old chore was cut from the robot&#x27;s list before anyone saw the new program work</li><li>Sep 14/15: Junyan took that back. A program may mark &#x27;in studio&#x27; and &#x27;done&#x27;. A no-show is never marked by a program: it writes a card, the Ops Lead reads it, and once the &#x27;we missed you&#x27; text is queued the job is done</li><li>Checked on the server: the new program is running, reads 2 bookings a pass, has written nothing. Both bookings had no arrival on record, so refusing was right</li><li>Still open. Closes once the card path is built (ticket 143), one real card is worked, and three quiet days pass on the daily watch</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
 
 <p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
@@ -18444,5 +18481,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-16 13:04 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-16 13:30 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>

@@ -1277,6 +1277,12 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
       <li class="entry det">
     <details>
+      <summary><span class="when">2026-09-16</span>
+      <h3>Mail-rules daily audit was blind &mdash; now it sees live work and fails when it cannot<span class="kind">EVENT-GATE &middot; /mail-rules &middot; wayfinder 054 phase 4</span></h3></summary>
+      <p><strong>What happened.</strong> The audit finds the lane&rsquo;s work by its <code>rules/&lt;id&gt;</code> fingerprint, but live mode wrote only the shared desk label. After the shadow-era threads aged past the 2-day lookback, 09-15 and 09-16 read <code>audit 0 checked, 0 misfiled</code> &mdash; indistinguishable from a clean day. On 09-15 the audit also ran 13 times, because deploy restarts wiped its in-memory date.</p>
+      <p><strong>Failure mode changed.</strong> Live mode writes the fingerprint too and backfills it (<code>marked</code>). An audit that checks 0 threads while the same pass saw sorted mail is now an <strong>error</strong>. The last-audit date persists in <code>/var/lib/eventgate/mail-rules-audit.json</code>. dc-canon <code>347dd021a</code>, deploy run <code>35126108391</code>. Ticket 054 clock stays at 2 of 7.</p>
+    </details>
+    <details>
       <summary><span class="when">2026-09-16 &middot; 14:45Z</span>
       <h3>Cloud Run public access removed on all four services (danceannex-skedda)<span class="kind">CLOUD RUN &middot; event-gate forwarder, skedda-mcp, alarm-mcp, phonecom-mcp</span></h3></summary>
       <p><strong>Route change.</strong> On Junyan&rsquo;s instruction, the <code>allUsers</code> <code>roles/run.invoker</code> binding was removed from <code>event-gate</code>, <code>skedda-mcp</code>, <code>alarm-mcp</code> and <code>phonecom-mcp</code> in <code>danceannex-skedda</code> / <code>us-central1</code>. Verified: all four <code>/health</code> return <strong>403</strong>; the Hostinger hosts <code>*.srv1948070.hstgr.cloud</code> return 200.</p>
