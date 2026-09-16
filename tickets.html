@@ -1394,7 +1394,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>clean day. Known edge: a day whose only sorted mail is a Provisional thread older than the 2-day</p>
 <p>lookback could raise this falsely; read the error before counting it as a fault.</p>
 <ul>
-<li>- The last-audit date is saved to </code>/var/lib/eventgate/mail-rules-audit.json` (mounted volume), so a</li>
+<li>- The last-audit date is saved to </code>/var/lib/eventgate/mail-rules-audit.json<code> (mounted volume), so a</li>
 </ul>
 <p>restart no longer re-audits. Unwritable state falls back to memory and logs it.</p>
 <ul>
@@ -1403,6 +1403,15 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Clock: 2 of 7.</b> Days 3–5 (09-14 missed, 09-15 and 09-16 blind) do not count. Counting resumes at</p>
 <p>the first audit after the fix that checks more than zero threads.</p>
+
+<p><b>Verified on the host, 2026-09-16 13:11 Toronto.</b> </code>/health<code> </code>git_sha 347dd02<code> (containment by</p>
+<p></code>merge-base --is-ancestor<code>). The first pass on the new code marked 52 previously filed threads,</p>
+<p>filed 1 new one, and ran the audit: <b></code>audit 53 checked, 0 misfiled`</b>. The next passes did not</p>
+<p>re-audit, so the saved date holds. Today&#x27;s 09:00 audit, on the old code, was blind; the 13:11 audit</p>
+<p>replaces it.</p>
+
+<p><b>Clock: 3 of 7</b> (09-12, 09-13, 09-16). Earliest close 2026-09-20 if every audit through then is</p>
+<p>clean, and a human reads one day&#x27;s cases.</p>
 </div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Sep 11: Junyan ruled the program finds the booking, the thinking robot decides. Built the same day, never switched on</li><li>Sep 13: a different program took over the whole chore and was allowed to mark a renter as a no-show by itself. The old chore was cut from the robot&#x27;s list before anyone saw the new program work</li><li>Sep 14/15: Junyan took that back. A program may mark &#x27;in studio&#x27; and &#x27;done&#x27;. A no-show is never marked by a program: it writes a card, the Ops Lead reads it, and once the &#x27;we missed you&#x27; text is queued the job is done</li><li>Checked on the server: the new program is running, reads 2 bookings a pass, has written nothing. Both bookings had no arrival on record, so refusing was right</li><li>Still open. Closes once the card path is built (ticket 143), one real card is worked, and three quiet days pass on the daily watch</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
 
 <p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
