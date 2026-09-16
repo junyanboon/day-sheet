@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-16 13:30 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-16 15:24 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -102,7 +102,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">109</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">110</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -3366,54 +3366,33 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Resolves with:</b> the PR merged, the VPS prompt regenerated, and one natural pass whose report</p>
 <p>lists only the surviving blocks.</p>
-</div></details></details></div><div class="job"><div class="jnum">#144</div><div class="jhead"><span class="emoji">🔒</span><h4>The end-of-day review locks a file too long and trips the ten-minute sweep</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sep 15. The review holds a lock for its whole run. When the next sweep starts before it ends, the sweep fails and files a &#x27;could not run&#x27; note every ten minutes</li><li>Fix: hold the lock only while writing, and stop two sweeps from overlapping</li><li>Sep 15: the fix is written and tested (3,824 checks pass). The review now locks the file only for the moment it writes, and a second sweep that starts early simply waits for the next turn instead of failing. Merged and on the server since 11:28pm Toronto, Sep 14. Now one clean day with no &#x27;could not run&#x27; notes closes it</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>end-of-day review holds a SQLite lock for its whole pass and stalls the reconcile sweep</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#145</div><div class="jhead"><span class="emoji">🔑</span><h4>The stale-row checker trips on a charge row somebody just marked done</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sep 16. Twice, right after a person marked a charge row done, the checker looked for a field the row did not have, and the whole ten-minute sweep failed for that pass</li><li>Fix: skip the row with a reason instead of failing the sweep, and test it with that exact row shape</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>stale sweep raises KeyError on a freshly Processed Charge row and fails the reconcile tick</b></p><h2>Question</h2>
 
-<p>Found 2026-09-15 while reading 137&#x27;s host log. <code>end_of_day_review.run</code> (JOB33 live mode) opens</p>
-<p><code>/var/lib/eventgate/job33.sqlite3</code> with <code>timeout=1</code> and <code>BEGIN IMMEDIATE</code>, then holds the write</p>
-<p>lock across Notion reads, publishing and routing. When one <code>/reconcile-sweep</code> pass overlaps the</p>
-<p>next, the next fails <code>OperationalError: database is locked</code>, the sweep ends</p>
-<p><code>Specialized reconciliation incomplete</code>, and a &quot;Reconcile sweep could not run&quot; row lands on ✅</p>
-<p>Actions to Perform every 10 min (12+ on 09-14). The route in <code>app.py</code> has no overlap guard.</p>
+<p>Found 2026-09-16 while reading 144&#x27;s 24 h check. Twice since the 144 deploy the 10-min</p>
+<p><code>/reconcile-sweep</code> ended <code>RuntimeError: stale sweep source/readback failed: [{&quot;id&quot;: …, &quot;kind&quot;:</p>
+<p>&quot;KeyError&quot;}]</code> and filed a &quot;Reconcile sweep could not run&quot; row on ✅ Actions to Perform:</p>
 
-<p>Fix: take the lock only around the write, or skip the end-of-day domain with a <code>deferred</code> result</p>
-<p>when the lock is held; add an overlap guard on the route like <code>board_status.LOCK</code>. Test for the</p>
-<p>overlap. Not a 137 item; it blocks 137&#x27;s close checks only because the sweep must run clean.</p>
+<ul>
+<li>- 2026-09-15 08:14Z on <code>3dc75032-81c4-8139-9ea2-d3fac99e1b1d</code> (Overtime charge — Tunde Ifafore · 693,</li>
+</ul>
+<p>raised by The Timekeeper 08:07Z, Status Processed, Proof type empty).</p>
+<ul>
+<li>- 2026-09-16 11:46Z on <code>3dc75032-81c4-81e5-a0b6-d23e39c34a4a</code> (Review unpaid booking — Studio 527,</li>
+</ul>
+<p>raised 09-15 22:18Z, Status Processed, Proof type empty).</p>
+
+<p>Each fired once and did not repeat. Both are <code>Type = Charge</code> rows with no <code>Proof type</code>, read by</p>
+<p><code>stale_sweep.run</code> (services/event-gate/stale_sweep.py) shortly after a human marked them Processed.</p>
+<p>Find the missing key (the row-level <code>except</code> records only the exception class), make the sweep skip</p>
+<p>the row with a named reason instead of failing the tick, and add a test with a Processed Charge row</p>
+<p>that has no <code>Proof type</code>.</p>
 
 <h2>Acceptance</h2>
 
 <ul>
-<li>- Two overlapping passes: the second defers, neither errors.</li>
-<li>- 24 h with no &quot;Reconcile sweep could not run&quot; row.</li>
+<li>- The two row shapes above pass through <code>stale_sweep.run</code> without an error entry.</li>
+<li>- No &quot;Reconcile sweep could not run … KeyError&quot; row for 7 days after deploy.</li>
 </ul>
-
-<h2>Progress</h2>
-
-<ul>
-<li>- <b>2026-09-15 — built, not deployed.</b> dc-canon <a href="https://github.com/junyanboon/desk-correspondence/pull/286" target="_blank" rel="noopener">PR #286</a></li>
-</ul>
-<p>(branch <code>claude/144-job33-lock</code>). <code>end_of_day_review.run</code> now takes the journal lock only around the</p>
-<p>day-list insert and each day&#x27;s stamp; a locked journal returns <code>{&#x27;skipped&#x27;:&#x27;deferred&#x27;,&#x27;deferred&#x27;:True}</code></p>
-<p>before the read, or marks the day&#x27;s stamp <code>deferred</code> at the write (the next pass re-selects the day).</p>
-<p><code>end_of_day_review.LOCK</code> defers an overlapping in-process pass. <code>app.py</code> gets <code>RECONCILE_SWEEP_LOCK</code></p>
-<p>on <code>/reconcile-sweep</code> (the <code>board_status.LOCK</code> pattern); a second pass answers <code>{&quot;ok&quot;: true,</p>
-<p>&quot;deferred&quot;: true}</code>. 7 tests; full suite 3824 green. <code>board_status.py</code> / <code>job1_flags.py</code> untouched (143).</p>
-<p>Left: Junyan merges and deploys (<code>target=hostinger mode=update</code>, pinned <code>deploy/&lt;sha&gt;</code>), then the</p>
-<p>24 h no-&quot;could not run&quot;-row check — add it to Desk Watch once deployed.</p>
-<ul>
-<li>- <b>2026-09-15 03:28Z — DEPLOYED.</b> PR #286 rebased onto main (test-file conflict with #288 resolved,</li>
-</ul>
-<p>3813 green), merged as <code>f0dbaa8da</code>, deployed <code>target=hostinger mode=update</code> via <code>deploy/f0dbaa8da…</code></p>
-<p>(run 34924220403, success). <code>/health</code>: <code>git_sha f0dbaa8</code>, <code>started 2026-09-15T03:28:29Z</code>. Pin branch</p>
-<p>deleted. Open until the 24 h check: no &quot;Reconcile sweep could not run&quot; row through 2026-09-16 03:28Z.</p>
-<ul>
-<li>- <b>2026-09-15 — Desk Watch line added.</b> Section I of the <code>desk-watch</code> scheduled task now prints <code>144: CLOSE CHECK MET / DAY 0 / N failed passes</code> from ✅ rows after the deploy time and the sweep log. Next fire 09:31 Toronto.</li>
-<li>- <b>2026-09-16 — 24 h check read.</b> Live <code>/health</code> = <code>ecb13cb</code>, which contains <code>f0dbaa8da</code>. The last</li>
-</ul>
-<p>&quot;Specialized reconciliation incomplete&quot; row is 2026-09-15 03:28:26Z, three seconds before the fix</p>
-<p>activated (03:28:29Z). <b>Zero lock-fault rows since.</b> Two &quot;Reconcile sweep could not run&quot; rows did</p>
-<p>land after the deploy, both a DIFFERENT fault: <code>stale sweep source/readback failed … KeyError</code> on a</p>
-<p>freshly Processed Charge row (08:14Z on the Tunde Ifafore overtime row; 09-16 11:46Z on the Studio 527</p>
-<p>unpaid-review row), once each, no repeat. Not 144&#x27;s fault; not yet ticketed. Junyan rules on the close.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">7</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -4082,6 +4061,62 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>continue from T0 in <code>assets/121-grokbot/GROKBOT-BRIEF.md</code> (the asset folder keeps the</p>
 <p>old ticket number 121; this ticket was renumbered 130 in the 2026-09-06 map trim). To</p>
 <p>retire: delete the Bot in Grok Bot; no other surface holds state.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#144</span><span class="emoji">🔒</span><span class="done-title">The end-of-day review locked a file too long and tripped the ten-minute sweep — fixed</span><span class="done-date">2026-09-16</span></summary><div class="done-body"><ul class="plain-bullets"><li>CLOSED Sep 16. The review held a lock on its notebook for its whole run. When the next sweep started before it finished, the sweep failed and filed a &#x27;could not run&#x27; note — twenty of them on Sep 14 alone</li><li>Fixed so the review locks the notebook only for the instant it writes, and a sweep that starts early waits for the next turn. On the server since 11:28pm Toronto, Sep 14</li><li>Checked a day later: not one lock failure since. Two &#x27;could not run&#x27; notes did appear, but from a different fault in the stale-row checker — cut as ticket 145</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>end-of-day review holds a SQLite lock for its whole pass and stalls the reconcile sweep</b></p><h2>Question</h2>
+
+<p>Found 2026-09-15 while reading 137&#x27;s host log. <code>end_of_day_review.run</code> (JOB33 live mode) opens</p>
+<p><code>/var/lib/eventgate/job33.sqlite3</code> with <code>timeout=1</code> and <code>BEGIN IMMEDIATE</code>, then holds the write</p>
+<p>lock across Notion reads, publishing and routing. When one <code>/reconcile-sweep</code> pass overlaps the</p>
+<p>next, the next fails <code>OperationalError: database is locked</code>, the sweep ends</p>
+<p><code>Specialized reconciliation incomplete</code>, and a &quot;Reconcile sweep could not run&quot; row lands on ✅</p>
+<p>Actions to Perform every 10 min (12+ on 09-14). The route in <code>app.py</code> has no overlap guard.</p>
+
+<p>Fix: take the lock only around the write, or skip the end-of-day domain with a <code>deferred</code> result</p>
+<p>when the lock is held; add an overlap guard on the route like <code>board_status.LOCK</code>. Test for the</p>
+<p>overlap. Not a 137 item; it blocks 137&#x27;s close checks only because the sweep must run clean.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Two overlapping passes: the second defers, neither errors.</li>
+<li>- 24 h with no &quot;Reconcile sweep could not run&quot; row.</li>
+</ul>
+
+<h2>Progress</h2>
+
+<ul>
+<li>- <b>2026-09-15 — built, not deployed.</b> dc-canon <a href="https://github.com/junyanboon/desk-correspondence/pull/286" target="_blank" rel="noopener">PR #286</a></li>
+</ul>
+<p>(branch <code>claude/144-job33-lock</code>). <code>end_of_day_review.run</code> now takes the journal lock only around the</p>
+<p>day-list insert and each day&#x27;s stamp; a locked journal returns <code>{&#x27;skipped&#x27;:&#x27;deferred&#x27;,&#x27;deferred&#x27;:True}</code></p>
+<p>before the read, or marks the day&#x27;s stamp <code>deferred</code> at the write (the next pass re-selects the day).</p>
+<p><code>end_of_day_review.LOCK</code> defers an overlapping in-process pass. <code>app.py</code> gets <code>RECONCILE_SWEEP_LOCK</code></p>
+<p>on <code>/reconcile-sweep</code> (the <code>board_status.LOCK</code> pattern); a second pass answers <code>{&quot;ok&quot;: true,</p>
+<p>&quot;deferred&quot;: true}</code>. 7 tests; full suite 3824 green. <code>board_status.py</code> / <code>job1_flags.py</code> untouched (143).</p>
+<p>Left: Junyan merges and deploys (<code>target=hostinger mode=update</code>, pinned <code>deploy/&lt;sha&gt;</code>), then the</p>
+<p>24 h no-&quot;could not run&quot;-row check — add it to Desk Watch once deployed.</p>
+<ul>
+<li>- <b>2026-09-15 03:28Z — DEPLOYED.</b> PR #286 rebased onto main (test-file conflict with #288 resolved,</li>
+</ul>
+<p>3813 green), merged as <code>f0dbaa8da</code>, deployed <code>target=hostinger mode=update</code> via <code>deploy/f0dbaa8da…</code></p>
+<p>(run 34924220403, success). <code>/health</code>: <code>git_sha f0dbaa8</code>, <code>started 2026-09-15T03:28:29Z</code>. Pin branch</p>
+<p>deleted. Open until the 24 h check: no &quot;Reconcile sweep could not run&quot; row through 2026-09-16 03:28Z.</p>
+<ul>
+<li>- <b>2026-09-15 — Desk Watch line added.</b> Section I of the <code>desk-watch</code> scheduled task now prints <code>144: CLOSE CHECK MET / DAY 0 / N failed passes</code> from ✅ rows after the deploy time and the sweep log. Next fire 09:31 Toronto.</li>
+<li>- <b>2026-09-16 — 24 h check read.</b> Live <code>/health</code> = <code>ecb13cb</code>, which contains <code>f0dbaa8da</code>. The last</li>
+</ul>
+<p>&quot;Specialized reconciliation incomplete&quot; row is 2026-09-15 03:28:26Z, three seconds before the fix</p>
+<p>activated (03:28:29Z). <b>Zero lock-fault rows since.</b> Two &quot;Reconcile sweep could not run&quot; rows did</p>
+<p>land after the deploy, both a DIFFERENT fault: <code>stale sweep source/readback failed … KeyError</code> on a</p>
+<p>freshly Processed Charge row (08:14Z on the Tunde Ifafore overtime row; 09-16 11:46Z on the Studio 527</p>
+<p>unpaid-review row), once each, no repeat. Not 144&#x27;s fault; not yet ticketed. Junyan rules on the close.</p>
+
+<h2>Resolution — CLOSED 2026-09-16</h2>
+
+<p>Junyan ruled the close on the evidence above: the lock fault has not recurred since the fix activated</p>
+<p>at 2026-09-15 03:28:29Z (20 &quot;Specialized reconciliation incomplete&quot; rows on 09-14, zero since). The</p>
+<p>two later &quot;could not run&quot; rows are a stale-sweep <code>KeyError</code>, a different fault, cut as</p>
+<p><b>145</b>. The Desk Watch 144 line drops on the next</p>
+<p>prompt edit. 137&#x27;s close checks are unblocked on this front.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#139</span><span class="emoji">🗺️</span><span class="done-title">Two teams were fixing the Concierge without knowing about each other — now there is one list</span><span class="done-date">2026-09-14</span></summary><div class="done-body"><ul class="plain-bullets"><li>DONE Sep 14. Over two days a second helper (Astra, on Codex) moved 21 Concierge chores to other robots and kept its own progress page</li><li>This map is the one list now. 4 of those moves agree with earlier rulings, 4 are new and accepted, 9 clash with something you already ruled</li><li>The clashes go to one sit-down (ticket 140). The prompt trim is ticket 141. Ticket 142 confirmed the Concierge runs</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Reconcile the Astra migration into the map — 21 rows, one crosswalk</b></p><h2>Task</h2>
 
 <p>Between 2026-09-12 and 2026-09-14 a separate effort, run on GPT Astra through Codex tasks,</p>
@@ -18490,5 +18525,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-16 13:30 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-16 15:24 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
