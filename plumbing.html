@@ -1278,6 +1278,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-09-16</span>
+      <h3>Weatherman: staff setpoint requests for 509, and Nest Eco cleared before cooling &mdash; PR open, NOT deployed<span class="kind">EVENT-GATE &middot; /climate-sweep &middot; desk-correspondence PR #319</span></h3></summary>
+      <p><strong>What happened.</strong> Maggie Morrison (509B, 13:00&ndash;21:00) asked for 22&deg;C from 12:00 with Eco off. Staff set 22 at ~11:30. The 12:10 pre-cool pass sent COOL 23; from 13:10 the dial read 23, one of the sweep&rsquo;s own numbers, so 23 stayed. On 09-14 she reported the unit going to Eco; the sweep never read Eco.</p>
+      <p><strong>Route change (after deploy).</strong> The sweep reads a new Notion data source, &#x1F39B;&#xFE0F; Setpoint Requests (<code>CLIMATE_SETPOINT_REQUESTS_DS</code>; unset = off). An active row replaces the number for pre-cool, occupied hold and daytime idle hold. Before any 509 cooling command it reads <code>ThermostatEco</code> and sends <code>SetMode OFF</code> when it is <code>MANUAL_ECO</code>.</p>
+      <p><strong>New failure modes.</strong> Eco that will not clear after one retry is <code>actuation-failed</code> (Sweep Feedback + ops SMS), and no cool command is sent. A configured request source that cannot be read sends 509 no command that pass and files <code>Climate sweep &mdash; setpoint requests unreadable</code>. A bad request row files <code>Climate setpoint request needs a fix</code>. 901 unchanged.</p>
+    </details>
+  </li>
+
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-09-16</span>
       <h3>Mail-rules daily audit was blind &mdash; now it sees live work and fails when it cannot<span class="kind">EVENT-GATE &middot; /mail-rules &middot; wayfinder 054 phase 4</span></h3></summary>
       <p><strong>What happened.</strong> The audit finds the lane&rsquo;s work by its <code>rules/&lt;id&gt;</code> fingerprint, but live mode wrote only the shared desk label. After the shadow-era threads aged past the 2-day lookback, 09-15 and 09-16 read <code>audit 0 checked, 0 misfiled</code> &mdash; indistinguishable from a clean day. On 09-15 the audit also ran 13 times, because deploy restarts wiped its in-memory date.</p>
       <p><strong>Failure mode changed.</strong> Live mode writes the fingerprint too and backfills it (<code>marked</code>). An audit that checks 0 threads while the same pass saw sorted mail is now an <strong>error</strong>. The last-audit date persists in <code>/var/lib/eventgate/mail-rules-audit.json</code>. dc-canon <code>347dd021a</code>, deploy run <code>35126108391</code>. Ticket 054 clock stays at 2 of 7.</p>
