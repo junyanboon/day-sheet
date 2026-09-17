@@ -1277,6 +1277,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
       <li class="entry det">
     <details>
+      <summary><span class="when">2026-09-17</span>
+      <h3>Emoji tapback read as a move request &mdash; duplicate Registrar confirmation queued<span class="kind">EVENT-GATE &middot; inbound / move lane &middot; PR #336 &middot; NOT YET DEPLOYED</span></h3></summary>
+      <p><strong>What happened.</strong> Taylor Yeung tapped &#x1F64F; on the Registrar&rsquo;s automatic move confirmation (07:41). Phone.com relayed the iOS&nbsp;18 reaction as an inbound SMS in a verb-less shape &mdash; the emoji, &ldquo;to&rdquo;, then our own text in curly quotes, padded with hair spaces (U+200A) and zero-width spaces (U+200B). <code>inbound.REACTION_RE</code> only knew the verb shapes (<code>Loved &ldquo;&hellip;&rdquo;</code>, <code>Reacted &#x1F44D; to &ldquo;&hellip;&rdquo;</code>), so <code>fresh_text</code> kept the whole body. The move lane matched &ldquo;adjusted to the time&rdquo; in OUR words, re-moved booking 121101911 to the slot it already held, and queued the same confirmation a second time (queue row <code>3de75032-81c4-81de</code>, keyed <code>[mover:83db1622-&hellip;]</code>). The literal-overlap check held it at Pending Review, so nothing went out twice. Same class as Rebecca Wise 2026-09-04.</p>
+      <p><strong>Failure mode change.</strong> <code>REACTION_RE</code> gains the verb-less emoji shape and <code>is_reaction</code> strips invisible padding before matching, so every lane sees an empty <code>fresh</code> for such a reaction and skips it. 4190 suite. Live only after <code>deploy-event-gate</code> (<code>target=hostinger mode=update</code>) runs on the merged SHA; until then the old pattern is what the host reads.</p>
+    </details>
+  </li>
+
+      <li class="entry det">
+    <details>
       <summary><span class="when">2026-09-16</span>
       <h3>Weatherman: staff setpoint requests for 509, and Nest Eco cleared before cooling &mdash; LIVE<span class="kind">EVENT-GATE &middot; /climate-sweep &middot; PR #319 &middot; deploy <code>2735266</code></span></h3></summary>
       <p><strong>What happened.</strong> Maggie Morrison (509B, 13:00&ndash;21:00) asked for 22&deg;C from 12:00 with Eco off. Staff set 22 at ~11:30. The 12:10 pre-cool pass sent COOL 23; from 13:10 the dial read 23, one of the sweep&rsquo;s own numbers, so 23 stayed. On 09-14 she reported the unit going to Eco; the sweep never read Eco.</p>
