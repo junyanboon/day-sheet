@@ -1304,6 +1304,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
       <li class="entry det">
     <details>
+      <summary><span class="when">2026-09-18</span>
+      <h3>Actions flood &mdash; board clocks silent since 09-16, Deck sorted every row to Junyan<span class="kind">DECK &middot; EVENT-GATE attendance &middot; FBS MONITOR HTA watch &middot; deck-app #87 &middot; desk-correspondence #347 &middot; fbs-monitor #19</span></h3></summary>
+      <p><strong>What happened.</strong> 58 open Actions rows; the Deck showed 23 under Needs your call, 15 were actually <code>For = Junyan</code>. The FBS board&rsquo;s <code>Disarmed</code> / <code>Armed</code> clocks stopped being written after 2026-09-16 16:30, so <code>board_status.py</code> read &ldquo;no disarm&rdquo; on every booking and filed 13 false EOB / no-show cards on 09-17 and 7 on 09-18, two per Skedda booking spanning 509A+509B. The HTA watchdog refiled one booking when its title drifted (&ldquo;Studio Studio 527&rdquo;). <code>end_of_day_review</code> filed a &ldquo;JOB33 evidence unavailable&rdquo; row daily for a lane that no longer exists.</p>
+      <p><strong>Failure mode change.</strong> Deck: an open, due <code>For = Ops Lead</code> row is Bot work whatever its title (live, worker <code>2c37bf48</code>). Attendance: with two or more bookings ended today and no clock on any, every eob / missed / unresolved card is held and one Run Error <code>[attend:arm-silent:&lt;day&gt;]</code> is filed for the Mechanic; one EOB card per Skedda booking. HTA watch: dedupe key <code>[hta:&lt;board row id&gt;]</code>. JOB33 failure Action retired. The clock writer itself is still unidentified &mdash; Hermes task <code>arm-clock-writer-silent-20260918</code>. Event-gate deploy is manual after #347 merges.</p>
+    </details>
+  </li>
+
+      <li class="entry det">
+    <details>
       <summary><span class="when">2026-09-17</span>
       <h3>Emoji tapback read as a move request &mdash; duplicate Registrar confirmation queued<span class="kind">EVENT-GATE &middot; inbound / move lane &middot; PR #336 &middot; deploy <code>837f559</code></span></h3></summary>
       <p><strong>What happened.</strong> Taylor Yeung tapped &#x1F64F; on the Registrar&rsquo;s automatic move confirmation (07:41). Phone.com relayed the iOS&nbsp;18 reaction as an inbound SMS in a verb-less shape &mdash; the emoji, &ldquo;to&rdquo;, then our own text in curly quotes, padded with hair spaces (U+200A) and zero-width spaces (U+200B). <code>inbound.REACTION_RE</code> only knew the verb shapes (<code>Loved &ldquo;&hellip;&rdquo;</code>, <code>Reacted &#x1F44D; to &ldquo;&hellip;&rdquo;</code>), so <code>fresh_text</code> kept the whole body. The move lane matched &ldquo;adjusted to the time&rdquo; in OUR words, re-moved booking 121101911 to the slot it already held, and queued the same confirmation a second time (queue row <code>3de75032-81c4-81de</code>, keyed <code>[mover:83db1622-&hellip;]</code>). The literal-overlap check held it at Pending Review, so nothing went out twice. Same class as Rebecca Wise 2026-09-04.</p>
