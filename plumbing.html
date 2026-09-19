@@ -1277,6 +1277,24 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
       <li class="entry det">
     <details>
+      <summary><span class="when">2026-09-18</span>
+      <h3>Duplicate-card report files on shared identifiers only &mdash; near-name pairs stay in the log<span class="kind">EVENT-GATE &middot; dupe_report &middot; PR #343 &middot; awaiting merge</span></h3></summary>
+      <p><strong>What happened.</strong> The Registrar&rsquo;s daily duplicate-card report filed a Review row on 09-17 and again on 09-18 with four near-name pairs and zero same-identifier pairs. At the 09-18 docket sitting Junyan ruled every pair not the same person, closed both rows as not valid, and asked who keeps making them.</p>
+      <p><strong>Evidence-model change.</strong> Ruling: &ldquo;limit it to same-identifier matches only.&rdquo; <code>dupe_report.run()</code> files the daily <code>[dupe-report:&lt;date&gt;]</code> row only when two live cards share an email, a last-ten phone or a Skedda user id. Near-name pairs are still counted in the run summary and log but never file a row or appear in the Basis. Not live until PR #343 merges and deploys.</p>
+    </details>
+  </li>
+
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-09-18</span>
+      <h3>693 Front Door trip not auto-cleared by the door-alarm watchdog; catch-all filed it a second time<span class="kind">ALARM MONITOR &middot; watchdog / escalate catch-all &middot; Action 3df7503281c4818aa65edef2783fba84 &middot; fix ticketed, not started</span></h3></summary>
+      <p><strong>What happened.</strong> 2026-09-17 16:47 Toronto: Studio 693 was armed and unbooked when its front door opened. The watchdog (siren 180&nbsp;s, then disarm, escalate only on repeated trips) did not clear it; the first disarm was a keypad disarm at 17:30. Separately the <code>escalate.py</code> catch-all filed &ldquo;unrecognised panel condition &mdash; Front Door Alarm&rdquo; as an Actions row that sat open 21&nbsp;h after the panel was normal. Hermes triage run <code>5623b52f</code>.</p>
+      <p><strong>Failure mode.</strong> Two defects, one ticket: (1) why the watchdog tick missed the trip; (2) alarm-trip phrases must join <code>HANDLED_ELSEWHERE_PHRASES</code> so the catch-all never double-files what the watchdog owns. Junyan: the door-alarm agent should auto-clear and report only a multiple alarm. Production monitoring change; PR to <code>danceannex-alarm-monitor</code> for Junyan to merge. Open question outside the map: who opened an armed, empty 693 58&nbsp;min before the first arrival.</p>
+    </details>
+  </li>
+
+      <li class="entry det">
+    <details>
       <summary><span class="when">2026-09-17</span>
       <h3>Emoji tapback read as a move request &mdash; duplicate Registrar confirmation queued<span class="kind">EVENT-GATE &middot; inbound / move lane &middot; PR #336 &middot; deploy <code>837f559</code></span></h3></summary>
       <p><strong>What happened.</strong> Taylor Yeung tapped &#x1F64F; on the Registrar&rsquo;s automatic move confirmation (07:41). Phone.com relayed the iOS&nbsp;18 reaction as an inbound SMS in a verb-less shape &mdash; the emoji, &ldquo;to&rdquo;, then our own text in curly quotes, padded with hair spaces (U+200A) and zero-width spaces (U+200B). <code>inbound.REACTION_RE</code> only knew the verb shapes (<code>Loved &ldquo;&hellip;&rdquo;</code>, <code>Reacted &#x1F44D; to &ldquo;&hellip;&rdquo;</code>), so <code>fresh_text</code> kept the whole body. The move lane matched &ldquo;adjusted to the time&rdquo; in OUR words, re-moved booking 121101911 to the slot it already held, and queued the same confirmation a second time (queue row <code>3de75032-81c4-81de</code>, keyed <code>[mover:83db1622-&hellip;]</code>). The literal-overlap check held it at Pending Review, so nothing went out twice. Same class as Rebecca Wise 2026-09-04.</p>
