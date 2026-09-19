@@ -1277,6 +1277,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-09-19</span>
+      <h3>Booking sweep runs 7&ndash;20 min against a 15-min deadline &mdash; deadline 25 min, one pass at a time, per-row timing logged<span class="kind">EVENT-GATE &middot; /booking-sweep &middot; desk-correspondence #355 &middot; deploy 87b84ca &middot; host timer config</span></h3></summary>
+      <p><strong>What happened.</strong> About half of today&rsquo;s 30-minute fires logged <code>timeout</code>: the timer job gives up at 900&nbsp;s while the pass runs on and returns 200 later. Phase timings put 280&ndash;690&nbsp;s in <code>chain</code> and 70&ndash;1100&nbsp;s in <code>daily_lanes</code>; the far-out shortcut from #348 is live; the journal truncates the summary, so which rows cost the time was invisible. Skedda is not it (4 calls per pass).</p>
+      <p><strong>Failure mode change.</strong> Host: booking-sweep deadline 1500&nbsp;s, unit timeout 1515&nbsp;s. Code: each row through the chain is timed and the five slowest are logged beside the phase timings; a second concurrent pass is refused with 409 rather than run over a half-written board. Speed fix follows once the row line names the cost.</p>
+    </details>
+  </li>
+
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-09-19</span>
       <h3>Watchdog outage 09-17: one hung panel read held the tick lock 30 min &mdash; read bounded, timer texts on-call after 5 failures<span class="kind">ALARM-MCP &middot; /watchdog tick &middot; danceannex-alarm-monitor #14 &middot; VPS timer script</span></h3></summary>
       <p><strong>What happened.</strong> 2026-09-17 20:54Z a tick&rsquo;s Alarm.com read never returned. The caller gave up at 170&nbsp;s, the route&rsquo;s busy flag stayed set, and every tick until 21:24Z answered 503 &ldquo;a previous tick is still running&rdquo; while the 693 siren ran (trip 20:47Z, keypad disarm 21:30Z). The Sentinel noticed at 21:07Z on its hourly sweep. Not memory: 89&nbsp;MB of 768.</p>
       <p><strong>Failure mode change.</strong> The tick&rsquo;s panel read is bounded (<code>TICK_READ_TIMEOUT</code>, 90&nbsp;s): a hung read fails that one tick with 502 and frees the lock. Live as <code>hostinger-27858b3</code>. The VPS timer script now keeps a failure streak and texts the on-call phone after five consecutive failed ticks (&ldquo;watch the alarm system by hand&rdquo;) and again on the first good tick (&ldquo;restored&rdquo;), one text per episode each way. Evidence lives in <code>journalctl -u danceannex-alarm-watchdog.service</code>; the container log rotates at 30&nbsp;MB and is lost on redeploy.</p>
