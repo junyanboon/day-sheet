@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-19 20:31 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-19 20:48 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3432,6 +3432,44 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- One line on 137 saying which way this went, so its three-day clock can restart.</li>
 </ul>
+
+<h2>Progress 2026-09-19 evening — writer narrowed, not named; the stop time was wrong</h2>
+
+<p><b>Corrected stop time.</b> The cells were still written on 09-16 after 16:30: Jia Chian Lee 527</p>
+<p>16:30–18:30 carries <code>Disarmed 16:22 / Armed 18:30 / Closed by Renter</code>; Simona Horova 509A 16:00</p>
+<p>carries <code>Armed 17:08 Simona Horova (keypad)</code>. Nina Li 901 20:30–22:30 has nothing, and nothing after.</p>
+<p>So the writer stopped between <b>~18:40 and 20:30 Toronto on 09-16</b>, not 16:30.</p>
+
+<p><b>Who edited the rows (Notion, edited-by filter):</b> every clock-bearing 09-16 row was edited by</p>
+<p>the <b>&quot;Dance Annex Desk CLI&quot;</b> bot only — not Junyan, not the Notion MCP bot (Claude sessions), not</p>
+<p>Zapier/Make/IFTTT/Day Hub/Deck/Send Engine. That token is the shared one every code lane and every</p>
+<p>Hermes lane on the VPS uses, so it names a <i>program on the VPS or the Mac</i>, not a person and not a</p>
+<p>hand session. Page history itself is not exposed by the Notion connector, and the browser pane is</p>
+<p>not signed in to Notion, so the edit-by-edit trail was not read.</p>
+
+<p><b>What does NOT write the cells (read, not assumed):</b> every <code>.py/.js/.ts/.sh</code> under dc-canon</p>
+<p>(<code>git log -S Disarmed</code> since 08-10 shows only the job1_flags add/remove and doc edits), fbs-monitor</p>
+<p>(reads them as a fallback only, <code>build.py:1318</code>), Codex/AlarmMonitor-NotionBridge (launch agent</p>
+<p><code>ca.danceannex.doorman.activity-sync</code> is <b>disabled</b>, log ends 07-13), dance-annex-os (a local</p>
+<p>dashboard, crash-looping), every Mac scheduled task (<code>live-desk</code> dead since 06-30, <code>virtual-front-desk</code></p>
+<p>/ <code>fbs-adt-sweep</code> retired, <code>the-doorman</code> local copy disabled 07-20), the Codex Concierge automation</p>
+<p>(PAUSED), and every canon page except the retired <code>job-1-adt-alarm.md</code>, whose Step 4 was the only</p>
+<p>instruction anywhere to stamp <code>Disarmed</code>/<code>Armed</code> — in exactly the <code>HH:MM</code> shape the cells carry.</p>
+
+<p><b>Conclusion.</b> The writer was an LLM lane on the VPS using the shared token — on the evidence, the</p>
+<p>Hermes Concierge still running the retired JOB 1 Step 4 by habit after the 09-13 canon retirement</p>
+<p>(the 09-16 and 09-17 rolling reports do not mention the writes, which is how a habit looks in a</p>
+<p>report). It stopped the evening the Concierge Closeout split was installed on the VPS (Hermes</p>
+<p>task 2026-09-16, commit cbc8eb99 21:26 ET) and the day the Concierge&#x27;s runtime was cut short 13</p>
+<p>passes in a row. The proof is one read Junyan can make and this session could not (production</p>
+<p>read refused): the Hermes cron transcripts for 09-16 under <code>cron/output/&lt;concierge-cron-id&gt;/</code>,</p>
+<p>grep <code>Disarmed</code>. Whichever pass wrote <code>16:22</code> for Jia Chian Lee names the writer.</p>
+
+<p><b>Recommendation for the ruling:</b> (b) retire the cells. Their only writer was a retired Concierge</p>
+<p>step; the panel ledger (#347) is now the attendance source; <code>fbs-monitor</code> and <code>board_fields.py</code></p>
+<p>should stop reading them. If Junyan wants the human-readable clocks back, <code>board_status.py</code> can</p>
+<p>stamp them from the ledger when it writes Complete — a small change, and then the cells have a</p>
+<p>code owner for the first time.</p>
 </div></details></details></div><div class="job"><div class="jnum">#147</div><div class="jhead"><span class="emoji">🗂️</span><h4>Desk Watch did not run on 09-18 or 09-19 — two ticket clocks depend on it</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Desk Watch did not run on 09-18 or 09-19 — two ticket clocks depend on it</b></p><h2>Question</h2>
 
 <p>The Desk Watch tally (<code>archive/desk-watch-tally.md</code>) ends at the 09-17 block. No Workflow Report and</p>
@@ -18732,5 +18770,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-19 20:31 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-19 20:48 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
