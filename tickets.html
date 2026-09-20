@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-16 18:02 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-19 20:31 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,8 +100,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">7</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">24</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">8</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">111</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
@@ -1595,7 +1595,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>two later &quot;could not run&quot; rows are a stale-sweep <code>KeyError</code>, cut as</p>
 <p><b>145</b>.</p>
 <ul>
-<li>- ✅ board read (09-16 22:00Z): 11 <code>[attend:</code> cards since 09-15 03:26Z — 7 <code>unresolved</code>, 4 <code>eob</code>,</li>
+<li>- ✅ board read (09-16 22:00Z): 11 <code><b>attend:</code> cards since 09-15 03:26Z — 7 <code>unresolved</code>, 4 <code>eob</code>,</li>
 </ul>
 <p>0 <code>missed</code>. Statuses: 6 Cancelled, 4 Processed, 1 Pending Review (509A 09-16 14:45–15:45, filed</p>
 <p>21:54Z, Deadline 09-17). Every <code>unresolved</code> reason is &quot;no decision: missing, stale or incomplete</p>
@@ -1626,8 +1626,59 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><b>Open fault, not ticketed:</b> the coverage check refuses more than the panel warrants, so the card</p>
 <p>path is carrying attended bookings as <code>unresolved</code> (7 of 7 so far). That is safe under ruling 1 but</p>
 <p>it is why check 2 is unmet. If the 09-17 / 09-18 watches still show no Complete write, cut a ticket.</p>
+
+<h2>Progress 2026-09-19 — close checks re-read; the clock did not run, and the board&#x27;s own evidence went dark</h2>
+
+<p>Read from Notion (✅ Actions, 🛎️ FBS AI Support, 📤 Message Queue, 📊 Workflow Reports), the</p>
+<p>Desk Watch tally and dc-canon <code>main</code>. The host journal was <b>not</b> read: the SSH read was refused as</p>
+<p>a production read in this session, so &quot;one live Complete with readback&quot; stays UNCHECKED from here.</p>
+
+<p><b>Ruling-7 checks, as of 09-19 evening:</b></p>
+<ol>
+<li>1. Writer set up correctly — met (unchanged since the 09-15 readback).</li>
+<li>2. One live Complete write with readback — <b>still unverified.</b> Eleven board rows dated 09-17/09-18</li>
+</ol>
+<p>read Complete, but every one has a blank <code>Disarmed</code> / <code>Armed</code> cell, so neither <code>sync_booking_status</code></p>
+<p>(needs both clocks) nor the pre-#347 <code>board_status.py</code> (needs alarm coverage) could have written</p>
+<p>them on board evidence. Teo Rivas 901 09-18 was seeded by hand &quot;attended, Junyan&quot;. Without the host</p>
+<p>log line <code>written: 1</code>, the Complete flips cannot be attributed to the lane.</p>
+<ol>
+<li>3. One Missed Booking card filed and closed — <b>not met.</b> 45 <code>[attend:</code> cards since 09-15, kinds</li>
+</ol>
+<p><code>unresolved</code> and <code>eob</code> only, <b>zero <code>missed</code></b>. Zero &quot;we missed you&quot; rows in the Message Queue since</p>
+<p>09-15. Every closed card was a false positive (Cancelled by agent or Won&#x27;t Do by Junyan).</p>
+<ol>
+<li>4. Three clean Desk Watch days — <b>the clock stalled at day 2.</b> The tally has 09-16 and 09-17 and</li>
+</ol>
+<p>nothing after; no Desk Watch report exists for 09-18 or 09-19. Day 3 was never read.</p>
+
+<p><b>The fault underneath (found in dc-canon, not on the map):</b> the board&#x27;s <code>Disarmed</code> / <code>Armed</code> clocks</p>
+<p>stopped being written at <b>2026-09-16 16:30</b> and their writer was never identified (PR #347 commit</p>
+<p>message, <code>board_status.py:361</code>). Every attendance card since then — 13 on 09-17, 7 on 09-18, 8 so</p>
+<p>far on 09-19 — fired on &quot;no disarm&quot; and every one was an attended renter. PR #347 (live 09-19) moved</p>
+<p>the EOB check onto the studio panel ledger instead, and <code>ff069bb44</code> renamed the cards to</p>
+<p><code>Raised by = Attendance Sweep</code>; today&#x27;s 20:23Z and 23:27Z cards carry the new name, so the fix is</p>
+<p>deployed. <code>fbs-monitor</code> reads the clocks as a fallback only (<code>build.py:1318</code>) and no file in</p>
+<p>dc-canon or fbs-monitor writes them. Cut as [146</b>.</p>
+
+<p><b>Open now on the board:</b> 9 <code><b>attend:</code> cards Pending Review, oldest Isabel Campo Jurado 509A 09-18</p>
+<p>18:30 (filed 05:09Z, Deadline 09-19, now past). Junyan&#x27;s Won&#x27;t Do on the five Isabel EOB cards and</p>
+<p>the Cancelled agent closes are the only worked cards this window.</p>
+
+<p><b>Not moved:</b> canon, event-gate code, host switches, the Desk Watch prompt.</p>
+
+<p><b>Waiting on Junyan (three rulings, [148</b>):</b></p>
+<ul>
+<li>- Does a closed <code>unresolved</code> / <code>eob</code> card count for check 3, given no true no-show has occurred in</li>
+</ul>
+<p>five days and Ops Lead makes the same decision from either card?</p>
+<ul>
+<li>- Does a hand-written Complete count for check 2, or must the lane&#x27;s own <code>written: 1</code> be seen?</li>
+<li>- Does the three-day clock restart from the first day after 146 is fixed (the cards so far were all</li>
+</ul>
+<p>false positives from a dead evidence source), or continue from 09-17?</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">22</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">24</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
 <p>Junyan&#x27;s Main Focus window today):</p>
@@ -3341,8 +3392,71 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- The two row shapes above pass through <code>stale_sweep.run</code> without an error entry.</li>
 <li>- No &quot;Reconcile sweep could not run … KeyError&quot; row for 7 days after deploy.</li>
 </ul>
+</div></details></details></div><div class="job"><div class="jnum">#146</div><div class="jhead"><span class="emoji">🗂️</span><h4>The board&#x27;s Disarmed / Armed clocks stopped on 2026-09-16 16:30 and nobody knows what wrote them</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>The board&#x27;s Disarmed / Armed clocks stopped on 2026-09-16 16:30 and nobody knows what wrote them</b></p><h2>Question</h2>
+
+<p>Found 2026-09-19 while re-reading <b>137</b>&#x27;s close checks.</p>
+<p>Every 🛎️ FBS AI Support row dated 09-17 onward has blank <code>Disarmed</code> and <code>Armed</code> cells; rows up to</p>
+<p>09-16 14:45 carry them. dc-canon PR #347 (merged 09-18 23:01 ET) records the stop time as</p>
+<p><b>2026-09-16 16:30</b> and says &quot;their writer was never found&quot;. No file in <code>dc-canon/services/event-gate</code></p>
+<p>or <code>fbs-monitor</code> writes those two properties; <code>fbs-monitor/build.py:1318</code> only reads them as a</p>
+<p>fallback, and <code>board_fields.py:57</code> reads <code>Disarmed</code> for the attendance lane.</p>
+
+<p>Consequence: the attendance card path (143) fired on &quot;no disarm&quot; for every booking since — 13 cards</p>
+<p>on 09-17, 7 on 09-18, 8 on 09-19 — all attended renters. PR #347 moved the EOB check onto the panel</p>
+<p>ledger, so the cards should thin from 09-19 on, but the cells themselves are still dead and two</p>
+<p>readers still trust them.</p>
+
+<p>Decide one of two things:</p>
+<ul>
+<li>- (a) <b>Find and restore the writer.</b> Candidates outside the two repos read here: an Agent Fleet</li>
+</ul>
+<p>lane, a Codex automation (<code>~/.codex/automations/</code>), a Hermes job, or a retired Concierge step that</p>
+<p>wrote the cells by hand (JOB 1 Step 4 was retired from canon on 09-13 — the same week). Check the</p>
+<p>Notion page history on one 09-16 row for the editor&#x27;s name; that names the writer in one read.</p>
+<ul>
+<li>- (b) <b>Retire the cells.</b> If the writer was the Concierge (retired 09-13 by design), the cells are</li>
+</ul>
+<p>a dead surface: remove the <code>fbs-monitor</code> fallback and the <code>board_fields.py</code> read, and let the</p>
+<p>attendance lane read the panel ledger only (as #347 already does for EOB).</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- The writer is named with evidence (page history or a log line), and either writes again with a</li>
+</ul>
+<p>09-19-or-later row showing a clock, or is declared retired and both readers are removed.</p>
+<ul>
+<li>- No <code>[attend:</code> card fires on a booking whose renter&#x27;s keypad disarm is in the panel ledger</li>
+</ul>
+<p>(spot-check three cards after the change).</p>
+<ul>
+<li>- One line on 137 saying which way this went, so its three-day clock can restart.</li>
+</ul>
+</div></details></details></div><div class="job"><div class="jnum">#147</div><div class="jhead"><span class="emoji">🗂️</span><h4>Desk Watch did not run on 09-18 or 09-19 — two ticket clocks depend on it</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Desk Watch did not run on 09-18 or 09-19 — two ticket clocks depend on it</b></p><h2>Question</h2>
+
+<p>The Desk Watch tally (<code>archive/desk-watch-tally.md</code>) ends at the 09-17 block. No Workflow Report and</p>
+<p>no tally block exist for 09-18 or 09-19. The <code>desk-watch</code> scheduled task folder holds <code>SKILL.md</code></p>
+<p>(edited 09-16 15:24) and two backups, and no run state. Two clocks stopped with it:</p>
+<p><b>137</b>&#x27;s &quot;three clean days&quot; (day 2 of 3 on 09-17) and Section D&#x27;s</p>
+<p>HTA Verified seven-day clock (day 2 of 7 on 09-17), whose rule says the verdict is void unless</p>
+<p>Section D was read on all seven days.</p>
+
+<p>Find out why it did not fire (Mac asleep, task disabled, the 09-16 SKILL.md edit broke the prompt,</p>
+<p>or the scheduler itself), fix that, and decide whether the two clocks restart or resume. This is the</p>
+<p>second time this month a watch went silent without an alarm (the 09-12…09-14 partial runs voided the</p>
+<p>first HTA clock); the map&#x27;s Notes say daily human reads live here because Junyan cannot do them, so a</p>
+<p>silent watch is a silent desk.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- A dated tally block for the next two consecutive mornings.</li>
+<li>- A stated cause and fix.</li>
+<li>- A liveness signal for the watch itself: a 🚦 Run Monitor row or a registry <code>produces</code> entry</li>
+</ul>
+<p>(registry currently lists desk-watch as UNVERIFIABLE) so its silence is visible the same morning.</p>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">7</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">8</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
 <p><b>The end-state is already ruled</b> (<b>018</b> §5, Junyan: *&quot;because the</p>
 <p>responder&#x27;s scope is so narrow I&#x27;m okay folding it in — worst case scenario I would just draft the</p>
@@ -3714,6 +3828,30 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>A ruling recorded on this map. And in the same change, <code>concierge-orchestration.md</code> stops</p>
 <p>describing the Morning Text as a live reader — that correction is due now regardless of the</p>
 <p>ruling, because it is currently false. Not &quot;the loop probably covers it&quot;.</p>
+</div></details></details></div><div class="job"><div class="jnum">#148</div><div class="jhead"><span class="emoji">🗂️</span><h4>Three rulings before 137 can close — what counts as the card, the write, and the clock</h4></div><span class="pill p-wait">needs 146 first</span> <details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Three rulings before 137 can close — what counts as the card, the write, and the clock</b></p><h2>Question</h2>
+
+<p><b>137</b>&#x27;s ruling 7 set four close checks. After five days of live</p>
+<p>cards the checks cannot be met as written, for reasons the ruling did not foresee: no true no-show</p>
+<p>has happened, the board&#x27;s own attendance evidence died on 09-16 (<b>146</b>),</p>
+<p>and the daily watch stopped (<b>147</b>). Junyan rules:</p>
+
+<ol>
+<li>1. <b>Check 3 — the card.</b> 45 cards filed, none <code>missed</code>, all <code>unresolved</code> / <code>eob</code>, all false</li>
+</ol>
+<p>positives. Does a closed <code>unresolved</code> card count as &quot;one Missed Booking card filed and closed&quot;,</p>
+<p>since Ops Lead makes the same decision from it? Or does 137 wait for a real no-show?</p>
+<ol>
+<li>2. <b>Check 2 — the write.</b> Eleven rows read Complete on 09-17/09-18 with no board clock. Does a</li>
+</ol>
+<p>Complete written by hand or by an unknown writer count, or must the host log show the lane&#x27;s own</p>
+<p><code>written: 1</code> (which needs a host read this session could not make)?</p>
+<ol>
+<li>3. <b>Check 4 — the clock.</b> Three clean days were counted from 09-16, while every card was a false</li>
+</ol>
+<p>positive from a dead evidence source. Restart from the first day after 146 is fixed, or continue?</p>
+
+<p>Grill on: whether &quot;seen acting&quot; (035&#x27;s test) is satisfied by a lane that files correctly on bad</p>
+<p>evidence, and whether a close check that depends on a real no-show occurring is a check at all.</p>
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
@@ -18594,5 +18732,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-16 18:02 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-19 20:31 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
