@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-19 21:02 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-19 21:05 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -101,7 +101,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="stats">
 <div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">23</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">8</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">9</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">111</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
@@ -3579,7 +3579,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p>(registry currently lists desk-watch as UNVERIFIABLE) so its silence is visible the same morning.</p>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">8</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">9</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
 <p><b>The end-state is already ruled</b> (<b>018</b> §5, Junyan: *&quot;because the</p>
 <p>responder&#x27;s scope is so narrow I&#x27;m okay folding it in — worst case scenario I would just draft the</p>
@@ -3975,6 +3975,48 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Grill on: whether &quot;seen acting&quot; (035&#x27;s test) is satisfied by a lane that files correctly on bad</p>
 <p>evidence, and whether a close check that depends on a real no-show occurring is a check at all.</p>
+</div></details></details></div><div class="job"><div class="jnum">#149</div><div class="jhead"><span class="emoji">🗂️</span><h4>A durable record of what the alarm panel saw — triggers, bypasses, troubles — that survives past three days</h4></div><span class="pill p-wait">needs 146 first</span> <details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A durable record of what the alarm panel saw — triggers, bypasses, troubles — that survives past three days</b></p><h2>Question</h2>
+
+<p>Junyan, 2026-09-19 (while ruling <b>146</b>): the arrival/departure</p>
+<p>cells exist so the desk can answer a dispute two weeks later. He wants the same for <b>alarm</p>
+<p>triggers, bypassed sensors, troubles and the like</b> — &quot;all of that info&quot;.</p>
+
+<p><b>What already sees these events (so this is possible without new sensors):</b> the alarm watchdog</p>
+<p>on Cloud Run reads every panel every 5 minutes and acts on sirens, stuck bypasses and troubles;</p>
+<p>the event-gate keeps door events for 72 h and a clean panel history for Studio 901 only; the</p>
+<p>Doorman logs one panel-state snapshot per studio per morning to the 🚪 Alarm Activity Log (last</p>
+<p>row 2026-09-04). <b>What is missing is a durable store</b>: every one of those sources forgets within</p>
+<p>about three days, and the Activity Log holds snapshots, not events.</p>
+
+<p><b>Prior ruling to respect (map, early September):</b> Junyan closed the &quot;record every arm/disarm to</p>
+<p>Notion&quot; job — the live board already shows who is in a room, three feeds cover the rest, a fourth</p>
+<p>Notion table would go against the move off Notion, and nobody would read it. That ruling was about</p>
+<p>a <i>real-time</i> log nobody reads. This ask is different: an <i>after-the-fact</i> record someone reads</p>
+<p>only when there is a dispute. The two can both be right.</p>
+
+<p><b>Decide:</b></p>
+<ol>
+<li>1. <b>Scope.</b> Per booking (a &quot;Panel events&quot; block on the board row, written by the same sweep that</li>
+</ol>
+<p>stamps the clocks: triggers, bypasses, troubles inside the booking window) — cheap, code-only,</p>
+<p>no new table. Or per studio, all events, booking or not (door opened at 3 am with nobody</p>
+<p>booked) — needs its own store.</p>
+<ol>
+<li>2. <b>Where it lives.</b> The board row for the per-booking part. For the studio-level part, the</li>
+</ol>
+<p>owned local store (desk-store / the git mirror the data-sovereignty map chose), not a new</p>
+<p>Notion table — the retired Activity Log shows a Notion table is the wrong shape.</p>
+<ol>
+<li>3. <b>Retention.</b> Junyan&#x27;s stated need is &quot;two weeks prior&quot;. Propose 13 months (a full year of</li>
+</ol>
+<p>disputes plus one), append-only.</p>
+<ol>
+<li>4. <b>Who writes it.</b> The watchdog already has the events in hand every 5 minutes; a code append</li>
+</ol>
+<p>from there costs no tokens. The Doorman&#x27;s daily snapshot stays as the drift check.</p>
+
+<p>No LLM anywhere in this; the whole thing is copying what the panel already said into a place that</p>
+<p>does not forget.</p>
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
@@ -18855,5 +18897,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-19 21:02 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-19 21:05 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
