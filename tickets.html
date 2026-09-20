@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-20 01:29 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-20 01:56 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1760,6 +1760,66 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Acceptance for this ticket&#x27;s check 3 should not be read until (a)–(c) are live: with the current</p>
 <p>code, &quot;one Missed Booking card filed and closed&quot; cannot happen for a genuine no-show.</p>
+
+<h3>Addendum 2026-09-20 — close the ledger&#x27;s holes at the source (Junyan: &quot;the robot can never say it doesn&#x27;t know&quot;)</h3>
+
+<p>The ~5.5-minute socket close is Alarm.com&#x27;s (code 1008, server-side, canon <code>studio-activity.md</code></p>
+<p>&quot;do not re-litigate&quot;); it cannot be removed. Since alarm-monitor #9/#10 the reconnect is 0.3 s</p>
+<p>median (09-17: 138 reconnects / 12.7 h, longest 86 s), so the holes are tiny — the false cards come</p>
+<p>from <code>board_status</code> refusing to decide on any hole, not from lost events. Fix outline item (b) above</p>
+<p>is therefore first. To make &quot;don&#x27;t know&quot; a rare answer rather than the default, two source-side</p>
+<p>changes on top of (b), both in alarm-monitor (<code>alarm_monitor/door_events.py</code>, <code>event_listener.py</code>):</p>
+
+<ul>
+<li>- (f) <b>Staggered second socket.</b> Each websocket connection is closed on its own ~5.5 min clock.</li>
+</ul>
+<p>Hold two connections, opened ~2.75 min apart; merge their events into the one ledger keyed</p>
+<p><code>(studio, kind, ts-to-the-second, device)</code> (the same dedup key <code>panel_ledger_pull.py</code> already</p>
+<p>uses). A gap is recorded only when <i>both</i> sockets are down at once. <code>/door-history</code> then</p>
+<p>returns <code>covered: true</code> for virtually every window, and <code>timeline()</code>&#x27;s existing gate passes</p>
+<p>without being loosened. Restart safety: on process start open the second socket after the</p>
+<p>first is confirmed subscribed, never both at t=0 (they would then drop together forever).</p>
+<ul>
+<li>- (g) <b>Stitch the arm-state poller into gaps.</b> <code>/arm-history</code> (the once-a-minute panel-state</li>
+</ul>
+<p>poll) never drops but carries no actor. When a recorded gap in <code>/door-history</code> is bracketed by</p>
+<p>a state change in <code>/arm-history</code> (armed before, disarmed after), write a synthetic ledger event</p>
+<p>inside the gap: <code>kind: disarm</code>, <code>actor: null</code>, <code>actor_source: &quot;arm_state&quot;</code>, <code>at: &lt;poll time&gt;</code>,</p>
+<p><code>gap_filled: true</code>. <code>board_status.decide()</code> must treat it as <b>presence evidence only</b></p>
+<p>(blocks a no-show, never a named arrival, never Complete on its own) — the same standing a</p>
+<p>nameless door/motion event has today (L237–242). Nothing changes for billing: <code>departure.verdict</code></p>
+<p>already ignores nameless events for <code>arm_then_exit</code>.</p>
+
+<p>What stays honest: if both sockets <i>and</i> the poller are down (Cloud Run outage, Alarm.com login</p>
+<p>revoked), <code>covered</code> is still false and the lane still files a review card instead of a no-show</p>
+<p>card. &quot;Never says it doesn&#x27;t know&quot; means a hole is closed by a second witness whenever one exists;</p>
+<p>it never means a dead pipe reads as the renter&#x27;s absence (house rule, unchanged).</p>
+
+<p>Not viable: backfilling from Alarm.com&#x27;s REST <code>activity/historyEvents</code> on each reconnect — that API</p>
+<p>is pinned to one selected system and cannot be switched (canon, found 2026-08-18).</p>
+
+<p>Order of work: (a) → (b) → (f) → (g) → (c) → (d), tests per (e) plus a two-socket merge test and a</p>
+<p>gap-stitch test in alarm-monitor.</p>
+
+<h3>Built 2026-09-20 — two PRs, nothing merged, nothing deployed</h3>
+
+<ul>
+<li>- <b>desk-correspondence #376</b> (<code>claude/137-attendance-cards</code>) — items (a), (b), (c) plus the canon</li>
+</ul>
+<p>update to <code>library/studio-activity.md</code>. (d) was already on main (<code>eob_timing.claim_facilitated</code>).</p>
+<p>4315 tests pass.</p>
+<ul>
+<li>- <b>danceannex-alarm-monitor #15</b> (<code>claude/137-two-sockets-gap-stitch</code>) — items (f) and (g):</li>
+</ul>
+<p><code>alarm_monitor/listener_pool.py</code> (two staggered sockets, one ledger, gap only when both are down,</p>
+<p>re-stagger on alignment, open outage written cut at each flush) and <code>door_events.stitch_arm_state</code></p>
+<p>(nameless <code>arm_state</code> row into a hole, presence only). 482 tests pass. Default is two sockets</p>
+<p>(<code>ALARM_EVENTS_SOCKETS=1</code> to fall back) — a third concurrent Alarm.com session in total.</p>
+
+<p>Order to land: #15 first (source), then #376 (consumer). After both are live, expect <code>covered:</p>
+<p>true</code> on nearly every window, zero <code>eob</code> cards for attended renters, and <code>classify</code> cards only for</p>
+<p>rows corroboration could not complete; a genuine no-show still goes through <code>missed</code> only when the</p>
+<p>five-room absence proof holds, otherwise <code>unresolved</code> with the panel read on the card.</p>
 </div></details></details></div><div class="job"><div class="jnum">#146</div><div class="jhead"><span class="emoji">🗂️</span><h4>The board&#x27;s Disarmed / Armed clocks stopped on 2026-09-16 16:30 and nobody knows what wrote them</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>The board&#x27;s Disarmed / Armed clocks stopped on 2026-09-16 16:30 and nobody knows what wrote them</b></p><h2>Question</h2>
 
 <p>Found 2026-09-19 while re-reading <b>137</b>&#x27;s close checks.</p>
@@ -4492,6 +4552,13 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>base points at <code>alarm-mcp.srv1948070.hstgr.cloud</code>. The next desk tick appends the first</p>
 <p>lines. GitHub Actions secrets NOT added (the workflow twin keeps skipping green; the VPS tick</p>
 <p>is the primary writer, so that is a mirror-only gap).</p>
+
+<p><b>No append yet, and that is the schedule, not a fault.</b> The desk tick does not run overnight</p>
+<p>(timer: last 02:52Z, next 12:07Z = 08:07 Toronto); the credentials landed at 05:29Z, after</p>
+<p>the last pass of the night. The VPS clone already carries the merge. First real append:</p>
+<p>the 08:07 Toronto pass on 2026-09-20. Check afterwards with</p>
+<p><code>git ls-tree -r --name-only origin/main -- panel-ledger</code> (month files) or on the host</p>
+<p><code>journalctl -u desk-tick.service --since &quot;1 hour ago&quot; | grep panel-ledger</code>.</p>
 </div></details></details></div><div class="job"><div class="jnum">#152</div><div class="jhead"><span class="emoji">🗂️</span><h4>alarm-mcp exposes bypassed sensors and troubles over HTTP so the panel ledger can record them</h4></div><span class="pill p-wait">needs 151 first</span> <details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>alarm-mcp exposes bypassed sensors and troubles over HTTP so the panel ledger can record them</b></p><h2>Question</h2>
 
 <p>Cut from <b>151</b> while building it (2026-09-19). Junyan&#x27;s ruling</p>
@@ -19397,5 +19464,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-20 01:29 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-20 01:56 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
