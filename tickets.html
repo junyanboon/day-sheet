@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-19 21:05 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-19 21:09 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -4017,6 +4017,37 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>No LLM anywhere in this; the whole thing is copying what the panel already said into a place that</p>
 <p>does not forget.</p>
+
+<h2>Rulings 2026-09-19 (Junyan, in session)</h2>
+
+<ol>
+<li>1. <b>Scope: per studio too.</b> Every panel event, booking or not.</li>
+<li>2. <b>Where: the local store</b> (owned, not Notion).</li>
+<li>3. <b>Retention: 13 months</b>, append-only.</li>
+<li>4. <b>Keep the Doorman&#x27;s daily snapshot</b> as the drift check.</li>
+<li>5. <b>Condition:</b> assess whether there is enough storage before building.</li>
+</ol>
+
+<h2>Storage assessment (same session)</h2>
+
+<p><b>The record itself is small.</b> Sizing from the panel&#x27;s own event rate: five studios, roughly</p>
+<p>20–60 arm/disarm/door/bypass/trouble events per studio per day at ~250 bytes per line as JSON</p>
+<p>(time, studio, event type, actor, sensor, source) is about 50–75 KB/day, <b>under 30 MB for 13</p>
+<p>months</b>. Even if every 5-minute watchdog read were stored as a full snapshot (5 studios × 288/day</p>
+<p>× ~300 B) it is ~430 KB/day, <b>~170 MB for 13 months</b>. Either fits on anything.</p>
+
+<p><b>The Mac does not have headroom, and that is the real finding.</b> <code>df</code> at 2026-09-19 21:xx ET:</p>
+<p>228 GB disk, <b>6.8 GB free</b>. The disk-space-watch task&#x27;s own note says the machine hit 3.5 GB free</p>
+<p>on 2026-08-15 and a cleanup reclaimed ~37 GB; five weeks later it is back near the edge. The</p>
+<p>record would not be what fills it, but a store that must never lose data should not live on a</p>
+<p>disk that is one cache regrowth from full. The existing <code>desk-store</code> (419 MB, the correspondence</p>
+<p>mirror) is on that same disk.</p>
+
+<p><b>Recommendation:</b> the record&#x27;s primary copy lives on the VPS beside the event-gate (the watchdog</p>
+<p>and the door ledger already run there; the 13-month file is tens of MB), with the Mac <code>desk-store</code></p>
+<p>holding a git-mirrored copy the way correspondence is mirrored today. VPS free space is UNCHECKED</p>
+<p>from this session (production read refused) — one <code>df -h</code> on the host closes that. Separately, the</p>
+<p>Mac needs the cleanup again; the weekly disk-space-watch report is the place that names what grew.</p>
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
@@ -18897,5 +18928,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-19 21:05 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-19 21:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
