@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-19 22:01 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-20 01:29 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1677,6 +1677,89 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Does the three-day clock restart from the first day after 146 is fixed (the cards so far were all</li>
 </ul>
 <p>false positives from a dead evidence source), or continue from 09-17?</p>
+
+<h2>Code bug 2026-09-20 — attendance cards fire on attended bookings; a true no-show can never reach <code>missed</code></h2>
+
+<p>Filed from the desk QA follow-up (<code>Claude-DanceAnnex/.scratch/desk-qa/2026-09-19-sweep.md</code>,</p>
+<p>&quot;Follow-up: attendance cards&quot;). Read-only: nothing below was changed. Code cited is the J28 mirror</p>
+<p>copy of <code>services/event-gate</code> (<code>board_status.py</code>, <code>eob_timing.py</code>).</p>
+
+<p><b>Evidence.</b> Every <code>[attend:</code> card 09-14 → 09-17 AM cross-checked against Alarm.com panel history</p>
+<p>(fbs-monitor deck history, clone ends 09-17 13:47Z): Salia 693 09-14, Greg Samba 901 09-14, August</p>
+<p>509A 09-15, Jia 509B 09-15, Marco Villa 509B 09-15, Danica 693 09-16, Simona 509A 09-16, Jia 527</p>
+<p>09-16, Harmony 509A 09-16, Krista Flynn (Nina Li FBS) 901 09-16 — <b>all attended on named keypad</p>
+<p>evidence; every card was false.</b> Every <code>classify</code> card&#x27;s Basis reads <code>no decision: missing, stale or</p>
+<p>incomplete alarm coverage</code>. <code>missed</code>-kind cards filed since go-live: 0. (Correction to the sweep&#x27;s</p>
+<p>URGENT 3: 901 09-16 20:30 was attended by the facilitator, Krista, 20:31–22:44; Junyan&#x27;s &quot;should</p>
+<p>have gone out&quot; note was about the EOB text.)</p>
+
+<p><b>Five defects:</b></p>
+
+<ol>
+<li>1. <b><code>studio_disarmed()</code> ignores ledger gaps</b> (<code>board_status.py</code> ~L372). Returns <code>False</code> when the</li>
+</ol>
+<p>door-history payload has no disarm event, without reading <code>covered</code> / <code>gaps</code> / <code>covering_gaps</code>.</p>
+<p>Docstring promises <code>None</code> on a gap; the code only returns <code>None</code> on an exception. With the alarm</p>
+<p>websocket dropping every ~6 min (L65 comment), a key-in that fell inside a drop reads as &quot;no</p>
+<p>disarm&quot; → false <b>EOB card</b>. This is the 09-17/18 false-card wave; PR #347 moved the read to</p>
+<p>the panel ledger but did not add the gap check.</p>
+<ol>
+<li>2. <b><code>timeline()</code> freshness/horizon gate fails nearly always</b> (L95–101: <code>updated_at</code> within 120 s</li>
+</ol>
+<p>of <code>now</code>, <code>covers_since ≤ start−6h</code>, <code>covered=True</code> or every gap tolerable). The failure is a</p>
+<p>plain <code>ValueError</code>, and <code>observe()</code> (L292) only routes <code>CoverageGap</code> / <code>GAP_DEFERRALS</code> into</p>
+<p><code>corroborate()</code> — so Alarm.com corroboration, which had the answer in every case above, is</p>
+<p>skipped. <code>decide()</code> never decides; the row stays Upcoming; <code>unresolved()</code> files the generic</p>
+<p><b>classify card</b> 2 h after the end for every booking, attended or not.</p>
+<ol>
+<li>3. <b><code>Missed Booking</code> is unreachable</b> (L232–243): needs all five rooms gap-free, armed baseline</li>
+</ol>
+<p>everywhere, zero activity during the window. With (2) the branch never executes. A real no-show</p>
+<p>therefore gets the same generic classify card as an attended booking — or <b>no card at all</b> when</p>
+<p>another writer flips the row Complete first (Nina/Krista row went Complete 02:53Z 09-17;</p>
+<p>FBS Monitor sync has <code>BOOKING_STATUS_SYNC_DISABLED=1</code> since 09-13 per <code>gh variable list</code>, so</p>
+<p>that was corroboration-live or a human).</p>
+<ol>
+<li>4. <b>Attended rows never close without a human</b> — Complete is only written on the ledger path</li>
+</ol>
+<p>(blocked by 2) or corroboration-live (only reachable via <code>CoverageGap</code>). Hence the 8 rows stuck</p>
+<p>Upcoming on 09-19 and the 09-19 &quot;one live Complete with readback&quot; check staying unverified.</p>
+<ol>
+<li>5. <b>Facilitator bookings lose their EOB</b> (<code>eob_timing.py:43</code>): Skedda holder (Nina) ≠ queue</li>
+</ol>
+<p>recipient (Krista) → <code>hold</code> &quot;Booking recipient or booking type changed.&quot; → Needs Fix → Will Not</p>
+<p>Send at Desk Sort. This is the text that should have gone out on 09-16. Owner: Registrar lane,</p>
+<p>but it lands here because it is the 4.7 pre-send EOB decision this ticket covers.</p>
+
+<p><b>Fix outline (not applied):</b></p>
+
+<ul>
+<li>- (a) <code>studio_disarmed()</code>: return <code>None</code> when <code>covered</code> is not True, or when any entry in <code>gaps</code> /</li>
+</ul>
+<p><code>covering_gaps</code> overlaps <code>[start−30 min, now]</code>; <code>None</code> already suppresses the EOB card.</p>
+<ul>
+<li>- (b) Route the plain &quot;missing, stale or incomplete&quot; <code>ValueError</code> from <code>timeline()</code> into</li>
+</ul>
+<p><code>corroborate()</code> the same way <code>CoverageGap</code> is, or relax the 120 s freshness gate to the tick</p>
+<p>cadence (10 min) — corroboration&#x27;s Alarm.com read is the source that was right ten times out of ten.</p>
+<ul>
+<li>- (c) <code>card_props()</code>: include the Alarm.com panel read (arrived/departed by whom) in the card</li>
+</ul>
+<p>Basis so Ops Lead is not re-deriving it; a card whose panel read shows a named arrival should not</p>
+<p>be filed as <code>unresolved</code> at all.</p>
+<ul>
+<li>- (d) <code>eob_timing.decide()</code>: treat the booking&#x27;s facilitator / authorized users as valid recipients</li>
+</ul>
+<p>— compare the holder against the row&#x27;s Artist relation <i>and</i> its Authorized Users, not the holder</p>
+<p>alone — before returning the &quot;recipient changed&quot; hold.</p>
+<ul>
+<li>- (e) Tests to add: <code>test_board_status.py</code> — EOB card not filed when the disarm window has a gap;</li>
+</ul>
+<p>classify card not filed when corroboration returns Complete; <code>test_eob_timing.py</code> — facilitator</p>
+<p>recipient is not a hold.</p>
+
+<p>Acceptance for this ticket&#x27;s check 3 should not be read until (a)–(c) are live: with the current</p>
+<p>code, &quot;one Missed Booking card filed and closed&quot; cannot happen for a genuine no-show.</p>
 </div></details></details></div><div class="job"><div class="jnum">#146</div><div class="jhead"><span class="emoji">🗂️</span><h4>The board&#x27;s Disarmed / Armed clocks stopped on 2026-09-16 16:30 and nobody knows what wrote them</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>The board&#x27;s Disarmed / Armed clocks stopped on 2026-09-16 16:30 and nobody knows what wrote them</b></p><h2>Question</h2>
 
 <p>Found 2026-09-19 while re-reading <b>137</b>&#x27;s close checks.</p>
@@ -4401,6 +4484,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><code>panel_ledger_pull skipping</code> (green). GitHub Actions has no <code>ALARM_*</code> secrets either</p>
 <p>(<code>gh secret list</code> shows none), so the workflow twin skips too. First real append is the</p>
 <p>tick after Junyan adds the two values. <b><code>df -h</code> recorded 2026-09-20 ~02:00Z (read-only SSH):</b> <code>/dev/sda1 96G, 73G used, 24G free (76%)</code> — one filesystem for <code>/</code>, <code>/srv</code>, <code>/opt</code> and <code>/docker</code>. The 13-month ledger is under 30 MB; the 1 GiB guard sits 23 GB below today&#x27;s free space. Storage precondition met. Note for the disk watch: 76% used with the deploy backups (181 <code>compose.before-eventgate</code> copies as of 09-17) is where to look first if that number climbs.</p>
+
+<p><b>2026-09-20 05:29Z — credentials on the host (Junyan: &quot;add the alarm env values to the tick</p>
+<p>env&quot;).</b> <code>ALARM_PANEL_BASE</code> and <code>ALARM_PANEL_TOKEN</code> copied line-for-line from</p>
+<p><code>/docker/danceannex-mcp/event-gate.env</code> into <code>/etc/danceannex/desk-tick.env</code> (backup</p>
+<p><code>desk-tick.env.bak-20260920T052918Z</code>, file stays <code>600 root:root</code>, values never printed). The</p>
+<p>base points at <code>alarm-mcp.srv1948070.hstgr.cloud</code>. The next desk tick appends the first</p>
+<p>lines. GitHub Actions secrets NOT added (the workflow twin keeps skipping green; the VPS tick</p>
+<p>is the primary writer, so that is a mirror-only gap).</p>
 </div></details></details></div><div class="job"><div class="jnum">#152</div><div class="jhead"><span class="emoji">🗂️</span><h4>alarm-mcp exposes bypassed sensors and troubles over HTTP so the panel ledger can record them</h4></div><span class="pill p-wait">needs 151 first</span> <details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>alarm-mcp exposes bypassed sensors and troubles over HTTP so the panel ledger can record them</b></p><h2>Question</h2>
 
 <p>Cut from <b>151</b> while building it (2026-09-19). Junyan&#x27;s ruling</p>
@@ -19306,5 +19397,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-19 22:01 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-20 01:29 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
