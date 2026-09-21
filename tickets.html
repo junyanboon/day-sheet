@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-21 18:55 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-21 19:08 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2391,6 +2391,21 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ol>
 <p>courtesy; Tagvenue enquiry = three emails in two minutes (Matthew Jadd). Same booking, three sources.</p>
 <p>Shape: same platform booking id within an hour → one source. Deterministic.</p>
+<p><b>Built 2026-09-21 evening:</b> <code>concierge_intake.fold_platform_sources()</code> — sources whose <code>From Address</code> is in a</p>
+<p>platform&#x27;s KNOWN sender set (email domain <code>giggster.com</code> / <code>tagvenue.com</code> / <code>peerspace.com</code> incl. subdomains, or</p>
+<p>Giggster&#x27;s SMS relay pool, the same <code>RELAY_SENDERS</code> list app.py drops; a Phone.com address counts only when the</p>
+<p>number it wraps is in the pool) + same platform + (same booking/enquiry id, or same ticket within</p>
+<p><code>PLATFORM_WINDOW</code> = 60 min) → one item; <code>audits</code> lists every folded audit id, <code>fold.members</code> carries each</p>
+<p>revision, and a receipt must name every folded id (<code>covers()</code>). A phone number NOT in the pool in <code>From Address</code></p>
+<p>is a per-guest proxy → a guest talking → never folds. Human senders never fold. Finding from the Hermes</p>
+<p>read-only dump (<code>run_4229f973…</code>): Thea&#x27;s courtesy text is NOT under her own number — it is</p>
+<p><code>hello@giggster.com / proxy (343) 306-5528</code>; the proxy rule keeps it separate (the 60-min window would too).</p>
+<p>The SMS mirror body links <code>giggster.com/bookings?role=host</code> (no id), so the Giggster pair folds by the</p>
+<p>ticket window. PR #423 merged as d26140f52. Both folds defined <code>FOLD_WINDOW</code>; the merge shadowed #421&#x27;s 10 min</p>
+<p>with 60 min and the first two deploy runs failed at the test step (host untouched). Fixed by PR #426</p>
+<p>(<code>PLATFORM_WINDOW</code>; my duplicate #425 closed). Live in 2802044 since 22:51Z. Section A on the 09-21 file:</p>
+<p>Giggster 3 → 2 (fold of 2 + Thea), Tagvenue 3 → 1; 46 → 43 for this fold alone, 35 → 32 after candidate 1.</p>
+<p>Tests: <code>services/event-gate/test_concierge_intake_fold.py</code> (15).</p>
 <ol>
 <li>3. <b>Sweep markers counted as handbacks (about 26 of 48).</b> <code>🩺 Persistent defect (3 runs)</code> rows (stale-48h,</li>
 </ol>
@@ -2471,6 +2486,19 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ol>
 <p>the confirmed dates; the only judgement was the holiday-skip question, already answered by the customer.</p>
 <p>Shape: confirmed renewal → one recurring paid series from the prior series&#x27; fields. Deterministic.</p>
+
+<p><b>2026-09-21 late evening (Junyan rulings):</b> Marilyn and Natascha — signature follow-ups queued (SMS, Jul-12 Shamir</p>
+<p>wording precedent). Shamir — dates nudge queued, Gate: Artist revisit 09-25. Lost &amp; Found — Done (claimed). Claudia —</p>
+<p>Drive copy in place (Sync/…/2026/20260912_Avante_Dance_Company_insurance.pdf), noted on Docs row + ticket. Harmony</p>
+<p>forgot-to-arm — Done (too late). Dennis Jun — Done (09-15 ruling executed; October pause Action Processed; reopen if</p>
+<p>Oct 1 bills). Ivanka — &quot;series is in the calendar, agreement shortly&quot; follow-up queued. Taylor/Lily — Lily replied</p>
+<p>with name + code from the corrected number; Case B provisioning sent to Hermes (<code>provision-lily-whiting-2026-09-21</code>,</p>
+<p>run_57ea0911…) with T4 (known-date branch, Tue Sep 22) and ticket close in the same task.</p>
+
+<p><b>Seen:</b> the two finished build chips (intake fold, reader-sees-finished-work) left no <code>claude/*</code> branch on</p>
+<p>origin as of 23:20 EDT — check their session transcripts before assuming a PR exists. The dc-canon working tree is</p>
+<p>checked out on <code>claude/greeter-artist-one-off</code> (another session&#x27;s branch), not main; my Tier A work used its own</p>
+<p>branch and is merged, so nothing of mine is affected.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">21</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
@@ -19966,5 +19994,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-21 18:55 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-21 19:08 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
