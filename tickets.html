@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-21 17:51 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-21 18:55 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2378,6 +2378,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ol>
 <p>13 Skedda &quot;System notification&quot; emails within two minutes (2026-09-14 11:18–11:19), each a distinct</p>
 <p>message id, all on one ticket. Shape: same sender + same ticket + same minute → one source. Deterministic.</p>
+<p><b>Built 2026-09-21 evening:</b> <code>concierge_intake.fold()</code> — same <code>Channel = System notification</code> + same <code>Sender</code></p>
+<p>+ same ticket + within 10 min of the run&#x27;s first source + state needs_pickup → one item; <code>sources</code> carries every</p>
+<p>audit id / revision / message id and <code>record_item_receipts()</code> stamps every folded audit row. Human channels never</p>
+<p>fold. PR #421 merged as 6845d7a33, live in cd2ce8a since 22:29Z. The inventory file holds 12 Maggie rows, not 13,</p>
+<p>so Section A goes 46 → 35 (not 34). Property names confirmed read-only by Hermes <code>run_52f7c241…</code>.</p>
+<p><b>VPS read-back 22:41Z (Hermes <code>run_fbe10417…</code>):</b> canon clone reset to origin/main, the two local-only commits</p>
+<p>kept on branch <code>local-only-backup-2026-09-21</code>; <code>concierge_intake.py</code> now reports seen 137 / remaining 31 /</p>
+<p>actionable 31, one folded item: ticket 3db75032-81c4-81f4-a253-c747cb924fc2 | 12 | Maggie Morrison.</p>
 <ol>
 <li>2. <b>Platform mirrors (5 of 46).</b> Giggster instant booking = email + Phone.com SMS mirror + closing</li>
 </ol>
@@ -2399,6 +2407,25 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>(Giggster/Tagvenue/Peerspace by booking id or ticket+60 min), 3 handback_sweep markers → own list +</p>
 <p>revisit_after, 4 <code>ball_in_court.py</code> shadow sweep. Junyan starts each chip; the PR is the handoff back.</p>
 
+<ol>
+<li>5. <b>Finished work the intake reader cannot see (3 of the first 5 items).</b> Jia Chian Lee (queue row Sent</li>
+</ol>
+<p>+ Action Processed, no ticket), Vicky Yeung (staff answered off-queue), Viktoriia (Docs row + Action filed,</p>
+<p>audit&#x27;s Notion Record blank). The reader checks the ticket relation only. Shape: handled when the source id</p>
+<p>is on a Sent queue row, a Processed Action, or a Docs row after the source date. Deterministic. Chip spun.</p>
+<ol>
+<li>6. <b>Processed Actions listed as handbacks.</b> The five money items (Walsh credit, Rebecca invoice, Rampersad</li>
+</ol>
+<p>and Rivas invoices, Dennis Jun decision) are all Processed, yet <code>handback_sweep.py</code> listed them as work.</p>
+<p>Add to the marker session&#x27;s scope.</p>
+
+<p><b>2026-09-21 evening, session 1 (Junyan + Claude, process-studio-tickets):</b> Jia Chian Lee — done earlier</p>
+<p>today by Junyan. Vicky Yeung — Done (receipt 31e389336bb4). Viktoriia — filed 09-10, nothing left. Pablo</p>
+<p>Perez — Lost by ruling (receipt c8ec9b1144e1). Claudia / Avante — certificate read (Tokio Marine ZMC19441,</p>
+<p>2026-09-12 → 2027-09-12, CGL $2M/$5M, holder box blank), PDF attached to Docs row 3e17503281c481ceb5fdca144d145b5d</p>
+<p>with transcription, checklist on the ticket, Review (receipt 072579672ade); not done: Drive copy, Skedda</p>
+<p>title check. Money pile: empty, all five Processed already.</p>
+
 <h2>Backlog sessions</h2>
 
 <p><b>2026-09-21 evening — off, and the first inventory.</b> Hermes run <code>run_7c583f3a…</code> paused both crons at</p>
@@ -2417,6 +2444,33 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Resolves with:</b> crons disabled with read-back; the backlog worked to zero unpicked sources at least</p>
 <p>once; on or after 2026-10-05 Junyan rules: stays off, comes back smaller, or comes back as built.</p>
+
+<p><b>2026-09-21 evening, session 1 continued (rulings by Junyan):</b> Studio 693 alarm — Done (waived 09-17, now</p>
+<p>on the ticket). Marilyn Hintsa — Gate: Artist, revisit 09-24 (09-20 ruling applied). Yogibare — phone call</p>
+<p>logged (<code>messages/2026/09/21/drop-call-out-21e0e56e63f1.json</code>), waiting list, Gate: Time revisit</p>
+<p>2027-01-05, held T1 retired, Decision Action Processed. iFreeStyle — held email to Caryl queued (install</p>
+<p>Wednesday, quote to follow), ticket Gate: Staff on the cost split. Taylor Yeung — provisioning recorded as</p>
+<p>done. 901 sound — left as is. Kimberly Rampersad — Won. Rebecca Wise, Camila Avendano, Lordasa Charles,</p>
+<p>sandra lewis, Windborne — Lost. Ivanka Moskaliuk — renewal series booked by Junyan from a verified dry run</p>
+<p>(Skedda 121348646, 13 Mondays 2026-11-02 → 2027-01-25, 509A 19:15–20:45, $67.80 Paid); next the renewal</p>
+<p>agreement. Money pile empty. Two permission-gate holds this session: the paid Skedda commit (Junyan ran it)</p>
+<p>and one batched ticket close (re-run singly).</p>
+
+<p><b>Backlog after session 1:</b> intake sources 46 → about 12 real (the rest are folds, finished work, or</p>
+<p>closed tonight); handbacks 48 → the remaining open gates are Marilyn (signature), Shamir (reply), Natascha</p>
+<p>(signature), Harmony (ball-in-court), Lost &amp; Found watch, Claudia (Drive copy), Ivanka (agreement), iFreeStyle</p>
+<p>(cost split), Taylor (T4 confirmation), Dennis Jun (Ops Lead credit/refund decision, Action Processed —</p>
+<p>verify), Nicholas Walsh (FBS marks, &quot;Elements Studio&quot; mismatch).</p>
+
+<ol>
+<li>7. <b>Weekly neighbour check (901 sound).</b> Junyan: keep it as is. The ticket expects a T4 to Liz every</li>
+</ol>
+<p>Wednesday 09:00 while the overlap lasts. Deterministic weekly draft; candidate only, not spun.</p>
+<ol>
+<li>8. <b>Time Slot Renewal SOP, booking leg.</b> Ivanka&#x27;s series was built from the existing series fields plus</li>
+</ol>
+<p>the confirmed dates; the only judgement was the holiday-skip question, already answered by the customer.</p>
+<p>Shape: confirmed renewal → one recurring paid series from the prior series&#x27; fields. Deterministic.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">21</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
@@ -19912,5 +19966,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-21 17:51 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-21 18:55 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
