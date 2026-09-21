@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-21 17:32 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-21 17:46 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2373,11 +2373,37 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <h2>Automation candidates</h2>
 
-<p>(none yet)</p>
+<ol>
+<li>1. <b>Duplicate intake of one event (13 of 46 sources).</b> Maggie Morrison&#x27;s Thursday-hours request arrived as</li>
+</ol>
+<p>13 Skedda &quot;System notification&quot; emails within two minutes (2026-09-14 11:18–11:19), each a distinct</p>
+<p>message id, all on one ticket. Shape: same sender + same ticket + same minute → one source. Deterministic.</p>
+<ol>
+<li>2. <b>Platform mirrors (5 of 46).</b> Giggster instant booking = email + Phone.com SMS mirror + closing</li>
+</ol>
+<p>courtesy; Tagvenue enquiry = three emails in two minutes (Matthew Jadd). Same booking, three sources.</p>
+<p>Shape: same platform booking id within an hour → one source. Deterministic.</p>
+<ol>
+<li>3. <b>Sweep markers counted as handbacks (about 26 of 48).</b> <code>🩺 Persistent defect (3 runs)</code> rows (stale-48h,</li>
+</ol>
+<p>orphan-gate, open-ended-wait, lapsed-wait) are the sweep&#x27;s own findings, listed beside real customer</p>
+<p>work. Shape: filter markers out of the handback list, or list them once per ticket. Deterministic.</p>
 
 <h2>Backlog sessions</h2>
 
-<p>(none yet)</p>
+<p><b>2026-09-21 evening — off, and the first inventory.</b> Hermes run <code>run_7c583f3a…</code> paused both crons at</p>
+<p>17:24 EDT (<code>hermes cron pause</code>; this build has no <code>disable</code>; reversal is <code>hermes cron resume</code>). Backup</p>
+<p><code>cron/jobs.json.bak-155-2026-09-21</code>. Read-back: 18 jobs before and after, only the two Concierge entries</p>
+<p>changed. Rolling report got the OFF line. Inventory run <code>run_1c8807fd…</code> (read-only) →</p>
+<p><b>assets/155-backlog-inventory-2026-09-21.txt</b>:</p>
+<p>46 intake sources in scope (44 needs_pickup, 2 unresolved_route) across 24 tickets; 2 deadline items</p>
+<p>(both &quot;obligation absent from source&quot;); 48 handbacks (32 Artist / 10 Staff / 6 Time) on 21 tickets, about</p>
+<p>half of them sweep markers; Inbound Messages board clean (53 rows, 0 unprocessed).</p>
+
+<p><b>Seen on the VPS, not fixed:</b> the canon clone at <code>/opt/data/profiles/dance-annex-ops/desk-correspondence</code></p>
+<p>has two local-only commits (5290175fe &quot;Access texts: merge same-day multi-studio bookings…&quot; and a merge</p>
+<p>b1dc78248) and cannot fast-forward to origin/main. Something committed there. Junyan&#x27;s call whether to</p>
+<p>reset it; the readers ran against the local HEAD.</p>
 
 <p><b>Resolves with:</b> crons disabled with read-back; the backlog worked to zero unpicked sources at least</p>
 <p>once; on or after 2026-10-05 Junyan rules: stays off, comes back smaller, or comes back as built.</p>
@@ -19876,5 +19902,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-21 17:32 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-21 17:46 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
