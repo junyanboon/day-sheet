@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-20 09:46 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-20 22:23 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -101,8 +101,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="stats">
 <div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">11</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">111</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">10</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">112</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -1820,6 +1820,37 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>true</code> on nearly every window, zero <code>eob</code> cards for attended renters, and <code>classify</code> cards only for</p>
 <p>rows corroboration could not complete; a genuine no-show still goes through <code>missed</code> only when the</p>
 <p>five-room absence proof holds, otherwise <code>unresolved</code> with the panel read on the card.</p>
+
+<h3>Deployed 2026-09-20 (Junyan merged and deployed; Claude built)</h3>
+
+<ul>
+<li>- desk-correspondence #376 merged (<code>f7e2011c</code>); event-gate Hostinger <code>update</code> run 35515143382 (first attempt</li>
+</ul>
+<p>timed out on port 22 from the runner, rerun succeeded); <code>/health</code> → <code>git_sha f7e2011</code>, started 14:08:37Z.</p>
+<ul>
+<li>- danceannex-alarm-monitor #15 merged (<code>4b567c4</code>); image <code>alarm:pool-4b567c4</code></li>
+</ul>
+<p>(<code>sha256:0db4657d…</code>) built by Cloud Build from the Mac, pulled on the VPS with a one-hour gcloud token,</p>
+<p>swapped into compose for alarm-mcp + alarm-events (backup <code>compose.before-alarm-pool-4b567c4.json</code>).</p>
+<p>Logs: <code>[pool] GAP 14:24:11 → 14:24:13</code> (process start only), <code>socket 1 listening, 165s behind socket 0</code></p>
+<p>at ~14:27Z, per-socket GAPs after that and <b>no</b> <code>[pool] GAP</code>.</p>
+
+<p><b>Close-check clock restarts from 2026-09-21.</b> What to read tomorrow: <code>/door-history</code> windows should</p>
+<p>come back <code>covered: true</code>; ✅ Actions should show zero new <code>eob</code> cards for attended renters and any</p>
+<p><code>classify</code> card&#x27;s Basis should end with <code>Panel clocks:</code> and <code>Second source:</code> lines; the watchdog&#x27;s panel</p>
+<p>reads should be unchanged with a third Alarm.com session open.</p>
+
+<h2>Rulings 2026-09-20 — <b>148</b> closed; the close checks are re-cut</h2>
+
+<ol>
+<li>1. Check 1 met (unchanged). 2. <b>Check 2</b> needs the lane&#x27;s own host line (<code>written: 1</code> + <code>clocks:</li>
+</ol>
+<p>stamped N</code>, readback) after Junyan flips <code>BOARD_CLOCKS_MODE=live</code>; hand/unknown Completes never</p>
+<p>count; Junyan reads the host. 3. <b>Check 3</b> is now: one post-2026-09-20-deploy card with the panel</p>
+<p>read in its Basis, closed by Ops Lead with a queued &quot;we missed you&quot; row or a recorded decline; a</p>
+<p>real <code>missed</code> card is watched after close, not gated on. 4. <b>Check 4</b> restarts: day 1 = the</p>
+<p>2026-09-21 Desk Watch run (stand-in on this account, first run 09-20 22:12 = day 0); earliest</p>
+<p>close <b>2026-09-23</b>. A lane filing correctly on bad evidence is not &quot;seen acting&quot;.</p>
 </div></details></details></div><div class="job"><div class="jnum">#146</div><div class="jhead"><span class="emoji">🗂️</span><h4>The board&#x27;s Disarmed / Armed clocks stopped on 2026-09-16 16:30 and nobody knows what wrote them</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>The board&#x27;s Disarmed / Armed clocks stopped on 2026-09-16 16:30 and nobody knows what wrote them</b></p><h2>Question</h2>
 
 <p>Found 2026-09-19 while re-reading <b>137</b>&#x27;s close checks.</p>
@@ -2116,6 +2147,13 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>account&#x27;s usage returns (Monday 2026-09-21 17:00 Toronto); first run 2026-09-22 09:30. The two</p>
 <p>mornings 09-20 and 09-21 stay unread; the Run Monitor row shows them red, which is the point. PR #373</p>
 <p>merged. The ticket closes on the first two dated blocks (expected 09-22 and 09-23).</p>
+
+<p><b>2026-09-20 — Junyan reversed option (c):</b> he re-created <code>desk-watch</code> on this account (the one</p>
+<p>with usage). First run 2026-09-20 22:12 Toronto wrote a full tally block with the Section I lines</p>
+<p>(<code>137 DAY 1 of 3 clean (provisional)</code>, <code>150: 3 shadow lines, 1/3 match, 2 unchecked</code>). Per</p>
+<p><b>148</b> ruling 3 that run is day 0 and 137&#x27;s day 1 is the 09-21 run. This</p>
+<p>ticket&#x27;s &quot;two dated blocks&quot; can now be 09-21 and 09-22; the old-account task still fires 09-22 09:30,</p>
+<p>so watch for a doubled morning that day.</p>
 </div></details></details></div><div class="job"><div class="jnum">#150</div><div class="jhead"><span class="emoji">🗂️</span><h4>board_status.py stamps Disarmed / Armed on every board row from the panel ledger — the dispute record gets a code owner</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>board_status.py stamps Disarmed / Armed on every board row from the panel ledger — the dispute record gets a code owner</b></p><h2>Question</h2>
 
 <p>Build ticket cut from <b>146</b> on Junyan&#x27;s go-ahead, 2026-09-19.</p>
@@ -3938,7 +3976,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- No &quot;Reconcile sweep could not run … KeyError&quot; row for 7 days after deploy.</li>
 </ul>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">11</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">10</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
 <p><b>The end-state is already ruled</b> (<b>018</b> §5, Junyan: *&quot;because the</p>
 <p>responder&#x27;s scope is so narrow I&#x27;m okay folding it in — worst case scenario I would just draft the</p>
@@ -4310,30 +4348,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>A ruling recorded on this map. And in the same change, <code>concierge-orchestration.md</code> stops</p>
 <p>describing the Morning Text as a live reader — that correction is due now regardless of the</p>
 <p>ruling, because it is currently false. Not &quot;the loop probably covers it&quot;.</p>
-</div></details></details></div><div class="job"><div class="jnum">#148</div><div class="jhead"><span class="emoji">🗂️</span><h4>Three rulings before 137 can close — what counts as the card, the write, and the clock</h4></div><span class="pill p-wait">needs 146 first</span> <details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Three rulings before 137 can close — what counts as the card, the write, and the clock</b></p><h2>Question</h2>
-
-<p><b>137</b>&#x27;s ruling 7 set four close checks. After five days of live</p>
-<p>cards the checks cannot be met as written, for reasons the ruling did not foresee: no true no-show</p>
-<p>has happened, the board&#x27;s own attendance evidence died on 09-16 (<b>146</b>),</p>
-<p>and the daily watch stopped (<b>147</b>). Junyan rules:</p>
-
-<ol>
-<li>1. <b>Check 3 — the card.</b> 45 cards filed, none <code>missed</code>, all <code>unresolved</code> / <code>eob</code>, all false</li>
-</ol>
-<p>positives. Does a closed <code>unresolved</code> card count as &quot;one Missed Booking card filed and closed&quot;,</p>
-<p>since Ops Lead makes the same decision from it? Or does 137 wait for a real no-show?</p>
-<ol>
-<li>2. <b>Check 2 — the write.</b> Eleven rows read Complete on 09-17/09-18 with no board clock. Does a</li>
-</ol>
-<p>Complete written by hand or by an unknown writer count, or must the host log show the lane&#x27;s own</p>
-<p><code>written: 1</code> (which needs a host read this session could not make)?</p>
-<ol>
-<li>3. <b>Check 4 — the clock.</b> Three clean days were counted from 09-16, while every card was a false</li>
-</ol>
-<p>positive from a dead evidence source. Restart from the first day after 146 is fixed, or continue?</p>
-
-<p>Grill on: whether &quot;seen acting&quot; (035&#x27;s test) is satisfied by a lane that files correctly on bad</p>
-<p>evidence, and whether a close check that depends on a real no-show occurring is a check at all.</p>
 </div></details></details></div><div class="job"><div class="jnum">#149</div><div class="jhead"><span class="emoji">🗂️</span><h4>A durable record of what the alarm panel saw — triggers, bypasses, troubles — that survives past three days</h4></div><span class="pill p-wait">needs 146 first</span> <details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A durable record of what the alarm panel saw — triggers, bypasses, troubles — that survives past three days</b></p><h2>Question</h2>
 
 <p>Junyan, 2026-09-19 (while ruling <b>146</b>): the arrival/departure</p>
@@ -4595,7 +4609,71 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#130</span><span class="emoji">🦾</span><span class="done-title">Give the desk a pair of hands inside Giggster and Tagvenue</span><span class="done-date">2026-09-16</span></summary><div class="done-body"><ul class="plain-bullets"><li>Two booking websites hold conversations we cannot finish. Giggster has no way to send a reply from the desk. Tagvenue forwards messages but blanks out every link</li><li>So a customer&#x27;s reply has sat unsent for 29 days, and a 30-person weekly lead sent us a link twice that nobody has been able to open</li><li>The robot kept asking a person to go log in and look. That is not a task, it is a missing tool</li><li>This job builds the tool: something that can log in, read the whole thread including links, post a reply a human already approved, and close out finished enquiries</li><li>Hard lines: it never sees a password, it never writes its own messages, and it stops dead if the website asks it to prove it is human</li><li>Accepting bookings stays with a person, because accepting charges the customer&#x27;s card</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the platform messenger agent (grokbot) — the desk&#x27;s hands inside Giggster and Tagvenue</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#148</span><span class="emoji">🗂️</span><span class="done-title">Three rulings before 137 can close — what counts as the card, the write, and the clock</span><span class="done-date">2026-09-23</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>Three rulings before 137 can close — what counts as the card, the write, and the clock</b></p><h2>Question</h2>
+
+<p><b>137</b>&#x27;s ruling 7 set four close checks. After five days of live</p>
+<p>cards the checks cannot be met as written, for reasons the ruling did not foresee: no true no-show</p>
+<p>has happened, the board&#x27;s own attendance evidence died on 09-16 (<b>146</b>),</p>
+<p>and the daily watch stopped (<b>147</b>). Junyan rules:</p>
+
+<ol>
+<li>1. <b>Check 3 — the card.</b> 45 cards filed, none <code>missed</code>, all <code>unresolved</code> / <code>eob</code>, all false</li>
+</ol>
+<p>positives. Does a closed <code>unresolved</code> card count as &quot;one Missed Booking card filed and closed&quot;,</p>
+<p>since Ops Lead makes the same decision from it? Or does 137 wait for a real no-show?</p>
+<ol>
+<li>2. <b>Check 2 — the write.</b> Eleven rows read Complete on 09-17/09-18 with no board clock. Does a</li>
+</ol>
+<p>Complete written by hand or by an unknown writer count, or must the host log show the lane&#x27;s own</p>
+<p><code>written: 1</code> (which needs a host read this session could not make)?</p>
+<ol>
+<li>3. <b>Check 4 — the clock.</b> Three clean days were counted from 09-16, while every card was a false</li>
+</ol>
+<p>positive from a dead evidence source. Restart from the first day after 146 is fixed, or continue?</p>
+
+<p>Grill on: whether &quot;seen acting&quot; (035&#x27;s test) is satisfied by a lane that files correctly on bad</p>
+<p>evidence, and whether a close check that depends on a real no-show occurring is a check at all.</p>
+
+<h2>Answer (2026-09-20, Junyan, in session — grilled, three rulings)</h2>
+
+<p>Facts read first: desk-correspondence #376 and alarm-monitor #15 (137&#x27;s fix items a–c, f, g) were</p>
+<p>merged and deployed 2026-09-20 ~14:08Z; 150&#x27;s clock stamper is live in shadow since 01:33Z; Desk</p>
+<p>Watch was re-created on this account and made its first run 2026-09-20 22:12 Toronto (tally block</p>
+<p>written, <code>137 DAY 1 of 3 clean (provisional)</code>, <code>150: 3 shadow lines, 1/3 match</code>).</p>
+
+<ol>
+<li>1. <b>Check 3 — the card: rewritten.</b> A closed <code>unresolved</code> / <code>eob</code> card from before today does NOT</li>
+</ol>
+<p>count: every one was a false positive from a dead evidence source. Nor does 137 wait for a real</p>
+<p>no-show — a check that depends on a renter&#x27;s behaviour is a wait, not a check. <b>New check 3:</b></p>
+<p>one <code>[attend:</code> card filed after the 2026-09-20 deploy whose Basis carries the panel read</p>
+<p>(<code>Panel clocks:</code> / <code>Second source:</code> lines), closed by Ops Lead with proof — a queued &quot;we missed</p>
+<p>you&quot; Message Queue row or a recorded decline. The <code>missed</code> branch is covered by unit test; the</p>
+<p>first real <code>missed</code> card is a Desk Watch Section I watch item after close, not a gate.</p>
+<ol>
+<li>2. <b>Check 2 — the write: the lane&#x27;s own log line, nothing less.</b> A Complete written by hand or by</li>
+</ol>
+<p>an unknown writer does not count (that is the 146 fault by another name). Evidence is the host</p>
+<p>journal line from the pass after Junyan flips <code>BOARD_CLOCKS_MODE=live</code> (after two clean shadow</p>
+<p>days, so 2026-09-22 at the earliest): <code>written: 1</code> with readback, and <code>clocks: stamped N</code> on the</p>
+<p>same pass. <b>Junyan reads the host himself</b> and pastes the line; sessions do not read production.</p>
+<p>That one line also closes 146.</p>
+<ol>
+<li>3. <b>Check 4 — the clock: restart, day 1 = 2026-09-21.</b> The pre-09-20 days were clean only because</li>
+</ol>
+<p>the evidence was dead, and days nobody read cannot count. Junyan set up Desk Watch on this</p>
+<p>account today (overriding 147&#x27;s &quot;no stand-in&quot;); today&#x27;s 22:12 run proves the stand-in works and</p>
+<p>is day 0. Day 1 is the 2026-09-21 run, days 2–3 are 09-22 and 09-23, so the earliest close of</p>
+<p>137 is <b>2026-09-23</b>. A run that dies does not count as a day.</p>
+<ol>
+<li>4. <b>&quot;Seen acting&quot; (035&#x27;s test) is not satisfied by a lane that files correctly on bad evidence.</b></li>
+</ol>
+<p>Cover means the retired step&#x27;s judgment is now made correctly by something else; 45 well-formed</p>
+<p>false cards proved the mechanism runs, not that it decides. Hence rulings 1 and 3.</p>
+
+<p>Follow-through: 137 Progress line added; 147 gets one line (stand-in created 09-20, first run</p>
+<p>22:12, so 147&#x27;s own two-block check can start from 09-21 too). No canon, code or host change.</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#130</span><span class="emoji">🦾</span><span class="done-title">Give the desk a pair of hands inside Giggster and Tagvenue</span><span class="done-date">2026-09-16</span></summary><div class="done-body"><ul class="plain-bullets"><li>Two booking websites hold conversations we cannot finish. Giggster has no way to send a reply from the desk. Tagvenue forwards messages but blanks out every link</li><li>So a customer&#x27;s reply has sat unsent for 29 days, and a 30-person weekly lead sent us a link twice that nobody has been able to open</li><li>The robot kept asking a person to go log in and look. That is not a task, it is a missing tool</li><li>This job builds the tool: something that can log in, read the whole thread including links, post a reply a human already approved, and close out finished enquiries</li><li>Hard lines: it never sees a password, it never writes its own messages, and it stops dead if the website asks it to prove it is human</li><li>Accepting bookings stays with a person, because accepting charges the customer&#x27;s card</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the platform messenger agent (grokbot) — the desk&#x27;s hands inside Giggster and Tagvenue</b></p><h2>Question</h2>
 
 <p>Two platforms hold conversations the desk cannot finish:</p>
 
@@ -19472,5 +19550,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-20 09:46 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-20 22:23 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
