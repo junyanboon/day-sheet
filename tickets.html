@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-21 16:42 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-21 17:04 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">20</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">21</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">10</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">114</div><div class="l">✅ Finished</div></div>
 </div>
@@ -2341,7 +2341,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>pass wrote the routing string inside its facts line; the 12:10 pass obeyed the 09-15 ruling. Tier C</p>
 <p>resolves it one way: either the pass line gains a </code>closeout` token or step 5 loses the sentence.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">20</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">21</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
 <p>Junyan&#x27;s Main Focus window today):</p>
@@ -4001,6 +4001,45 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Net: two of six are necessary as built (13, 14). One is useful with a failure-mode ruling (10).</p>
 <p>Three are not necessary (11, 12, 15). No live change made; every removal is a PR under 141&#x27;s</p>
 <p>Claude-side engineering rule after Junyan rules here.</p>
+</div></details></details></div><div class="job"><div class="jnum">#154</div><div class="jhead"><span class="emoji">🗂️</span><h4>The Timekeeper burns 10.4M prompt tokens in one fire — find the loop, cap the fleet</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>The Timekeeper burns 10.4M prompt tokens in one fire — find the loop, cap the fleet</b></p><h2>Task</h2>
+
+<p>Hermes raised the runaway alarm three times on 2026-09-21 (mailbox 15:15Z, 15:15Z again, 20:45Z):</p>
+
+<p>| Time (UTC) | Timekeeper single fire | Fleet prompt tokens | Fires |</p>
+<p>|---|---|---|---|</p>
+<p>| 13:00 | 10,419,819 | 24,205,231 | 10 |</p>
+<p>| 15:15 | 10,419,819 | 55,628,317 | 19 |</p>
+<p>| 20:45 | 10,419,819 | 107,883,326 | 37 |</p>
+
+<p>The limit is 10,000,000 prompt tokens per fire. The Timekeeper breached it and stayed the worst fire all</p>
+<p>day. The fleet nearly doubled between 15:15Z and 20:45Z: about 3.5M prompt tokens per fire on average, and</p>
+<p>the Concierge&#x27;s own two morning fires took 10.8M together (max fire 7.6M, 94% cached).</p>
+
+<p>Two questions, in order:</p>
+
+<ol>
+<li>1. <b>What is the Timekeeper doing with 10.4M tokens in one fire?</b> Read <code>state/usage/2026-09-21.json</code></li>
+</ol>
+<p>and the Run Monitor FLEET USAGE V1 block; get the call count for that fire. 10M prompt at 94% cache is</p>
+<p>a long agentic loop re-sending a big context, not one big read. Find the loop: a retry without a cap, a</p>
+<p>re-read of a growing page (compare the Concierge lock failure: the state code block is 79,595 chars,</p>
+<p>60,167 of it <code>deferred_items</code>), or a tool result pasted back in whole.</p>
+<ol>
+<li>2. <b>What stops the next one?</b> Options in preference order: (a) the Timekeeper&#x27;s own prompt gets a hard</li>
+</ol>
+<p>step cap and a &quot;stop and report&quot; line; (b) Hermes&#x27;s per-fire limit becomes an abort, not an alarm;</p>
+<p>(c) the Timekeeper&#x27;s job moves to code (it is a clock; check whether any LLM work remains).</p>
+
+<p>Evidence to attach: the three mailbox lines, the usage json for the day, the Timekeeper cron prompt</p>
+<p>(read-only; never print a key). Do not edit any cron, prompt or trigger inside this ticket; write the</p>
+<p>Hermes task and Junyan sends it.</p>
+
+<p>Related, not this ticket: <b>153</b> shrinks the Concierge prompt; the</p>
+<p>Concierge closeout could not claim its lock at 11:41 because the run-state block is too big to PATCH</p>
+<p>(Hermes: &quot;prune or relocate <code>deferred_items</code>&quot;, human-owned) — that block is also a per-fire token cost.</p>
+
+<p><b>Resolves with:</b> the loop named with evidence, one cap in place, and one full day under 10M on every</p>
+<p>fire with the fleet total reported.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">10</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -19796,5 +19835,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-21 16:42 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-21 17:04 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
