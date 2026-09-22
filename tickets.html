@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-21 23:45 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-22 12:03 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1406,12 +1406,53 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Verified on the host, 2026-09-16 13:11 Toronto.</b> </code>/health<code> </code>git_sha 347dd02<code> (containment by</p>
 <p></code>merge-base --is-ancestor<code>). The first pass on the new code marked 52 previously filed threads,</p>
-<p>filed 1 new one, and ran the audit: <b></code>audit 53 checked, 0 misfiled`</b>. The next passes did not</p>
+<p>filed 1 new one, and ran the audit: <b></code>audit 53 checked, 0 misfiled<code></b>. The next passes did not</p>
 <p>re-audit, so the saved date holds. Today&#x27;s 09:00 audit, on the old code, was blind; the 13:11 audit</p>
 <p>replaces it.</p>
 
 <p><b>Clock: 3 of 7</b> (09-12, 09-13, 09-16). Earliest close 2026-09-20 if every audit through then is</p>
 <p>clean, and a human reads one day&#x27;s cases.</p>
+
+<h3>Phase 4 — 2026-09-22: six clean days, then a false misfile; audit signal refined</h3>
+
+<p>| Day | Audit line |</p>
+<p>|---|---|</p>
+<p>| 09-16 | </code>53 checked, 0 misfiled<code> (13:11 run, after the fingerprint fix) |</p>
+<p>| 09-17 | </code>47 checked, 0 misfiled<code> |</p>
+<p>| 09-18 | </code>21 checked, 0 misfiled<code> |</p>
+<p>| 09-19 | </code>21 checked, 0 misfiled<code> |</p>
+<p>| 09-20 | </code>35 checked, 0 misfiled<code> |</p>
+<p>| 09-21 | </code>46 checked, 0 misfiled<code> |</p>
+<p>| 09-22 | </code>39 checked, 1 misfiled<code> — <b>false alarm</b> |</p>
+
+<p>Every day audited exactly once at 09:00, so the persisted date holds across midnight.</p>
+
+<p><b>Counting correction.</b> The close condition says <i>consecutive</i>. The 09-14 and 09-15 gaps broke the</p>
+<p>run, so 09-12 and 09-13 do not carry forward, and the earlier &quot;3 of 7&quot; framing was loose. The</p>
+<p>consecutive run starts 09-16.</p>
+
+<p><b>The 09-22 case.</b> </code>github-run-failed<code>, signal </code>conversation<code>, thread </code>1a0c6200c6fdac57<code>: three</p>
+<p>identical </code>Run failed: deploy-event-gate - deploy/7f01610…<code> notices from </code>notifications@github.com<code>,</p>
+<p>22:39Z / 22:44Z / 22:45Z on 09-21 (three attempts of one deploy), stacked by Gmail on the identical</p>
+<p>subject. No human message. The signal assumed &quot;more than one message = a person replied&quot;, which is</p>
+<p>false for a repeated machine notice.</p>
+
+<p><b>Fix — dc-canon </code>416376544<code>, deploy run </code>35751441258<code>.</b> </code>read_thread<code> now returns every message&#x27;s</p>
+<p>sender and subject. The </code>conversation` signal fires only when some message does not match the rule</p>
+<p>that filed the thread. No rule, or a message list that does not cover the thread, keeps the old</p>
+<p>suspicion — the exemption may only remove a false alarm, never hide a real reply. Tests: the</p>
+<p>09-22 shape, a person replying on a robot thread, and both fail-safe cases. Suite 4,629 green.</p>
+
+<p><b>Open for Junyan:</b></p>
+<ol>
+<li>1. <b>Rule on the 09-22 flag.</b> Evidence says false. If ruled false, 09-16 → 09-22 is seven</li>
+</ol>
+<p>consecutive clean days.</p>
+<ol>
+<li>2. <b>The human read.</b> Read one day&#x27;s audited threads. Still outstanding.</li>
+</ol>
+
+<p>Close 054 only when both are done.</p>
 </div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Sep 11: Junyan ruled the program finds the booking, the thinking robot decides. Built the same day, never switched on</li><li>Sep 13: a different program took over the whole chore and was allowed to mark a renter as a no-show by itself. The old chore was cut from the robot&#x27;s list before anyone saw the new program work</li><li>Sep 14/15: Junyan took that back. A program may mark &#x27;in studio&#x27; and &#x27;done&#x27;. A no-show is never marked by a program: it writes a card, the Ops Lead reads it, and once the &#x27;we missed you&#x27; text is queued the job is done</li><li>Checked on the server: the new program is running, reads 2 bookings a pass, has written nothing. Both bookings had no arrival on record, so refusing was right</li><li>Sep 16: the card path (143) and the lock fix (144) are both done and live. Eleven cards have been written; every one was worked. None was a true no-show</li><li>Still open. Two checks left: the program has not yet been seen marking a booking done by itself (it keeps refusing because the alarm read looks incomplete), and the daily watch is on day 1 of 3 quiet days</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
 
 <p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
@@ -20009,5 +20050,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-21 23:45 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-22 12:03 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
