@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-22 12:03 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-22 18:07 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1438,7 +1438,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>false for a repeated machine notice.</p>
 
 <p><b>Fix — dc-canon </code>416376544<code>, deploy run </code>35751441258<code>.</b> </code>read_thread<code> now returns every message&#x27;s</p>
-<p>sender and subject. The </code>conversation` signal fires only when some message does not match the rule</p>
+<p>sender and subject. The </code>conversation<code> signal fires only when some message does not match the rule</p>
 <p>that filed the thread. No rule, or a message list that does not cover the thread, keeps the old</p>
 <p>suspicion — the exemption may only remove a false alarm, never hide a real reply. Tests: the</p>
 <p>09-22 shape, a person replying on a robot thread, and both fail-safe cases. Suite 4,629 green.</p>
@@ -1453,6 +1453,39 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ol>
 
 <p>Close 054 only when both are done.</p>
+
+<p><b>RULING — Junyan, 2026-09-22: the 09-22 flag is a FALSE ALARM.</b> Evidence: thread</p>
+<p></code>1a0c6200c6fdac57<code>, three messages 22:39 / 22:44 / 22:45 on 09-21, every one from</p>
+<p></code>notifications@github.com<code>, identical subject naming commit </code>7f01610<code>, no human address on the</p>
+<p>thread, not starred, not un-archived. The clean run therefore stands unbroken:</p>
+<p><b>09-16, 17, 18, 19, 20, 21, 22 — seven consecutive days, zero real misfiles.</b></p>
+
+<p>Remaining before close: one day&#x27;s filed mail read by a human.</p>
+
+<h3>Phase 4 — the sample read, 2026-09-22 (prepared by Claude; Junyan&#x27;s sign-off still required)</h3>
+
+<p>Window: 2026-09-20 00:00 → 2026-09-21 23:59 Toronto, every thread from a rule-named sender (41).</p>
+<p>Read by metadata (sender, subject, label ids) through the business connector — no bodies.</p>
+
+<p>| Class | Threads | Labels carried | Verdict |</p>
+<p>|---|---|---|---|</p>
+<p>| </code>Run failed:<code> from </code>notifications@github.com<code> (5 repos) | 11 | </code>rules/github-run-failed<code> + </code>Junyan - Maintenance<code>, no INBOX, read | correct, Full rule |</p>
+<p>| </code>PR run failed:<code> same sender | 3 | </code>rules/github-pr-run-failed<code> + </code>Junyan - Maintenance<code> | correct, Provisional (label only) |</p>
+<p>| Telus Armed Away / Disarmed / Armed Stay | ~14 | </code>rules/telus-*<code> + </code>Artist Care - ADT<code>, several still UNREAD | correct, Provisional |</p>
+<p>| Telus Panel Camera images | 7 | </code>rules/telus-panel-camera-images<code> + </code>Artist Care - ADT<code> | correct, Provisional |</p>
+<p>| Telus <b>High activity</b> ×2, <b>PENDING Alarm</b> ×2 | 4 | </code>Artist Care - ADT<code> only, <b>no </code>rules/<code> tag</b> | correct — the excluded safety class was left alone |</p>
+
+<p><b>No human-authored mail appears anywhere in the sample</b>, and no thread carries a </code>rules/<code> tag from</p>
+<p>a sender outside its rule. The two excluded Telus shapes (</code>High activity<code>, </code>PENDING Alarm<code>) prove the</p>
+<p>exclusion list is doing its job on live mail, not just in the rules file.</p>
+
+<p>One thing worth knowing, not a fault: the GitHub and Telus threads were already out of the inbox and</p>
+<p>several are unread. Pre-existing Gmail filters auto-file that mail (ticket 096). Provisional rules</p>
+<p>never archive and never mark read, so that state is not this lane&#x27;s doing.</p>
+
+<p>Label id map used: </code>Label_52 rules/github-run-failed<code>, </code>Label_56 rules/github-pr-run-failed<code>,</p>
+<p></code>Label_53/54/59 rules/telus-armed-away|disarmed|armed-stay<code>, </code>Label_55 rules/telus-panel-camera-images<code>,</p>
+<p></code>Label_46 Junyan - Maintenance<code>, </code>Label_2829552278305024357 Artist Care - ADT`.</p>
 </div></details></details></div><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Sep 11: Junyan ruled the program finds the booking, the thinking robot decides. Built the same day, never switched on</li><li>Sep 13: a different program took over the whole chore and was allowed to mark a renter as a no-show by itself. The old chore was cut from the robot&#x27;s list before anyone saw the new program work</li><li>Sep 14/15: Junyan took that back. A program may mark &#x27;in studio&#x27; and &#x27;done&#x27;. A no-show is never marked by a program: it writes a card, the Ops Lead reads it, and once the &#x27;we missed you&#x27; text is queued the job is done</li><li>Checked on the server: the new program is running, reads 2 bookings a pass, has written nothing. Both bookings had no arrival on record, so refusing was right</li><li>Sep 16: the card path (143) and the lock fix (144) are both done and live. Eleven cards have been written; every one was worked. None was a true no-show</li><li>Still open. Two checks left: the program has not yet been seen marking a booking done by itself (it keeps refusing because the alarm read looks incomplete), and the daily watch is on day 1 of 3 quiet days</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
 
 <p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
@@ -20050,5 +20083,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-22 12:03 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-22 18:07 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
