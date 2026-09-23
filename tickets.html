@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-22 18:13 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-23 11:19 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +100,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </header>
 <div class="stats">
 <div class="stat"><div class="n">7</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">21</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">10</div><div class="l">⏳ Waiting</div></div>
 <div class="stat"><div class="n">115</div><div class="l">✅ Finished</div></div>
 </div>
@@ -1364,6 +1364,15 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>real <code>missed</code> card is watched after close, not gated on. 4. <b>Check 4</b> restarts: day 1 = the</p>
 <p>2026-09-21 Desk Watch run (stand-in on this account, first run 09-20 22:12 = day 0); earliest</p>
 <p>close <b>2026-09-23</b>. A lane filing correctly on bad evidence is not &quot;seen acting&quot;.</p>
+
+<h2>Ruling 2026-09-23 — check 2: make the write visible (<b>156</b>)</h2>
+
+<p>Desk Watch 09-23: the 09-20 alarm-read fix works and the lane now writes (12 writes on 09-22), but</p>
+<p>it logs counts only, cut at 400 chars, so no Complete is attributable (9 on the board, 0 to this</p>
+<p>lane). Junyan ruled: fix it, &quot;people never tick done by hand&quot;. Cut 156: one <code>attendance: wrote</code></p>
+<p>line per write with row id and readback, and one line per error. Check 2 is met by the first such</p>
+<p>line whose row reads Complete. Check 3 (Caryl CUIZON 693 card, closed Won&#x27;t Do by an attended Desk</p>
+<p>Sort) still waits for Junyan to confirm that counts as closed by a person. Check 4: day 1 of 3 on 09-23.</p>
 </div></details></details></div><div class="job"><div class="jnum">#145</div><div class="jhead"><span class="emoji">🔑</span><h4>The stale-row checker trips on a charge row somebody just marked done</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sep 16. Twice, right after a person marked a charge row done, the checker looked for a field the row did not have, and the whole ten-minute sweep failed for that pass</li><li>Fix: skip the row with a reason instead of failing the sweep, and test it with that exact row shape</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>stale sweep raises KeyError on a freshly Processed Charge row and fails the reconcile tick</b></p><h2>Question</h2>
 
 <p>Found 2026-09-16 while reading 144&#x27;s 24 h check. Twice since the 144 deploy the 10-min</p>
@@ -2027,8 +2036,27 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Notion Record that points at an Action, so an audit with no ticket cannot be pointed at its Processed Action — add to</p>
 <p>the reader chip&#x27;s scope. The one remaining needs_pickup (audit 3da75032-81c4-81aa on ticket 3da75032-81c4-816a) was not</p>
 <p>in the brief; look at it next session.</p>
+
+<p><b>2026-09-22 — two gaps handed over from <b>053</b> (closed today).</b> The one</p>
+<p>board and its closer stay on, but two row kinds on ✅ Actions to Perform were closed only by the Concierge:</p>
+
+<ol>
+<li>9. <b><code>booking-message-review</code> rows.</b> Reserved for the Concierge since <code>d0caf1ec8</code>: <code>process</code> returns</li>
+</ol>
+<p><code>concierge</code>, no coded close, no expiry. With the Concierge paused, nothing closes them. Work them by hand in</p>
+<p>backlog sessions. Shape to count: a review row whose queue message is now <code>Sent</code> or <code>Will Not Send</code>. That</p>
+<p>close is deterministic (<code>message_queue</code> proof). Count it before building.</p>
+<ol>
+<li>10. <b><code>Ruled</code> rows waiting for hand-back.</b> Typed rows sit at <code>Status = Ruled</code> until the Concierge carries out</li>
+</ol>
+<p>the ruling and hands them back. Nothing carries them out now. Work them by hand. Shape to count: the ruling</p>
+<p>names one executable step (queue a message, move a booking) that a coded lane already owns.</p>
+
+<p><b>Also handed over from 053: criterion E</b> (fewer than 5 new <code>For = Junyan</code> rows a day). It cannot be measured</p>
+<p>while the Concierge is paused, because the Concierge is one of its writers. Re-read it as part of the 10-05</p>
+<p>ruling, on whatever shape the Concierge comes back in.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">21</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">22</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
 <p>Junyan&#x27;s Main Focus window today):</p>
@@ -3727,6 +3755,52 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Resolves with:</b> the loop named with evidence, one cap in place, and one full day under 10M on every</p>
 <p>fire with the fleet total reported.</p>
+</div></details></details></div><div class="job"><div class="jnum">#156</div><div class="jhead"><span class="emoji">🔎</span><h4>The attendance program says which booking it marked done</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 23 from 137. Since the Sep 20 alarm fix the program does mark bookings done: 12 times on Sep 22</li><li>But its note only gives a count, and the note gets cut off. So nobody can say which of the day&#x27;s done bookings it marked</li><li>Fix: one line per booking it marks, with the booking&#x27;s id and a re-read that shows it stuck. One line per error too, so the cut-off stops hiding why some passes fail</li><li>The first such line whose booking reads done closes 137&#x27;s last program check</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>the attendance lane prints one line per Complete it writes, naming the row — 137&#x27;s check 2 becomes readable</b></p><h2>Question</h2>
+
+<p>Cut 2026-09-23 from <b>137</b>. Junyan ruled: fix it so the</p>
+<p>lane&#x27;s own Complete writes can be seen (&quot;People never tick done by hand&quot;).</p>
+
+<p><b>What the 09-23 Desk Watch found.</b> The alarm-read fix from 09-20 (two sockets, gap stitch, #15 /</p>
+<p>#376) works: the attendance lane in <code>board_status.py</code> now writes. Seven passes on 09-22 logged</p>
+<p><code>written</code> 1/1/2/3/1/3/1 (12 writes). But 137&#x27;s check 2 needs a per-row write line with readback,</p>
+<p>and the lane only reports counts, inside a summary that <code>app.py</code> cuts at 400 chars. So 9 Completes</p>
+<p>on 09-22 are on the board and 0 can be attributed to this lane. <code>fbs-monitor sync_booking_status()</code></p>
+<p>also writes Complete, so a Complete on the board is not proof by itself.</p>
+
+<p>The only per-row line today is <code>clocks: stamped &lt;id&gt; …</code> (<code>board_status.py</code> ~line 786). It prints</p>
+<p>on a status write that carried clocks, but <code>stamp_clocks()</code> prints the same prefix for a</p>
+<p>clocks-only stamp (~line 399). A reader cannot tell the two apart.</p>
+
+<p>Same cap also hides why every <code>reconcile-review</code> pass shows attendance <code>ok: false</code> with</p>
+<p><code>errors</code> 8–11.</p>
+
+<h2>Build</h2>
+
+<ol>
+<li>1. In the live write branch of <code>board_status.run()</code>, right after <code>apply(...)</code> returns, print one</li>
+</ol>
+<p>line: <code>attendance: wrote &lt;target&gt; &lt;row id&gt; &lt;studio&gt; &lt;day&gt; readback=ok clocks=&lt;n&gt;</code>. Use the</p>
+<p>readback <code>apply()</code> already does; if it does not return the read value, return it.</p>
+<ol>
+<li>2. Print each entry of <code>out[&#x27;errors&#x27;]</code> on its own line (<code>attendance: error &lt;row id&gt; &lt;reason&gt;</code>),</li>
+</ol>
+<p>so the 400-char summary cap no longer hides the cause. No change to the cap itself.</p>
+<ol>
+<li>3. Tests for both lines (a live write, an error row).</li>
+<li>4. No switch changes, no change to what the lane decides or writes.</li>
+<li>5. Desk Watch Section I: read check 2 from <code>attendance: wrote Complete</code> lines (row id, then open</li>
+</ol>
+<p>the board row and confirm it reads Complete). Plumbing Map entry (failure-mode visibility).</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Deployed; the host journal shows ≥ 1 <code>attendance: wrote Complete &lt;id&gt; … readback=ok</code> line</li>
+</ul>
+<p>whose row reads Complete on the board. That line is 137&#x27;s check 2.</p>
+<ul>
+<li>- The next Desk Watch names the cause of the 8–11 attendance errors per pass (or cuts a ticket).</li>
+</ul>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">10</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -20109,5 +20183,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-22 18:13 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-23 11:19 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
