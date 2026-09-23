@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-23 11:19 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-23 11:45 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3755,7 +3755,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Resolves with:</b> the loop named with evidence, one cap in place, and one full day under 10M on every</p>
 <p>fire with the fleet total reported.</p>
-</div></details></details></div><div class="job"><div class="jnum">#156</div><div class="jhead"><span class="emoji">🔎</span><h4>The attendance program says which booking it marked done</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 23 from 137. Since the Sep 20 alarm fix the program does mark bookings done: 12 times on Sep 22</li><li>But its note only gives a count, and the note gets cut off. So nobody can say which of the day&#x27;s done bookings it marked</li><li>Fix: one line per booking it marks, with the booking&#x27;s id and a re-read that shows it stuck. One line per error too, so the cut-off stops hiding why some passes fail</li><li>The first such line whose booking reads done closes 137&#x27;s last program check</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>the attendance lane prints one line per Complete it writes, naming the row — 137&#x27;s check 2 becomes readable</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#156</div><div class="jhead"><span class="emoji">🔎</span><h4>The attendance program says which booking it marked done</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 23 from 137. Since the Sep 20 alarm fix the program does mark bookings done: 12 times on Sep 22</li><li>But its note only gives a count, and the note gets cut off. So nobody can say which of the day&#x27;s done bookings it marked</li><li>Fix: one line per booking it marks, with the booking&#x27;s id and a re-read that shows it stuck. One line per error too, so the cut-off stops hiding why some passes fail</li><li>The first such line whose booking reads done closes 137&#x27;s last program check</li><li>Sep 23: built and tested (4,753 checks pass), pull request 477 open. Nothing changes in what the program decides or writes. Waiting for Junyan to merge and send it to the server</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>the attendance lane prints one line per Complete it writes, naming the row — 137&#x27;s check 2 becomes readable</b></p><h2>Question</h2>
 
 <p>Cut 2026-09-23 from <b>137</b>. Junyan ruled: fix it so the</p>
 <p>lane&#x27;s own Complete writes can be seen (&quot;People never tick done by hand&quot;).</p>
@@ -3801,6 +3801,16 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- The next Desk Watch names the cause of the 8–11 attendance errors per pass (or cuts a ticket).</li>
 </ul>
+
+<h2>Progress 2026-09-23 — built, PR open, not merged or deployed</h2>
+
+<p>dc-canon PR <a href="https://github.com/junyanboon/desk-correspondence/pull/477" target="_blank" rel="noopener">#477</a></p>
+<p>(<code>claude/156-attendance-write-line</code>, <code>ab17525ea</code>). Build items 1 to 4 done: <code>run()</code> prints</p>
+<p><code>attendance: wrote &lt;target&gt; &lt;row id&gt; &lt;studio&gt; &lt;day&gt; readback=ok clocks=&lt;n&gt;</code> from the row <code>apply()</code></p>
+<p>already returns, and <code>print_errors()</code> prints <code>attendance: error &lt;row id|-&gt; &lt;reason&gt;</code> on both return</p>
+<p>paths. Five new tests; full event-gate suite 4753 passed. No switch, cap or decision change.</p>
+<p>Waiting on Junyan: merge, then a Hostinger <code>update</code> deploy. Item 5 (Desk Watch Section I, Plumbing</p>
+<p>Map) waits for the deploy.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">10</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -20183,5 +20193,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-23 11:19 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-23 11:45 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
