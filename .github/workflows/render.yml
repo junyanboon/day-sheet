@@ -5,8 +5,10 @@ name: day-sheet-render
 # around). The renderer script is CANON in desk-correspondence/scripts/ — checked out
 # here read-write via DESK_REPO_PAT so the desk-state snapshot can be pushed back.
 #
-# Every 15 min, ~08:00–23:00 Toronto (GitHub cron is UTC; 11:00–03:59 UTC covers the
-# window in both EDT and EST with a harmless shoulder hour). The 22:45 Toronto tick
+# Every 15 min around the clock: cron-job.org's "day-sheet render dispatch" job
+# (`*/15 * * * *`, America/Toronto, all hours since 2026-09-24) sends the
+# workflow_dispatch that drives this. The GitHub cron below is a throttled backup
+# for the old ~08:00–23:00 window only. The 22:45 Toronto tick
 # also runs the end-of-day Workflow Reports finalizer (gated inside the script).
 
 on:
