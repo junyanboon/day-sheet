@@ -1276,6 +1276,13 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
     <details>
+      <summary><span class="when">2026-09-24</span>
+      <h3>Charges tab: unpaid charges stay visible; Charged takes the money on Stripe (owner click only)<span class="kind">DECK &middot; /api/charge/preview + /api/charge/run &middot; deck-app #111, #112 &middot; canon #490</span></h3></summary>
+      <p><strong>What happened.</strong> The Charges tab read 0 while Skedda showed three unpaid blocks (Isabel Campo Jurado 18 Sep $21.47 and 19 Sep $21.47, Teo Rivas 18 Sep $90.40). The Desk Sort closed the overtime rows <code>Processed</code> with a <code>KIND: fyi</code> card when it booked the block, not when the renter paid, and the 19 Sep block had no Action row at all.</p>
+      <p><strong>Failure mode changed.</strong> The Deck lists every <code>Processed</code> Charge / Invoice row with <code>Verified</code> unticked under &ldquo;Closed but not paid&rdquo;. Canon and the Desk Sort skill now close a money row only on a paid Stripe or Skedda read.</p>
+      <p><strong>Route added.</strong> Charged on the Charges tab now asks the worker (<code>src/charge.js</code>) what it would do, shows a one-line confirm, and on the second press charges the saved Stripe card off-session, pays the row&rsquo;s one open Stripe invoice, or, with no card, creates and sends a Stripe invoice. Owner session only; refunds stay manual; <code>CHARGE_MAX_CAD</code> cap; idempotency key per row. It writes <code>CHARGED &mdash; Stripe pi_&hellip;</code> / <code>INVOICED &mdash; Stripe in_&hellip;</code> on the row (Status Ruled); the Desk Sort verifies in Stripe, settles Skedda with that id, then closes. Dormant until the owner sets the <code>STRIPE_CHARGE_KEY</code> worker secret; until then Charged stays a note.</p>
+    </details>
+    <details>
       <summary><span class="when">2026-09-22</span>
       <h3>Mail-rules audit &mdash; repeated machine notices no longer read as a human reply<span class="kind">EVENT-GATE &middot; /mail-rules &middot; wayfinder 054 phase 4</span></h3></summary>
       <p><strong>What happened.</strong> The 09-22 audit reported one misfile: three identical GitHub <code>Run failed</code> notices for one deploy, stacked by Gmail into one thread. The <code>conversation</code> signal treated any multi-message thread as a person replying.</p>
