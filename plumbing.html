@@ -1276,6 +1276,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
     <details>
+      <summary><span class="when">2026-09-25</span>
+      <h3>Attendance lane names every write and every error on its own line<span class="kind">EVENT-GATE attendance &middot; /reconcile-review &middot; desk-correspondence #477 &middot; deploy 49bd101 live 2026-09-25 18:41Z &middot; wayfinder 137 / 156</span></h3></summary>
+      <p><strong>What happened.</strong> Since the 09-20 alarm-read fix, <code>board_status.py</code> writes Complete (12 writes on 09-22), but it logged counts only, inside a summary <code>app.py</code> cuts at 400 chars. <code>fbs-monitor</code> and people also write Complete, so 9 Completes on the board could not be attributed to the lane, and the cause of the 8&ndash;11 errors on every <code>reconcile-review</code> pass was cut off.</p>
+      <p><strong>Failure mode visibility changed.</strong> After each live write, the lane prints <code>attendance: wrote &lt;target&gt; &lt;row id&gt; &lt;studio&gt; &lt;day&gt; readback=ok clocks=&lt;n&gt;</code> from the row <code>apply()</code> reads back. Each error prints as <code>attendance: error &lt;row id|-&gt; &lt;reason&gt;</code>. The 400-char cap, the switches, and what the lane decides or writes are unchanged. Desk Watch Section I reads 137 check 2 from the <code>attendance: wrote Complete</code> lines and groups the error lines by reason. 4753 tests pass.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
       <summary><span class="when">2026-09-24</span>
       <h3>Invoice chase: a held reminder every 2 days until paid; the sweep closes the row on proof<span class="kind">EVENT-GATE &middot; /chase-sweep invoice lane &middot; desk-correspondence #492 &middot; deck-app #114</span></h3></summary>
       <p><strong>Route added.</strong> Charge / Invoice Actions whose newest <code>You</code> line is <code>INVOICED</code> (the Deck&rsquo;s new Invoice sent button, or Charged sending a Stripe invoice) belong to the chase sweep&rsquo;s invoice lane, daily 09:30. Paid (the Stripe invoice reads <code>paid</code>, or the Skedda booking reads paid with holder and price matching): the Action closes Processed + Verified and a held reminder goes Will Not Send. Unpaid: one <code>INVOICE-CHASE-n</code> reminder every 2 days at Pending Review, SMS when there is a phone, else Email, no cap; wording from the HTR row <em>Invoice reminder &mdash; unpaid invoice</em>.</p>
