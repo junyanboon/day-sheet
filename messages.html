@@ -1,0 +1,155 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Renter Messages</title><link rel="icon" href="favicon.svg">
+<style>
+:root{--paper:#f7f6f2;--ink:#22251f;--muted:#6b6f63;--line:#dcdbd2;--card:#fffefb;
+  --accent:#3d6b4f;--open:#8a6d1f;--watch:#2f5f8a;--done:#7d7f76;--bubble:#eeede6;--old:#f3e9e4}
+@media (prefers-color-scheme: dark){:root{--paper:#191b17;--ink:#e8e7de;--muted:#9ba092;
+  --line:#33372e;--card:#20231d;--accent:#7fb894;--open:#d4b45a;--watch:#7fb0d9;--done:#8a8d81;
+  --bubble:#2a2d25;--old:#33282a}}
+*{box-sizing:border-box}
+html{color-scheme:light dark}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.55 "Avenir Next","Segoe UI",system-ui,sans-serif;padding:2.5rem 1rem 5rem}
+.wrap{max-width:1000px;margin:0 auto}
+a{color:var(--accent)}
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;color:var(--muted);margin-bottom:.6rem}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:2.1rem;line-height:1.15;margin:0 0 .4rem}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 1.6rem}
+.tabtab{font-size:.84rem;font-weight:650;text-decoration:none;color:var(--muted);
+  background:var(--card);border:1px solid var(--line);border-radius:999px;padding:.5rem 1.1rem}
+.tabtab.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.goal{background:var(--card);border:1px solid var(--accent);border-radius:8px;padding:1rem 1.2rem;margin:1.2rem 0 0}
+.stats{display:flex;flex-wrap:wrap;gap:.6rem;margin:1.2rem 0 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.6rem .9rem;font-size:.9rem}
+.stat b{font-family:Georgia,serif;font-size:1.4rem;margin-right:.3rem}
+h2{font-family:Georgia,serif;font-size:1.35rem;margin:2.4rem 0 .8rem;padding-top:1.2rem;border-top:1px solid var(--line)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.2rem;margin:0 0 1rem}
+.card h3{margin:.2rem 0 .5rem;font-size:1.08rem;line-height:1.35}
+.chip{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  border-radius:999px;padding:.15rem .6rem;color:var(--paper)}
+.chip.done{background:var(--done)} .chip.open{background:var(--open)} .chip.watch{background:var(--watch)}
+.meta{font-size:.8rem;color:var(--muted);margin-left:.5rem}
+.q{color:var(--muted);font-size:.95rem;margin:.3rem 0 .8rem}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+@media (max-width:700px){.pair{grid-template-columns:1fr}}
+.msg .lbl{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.bubble{background:var(--bubble);border-radius:14px;padding:.8rem .95rem;white-space:pre-wrap;font-size:.92rem;
+  overflow-wrap:anywhere}
+.msg.before .bubble{background:var(--old);text-decoration:line-through;text-decoration-color:rgba(160,60,50,.45)}
+.watchline{margin-top:.7rem;font-size:.88rem;border-left:3px solid var(--watch);padding-left:.6rem}
+footer{margin-top:3rem;font-size:.8rem;color:var(--muted)}
+</style></head><body><div class="wrap">
+<div class="eyebrow">Dance Annex · what renters receive</div>
+<nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab" href="tickets.html">🎟 Tickets</a><a class="tabtab on" href="messages.html" aria-current="page">💬 Messages</a></nav>
+<h1>Renter messages</h1>
+<div class="goal">Every automated message a renter receives (booking replies, access texts, reminders) fits that renter&#x27;s real situation: right booking, right timing, right amount of help, no dashes. Every change to what renters receive is recorded as a ticket here with the message **before** and **after**, and shows on the day-sheet **💬 Messages** tab, so Junyan can see the effect of a change without reading code.</div>
+<div class="stats"><div class="stat"><b>4</b>Open</div><div class="stat"><b>1</b>Live</div><div class="stat"><b>5</b>Done</div></div>
+<h2>Open</h2>
+<div class="card"><span class="chip open">Open</span>
+<h3>The Host still exists as a job after its work moved to code</h3>
+<div class="q">The Host (AI lane that tiered bookings and queued messages) has not run since 2026-09-04 (Claude trigger) and 2026-09-07 (Hermes job); <code>host_sweep.py</code> and the Registrar do its work. What must be removed so nothing half-runs, alerts or misleads?</div>
+</div>
+<div class="card"><span class="chip open">Open</span>
+<h3>Many message skills still live in Notion, costly to read and partly obsolete</h3>
+<div class="q">Which Notion skill pages are still read by a runtime, which only by people, and which are dead? Port the live ones to <code>library/</code> in git, retire the rest with pointer banners.</div>
+</div>
+<div class="card"><span class="chip open">Open</span>
+<h3>The Deck shows a renter&#x27;s old platform thread in &quot;To:&quot;</h3>
+<div class="q">For a Peerspace renter with two bookings, the Deck&#x27;s reply card showed &quot;To:&quot; as the relay address of her FIRST booking&#x27;s thread (the email on her Artist card), while the queue row&#x27;s Reply To held the NEW booking&#x27;s relay. The send went to the right thread, so the screen is wrong, not the send. Confirm which address the Deck&#x27;s Send uses in every case (Send from Deck, Copy), and make the screen show the row&#x27;s Reply To.</div>
+</div>
+<div class="card"><span class="chip open">Open</span>
+<h3>First-time renters booking for tomorrow are still told &quot;24 hours prior&quot;</h3>
+<div class="q">002 fixed the timing line for RETURNING renters only. A first-time platform renter who books for today or tomorrow still gets &quot;24 hours prior to your booking we will send a text… Please leave us your phone number&quot;. The access text cannot go out until they send a number, so &quot;shortly&quot; would be false too. What should the reply say when the booking is this close and there is no number yet?</div>
+<div class="pair">
+<div class="msg before"><div class="lbl">Renter got</div><div class="bubble">Hi [Name],
+
+Thank you for booking space with us!
+
+24 hours prior to your booking we will send a text message with details on accessing and using the studios.
+
+Please leave us your phone number here so we can coordinate with you on the day of your booking.</div></div>
+</div>
+</div>
+<h2>Live, watching for the first real case</h2>
+<div class="card"><span class="chip watch">Live, watching</span>
+<h3>A renter back after a long gap is treated like a regular</h3>
+<div class="q">The Support Ladder counted every visit to a room, forever. A renter away for months still got the codes-only text (or none). When does a room&#x27;s count reset?</div>
+<div class="pair">
+<div class="msg before"><div class="lbl">Renter got</div><div class="bubble">(for a renter with 1 or 2 visits long ago, or 3+ visits with the last over 40 days ago)
+
+Returning Access: a short codes reminder, no walkthrough, no &quot;Good to Go!&quot;.</div></div>
+<div class="msg after"><div class="lbl">Renter gets now</div><div class="bubble">The full access text again (as in [003](003-first-time-in-room-full-access-text.md)), and FBS
+support (AVA, EOB, Good to Go).</div></div>
+</div>
+<div class="watchline"><b>Watching:</b> The first lapsed renter after 2026-09-26: their board row&#x27;s &quot;Why is support needed?&quot; should say &quot;room timer reset&quot;, and they should get the full access text. Close this ticket on that sighting. Add the check to the <code>desk-watch</code> morning task.</div>
+</div>
+<h2>Done</h2>
+<div class="card"><span class="chip done">Done</span><span class="meta">closed 2026-09-26</span>
+<h3>Access texts carry dashes, and hand-made ones must keep the hyphen</h3>
+<div class="q">The access text opened &quot;at the Dance Annex — Studio [###]&quot;, and the check that guards hand-made access texts (Deck release check and Send Engine) demanded &quot;Dance Annex - Studio&quot; exactly. How should the line read, and how do the checks follow?</div>
+<div class="pair">
+<div class="msg before"><div class="lbl">Renter got</div><div class="bubble">You have an upcoming booking at the Dance Annex — Studio [###] 🎉</div></div>
+<div class="msg after"><div class="lbl">Renter gets now</div><div class="bubble">You have an upcoming booking at Dance Annex Studio [###] 🎉</div></div>
+</div>
+</div>
+<div class="card"><span class="chip done">Done</span><span class="meta">closed 2026-09-26</span>
+<h3>Seeing the effect of a message change without reading code</h3>
+<div class="q">Junyan wanted a human-friendly, visual way to track message changes. Options weighed: Hermes kanban on the Mac (a robot work queue, local file, office Hermes cannot write it), GitHub Projects (a third place to look), or this map rendered to the day-sheet site he already reads.</div>
+</div>
+<div class="card"><span class="chip done">Done</span><span class="meta">closed 2026-09-25</span>
+<h3>The Greeter points a returning renter at a finished booking&#x27;s thread</h3>
+<div class="q">A renter&#x27;s second platform booking got &quot;Thank you for your second booking! We sent the details in your other booking thread&quot;, although the other booking had ended days earlier and its thread held nothing about the new booking. When should the Greeter send that pointer?</div>
+<div class="pair">
+<div class="msg before"><div class="lbl">Renter got</div><div class="bubble">Hi [Name],
+
+Thank you for your second booking! We sent the details in your other booking thread, so please refer to that message to keep everything in one place.</div></div>
+<div class="msg after"><div class="lbl">Renter gets now</div><div class="bubble">Hi [Name], you&#x27;re all set for tomorrow, [Day, Date], in Studio [###] from [start] to [end] 🙏
+
+Since your booking is tomorrow, we&#x27;ve already sent you a text with the access details. Please take a look when you get a chance.</div></div>
+</div>
+</div>
+<div class="card"><span class="chip done">Done</span><span class="meta">closed 2026-09-25</span>
+<h3>Next-day returning renters are told access comes &quot;24 hours prior&quot;</h3>
+<div class="q">A returning renter who books for today or tomorrow was told &quot;24 hours prior to your booking we will send a text&quot;, when the access text had already gone out or was minutes away. What should the reply say?</div>
+<div class="pair">
+<div class="msg before"><div class="lbl">Renter got</div><div class="bubble">Hi [Name],
+
+Thank you for booking with us again! Your booking is confirmed for [Day, Date] in Studio [###].
+
+24 hours prior to your booking we will send a text message to this number with details on accessing and using the studios.</div></div>
+<div class="msg after"><div class="lbl">Renter gets now</div><div class="bubble">Hi [Name], you&#x27;re all set for [today / tomorrow], [Day, Date], in Studio [###] from [start] to [end] 🙏
+
+Since your booking is [today / tomorrow], we&#x27;ve already sent you a text with the access details. Please take a look when you get a chance.
+
+(or, when the access text has not gone yet: &quot;you&#x27;ll get a text from us shortly with the access details.&quot;)</div></div>
+</div>
+</div>
+<div class="card"><span class="chip done">Done</span><span class="meta">closed 2026-09-25</span>
+<h3>First time in a room gets &quot;same codes as before&quot; with no codes</h3>
+<div class="q">A renter on only their second visit, first time in a new studio, got an access text that said &quot;You can use the same door and alarm codes as before&quot; and gave no codes. What should a first visit to a room get?</div>
+<div class="pair">
+<div class="msg before"><div class="lbl">Renter got</div><div class="bubble">Hi [Name],
+
+You have an upcoming booking at the Dance Annex — Studio [###] 🎉
+
+You can use the same door and alarm codes as before. Because this is your first booking in Studio [###], please watch its walkthrough before arriving:
+[walkthrough link]
+
+Please reply &quot;Good to Go!&quot; once you&#x27;ve watched it.</div></div>
+<div class="msg after"><div class="lbl">Renter gets now</div><div class="bubble">Hi [Name],
+
+You have an upcoming booking at Dance Annex Studio [###] 🎉
+
+1️⃣ Please write this down ✏️
+∙ Door Code: ••••
+∙ Alarm Code: ••••
+∙ Wifi: &quot;Dance Annex&quot; Pass: ••••
+
+2️⃣ Watch our quick video walkthrough 🎥
+∙ [walkthrough link]
+
+3️⃣ Kindly respond &quot;Good to Go!&quot; once you&#x27;ve watched the video 🗣️</div></div>
+</div>
+</div>
+<footer>Built from the renter-messages map, Sep 25, 2026 10:01 PM Toronto. Messages are shown as templates; names and codes are never published here.</footer></div></body></html>
