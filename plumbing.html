@@ -1276,6 +1276,21 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
     <details>
+      <summary><span class="when">2026-09-28</span>
+      <h3>Extensions: nothing is removed at midnight; Void or Waive waits in Review<span class="kind">DECK + EVENT-GATE &middot; /api/charge/void-extension &middot; extension_deadline.py &middot; deck-app #166, #167, #171 &middot; desk-correspondence #651, #657, #661 &middot; event-gate fb122f3 live 18:24Z &middot; Deck 310ebb69</span></h3></summary>
+      <p><strong>Trigger changed.</strong> The Deck no longer voids an extension invoice at the deadline, and <code>extension_deadline.py</code> no longer acts on the Deck&rsquo;s VOIDED-at-deadline line or the Skedda invoice clock (both behind <code>EXTENSION_VOID_AUTO</code> / <code>EXTENSION_DEADLINE_AUTO</code>, off, rollback only). Past midnight an unpaid extension moves into the Charges tab&rsquo;s Review with <strong>Void + remove time</strong> and <strong>Waive</strong>, and waits with no fallback and no text (Junyan: &ldquo;Never auto, no text&rdquo;).</p>
+      <p><strong>Route added.</strong> Void + remove time: the Deck voids the invoice (the row&rsquo;s, or the one Skedda made for the <code>EXT-V1</code> block), reads it back, writes <code>VOIDED &hellip; remove the extra time now (extension)</code>; the lane cancels the block on its next 5-minute pass and closes the row Cancelled, or closes it at once when the block is already gone. Waive voids the same way and writes <code>WAIVED &hellip; the extra time stays</code> for the Desk Sort. Owner session is Junyan or Ela (<code>DECK_OWNER_USERNAME</code> default <code>JunyanBoon,ElaKrystin</code>), also for Charged and signed owner instructions.</p>
+      <p><strong>Origin.</strong> Himanshi Mehta, 901 Oct 17: her Skedda-sent extension invoice stayed open after the block came off, and the Stripe connector key cannot void.</p>
+    </details>
+    <details>
+      <summary><span class="when">2026-09-28</span>
+      <h3>Invoice chase: QBO invoices parked WAITING get held reminders; the payer is emailed with the renter CC&rsquo;d<span class="kind">EVENT-GATE &middot; /chase-sweep invoice lane &middot; desk-correspondence #659 &middot; deck-app #170</span></h3></summary>
+      <p><strong>Route added.</strong> A WAITING row naming a QBO invoice (<code>RB</code> number) is chased like any invoice: a held reminder 2 days after the WAITING line, then every 2 days. When the row names one address that is not the renter&rsquo;s, the reminder is an Email to that payer (<code>Reply To</code>), &ldquo;Hi there&rdquo;, with the renter in <code>CC Email</code> and linked as Artist so the Deck&rsquo;s dispatch check passes. Interac instalment rows are never chased. First case: Sangah Lee&rsquo;s RB1175 to KCC.</p>
+      <p><strong>Deck.</strong> Waiting cards summarize in bullets and keep their open state across the minute redraw; an instalment card shows paid of total, what is left, and each Interac payment (Stephanie Brinning, $95.00 of $705.12).</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
       <summary><span class="when">2026-09-25</span>
       <h3>Attendance lane names every write and every error on its own line<span class="kind">EVENT-GATE attendance &middot; /reconcile-review &middot; desk-correspondence #477 &middot; deploy 49bd101 live 2026-09-25 18:41Z &middot; wayfinder 137 / 156</span></h3></summary>
       <p><strong>What happened.</strong> Since the 09-20 alarm-read fix, <code>board_status.py</code> writes Complete (12 writes on 09-22), but it logged counts only, inside a summary <code>app.py</code> cuts at 400 chars. <code>fbs-monitor</code> and people also write Complete, so 9 Completes on the board could not be attributed to the lane, and the cause of the 8&ndash;11 errors on every <code>reconcile-review</code> pass was cut off.</p>
