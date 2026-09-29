@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a><a class="tabtab" href="messages.html">💬 Messages</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-29 10:07 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-29 10:09 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2984,7 +2984,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Both writers fixed and deployed, then criterion F holds for 7 consecutive days on</p>
 <p><code>scripts/phase4_measure.py</code> (earliest pass: 7 days after the fix). Add the daily read to the</p>
 <p><code>desk-watch</code> task, per the map Notes.</p>
-</div></details></details></div><div class="job"><div class="jnum">#158</div><div class="jhead"><span class="emoji">🩹</span><h4>The attendance program gives up on people who did show up</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 29 from 137. The program now marks most bookings done and says which. That part works</li><li>But every day since Sep 24 it has got stuck on one or two renters who clearly came. The alarm shows them unlocking and locking up</li><li>When stuck, it either writes a wrong &#x27;did they come?&#x27; card, or, worse, says nothing and the booking sits open</li><li>Fix both: let it trust the renter&#x27;s own unlock and lock, and make sure a stuck booking always gets a card</li><li>After that ships, 137 needs three quiet mornings in a row to close</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>attendance errors on attended bookings leave them silent or carded wrong — 137&#x27;s clean-day clock never gets past day 0</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#158</div><div class="jhead"><span class="emoji">🩹</span><h4>The attendance program gives up on people who did show up</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 29 from 137. The program now marks most bookings done and says which. That part works</li><li>But every day since Sep 24 it has got stuck on one or two renters who clearly came. The alarm shows them unlocking and locking up</li><li>When stuck, it either writes a wrong &#x27;did they come?&#x27; card, or, worse, says nothing and the booking sits open</li><li>Fix both: let it trust the renter&#x27;s own unlock and lock, and make sure a stuck booking always gets a card</li><li>After that ships, 137 needs three quiet mornings in a row to close</li><li>Sep 29: found both causes. When the next renter unlocked right after someone left, the program threw away the first renter&#x27;s visit. It also ignored a host who unlocks under their own name</li><li>The &#x27;says nothing&#x27; part was the daily watch looking in the wrong place. Each stuck booking did get a to-do row, on the Fixer&#x27;s list. The watch now checks there too</li><li>Also fixed: the &#x27;did they come?&#x27; card no longer fires before a booking starts (Makiko, Sep 28) or right after someone unlocks (Desiree, Sep 26)</li><li>Fix is pull request 706, tested on the real cases. Waiting for Junyan to merge and send it to the server. Thea&#x27;s booking is fixed by a separate pull request, 705</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>attendance errors on attended bookings leave them silent or carded wrong — 137&#x27;s clean-day clock never gets past day 0</b></p><h2>Question</h2>
 
 <p>Cut 2026-09-29 from <b>137</b>. Checks 1, 2 and 3 are met. Check 4</p>
 <p>(three clean Desk Watch days) has reset every morning since 09-24:</p>
@@ -3035,6 +3035,64 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Then 137&#x27;s check 4: three Desk Watch days in a row with 0 silent, 0 code-written Missed Booking,</li>
 </ul>
 <p>0 false cards.</p>
+
+<h2>Progress 2026-09-29 — both faults reproduced; PR 706 open (not merged, not deployed)</h2>
+
+<p>Read live this session: panel ledger (<code>studio_activity</code>, 509B and 693, 09-26 to 09-29), 🛎️ board rows, 🔧 Sweep Feedback.</p>
+
+<p><b>Fault 1, reproduced (ledger events):</b></p>
+<ul>
+<li>- Nabil Fairbairn 693 09-26: keypad disarm 14:02:59 and arm 17:05:08 (his id 247283569), then Abbey Richens</li>
+</ul>
+<p>disarmed 17:18:32. The freshness-free witness path in <code>decide()</code> voided the stay on ANY later disarm, so the</p>
+<p>next renter killed it. The strict path then hit a 2 s drop 54 s before his disarm (inside <code>WITNESS_GUARD</code>):</p>
+<p>&quot;alarm recording gap overlaps the attendance witness&quot;. Same shape for Jia Chian Lee 509B 09-24 (10:22 / 11:30).</p>
+<ul>
+<li>- Risa / Jillian 693 09-27: Jillian disarm 09:30:28, arm 11:08:38; Olivia Nieuwland disarmed 11:09:42. Jillian&#x27;s</li>
+</ul>
+<p>id is not on Risa&#x27;s card (facilitator), and Olivia voided the path. Megan Chapman 509A 09-25 is the same</p>
+<p>facilitator case (16:54 / 18:06 on the board row).</p>
+<ul>
+<li>- Nabil and Risa/Jillian now read Complete: <code>7c2aad3a8</code> (09-28, board Disarmed cell names the renter) closed them.</li>
+<li>- Thea Giggster 509B 09-26: arrival was a remote app disarm (login 13152301, no name); &quot;Thea Thea&quot; (her id</li>
+</ul>
+<p>248713030) armed 15:15 after staff armed and Chelly Li disarmed. No named disarm, so she is outside this</p>
+<p>ticket&#x27;s rule. A parallel session&#x27;s PR 705 makes her own arm-out count (Junyan&#x27;s &quot;fix it so it can figure</p>
+<p>out these errors&quot;). Row still Upcoming.</p>
+<ul>
+<li>- EOB false cards: Desiree Joy 509A 09-26 (13:30–14:30) was carded 114 s after her 13:26:45 disarm, because</li>
+</ul>
+<p><code>studio_disarmed()</code> read the ledger only to <code>now - 2 min</code>; the window also opened at 13:00, before her start.</p>
+<p>Makiko Yamane 509B 09-28 was carded 24 min before her 11:45 start (same cause: <code>end - 90</code> is before the start</p>
+<p>for a booking of 90 min or less).</p>
+
+<p><b>Fault 2 is not a code fault.</b> Each &quot;silent&quot; row had its record: 🔧 Sweep Feedback <code>Booking still open past its</p>
+<p>end</code> rows for Thea (09-26 21:22Z, New), Nabil (09-26 23:22Z, Applied) and Risa (09-27 17:21Z, Applied), each</p>
+<p>about end + 2 h 20 min. Since <code>68434b350</code> (09-25) the 2-hour record goes to the Fixer on Sweep Feedback, never to</p>
+<p>✅ Actions. Desk Watch Section I line &quot;Was anything left silent?&quot; counted only <code>[attend:</code> cards. Fixed in</p>
+<p><code>~/.claude/scheduled-tasks/desk-watch/SKILL.md</code> (local task file): a Sweep Feedback row counts; a row with only</p>
+<p>that record is printed on a <code>still open, with Fixer row:</code> line.</p>
+
+<p><b>Built: desk-correspondence PR 706</b> (<code>claude/158-attendance-errors</code>), not merged, not deployed.</p>
+<ul>
+<li>- Witness path: a keypad entry counts by the renter&#x27;s or group&#x27;s id OR a recorded name matching the renter, an</li>
+</ul>
+<p>authorized user or the title&#x27;s <code>[Facilitator: ...]</code>; only a later disarm by their own people is a return; an</p>
+<p>arm-out before the end counts; fires only after end + 2 min. Completion only. No-show, continuity and</p>
+<p>In Studio rules unchanged.</p>
+<ul>
+<li>- EOB card: not before start + 15 min; the panel read runs to <code>now</code>.</li>
+<li>- 9 tests from the real cases (7 fail on <code>main</code>). Full suite 6072 pass; the 13 failures are all</li>
+</ul>
+<p><code>test_skedda_mcp_config.py</code>, identical on <code>main</code> (local venv lacks the MCP client package).</p>
+<ul>
+<li>- PR 705 and PR 706 merge with one append-only conflict in <code>test_board_status.py</code> (keep both); combined, 196</li>
+</ul>
+<p>board_status tests pass.</p>
+
+<p><b>Next:</b> Junyan merges 706 (and 705) and says deploy. Then 137&#x27;s check 4 runs again under the corrected Desk</p>
+<p>Watch read. Acceptance line &quot;Nabil, Risa/Jillian, Thea read Complete from <code>attendance: wrote</code> lines&quot;: Nabil and</p>
+<p>Risa/Jillian are already Complete (by the lane after <code>7c2aad3a8</code>); Thea needs 705.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">10</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -20384,5 +20442,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-29 10:07 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-29 10:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
