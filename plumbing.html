@@ -1276,6 +1276,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
     <details>
+      <summary><span class="when">2026-09-29</span>
+      <h3>Attendance: the renter&rsquo;s own code on the keypad proves they came, arm or disarm<span class="kind">EVENT-GATE attendance &middot; /reconcile-review &middot; desk-correspondence #705 &middot; deploy f4580f9 live 2026-09-29 14:12Z &middot; canon #708 &middot; wayfinder 137 / 156</span></h3></summary>
+      <p><strong>What happened.</strong> After the 09-25 to 09-28 fixes, one booking still failed every hourly pass: Thea (Giggster), 509B, 09-26 13:00&ndash;15:00, 42 <code>attendance: error</code> lines. Staff let her in with a remote disarm (no name) at 13:04, and she armed out on her own code (<code>248713030</code>) at 15:15. The lane took only a named renter disarm as arrival.</p>
+      <p><strong>Route changed.</strong> <code>board_status.armout_witness()</code>: a keypad arm of the booked room by the renter or their group, from the start to 2&nbsp;h after the end, closes the row Complete once the booking has ended, read from the ledger&rsquo;s own events, so it survives a later gap or a stale ledger. Their own disarm after the arm-out is a return, and the row waits. Completion only, never absence. Junyan: &ldquo;if they use their codes it proves they came.&rdquo; First pass after deploy (14:20Z) wrote Thea Complete with <code>readback=ok</code> and logged no attendance error.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
       <summary><span class="when">2026-09-28</span>
       <h3>Extensions: nothing is removed at midnight; Void or Waive waits in Review<span class="kind">DECK + EVENT-GATE &middot; /api/charge/void-extension &middot; extension_deadline.py &middot; deck-app #166, #167, #171 &middot; desk-correspondence #651, #657, #661 &middot; event-gate fb122f3 live 18:24Z &middot; Deck 310ebb69</span></h3></summary>
       <p><strong>Trigger changed.</strong> The Deck no longer voids an extension invoice at the deadline, and <code>extension_deadline.py</code> no longer acts on the Deck&rsquo;s VOIDED-at-deadline line or the Skedda invoice clock (both behind <code>EXTENSION_VOID_AUTO</code> / <code>EXTENSION_DEADLINE_AUTO</code>, off, rollback only). Past midnight an unpaid extension moves into the Charges tab&rsquo;s Review with <strong>Void + remove time</strong> and <strong>Waive</strong>, and waits with no fallback and no text (Junyan: &ldquo;Never auto, no text&rdquo;).</p>
