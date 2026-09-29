@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a><a class="tabtab" href="messages.html">💬 Messages</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-29 10:09 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-29 10:10 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2984,7 +2984,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Both writers fixed and deployed, then criterion F holds for 7 consecutive days on</p>
 <p><code>scripts/phase4_measure.py</code> (earliest pass: 7 days after the fix). Add the daily read to the</p>
 <p><code>desk-watch</code> task, per the map Notes.</p>
-</div></details></details></div><div class="job"><div class="jnum">#158</div><div class="jhead"><span class="emoji">🩹</span><h4>The attendance program gives up on people who did show up</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 29 from 137. The program now marks most bookings done and says which. That part works</li><li>But every day since Sep 24 it has got stuck on one or two renters who clearly came. The alarm shows them unlocking and locking up</li><li>When stuck, it either writes a wrong &#x27;did they come?&#x27; card, or, worse, says nothing and the booking sits open</li><li>Fix both: let it trust the renter&#x27;s own unlock and lock, and make sure a stuck booking always gets a card</li><li>After that ships, 137 needs three quiet mornings in a row to close</li><li>Sep 29: found both causes. When the next renter unlocked right after someone left, the program threw away the first renter&#x27;s visit. It also ignored a host who unlocks under their own name</li><li>The &#x27;says nothing&#x27; part was the daily watch looking in the wrong place. Each stuck booking did get a to-do row, on the Fixer&#x27;s list. The watch now checks there too</li><li>Also fixed: the &#x27;did they come?&#x27; card no longer fires before a booking starts (Makiko, Sep 28) or right after someone unlocks (Desiree, Sep 26)</li><li>Fix is pull request 706, tested on the real cases. Waiting for Junyan to merge and send it to the server. Thea&#x27;s booking is fixed by a separate pull request, 705</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>attendance errors on attended bookings leave them silent or carded wrong — 137&#x27;s clean-day clock never gets past day 0</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#158</div><div class="jhead"><span class="emoji">🩹</span><h4>The attendance program gives up on people who did show up</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 29 from 137. The program now marks most bookings done and says which. That part works</li><li>But every day since Sep 24 it has got stuck on one or two renters who clearly came. The alarm shows them unlocking and locking up</li><li>When stuck, it either writes a wrong &#x27;did they come?&#x27; card, or, worse, says nothing and the booking sits open</li><li>Fix both: let it trust the renter&#x27;s own unlock and lock, and make sure a stuck booking always gets a card</li><li>After that ships, 137 needs three quiet mornings in a row to close</li><li>Sep 29: found both causes. When the next renter unlocked right after someone left, the program threw away the first renter&#x27;s visit. It also ignored a host who unlocks under their own name</li><li>The &#x27;says nothing&#x27; part was the daily watch looking in the wrong place. Each stuck booking did get a to-do row, on the Fixer&#x27;s list. The watch now checks there too</li><li>Also fixed: the &#x27;did they come?&#x27; card no longer fires before a booking starts (Makiko, Sep 28) or right after someone unlocks (Desiree, Sep 26)</li><li>Fix is pull request 706, tested on the real cases. Waiting for Junyan to merge and send it to the server. Thea&#x27;s booking is fixed by pull request 705, merged Sep 29</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>attendance errors on attended bookings leave them silent or carded wrong — 137&#x27;s clean-day clock never gets past day 0</b></p><h2>Question</h2>
 
 <p>Cut 2026-09-29 from <b>137</b>. Checks 1, 2 and 3 are met. Check 4</p>
 <p>(three clean Desk Watch days) has reset every morning since 09-24:</p>
@@ -3086,9 +3086,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p><code>test_skedda_mcp_config.py</code>, identical on <code>main</code> (local venv lacks the MCP client package).</p>
 <ul>
-<li>- PR 705 and PR 706 merge with one append-only conflict in <code>test_board_status.py</code> (keep both); combined, 196</li>
+<li>- PR 705 merged to <code>main</code> 2026-09-29 14:09Z (deploy state not read). 706 now carries a merge of that <code>main</code></li>
 </ul>
-<p>board_status tests pass.</p>
+<p>(append-only test conflict, both kept): full suite 6081 pass, same 13 local-only failures.</p>
 
 <p><b>Next:</b> Junyan merges 706 (and 705) and says deploy. Then 137&#x27;s check 4 runs again under the corrected Desk</p>
 <p>Watch read. Acceptance line &quot;Nabil, Risa/Jillian, Thea read Complete from <code>attendance: wrote</code> lines&quot;: Nabil and</p>
@@ -20442,5 +20442,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-29 10:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-29 10:10 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
