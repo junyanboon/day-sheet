@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a><a class="tabtab" href="messages.html">💬 Messages</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-29 09:32 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-29 09:34 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -570,6 +570,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p>on renters the panel shows attended). Cause: the lane errors instead of writing Complete. Cut</p>
 <p><b>158</b>. 137 closes after 158 ships and three clean days follow.</p>
+
+<h2>Check 2 MET 2026-09-29 (read for <b>156</b>)</h2>
+
+<p>Host journal 2026-09-25 20:20Z to 09-29: 35 <code>attendance: wrote Complete … readback=ok</code> lines. First:</p>
+<p>Aris Wu 509B 2026-09-25 (<code>3e375032-81c4-8142-863b-de2f6032a1b0</code>, ~09-26 00:20Z); that row and two others</p>
+<p>(Nabil Fairbairn 693 09-26, Greg Samba 901 09-28) read Complete on the board with lane-written clocks.</p>
+<p>Check 2 is met by the lane&#x27;s own line, per the 09-20 ruling. 18 lines carried clocks, so <code>BOARD_CLOCKS_MODE</code></p>
+<p>is live on the host (146&#x27;s close evidence, for that ticket to record).</p>
 </div></details></details></div><div class="job"><div class="jnum">#145</div><div class="jhead"><span class="emoji">🔑</span><h4>The stale-row checker trips on a charge row somebody just marked done</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sep 16. Twice, right after a person marked a charge row done, the checker looked for a field the row did not have, and the whole ten-minute sweep failed for that pass</li><li>Fix: skip the row with a reason instead of failing the sweep, and test it with that exact row shape</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>stale sweep raises KeyError on a freshly Processed Charge row and fails the reconcile tick</b></p><h2>Question</h2>
 
 <p>Found 2026-09-16 while reading 144&#x27;s 24 h check. Twice since the 144 deploy the 10-min</p>
@@ -3661,7 +3669,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#156</span><span class="emoji">🔎</span><span class="done-title">The attendance program says which booking it marked done</span><span class="done-date">2026-09-29</span></summary><div class="done-body"><ul class="plain-bullets"><li>Cut Sep 23 from 137. Since the Sep 20 alarm fix the program does mark bookings done: 12 times on Sep 22</li><li>But its note only gives a count, and the note gets cut off. So nobody can say which of the day&#x27;s done bookings it marked</li><li>Fix: one line per booking it marks, with the booking&#x27;s id and a re-read that shows it stuck. One line per error too, so the cut-off stops hiding why some passes fail</li><li>The first such line whose booking reads done closes 137&#x27;s last program check</li><li>CLOSED Sep 29. Deployed Sep 25; on Sep 27 the watch saw 18 named &#x27;done&#x27; lines, all correct. 137&#x27;s check 2 is met</li><li>Sep 23: built and tested (4,753 checks pass), pull request 477 open. Nothing changes in what the program decides or writes. Waiting for Junyan to merge and send it to the server</li><li>Sep 25: merged and on the server (6:41pm UTC). The daily watch now looks for the new lines. Stays open until the watch sees the first line for a booking that really reads done, and names why some passes fail</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>the attendance lane prints one line per Complete it writes, naming the row — 137&#x27;s check 2 becomes readable</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#156</span><span class="emoji">🔎</span><span class="done-title">The attendance program says which booking it marked done</span><span class="done-date">2026-09-29</span></summary><div class="done-body"><ul class="plain-bullets"><li>Cut Sep 23 from 137. Since the Sep 20 alarm fix the program does mark bookings done: 12 times on Sep 22</li><li>But its note only gives a count, and the note gets cut off. So nobody can say which of the day&#x27;s done bookings it marked</li><li>Fix: one line per booking it marks, with the booking&#x27;s id and a re-read that shows it stuck. One line per error too, so the cut-off stops hiding why some passes fail</li><li>The first such line whose booking reads done closes 137&#x27;s last program check</li><li>CLOSED Sep 29. Deployed Sep 25; on Sep 27 the watch saw 18 named &#x27;done&#x27; lines, all correct. 137&#x27;s check 2 is met</li><li>Sep 23: built and tested (4,753 checks pass), pull request 477 open. Nothing changes in what the program decides or writes. Waiting for Junyan to merge and send it to the server</li><li>Sep 25: merged and on the server (6:41pm UTC). The daily watch now looks for the new lines. Stays open until the watch sees the first line for a booking that really reads done, and names why some passes fail</li><li>CLOSED Sep 29. In four days the program marked 35 bookings done and wrote a line for each. Three checked on the board: all read done. That meets 137&#x27;s program check</li><li>The &#x27;errors&#x27; are bookings it could not decide yet. It retries each hour, and 31 of 34 were later marked done. One is still open: Thea (Giggster), 509B, Sep 26</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>the attendance lane prints one line per Complete it writes, naming the row — 137&#x27;s check 2 becomes readable</b></p><h2>Question</h2>
 
 <p>Cut 2026-09-23 from <b>137</b>. Junyan ruled: fix it so the</p>
 <p>lane&#x27;s own Complete writes can be seen (&quot;People never tick done by hand&quot;).</p>
@@ -3748,6 +3756,39 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </ul>
 <p>recording gap overlaps the attendance witness&quot; x21, &quot;current source identity is not reconciled&quot; x1.</p>
 <p>Those errors are the cause of 137&#x27;s failing check 4; cut as <b>158</b>.</p>
+
+<h2>Closed 2026-09-29 — acceptance read on the host (Junyan: &quot;check it&quot;)</h2>
+
+<p>Host journal read with <code>vps-read eventgate-journal 96</code> (window 2026-09-25 20:20Z to 2026-09-29 ~13:20Z,</p>
+<p>74,221 lines). The live service has since moved on to <code>f0ce4a4</code>; the 156 lines are still printed.</p>
+
+<p><b>Acceptance 1: MET.</b> 38 write lines: 35 <code>attendance: wrote Complete</code>, 3 <code>attendance: wrote In Studio</code>,</p>
+<p>every one <code>readback=ok</code>. First line: <code>attendance: wrote Complete 3e375032-81c4-8142-863b-de2f6032a1b0 509B</p>
+<p>2026-09-25 readback=ok clocks=0</code> (~2026-09-26 00:20Z). Three rows opened on the FBS AI Support board, all read</p>
+<p>Complete: Aris Wu 509B 09-25 (Disarmed 19:06 / Armed 20:01), Nabil Fairbairn 693 09-26 (14:02 / 17:05),</p>
+<p>Greg Samba 901 09-28 (18:22 / 19:35). 18 write lines carried clocks (<code>clocks=1</code> or <code>2</code>). This is 137 check 2.</p>
+
+<p><b>Acceptance 2: MET (cause named, no code fault).</b> 405 <code>attendance: error</code> lines on 34 rows</p>
+<p>(09-25 46, 09-26 228, 09-27 55, 09-28 61, 09-29 15). Reasons:</p>
+<ul>
+<li>- 354 <code>missing, stale or incomplete alarm coverage</code>. The corroboration line beside them mostly reads</li>
+</ul>
+<p><code>arm-history: no named keypad arrival observed in the ledger</code> (286), <code>another backstop transition in the</p>
+<p>room</code> (85), <code>stale</code> (35).</p>
+<ul>
+<li>- 50 <code>alarm recording gap overlaps the attendance witness</code> (41 on the Nabil 693 09-26 row).</li>
+<li>- 1 <code>current source identity is not reconciled</code>.</li>
+</ul>
+
+<p>They are not failed writes. They are rows the lane cannot decide yet, re-tried every hourly pass and</p>
+<p>counted as errors, which is why <code>reconcile-review</code> reads <code>ok: false</code>. 31 of the 34 rows were later written</p>
+<p>Complete (the five 09-19/09-20 rows sat for six days, then all wrote at ~09-26 22:23Z). One row is still</p>
+<p>open: Thea Giggster 509B 2026-09-26 13:00–15:00 (<code>3e475032-81c4-814c-9e68-dd652df6f632</code>), Upcoming, blank</p>
+<p>clocks, 42 errors to 09-29 13:20Z, all &quot;no named keypad arrival&quot;. Whether its <code>unresolved</code> card was filed</p>
+<p>was not confirmed in this read (the card key search found none by title).</p>
+
+<p><b>Follow-up, not cut:</b> counting an undecided row as an <code>error</code> keeps the pass <code>ok: false</code> forever and buries</p>
+<p>real faults. A separate <code>undecided</code> bucket would fix that. Junyan to rule whether to cut it.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#053</span><span class="emoji">🔁</span><span class="done-title">Build the new way tickets get done — the robot suggests, Junyan says yes or fixes it</span><span class="done-date">2026-09-25</span></summary><div class="done-body"><ul class="plain-bullets"><li>CLOSED Sept 25: the one to-do board and the robot that ticks rows off are built and running since Sept 12</li><li>Closed instead of waiting out the test week, because the Concierge is switched off and one of the test numbers counts its rows</li><li>Last check Sept 22: no robot had duplicate rows (good); 5 rows looked overdue, caused by two other robots, now their own ticket (157)</li><li>The rows only the Concierge used to finish are now on the by-hand list (155)</li><li>Replan 2026-09-08: three lists, sorted by who finishes the job — robots finish the Next Action list, Junyan finishes the Actions to Perform list, messages live on the Message Queue</li><li>A job type only goes on the robot list after Junyan has ruled it safe (already written in the Action Classes table); a robot job that sits past its deadline moves to Junyan&#x27;s list with a note</li><li>Junyan&#x27;s list was 60% alarms (33 of 55 open) burying the 6 real decisions — each alarm writer now keeps ONE rolling row; ticket 120 catches floods</li><li>Close path: keep the hourly suggester off, land tickets 120–123, add deadlines + the escalate path, then measure 7 quiet days on both lists</li><li>Each suggestion comes with the proof behind it, so Junyan can decide without digging</li><li>Two moves only: say yes, or rewrite the step to what it should have been, then mark it Ready</li><li>The robot only does steps marked Ready — never one Junyan hasn&#x27;t seen</li><li>After doing it, the robot looks again at the real booking or calendar to check it truly happened</li><li>If Junyan already did the job himself, the robot spots it and ticks it off — no double work</li><li>Steps the robot gets right over and over become automatic; one rewrite and it goes back to asking</li><li>Trying it first on booking changes, the busiest and messiest kind</li><li>IN PROGRESS: the two new lists exist in Notion and the rulebook page is written</li><li>Checked what Skedda&#x27;s robot arm can really do: move, create, cancel and approve bookings — but not change a price</li><li>Junyan ruled: the old to-do board gets finished off first, then retired — no copying rows over</li><li>Junyan ruled: instant bookings and moves run on their own, and he gets a text each time one happens</li><li>BUILT Aug 6: the little sweep that runs every 10 minutes — it checks the real booking for every open step and ticks off whatever already happened</li><li>It cannot touch bookings itself, on purpose: one robot does the work, a different one checks it. A checker that can also change things isn&#x27;t a checker</li><li>Safety rule built in first: if it can&#x27;t reach the booking system, it says &#x27;couldn&#x27;t check&#x27; — it never reads silence as &#x27;the booking is gone&#x27;</li><li>Aug 15 — checked what was actually live: the little 10-minute sweep has been running since Aug 7 and works fine</li><li>But every single one of the 15 steps on the new list was written by a human. The robot had never suggested anything, not once</li><li>The thinking half simply had no robot to run it. The Concierge was supposed to be it, and the Concierge never gets that far — it runs out of time every pass</li><li>BUILT Aug 15: a new small robot, The Loop, that runs every hour and does the two missing parts — suggest the next step, and do the ones marked Ready</li><li>SWITCHED ON Aug 15, first run 8:35am. The one step in the way turned out to be already done — Junyan sent David Diep that text himself back on Aug 7, word for word, at 9:42 at night</li><li>Which found the next problem: the list had no way of ever noticing. It can check a booking for itself, but not a text message — so a step that was finished in five minutes sat looking unfinished for eight days</li><li>Three rules sit above everything in its instructions: only do steps marked Ready, never touch money, and never tick its own work off as done</li><li>Day one, four runs: it wrote its first two suggestions on its own. That was the thing to watch for, and it happened</li><li>It did nothing else, four runs in a row — because nobody has said yes to anything yet. The queue of approved work was empty every time</li><li>And it lost one. It spotted a 15-minute gap in Studio 527 at 8:39am, wrote a careful suggestion, checked again at 9:36 — and the gap came and went at 10:30 with nobody having read it</li><li>Nothing went wrong, which is the point. It refused to act without a yes, refused to nag, refused to tick off its own work. All three rules held and the job was still missed</li><li>What&#x27;s missing: a suggestion with a deadline needs to tap someone on the shoulder, not sit in a list waiting to be found</li><li>It also caught a ticket about to nag a customer to move a booking he had already moved four days ago — and noticed it has no alarm clock watching itself, which is the very problem it was built to fix</li><li>Two suggestions are sitting there now waiting on Junyan — and until one gets a yes or a rewrite, the robot cannot start learning what good looks like</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the Next Action queue + the advancement loop — pilot on Booking Changes</b></p><h2>Question</h2>
 
 <p>Graduated from <b>018</b>, which dissolved J01 and ruled that ticket</p>
@@ -20334,5 +20375,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-29 09:32 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-09-29 09:34 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
