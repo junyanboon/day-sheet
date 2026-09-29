@@ -1277,7 +1277,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-09-30</span>
-      <h3>Credit lane: a held reply instead of a text to on-call<span class="kind">EVENT-GATE registrar &middot; credit_sweep.py, inbound.fetch_sms &middot; desk-correspondence #729 &middot; NOT YET MERGED OR DEPLOYED</span></h3></summary>
+      <h3>Credit lane: a held reply instead of a text to on-call<span class="kind">EVENT-GATE registrar &middot; credit_sweep.py, inbound.fetch_sms &middot; desk-correspondence #729 &middot; deploy 97a7ec9 live 2026-09-29 23:59Z (run 36647802476)</span></h3></summary>
       <p><strong>Route changed.</strong> Junyan, 2026-09-29: &ldquo;Stop the registrar from pinging me. Just queue up a response.&rdquo; The credit lane no longer texts on-call for a booking or an escalation; the only text left is the red booked-but-not-recorded incident. A &ldquo;yes&rdquo; to a desk credit offer books the offered slot (SMS records now carry <code>last_desk_text</code>). A date and range with no studio queues a held offer of the renter&rsquo;s first free studio with price and balance after. A missing date or range queues a held question. Judgment cases stay a Review row. Studio 901 past 9 PM stays a human booking.</p>
       <p><strong>Failure mode fixed.</strong> <code>extension_sweep.price_for</code> rounded 220.915 to 220.91 against Skedda&rsquo;s 220.92; it now rounds half up.</p>
     </details>
@@ -1285,35 +1285,35 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-09-29</span>
-      <h3>Analyst handoffs: the two-reminder rest finally applies<span class="kind">EVENT-GATE analyst &middot; analyst_sweep.handoff_due &middot; desk-correspondence #727 &middot; NOT YET MERGED OR DEPLOYED</span></h3></summary>
+      <h3>Analyst handoffs: the two-reminder rest finally applies<span class="kind">EVENT-GATE analyst &middot; analyst_sweep.handoff_due &middot; desk-correspondence #727 &middot; deploy 97a7ec9 live 2026-09-29 23:59Z (run 36647802476)</span></h3></summary>
       <p><strong>Failure mode fixed.</strong> <code>handoff_due</code> sent its three Notion queries without the <code>filter</code> wrapper. Notion rejected every one, the error read as &ldquo;history unreadable&rdquo;, and every renter got every T3/T4/MID since the rest rule landed on 2026-09-26. With the wrapper, a renter with two Sent reminders since their last forgot-to-arm row or Alarm trigger ticket gets none.</p>
     </details>
       </li>
       <li class="entry det">
     <details>
       <summary><span class="when">2026-09-29</span>
-      <h3>Analyst: inspection findings become held tickets again (Step 8a)<span class="kind">EVENT-GATE analyst &middot; inspection_findings.py &middot; desk-correspondence #725 &middot; NOT YET MERGED OR DEPLOYED</span></h3></summary>
+      <h3>Analyst: inspection findings become held tickets again (Step 8a)<span class="kind">EVENT-GATE analyst &middot; inspection_findings.py &middot; desk-correspondence #725 &middot; deploy 97a7ec9 live 2026-09-29 23:59Z (run 36647802476)</span></h3></summary>
       <p><strong>Route added.</strong> Today&rsquo;s pass reads Stefan&rsquo;s inspections from the last 3 days (not Reviewed = Complete) without a model. Door, alarm, heel marks, trash and unswept findings pinned to exactly one renter get a keyed Customer Care ticket plus a held message from How to Respond cards INSP-DOOR / ALARM / HEEL / MESS / TRASH. Utilities left on or open are tickets on Studio Left in a Bad State with the lights, window or heat/AC card (Junyan 2026-09-29). Uncertain renter, damage or unreadable notes go to a carded Review row. Live with <code>ANALYST_LIVE=1</code> (no second switch, Junyan 2026-09-29); <code>INSPECTION_FINDINGS_DISABLED=1</code> stops it.</p>
     </details>
       </li>
       <li class="entry det">
     <details>
       <summary><span class="when">2026-09-29</span>
-      <h3>Analyst: a flagged 901 sound booking gets its ticket again<span class="kind">EVENT-GATE analyst &middot; sound_ticket.py &middot; desk-correspondence #723 &middot; NOT YET MERGED OR DEPLOYED</span></h3></summary>
+      <h3>Analyst: a flagged 901 sound booking gets its ticket again<span class="kind">EVENT-GATE analyst &middot; sound_ticket.py &middot; desk-correspondence #723 &middot; deploy 97a7ec9 live 2026-09-29 23:59Z (run 36647802476)</span></h3></summary>
       <p><strong>Route changed.</strong> Each flagged (not watch, not B2) 901 booking gets one keyed 901 Sound Issue ticket at Gate: Staff, linked to its held T2, instead of a hidden Machine-readable Review row that expired unseen. An unreachable renter gets a carded Actions row with an Ask. A Notion error skips the booking for that pass.</p>
     </details>
       </li>
       <li class="entry det">
     <details>
       <summary><span class="when">2026-09-29</span>
-      <h3>Analyst: renters with a recent arming or door mistake get a held prevention message (Step 10)<span class="kind">EVENT-GATE analyst &middot; prevention_watch.py &middot; desk-correspondence #724 &middot; NOT YET MERGED OR DEPLOYED</span></h3></summary>
+      <h3>Analyst: renters with a recent arming or door mistake get a held prevention message (Step 10)<span class="kind">EVENT-GATE analyst &middot; prevention_watch.py &middot; desk-correspondence #724 &middot; deploy 97a7ec9 live 2026-09-29 23:59Z (run 36647802476)</span></h3></summary>
       <p><strong>Route added.</strong> Renters booked today with a forgot-to-arm row or an Alarm trigger / Door Left Unlocked / Unable to Arm / Bypass ticket in the last 30 days get one Proactive Issue Prevention ticket and a held T1 (card <code>3ea75032-81c4-81db-9025-ed4a80092b72</code>). One per mistake, never two in 7 days, skipped when today&rsquo;s T3 or MID already asks them to arm. No model; email-only history is not covered.</p>
     </details>
       </li>
       <li class="entry det">
     <details>
       <summary><span class="when">2026-09-29</span>
-      <h3>Analyst: an exact 15-minute gap is filled and T1 queued; any other gap is carded<span class="kind">EVENT-GATE analyst &middot; gap_fill.py &middot; analyst_sweep.py Step 6 &middot; desk-correspondence PR claude/analyst-gap-fill &middot; NOT YET MERGED OR DEPLOYED</span></h3></summary>
+      <h3>Analyst: an exact 15-minute gap is filled and T1 queued; any other gap is carded<span class="kind">EVENT-GATE analyst &middot; gap_fill.py &middot; analyst_sweep.py Step 6 &middot; desk-correspondence #721 &middot; deploy 97a7ec9 live 2026-09-29 23:59Z (run 36647802476)</span></h3></summary>
       <p><strong>What happened.</strong> Jia Chian Lee held 509A 11:00 AM to 2:30 PM and 2:45 PM to 5:45 PM on Sep 29. The Analyst (ported to code Sep 27) found the gap and filed a Machine-readable Review row that the Desk Sort never cards. Nothing filled the gap and nothing messaged her. The old Notion skill opened a Gapped Booking ticket, and the SOP fills the gap and sends T1 (Junyan: &ldquo;We handle gaps by autofilling it and then sending a message informing them that the gap has been filled&rdquo;). Filled by hand as Skedda 121832028, $11.30.</p>
       <p><strong>Route added.</strong> A new Skedda write, granted in canon <code>autonomy.md</code> (&ldquo;A FIFTH Skedda write&rdquo;). <code>gap_fill.fill()</code> creates a separate 15-minute booking on the renter&rsquo;s own account through the Timekeeper&rsquo;s guarded create (dry-run, confirm, exact re-read), only when the gap is exactly 15 min, both bookings share one holder id and one hourly rate, neither side is staff or platform, there is no Case B title, and the slot is free. The filler is unpaid; the JOB32 unpaid scan collects. T1 (How to Respond <code>3ea75032-81c4-816b-8966-dc126cc202b8</code>) is queued HELD. <code>analyst_completion</code> now accepts a same-holder filler as proof.</p>
       <p><strong>Failure mode changed.</strong> A gap the lane does not fill (30 min, two accounts, price unclear, slot taken, write failed, <code>ANALYST_GAP_FILL_DISABLED=1</code>) is filed <code>Human-confirmed</code> with an Ask, so the Deck shows it. It used to be a hidden bot row that expired to Won&rsquo;t Do three days after the booking.</p>
