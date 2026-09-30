@@ -1277,6 +1277,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-09-30</span>
+      <h3>A reply draft on a new ticket with no SOP is labelled &ldquo;&#128587; No SOP&rdquo;<span class="kind">REPLY DRAFTS &middot; scripts/queue_draft.py, intake_decide.py, no_sop_label.py, booking pass &middot; desk-correspondence #752, #753 &middot; not yet deployed</span></h3></summary>
+      <p><strong>What happened.</strong> Desk Watch Section AC (2026-09-28 to 09-30) found 5 customer drafts made on new tickets with no SOP. Nothing on those cards said they were guesses. Junyan, 2026-09-30: keep the draft (&ldquo;without me seeing a response on there everything dies quietly&rdquo;), label it, no extra Send check, and it still counts as a bad draft.</p>
+      <p><strong>Route changed.</strong> <code>intake_decide.py</code> writes <code>SOP-VERDICT none|doubted|ok</code> on each stub audit row. <code>queue_draft.py</code> reads the ticket&rsquo;s audit row and labels the draft as it writes it: the Message Code starts <code>&#128587; No SOP &middot;</code>, and Reasoning starts with a <code>NO-SOP-V1</code> line (the ask, Jev&rsquo;s guess). Drafts written any other way (Quick-Answer, Courtesy Reply, Greeter, Desk Sort by hand) get the same label on the 30-minute booking pass, after queue hygiene. Only the title and Reasoning change, never the body or the Status.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-09-30</span>
       <h3>EOB live timing: a blind Skedda read leaves the row alone instead of Needs Fix<span class="kind">EOB LIVE TIMING &middot; eob_timing.py, booking_sweep.py &middot; desk-correspondence #751 &middot; not yet deployed</span></h3></summary>
       <p><strong>Failure mode changed.</strong> An expired Skedda session reads the public schedule with every holder and price stripped. <code>eob_timing</code> read that as &ldquo;Booking recipient or booking type changed&rdquo; and moved all four 2026-09-30 EOB rows to Needs Fix; they stayed blocked after the session came back. A read where no booking has a holder or a price is now the verdict <code>defer</code>: no row write, the next pass rechecks. Platform mirrors have no holder but carry a price, so they do not count as blind.</p>
       <p><strong>Wording.</strong> The EOB body now reads &ldquo;if no one is booked&rdquo; (was &ldquo;if no one if booked&rdquo;), with one space after &ldquo;charges.&rdquo; Junyan, 2026-09-30: &ldquo;okay fix it&rdquo;.</p>
