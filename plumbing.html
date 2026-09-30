@@ -1277,8 +1277,8 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-09-30</span>
-      <h3>Desk Watch only tests; heartbeats and the jobs registry move to Fleet health<span class="kind">MAC SCHEDULED TASKS &middot; desk-watch, fleet-health (new, daily 09:45 Toronto) &middot; no code change</span></h3></summary>
-      <p><strong>Cadence changed.</strong> Junyan, 2026-09-30: the Desk Watch&rsquo;s purpose is to test, not to do work. Its ongoing checks left it. E (Run Monitor heartbeats) and J (the jobs registry check, <code>scripts/jobs_registry.py check</code>) moved to a new read-only Mac task <code>fleet-health</code>, daily 09:45, which reports only and keeps <code>archive/fleet-health-tally.md</code>. G (thank-you text queued) and L (the three receivers) stopped; K (JOB 3 and JOB 4 as code) retired after Junyan let the Concierge keep that work by hand. Their Live Tests cards are Dropped. The Desk Watch still runs at 09:30 with its test sections.</p>
+      <h3>Desk Watch only tests; heartbeats and the jobs registry go to the Sentinel<span class="kind">MAC SCHEDULED TASKS &middot; desk-watch &middot; Sentinel</span></h3></summary>
+      <p><strong>Cadence changed.</strong> Junyan, 2026-09-30: the Desk Watch&rsquo;s purpose is to test, not to do work. Its ongoing checks left it. E (Run Monitor heartbeats) is left to the deterministic Sentinel (<code>sentinel_sweep.py</code>, live), which already watches every Live Run Monitor row. J (the jobs registry check, <code>scripts/jobs_registry.py check</code>) is being moved into the Sentinel. A Mac task <code>fleet-health</code> was made for E and J and deleted the same day before its first run (Junyan: &ldquo;I want it to be done by the sentinel&rdquo;); its Run Monitor row is Retired. G (thank-you text queued) and L (the three receivers) stopped; K (JOB 3 and JOB 4 as code) retired after Junyan let the Concierge keep that work by hand. Their Live Tests cards are Dropped. The Desk Watch still runs at 09:30 with its test sections.</p>
     </details>
       </li>
       <li class="entry det">
