@@ -1277,6 +1277,22 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-09-30</span>
+      <h3>desk-loop VPS timer switched off<span class="kind">DESK LOOP &middot; danceannex-desk-loop.timer &middot; disabled by Junyan 2026-09-30</span></h3></summary>
+      <p><strong>What happened.</strong> The timer still fired <code>POST /loop</code> every 10 minutes, 08:00 to 22:50, although the loop was switched off in code (<code>LOOP_DISABLED=1</code>) on 2026-09-12 and the registry had retired it. Each call answered <code>{"disabled": true}</code> and did nothing.</p>
+      <p><strong>Route changed.</strong> <code>systemctl disable --now danceannex-desk-loop.timer</code> (Junyan, d10: &ldquo;this need to be turned off&rdquo;). Verified <code>disabled</code> and <code>inactive</code>. The <code>/loop</code> route and <code>loop.py</code> are unchanged. Its Run Monitor row was already Disabled.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-09-30</span>
+      <h3>Skedda refresh logs in again when the saved session is dead<span class="kind">SKEDDA SESSION &middot; skedda-cli hosting/vps_session.py &middot; skedda-cli #27 &middot; deployed f28a5e2 2026-09-30</span></h3></summary>
+      <p><strong>Failure mode changed.</strong> A saved session under 20 hours old was reused without a check. When a human login ended the fleet session mid-day (about 13:24), <code>POST /_internal/refresh-session</code> reused the dead cookie and returned 503 without logging in; recovery needed moving <code>session.json</code> aside by hand. Now the worker validates the saved session first and logs in once if it is dead. A retained <code>session.pending.json</code> is still never replaced by a second login.</p>
+      <p><strong>Runbook.</strong> <code>library/skedda-session.md</code> step 2 (desk-correspondence #750).</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-09-30</span>
       <h3>A reply draft on a new ticket with no SOP is labelled &ldquo;&#128587; No SOP&rdquo;<span class="kind">REPLY DRAFTS &middot; scripts/queue_draft.py, intake_decide.py, no_sop_label.py, booking pass &middot; desk-correspondence #752, #754 &middot; deployed 763ae23 2026-09-30 18:49Z</span></h3></summary>
       <p><strong>What happened.</strong> Desk Watch Section AC (2026-09-28 to 09-30) found 5 customer drafts made on new tickets with no SOP. Nothing on those cards said they were guesses. Junyan, 2026-09-30: keep the draft (&ldquo;without me seeing a response on there everything dies quietly&rdquo;), label it, no extra Send check, and it still counts as a bad draft.</p>
       <p><strong>Route changed.</strong> <code>intake_decide.py</code> writes <code>SOP-VERDICT none|doubted|ok</code> on each stub audit row. <code>queue_draft.py</code> reads the ticket&rsquo;s audit row and labels the draft as it writes it: the Message Code starts <code>&#128587; No SOP &middot;</code>, and Reasoning starts with a <code>NO-SOP-V1</code> line (the ask, Jev&rsquo;s guess). Drafts written any other way (Quick-Answer, Courtesy Reply, Greeter, Desk Sort by hand) get the same label on the 30-minute booking pass, after queue hygiene. Only the title and Reasoning change, never the body or the Status.</p>
