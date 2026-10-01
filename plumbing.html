@@ -1274,6 +1274,13 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-01</span>
+      <h3>Responder re-checks the queue right before it writes a draft<span class="kind">RESPONDER &middot; scripts/queue_draft.py &middot; library/the-responder.md &middot; desk-correspondence #767 (open, awaiting Junyan)</span></h3></summary>
+      <p><strong>Failure mode closed.</strong> The Responder&rsquo;s dedup read happens at the start of its pass, so a reply another lane queues a minute later is invisible to it. Jack C. [Peerspace], 901 Oct 6, 2026-09-30: the Greeter queued a welcome at 19:21, the Responder had read at 19:20 and queued a second at 19:23. Now <code>queue_draft.py</code> reads the Message Queue again just before the write: an unsent row (Pending Review or Ready to Send), any lane, whose Source Email names the same message (Gmail id or <code>sms-in-</code> id, any spelling) stops the write with exit 3. An unreadable queue also exits 3 (retry next pass). <code>--not-duplicate REASON</code> overrides and records why.</p>
+    </details>
+      </li>
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-01</span>
