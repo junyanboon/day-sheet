@@ -1274,6 +1274,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-01</span>
+      <h3>Owner texts to #desk-status no longer depend on a Notion select option<span class="kind">EVENT-GATE &middot; owner_text_release.py &middot; desk-correspondence #771 &middot; PR open 2026-10-01, not yet merged or deployed</span></h3></summary>
+      <p><strong>Failure mode found.</strong> The owner text release (minute poll, posts <code>[needhelp:</code>, <code>[urgent:</code> and <code>[owner:</code> Message Queue rows to Slack #desk-status) queried the queue with a filter on <code>Raised by</code> = The Responder, The Desk Sort or The Fixer. Notion fails the whole query with HTTP 400 when a select filter names an option the property does not have yet. &ldquo;The Fixer&rdquo; had never been used until <code>fixer_ping.py</code> wrote its first row, so from 03:22 to 08:30 Toronto on 2026-10-01 every pass failed (248 of them, <code>select option &quot;The Fixer&quot; not found for property &quot;Raised by&quot;</code>) and every owner text, the Responder&rsquo;s included, was held. It recovered at 08:32 when the Fixer ping created the option. Texts were delayed up to about 5 hours; nothing was lost.</p>
+      <p><strong>Fix (in #771).</strong> The query now filters on the Message Code tag (<code>[needhelp:</code>, <code>[urgent:</code>, <code>[owner:</code>), a title text match that cannot miss an option. <code>Raised by</code> is still checked row by row in Python, so nothing new can be released. A new test fakes Notion&rsquo;s missing-option 400 and proves the other owner rows still go out. Same PR marks <code>fixer-ping</code> (08:30) and <code>overnight-check</code> (07:45) live after their first VPS runs; the Mac tasks for both are off (Junyan d24, d25, 2026-09-30).</p>
+    </details>
+      </li>
       <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-01</span>
