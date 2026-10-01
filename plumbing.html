@@ -1274,10 +1274,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-01</span>
+      <h3>Gate token rotation: a script that moves every caller without downtime<span class="kind">EVENT-GATE &middot; hosting/rotate-gate-token.sh &middot; desk-correspondence #774 &middot; merged ca7a2e1; Junyan runs it step by step from 2026-10-01</span></h3></summary>
+      <p><strong>Why.</strong> The gate token (<code>X-Gate-Token</code>) was printed into a helper session on 2026-10-01; Junyan: &ldquo;d34 sur change it&rdquo;.</p>
+      <p><strong>How.</strong> <code>start</code> sets a new token with the old one kept as <code>GATE_PATH_TOKEN_PREV</code> (both accepted), recreates event-gate under the deploy locks, and moves all 40 VPS schedule headers once the container accepts the new value. Junyan then moves the callers outside the VPS: the Deck Worker secret <code>OUTBOUND_GATE_TOKEN</code>, the Send Engine Script Property <code>EOB_GATE_TOKEN</code>, and the Claude cloud environment&rsquo;s <code>GATE_PATH_TOKEN</code>. <code>finish</code> drops PREV and shreds every copy of the old value. No step prints a token.</p>
+    </details>
+      </li>
       <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-01</span>
-      <h3>Intake: a follow-up on an open ticket uses that ticket&rsquo;s SOP, no Need Help ping<span class="kind">RESPONDER &middot; scripts/intake_decide.py &middot; scripts/queue_draft.py &middot; no_sop_label.py &middot; library/the-responder.md &middot; desk-correspondence #773 &middot; wording approved (Junyan d47); merge waits on Junyan</span></h3></summary>
+      <h3>Intake: a follow-up on an open ticket uses that ticket&rsquo;s SOP, no Need Help ping<span class="kind">RESPONDER &middot; scripts/intake_decide.py &middot; scripts/queue_draft.py &middot; no_sop_label.py &middot; library/the-responder.md &middot; desk-correspondence #773 &middot; merged, deployed ca7a2e1 2026-10-01 19:22Z</span></h3></summary>
       <p><strong>Failure mode closed.</strong> Pekhna Kaur, 2026-09-30 20:52: her reply in the &ldquo;Studio Rental&rdquo; thread was stubbed, Junyan got &ldquo;No idea which SOP to use&rdquo;, and the held reply was labelled &ldquo;🙋 No SOP&rdquo;, although her open Sales ticket had an SOP. The SOP was chosen before the existing ticket was looked up.</p>
       <p><strong>Route change.</strong> <code>intake_decide.py</code> now looks for an open ticket keyed to the thread first. Ticket has an SOP: disposition <code>routed</code>, the ticket&rsquo;s SOP, <code>SOP-VERDICT ok</code>, no ping, no label. Ticket has no SOP: <code>routed</code>, and the Need Help ping still goes (same wording). <code>queue_draft.py</code> reads the message&rsquo;s own intake row before the ticket&rsquo;s oldest one. Desk Watch AJ1 and AJ3 updated to match.</p>
     </details>
