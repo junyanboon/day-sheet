@@ -1276,6 +1276,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <ul class="log">
       <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>AAP: every booking counts toward the 4 prepaid hours, whatever the activity says<span class="kind">SKEDDA-MCP &middot; skedda/plan_allowance.py eligible() &middot; library/studio-tickets-bookings.md &sect; Monthly 1AP/AAP allowance &middot; skedda-cli #29 (merged 0fe681b), desk-correspondence #788 (merged 2cc2a5b) &middot; VPS overlay deploy hosting/vps-deploy/deploy-aap-any-activity-186a34b.sh, run by Junyan</span></h3></summary>
+      <p><strong>Why.</strong> Kyle FitzGerald (AAP): four October bookings say &ldquo;ProAm Student&rdquo;, and <code>settle_plan_allowance</code> refused his whole month with &ldquo;Booking activity is outside or ambiguous for the plan&rdquo;. Junyan d34 (2026-10-02): &ldquo;if they are on an aap account it just gets auto counted.&rdquo;</p>
+      <p><strong>Failure mode removed.</strong> For AAP the activity text is no longer read: any booking (except overtime, additional time, viewing and comp titles, as before) counts toward the month. 1AP is unchanged: solo attendance and rehearsal / practice / instrument activity, or the month stops.</p>
+      <p><strong>Still stops.</strong> The agreement check in event-gate (<code>plan_document_source</code>: every Rental Agreement Docs page needs exactly one file) runs before the helper is called and is untouched by this change.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-01</span>
       <h3>AAP / 1AP renters&rsquo; unpaid bookings reach the prepaid-hours bot again<span class="kind">EVENT-GATE money lane &middot; unpaid_review.py (JOB 32) &middot; plan_allowance_sweep.py &middot; library/studio-tickets-bookings.md &sect; Monthly 1AP/AAP allowance &middot; desk-correspondence #787 &middot; merged 8ca7a04, deployed 8ca7a04 2026-10-01 21:33Z (run 36929033736, VPS runner)</span></h3></summary>
       <p><strong>Why.</strong> Kyle FitzGerald (AAP), Studio 527, 2026-10-01: his unpaid bookings were carded as ordinary charges and the prepaid-hours bot&rsquo;s receipt read <code>applied 0, held 0</code>. Since #607 (2026-09-27) the unpaid review looked for AAP/1AP in Account Status, but live Artist cards keep the plan in Product and Account Status is just Active. Junyan d33 (2026-10-02): &ldquo;yes&rdquo;.</p>
