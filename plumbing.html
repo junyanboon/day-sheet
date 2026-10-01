@@ -1277,6 +1277,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-01</span>
+      <h3>A History Check write no longer holds a Send<span class="kind">EVENT-GATE &middot; outbound_guard.py &middot; DECK &middot; outbound-guard.js &middot; queue_draft.py &middot; desk-correspondence #777 (deployed 81c4a16) &middot; deck-app #189 (Worker version 9bef26b0) &middot; 2026-10-01</span></h3></summary>
+      <p><strong>Failure mode closed.</strong> Pekhna Kaur&rsquo;s reply was Sent from the Deck at 10:45 and held as <code>draft_changed</code>: <code>history_check.py</code> (VPS, every 5 min) wrote <code>History Check</code> onto the new row while the release check ran, and three checks compared the whole page (the gate&rsquo;s end-of-check read, the Deck&rsquo;s re-read after the verdict, and its re-read before the release write).</p>
+      <p><strong>Fix.</strong> All three now compare only the send fields (Message Body, Reply To, CC Email, Channel, Artist, Email Subject, Status, Send After, Dispatch Receipt, Sent At, Source Email, Booking) and the recipient; bookkeeping such as History Check and Reconciled is ignored. <code>queue_draft.py</code> also writes History Check when it queues the row, so the sweep&rsquo;s first pass writes nothing. The gate&rsquo;s opening <code>draft_unavailable</code> check still binds to <code>last_edited_time</code>, but the Deck reads the row fresh at the moment of Send, so its window is about a second.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-01</span>
       <h3>Treasurer: the monthly passes retry, and a lost blocked row pages Junyan outside Notion<span class="kind">EVENT-GATE &middot; treasurer_sweep.py &middot; systemd drop-in &middot; desk-correspondence #770 &middot; merged and deployed 99521d4 2026-10-01; retry drop-in waits on Junyan&rsquo;s install</span></h3></summary>
       <p><strong>Failure mode closed.</strong> 2026-10-01 08:00: <code>treasurer-sweep</code> fired during a Notion outage (HTTP 500, 07:30 to 08:07). The Layer 1 read failed, the blocked row failed too, and the timer (<code>Persistent=false</code>, no retry) never tried again, so the month-start pass did not happen and nobody was told.</p>
       <p><strong>Retry (new cadence on failure).</strong> A drop-in on <code>danceannex-treasurer-sweep</code> and <code>-midmonth</code>: <code>Restart=on-failure</code>, <code>RestartSec=900</code>, <code>StartLimitBurst=4</code>, <code>StartLimitIntervalSec=7200</code>. The runner exits 1 when the route says <code>"ok": false</code>, so a blocked pass tries again at about 08:15, 08:30 and 08:46, before the 10:00 cloud lane. Safe: every write is keyed. Installed by <code>hosting/treasurer/install-treasurer-retry.sh</code>.</p>
