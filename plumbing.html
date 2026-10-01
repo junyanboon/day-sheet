@@ -1302,9 +1302,10 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry human">
     <details>
       <summary><span class="when">2026-10-01</span>
-      <h3>Gate token rotation: a script that moves every caller without downtime<span class="kind">EVENT-GATE &middot; hosting/rotate-gate-token.sh &middot; desk-correspondence #774 &middot; merged ca7a2e1; Junyan runs it step by step from 2026-10-01</span></h3></summary>
+      <h3>Gate token rotation: a script that moves every caller without downtime<span class="kind">EVENT-GATE &middot; hosting/rotate-gate-token.sh &middot; desk-correspondence #774 &middot; merged ca7a2e1; rotation DONE 2026-10-01 (finish 20:14Z, old token retired)</span></h3></summary>
       <p><strong>Why.</strong> The gate token (<code>X-Gate-Token</code>) was printed into a helper session on 2026-10-01; Junyan: &ldquo;d34 sur change it&rdquo;.</p>
       <p><strong>How.</strong> <code>start</code> sets a new token with the old one kept as <code>GATE_PATH_TOKEN_PREV</code> (both accepted), recreates event-gate under the deploy locks, and moves all 40 VPS schedule headers once the container accepts the new value. Junyan then moves the callers outside the VPS: the Deck Worker secret <code>OUTBOUND_GATE_TOKEN</code>, the Send Engine Script Property <code>EOB_GATE_TOKEN</code>, and the Claude cloud environment&rsquo;s <code>GATE_PATH_TOKEN</code>. <code>finish</code> drops PREV and shreds every copy of the old value. No step prints a token.</p>
+      <p><strong>Done 2026-10-01.</strong> All 40 VPS timers, the Deck Worker secret and the Send Engine moved to the new token; <code>finish</code> ran at 20:14Z (PREV removed). The Send Engine property was set through a temporary owner-only page (Project Settings will not edit a project with more than 50 properties), removed again the same evening. <strong>Gotcha:</strong> an Apps Script project cannot hold a <code>.js</code> and a <code>.html</code> file with the same name; <code>clasp push</code> fails with &ldquo;A file with this name already exists&rdquo;.</p>
     </details>
       </li>
       <li class="entry llm">
