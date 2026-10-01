@@ -1274,6 +1274,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-01</span>
+      <h3>Intake: a follow-up on an open ticket uses that ticket&rsquo;s SOP, no Need Help ping<span class="kind">RESPONDER &middot; scripts/intake_decide.py &middot; scripts/queue_draft.py &middot; no_sop_label.py &middot; library/the-responder.md &middot; desk-correspondence #773 &middot; wording approved (Junyan d47); merge waits on Junyan</span></h3></summary>
+      <p><strong>Failure mode closed.</strong> Pekhna Kaur, 2026-09-30 20:52: her reply in the &ldquo;Studio Rental&rdquo; thread was stubbed, Junyan got &ldquo;No idea which SOP to use&rdquo;, and the held reply was labelled &ldquo;🙋 No SOP&rdquo;, although her open Sales ticket had an SOP. The SOP was chosen before the existing ticket was looked up.</p>
+      <p><strong>Route change.</strong> <code>intake_decide.py</code> now looks for an open ticket keyed to the thread first. Ticket has an SOP: disposition <code>routed</code>, the ticket&rsquo;s SOP, <code>SOP-VERDICT ok</code>, no ping, no label. Ticket has no SOP: <code>routed</code>, and the Need Help ping still goes (same wording). <code>queue_draft.py</code> reads the message&rsquo;s own intake row before the ticket&rsquo;s oldest one. Desk Watch AJ1 and AJ3 updated to match.</p>
+    </details>
+      </li>
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-01</span>
@@ -1303,7 +1311,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-01</span>
-      <h3>Chase sweep survives an empty Email Subject; owner text release pages after 10 straight failures; scheduler says &ldquo;timeout&rdquo;<span class="kind">EVENT-GATE &middot; chase_sweep.py &middot; owner_text_release.py &middot; eventgate_schedule.py &middot; desk-correspondence #772 &middot; PR open, merge and deploy wait on Junyan</span></h3></summary>
+      <h3>Chase sweep survives an empty Email Subject; owner text release pages after 10 straight failures; scheduler says &ldquo;timeout&rdquo;<span class="kind">EVENT-GATE &middot; chase_sweep.py &middot; owner_text_release.py &middot; eventgate_schedule.py &middot; desk-correspondence #771 + #772 &middot; merged, deployed 7f337db 2026-10-01 19:12Z; d38 schedule fixes applied on the VPS the same day</span></h3></summary>
       <p><strong>Chase sweep.</strong> A sent row whose <code>Email Subject</code> had empty text segments crashed the Sales lane (<code>None[:1900]</code>), so Isabel Cam, Shamir Panchal and BELT Collective got no follow-up. The field is skipped when empty, and each Sales ticket runs in its own try/except that records the error. Must be live before 2026-10-02 09:30.</p>
       <p><strong>Owner text release.</strong> The query fix is #771 (another session). #772 adds the alarm: after 10 straight failed passes, one alert through <code>actuator.send_ops_text</code> per streak. Canon <code>gotchas.md</code>: a select filter on a missing option returns 400 and fails the whole query.</p>
       <p><strong>Scheduler.</strong> The runner reports a socket timeout as <code>timeout</code>, not <code>unreachable</code>; <code>analyst-sweep</code> deadline 180 to 900 s and <code>handback-sweep</code> 300 to 540 s, with the unit timeouts raised to match (<code>hosting/apply-schedule-fixes-2026-10-01.sh</code>, Junyan runs it).</p>
