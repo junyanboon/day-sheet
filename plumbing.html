@@ -1274,6 +1274,13 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-01</span>
+      <h3>GitHub jobs move to the VPS: no paid Actions minutes<span class="kind">GITHUB ACTIONS &middot; desk-correspondence #759, #760, #766 &middot; fbs-watch #3</span></h3></summary>
+      <p><strong>Cadence unchanged, runner changed.</strong> Junyan, 2026-09-30: stop using GitHub&rsquo;s paid machines, use the VPS (rule in AGENTS.md and <code>library/house-rules.md</code>). The account has a $20/month Actions budget with &ldquo;stop at limit&rdquo;, which could freeze deploys late in a month. The fbs-monitor rebuild already ran on the VPS runner since 2026-09-28 (repo private, GitHub Pages off). Now the desk repo&rsquo;s tests, decay, scribe and QA jobs run on the VPS runner <code>hostinger-watchlist</code> (<code>DC_RUNNER</code>; first run 2026-10-01 14:06Z, billed nothing), and the event-gate deploy runs there too (<code>DEPLOY_RUNNER</code>): it sends the source with <code>src-&lt;mode&gt;</code> and the host builds the image (<code>/usr/local/sbin/eventgate-deploy</code> updated, backup <code>.bak-20261001</code>). Delete either variable to go back to hosted. FBS Watch reads the private board through the GitHub contents API with <code>FBS_MONITOR_TOKEN</code> instead of the dead Pages URL.</p>
+    </details>
+      </li>
       <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-01</span>
