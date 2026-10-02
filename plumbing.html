@@ -1274,6 +1274,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>QuickBooks link: Intuit trace ids logged, one retry, discovery addresses, a reconnect text, and a real disconnect<span class="kind">EVENT-GATE qbo.py _send, endpoint, alert_reconnect, revoke, forget_if_dead &middot; /qbo/revoke, /qbo/disconnect &middot; desk-correspondence #824 &middot; open, waiting on merge and deploy</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-02: &ldquo;d72 yes&rdquo;, after Intuit&rsquo;s production questionnaire asked about retries, reconnect handling and disconnects.</p>
+      <p><strong>Failure modes closed.</strong> A QuickBooks login that dies (expired refresh token or invalid_grant) used to fail quietly in the logs. Now it texts Junyan once a day on the owner route that does not touch Notion (actuator.send_ops_text). A brief Intuit 429 or 5xx is retried once after 2 seconds. Every Intuit answer&rsquo;s intuit_tid is logged for support.</p>
+      <p><strong>Route change.</strong> <code>POST /qbo/revoke</code> (gate token) revokes the login at Intuit and deletes the stored tokens. <code>GET /qbo/disconnect</code> is Intuit&rsquo;s Disconnect URL and deletes the tokens only when Intuit already refuses them. OAuth addresses come from Intuit&rsquo;s discovery document, with the fixed ones as the fallback.</p>
+    </details>
+      </li>
       <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-02</span>
