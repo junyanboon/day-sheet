@@ -119,6 +119,64 @@ jobs:
             done
           fi
 
+      # Plumbing Map change log (Junyan 2026-10-02, d34 to d36). Each plumbing change adds one
+      # file, plumbing/changes/YYYY-MM-DD-slug.md, in the PR that makes it, in desk-correspondence
+      # or deck-app; nobody edits plumbing.html for an entry, so those PRs never collide.
+      # plumbing_build.py (canon) rewrites only the block between the changes:start/end markers
+      # and keeps plumbing-index.json (first seen + PR number from the commit that added the file;
+      # the history depth below is what that lookup can see). Format: desk-correspondence
+      # plumbing/README.md. Non-fatal: a failure here never blocks the Day Sheet.
+      - name: Check out canon plumbing changes
+        if: steps.gate.outputs.ready == 'true'
+        continue-on-error: true
+        uses: actions/checkout@v5
+        with:
+          repository: junyanboon/desk-correspondence
+          token: ${{ secrets.DESK_REPO_PAT }}
+          path: plumbing-src/desk-correspondence
+          fetch-depth: 2000
+          filter: blob:none
+          sparse-checkout: plumbing
+          sparse-checkout-cone-mode: true
+
+      # Needs DESK_REPO_PAT to read deck-app (contents: read). Until it can, this step fails
+      # quietly and deck-app entries are simply not shown.
+      - name: Check out deck-app plumbing changes
+        if: steps.gate.outputs.ready == 'true'
+        continue-on-error: true
+        uses: actions/checkout@v5
+        with:
+          repository: junyanboon/deck-app
+          token: ${{ secrets.DESK_REPO_PAT }}
+          path: plumbing-src/deck-app
+          fetch-depth: 2000
+          filter: blob:none
+          sparse-checkout: plumbing
+          sparse-checkout-cone-mode: true
+
+      - name: Render plumbing.html change log (change-only)
+        if: steps.gate.outputs.ready == 'true'
+        continue-on-error: true
+        run: |
+          [ -f desk/scripts/plumbing_build.py ] || { echo "plumbing_build.py not in canon yet, skipping"; exit 0; }
+          src=()
+          for r in desk-correspondence deck-app; do
+            [ -d "plumbing-src/$r/.git" ] && src+=(--source "$r=plumbing-src/$r")
+          done
+          [ ${#src[@]} -gt 0 ] || { echo "no plumbing sources checked out, skipping"; exit 0; }
+          python3 desk/scripts/plumbing_build.py --page plumbing.html --index plumbing-index.json "${src[@]}"
+          git add plumbing.html plumbing-index.json
+          if git diff --cached --quiet; then echo "no plumbing change, not committing"; exit 0; fi
+          git config user.name "day-sheet-bot"
+          git config user.email "day-sheet-bot@users.noreply.github.com"
+          git commit -m "Plumbing Map change log $(date -u +%F' '%H:%M) render"
+          for i in 1 2 3; do
+            if git push; then exit 0; fi
+            git fetch origin main && git rebase -X theirs origin/main || git rebase --abort || true
+            sleep $((i * 3))
+          done
+          echo "::warning::plumbing.html push lost the race (non-fatal, next run rewrites)."
+
       - name: Push desk-state snapshot (change-only, race-tolerant)
         if: steps.gate.outputs.ready == 'true'
         run: |
