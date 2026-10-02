@@ -1277,6 +1277,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Deck: helper notes never decide whose turn a row is<span class="kind">DECK sources/deck.html turnOf &middot; deck-app #200 &middot; PR open, waiting on merge and deploy</span></h3></summary>
+      <p><strong>Why.</strong> Maggie Morrison&rsquo;s charged cards came back as waiting after a &ldquo;Desk Hand &middot; &hellip;&rdquo; note followed Junyan&rsquo;s &ldquo;You &middot; &hellip; CHARGED&rdquo; line (fix approved 2026-10-02).</p>
+      <p><strong>Route change.</strong> Notes from the in-session helpers (Desk Hand, Shipper, Door Checker, Lane Detective, Message Tracer, Jev Keeper, Matt, Boss, Session, Claude Code) stay in the thread but are skipped when the Deck decides whose turn it is. You and Ela lines count as staff; lane answers still hand a row back.</p>
+      <p><strong>Failure modes.</strong> A helper writing under a name not on the list still re-opens a row; add the name to <code>NOTE_ONLY</code>.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Charged accepts every card the Charges tab lists; unpaid review re-plans its own collision rows<span class="kind">DECK src/charge-hold.js unpaidBookingRow, charge.js preview &middot; EVENT-GATE unpaid_review.replan &middot; library/desk-sort.md &middot; deck-app #199 (merged, Deck deployed 2026-10-02 10:06 UTC), desk-correspondence #816 (merged 8691308, deploy run 36993620900, VPS runner)</span></h3></summary>
       <p><strong>Why.</strong> Junyan, 2026-10-02 (d11): &ldquo;I can&rsquo;t charge maggie.. help me fix this. d11 fixes let&rsquo;s do it.&rdquo; Maggie Morrison&rsquo;s <code>[UNPAID-REVIEW-V1:</code> rows (Type Review, fyi card) were listed on the Charges tab and refused by Charged.</p>
       <p><strong>Route change.</strong> The tab and the worker share one unpaid-booking rule, so any listed unpaid-booking card reaches the live Skedda and Stripe checks; plan entitlement rows stay refused. The unpaid review lane turns its own collision Review row into a Charge once every collision row is closed. The Desk Sort re-cards a past unpaid booking as a charge.</p>
