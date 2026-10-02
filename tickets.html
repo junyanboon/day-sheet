@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a><a class="tabtab" href="messages.html">💬 Messages</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-02 04:09 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-02 06:21 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -101,8 +101,8 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="stats">
 <div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
-<div class="stat"><div class="n">10</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">119</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">9</div><div class="l">⏳ Waiting</div></div>
+<div class="stat"><div class="n">120</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
@@ -192,209 +192,88 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>on or after 2026-09-28</b>: ✅ Actions to Perform, <code>Type = Run Error</code> rows mentioning <code>KeyError</code> or</p>
 <p><code>stale sweep source/readback failed</code> created after that instant. Any error entry that does appear</p>
 <p>now names <code>id</code>, <code>kind</code> and <code>detail</code>.</p>
-</div></details></details></div><div class="job"><div class="jnum">#146</div><div class="jhead"><span class="emoji">🗂️</span><h4>The board&#x27;s Disarmed / Armed clocks stopped on 2026-09-16 16:30 and nobody knows what wrote them</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>The board&#x27;s Disarmed / Armed clocks stopped on 2026-09-16 16:30 and nobody knows what wrote them</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#149</div><div class="jhead"><span class="emoji">🗂️</span><h4>A durable record of what the alarm panel saw — triggers, bypasses, troubles — that survives past three days</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A durable record of what the alarm panel saw — triggers, bypasses, troubles — that survives past three days</b></p><h2>Question</h2>
 
-<p>Found 2026-09-19 while re-reading <b>137</b>&#x27;s close checks.</p>
-<p>Every 🛎️ FBS AI Support row dated 09-17 onward has blank <code>Disarmed</code> and <code>Armed</code> cells; rows up to</p>
-<p>09-16 14:45 carry them. dc-canon PR #347 (merged 09-18 23:01 ET) records the stop time as</p>
-<p><b>2026-09-16 16:30</b> and says &quot;their writer was never found&quot;. No file in <code>dc-canon/services/event-gate</code></p>
-<p>or <code>fbs-monitor</code> writes those two properties; <code>fbs-monitor/build.py:1318</code> only reads them as a</p>
-<p>fallback, and <code>board_fields.py:57</code> reads <code>Disarmed</code> for the attendance lane.</p>
+<p>Junyan, 2026-09-19 (while ruling <b>146</b>): the arrival/departure</p>
+<p>cells exist so the desk can answer a dispute two weeks later. He wants the same for <b>alarm</p>
+<p>triggers, bypassed sensors, troubles and the like</b> — &quot;all of that info&quot;.</p>
 
-<p>Consequence: the attendance card path (143) fired on &quot;no disarm&quot; for every booking since — 13 cards</p>
-<p>on 09-17, 7 on 09-18, 8 on 09-19 — all attended renters. PR #347 moved the EOB check onto the panel</p>
-<p>ledger, so the cards should thin from 09-19 on, but the cells themselves are still dead and two</p>
-<p>readers still trust them.</p>
+<p><b>What already sees these events (so this is possible without new sensors):</b> the alarm watchdog</p>
+<p>on Cloud Run reads every panel every 5 minutes and acts on sirens, stuck bypasses and troubles;</p>
+<p>the event-gate keeps door events for 72 h and a clean panel history for Studio 901 only; the</p>
+<p>Doorman logs one panel-state snapshot per studio per morning to the 🚪 Alarm Activity Log (last</p>
+<p>row 2026-09-04). <b>What is missing is a durable store</b>: every one of those sources forgets within</p>
+<p>about three days, and the Activity Log holds snapshots, not events.</p>
 
-<p>Decide one of two things:</p>
-<ul>
-<li>- (a) <b>Find and restore the writer.</b> Candidates outside the two repos read here: an Agent Fleet</li>
-</ul>
-<p>lane, a Codex automation (<code>~/.codex/automations/</code>), a Hermes job, or a retired Concierge step that</p>
-<p>wrote the cells by hand (JOB 1 Step 4 was retired from canon on 09-13 — the same week). Check the</p>
-<p>Notion page history on one 09-16 row for the editor&#x27;s name; that names the writer in one read.</p>
-<ul>
-<li>- (b) <b>Retire the cells.</b> If the writer was the Concierge (retired 09-13 by design), the cells are</li>
-</ul>
-<p>a dead surface: remove the <code>fbs-monitor</code> fallback and the <code>board_fields.py</code> read, and let the</p>
-<p>attendance lane read the panel ledger only (as #347 already does for EOB).</p>
+<p><b>Prior ruling to respect (map, early September):</b> Junyan closed the &quot;record every arm/disarm to</p>
+<p>Notion&quot; job — the live board already shows who is in a room, three feeds cover the rest, a fourth</p>
+<p>Notion table would go against the move off Notion, and nobody would read it. That ruling was about</p>
+<p>a <i>real-time</i> log nobody reads. This ask is different: an <i>after-the-fact</i> record someone reads</p>
+<p>only when there is a dispute. The two can both be right.</p>
 
-<h2>Acceptance</h2>
-
-<ul>
-<li>- The writer is named with evidence (page history or a log line), and either writes again with a</li>
-</ul>
-<p>09-19-or-later row showing a clock, or is declared retired and both readers are removed.</p>
-<ul>
-<li>- No <code><b>attend:</code> card fires on a booking whose renter&#x27;s keypad disarm is in the panel ledger</li>
-</ul>
-<p>(spot-check three cards after the change).</p>
-<ul>
-<li>- One line on 137 saying which way this went, so its three-day clock can restart.</li>
-</ul>
-
-<h2>Progress 2026-09-19 evening — writer narrowed, not named; the stop time was wrong</h2>
-
-<p><b>Corrected stop time.</b> The cells were still written on 09-16 after 16:30: Jia Chian Lee 527</p>
-<p>16:30–18:30 carries <code>Disarmed 16:22 / Armed 18:30 / Closed by Renter</code>; Simona Horova 509A 16:00</p>
-<p>carries <code>Armed 17:08 Simona Horova (keypad)</code>. Nina Li 901 20:30–22:30 has nothing, and nothing after.</p>
-<p>So the writer stopped between <b>~18:40 and 20:30 Toronto on 09-16</b>, not 16:30.</p>
-
-<p><b>Who edited the rows (Notion, edited-by filter):</b> every clock-bearing 09-16 row was edited by</p>
-<p>the <b>&quot;Dance Annex Desk CLI&quot;</b> bot only — not Junyan, not the Notion MCP bot (Claude sessions), not</p>
-<p>Zapier/Make/IFTTT/Day Hub/Deck/Send Engine. That token is the shared one every code lane and every</p>
-<p>Hermes lane on the VPS uses, so it names a <i>program on the VPS or the Mac</i>, not a person and not a</p>
-<p>hand session. Page history itself is not exposed by the Notion connector, and the browser pane is</p>
-<p>not signed in to Notion, so the edit-by-edit trail was not read.</p>
-
-<p><b>What does NOT write the cells (read, not assumed):</b> every <code>.py/.js/.ts/.sh</code> under dc-canon</p>
-<p>(<code>git log -S Disarmed</code> since 08-10 shows only the job1_flags add/remove and doc edits), fbs-monitor</p>
-<p>(reads them as a fallback only, <code>build.py:1318</code>), Codex/AlarmMonitor-NotionBridge (launch agent</p>
-<p><code>ca.danceannex.doorman.activity-sync</code> is <b>disabled</b>, log ends 07-13), dance-annex-os (a local</p>
-<p>dashboard, crash-looping), every Mac scheduled task (<code>live-desk</code> dead since 06-30, <code>virtual-front-desk</code></p>
-<p>/ <code>fbs-adt-sweep</code> retired, <code>the-doorman</code> local copy disabled 07-20), the Codex Concierge automation</p>
-<p>(PAUSED), and every canon page except the retired <code>job-1-adt-alarm.md</code>, whose Step 4 was the only</p>
-<p>instruction anywhere to stamp <code>Disarmed</code>/<code>Armed</code> — in exactly the <code>HH:MM</code> shape the cells carry.</p>
-
-<p><b>Conclusion.</b> The writer was an LLM lane on the VPS using the shared token — on the evidence, the</p>
-<p>Hermes Concierge still running the retired JOB 1 Step 4 by habit after the 09-13 canon retirement</p>
-<p>(the 09-16 and 09-17 rolling reports do not mention the writes, which is how a habit looks in a</p>
-<p>report). It stopped the evening the Concierge Closeout split was installed on the VPS (Hermes</p>
-<p>task 2026-09-16, commit cbc8eb99 21:26 ET) and the day the Concierge&#x27;s runtime was cut short 13</p>
-<p>passes in a row. The proof is one read Junyan can make and this session could not (production</p>
-<p>read refused): the Hermes cron transcripts for 09-16 under <code>cron/output/&lt;concierge-cron-id&gt;/</code>,</p>
-<p>grep <code>Disarmed</code>. Whichever pass wrote <code>16:22</code> for Jia Chian Lee names the writer.</p>
-
-<p><b>Recommendation for the ruling:</b> (b) retire the cells. Their only writer was a retired Concierge</p>
-<p>step; the panel ledger (#347) is now the attendance source; <code>fbs-monitor</code> and <code>board_fields.py</code></p>
-<p>should stop reading them. If Junyan wants the human-readable clocks back, <code>board_status.py</code> can</p>
-<p>stamp them from the ledger when it writes Complete — a small change, and then the cells have a</p>
-<p>code owner for the first time.</p>
-
-<h2>Ruling 2026-09-19 (Junyan, in session) — the times come back, with a code owner</h2>
-
-<p>Junyan: *&quot;We need to be able to reference when people come and go out of the studio. We used to</p>
-<p>have it written directly on the Skedda bookings themselves before.&quot;* So option (b) (retire the</p>
-<p>cells) is <b>refused</b>. The arrival and departure times are a desk record that must exist and be</p>
-<p>readable per booking, not a cosmetic column.</p>
-
-<p><b>Shape (proposed, not yet built):</b> <code>board_status.py</code> already reads the panel ledger</p>
-<p>(<code>overtime_sweep.door_history</code>) for every booking on the 10-minute sweep and already writes</p>
-<p><code>In Studio</code> and <code>Complete</code>. It stamps the board&#x27;s <code>Disarmed</code> / <code>Armed</code> cells from the same ledger</p>
-<p>read — first named keypad disarm in the booked studio from start − 30 min, and the arm-out that</p>
-<p>closes the window — in the same write as the status flip, and only when the ledger actually</p>
-<p>carries the event (unknown stays blank; never inferred). That gives the cells their first code</p>
-<p>owner and ends the three-day gap for good.</p>
-
-<p><b>Open for Junyan before build:</b> where the times should live —</p>
+<p><b>Decide:</b></p>
 <ol>
-<li>1. the board cells only (what the Concierge did for months), or</li>
-<li>2. also appended to the Skedda booking title, the way it used to be written on the booking itself</li>
+<li>1. <b>Scope.</b> Per booking (a &quot;Panel events&quot; block on the board row, written by the same sweep that</li>
 </ol>
-<p>(<code>edit_booking</code> can write <code>title</code>; nothing else on a booking), or</p>
+<p>stamps the clocks: triggers, bypasses, troubles inside the booking window) — cheap, code-only,</p>
+<p>no new table. Or per studio, all events, booking or not (door opened at 3 am with nobody</p>
+<p>booked) — needs its own store.</p>
 <ol>
-<li>3. both.</li>
+<li>2. <b>Where it lives.</b> The board row for the per-booking part. For the studio-level part, the</li>
 </ol>
-<p>Skedda&#x27;s title is the only field a program can write, and a title suffix survives moves and shows</p>
-<p>in Skedda&#x27;s own history, which is the &quot;on the booking itself&quot; reference Junyan described.</p>
-
-<p>Acceptance is amended: the writer is named (this ticket&#x27;s evidence plus the VPS transcript grep),</p>
-<p>the cells are written by <code>board_status.py</code> on the next Complete, and a 09-20-or-later row shows</p>
-<p>both clocks.</p>
-
-<p><b>Two more factors (Junyan, same session): token cost, and overtime billing.</b></p>
-<ul>
-<li>- <b>Tokens.</b> The proposed writer is <code>board_status.py</code>, plain code on the 10-minute sweep. It costs</li>
-</ul>
-<p>no tokens: the ledger read it needs already happens every pass. The old writer was an LLM pass,</p>
-<p>which is exactly what made it both expensive and unreliable.</p>
-<ul>
-<li>- <b>Overtime billing.</b> The Timekeeper is code too (<code>overtime_sweep.py</code>, registry owner &quot;The</li>
-</ul>
-<p>Timekeeper&quot;) and reads the panel ledger directly (<code>door_history</code>, lines 307–504), never the</p>
-<p>board cells. So the cells are a <i>reading</i> copy for humans and the Concierge; billing evidence is</p>
-<p>unaffected whether the cells are right, wrong or blank. Nothing here should make billing read</p>
-<p>the cells — the ledger is the primary source and stays so.</p>
-<ul>
-<li>- <b>Skedda title suffix is ruled out on the evidence:</b> four lanes parse or match the Skedda title</li>
-</ul>
-<p>verbatim (<code>booking_sweep.py:5857</code> facilitator parse, <code>fbs_extension.py:47</code> title equality,</p>
-<p><code>host_sweep.py:216</code>, the seed write at <code>booking_sweep.py:1661</code>). Appending &quot;in 16:22 · out 18:30&quot;</p>
-<p>would break extension matching and facilitator resolution. If the times must be visible in</p>
-<p>Skedda, that is a separate ticket with its own field design, not a title hack.</p>
-<ul>
-<li>- <b>Registry drift found in passing:</b> <code>registry/jobs.json</code> still lists <code>job-1-alarm</code> owned by The</li>
-</ul>
-<p>Concierge with &quot;Booking Status Complete/Missed set&quot; — the retired job. Fix in the build PR.</p>
-
-<p><b>Resolved shape:</b> option 1 — board cells only, written by <code>board_status.py</code> from the panel</p>
-<p>ledger, no LLM, billing untouched.</p>
-
-<p><b>Purpose, restated by Junyan (same session):</b> the cells are the <b>durable record</b> for disputes.</p>
-<p>When a renter questions a charge or asks what happened at the studio two weeks ago, the desk needs</p>
-<p>to point at what the alarm panel recorded, per booking, without re-deriving it. The Timekeeper</p>
-<p>reading the panel live at billing time does not give that: the panel sources age out (the map&#x27;s</p>
-<p>&quot;Not yet specified&quot; entry: <code>door_events.py</code> keeps 72 h, <code>last_seen.py</code> keeps only the latest</p>
-<p>sighting, <code>panel_history.py</code> is Studio 901 only). After three days the board row is the only</p>
-<p>place the evidence survives.</p>
-
-<p><b>Requirements this adds to the build:</b></p>
+<p>owned local store (desk-store / the git mirror the data-sovereignty map chose), not a new</p>
+<p>Notion table — the retired Activity Log shows a Notion table is the wrong shape.</p>
 <ol>
-<li>1. Write the times <b>with the name and source</b> when the ledger carries them, e.g.</li>
+<li>3. <b>Retention.</b> Junyan&#x27;s stated need is &quot;two weeks prior&quot;. Propose 13 months (a full year of</li>
 </ol>
-<p><code>16:22 Jia Chian Lee (keypad)</code> / <code>18:30 Jia Chian Lee (keypad)</code> — the shape the 09-15/09-16</p>
-<p>hand-stamped rows already use. A time with no name is weak in a dispute.</p>
+<p>disputes plus one), append-only.</p>
 <ol>
-<li>2. Write <b>every</b> booking&#x27;s clocks, not only the ones that flip to Complete: a booking that ends</li>
+<li>4. <b>Who writes it.</b> The watchdog already has the events in hand every 5 minutes; a code append</li>
 </ol>
-<p><code>unresolved</code> still gets whatever the ledger saw. Blank means the panel saw nothing, and the row</p>
-<p>should say so (<code>no panel event</code>) rather than stay empty, so blank and unwritten are different.</p>
+<p>from there costs no tokens. The Doorman&#x27;s daily snapshot stays as the drift check.</p>
+
+<p>No LLM anywhere in this; the whole thing is copying what the panel already said into a place that</p>
+<p>does not forget.</p>
+
+<h2>Rulings 2026-09-19 (Junyan, in session)</h2>
+
 <ol>
-<li>3. Write once per event and never overwrite a filled cell — the record must not drift.</li>
-<li>4. The wider fog item (evidence expires at ~3 days) is now partly answered by this ticket: the</li>
+<li>1. <b>Scope: per studio too.</b> Every panel event, booking or not.</li>
+<li>2. <b>Where: the local store</b> (owned, not Notion).</li>
+<li>3. <b>Retention: 13 months</b>, append-only.</li>
+<li>4. <b>Keep the Doorman&#x27;s daily snapshot</b> as the drift check.</li>
+<li>5. <b>Condition:</b> assess whether there is enough storage before building.</li>
 </ol>
-<p>board row is the fold-into-durable step for arrival/departure. It does not cover door and</p>
-<p>motion events with no booking, which stays fog.</p>
 
-<p><b>2026-09-19 — build cut:</b> [150</b> (Junyan: &quot;go ahead and</p>
-<p>cut the build ticket&quot;). 146 closes when 150 has its first live day and the VPS transcript names</p>
-<p>the old writer.</p>
+<h2>Storage assessment (same session)</h2>
 
-<h2>Correction 2026-09-19 late — Hermes had already searched the VPS; the Concierge is cleared</h2>
+<p><b>The record itself is small.</b> Sizing from the panel&#x27;s own event rate: five studios, roughly</p>
+<p>20–60 arm/disarm/door/bypass/trouble events per studio per day at ~250 bytes per line as JSON</p>
+<p>(time, studio, event type, actor, sensor, source) is about 50–75 KB/day, <b>under 30 MB for 13</p>
+<p>months</b>. Even if every 5-minute watchdog read were stored as a full snapshot (5 studios × 288/day</p>
+<p>× ~300 B) it is ~430 KB/day, <b>~170 MB for 13 months</b>. Either fits on anything.</p>
 
-<p>Junyan had sent Hermes the task <code>arm-clock-writer-silent-20260918</code> on 09-18. Its report</p>
-<p>(Hermes mailbox 2026-09-19, 02:49Z, read-only, nothing changed) rules out the theory above:</p>
-<ul>
-<li>- <b>No VPS lane ever wrote the clocks.</b> Zero cron transcripts across all lanes and all dates</li>
-</ul>
-<p>contain &quot;Disarmed&quot;; zero of the 18 cron prompts instruct a clock write; no code in the</p>
-<p>desk-correspondence checkout writes the properties (<code>git log -S</code> across all history: never).</p>
-<ul>
-<li>- <b>The Concierge kept firing through the silence</b> (transcripts 09-17 18:23, 20:35, 22:29 and</li>
-</ul>
-<p>eight more on 09-18), so &quot;stopped when the Concierge stopped&quot; is false, and JOB 1&#x27;s canon</p>
-<p>retirement (09-13) predates the stop by three days with clocks still written after it.</p>
-<ul>
-<li>- <b>The source is healthy.</b> A live <code>studio_activity</code> read returns the named arrival for the</li>
-</ul>
-<p>very booking whose cells are blank (Teo Rivas 901 09-18, disarm 22:15:50Z). The panel knew;</p>
-<p>the board was never told. An ingest/write-path break, not a dead feed.</p>
-<ul>
-<li>- <b>Boundary confirmed:</b> last clock 527 Jia Chian Lee 16:22 / 18:30 on 09-16; first blank</li>
-</ul>
-<p>901 Nina Li 20:30. Two formats in the window (bare <code>HH:MM</code> on 09-14 / 09-16; the long</p>
-<p><code>… Toronto by Name (keypad)</code> on 09-15, which is the 143 session&#x27;s hand stamps).</p>
-<ul>
-<li>- Hermes points at the fbs-monitor / arm-state watchdog side but <b>could not cite a write</li>
-</ul>
-<p>line</b>, and this session&#x27;s Mac search found none there either. <b>The writer stays unnamed.</b></p>
+<p><b>The Mac does not have headroom, and that is the real finding.</b> <code>df</code> at 2026-09-19 21:xx ET:</p>
+<p>228 GB disk, <b>6.8 GB free</b>. The disk-space-watch task&#x27;s own note says the machine hit 3.5 GB free</p>
+<p>on 2026-08-15 and a cleanup reclaimed ~37 GB; five weeks later it is back near the edge. The</p>
+<p>record would not be what fills it, but a store that must never lose data should not live on a</p>
+<p>disk that is one cache regrowth from full. The existing <code>desk-store</code> (419 MB, the correspondence</p>
+<p>mirror) is on that same disk.</p>
 
-<p><b>What this changes: nothing about the fix.</b> <b>150</b></p>
-<p>gives the cells a code owner whoever the old writer was, and its write-once rule means a</p>
-<p>returning old writer cannot make the two fight over a filled cell. 146 closes on 150&#x27;s first</p>
-<p>live day; the &quot;name the writer&quot; half is closed as *unidentified after two independent</p>
-<p>searches*, recorded here so nobody spends a third session on it.</p>
-</div></details></details></div><div class="job"><div class="jnum">#150</div><div class="jhead"><span class="emoji">🗂️</span><h4>board_status.py stamps Disarmed / Armed on every board row from the panel ledger — the dispute record gets a code owner</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>board_status.py stamps Disarmed / Armed on every board row from the panel ledger — the dispute record gets a code owner</b></p><h2>Question</h2>
+<p><b>Recommendation:</b> the record&#x27;s primary copy lives on the VPS beside the event-gate (the watchdog</p>
+<p>and the door ledger already run there; the 13-month file is tens of MB), with the Mac <code>desk-store</code></p>
+<p>holding a git-mirrored copy the way correspondence is mirrored today. VPS free space is UNCHECKED</p>
+<p>from this session (production read refused) — one <code>df -h</code> on the host closes that. Separately, the</p>
+<p>Mac needs the cleanup again; the weekly disk-space-watch report is the place that names what grew.</p>
+
+<p><b>2026-09-19 — build cut:</b> <b>151</b> (Junyan: &quot;cut the build ticket</p>
+<p>for 149 too&quot;). 149 closes on 151&#x27;s seven-day acceptance.</p>
+
+<h2>2026-10-02 — unblocked</h2>
+
+<p><b>146</b> closed today, so <code>blocked-by</code> is cleared. 149 still closes</p>
+<p>on <b>151</b>&#x27;s seven-day acceptance.</p>
+</div></details></details></div><div class="job"><div class="jnum">#150</div><div class="jhead"><span class="emoji">🕰️</span><h4>A program writes each renter&#x27;s unlock and lock-up time on the board</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Built Sep 19, on the server Sep 20, writing for real since Sep 21. No AI, no new table, billing untouched</li><li>Most times are right: the daily watch matched 3 of 3, 1 of 1 and 3 of 3 on Sep 29, Sep 30 and Oct 1</li><li>Still open (checked Oct 2): three bookings carry the time of the renter before or after them (Natascha Sep 24, June Sep 26, Iqra Sep 27), and six bookings have a blank time</li><li>Closes when a fix stops it from picking up a neighbouring renter&#x27;s time, proven on a real back-to-back booking</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>board_status.py stamps Disarmed / Armed on every board row from the panel ledger — the dispute record gets a code owner</b></p><h2>Question</h2>
 
 <p>Build ticket cut from <b>146</b> on Junyan&#x27;s go-ahead, 2026-09-19.</p>
 <p>The board&#x27;s <code>Disarmed</code> / <code>Armed</code> cells are the desk&#x27;s durable record of when a renter came and</p>
@@ -500,6 +379,52 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>three lines against the panel, then append <code>BOARD_CLOCKS_MODE=live</code> to the host&#x27;s</p>
 <p><code>event-gate.env</code> (backed up, append-only, the documented root route) and recreate the</p>
 <p>service. That first live pass closes 146 and is 137&#x27;s check-2 evidence.</p>
+
+<h2>Close check 2026-10-02 — NOT MET, stays open</h2>
+
+<p>Read this turn: Desk Watch tally Section I (150 LIVE 09-29 3/3, 09-30 1/1, 10-01 3/3 match), the</p>
+<p>live board rows dated 09-21 to 10-01, and <code>board_status.py</code> on <code>origin/main</code> (<code>clock_stamps</code>).</p>
+
+<p>| Acceptance item | Verdict |</p>
+<p>|---|---|</p>
+<p>| Two days of shadow lines match the panel on three rows | <b>Superseded.</b> One evening of shadow (09-20, 3 lines, 2 confirmed, 1 unchecked); Junyan flipped <code>BOARD_CLOCKS_MODE=live</code> on 09-21 before a second day. Not counted against the close. |</p>
+<p>| Every 09-2x booking the panel saw carries both clocks, in format, written by the lane, none overwritten | <b>NOT MET</b> (below). |</p>
+<p>| 146 closes on the first live day; 137 check 2 evidence | <b>Met.</b> 146 closed 2026-10-02; 137 check 2 met 09-29. |</p>
+<p>| No Notion table, no LLM call, Timekeeper untouched | <b>Met</b> (no new table; code only; <code>overtime_sweep.py</code> not changed by this build). |</p>
+
+<p><b>What is missing, on the live board today:</b></p>
+
+<ol>
+<li>1. <b>Another renter&#x27;s time is on three rows</b> (write-once, so they stay wrong):</li>
+</ol>
+<ul>
+<li>- Natascha M 901 09-24 (<code>3e275032-81c4-8142-b422-f0a5de4608ff</code>): Armed <code>20:56 Sorina Colyn</code> (her own arm was 18:56 &quot;Armed Stay by Natascha M&quot;).</li>
+<li>- June P. 509B 09-26 (<code>3e675032-81c4-8168-b5cf-cedec2f625ca</code>): Disarmed <code>15:13 Chelly Li</code> (her own disarm 15:38:53).</li>
+<li>- Iqra Rafique 901 09-27 (<code>3e575032-81c4-8166-8881-d405cc764d9e</code>): Disarmed <code>11:00 Elzbieta Chernyak</code> (own 11:26:25), Armed <code>14:04 Aakanksha Patel</code> (next renter).</li>
+</ul>
+<p>The rule on <code>origin/main</code> still takes the <b>first keypad disarm from 30 min before the start</b>,</p>
+<p>so a previous renter&#x27;s disarm inside that lead can still be stamped. The 09-28 to 10-01 samples</p>
+<p>were clean, but no case of this shape was in them, so the clean run does not prove it fixed.</p>
+<ol>
+<li>2. <b>Complete rows with a blank cell</b> (neither a time nor <code>no panel event</code>):</li>
+</ol>
+<p>Avante Dance Company 527 09-21 Armed (<code>3e075032-81c4-8138-a885-dedae308ad62</code>); Janet Zamora 901</p>
+<p>09-21 Armed (<code>3e075032-81c4-812a-a8c9-ec6bd8e25bd4</code>); Caryl CUIZON 693 09-23 Disarmed</p>
+<p>(<code>3e275032-81c4-818e-ac39-c73668259721</code>); Caryl CUIZON 693 09-24 both</p>
+<p>(<code>3e275032-81c4-8107-8d5c-e93bc8047147</code>); Thea Giggster 509B 09-26 both</p>
+<p>(<code>3e475032-81c4-814c-9e68-dd652df6f632</code>, before the ledger covered 509B; #746 targets this</p>
+<p>shape going forward). Jia Chian Lee 509B 09-25 Missed Booking, both blank</p>
+<p>(<code>3e375032-81c4-8168-be95-f5b23379feb6</code>).</p>
+<ol>
+<li>3. <b>Off-format cells written by hand, not the lane:</b> Zoe Young 509B 09-21 Disarmed</li>
+</ol>
+<p><code>none (509B already disarmed since 09-20 09:56)</code>; Caryl 693 09-22 Armed <code>23:35 keypad (Angus</p>
+<p>Dirnbeck)</code>; Stephanie Billones 509B 09-25 bare <code>15:19</code> / <code>16:28</code> (Desk Sort). Not a lane fault,</p>
+<p>listed so the count is honest.</p>
+
+<p><b>To close:</b> a fix (or a ruling) for item 1 so a neighbouring renter&#x27;s disarm or arm is never</p>
+<p>stamped, proven on a real back-to-back booking; then a call on whether the item-2 blanks are</p>
+<p>acceptable (ledger gaps before 09-27) or need a backfill. Nothing was changed this turn.</p>
 </div></details></details></div><div class="job"><div class="jnum">#153</div><div class="jhead"><span class="emoji">🗂️</span><h4>Shrink the Concierge canon — history out, receiver rules out, one pass-runner section</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Shrink the Concierge canon — history out, receiver rules out, one pass-runner section</b></p><h2>Task</h2>
 
 <p>Ruling 2026-09-21 (Junyan, after <b>141</b> step 2): the VPS cron</p>
@@ -2513,7 +2438,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p><code>scripts/phase4_measure.py</code> (earliest pass: 7 days after the fix). Add the daily read to the</p>
 <p><code>desk-watch</code> task, per the map Notes.</p>
 </div></details></details></div></div>
-<div class="col"><h3>⏳ Waiting<span class="cnt">10</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
+<div class="col"><h3>⏳ Waiting<span class="cnt">9</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
 <p><b>The end-state is already ruled</b> (<b>018</b> §5, Junyan: *&quot;because the</p>
 <p>responder&#x27;s scope is so narrow I&#x27;m okay folding it in — worst case scenario I would just draft the</p>
@@ -2885,82 +2810,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>A ruling recorded on this map. And in the same change, <code>concierge-orchestration.md</code> stops</p>
 <p>describing the Morning Text as a live reader — that correction is due now regardless of the</p>
 <p>ruling, because it is currently false. Not &quot;the loop probably covers it&quot;.</p>
-</div></details></details></div><div class="job"><div class="jnum">#149</div><div class="jhead"><span class="emoji">🗂️</span><h4>A durable record of what the alarm panel saw — triggers, bypasses, troubles — that survives past three days</h4></div><span class="pill p-wait">needs 146 first</span> <details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A durable record of what the alarm panel saw — triggers, bypasses, troubles — that survives past three days</b></p><h2>Question</h2>
-
-<p>Junyan, 2026-09-19 (while ruling <b>146</b>): the arrival/departure</p>
-<p>cells exist so the desk can answer a dispute two weeks later. He wants the same for <b>alarm</p>
-<p>triggers, bypassed sensors, troubles and the like</b> — &quot;all of that info&quot;.</p>
-
-<p><b>What already sees these events (so this is possible without new sensors):</b> the alarm watchdog</p>
-<p>on Cloud Run reads every panel every 5 minutes and acts on sirens, stuck bypasses and troubles;</p>
-<p>the event-gate keeps door events for 72 h and a clean panel history for Studio 901 only; the</p>
-<p>Doorman logs one panel-state snapshot per studio per morning to the 🚪 Alarm Activity Log (last</p>
-<p>row 2026-09-04). <b>What is missing is a durable store</b>: every one of those sources forgets within</p>
-<p>about three days, and the Activity Log holds snapshots, not events.</p>
-
-<p><b>Prior ruling to respect (map, early September):</b> Junyan closed the &quot;record every arm/disarm to</p>
-<p>Notion&quot; job — the live board already shows who is in a room, three feeds cover the rest, a fourth</p>
-<p>Notion table would go against the move off Notion, and nobody would read it. That ruling was about</p>
-<p>a <i>real-time</i> log nobody reads. This ask is different: an <i>after-the-fact</i> record someone reads</p>
-<p>only when there is a dispute. The two can both be right.</p>
-
-<p><b>Decide:</b></p>
-<ol>
-<li>1. <b>Scope.</b> Per booking (a &quot;Panel events&quot; block on the board row, written by the same sweep that</li>
-</ol>
-<p>stamps the clocks: triggers, bypasses, troubles inside the booking window) — cheap, code-only,</p>
-<p>no new table. Or per studio, all events, booking or not (door opened at 3 am with nobody</p>
-<p>booked) — needs its own store.</p>
-<ol>
-<li>2. <b>Where it lives.</b> The board row for the per-booking part. For the studio-level part, the</li>
-</ol>
-<p>owned local store (desk-store / the git mirror the data-sovereignty map chose), not a new</p>
-<p>Notion table — the retired Activity Log shows a Notion table is the wrong shape.</p>
-<ol>
-<li>3. <b>Retention.</b> Junyan&#x27;s stated need is &quot;two weeks prior&quot;. Propose 13 months (a full year of</li>
-</ol>
-<p>disputes plus one), append-only.</p>
-<ol>
-<li>4. <b>Who writes it.</b> The watchdog already has the events in hand every 5 minutes; a code append</li>
-</ol>
-<p>from there costs no tokens. The Doorman&#x27;s daily snapshot stays as the drift check.</p>
-
-<p>No LLM anywhere in this; the whole thing is copying what the panel already said into a place that</p>
-<p>does not forget.</p>
-
-<h2>Rulings 2026-09-19 (Junyan, in session)</h2>
-
-<ol>
-<li>1. <b>Scope: per studio too.</b> Every panel event, booking or not.</li>
-<li>2. <b>Where: the local store</b> (owned, not Notion).</li>
-<li>3. <b>Retention: 13 months</b>, append-only.</li>
-<li>4. <b>Keep the Doorman&#x27;s daily snapshot</b> as the drift check.</li>
-<li>5. <b>Condition:</b> assess whether there is enough storage before building.</li>
-</ol>
-
-<h2>Storage assessment (same session)</h2>
-
-<p><b>The record itself is small.</b> Sizing from the panel&#x27;s own event rate: five studios, roughly</p>
-<p>20–60 arm/disarm/door/bypass/trouble events per studio per day at ~250 bytes per line as JSON</p>
-<p>(time, studio, event type, actor, sensor, source) is about 50–75 KB/day, <b>under 30 MB for 13</p>
-<p>months</b>. Even if every 5-minute watchdog read were stored as a full snapshot (5 studios × 288/day</p>
-<p>× ~300 B) it is ~430 KB/day, <b>~170 MB for 13 months</b>. Either fits on anything.</p>
-
-<p><b>The Mac does not have headroom, and that is the real finding.</b> <code>df</code> at 2026-09-19 21:xx ET:</p>
-<p>228 GB disk, <b>6.8 GB free</b>. The disk-space-watch task&#x27;s own note says the machine hit 3.5 GB free</p>
-<p>on 2026-08-15 and a cleanup reclaimed ~37 GB; five weeks later it is back near the edge. The</p>
-<p>record would not be what fills it, but a store that must never lose data should not live on a</p>
-<p>disk that is one cache regrowth from full. The existing <code>desk-store</code> (419 MB, the correspondence</p>
-<p>mirror) is on that same disk.</p>
-
-<p><b>Recommendation:</b> the record&#x27;s primary copy lives on the VPS beside the event-gate (the watchdog</p>
-<p>and the door ledger already run there; the 13-month file is tens of MB), with the Mac <code>desk-store</code></p>
-<p>holding a git-mirrored copy the way correspondence is mirrored today. VPS free space is UNCHECKED</p>
-<p>from this session (production read refused) — one <code>df -h</code> on the host closes that. Separately, the</p>
-<p>Mac needs the cleanup again; the weekly disk-space-watch report is the place that names what grew.</p>
-
-<p><b>2026-09-19 — build cut:</b> <b>151</b> (Junyan: &quot;cut the build ticket</p>
-<p>for 149 too&quot;). 149 closes on 151&#x27;s seven-day acceptance.</p>
 </div></details></details></div><div class="job"><div class="jnum">#151</div><div class="jhead"><span class="emoji">🗂️</span><h4>Panel event ledger — every alarm trigger, bypass, trouble and arm/disarm, per studio, kept 13 months in the local store</h4></div><span class="pill p-wait">needs 150 first</span> <details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Panel event ledger — every alarm trigger, bypass, trouble and arm/disarm, per studio, kept 13 months in the local store</b></p><h2>Question</h2>
 
 <p>Build ticket cut from <b>149</b> on Junyan&#x27;s go-ahead, 2026-09-19.</p>
@@ -3118,6 +2967,11 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Files are in <code>origin/main</code> under <code>panel-ledger/&lt;studio&gt;/2026-09.jsonl</code> (mirror working). Ledger is live.</p>
 <p>Still open: GitHub Actions secrets for the twin workflow (Junyan&#x27;s call); the per-booking &quot;Panel events&quot;</p>
 <p>block (needs a Notion property); bypass/trouble lines wait on 152.</p>
+
+<h2>2026-10-02 — still blocked on 150</h2>
+
+<p><b>150</b>&#x27;s close check failed today (wrong-renter stamps and</p>
+<p>blank cells on the board), so <code>blocked-by: [150]</code> stays. The ledger itself is live (09-20 first append).</p>
 </div></details></details></div><div class="job"><div class="jnum">#152</div><div class="jhead"><span class="emoji">🗂️</span><h4>alarm-mcp exposes bypassed sensors and troubles over HTTP so the panel ledger can record them</h4></div><span class="pill p-wait">needs 151 first</span> <details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>alarm-mcp exposes bypassed sensors and troubles over HTTP so the panel ledger can record them</b></p><h2>Question</h2>
 
 <p>Cut from <b>151</b> while building it (2026-09-19). Junyan&#x27;s ruling</p>
@@ -3633,6 +3487,238 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- Junyan asked 10-02 &quot;check did it read it&quot;: it did.</li>
 </ul>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#146</span><span class="emoji">⏱️</span><span class="done-title">The board stopped writing down when renters came and left</span><span class="done-date">2026-10-02</span></summary><div class="done-body"><ul class="plain-bullets"><li>Since Sep 16 evening, the &#x27;unlocked at&#x27; and &#x27;locked at&#x27; times on each booking were blank. Two searches never found what used to fill them in</li><li>Junyan: we need these times to settle a charge or a question weeks later. So a program now fills them in from the alarm record (ticket 150)</li><li>CLOSED Oct 2. The times are written again since Sep 21, and the daily watch matched them to the alarm 3 of 3, 1 of 1 and 3 of 3 on Sep 29, Sep 30 and Oct 1</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>The board&#x27;s Disarmed / Armed clocks stopped on 2026-09-16 16:30 and nobody knows what wrote them</b></p><h2>Question</h2>
+
+<p>Found 2026-09-19 while re-reading <b>137</b>&#x27;s close checks.</p>
+<p>Every 🛎️ FBS AI Support row dated 09-17 onward has blank <code>Disarmed</code> and <code>Armed</code> cells; rows up to</p>
+<p>09-16 14:45 carry them. dc-canon PR #347 (merged 09-18 23:01 ET) records the stop time as</p>
+<p><b>2026-09-16 16:30</b> and says &quot;their writer was never found&quot;. No file in <code>dc-canon/services/event-gate</code></p>
+<p>or <code>fbs-monitor</code> writes those two properties; <code>fbs-monitor/build.py:1318</code> only reads them as a</p>
+<p>fallback, and <code>board_fields.py:57</code> reads <code>Disarmed</code> for the attendance lane.</p>
+
+<p>Consequence: the attendance card path (143) fired on &quot;no disarm&quot; for every booking since — 13 cards</p>
+<p>on 09-17, 7 on 09-18, 8 on 09-19 — all attended renters. PR #347 moved the EOB check onto the panel</p>
+<p>ledger, so the cards should thin from 09-19 on, but the cells themselves are still dead and two</p>
+<p>readers still trust them.</p>
+
+<p>Decide one of two things:</p>
+<ul>
+<li>- (a) <b>Find and restore the writer.</b> Candidates outside the two repos read here: an Agent Fleet</li>
+</ul>
+<p>lane, a Codex automation (<code>~/.codex/automations/</code>), a Hermes job, or a retired Concierge step that</p>
+<p>wrote the cells by hand (JOB 1 Step 4 was retired from canon on 09-13 — the same week). Check the</p>
+<p>Notion page history on one 09-16 row for the editor&#x27;s name; that names the writer in one read.</p>
+<ul>
+<li>- (b) <b>Retire the cells.</b> If the writer was the Concierge (retired 09-13 by design), the cells are</li>
+</ul>
+<p>a dead surface: remove the <code>fbs-monitor</code> fallback and the <code>board_fields.py</code> read, and let the</p>
+<p>attendance lane read the panel ledger only (as #347 already does for EOB).</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- The writer is named with evidence (page history or a log line), and either writes again with a</li>
+</ul>
+<p>09-19-or-later row showing a clock, or is declared retired and both readers are removed.</p>
+<ul>
+<li>- No <code><b>attend:</code> card fires on a booking whose renter&#x27;s keypad disarm is in the panel ledger</li>
+</ul>
+<p>(spot-check three cards after the change).</p>
+<ul>
+<li>- One line on 137 saying which way this went, so its three-day clock can restart.</li>
+</ul>
+
+<h2>Progress 2026-09-19 evening — writer narrowed, not named; the stop time was wrong</h2>
+
+<p><b>Corrected stop time.</b> The cells were still written on 09-16 after 16:30: Jia Chian Lee 527</p>
+<p>16:30–18:30 carries <code>Disarmed 16:22 / Armed 18:30 / Closed by Renter</code>; Simona Horova 509A 16:00</p>
+<p>carries <code>Armed 17:08 Simona Horova (keypad)</code>. Nina Li 901 20:30–22:30 has nothing, and nothing after.</p>
+<p>So the writer stopped between <b>~18:40 and 20:30 Toronto on 09-16</b>, not 16:30.</p>
+
+<p><b>Who edited the rows (Notion, edited-by filter):</b> every clock-bearing 09-16 row was edited by</p>
+<p>the <b>&quot;Dance Annex Desk CLI&quot;</b> bot only — not Junyan, not the Notion MCP bot (Claude sessions), not</p>
+<p>Zapier/Make/IFTTT/Day Hub/Deck/Send Engine. That token is the shared one every code lane and every</p>
+<p>Hermes lane on the VPS uses, so it names a <i>program on the VPS or the Mac</i>, not a person and not a</p>
+<p>hand session. Page history itself is not exposed by the Notion connector, and the browser pane is</p>
+<p>not signed in to Notion, so the edit-by-edit trail was not read.</p>
+
+<p><b>What does NOT write the cells (read, not assumed):</b> every <code>.py/.js/.ts/.sh</code> under dc-canon</p>
+<p>(<code>git log -S Disarmed</code> since 08-10 shows only the job1_flags add/remove and doc edits), fbs-monitor</p>
+<p>(reads them as a fallback only, <code>build.py:1318</code>), Codex/AlarmMonitor-NotionBridge (launch agent</p>
+<p><code>ca.danceannex.doorman.activity-sync</code> is <b>disabled</b>, log ends 07-13), dance-annex-os (a local</p>
+<p>dashboard, crash-looping), every Mac scheduled task (<code>live-desk</code> dead since 06-30, <code>virtual-front-desk</code></p>
+<p>/ <code>fbs-adt-sweep</code> retired, <code>the-doorman</code> local copy disabled 07-20), the Codex Concierge automation</p>
+<p>(PAUSED), and every canon page except the retired <code>job-1-adt-alarm.md</code>, whose Step 4 was the only</p>
+<p>instruction anywhere to stamp <code>Disarmed</code>/<code>Armed</code> — in exactly the <code>HH:MM</code> shape the cells carry.</p>
+
+<p><b>Conclusion.</b> The writer was an LLM lane on the VPS using the shared token — on the evidence, the</p>
+<p>Hermes Concierge still running the retired JOB 1 Step 4 by habit after the 09-13 canon retirement</p>
+<p>(the 09-16 and 09-17 rolling reports do not mention the writes, which is how a habit looks in a</p>
+<p>report). It stopped the evening the Concierge Closeout split was installed on the VPS (Hermes</p>
+<p>task 2026-09-16, commit cbc8eb99 21:26 ET) and the day the Concierge&#x27;s runtime was cut short 13</p>
+<p>passes in a row. The proof is one read Junyan can make and this session could not (production</p>
+<p>read refused): the Hermes cron transcripts for 09-16 under <code>cron/output/&lt;concierge-cron-id&gt;/</code>,</p>
+<p>grep <code>Disarmed</code>. Whichever pass wrote <code>16:22</code> for Jia Chian Lee names the writer.</p>
+
+<p><b>Recommendation for the ruling:</b> (b) retire the cells. Their only writer was a retired Concierge</p>
+<p>step; the panel ledger (#347) is now the attendance source; <code>fbs-monitor</code> and <code>board_fields.py</code></p>
+<p>should stop reading them. If Junyan wants the human-readable clocks back, <code>board_status.py</code> can</p>
+<p>stamp them from the ledger when it writes Complete — a small change, and then the cells have a</p>
+<p>code owner for the first time.</p>
+
+<h2>Ruling 2026-09-19 (Junyan, in session) — the times come back, with a code owner</h2>
+
+<p>Junyan: *&quot;We need to be able to reference when people come and go out of the studio. We used to</p>
+<p>have it written directly on the Skedda bookings themselves before.&quot;* So option (b) (retire the</p>
+<p>cells) is <b>refused</b>. The arrival and departure times are a desk record that must exist and be</p>
+<p>readable per booking, not a cosmetic column.</p>
+
+<p><b>Shape (proposed, not yet built):</b> <code>board_status.py</code> already reads the panel ledger</p>
+<p>(<code>overtime_sweep.door_history</code>) for every booking on the 10-minute sweep and already writes</p>
+<p><code>In Studio</code> and <code>Complete</code>. It stamps the board&#x27;s <code>Disarmed</code> / <code>Armed</code> cells from the same ledger</p>
+<p>read — first named keypad disarm in the booked studio from start − 30 min, and the arm-out that</p>
+<p>closes the window — in the same write as the status flip, and only when the ledger actually</p>
+<p>carries the event (unknown stays blank; never inferred). That gives the cells their first code</p>
+<p>owner and ends the three-day gap for good.</p>
+
+<p><b>Open for Junyan before build:</b> where the times should live —</p>
+<ol>
+<li>1. the board cells only (what the Concierge did for months), or</li>
+<li>2. also appended to the Skedda booking title, the way it used to be written on the booking itself</li>
+</ol>
+<p>(<code>edit_booking</code> can write <code>title</code>; nothing else on a booking), or</p>
+<ol>
+<li>3. both.</li>
+</ol>
+<p>Skedda&#x27;s title is the only field a program can write, and a title suffix survives moves and shows</p>
+<p>in Skedda&#x27;s own history, which is the &quot;on the booking itself&quot; reference Junyan described.</p>
+
+<p>Acceptance is amended: the writer is named (this ticket&#x27;s evidence plus the VPS transcript grep),</p>
+<p>the cells are written by <code>board_status.py</code> on the next Complete, and a 09-20-or-later row shows</p>
+<p>both clocks.</p>
+
+<p><b>Two more factors (Junyan, same session): token cost, and overtime billing.</b></p>
+<ul>
+<li>- <b>Tokens.</b> The proposed writer is <code>board_status.py</code>, plain code on the 10-minute sweep. It costs</li>
+</ul>
+<p>no tokens: the ledger read it needs already happens every pass. The old writer was an LLM pass,</p>
+<p>which is exactly what made it both expensive and unreliable.</p>
+<ul>
+<li>- <b>Overtime billing.</b> The Timekeeper is code too (<code>overtime_sweep.py</code>, registry owner &quot;The</li>
+</ul>
+<p>Timekeeper&quot;) and reads the panel ledger directly (<code>door_history</code>, lines 307–504), never the</p>
+<p>board cells. So the cells are a <i>reading</i> copy for humans and the Concierge; billing evidence is</p>
+<p>unaffected whether the cells are right, wrong or blank. Nothing here should make billing read</p>
+<p>the cells — the ledger is the primary source and stays so.</p>
+<ul>
+<li>- <b>Skedda title suffix is ruled out on the evidence:</b> four lanes parse or match the Skedda title</li>
+</ul>
+<p>verbatim (<code>booking_sweep.py:5857</code> facilitator parse, <code>fbs_extension.py:47</code> title equality,</p>
+<p><code>host_sweep.py:216</code>, the seed write at <code>booking_sweep.py:1661</code>). Appending &quot;in 16:22 · out 18:30&quot;</p>
+<p>would break extension matching and facilitator resolution. If the times must be visible in</p>
+<p>Skedda, that is a separate ticket with its own field design, not a title hack.</p>
+<ul>
+<li>- <b>Registry drift found in passing:</b> <code>registry/jobs.json</code> still lists <code>job-1-alarm</code> owned by The</li>
+</ul>
+<p>Concierge with &quot;Booking Status Complete/Missed set&quot; — the retired job. Fix in the build PR.</p>
+
+<p><b>Resolved shape:</b> option 1 — board cells only, written by <code>board_status.py</code> from the panel</p>
+<p>ledger, no LLM, billing untouched.</p>
+
+<p><b>Purpose, restated by Junyan (same session):</b> the cells are the <b>durable record</b> for disputes.</p>
+<p>When a renter questions a charge or asks what happened at the studio two weeks ago, the desk needs</p>
+<p>to point at what the alarm panel recorded, per booking, without re-deriving it. The Timekeeper</p>
+<p>reading the panel live at billing time does not give that: the panel sources age out (the map&#x27;s</p>
+<p>&quot;Not yet specified&quot; entry: <code>door_events.py</code> keeps 72 h, <code>last_seen.py</code> keeps only the latest</p>
+<p>sighting, <code>panel_history.py</code> is Studio 901 only). After three days the board row is the only</p>
+<p>place the evidence survives.</p>
+
+<p><b>Requirements this adds to the build:</b></p>
+<ol>
+<li>1. Write the times <b>with the name and source</b> when the ledger carries them, e.g.</li>
+</ol>
+<p><code>16:22 Jia Chian Lee (keypad)</code> / <code>18:30 Jia Chian Lee (keypad)</code> — the shape the 09-15/09-16</p>
+<p>hand-stamped rows already use. A time with no name is weak in a dispute.</p>
+<ol>
+<li>2. Write <b>every</b> booking&#x27;s clocks, not only the ones that flip to Complete: a booking that ends</li>
+</ol>
+<p><code>unresolved</code> still gets whatever the ledger saw. Blank means the panel saw nothing, and the row</p>
+<p>should say so (<code>no panel event</code>) rather than stay empty, so blank and unwritten are different.</p>
+<ol>
+<li>3. Write once per event and never overwrite a filled cell — the record must not drift.</li>
+<li>4. The wider fog item (evidence expires at ~3 days) is now partly answered by this ticket: the</li>
+</ol>
+<p>board row is the fold-into-durable step for arrival/departure. It does not cover door and</p>
+<p>motion events with no booking, which stays fog.</p>
+
+<p><b>2026-09-19 — build cut:</b> [150</b> (Junyan: &quot;go ahead and</p>
+<p>cut the build ticket&quot;). 146 closes when 150 has its first live day and the VPS transcript names</p>
+<p>the old writer.</p>
+
+<h2>Correction 2026-09-19 late — Hermes had already searched the VPS; the Concierge is cleared</h2>
+
+<p>Junyan had sent Hermes the task <code>arm-clock-writer-silent-20260918</code> on 09-18. Its report</p>
+<p>(Hermes mailbox 2026-09-19, 02:49Z, read-only, nothing changed) rules out the theory above:</p>
+<ul>
+<li>- <b>No VPS lane ever wrote the clocks.</b> Zero cron transcripts across all lanes and all dates</li>
+</ul>
+<p>contain &quot;Disarmed&quot;; zero of the 18 cron prompts instruct a clock write; no code in the</p>
+<p>desk-correspondence checkout writes the properties (<code>git log -S</code> across all history: never).</p>
+<ul>
+<li>- <b>The Concierge kept firing through the silence</b> (transcripts 09-17 18:23, 20:35, 22:29 and</li>
+</ul>
+<p>eight more on 09-18), so &quot;stopped when the Concierge stopped&quot; is false, and JOB 1&#x27;s canon</p>
+<p>retirement (09-13) predates the stop by three days with clocks still written after it.</p>
+<ul>
+<li>- <b>The source is healthy.</b> A live <code>studio_activity</code> read returns the named arrival for the</li>
+</ul>
+<p>very booking whose cells are blank (Teo Rivas 901 09-18, disarm 22:15:50Z). The panel knew;</p>
+<p>the board was never told. An ingest/write-path break, not a dead feed.</p>
+<ul>
+<li>- <b>Boundary confirmed:</b> last clock 527 Jia Chian Lee 16:22 / 18:30 on 09-16; first blank</li>
+</ul>
+<p>901 Nina Li 20:30. Two formats in the window (bare <code>HH:MM</code> on 09-14 / 09-16; the long</p>
+<p><code>… Toronto by Name (keypad)</code> on 09-15, which is the 143 session&#x27;s hand stamps).</p>
+<ul>
+<li>- Hermes points at the fbs-monitor / arm-state watchdog side but <b>could not cite a write</li>
+</ul>
+<p>line</b>, and this session&#x27;s Mac search found none there either. <b>The writer stays unnamed.</b></p>
+
+<p><b>What this changes: nothing about the fix.</b> <b>150</b></p>
+<p>gives the cells a code owner whoever the old writer was, and its write-once rule means a</p>
+<p>returning old writer cannot make the two fight over a filled cell. 146 closes on 150&#x27;s first</p>
+<p>live day; the &quot;name the writer&quot; half is closed as *unidentified after two independent</p>
+<p>searches*, recorded here so nobody spends a third session on it.</p>
+
+<h2>CLOSED 2026-10-02 — the cells have a code owner and are written again</h2>
+
+<p>Checked against the live board this turn (🛎️ FBS AI Support, data source</p>
+<p><code>36475032-81c4-80d6-b18a-000b8d6f9421</code>, rows dated 09-21 to 10-01).</p>
+
+<ul>
+<li>- <b>Writer.</b> The old writer stays <i>unidentified after two independent searches</i> (this ticket&#x27;s</li>
+</ul>
+<p>09-19 Mac search and Hermes&#x27;s VPS search, <code>arm-clock-writer-silent-20260918</code>). Replaced by</p>
+<p><code>board_status.py</code> (<b>150</b>), which writes again: Desk Watch</p>
+<p>2026-09-21 saw the first <code>clocks: stamped</code> line (Amandeep Kaur 693, <code>no panel event</code>), and the</p>
+<p>board now shows 09-20-or-later rows with both clocks, e.g. Harper Drzymala-Bokitch 509A 09-21</p>
+<p><code>10:09 … (keypad)</code> / <code>11:38 … (keypad)</code>, Khalid Roach-McLeod 527 09-22 <code>17:46</code> / <code>22:14</code>, and</p>
+<p>every 09-28 to 09-30 Complete row.</p>
+<ul>
+<li>- <b>No false <code><b>attend:</code> card on a renter with a named keypad disarm.</b> Met through</li>
+</ul>
+<p>[137</b>, closed 2026-10-02 after three clean Desk Watch days</p>
+<p>(09-28, 09-29, 09-30: false cards 0).</p>
+<ul>
+<li>- <b>One line on 137.</b> 137 records it (Check 2 MET 2026-09-29: &quot;<code>BOARD_CLOCKS_MODE</code> is live on the</li>
+</ul>
+<p>host (146&#x27;s close evidence)&quot;), and 137 is closed.</p>
+<ul>
+<li>- Desk Watch Section I, 150 LIVE: 09-29 3/3, 09-30 1/1, 10-01 3/3 stamps matched the panel.</li>
+</ul>
+
+<p>What is still wrong with the cells (wrong-renter stamps, a few blanks) is 150&#x27;s acceptance, not</p>
+<p>this ticket&#x27;s: see 150&#x27;s 2026-10-02 close check.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#158</span><span class="emoji">🩹</span><span class="done-title">The attendance program gives up on people who did show up</span><span class="done-date">2026-10-02</span></summary><div class="done-body"><ul class="plain-bullets"><li>Cut Sep 29 from 137. The program now marks most bookings done and says which. That part works</li><li>But every day since Sep 24 it has got stuck on one or two renters who clearly came. The alarm shows them unlocking and locking up</li><li>When stuck, it either writes a wrong &#x27;did they come?&#x27; card, or, worse, says nothing and the booking sits open</li><li>Fix both: let it trust the renter&#x27;s own unlock and lock, and make sure a stuck booking always gets a card</li><li>After that ships, 137 needs three quiet mornings in a row to close</li><li>CLOSED Oct 2. Shipped Sep 30. All three stuck bookings now read done, and 137 got its three quiet mornings</li><li>Sep 29: found both causes. When the next renter unlocked right after someone left, the program threw away the first renter&#x27;s visit. It also ignored a host who unlocks under their own name</li><li>The &#x27;says nothing&#x27; part was the daily watch looking in the wrong place. Each stuck booking did get a to-do row, on the Fixer&#x27;s list. The watch now checks there too</li><li>Also fixed: the &#x27;did they come?&#x27; card no longer fires before a booking starts (Makiko, Sep 28) or right after someone unlocks (Desiree, Sep 26)</li><li>Fix is pull request 706, tested on the real cases. Waiting for Junyan to merge and send it to the server. Thea&#x27;s booking is fixed by pull request 705, merged Sep 29</li><li>Sep 30: merged and on the server (3:50pm UTC). Next: three quiet mornings in a row from the daily watch closes 137</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>attendance errors on attended bookings leave them silent or carded wrong — 137&#x27;s clean-day clock never gets past day 0</b></p><h2>Question</h2>
 
 <p>Cut 2026-09-29 from <b>137</b>. Checks 1, 2 and 3 are met. Check 4</p>
@@ -20550,5 +20636,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-10-02 04:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-10-02 06:21 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
