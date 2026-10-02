@@ -1277,6 +1277,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>1AP/AAP allowance receipts move from the renter&rsquo;s Skedda text to Notion<span class="kind">EVENT-GATE plan_receipts.py, plan_allowance_sweep, plan_allowance_receiver, move_sweep &middot; SKEDDA-MCP plan_allowance.settle receipts / receipt_store &middot; NOTION 🧾 Plan Allowance Receipts (PLAN_RECEIPTS_DS) &middot; desk-correspondence #822, skedda-cli #35 &middot; PRs open, waiting on merge, deploys and enable-plan-receipts.sh</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-02 (d14): &ldquo;plan the move to notion&rdquo;, after d13 &ldquo;stop putting notes in skedda descriptions&rdquo;.</p>
+      <p><strong>Route change.</strong> The receiver files the receipt (pending) in Notion before the Skedda write, passes the month&rsquo;s verified receipts to skedda-mcp <code>/plan-allowance</code> with <code>receipt_store=notion</code> (no activity write), and marks the row verified after the read-back. The move lane counts a logged receipt as settled.</p>
+      <p><strong>Failure modes.</strong> A Notion read error stops the allowance pass (fail closed) and makes the move lane read the booking as unknown. Two verified rows for one booking stop the count. Old text receipts are read as a fallback until <code>plan_receipt_cleanup.py</code> (Junyan&rsquo;s OK) removes them. <code>PLAN_RECEIPTS_DS</code> unset = old behaviour.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>QuickBooks connects straight to event-gate (no Zapier): invoice log, paid log, and the Record payment write<span class="kind">EVENT-GATE qbo.py, /qbo/connect, /qbo/callback, /qbo/webhook, /qbo/payment, /qbo/status, /qbo/backfill &middot; hosting/qbo/set-qbo-keys.sh &middot; DECK src/reconcile.js &middot; NOTION 🧾 QBO Invoices, 🧾 QBO Payments &middot; desk-correspondence #819 &middot; deck-app #201 &middot; open, waiting on Junyan (Intuit app, merge, deploy, keys, Connect)</span></h3></summary>
       <p><strong>Why.</strong> Junyan, 2026-10-02: &ldquo;d71 option 1, walk me through the setup&rdquo;. Zapier&rsquo;s free plan has no QuickBooks, so the Zapier design (entry below) is retired, and the live <code>qbo-paid-invoice-to-notion</code> workflow likely stops when the Zapier trial ends.</p>
       <p><strong>Route change.</strong> QuickBooks Invoice or Payment webhook (Intuit HMAC) &rarr; event-gate <code>/qbo/webhook</code> &rarr; re-read from QuickBooks &rarr; 🧾 QBO Invoices row updated; paid in full &rarr; 🧾 QBO Payments row (replaces the Zapier feed for the chase sweep and Paid by). First Connect copies every open invoice. Deck Record payment on a QBO card &rarr; event-gate <code>/qbo/payment</code> (gate token plus a Deck-signed owner receipt; the Action must already carry the owner&rsquo;s line) &rarr; QuickBooks Create Payment with <code>requestid</code>.</p>
