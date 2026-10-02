@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a><a class="tabtab" href="messages.html">💬 Messages</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-09-30 15:27 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-02 04:09 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,486 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">6</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">23</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">22</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">10</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">117</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">119</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">6</span></h3><div class="job"><div class="jnum">#137</div><div class="jhead"><span class="emoji">🧹</span><h4>The last leftover chore becomes a program that spots the work and hands it over</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Sep 11: Junyan ruled the program finds the booking, the thinking robot decides. Built the same day, never switched on</li><li>Sep 13: a different program took over the whole chore and was allowed to mark a renter as a no-show by itself. The old chore was cut from the robot&#x27;s list before anyone saw the new program work</li><li>Sep 14/15: Junyan took that back. A program may mark &#x27;in studio&#x27; and &#x27;done&#x27;. A no-show is never marked by a program: it writes a card, the Ops Lead reads it, and once the &#x27;we missed you&#x27; text is queued the job is done</li><li>Checked on the server: the new program is running, reads 2 bookings a pass, has written nothing. Both bookings had no arrival on record, so refusing was right</li><li>Sep 16: the card path (143) and the lock fix (144) are both done and live. Eleven cards have been written; every one was worked. None was a true no-show</li><li>Still open. Two checks left: the program has not yet been seen marking a booking done by itself (it keeps refusing because the alarm read looks incomplete), and the daily watch is on day 1 of 3 quiet days</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
-
-<p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
-<p><b>093</b> on the assumption that the FAST-TRACK retirement and the</p>
-<p>JOB 1 remainder deletion were one canon pass. They are not: FAST-TRACK&#x27;s owners were all live and</p>
-<p>seen acting; the JOB 1 remainder&#x27;s are not.</p>
-
-<p><b>The remainder</b> (<code>concierge-orchestration.md</code> step 5, <code>job-1-adt-alarm.md</code> Steps 4 / 4.5 / 4.7 / 5):</p>
-<p>the judgment half of <code>Booking Status</code> — <code>Missed Booking</code> (multi-studio read, continuity-chain rule),</p>
-<p>arrival-without-departure, yesterday&#x27;s stragglers and the end-time completeness sweep — the</p>
-<p>pre-send EOB cancel for a likely no-show (4.7), and the &quot;Complete + PBF Unsent next day&quot; flag (5).</p>
-
-<p><b>What is observed today, and what is not:</b></p>
-
-<ul>
-<li>- <code>fbs-monitor/build.py sync_booking_status()</code> (every ~15 min) flips the ONE unambiguous case —</li>
-</ul>
-<p>arrived AND departed AND end passed → <code>Complete</code> — and by its own docstring leaves every judgment</p>
-<p>flip to the Concierge. Cover for part of Step 4 only.</p>
-<ul>
-<li>- Invariants T (GTG booking, no arrival signal) and U (HTA row, end &gt; 1 h old, no PBF row — the</li>
-</ul>
-<p>2026-09-11 rule from <b>052</b>) are <b>not built</b>; <code>invariants.py</code></p>
-<p>carries A–E, G–I, K. The PBF line is a Desk Watch human read (<b>136</b>).</p>
-<ul>
-<li>- Nothing deterministic classifies a no-show or a straggler. 4.7&#x27;s EOB cancel has no code owner</li>
-</ul>
-<p>either (<code>eob_timing.py</code> is a live-authority check for existing rows, not a no-show detector).</p>
-
-<p><b>Decide, per step, one of two things:</b> (a) name the code lane that covers it and observe it</p>
-<p>acting — T and U on the 046 roster, <code>sync_booking_status</code> extended to the straggler case, or a</p>
-<p>new event-gate check — or (b) rule it stays LLM work, but as a <b>flagged verb</b> (a <code>Next Action</code></p>
-<p>row the tick raises: &quot;classify this booking&quot;) rather than a self-scanning Concierge step, the</p>
-<p>shape <b>094</b> chose for JOB 4&#x27;s resumption residue.</p>
-
-<h2>Progress 2026-09-11 — ruled and BUILT; deployment staged; canon retirement waits on observation</h2>
-
-<p><b>Ruling (Junyan, in session):</b> <i>code detects, the LLM classifies.</i> Option (a)+(b) as one shape —</p>
-<p>a deterministic detector on the gate, every finding a flagged verb the Concierge works, no</p>
-<p>auto-flip of <code>Missed Booking</code> (a wrong flip is the Responder&#x27;s &quot;we missed you&quot; auto-send).</p>
-
-<p><b>Built — dc-canon <code>a0b5c4e99</code> on <code>main</code>:</b> <code>services/event-gate/job1_flags.py</code> + route</p>
-<p><code>POST /job1-flags</code> (<code>app.py</code>), README section, 31 tests (suite 2318 green). Four kinds, one ⏩</p>
-<p>Next Action row each (<code>Raised by = Desk Invariants</code>, key <code>[job1:&lt;kind&gt;:&lt;board row id&gt;]</code> in</p>
-<p><code>Basis</code> for dedup): <code>classify</code> (Step 4 / 4.5 — unclassified ≥ 45 min past end), <code>no-arrival</code></p>
-<p>(invariant T — first-timer path, start + 20, no disarm), <code>eob-no-show</code> (Step 4.7 — inside end − 90</p>
-<p>… end − 15, EOB undecided, carries <code>Deadline</code>), <code>pbf-missing</code> (invariant U, 052/136 rule — end +</p>
-<p>60, HTA row exists, no PBF row any status). Never writes <code>Booking Status</code>, the queue, or a message.</p>
-<p>Shadow by default; <code>JOB1_FLAGS_LIVE=1</code> writes; one <code>Run Error</code> row on failure, lane-titled.</p>
-<p>This also gives the retired first-timer watch (092) its new home — invariant T is the check, the</p>
-<p>proactive text is not rebuilt.</p>
-
-<p><b>Deployment:</b> image <code>a0b5c4e99…</code> <b>staged and verified</b> on the Hostinger host (deploy run</p>
-<p>34626272940; the first attempt timed out on SSH from the runner, retry succeeded). <b>Activation</p>
-<p>is Junyan&#x27;s</b> — the session&#x27;s activate call was blocked as a production container swap:</p>
-<p><code>gh workflow run deploy-event-gate --ref deploy/a0b5c4e99a053b9d6db26ea8c8df60b4c2c4f2e0 -f target=hostinger -f mode=activate</code>,</p>
-<p>then <code>/health</code> shows <code>git_sha a0b5c4e</code>, then delete the <code>deploy/…</code> branch.</p>
-
-<p><b>Owner checklist to reach acceptance (in order):</b></p>
-<ol>
-<li>1. Activate (above). Route is shadow: reads everything, writes nothing.</li>
-<li>2. Wire the host timer <code>danceannex-job1-flags</code> (every 10 min, path <code>/job1-flags</code>) —</li>
-</ol>
-<p><code>hosting/README-hostinger.md</code> → Scheduling. Hermes cannot.</p>
-<ol>
-<li>3. Read shadow <code>job1-shadow: would flag …</code> lines for a few days against the board (Desk Watch</li>
-</ol>
-<p>task carries the line). Every would-flag should be a booking the Concierge would otherwise</p>
-<p>have had to find by scanning.</p>
-<ol>
-<li>4. Create the 🚥 Run Monitor row (<code>Paused</code>), set <code>JOB1_FLAGS_MONITOR_ROW</code>, flip</li>
-</ol>
-<p><code>JOB1_FLAGS_LIVE=1</code> (Junyan&#x27;s flip).</p>
-<ol>
-<li>5. <b>Once rows are seen being worked</b> — a <code>classify</code> row closes with a real status flip, a</li>
-</ol>
-<p><code>pbf-missing</code> row closes with a queued PBF — retire orchestration step 5, give</p>
-<p><code>job-1-adt-alarm.md</code> its ⛔ RETIRED header (Steps 4 / 4.5 / 4.7 / 5 / 6 named to their cover;</p>
-<p>Step 1 enrichment stays), Plumbing Map entry, close this ticket. Step 6 (mark alarm emails</p>
-<p>read) is deleted with no cover: the feed is a backup and an absent email is never evidence.</p>
-
-<p>Ticket stays <b>open</b> (035&#x27;s test): the build is done; the retirement is not earned yet.</p>
-
-<h2>Progress 2026-09-14 — the 09-13 transfer is found, and Junyan re-rules</h2>
-
-<p><b>Found:</b> after this ticket was built, the Astra lane moved the work under a different design.</p>
-<p>dc-canon <code>a264942c4</code> (09-13) retired JOB 1 from <code>concierge-orchestration.md</code> and</p>
-<p><code>job-1-adt-alarm.md</code> before any cover was seen acting. <code>board_status.py</code> (merged, deployed in</p>
-<p><code>94bcac4</code>) takes In Studio / Complete / <b>Missed Booking</b> writes behind <code>BOARD_RECONCILE_MODE</code>,</p>
-<p><code>RECONCILE_SWEEP_LIVE</code> and <code>BOARD_STATUS_OWNER=reconcile</code>. <code>job1_flags.run()</code> returns</p>
-<p><code>retired</code> when <code>BOARD_STATUS_OWNER=reconcile</code>. PR264 merged although the</p>
-<p><b>139 crosswalk</b> row 3 said Hold.</p>
-
-<p><b>Observed (Notion read, 09-12…09-14):</b> 31 board rows: 28 Complete, 1 Cancelled, 2 Upcoming,</p>
-<p>0 In Studio, 0 Missed Booking. 0 <code><b>job1:</code> rows ever filed, so the 137 lane never went live.</p>
-<p>The reconcile sweep filed 12 &quot;Specialized reconciliation incomplete&quot; + 2 &quot;stale sweep</p>
-<p>source/readback failed&quot; rows on 09-14 (15:44Z–23:32Z). The &quot;we missed you&quot; draft is held at</p>
-<p>Pending Review by canon (<code>the-responder.md</code>), so <code>Missed Booking</code> is not send authority; the</p>
-<p><code>job1_flags.py</code> comment that says otherwise is stale. Host flag values are <b>unknown</b>: Hermes has</p>
-<p>no route to the host, and Junyan&#x27;s first readback ran on the Mac (no Docker there), so its</p>
-<p>&quot;unset&quot; lines are not evidence.</p>
-
-<p><b>Rulings (Junyan, in session):</b></p>
-<ol>
-<li>1. <b>Split.</b> Code writes In Studio and Complete. <code>Missed Booking</code> is never written by code —</li>
-</ol>
-<p>it stays a flagged card that someone classifies.</p>
-<ol>
-<li>2. Junyan approved the 09-13 transfer at the time and <b>withdraws it</b>, after the Astra mess.</li>
-</ol>
-<p>The automatic <code>Missed Booking</code> write goes; ruling 1 governs.</p>
-<ol>
-<li>3. <b>Canon stays retired.</b> JOB 1 does not return to the Concierge (&quot;Concierge already doesn&#x27;t</li>
-</ol>
-<p>function properly. I need to create a system that works as soon as possible&quot;). A Desk Watch</p>
-<p>line covers the gap until the cover is seen acting.</p>
-
-<p><b>Host readback (Junyan, 2026-09-15 01:23–01:27Z, reconcile-sweep log):</b> <code>board_mode: live</code>,</p>
-<p>attendance <code>live: true</code>, <code>checked: 2, written: 0, errors: 2</code> on every pass; <code>alarm_context</code></p>
-<p>ok; <code>end_of_day</code> fails <code>OperationalError: database is locked</code>; the sweep ends</p>
-<p><code>Specialized reconciliation incomplete</code>. So <code>board_status.py</code> is live and has written nothing.</p>
-
-<p><b>Round 2 rulings (Junyan, in session):</b></p>
-<ol>
-<li>4. <b>One program.</b> <code>board_status.py</code> files the card. Where its evidence reads no-show, and where</li>
-</ol>
-<p>a booking is still unresolved hours after its end, it files a ✅ Actions to Perform card with</p>
-<p>the evidence instead of writing the status. <code>job1_flags.py</code> retires.</p>
-<ol>
-<li>5. <b>Ops Lead works the card</b> (<code>For = Ops Lead</code>, next-day <code>Deadline</code>). The only downstream action</li>
-</ol>
-<p>is a message: once the &quot;we missed you&quot; message is queued, everyone has done their job. If Ops</p>
-<p>Lead decides not to send, that is of no consequence. So the card&#x27;s proof is the queued Message</p>
-<p>Queue row (<code>Proof type = message_queue</code>) or Ops Lead&#x27;s decline, and the sweep can close it.</p>
-<ol>
-<li>6. Of the other 09-11 kinds: <code>pbf-missing</code> deleted (<code>followup_coverage.py</code> covers it),</li>
-</ol>
-<p><code>no-arrival</code> deleted (nobody texts on it), <code>eob-no-show</code> moves into the same card path.</p>
-<ol>
-<li>7. <b>137 closes when:</b> the host readback shows the writer set up correctly; one live pass</li>
-</ol>
-<p>writes ≥ 1 Complete with readback; ≥ 1 Missed Booking card is filed and closed; three days of</p>
-<p>Desk Watch show no booking left Upcoming &gt; 2 h past end without a card. Then <code>job1_flags.py</code></p>
-<p>goes, the stale comment goes with it, and the Plumbing Map gets its entry.</p>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- JOB 1&#x27;s remainder is removed from <code>concierge-orchestration.md</code> step 5 and the job page carries a</li>
-</ul>
-<p>⛔ RETIRED header — <b>only after</b> each deleted step&#x27;s cover is seen acting</p>
-<p>([035</b>&#x27;s test), or is ruled into the flagged-verb shape.</p>
-<ul>
-<li>- Every deleted step names its covering mechanism in the retired page (no orphans).</li>
-<li>- Invariants T and U, if they are the cover, are live on the gate and have produced at least one</li>
-</ul>
-<p>real finding or one clean pass with a heartbeat.</p>
-<ul>
-<li>- Plumbing Map entry.</li>
-</ul>
-
-<h2>Done this session (2026-09-15)</h2>
-
-<ul>
-<li>- Build cut: <b>143</b>. Lock fault cut: <b>144</b>.</li>
-<li>- Desk Watch Section I rewritten for the new shape (silent-booking check, code-wrote-Missed-Booking breach check, 137 status line).</li>
-<li>- Map Decisions so far entry added; tickets board rendered and pushed (day-sheet <code>9ffc48f</code>).</li>
-<li>- Nothing changed on the host, in canon, or in event-gate code.</li>
-</ul>
-
-<h2>Progress 2026-09-16 — 143 and 144 closed; close checks read</h2>
-
-<ul>
-<li>- <b>143</b> CLOSED: <code>board_status.py</code> files the card (PR #287, live 09-15 03:15Z);</li>
-</ul>
-<p><code>job1_flags.py</code>, its route, tests and env reads are gone from <code>main</code>; canon <code>job-1-adt-alarm.md</code></p>
-<p>and the Plumbing Map already carry the card shape. The stale comment went with the file.</p>
-<ul>
-<li>- <b>144</b> CLOSED: no lock-fault rows since 09-15 03:28Z. The</li>
-</ul>
-<p>two later &quot;could not run&quot; rows are a stale-sweep <code>KeyError</code>, cut as</p>
-<p><b>145</b>.</p>
-<ul>
-<li>- ✅ board read (09-16 22:00Z): 11 <code><b>attend:</code> cards since 09-15 03:26Z — 7 <code>unresolved</code>, 4 <code>eob</code>,</li>
-</ul>
-<p>0 <code>missed</code>. Statuses: 6 Cancelled, 4 Processed, 1 Pending Review (509A 09-16 14:45–15:45, filed</p>
-<p>21:54Z, Deadline 09-17). Every <code>unresolved</code> reason is &quot;no decision: missing, stale or incomplete</p>
-<p>alarm coverage&quot;.</p>
-<ul>
-<li>- Desk Watch 09-16 (13:50Z run) Section I: 0 silent bookings, code never wrote Missed Booking,</li>
-</ul>
-<p>3 attendance cards all Cancelled. Line: <code>137: day 1 of 3 clean</code>.</p>
-
-<p><b>Ruling-7 checks, as of 09-16:</b></p>
-<ol>
-<li>1. Host readback shows the writer set up correctly — <b>met</b> (09-15 readback: <code>board_mode: live</code>, attendance <code>live: true</code>).</li>
-<li>2. One live pass writes ≥ 1 Complete with readback — <b>not verified.</b> Every observed pass returned</li>
-</ol>
-<p>&quot;incomplete alarm coverage&quot; and wrote nothing; the renters had attended on keypad evidence (143&#x27;s</p>
-<p>close note). PRs #292 / #297 loosened the coverage read on 09-14 / 09-15; no Complete write has</p>
-<p>been confirmed since. Needs one host log line <code>written: 1</code> or a board row whose Complete flip</p>
-<p>the sweep log claims.</p>
-<ol>
-<li>3. ≥ 1 Missed Booking card filed and closed — <b>not met on the strict read.</b> 0 <code>missed</code> cards; the</li>
-</ol>
-<p>worked cards are all <code>unresolved</code> / <code>eob</code>. Junyan may rule that a closed <code>unresolved</code> card counts,</p>
-<p>since Ops Lead makes the same decision from it.</p>
-<ol>
-<li>4. Three clean Desk Watch days — day 1 of 3 (09-16). Day 3 is the 09-18 run.</li>
-</ol>
-
-<p><b>Open fault, not ticketed:</b> the coverage check refuses more than the panel warrants, so the card</p>
-<p>path is carrying attended bookings as <code>unresolved</code> (7 of 7 so far). That is safe under ruling 1 but</p>
-<p>it is why check 2 is unmet. If the 09-17 / 09-18 watches still show no Complete write, cut a ticket.</p>
-
-<h2>Progress 2026-09-19 — close checks re-read; the clock did not run, and the board&#x27;s own evidence went dark</h2>
-
-<p>Read from Notion (✅ Actions, 🛎️ FBS AI Support, 📤 Message Queue, 📊 Workflow Reports), the</p>
-<p>Desk Watch tally and dc-canon <code>main</code>. The host journal was <b>not</b> read: the SSH read was refused as</p>
-<p>a production read in this session, so &quot;one live Complete with readback&quot; stays UNCHECKED from here.</p>
-
-<p><b>Ruling-7 checks, as of 09-19 evening:</b></p>
-<ol>
-<li>1. Writer set up correctly — met (unchanged since the 09-15 readback).</li>
-<li>2. One live Complete write with readback — <b>still unverified.</b> Eleven board rows dated 09-17/09-18</li>
-</ol>
-<p>read Complete, but every one has a blank <code>Disarmed</code> / <code>Armed</code> cell, so neither <code>sync_booking_status</code></p>
-<p>(needs both clocks) nor the pre-#347 <code>board_status.py</code> (needs alarm coverage) could have written</p>
-<p>them on board evidence. Teo Rivas 901 09-18 was seeded by hand &quot;attended, Junyan&quot;. Without the host</p>
-<p>log line <code>written: 1</code>, the Complete flips cannot be attributed to the lane.</p>
-<ol>
-<li>3. One Missed Booking card filed and closed — <b>not met.</b> 45 <code>[attend:</code> cards since 09-15, kinds</li>
-</ol>
-<p><code>unresolved</code> and <code>eob</code> only, <b>zero <code>missed</code></b>. Zero &quot;we missed you&quot; rows in the Message Queue since</p>
-<p>09-15. Every closed card was a false positive (Cancelled by agent or Won&#x27;t Do by Junyan).</p>
-<ol>
-<li>4. Three clean Desk Watch days — <b>the clock stalled at day 2.</b> The tally has 09-16 and 09-17 and</li>
-</ol>
-<p>nothing after; no Desk Watch report exists for 09-18 or 09-19. Day 3 was never read.</p>
-
-<p><b>The fault underneath (found in dc-canon, not on the map):</b> the board&#x27;s <code>Disarmed</code> / <code>Armed</code> clocks</p>
-<p>stopped being written at <b>2026-09-16 16:30</b> and their writer was never identified (PR #347 commit</p>
-<p>message, <code>board_status.py:361</code>). Every attendance card since then — 13 on 09-17, 7 on 09-18, 8 so</p>
-<p>far on 09-19 — fired on &quot;no disarm&quot; and every one was an attended renter. PR #347 (live 09-19) moved</p>
-<p>the EOB check onto the studio panel ledger instead, and <code>ff069bb44</code> renamed the cards to</p>
-<p><code>Raised by = Attendance Sweep</code>; today&#x27;s 20:23Z and 23:27Z cards carry the new name, so the fix is</p>
-<p>deployed. <code>fbs-monitor</code> reads the clocks as a fallback only (<code>build.py:1318</code>) and no file in</p>
-<p>dc-canon or fbs-monitor writes them. Cut as [146</b>.</p>
-
-<p><b>Open now on the board:</b> 9 <code><b>attend:</code> cards Pending Review, oldest Isabel Campo Jurado 509A 09-18</p>
-<p>18:30 (filed 05:09Z, Deadline 09-19, now past). Junyan&#x27;s Won&#x27;t Do on the five Isabel EOB cards and</p>
-<p>the Cancelled agent closes are the only worked cards this window.</p>
-
-<p><b>Not moved:</b> canon, event-gate code, host switches, the Desk Watch prompt.</p>
-
-<p><b>Waiting on Junyan (three rulings, [148</b>):</b></p>
-<ul>
-<li>- Does a closed <code>unresolved</code> / <code>eob</code> card count for check 3, given no true no-show has occurred in</li>
-</ul>
-<p>five days and Ops Lead makes the same decision from either card?</p>
-<ul>
-<li>- Does a hand-written Complete count for check 2, or must the lane&#x27;s own <code>written: 1</code> be seen?</li>
-<li>- Does the three-day clock restart from the first day after 146 is fixed (the cards so far were all</li>
-</ul>
-<p>false positives from a dead evidence source), or continue from 09-17?</p>
-
-<h2>Code bug 2026-09-20 — attendance cards fire on attended bookings; a true no-show can never reach <code>missed</code></h2>
-
-<p>Filed from the desk QA follow-up (<code>Claude-DanceAnnex/.scratch/desk-qa/2026-09-19-sweep.md</code>,</p>
-<p>&quot;Follow-up: attendance cards&quot;). Read-only: nothing below was changed. Code cited is the J28 mirror</p>
-<p>copy of <code>services/event-gate</code> (<code>board_status.py</code>, <code>eob_timing.py</code>).</p>
-
-<p><b>Evidence.</b> Every <code>[attend:</code> card 09-14 → 09-17 AM cross-checked against Alarm.com panel history</p>
-<p>(fbs-monitor deck history, clone ends 09-17 13:47Z): Salia 693 09-14, Greg Samba 901 09-14, August</p>
-<p>509A 09-15, Jia 509B 09-15, Marco Villa 509B 09-15, Danica 693 09-16, Simona 509A 09-16, Jia 527</p>
-<p>09-16, Harmony 509A 09-16, Krista Flynn (Nina Li FBS) 901 09-16 — <b>all attended on named keypad</p>
-<p>evidence; every card was false.</b> Every <code>classify</code> card&#x27;s Basis reads <code>no decision: missing, stale or</p>
-<p>incomplete alarm coverage</code>. <code>missed</code>-kind cards filed since go-live: 0. (Correction to the sweep&#x27;s</p>
-<p>URGENT 3: 901 09-16 20:30 was attended by the facilitator, Krista, 20:31–22:44; Junyan&#x27;s &quot;should</p>
-<p>have gone out&quot; note was about the EOB text.)</p>
-
-<p><b>Five defects:</b></p>
-
-<ol>
-<li>1. <b><code>studio_disarmed()</code> ignores ledger gaps</b> (<code>board_status.py</code> ~L372). Returns <code>False</code> when the</li>
-</ol>
-<p>door-history payload has no disarm event, without reading <code>covered</code> / <code>gaps</code> / <code>covering_gaps</code>.</p>
-<p>Docstring promises <code>None</code> on a gap; the code only returns <code>None</code> on an exception. With the alarm</p>
-<p>websocket dropping every ~6 min (L65 comment), a key-in that fell inside a drop reads as &quot;no</p>
-<p>disarm&quot; → false <b>EOB card</b>. This is the 09-17/18 false-card wave; PR #347 moved the read to</p>
-<p>the panel ledger but did not add the gap check.</p>
-<ol>
-<li>2. <b><code>timeline()</code> freshness/horizon gate fails nearly always</b> (L95–101: <code>updated_at</code> within 120 s</li>
-</ol>
-<p>of <code>now</code>, <code>covers_since ≤ start−6h</code>, <code>covered=True</code> or every gap tolerable). The failure is a</p>
-<p>plain <code>ValueError</code>, and <code>observe()</code> (L292) only routes <code>CoverageGap</code> / <code>GAP_DEFERRALS</code> into</p>
-<p><code>corroborate()</code> — so Alarm.com corroboration, which had the answer in every case above, is</p>
-<p>skipped. <code>decide()</code> never decides; the row stays Upcoming; <code>unresolved()</code> files the generic</p>
-<p><b>classify card</b> 2 h after the end for every booking, attended or not.</p>
-<ol>
-<li>3. <b><code>Missed Booking</code> is unreachable</b> (L232–243): needs all five rooms gap-free, armed baseline</li>
-</ol>
-<p>everywhere, zero activity during the window. With (2) the branch never executes. A real no-show</p>
-<p>therefore gets the same generic classify card as an attended booking — or <b>no card at all</b> when</p>
-<p>another writer flips the row Complete first (Nina/Krista row went Complete 02:53Z 09-17;</p>
-<p>FBS Monitor sync has <code>BOOKING_STATUS_SYNC_DISABLED=1</code> since 09-13 per <code>gh variable list</code>, so</p>
-<p>that was corroboration-live or a human).</p>
-<ol>
-<li>4. <b>Attended rows never close without a human</b> — Complete is only written on the ledger path</li>
-</ol>
-<p>(blocked by 2) or corroboration-live (only reachable via <code>CoverageGap</code>). Hence the 8 rows stuck</p>
-<p>Upcoming on 09-19 and the 09-19 &quot;one live Complete with readback&quot; check staying unverified.</p>
-<ol>
-<li>5. <b>Facilitator bookings lose their EOB</b> (<code>eob_timing.py:43</code>): Skedda holder (Nina) ≠ queue</li>
-</ol>
-<p>recipient (Krista) → <code>hold</code> &quot;Booking recipient or booking type changed.&quot; → Needs Fix → Will Not</p>
-<p>Send at Desk Sort. This is the text that should have gone out on 09-16. Owner: Registrar lane,</p>
-<p>but it lands here because it is the 4.7 pre-send EOB decision this ticket covers.</p>
-
-<p><b>Fix outline (not applied):</b></p>
-
-<ul>
-<li>- (a) <code>studio_disarmed()</code>: return <code>None</code> when <code>covered</code> is not True, or when any entry in <code>gaps</code> /</li>
-</ul>
-<p><code>covering_gaps</code> overlaps <code>[start−30 min, now]</code>; <code>None</code> already suppresses the EOB card.</p>
-<ul>
-<li>- (b) Route the plain &quot;missing, stale or incomplete&quot; <code>ValueError</code> from <code>timeline()</code> into</li>
-</ul>
-<p><code>corroborate()</code> the same way <code>CoverageGap</code> is, or relax the 120 s freshness gate to the tick</p>
-<p>cadence (10 min) — corroboration&#x27;s Alarm.com read is the source that was right ten times out of ten.</p>
-<ul>
-<li>- (c) <code>card_props()</code>: include the Alarm.com panel read (arrived/departed by whom) in the card</li>
-</ul>
-<p>Basis so Ops Lead is not re-deriving it; a card whose panel read shows a named arrival should not</p>
-<p>be filed as <code>unresolved</code> at all.</p>
-<ul>
-<li>- (d) <code>eob_timing.decide()</code>: treat the booking&#x27;s facilitator / authorized users as valid recipients</li>
-</ul>
-<p>— compare the holder against the row&#x27;s Artist relation <i>and</i> its Authorized Users, not the holder</p>
-<p>alone — before returning the &quot;recipient changed&quot; hold.</p>
-<ul>
-<li>- (e) Tests to add: <code>test_board_status.py</code> — EOB card not filed when the disarm window has a gap;</li>
-</ul>
-<p>classify card not filed when corroboration returns Complete; <code>test_eob_timing.py</code> — facilitator</p>
-<p>recipient is not a hold.</p>
-
-<p>Acceptance for this ticket&#x27;s check 3 should not be read until (a)–(c) are live: with the current</p>
-<p>code, &quot;one Missed Booking card filed and closed&quot; cannot happen for a genuine no-show.</p>
-
-<h3>Addendum 2026-09-20 — close the ledger&#x27;s holes at the source (Junyan: &quot;the robot can never say it doesn&#x27;t know&quot;)</h3>
-
-<p>The ~5.5-minute socket close is Alarm.com&#x27;s (code 1008, server-side, canon <code>studio-activity.md</code></p>
-<p>&quot;do not re-litigate&quot;); it cannot be removed. Since alarm-monitor #9/#10 the reconnect is 0.3 s</p>
-<p>median (09-17: 138 reconnects / 12.7 h, longest 86 s), so the holes are tiny — the false cards come</p>
-<p>from <code>board_status</code> refusing to decide on any hole, not from lost events. Fix outline item (b) above</p>
-<p>is therefore first. To make &quot;don&#x27;t know&quot; a rare answer rather than the default, two source-side</p>
-<p>changes on top of (b), both in alarm-monitor (<code>alarm_monitor/door_events.py</code>, <code>event_listener.py</code>):</p>
-
-<ul>
-<li>- (f) <b>Staggered second socket.</b> Each websocket connection is closed on its own ~5.5 min clock.</li>
-</ul>
-<p>Hold two connections, opened ~2.75 min apart; merge their events into the one ledger keyed</p>
-<p><code>(studio, kind, ts-to-the-second, device)</code> (the same dedup key <code>panel_ledger_pull.py</code> already</p>
-<p>uses). A gap is recorded only when <i>both</i> sockets are down at once. <code>/door-history</code> then</p>
-<p>returns <code>covered: true</code> for virtually every window, and <code>timeline()</code>&#x27;s existing gate passes</p>
-<p>without being loosened. Restart safety: on process start open the second socket after the</p>
-<p>first is confirmed subscribed, never both at t=0 (they would then drop together forever).</p>
-<ul>
-<li>- (g) <b>Stitch the arm-state poller into gaps.</b> <code>/arm-history</code> (the once-a-minute panel-state</li>
-</ul>
-<p>poll) never drops but carries no actor. When a recorded gap in <code>/door-history</code> is bracketed by</p>
-<p>a state change in <code>/arm-history</code> (armed before, disarmed after), write a synthetic ledger event</p>
-<p>inside the gap: <code>kind: disarm</code>, <code>actor: null</code>, <code>actor_source: &quot;arm_state&quot;</code>, <code>at: &lt;poll time&gt;</code>,</p>
-<p><code>gap_filled: true</code>. <code>board_status.decide()</code> must treat it as <b>presence evidence only</b></p>
-<p>(blocks a no-show, never a named arrival, never Complete on its own) — the same standing a</p>
-<p>nameless door/motion event has today (L237–242). Nothing changes for billing: <code>departure.verdict</code></p>
-<p>already ignores nameless events for <code>arm_then_exit</code>.</p>
-
-<p>What stays honest: if both sockets <i>and</i> the poller are down (Cloud Run outage, Alarm.com login</p>
-<p>revoked), <code>covered</code> is still false and the lane still files a review card instead of a no-show</p>
-<p>card. &quot;Never says it doesn&#x27;t know&quot; means a hole is closed by a second witness whenever one exists;</p>
-<p>it never means a dead pipe reads as the renter&#x27;s absence (house rule, unchanged).</p>
-
-<p>Not viable: backfilling from Alarm.com&#x27;s REST <code>activity/historyEvents</code> on each reconnect — that API</p>
-<p>is pinned to one selected system and cannot be switched (canon, found 2026-08-18).</p>
-
-<p>Order of work: (a) → (b) → (f) → (g) → (c) → (d), tests per (e) plus a two-socket merge test and a</p>
-<p>gap-stitch test in alarm-monitor.</p>
-
-<h3>Built 2026-09-20 — two PRs, nothing merged, nothing deployed</h3>
-
-<ul>
-<li>- <b>desk-correspondence #376</b> (<code>claude/137-attendance-cards</code>) — items (a), (b), (c) plus the canon</li>
-</ul>
-<p>update to <code>library/studio-activity.md</code>. (d) was already on main (<code>eob_timing.claim_facilitated</code>).</p>
-<p>4315 tests pass.</p>
-<ul>
-<li>- <b>danceannex-alarm-monitor #15</b> (<code>claude/137-two-sockets-gap-stitch</code>) — items (f) and (g):</li>
-</ul>
-<p><code>alarm_monitor/listener_pool.py</code> (two staggered sockets, one ledger, gap only when both are down,</p>
-<p>re-stagger on alignment, open outage written cut at each flush) and <code>door_events.stitch_arm_state</code></p>
-<p>(nameless <code>arm_state</code> row into a hole, presence only). 482 tests pass. Default is two sockets</p>
-<p>(<code>ALARM_EVENTS_SOCKETS=1</code> to fall back) — a third concurrent Alarm.com session in total.</p>
-
-<p>Order to land: #15 first (source), then #376 (consumer). After both are live, expect <code>covered:</p>
-<p>true</code> on nearly every window, zero <code>eob</code> cards for attended renters, and <code>classify</code> cards only for</p>
-<p>rows corroboration could not complete; a genuine no-show still goes through <code>missed</code> only when the</p>
-<p>five-room absence proof holds, otherwise <code>unresolved</code> with the panel read on the card.</p>
-
-<h3>Deployed 2026-09-20 (Junyan merged and deployed; Claude built)</h3>
-
-<ul>
-<li>- desk-correspondence #376 merged (<code>f7e2011c</code>); event-gate Hostinger <code>update</code> run 35515143382 (first attempt</li>
-</ul>
-<p>timed out on port 22 from the runner, rerun succeeded); <code>/health</code> → <code>git_sha f7e2011</code>, started 14:08:37Z.</p>
-<ul>
-<li>- danceannex-alarm-monitor #15 merged (<code>4b567c4</code>); image <code>alarm:pool-4b567c4</code></li>
-</ul>
-<p>(<code>sha256:0db4657d…</code>) built by Cloud Build from the Mac, pulled on the VPS with a one-hour gcloud token,</p>
-<p>swapped into compose for alarm-mcp + alarm-events (backup <code>compose.before-alarm-pool-4b567c4.json</code>).</p>
-<p>Logs: <code>[pool] GAP 14:24:11 → 14:24:13</code> (process start only), <code>socket 1 listening, 165s behind socket 0</code></p>
-<p>at ~14:27Z, per-socket GAPs after that and <b>no</b> <code>[pool] GAP</code>.</p>
-
-<p><b>Close-check clock restarts from 2026-09-21.</b> What to read tomorrow: <code>/door-history</code> windows should</p>
-<p>come back <code>covered: true</code>; ✅ Actions should show zero new <code>eob</code> cards for attended renters and any</p>
-<p><code>classify</code> card&#x27;s Basis should end with <code>Panel clocks:</code> and <code>Second source:</code> lines; the watchdog&#x27;s panel</p>
-<p>reads should be unchanged with a third Alarm.com session open.</p>
-
-<h2>Rulings 2026-09-20 — <b>148</b> closed; the close checks are re-cut</h2>
-
-<ol>
-<li>1. Check 1 met (unchanged). 2. <b>Check 2</b> needs the lane&#x27;s own host line (<code>written: 1</code> + <code>clocks:</li>
-</ol>
-<p>stamped N</code>, readback) after Junyan flips <code>BOARD_CLOCKS_MODE=live</code>; hand/unknown Completes never</p>
-<p>count; Junyan reads the host. 3. <b>Check 3</b> is now: one post-2026-09-20-deploy card with the panel</p>
-<p>read in its Basis, closed by Ops Lead with a queued &quot;we missed you&quot; row or a recorded decline; a</p>
-<p>real <code>missed</code> card is watched after close, not gated on. 4. <b>Check 4</b> restarts: day 1 = the</p>
-<p>2026-09-21 Desk Watch run (stand-in on this account, first run 09-20 22:12 = day 0); earliest</p>
-<p>close <b>2026-09-23</b>. A lane filing correctly on bad evidence is not &quot;seen acting&quot;.</p>
-
-<h2>Ruling 2026-09-23 — check 2: make the write visible (<b>156</b>)</h2>
-
-<p>Desk Watch 09-23: the 09-20 alarm-read fix works and the lane now writes (12 writes on 09-22), but</p>
-<p>it logs counts only, cut at 400 chars, so no Complete is attributable (9 on the board, 0 to this</p>
-<p>lane). Junyan ruled: fix it, &quot;people never tick done by hand&quot;. Cut 156: one <code>attendance: wrote</code></p>
-<p>line per write with row id and readback, and one line per error. Check 2 is met by the first such</p>
-<p>line whose row reads Complete. Check 3 (Caryl CUIZON 693 card, closed Won&#x27;t Do by an attended Desk</p>
-<p>Sort) still waits for Junyan to confirm that counts as closed by a person. Check 4: day 1 of 3 on 09-23.</p>
-
-<h2>Progress 2026-09-29 — checks 2 and 3 met; check 4 cut as 158</h2>
-
-<ul>
-<li>- <b>Check 2 MET (Desk Watch 09-27):</b> <code>attendance: wrote</code> line for <code>3e475032-81c4-81b5-823a-f14fd3cc6b4c</code></li>
-</ul>
-<p>693 09-26 (Shania Bridgewater), row reads Complete. <b>156</b> closed.</p>
-<ul>
-<li>- <b>Check 3 MET:</b> Caryl CUIZON 693 card, closed by the Desk Sort; Desk Watch records it as met on</li>
-</ul>
-<p>Junyan&#x27;s ruling (09-24 onward).</p>
-<ul>
-<li>- <b>Check 4 not met:</b> reset to day 0 on every watch 09-25 to 09-28 (false cards and silent bookings, all</li>
-</ul>
-<p>on renters the panel shows attended). Cause: the lane errors instead of writing Complete. Cut</p>
-<p><b>158</b>. 137 closes after 158 ships and three clean days follow.</p>
-
-<h2>Check 2 MET 2026-09-29 (read for <b>156</b>)</h2>
-
-<p>Host journal 2026-09-25 20:20Z to 09-29: 35 <code>attendance: wrote Complete … readback=ok</code> lines. First:</p>
-<p>Aris Wu 509B 2026-09-25 (<code>3e375032-81c4-8142-863b-de2f6032a1b0</code>, ~09-26 00:20Z); that row and two others</p>
-<p>(Nabil Fairbairn 693 09-26, Greg Samba 901 09-28) read Complete on the board with lane-written clocks.</p>
-<p>Check 2 is met by the lane&#x27;s own line, per the 09-20 ruling. 18 lines carried clocks, so <code>BOARD_CLOCKS_MODE</code></p>
-<p>is live on the host (146&#x27;s close evidence, for that ticket to record).</p>
-</div></details></details></div><div class="job"><div class="jnum">#145</div><div class="jhead"><span class="emoji">🔑</span><h4>The stale-row checker trips on a charge row somebody just marked done</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sep 16. Twice, right after a person marked a charge row done, the checker looked for a field the row did not have, and the whole ten-minute sweep failed for that pass</li><li>Fix: skip the row with a reason instead of failing the sweep, and test it with that exact row shape</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>stale sweep raises KeyError on a freshly Processed Charge row and fails the reconcile tick</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">5</span></h3><div class="job"><div class="jnum">#145</div><div class="jhead"><span class="emoji">🔑</span><h4>The stale-row checker trips on a charge row somebody just marked done</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sep 16. Twice, right after a person marked a charge row done, the checker looked for a field the row did not have, and the whole ten-minute sweep failed for that pass</li><li>Fix: skip the row with a reason instead of failing the sweep, and test it with that exact row shape</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>stale sweep raises KeyError on a freshly Processed Charge row and fails the reconcile tick</b></p><h2>Question</h2>
 
 <p>Found 2026-09-16 while reading 144&#x27;s 24 h check. Twice since the 144 deploy the 10-min</p>
 <p><code>/reconcile-sweep</code> ended <code>RuntimeError: stale sweep source/readback failed: [{&quot;id&quot;: …, &quot;kind&quot;:</p>
@@ -1261,7 +789,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>while the Concierge is paused, because the Concierge is one of its writers. Re-read it as part of the 10-05</p>
 <p>ruling, on whatever shape the Concierge comes back in.</p>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">23</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">22</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
 <p>Junyan&#x27;s Main Focus window today):</p>
@@ -2984,130 +2512,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Both writers fixed and deployed, then criterion F holds for 7 consecutive days on</p>
 <p><code>scripts/phase4_measure.py</code> (earliest pass: 7 days after the fix). Add the daily read to the</p>
 <p><code>desk-watch</code> task, per the map Notes.</p>
-</div></details></details></div><div class="job"><div class="jnum">#158</div><div class="jhead"><span class="emoji">🩹</span><h4>The attendance program gives up on people who did show up</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Cut Sep 29 from 137. The program now marks most bookings done and says which. That part works</li><li>But every day since Sep 24 it has got stuck on one or two renters who clearly came. The alarm shows them unlocking and locking up</li><li>When stuck, it either writes a wrong &#x27;did they come?&#x27; card, or, worse, says nothing and the booking sits open</li><li>Fix both: let it trust the renter&#x27;s own unlock and lock, and make sure a stuck booking always gets a card</li><li>After that ships, 137 needs three quiet mornings in a row to close</li><li>Sep 29: found both causes. When the next renter unlocked right after someone left, the program threw away the first renter&#x27;s visit. It also ignored a host who unlocks under their own name</li><li>The &#x27;says nothing&#x27; part was the daily watch looking in the wrong place. Each stuck booking did get a to-do row, on the Fixer&#x27;s list. The watch now checks there too</li><li>Also fixed: the &#x27;did they come?&#x27; card no longer fires before a booking starts (Makiko, Sep 28) or right after someone unlocks (Desiree, Sep 26)</li><li>Fix is pull request 706, tested on the real cases. Waiting for Junyan to merge and send it to the server. Thea&#x27;s booking is fixed by pull request 705, merged Sep 29</li><li>Sep 30: merged and on the server (3:50pm UTC). Next: three quiet mornings in a row from the daily watch closes 137</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>attendance errors on attended bookings leave them silent or carded wrong — 137&#x27;s clean-day clock never gets past day 0</b></p><h2>Question</h2>
-
-<p>Cut 2026-09-29 from <b>137</b>. Checks 1, 2 and 3 are met. Check 4</p>
-<p>(three clean Desk Watch days) has reset every morning since 09-24:</p>
-
-<p>| Watch | Breach |</p>
-<p>|---|---|</p>
-<p>| 09-25 | false card: Jia Chian Lee 509B 09-24, named disarm + arm in the panel ledger |</p>
-<p>| 09-26 | false card: Megan Chapman 509A 09-25, named disarm in the Basis |</p>
-<p>| 09-27 | 2 silent (Thea Giggster 509B 09-26, Nabil Fairbairn 693 09-26) + false <code>eob</code> card (Desiree Joy 509A) |</p>
-<p>| 09-28 | 1 silent (Risa Waldman / Jillian Ramos 693 09-27 09:45) |</p>
-
-<p>Every one is a renter the panel shows attended. The lane errored on them instead of writing Complete.</p>
-<p>09-28 host journal, 70 <code>attendance: error</code> lines: &quot;missing, stale or incomplete alarm coverage&quot; x48,</p>
-<p>&quot;alarm recording gap overlaps the attendance witness&quot; x21, &quot;current source identity is not reconciled&quot;</p>
-<p>x1. Top rows: Nabil 693 09-26 (26 errors), Risa/Jillian 693 09-27 (23), Thea 509B 09-26 (14). All three</p>
-<p>still read Upcoming.</p>
-
-<p>Two separate faults:</p>
-<ol>
-<li>1. <b>The alarm read refuses too much.</b> The coverage check and the recording-gap check reject windows</li>
-</ol>
-<p>the panel ledger covers well enough to name the renter&#x27;s disarm and arm.</p>
-<ol>
-<li>2. <b>An errored row can end silent.</b> <code>run()</code> files an <code>unresolved</code> card on error once 2 h past the end,</li>
-</ol>
-<p>yet three rows ended with no card. Find why (card dedup? the 10-card cap? the row leaving the</p>
-<p>worklist window before the 2 h mark?).</p>
-
-<h2>Build</h2>
-
-<ul>
-<li>- Reproduce each named row against the panel ledger (<code>/door-history</code>, <code>studio_activity</code>) and find which</li>
-</ul>
-<p>check rejects it and why.</p>
-<ul>
-<li>- Fix fault 1 only where the ledger has the renter&#x27;s own named disarm and arm inside the window. Keep the</li>
-</ul>
-<p>rule that unknown telemetry stays unknown, and that a no-show needs full five-room coverage.</p>
-<ul>
-<li>- Fix fault 2 so no booking can pass 2 h after its end still Upcoming with no card.</li>
-<li>- Tests from the four real cases above. No switch changes. Stop before deploy; Junyan says go.</li>
-</ul>
-
-<h2>Acceptance</h2>
-
-<ul>
-<li>- Deployed; the three stuck rows (Nabil, Risa/Jillian, Thea) read Complete from <code>attendance: wrote</code> lines.</li>
-<li>- Then 137&#x27;s check 4: three Desk Watch days in a row with 0 silent, 0 code-written Missed Booking,</li>
-</ul>
-<p>0 false cards.</p>
-
-<h2>Progress 2026-09-29 — both faults reproduced; PR 706 open (not merged, not deployed)</h2>
-
-<p>Read live this session: panel ledger (<code>studio_activity</code>, 509B and 693, 09-26 to 09-29), 🛎️ board rows, 🔧 Sweep Feedback.</p>
-
-<p><b>Fault 1, reproduced (ledger events):</b></p>
-<ul>
-<li>- Nabil Fairbairn 693 09-26: keypad disarm 14:02:59 and arm 17:05:08 (his id 247283569), then Abbey Richens</li>
-</ul>
-<p>disarmed 17:18:32. The freshness-free witness path in <code>decide()</code> voided the stay on ANY later disarm, so the</p>
-<p>next renter killed it. The strict path then hit a 2 s drop 54 s before his disarm (inside <code>WITNESS_GUARD</code>):</p>
-<p>&quot;alarm recording gap overlaps the attendance witness&quot;. Same shape for Jia Chian Lee 509B 09-24 (10:22 / 11:30).</p>
-<ul>
-<li>- Risa / Jillian 693 09-27: Jillian disarm 09:30:28, arm 11:08:38; Olivia Nieuwland disarmed 11:09:42. Jillian&#x27;s</li>
-</ul>
-<p>id is not on Risa&#x27;s card (facilitator), and Olivia voided the path. Megan Chapman 509A 09-25 is the same</p>
-<p>facilitator case (16:54 / 18:06 on the board row).</p>
-<ul>
-<li>- Nabil and Risa/Jillian now read Complete: <code>7c2aad3a8</code> (09-28, board Disarmed cell names the renter) closed them.</li>
-<li>- Thea Giggster 509B 09-26: arrival was a remote app disarm (login 13152301, no name); &quot;Thea Thea&quot; (her id</li>
-</ul>
-<p>248713030) armed 15:15 after staff armed and Chelly Li disarmed. No named disarm, so she is outside this</p>
-<p>ticket&#x27;s rule. A parallel session&#x27;s PR 705 makes her own arm-out count (Junyan&#x27;s &quot;fix it so it can figure</p>
-<p>out these errors&quot;). Row still Upcoming.</p>
-<ul>
-<li>- EOB false cards: Desiree Joy 509A 09-26 (13:30–14:30) was carded 114 s after her 13:26:45 disarm, because</li>
-</ul>
-<p><code>studio_disarmed()</code> read the ledger only to <code>now - 2 min</code>; the window also opened at 13:00, before her start.</p>
-<p>Makiko Yamane 509B 09-28 was carded 24 min before her 11:45 start (same cause: <code>end - 90</code> is before the start</p>
-<p>for a booking of 90 min or less).</p>
-
-<p><b>Fault 2 is not a code fault.</b> Each &quot;silent&quot; row had its record: 🔧 Sweep Feedback <code>Booking still open past its</p>
-<p>end</code> rows for Thea (09-26 21:22Z, New), Nabil (09-26 23:22Z, Applied) and Risa (09-27 17:21Z, Applied), each</p>
-<p>about end + 2 h 20 min. Since <code>68434b350</code> (09-25) the 2-hour record goes to the Fixer on Sweep Feedback, never to</p>
-<p>✅ Actions. Desk Watch Section I line &quot;Was anything left silent?&quot; counted only <code>[attend:</code> cards. Fixed in</p>
-<p><code>~/.claude/scheduled-tasks/desk-watch/SKILL.md</code> (local task file): a Sweep Feedback row counts; a row with only</p>
-<p>that record is printed on a <code>still open, with Fixer row:</code> line.</p>
-
-<p><b>Built: desk-correspondence PR 706</b> (<code>claude/158-attendance-errors</code>), not merged, not deployed.</p>
-<ul>
-<li>- Witness path: a keypad entry counts by the renter&#x27;s or group&#x27;s id OR a recorded name matching the renter, an</li>
-</ul>
-<p>authorized user or the title&#x27;s <code>[Facilitator: ...]</code>; only a later disarm by their own people is a return; an</p>
-<p>arm-out before the end counts; fires only after end + 2 min. Completion only. No-show, continuity and</p>
-<p>In Studio rules unchanged.</p>
-<ul>
-<li>- EOB card: not before start + 15 min; the panel read runs to <code>now</code>.</li>
-<li>- 9 tests from the real cases (7 fail on <code>main</code>). Full suite 6072 pass; the 13 failures are all</li>
-</ul>
-<p><code>test_skedda_mcp_config.py</code>, identical on <code>main</code> (local venv lacks the MCP client package).</p>
-<ul>
-<li>- PR 705 merged to <code>main</code> 2026-09-29 14:09Z (deploy state not read). 706 now carries a merge of that <code>main</code></li>
-</ul>
-<p>(append-only test conflict, both kept): full suite 6081 pass, same 13 local-only failures.</p>
-
-<p><b>Next:</b> Junyan merges 706 (and 705) and says deploy. Then 137&#x27;s check 4 runs again under the corrected Desk</p>
-<p>Watch read. Acceptance line &quot;Nabil, Risa/Jillian, Thea read Complete from <code>attendance: wrote</code> lines&quot;: Nabil and</p>
-<p>Risa/Jillian are already Complete (by the lane after <code>7c2aad3a8</code>); Thea needs 705.</p>
-
-<h2>Deployed 2026-09-30 (Junyan: &quot;it&#x27;s merged deploy&quot;)</h2>
-
-<ul>
-<li>- PR 706 merged as <code>3128cca02</code>. Hostinger <code>update</code> run 36739197767 succeeded (&quot;Activated event-gate 3128cca…&quot;);</li>
-</ul>
-<p><code>/health</code> → <code>git_sha 3128cca</code>, started 2026-09-30 15:50:00Z. Deploy branch deleted.</p>
-<ul>
-<li>- Same deploy also carried PR 742 (<code>owner_text_release.py</code>, Fixer / Desk Sort problems to #desk-status) and</li>
-</ul>
-<p>PR 708 (canon), both merged by Junyan. PR 705 (Thea&#x27;s own arm-out) was already live in <code>88abf47</code>.</p>
-<ul>
-<li>- Not yet read: the host journal <code>attendance: wrote</code> lines after the deploy, and Thea&#x27;s board row. The next Desk</li>
-</ul>
-<p>Watch reads both. Acceptance: then 137&#x27;s check 4, three clean days under the corrected Section I read.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">10</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -3742,7 +3146,628 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#156</span><span class="emoji">🔎</span><span class="done-title">The attendance program says which booking it marked done</span><span class="done-date">2026-09-29</span></summary><div class="done-body"><ul class="plain-bullets"><li>Cut Sep 23 from 137. Since the Sep 20 alarm fix the program does mark bookings done: 12 times on Sep 22</li><li>But its note only gives a count, and the note gets cut off. So nobody can say which of the day&#x27;s done bookings it marked</li><li>Fix: one line per booking it marks, with the booking&#x27;s id and a re-read that shows it stuck. One line per error too, so the cut-off stops hiding why some passes fail</li><li>The first such line whose booking reads done closes 137&#x27;s last program check</li><li>CLOSED Sep 29. Deployed Sep 25; on Sep 27 the watch saw 18 named &#x27;done&#x27; lines, all correct. 137&#x27;s check 2 is met</li><li>Sep 23: built and tested (4,753 checks pass), pull request 477 open. Nothing changes in what the program decides or writes. Waiting for Junyan to merge and send it to the server</li><li>Sep 25: merged and on the server (6:41pm UTC). The daily watch now looks for the new lines. Stays open until the watch sees the first line for a booking that really reads done, and names why some passes fail</li><li>CLOSED Sep 29. In four days the program marked 35 bookings done and wrote a line for each. Three checked on the board: all read done. That meets 137&#x27;s program check</li><li>The &#x27;errors&#x27; are bookings it could not decide yet. It retries each hour, and 31 of 34 were later marked done. One is still open: Thea (Giggster), 509B, Sep 26</li><li>Sep 29: Thea did come. Staff let her in from the app, and she locked up with her own code at 3:15. The program only counted a renter unlocking. Fix (pull request 705): a renter locking up with their own code also counts. Waiting for Junyan to merge</li><li>Sep 29: live. Junyan: &#x27;if they use their codes it proves they came.&#x27; The first run after the change marked Thea&#x27;s booking done, and that run had no errors</li><li>Sep 30: Junyan asked that the robot know when he locks or unlocks from the app. The alarm record kept those as a login number with no name, and forgot names on every restart. Two fixes are ready (alarm 29, desk 746). Whose login number 13152301 is: not yet known; the fix will log it the next time it signs in</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>the attendance lane prints one line per Complete it writes, naming the row — 137&#x27;s check 2 becomes readable</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#137</span><span class="emoji">🧹</span><span class="done-title">The last leftover chore becomes a program that spots the work and hands it over</span><span class="done-date">2026-10-02</span></summary><div class="done-body"><ul class="plain-bullets"><li>Sep 11: Junyan ruled the program finds the booking, the thinking robot decides. Built the same day, never switched on</li><li>Sep 13: a different program took over the whole chore and was allowed to mark a renter as a no-show by itself. The old chore was cut from the robot&#x27;s list before anyone saw the new program work</li><li>Sep 14/15: Junyan took that back. A program may mark &#x27;in studio&#x27; and &#x27;done&#x27;. A no-show is never marked by a program: it writes a card, the Ops Lead reads it, and once the &#x27;we missed you&#x27; text is queued the job is done</li><li>Checked on the server: the new program is running, reads 2 bookings a pass, has written nothing. Both bookings had no arrival on record, so refusing was right</li><li>Sep 16: the card path (143) and the lock fix (144) are both done and live. Eleven cards have been written; every one was worked. None was a true no-show</li><li>CLOSED Oct 2. All four checks met: the program marks bookings done by itself, says which, hands real doubts to a person, and had three quiet mornings in a row (Sep 28 to 30)</li><li>Earlier note: two checks left: the program has not yet been seen marking a booking done by itself (it keeps refusing because the alarm read looks incomplete), and the daily watch is on day 1 of 3 quiet days</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
+
+<p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
+<p><b>093</b> on the assumption that the FAST-TRACK retirement and the</p>
+<p>JOB 1 remainder deletion were one canon pass. They are not: FAST-TRACK&#x27;s owners were all live and</p>
+<p>seen acting; the JOB 1 remainder&#x27;s are not.</p>
+
+<p><b>The remainder</b> (<code>concierge-orchestration.md</code> step 5, <code>job-1-adt-alarm.md</code> Steps 4 / 4.5 / 4.7 / 5):</p>
+<p>the judgment half of <code>Booking Status</code> — <code>Missed Booking</code> (multi-studio read, continuity-chain rule),</p>
+<p>arrival-without-departure, yesterday&#x27;s stragglers and the end-time completeness sweep — the</p>
+<p>pre-send EOB cancel for a likely no-show (4.7), and the &quot;Complete + PBF Unsent next day&quot; flag (5).</p>
+
+<p><b>What is observed today, and what is not:</b></p>
+
+<ul>
+<li>- <code>fbs-monitor/build.py sync_booking_status()</code> (every ~15 min) flips the ONE unambiguous case —</li>
+</ul>
+<p>arrived AND departed AND end passed → <code>Complete</code> — and by its own docstring leaves every judgment</p>
+<p>flip to the Concierge. Cover for part of Step 4 only.</p>
+<ul>
+<li>- Invariants T (GTG booking, no arrival signal) and U (HTA row, end &gt; 1 h old, no PBF row — the</li>
+</ul>
+<p>2026-09-11 rule from <b>052</b>) are <b>not built</b>; <code>invariants.py</code></p>
+<p>carries A–E, G–I, K. The PBF line is a Desk Watch human read (<b>136</b>).</p>
+<ul>
+<li>- Nothing deterministic classifies a no-show or a straggler. 4.7&#x27;s EOB cancel has no code owner</li>
+</ul>
+<p>either (<code>eob_timing.py</code> is a live-authority check for existing rows, not a no-show detector).</p>
+
+<p><b>Decide, per step, one of two things:</b> (a) name the code lane that covers it and observe it</p>
+<p>acting — T and U on the 046 roster, <code>sync_booking_status</code> extended to the straggler case, or a</p>
+<p>new event-gate check — or (b) rule it stays LLM work, but as a <b>flagged verb</b> (a <code>Next Action</code></p>
+<p>row the tick raises: &quot;classify this booking&quot;) rather than a self-scanning Concierge step, the</p>
+<p>shape <b>094</b> chose for JOB 4&#x27;s resumption residue.</p>
+
+<h2>Progress 2026-09-11 — ruled and BUILT; deployment staged; canon retirement waits on observation</h2>
+
+<p><b>Ruling (Junyan, in session):</b> <i>code detects, the LLM classifies.</i> Option (a)+(b) as one shape —</p>
+<p>a deterministic detector on the gate, every finding a flagged verb the Concierge works, no</p>
+<p>auto-flip of <code>Missed Booking</code> (a wrong flip is the Responder&#x27;s &quot;we missed you&quot; auto-send).</p>
+
+<p><b>Built — dc-canon <code>a0b5c4e99</code> on <code>main</code>:</b> <code>services/event-gate/job1_flags.py</code> + route</p>
+<p><code>POST /job1-flags</code> (<code>app.py</code>), README section, 31 tests (suite 2318 green). Four kinds, one ⏩</p>
+<p>Next Action row each (<code>Raised by = Desk Invariants</code>, key <code>[job1:&lt;kind&gt;:&lt;board row id&gt;]</code> in</p>
+<p><code>Basis</code> for dedup): <code>classify</code> (Step 4 / 4.5 — unclassified ≥ 45 min past end), <code>no-arrival</code></p>
+<p>(invariant T — first-timer path, start + 20, no disarm), <code>eob-no-show</code> (Step 4.7 — inside end − 90</p>
+<p>… end − 15, EOB undecided, carries <code>Deadline</code>), <code>pbf-missing</code> (invariant U, 052/136 rule — end +</p>
+<p>60, HTA row exists, no PBF row any status). Never writes <code>Booking Status</code>, the queue, or a message.</p>
+<p>Shadow by default; <code>JOB1_FLAGS_LIVE=1</code> writes; one <code>Run Error</code> row on failure, lane-titled.</p>
+<p>This also gives the retired first-timer watch (092) its new home — invariant T is the check, the</p>
+<p>proactive text is not rebuilt.</p>
+
+<p><b>Deployment:</b> image <code>a0b5c4e99…</code> <b>staged and verified</b> on the Hostinger host (deploy run</p>
+<p>34626272940; the first attempt timed out on SSH from the runner, retry succeeded). <b>Activation</p>
+<p>is Junyan&#x27;s</b> — the session&#x27;s activate call was blocked as a production container swap:</p>
+<p><code>gh workflow run deploy-event-gate --ref deploy/a0b5c4e99a053b9d6db26ea8c8df60b4c2c4f2e0 -f target=hostinger -f mode=activate</code>,</p>
+<p>then <code>/health</code> shows <code>git_sha a0b5c4e</code>, then delete the <code>deploy/…</code> branch.</p>
+
+<p><b>Owner checklist to reach acceptance (in order):</b></p>
+<ol>
+<li>1. Activate (above). Route is shadow: reads everything, writes nothing.</li>
+<li>2. Wire the host timer <code>danceannex-job1-flags</code> (every 10 min, path <code>/job1-flags</code>) —</li>
+</ol>
+<p><code>hosting/README-hostinger.md</code> → Scheduling. Hermes cannot.</p>
+<ol>
+<li>3. Read shadow <code>job1-shadow: would flag …</code> lines for a few days against the board (Desk Watch</li>
+</ol>
+<p>task carries the line). Every would-flag should be a booking the Concierge would otherwise</p>
+<p>have had to find by scanning.</p>
+<ol>
+<li>4. Create the 🚥 Run Monitor row (<code>Paused</code>), set <code>JOB1_FLAGS_MONITOR_ROW</code>, flip</li>
+</ol>
+<p><code>JOB1_FLAGS_LIVE=1</code> (Junyan&#x27;s flip).</p>
+<ol>
+<li>5. <b>Once rows are seen being worked</b> — a <code>classify</code> row closes with a real status flip, a</li>
+</ol>
+<p><code>pbf-missing</code> row closes with a queued PBF — retire orchestration step 5, give</p>
+<p><code>job-1-adt-alarm.md</code> its ⛔ RETIRED header (Steps 4 / 4.5 / 4.7 / 5 / 6 named to their cover;</p>
+<p>Step 1 enrichment stays), Plumbing Map entry, close this ticket. Step 6 (mark alarm emails</p>
+<p>read) is deleted with no cover: the feed is a backup and an absent email is never evidence.</p>
+
+<p>Ticket stays <b>open</b> (035&#x27;s test): the build is done; the retirement is not earned yet.</p>
+
+<h2>Progress 2026-09-14 — the 09-13 transfer is found, and Junyan re-rules</h2>
+
+<p><b>Found:</b> after this ticket was built, the Astra lane moved the work under a different design.</p>
+<p>dc-canon <code>a264942c4</code> (09-13) retired JOB 1 from <code>concierge-orchestration.md</code> and</p>
+<p><code>job-1-adt-alarm.md</code> before any cover was seen acting. <code>board_status.py</code> (merged, deployed in</p>
+<p><code>94bcac4</code>) takes In Studio / Complete / <b>Missed Booking</b> writes behind <code>BOARD_RECONCILE_MODE</code>,</p>
+<p><code>RECONCILE_SWEEP_LIVE</code> and <code>BOARD_STATUS_OWNER=reconcile</code>. <code>job1_flags.run()</code> returns</p>
+<p><code>retired</code> when <code>BOARD_STATUS_OWNER=reconcile</code>. PR264 merged although the</p>
+<p><b>139 crosswalk</b> row 3 said Hold.</p>
+
+<p><b>Observed (Notion read, 09-12…09-14):</b> 31 board rows: 28 Complete, 1 Cancelled, 2 Upcoming,</p>
+<p>0 In Studio, 0 Missed Booking. 0 <code><b>job1:</code> rows ever filed, so the 137 lane never went live.</p>
+<p>The reconcile sweep filed 12 &quot;Specialized reconciliation incomplete&quot; + 2 &quot;stale sweep</p>
+<p>source/readback failed&quot; rows on 09-14 (15:44Z–23:32Z). The &quot;we missed you&quot; draft is held at</p>
+<p>Pending Review by canon (<code>the-responder.md</code>), so <code>Missed Booking</code> is not send authority; the</p>
+<p><code>job1_flags.py</code> comment that says otherwise is stale. Host flag values are <b>unknown</b>: Hermes has</p>
+<p>no route to the host, and Junyan&#x27;s first readback ran on the Mac (no Docker there), so its</p>
+<p>&quot;unset&quot; lines are not evidence.</p>
+
+<p><b>Rulings (Junyan, in session):</b></p>
+<ol>
+<li>1. <b>Split.</b> Code writes In Studio and Complete. <code>Missed Booking</code> is never written by code —</li>
+</ol>
+<p>it stays a flagged card that someone classifies.</p>
+<ol>
+<li>2. Junyan approved the 09-13 transfer at the time and <b>withdraws it</b>, after the Astra mess.</li>
+</ol>
+<p>The automatic <code>Missed Booking</code> write goes; ruling 1 governs.</p>
+<ol>
+<li>3. <b>Canon stays retired.</b> JOB 1 does not return to the Concierge (&quot;Concierge already doesn&#x27;t</li>
+</ol>
+<p>function properly. I need to create a system that works as soon as possible&quot;). A Desk Watch</p>
+<p>line covers the gap until the cover is seen acting.</p>
+
+<p><b>Host readback (Junyan, 2026-09-15 01:23–01:27Z, reconcile-sweep log):</b> <code>board_mode: live</code>,</p>
+<p>attendance <code>live: true</code>, <code>checked: 2, written: 0, errors: 2</code> on every pass; <code>alarm_context</code></p>
+<p>ok; <code>end_of_day</code> fails <code>OperationalError: database is locked</code>; the sweep ends</p>
+<p><code>Specialized reconciliation incomplete</code>. So <code>board_status.py</code> is live and has written nothing.</p>
+
+<p><b>Round 2 rulings (Junyan, in session):</b></p>
+<ol>
+<li>4. <b>One program.</b> <code>board_status.py</code> files the card. Where its evidence reads no-show, and where</li>
+</ol>
+<p>a booking is still unresolved hours after its end, it files a ✅ Actions to Perform card with</p>
+<p>the evidence instead of writing the status. <code>job1_flags.py</code> retires.</p>
+<ol>
+<li>5. <b>Ops Lead works the card</b> (<code>For = Ops Lead</code>, next-day <code>Deadline</code>). The only downstream action</li>
+</ol>
+<p>is a message: once the &quot;we missed you&quot; message is queued, everyone has done their job. If Ops</p>
+<p>Lead decides not to send, that is of no consequence. So the card&#x27;s proof is the queued Message</p>
+<p>Queue row (<code>Proof type = message_queue</code>) or Ops Lead&#x27;s decline, and the sweep can close it.</p>
+<ol>
+<li>6. Of the other 09-11 kinds: <code>pbf-missing</code> deleted (<code>followup_coverage.py</code> covers it),</li>
+</ol>
+<p><code>no-arrival</code> deleted (nobody texts on it), <code>eob-no-show</code> moves into the same card path.</p>
+<ol>
+<li>7. <b>137 closes when:</b> the host readback shows the writer set up correctly; one live pass</li>
+</ol>
+<p>writes ≥ 1 Complete with readback; ≥ 1 Missed Booking card is filed and closed; three days of</p>
+<p>Desk Watch show no booking left Upcoming &gt; 2 h past end without a card. Then <code>job1_flags.py</code></p>
+<p>goes, the stale comment goes with it, and the Plumbing Map gets its entry.</p>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- JOB 1&#x27;s remainder is removed from <code>concierge-orchestration.md</code> step 5 and the job page carries a</li>
+</ul>
+<p>⛔ RETIRED header — <b>only after</b> each deleted step&#x27;s cover is seen acting</p>
+<p>([035</b>&#x27;s test), or is ruled into the flagged-verb shape.</p>
+<ul>
+<li>- Every deleted step names its covering mechanism in the retired page (no orphans).</li>
+<li>- Invariants T and U, if they are the cover, are live on the gate and have produced at least one</li>
+</ul>
+<p>real finding or one clean pass with a heartbeat.</p>
+<ul>
+<li>- Plumbing Map entry.</li>
+</ul>
+
+<h2>Done this session (2026-09-15)</h2>
+
+<ul>
+<li>- Build cut: <b>143</b>. Lock fault cut: <b>144</b>.</li>
+<li>- Desk Watch Section I rewritten for the new shape (silent-booking check, code-wrote-Missed-Booking breach check, 137 status line).</li>
+<li>- Map Decisions so far entry added; tickets board rendered and pushed (day-sheet <code>9ffc48f</code>).</li>
+<li>- Nothing changed on the host, in canon, or in event-gate code.</li>
+</ul>
+
+<h2>Progress 2026-09-16 — 143 and 144 closed; close checks read</h2>
+
+<ul>
+<li>- <b>143</b> CLOSED: <code>board_status.py</code> files the card (PR #287, live 09-15 03:15Z);</li>
+</ul>
+<p><code>job1_flags.py</code>, its route, tests and env reads are gone from <code>main</code>; canon <code>job-1-adt-alarm.md</code></p>
+<p>and the Plumbing Map already carry the card shape. The stale comment went with the file.</p>
+<ul>
+<li>- <b>144</b> CLOSED: no lock-fault rows since 09-15 03:28Z. The</li>
+</ul>
+<p>two later &quot;could not run&quot; rows are a stale-sweep <code>KeyError</code>, cut as</p>
+<p><b>145</b>.</p>
+<ul>
+<li>- ✅ board read (09-16 22:00Z): 11 <code><b>attend:</code> cards since 09-15 03:26Z — 7 <code>unresolved</code>, 4 <code>eob</code>,</li>
+</ul>
+<p>0 <code>missed</code>. Statuses: 6 Cancelled, 4 Processed, 1 Pending Review (509A 09-16 14:45–15:45, filed</p>
+<p>21:54Z, Deadline 09-17). Every <code>unresolved</code> reason is &quot;no decision: missing, stale or incomplete</p>
+<p>alarm coverage&quot;.</p>
+<ul>
+<li>- Desk Watch 09-16 (13:50Z run) Section I: 0 silent bookings, code never wrote Missed Booking,</li>
+</ul>
+<p>3 attendance cards all Cancelled. Line: <code>137: day 1 of 3 clean</code>.</p>
+
+<p><b>Ruling-7 checks, as of 09-16:</b></p>
+<ol>
+<li>1. Host readback shows the writer set up correctly — <b>met</b> (09-15 readback: <code>board_mode: live</code>, attendance <code>live: true</code>).</li>
+<li>2. One live pass writes ≥ 1 Complete with readback — <b>not verified.</b> Every observed pass returned</li>
+</ol>
+<p>&quot;incomplete alarm coverage&quot; and wrote nothing; the renters had attended on keypad evidence (143&#x27;s</p>
+<p>close note). PRs #292 / #297 loosened the coverage read on 09-14 / 09-15; no Complete write has</p>
+<p>been confirmed since. Needs one host log line <code>written: 1</code> or a board row whose Complete flip</p>
+<p>the sweep log claims.</p>
+<ol>
+<li>3. ≥ 1 Missed Booking card filed and closed — <b>not met on the strict read.</b> 0 <code>missed</code> cards; the</li>
+</ol>
+<p>worked cards are all <code>unresolved</code> / <code>eob</code>. Junyan may rule that a closed <code>unresolved</code> card counts,</p>
+<p>since Ops Lead makes the same decision from it.</p>
+<ol>
+<li>4. Three clean Desk Watch days — day 1 of 3 (09-16). Day 3 is the 09-18 run.</li>
+</ol>
+
+<p><b>Open fault, not ticketed:</b> the coverage check refuses more than the panel warrants, so the card</p>
+<p>path is carrying attended bookings as <code>unresolved</code> (7 of 7 so far). That is safe under ruling 1 but</p>
+<p>it is why check 2 is unmet. If the 09-17 / 09-18 watches still show no Complete write, cut a ticket.</p>
+
+<h2>Progress 2026-09-19 — close checks re-read; the clock did not run, and the board&#x27;s own evidence went dark</h2>
+
+<p>Read from Notion (✅ Actions, 🛎️ FBS AI Support, 📤 Message Queue, 📊 Workflow Reports), the</p>
+<p>Desk Watch tally and dc-canon <code>main</code>. The host journal was <b>not</b> read: the SSH read was refused as</p>
+<p>a production read in this session, so &quot;one live Complete with readback&quot; stays UNCHECKED from here.</p>
+
+<p><b>Ruling-7 checks, as of 09-19 evening:</b></p>
+<ol>
+<li>1. Writer set up correctly — met (unchanged since the 09-15 readback).</li>
+<li>2. One live Complete write with readback — <b>still unverified.</b> Eleven board rows dated 09-17/09-18</li>
+</ol>
+<p>read Complete, but every one has a blank <code>Disarmed</code> / <code>Armed</code> cell, so neither <code>sync_booking_status</code></p>
+<p>(needs both clocks) nor the pre-#347 <code>board_status.py</code> (needs alarm coverage) could have written</p>
+<p>them on board evidence. Teo Rivas 901 09-18 was seeded by hand &quot;attended, Junyan&quot;. Without the host</p>
+<p>log line <code>written: 1</code>, the Complete flips cannot be attributed to the lane.</p>
+<ol>
+<li>3. One Missed Booking card filed and closed — <b>not met.</b> 45 <code>[attend:</code> cards since 09-15, kinds</li>
+</ol>
+<p><code>unresolved</code> and <code>eob</code> only, <b>zero <code>missed</code></b>. Zero &quot;we missed you&quot; rows in the Message Queue since</p>
+<p>09-15. Every closed card was a false positive (Cancelled by agent or Won&#x27;t Do by Junyan).</p>
+<ol>
+<li>4. Three clean Desk Watch days — <b>the clock stalled at day 2.</b> The tally has 09-16 and 09-17 and</li>
+</ol>
+<p>nothing after; no Desk Watch report exists for 09-18 or 09-19. Day 3 was never read.</p>
+
+<p><b>The fault underneath (found in dc-canon, not on the map):</b> the board&#x27;s <code>Disarmed</code> / <code>Armed</code> clocks</p>
+<p>stopped being written at <b>2026-09-16 16:30</b> and their writer was never identified (PR #347 commit</p>
+<p>message, <code>board_status.py:361</code>). Every attendance card since then — 13 on 09-17, 7 on 09-18, 8 so</p>
+<p>far on 09-19 — fired on &quot;no disarm&quot; and every one was an attended renter. PR #347 (live 09-19) moved</p>
+<p>the EOB check onto the studio panel ledger instead, and <code>ff069bb44</code> renamed the cards to</p>
+<p><code>Raised by = Attendance Sweep</code>; today&#x27;s 20:23Z and 23:27Z cards carry the new name, so the fix is</p>
+<p>deployed. <code>fbs-monitor</code> reads the clocks as a fallback only (<code>build.py:1318</code>) and no file in</p>
+<p>dc-canon or fbs-monitor writes them. Cut as [146</b>.</p>
+
+<p><b>Open now on the board:</b> 9 <code><b>attend:</code> cards Pending Review, oldest Isabel Campo Jurado 509A 09-18</p>
+<p>18:30 (filed 05:09Z, Deadline 09-19, now past). Junyan&#x27;s Won&#x27;t Do on the five Isabel EOB cards and</p>
+<p>the Cancelled agent closes are the only worked cards this window.</p>
+
+<p><b>Not moved:</b> canon, event-gate code, host switches, the Desk Watch prompt.</p>
+
+<p><b>Waiting on Junyan (three rulings, [148</b>):</b></p>
+<ul>
+<li>- Does a closed <code>unresolved</code> / <code>eob</code> card count for check 3, given no true no-show has occurred in</li>
+</ul>
+<p>five days and Ops Lead makes the same decision from either card?</p>
+<ul>
+<li>- Does a hand-written Complete count for check 2, or must the lane&#x27;s own <code>written: 1</code> be seen?</li>
+<li>- Does the three-day clock restart from the first day after 146 is fixed (the cards so far were all</li>
+</ul>
+<p>false positives from a dead evidence source), or continue from 09-17?</p>
+
+<h2>Code bug 2026-09-20 — attendance cards fire on attended bookings; a true no-show can never reach <code>missed</code></h2>
+
+<p>Filed from the desk QA follow-up (<code>Claude-DanceAnnex/.scratch/desk-qa/2026-09-19-sweep.md</code>,</p>
+<p>&quot;Follow-up: attendance cards&quot;). Read-only: nothing below was changed. Code cited is the J28 mirror</p>
+<p>copy of <code>services/event-gate</code> (<code>board_status.py</code>, <code>eob_timing.py</code>).</p>
+
+<p><b>Evidence.</b> Every <code>[attend:</code> card 09-14 → 09-17 AM cross-checked against Alarm.com panel history</p>
+<p>(fbs-monitor deck history, clone ends 09-17 13:47Z): Salia 693 09-14, Greg Samba 901 09-14, August</p>
+<p>509A 09-15, Jia 509B 09-15, Marco Villa 509B 09-15, Danica 693 09-16, Simona 509A 09-16, Jia 527</p>
+<p>09-16, Harmony 509A 09-16, Krista Flynn (Nina Li FBS) 901 09-16 — <b>all attended on named keypad</p>
+<p>evidence; every card was false.</b> Every <code>classify</code> card&#x27;s Basis reads <code>no decision: missing, stale or</p>
+<p>incomplete alarm coverage</code>. <code>missed</code>-kind cards filed since go-live: 0. (Correction to the sweep&#x27;s</p>
+<p>URGENT 3: 901 09-16 20:30 was attended by the facilitator, Krista, 20:31–22:44; Junyan&#x27;s &quot;should</p>
+<p>have gone out&quot; note was about the EOB text.)</p>
+
+<p><b>Five defects:</b></p>
+
+<ol>
+<li>1. <b><code>studio_disarmed()</code> ignores ledger gaps</b> (<code>board_status.py</code> ~L372). Returns <code>False</code> when the</li>
+</ol>
+<p>door-history payload has no disarm event, without reading <code>covered</code> / <code>gaps</code> / <code>covering_gaps</code>.</p>
+<p>Docstring promises <code>None</code> on a gap; the code only returns <code>None</code> on an exception. With the alarm</p>
+<p>websocket dropping every ~6 min (L65 comment), a key-in that fell inside a drop reads as &quot;no</p>
+<p>disarm&quot; → false <b>EOB card</b>. This is the 09-17/18 false-card wave; PR #347 moved the read to</p>
+<p>the panel ledger but did not add the gap check.</p>
+<ol>
+<li>2. <b><code>timeline()</code> freshness/horizon gate fails nearly always</b> (L95–101: <code>updated_at</code> within 120 s</li>
+</ol>
+<p>of <code>now</code>, <code>covers_since ≤ start−6h</code>, <code>covered=True</code> or every gap tolerable). The failure is a</p>
+<p>plain <code>ValueError</code>, and <code>observe()</code> (L292) only routes <code>CoverageGap</code> / <code>GAP_DEFERRALS</code> into</p>
+<p><code>corroborate()</code> — so Alarm.com corroboration, which had the answer in every case above, is</p>
+<p>skipped. <code>decide()</code> never decides; the row stays Upcoming; <code>unresolved()</code> files the generic</p>
+<p><b>classify card</b> 2 h after the end for every booking, attended or not.</p>
+<ol>
+<li>3. <b><code>Missed Booking</code> is unreachable</b> (L232–243): needs all five rooms gap-free, armed baseline</li>
+</ol>
+<p>everywhere, zero activity during the window. With (2) the branch never executes. A real no-show</p>
+<p>therefore gets the same generic classify card as an attended booking — or <b>no card at all</b> when</p>
+<p>another writer flips the row Complete first (Nina/Krista row went Complete 02:53Z 09-17;</p>
+<p>FBS Monitor sync has <code>BOOKING_STATUS_SYNC_DISABLED=1</code> since 09-13 per <code>gh variable list</code>, so</p>
+<p>that was corroboration-live or a human).</p>
+<ol>
+<li>4. <b>Attended rows never close without a human</b> — Complete is only written on the ledger path</li>
+</ol>
+<p>(blocked by 2) or corroboration-live (only reachable via <code>CoverageGap</code>). Hence the 8 rows stuck</p>
+<p>Upcoming on 09-19 and the 09-19 &quot;one live Complete with readback&quot; check staying unverified.</p>
+<ol>
+<li>5. <b>Facilitator bookings lose their EOB</b> (<code>eob_timing.py:43</code>): Skedda holder (Nina) ≠ queue</li>
+</ol>
+<p>recipient (Krista) → <code>hold</code> &quot;Booking recipient or booking type changed.&quot; → Needs Fix → Will Not</p>
+<p>Send at Desk Sort. This is the text that should have gone out on 09-16. Owner: Registrar lane,</p>
+<p>but it lands here because it is the 4.7 pre-send EOB decision this ticket covers.</p>
+
+<p><b>Fix outline (not applied):</b></p>
+
+<ul>
+<li>- (a) <code>studio_disarmed()</code>: return <code>None</code> when <code>covered</code> is not True, or when any entry in <code>gaps</code> /</li>
+</ul>
+<p><code>covering_gaps</code> overlaps <code>[start−30 min, now]</code>; <code>None</code> already suppresses the EOB card.</p>
+<ul>
+<li>- (b) Route the plain &quot;missing, stale or incomplete&quot; <code>ValueError</code> from <code>timeline()</code> into</li>
+</ul>
+<p><code>corroborate()</code> the same way <code>CoverageGap</code> is, or relax the 120 s freshness gate to the tick</p>
+<p>cadence (10 min) — corroboration&#x27;s Alarm.com read is the source that was right ten times out of ten.</p>
+<ul>
+<li>- (c) <code>card_props()</code>: include the Alarm.com panel read (arrived/departed by whom) in the card</li>
+</ul>
+<p>Basis so Ops Lead is not re-deriving it; a card whose panel read shows a named arrival should not</p>
+<p>be filed as <code>unresolved</code> at all.</p>
+<ul>
+<li>- (d) <code>eob_timing.decide()</code>: treat the booking&#x27;s facilitator / authorized users as valid recipients</li>
+</ul>
+<p>— compare the holder against the row&#x27;s Artist relation <i>and</i> its Authorized Users, not the holder</p>
+<p>alone — before returning the &quot;recipient changed&quot; hold.</p>
+<ul>
+<li>- (e) Tests to add: <code>test_board_status.py</code> — EOB card not filed when the disarm window has a gap;</li>
+</ul>
+<p>classify card not filed when corroboration returns Complete; <code>test_eob_timing.py</code> — facilitator</p>
+<p>recipient is not a hold.</p>
+
+<p>Acceptance for this ticket&#x27;s check 3 should not be read until (a)–(c) are live: with the current</p>
+<p>code, &quot;one Missed Booking card filed and closed&quot; cannot happen for a genuine no-show.</p>
+
+<h3>Addendum 2026-09-20 — close the ledger&#x27;s holes at the source (Junyan: &quot;the robot can never say it doesn&#x27;t know&quot;)</h3>
+
+<p>The ~5.5-minute socket close is Alarm.com&#x27;s (code 1008, server-side, canon <code>studio-activity.md</code></p>
+<p>&quot;do not re-litigate&quot;); it cannot be removed. Since alarm-monitor #9/#10 the reconnect is 0.3 s</p>
+<p>median (09-17: 138 reconnects / 12.7 h, longest 86 s), so the holes are tiny — the false cards come</p>
+<p>from <code>board_status</code> refusing to decide on any hole, not from lost events. Fix outline item (b) above</p>
+<p>is therefore first. To make &quot;don&#x27;t know&quot; a rare answer rather than the default, two source-side</p>
+<p>changes on top of (b), both in alarm-monitor (<code>alarm_monitor/door_events.py</code>, <code>event_listener.py</code>):</p>
+
+<ul>
+<li>- (f) <b>Staggered second socket.</b> Each websocket connection is closed on its own ~5.5 min clock.</li>
+</ul>
+<p>Hold two connections, opened ~2.75 min apart; merge their events into the one ledger keyed</p>
+<p><code>(studio, kind, ts-to-the-second, device)</code> (the same dedup key <code>panel_ledger_pull.py</code> already</p>
+<p>uses). A gap is recorded only when <i>both</i> sockets are down at once. <code>/door-history</code> then</p>
+<p>returns <code>covered: true</code> for virtually every window, and <code>timeline()</code>&#x27;s existing gate passes</p>
+<p>without being loosened. Restart safety: on process start open the second socket after the</p>
+<p>first is confirmed subscribed, never both at t=0 (they would then drop together forever).</p>
+<ul>
+<li>- (g) <b>Stitch the arm-state poller into gaps.</b> <code>/arm-history</code> (the once-a-minute panel-state</li>
+</ul>
+<p>poll) never drops but carries no actor. When a recorded gap in <code>/door-history</code> is bracketed by</p>
+<p>a state change in <code>/arm-history</code> (armed before, disarmed after), write a synthetic ledger event</p>
+<p>inside the gap: <code>kind: disarm</code>, <code>actor: null</code>, <code>actor_source: &quot;arm_state&quot;</code>, <code>at: &lt;poll time&gt;</code>,</p>
+<p><code>gap_filled: true</code>. <code>board_status.decide()</code> must treat it as <b>presence evidence only</b></p>
+<p>(blocks a no-show, never a named arrival, never Complete on its own) — the same standing a</p>
+<p>nameless door/motion event has today (L237–242). Nothing changes for billing: <code>departure.verdict</code></p>
+<p>already ignores nameless events for <code>arm_then_exit</code>.</p>
+
+<p>What stays honest: if both sockets <i>and</i> the poller are down (Cloud Run outage, Alarm.com login</p>
+<p>revoked), <code>covered</code> is still false and the lane still files a review card instead of a no-show</p>
+<p>card. &quot;Never says it doesn&#x27;t know&quot; means a hole is closed by a second witness whenever one exists;</p>
+<p>it never means a dead pipe reads as the renter&#x27;s absence (house rule, unchanged).</p>
+
+<p>Not viable: backfilling from Alarm.com&#x27;s REST <code>activity/historyEvents</code> on each reconnect — that API</p>
+<p>is pinned to one selected system and cannot be switched (canon, found 2026-08-18).</p>
+
+<p>Order of work: (a) → (b) → (f) → (g) → (c) → (d), tests per (e) plus a two-socket merge test and a</p>
+<p>gap-stitch test in alarm-monitor.</p>
+
+<h3>Built 2026-09-20 — two PRs, nothing merged, nothing deployed</h3>
+
+<ul>
+<li>- <b>desk-correspondence #376</b> (<code>claude/137-attendance-cards</code>) — items (a), (b), (c) plus the canon</li>
+</ul>
+<p>update to <code>library/studio-activity.md</code>. (d) was already on main (<code>eob_timing.claim_facilitated</code>).</p>
+<p>4315 tests pass.</p>
+<ul>
+<li>- <b>danceannex-alarm-monitor #15</b> (<code>claude/137-two-sockets-gap-stitch</code>) — items (f) and (g):</li>
+</ul>
+<p><code>alarm_monitor/listener_pool.py</code> (two staggered sockets, one ledger, gap only when both are down,</p>
+<p>re-stagger on alignment, open outage written cut at each flush) and <code>door_events.stitch_arm_state</code></p>
+<p>(nameless <code>arm_state</code> row into a hole, presence only). 482 tests pass. Default is two sockets</p>
+<p>(<code>ALARM_EVENTS_SOCKETS=1</code> to fall back) — a third concurrent Alarm.com session in total.</p>
+
+<p>Order to land: #15 first (source), then #376 (consumer). After both are live, expect <code>covered:</p>
+<p>true</code> on nearly every window, zero <code>eob</code> cards for attended renters, and <code>classify</code> cards only for</p>
+<p>rows corroboration could not complete; a genuine no-show still goes through <code>missed</code> only when the</p>
+<p>five-room absence proof holds, otherwise <code>unresolved</code> with the panel read on the card.</p>
+
+<h3>Deployed 2026-09-20 (Junyan merged and deployed; Claude built)</h3>
+
+<ul>
+<li>- desk-correspondence #376 merged (<code>f7e2011c</code>); event-gate Hostinger <code>update</code> run 35515143382 (first attempt</li>
+</ul>
+<p>timed out on port 22 from the runner, rerun succeeded); <code>/health</code> → <code>git_sha f7e2011</code>, started 14:08:37Z.</p>
+<ul>
+<li>- danceannex-alarm-monitor #15 merged (<code>4b567c4</code>); image <code>alarm:pool-4b567c4</code></li>
+</ul>
+<p>(<code>sha256:0db4657d…</code>) built by Cloud Build from the Mac, pulled on the VPS with a one-hour gcloud token,</p>
+<p>swapped into compose for alarm-mcp + alarm-events (backup <code>compose.before-alarm-pool-4b567c4.json</code>).</p>
+<p>Logs: <code>[pool] GAP 14:24:11 → 14:24:13</code> (process start only), <code>socket 1 listening, 165s behind socket 0</code></p>
+<p>at ~14:27Z, per-socket GAPs after that and <b>no</b> <code>[pool] GAP</code>.</p>
+
+<p><b>Close-check clock restarts from 2026-09-21.</b> What to read tomorrow: <code>/door-history</code> windows should</p>
+<p>come back <code>covered: true</code>; ✅ Actions should show zero new <code>eob</code> cards for attended renters and any</p>
+<p><code>classify</code> card&#x27;s Basis should end with <code>Panel clocks:</code> and <code>Second source:</code> lines; the watchdog&#x27;s panel</p>
+<p>reads should be unchanged with a third Alarm.com session open.</p>
+
+<h2>Rulings 2026-09-20 — <b>148</b> closed; the close checks are re-cut</h2>
+
+<ol>
+<li>1. Check 1 met (unchanged). 2. <b>Check 2</b> needs the lane&#x27;s own host line (<code>written: 1</code> + <code>clocks:</li>
+</ol>
+<p>stamped N</code>, readback) after Junyan flips <code>BOARD_CLOCKS_MODE=live</code>; hand/unknown Completes never</p>
+<p>count; Junyan reads the host. 3. <b>Check 3</b> is now: one post-2026-09-20-deploy card with the panel</p>
+<p>read in its Basis, closed by Ops Lead with a queued &quot;we missed you&quot; row or a recorded decline; a</p>
+<p>real <code>missed</code> card is watched after close, not gated on. 4. <b>Check 4</b> restarts: day 1 = the</p>
+<p>2026-09-21 Desk Watch run (stand-in on this account, first run 09-20 22:12 = day 0); earliest</p>
+<p>close <b>2026-09-23</b>. A lane filing correctly on bad evidence is not &quot;seen acting&quot;.</p>
+
+<h2>Ruling 2026-09-23 — check 2: make the write visible (<b>156</b>)</h2>
+
+<p>Desk Watch 09-23: the 09-20 alarm-read fix works and the lane now writes (12 writes on 09-22), but</p>
+<p>it logs counts only, cut at 400 chars, so no Complete is attributable (9 on the board, 0 to this</p>
+<p>lane). Junyan ruled: fix it, &quot;people never tick done by hand&quot;. Cut 156: one <code>attendance: wrote</code></p>
+<p>line per write with row id and readback, and one line per error. Check 2 is met by the first such</p>
+<p>line whose row reads Complete. Check 3 (Caryl CUIZON 693 card, closed Won&#x27;t Do by an attended Desk</p>
+<p>Sort) still waits for Junyan to confirm that counts as closed by a person. Check 4: day 1 of 3 on 09-23.</p>
+
+<h2>Progress 2026-09-29 — checks 2 and 3 met; check 4 cut as 158</h2>
+
+<ul>
+<li>- <b>Check 2 MET (Desk Watch 09-27):</b> <code>attendance: wrote</code> line for <code>3e475032-81c4-81b5-823a-f14fd3cc6b4c</code></li>
+</ul>
+<p>693 09-26 (Shania Bridgewater), row reads Complete. <b>156</b> closed.</p>
+<ul>
+<li>- <b>Check 3 MET:</b> Caryl CUIZON 693 card, closed by the Desk Sort; Desk Watch records it as met on</li>
+</ul>
+<p>Junyan&#x27;s ruling (09-24 onward).</p>
+<ul>
+<li>- <b>Check 4 not met:</b> reset to day 0 on every watch 09-25 to 09-28 (false cards and silent bookings, all</li>
+</ul>
+<p>on renters the panel shows attended). Cause: the lane errors instead of writing Complete. Cut</p>
+<p><b>158</b>. 137 closes after 158 ships and three clean days follow.</p>
+
+<h2>Check 2 MET 2026-09-29 (read for <b>156</b>)</h2>
+
+<p>Host journal 2026-09-25 20:20Z to 09-29: 35 <code>attendance: wrote Complete … readback=ok</code> lines. First:</p>
+<p>Aris Wu 509B 2026-09-25 (<code>3e375032-81c4-8142-863b-de2f6032a1b0</code>, ~09-26 00:20Z); that row and two others</p>
+<p>(Nabil Fairbairn 693 09-26, Greg Samba 901 09-28) read Complete on the board with lane-written clocks.</p>
+<p>Check 2 is met by the lane&#x27;s own line, per the 09-20 ruling. 18 lines carried clocks, so <code>BOARD_CLOCKS_MODE</code></p>
+<p>is live on the host (146&#x27;s close evidence, for that ticket to record).</p>
+
+<h2>CLOSED 2026-10-02 — all four close checks met</h2>
+
+<ul>
+<li>- Check 1: writer live (09-15 host readback). Check 2: named <code>attendance: wrote Complete</code> line, 09-27</li>
+</ul>
+<p>(156). Check 3: Caryl CUIZON 693 card, Desk Sort close on Junyan&#x27;s ruling. Check 4: three clean Desk</p>
+<p>Watch days 09-28, 09-29, 09-30, read by the 10-01 run (&quot;137 CLOSE CHECKS MET&quot;), after 158.</p>
+<ul>
+<li>- Canon <code>library/job-1-adt-alarm.md</code> already carries the retired header and names each step&#x27;s cover.</li>
+</ul>
+<p>Plumbing Map entries exist for 143, 156 and #705. <code>job1_flags.py</code> deleted in 143.</p>
+<ul>
+<li>- Junyan asked 10-02 &quot;check did it read it&quot;: it did.</li>
+</ul>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#158</span><span class="emoji">🩹</span><span class="done-title">The attendance program gives up on people who did show up</span><span class="done-date">2026-10-02</span></summary><div class="done-body"><ul class="plain-bullets"><li>Cut Sep 29 from 137. The program now marks most bookings done and says which. That part works</li><li>But every day since Sep 24 it has got stuck on one or two renters who clearly came. The alarm shows them unlocking and locking up</li><li>When stuck, it either writes a wrong &#x27;did they come?&#x27; card, or, worse, says nothing and the booking sits open</li><li>Fix both: let it trust the renter&#x27;s own unlock and lock, and make sure a stuck booking always gets a card</li><li>After that ships, 137 needs three quiet mornings in a row to close</li><li>CLOSED Oct 2. Shipped Sep 30. All three stuck bookings now read done, and 137 got its three quiet mornings</li><li>Sep 29: found both causes. When the next renter unlocked right after someone left, the program threw away the first renter&#x27;s visit. It also ignored a host who unlocks under their own name</li><li>The &#x27;says nothing&#x27; part was the daily watch looking in the wrong place. Each stuck booking did get a to-do row, on the Fixer&#x27;s list. The watch now checks there too</li><li>Also fixed: the &#x27;did they come?&#x27; card no longer fires before a booking starts (Makiko, Sep 28) or right after someone unlocks (Desiree, Sep 26)</li><li>Fix is pull request 706, tested on the real cases. Waiting for Junyan to merge and send it to the server. Thea&#x27;s booking is fixed by pull request 705, merged Sep 29</li><li>Sep 30: merged and on the server (3:50pm UTC). Next: three quiet mornings in a row from the daily watch closes 137</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>attendance errors on attended bookings leave them silent or carded wrong — 137&#x27;s clean-day clock never gets past day 0</b></p><h2>Question</h2>
+
+<p>Cut 2026-09-29 from <b>137</b>. Checks 1, 2 and 3 are met. Check 4</p>
+<p>(three clean Desk Watch days) has reset every morning since 09-24:</p>
+
+<p>| Watch | Breach |</p>
+<p>|---|---|</p>
+<p>| 09-25 | false card: Jia Chian Lee 509B 09-24, named disarm + arm in the panel ledger |</p>
+<p>| 09-26 | false card: Megan Chapman 509A 09-25, named disarm in the Basis |</p>
+<p>| 09-27 | 2 silent (Thea Giggster 509B 09-26, Nabil Fairbairn 693 09-26) + false <code>eob</code> card (Desiree Joy 509A) |</p>
+<p>| 09-28 | 1 silent (Risa Waldman / Jillian Ramos 693 09-27 09:45) |</p>
+
+<p>Every one is a renter the panel shows attended. The lane errored on them instead of writing Complete.</p>
+<p>09-28 host journal, 70 <code>attendance: error</code> lines: &quot;missing, stale or incomplete alarm coverage&quot; x48,</p>
+<p>&quot;alarm recording gap overlaps the attendance witness&quot; x21, &quot;current source identity is not reconciled&quot;</p>
+<p>x1. Top rows: Nabil 693 09-26 (26 errors), Risa/Jillian 693 09-27 (23), Thea 509B 09-26 (14). All three</p>
+<p>still read Upcoming.</p>
+
+<p>Two separate faults:</p>
+<ol>
+<li>1. <b>The alarm read refuses too much.</b> The coverage check and the recording-gap check reject windows</li>
+</ol>
+<p>the panel ledger covers well enough to name the renter&#x27;s disarm and arm.</p>
+<ol>
+<li>2. <b>An errored row can end silent.</b> <code>run()</code> files an <code>unresolved</code> card on error once 2 h past the end,</li>
+</ol>
+<p>yet three rows ended with no card. Find why (card dedup? the 10-card cap? the row leaving the</p>
+<p>worklist window before the 2 h mark?).</p>
+
+<h2>Build</h2>
+
+<ul>
+<li>- Reproduce each named row against the panel ledger (<code>/door-history</code>, <code>studio_activity</code>) and find which</li>
+</ul>
+<p>check rejects it and why.</p>
+<ul>
+<li>- Fix fault 1 only where the ledger has the renter&#x27;s own named disarm and arm inside the window. Keep the</li>
+</ul>
+<p>rule that unknown telemetry stays unknown, and that a no-show needs full five-room coverage.</p>
+<ul>
+<li>- Fix fault 2 so no booking can pass 2 h after its end still Upcoming with no card.</li>
+<li>- Tests from the four real cases above. No switch changes. Stop before deploy; Junyan says go.</li>
+</ul>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Deployed; the three stuck rows (Nabil, Risa/Jillian, Thea) read Complete from <code>attendance: wrote</code> lines.</li>
+<li>- Then 137&#x27;s check 4: three Desk Watch days in a row with 0 silent, 0 code-written Missed Booking,</li>
+</ul>
+<p>0 false cards.</p>
+
+<h2>Progress 2026-09-29 — both faults reproduced; PR 706 open (not merged, not deployed)</h2>
+
+<p>Read live this session: panel ledger (<code>studio_activity</code>, 509B and 693, 09-26 to 09-29), 🛎️ board rows, 🔧 Sweep Feedback.</p>
+
+<p><b>Fault 1, reproduced (ledger events):</b></p>
+<ul>
+<li>- Nabil Fairbairn 693 09-26: keypad disarm 14:02:59 and arm 17:05:08 (his id 247283569), then Abbey Richens</li>
+</ul>
+<p>disarmed 17:18:32. The freshness-free witness path in <code>decide()</code> voided the stay on ANY later disarm, so the</p>
+<p>next renter killed it. The strict path then hit a 2 s drop 54 s before his disarm (inside <code>WITNESS_GUARD</code>):</p>
+<p>&quot;alarm recording gap overlaps the attendance witness&quot;. Same shape for Jia Chian Lee 509B 09-24 (10:22 / 11:30).</p>
+<ul>
+<li>- Risa / Jillian 693 09-27: Jillian disarm 09:30:28, arm 11:08:38; Olivia Nieuwland disarmed 11:09:42. Jillian&#x27;s</li>
+</ul>
+<p>id is not on Risa&#x27;s card (facilitator), and Olivia voided the path. Megan Chapman 509A 09-25 is the same</p>
+<p>facilitator case (16:54 / 18:06 on the board row).</p>
+<ul>
+<li>- Nabil and Risa/Jillian now read Complete: <code>7c2aad3a8</code> (09-28, board Disarmed cell names the renter) closed them.</li>
+<li>- Thea Giggster 509B 09-26: arrival was a remote app disarm (login 13152301, no name); &quot;Thea Thea&quot; (her id</li>
+</ul>
+<p>248713030) armed 15:15 after staff armed and Chelly Li disarmed. No named disarm, so she is outside this</p>
+<p>ticket&#x27;s rule. A parallel session&#x27;s PR 705 makes her own arm-out count (Junyan&#x27;s &quot;fix it so it can figure</p>
+<p>out these errors&quot;). Row still Upcoming.</p>
+<ul>
+<li>- EOB false cards: Desiree Joy 509A 09-26 (13:30–14:30) was carded 114 s after her 13:26:45 disarm, because</li>
+</ul>
+<p><code>studio_disarmed()</code> read the ledger only to <code>now - 2 min</code>; the window also opened at 13:00, before her start.</p>
+<p>Makiko Yamane 509B 09-28 was carded 24 min before her 11:45 start (same cause: <code>end - 90</code> is before the start</p>
+<p>for a booking of 90 min or less).</p>
+
+<p><b>Fault 2 is not a code fault.</b> Each &quot;silent&quot; row had its record: 🔧 Sweep Feedback <code>Booking still open past its</p>
+<p>end</code> rows for Thea (09-26 21:22Z, New), Nabil (09-26 23:22Z, Applied) and Risa (09-27 17:21Z, Applied), each</p>
+<p>about end + 2 h 20 min. Since <code>68434b350</code> (09-25) the 2-hour record goes to the Fixer on Sweep Feedback, never to</p>
+<p>✅ Actions. Desk Watch Section I line &quot;Was anything left silent?&quot; counted only <code>[attend:</code> cards. Fixed in</p>
+<p><code>~/.claude/scheduled-tasks/desk-watch/SKILL.md</code> (local task file): a Sweep Feedback row counts; a row with only</p>
+<p>that record is printed on a <code>still open, with Fixer row:</code> line.</p>
+
+<p><b>Built: desk-correspondence PR 706</b> (<code>claude/158-attendance-errors</code>), not merged, not deployed.</p>
+<ul>
+<li>- Witness path: a keypad entry counts by the renter&#x27;s or group&#x27;s id OR a recorded name matching the renter, an</li>
+</ul>
+<p>authorized user or the title&#x27;s <code>[Facilitator: ...]</code>; only a later disarm by their own people is a return; an</p>
+<p>arm-out before the end counts; fires only after end + 2 min. Completion only. No-show, continuity and</p>
+<p>In Studio rules unchanged.</p>
+<ul>
+<li>- EOB card: not before start + 15 min; the panel read runs to <code>now</code>.</li>
+<li>- 9 tests from the real cases (7 fail on <code>main</code>). Full suite 6072 pass; the 13 failures are all</li>
+</ul>
+<p><code>test_skedda_mcp_config.py</code>, identical on <code>main</code> (local venv lacks the MCP client package).</p>
+<ul>
+<li>- PR 705 merged to <code>main</code> 2026-09-29 14:09Z (deploy state not read). 706 now carries a merge of that <code>main</code></li>
+</ul>
+<p>(append-only test conflict, both kept): full suite 6081 pass, same 13 local-only failures.</p>
+
+<p><b>Next:</b> Junyan merges 706 (and 705) and says deploy. Then 137&#x27;s check 4 runs again under the corrected Desk</p>
+<p>Watch read. Acceptance line &quot;Nabil, Risa/Jillian, Thea read Complete from <code>attendance: wrote</code> lines&quot;: Nabil and</p>
+<p>Risa/Jillian are already Complete (by the lane after <code>7c2aad3a8</code>); Thea needs 705.</p>
+
+<h2>Deployed 2026-09-30 (Junyan: &quot;it&#x27;s merged deploy&quot;)</h2>
+
+<ul>
+<li>- PR 706 merged as <code>3128cca02</code>. Hostinger <code>update</code> run 36739197767 succeeded (&quot;Activated event-gate 3128cca…&quot;);</li>
+</ul>
+<p><code>/health</code> → <code>git_sha 3128cca</code>, started 2026-09-30 15:50:00Z. Deploy branch deleted.</p>
+<ul>
+<li>- Same deploy also carried PR 742 (<code>owner_text_release.py</code>, Fixer / Desk Sort problems to #desk-status) and</li>
+</ul>
+<p>PR 708 (canon), both merged by Junyan. PR 705 (Thea&#x27;s own arm-out) was already live in <code>88abf47</code>.</p>
+<ul>
+<li>- Not yet read: the host journal <code>attendance: wrote</code> lines after the deploy, and Thea&#x27;s board row. The next Desk</li>
+</ul>
+<p>Watch reads both. Acceptance: then 137&#x27;s check 4, three clean days under the corrected Section I read.</p>
+
+<h2>CLOSED 2026-10-02 — acceptance met</h2>
+
+<ul>
+<li>- Board read 10-02: Nabil Fairbairn 693 09-26, Risa Waldman / Jillian Ramos 693 09-27 and Thea Giggster</li>
+</ul>
+<p>509B 09-26 all read Complete (Nabil and Jillian with named keypad clocks; Thea&#x27;s clocks blank).</p>
+<ul>
+<li>- Desk Watch 10-01: 137 check 4 met (clean 09-28, 09-29, 09-30).</li>
+</ul>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#156</span><span class="emoji">🔎</span><span class="done-title">The attendance program says which booking it marked done</span><span class="done-date">2026-09-29</span></summary><div class="done-body"><ul class="plain-bullets"><li>Cut Sep 23 from 137. Since the Sep 20 alarm fix the program does mark bookings done: 12 times on Sep 22</li><li>But its note only gives a count, and the note gets cut off. So nobody can say which of the day&#x27;s done bookings it marked</li><li>Fix: one line per booking it marks, with the booking&#x27;s id and a re-read that shows it stuck. One line per error too, so the cut-off stops hiding why some passes fail</li><li>The first such line whose booking reads done closes 137&#x27;s last program check</li><li>CLOSED Sep 29. Deployed Sep 25; on Sep 27 the watch saw 18 named &#x27;done&#x27; lines, all correct. 137&#x27;s check 2 is met</li><li>Sep 23: built and tested (4,753 checks pass), pull request 477 open. Nothing changes in what the program decides or writes. Waiting for Junyan to merge and send it to the server</li><li>Sep 25: merged and on the server (6:41pm UTC). The daily watch now looks for the new lines. Stays open until the watch sees the first line for a booking that really reads done, and names why some passes fail</li><li>CLOSED Sep 29. In four days the program marked 35 bookings done and wrote a line for each. Three checked on the board: all read done. That meets 137&#x27;s program check</li><li>The &#x27;errors&#x27; are bookings it could not decide yet. It retries each hour, and 31 of 34 were later marked done. One is still open: Thea (Giggster), 509B, Sep 26</li><li>Sep 29: Thea did come. Staff let her in from the app, and she locked up with her own code at 3:15. The program only counted a renter unlocking. Fix (pull request 705): a renter locking up with their own code also counts. Waiting for Junyan to merge</li><li>Sep 29: live. Junyan: &#x27;if they use their codes it proves they came.&#x27; The first run after the change marked Thea&#x27;s booking done, and that run had no errors</li><li>Sep 30: Junyan asked that the robot know when he locks or unlocks from the app. The alarm record kept those as a login number with no name, and forgot names on every restart. Two fixes are ready (alarm 29, desk 746). Whose login number 13152301 is: not yet known; the fix will log it the next time it signs in</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>the attendance lane prints one line per Complete it writes, naming the row — 137&#x27;s check 2 becomes readable</b></p><h2>Question</h2>
 
 <p>Cut 2026-09-23 from <b>137</b>. Junyan ruled: fix it so the</p>
 <p>lane&#x27;s own Complete writes can be seen (&quot;People never tick done by hand&quot;).</p>
@@ -20525,5 +20550,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-09-30 15:27 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-10-02 04:09 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
