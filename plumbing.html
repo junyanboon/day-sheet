@@ -1277,6 +1277,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Deck says why a book-direct pitch was held, and files it for a person<span class="kind">DECK src/outbound-guard.js HELD_REASONS &middot; src/held-action.js REVIEW_CODES &middot; deck-app #198 (open, not merged) &middot; house-rules d22 note, desk-correspondence #815</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-02: &ldquo;d23 yes&rdquo;. The event-gate <code>relay_book_direct</code> hold (#811) showed on the Deck as the raw code.</p>
+      <p><strong>Failure mode.</strong> The hold now reads &ldquo;Book-direct pitch can&rsquo;t go through a platform&rdquo; and files a Review row (Human-confirmed) instead of a Run Error for an agent: a person cuts the pitch. d22 (&ldquo;no, only platform renters, international renters sitill book direct&rdquo;): Manual Send stays in the block.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Six more canon jobs can no longer fall back to a paid GitHub machine<span class="kind">GITHUB sales-decay, test-sales-decay, Concierge deadline regression, qa-review, scribe, watchlist test-alert &middot; VPS runner hostinger-watchlist &middot; desk-correspondence #810 (open, not merged)</span></h3></summary>
       <p><strong>Why.</strong> Junyan, 2026-09-30: no GitHub-hosted runners on private repos. Junyan, 2026-10-02: &ldquo;d18 yes&rdquo;. Same pattern as the event-gate deploy entry below.</p>
       <p><strong>Failure mode closed.</strong> These jobs ran on <code>DC_RUNNER || ubuntu-latest</code>, so deleting the repo variable silently moved them onto paid minutes. Now <code>self-hosted</code> is always in the label set and an unset <code>DC_RUNNER</code> means <code>watchlist-hostinger</code>; a hosted label in the variable leaves the job queued. Nothing changes today: <code>DC_RUNNER</code> is already <code>watchlist-hostinger</code>. qa-review (disabled since 2026-09-12) would fail on the VPS at <code>npm install -g</code> if re-enabled. The watchlist refresh job (<code>WATCHLIST_RUNNER</code>) still has a hosted fallback, to be changed separately.</p>
