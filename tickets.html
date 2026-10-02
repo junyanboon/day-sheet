@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a><a class="tabtab" href="messages.html">💬 Messages</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-02 06:23 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-02 06:28 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2273,7 +2273,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Resolves with:</b> the loop named with evidence, one cap in place, and one full day under 10M on every</p>
 <p>fire with the fleet total reported.</p>
-</div></details></details></div><div class="job"><div class="jnum">#157</div><div class="jhead"><span class="emoji">⏰</span><h4>Two robots leave their to-do rows looking overdue</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sept 22 in the last check of the work-loop ticket (053)</li><li>The overnight checker keeps one row per area but seems not to move the due date when it updates it, so 4 rows look late</li><li>The Timekeeper filed a $11.30 charge row with no due date at all</li><li>Fix both, then watch 7 clean days in a row</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Overnight Verifier and Timekeeper rows break the deadline rule</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#157</div><div class="jhead"><span class="emoji">⏰</span><h4>Two robots leave their to-do rows looking overdue</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sept 22 in the last check of the work-loop ticket (053)</li><li>Oct 2, overnight checker: confirmed it only moves the due date when it reopens a row, not on each nightly update</li><li>But those nights really are failing (custodian reviews, doorman report, timekeeper evidence), so the rows are right to be open</li><li>WAITING ON JUNYAN: should a row that stays open because the problem keeps happening get a new due date each night, or keep the old one so it shows as late?</li><li>Oct 2, Timekeeper: its charge rows said &#x27;closes when paid&#x27; but had no due date; fix ready in PR 820 (due date = 7 days after the overtime), not merged</li><li>Then: deploy, add the daily check to the morning watch, watch 7 clean days in a row</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Overnight Verifier and Timekeeper rows break the deadline rule</b></p><h2>Question</h2>
 
 <p>Graduated from <b>053</b>, closed 2026-09-25. Its final Phase 4 reading</p>
 <p>(Hermes <code>run_27b769fa…</code>, 2026-09-22 19:11 Toronto, main <code>0c5ee46</code>) failed criterion F: 5 of 8 open</p>
@@ -2297,6 +2297,41 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>Both writers fixed and deployed, then criterion F holds for 7 consecutive days on</p>
 <p><code>scripts/phase4_measure.py</code> (earliest pass: 7 days after the fix). Add the daily read to the</p>
 <p><code>desk-watch</code> task, per the map Notes.</p>
+
+<h2>2026-10-02 — both writers traced (Claude session)</h2>
+
+<p><b>Live board first</b> (✅ Actions to Perform, Pending Review rows with a <code>Proof type</code>, 10:19Z):</p>
+<p>7 typed open rows. Overnight Verifier: custodian <code>Deadline</code> 09-28 07:30Z (past), doorman</p>
+<p>10-02 10:30Z, timekeeper 09-21 02:45Z (past). Other writers past deadline, not this ticket&#x27;s:</p>
+<p>Planner (09-25), Registrar message-review (09-27 13:15Z). The Taylor Yeung <code>paid</code> row is now</p>
+<p><code>Processed</code>.</p>
+
+<p><b>1. Overnight Verifier: suspicion confirmed, but the nights genuinely fail. Stopped for a ruling.</b></p>
+<p><code>overnight-verifier/verifier/publish.py</code> <code>_deliver_lane</code> (agent-fleet, <code>origin/cold-standby-2026-09-04</code>):</p>
+<p>on an open row it writes only <code>Basis</code> (not Notes); <code>Deadline</code> is set only on create and on</p>
+<p>reopen (<code>now + 1 day</code>). <code>_arm_investigation</code> also carries the prior contract <code>deadline</code> forward.</p>
+<p>So a lane that keeps failing keeps its first deadline. The nights are real failures, per each</p>
+<p>row&#x27;s own Basis this morning: custodian 10-02 02:35 <code>custodian_reviews: failed</code> (5 missing),</p>
+<p>36 earlier unverified; doorman 10-01 06:00 <code>report: failed</code>, 28 earlier; timekeeper 10-02 04:00</p>
+<p><code>timekeeper_findings/sessions: unverified</code>, 26 earlier. The row is correct to stay open. The</p>
+<p>open question for Junyan: does a rolling row&#x27;s <code>Deadline</code> roll forward each failing night</p>
+<p>(F passes, the lane failure shows only in Basis), or stay fixed (F keeps failing until the lane</p>
+<p>is repaired, which is what F is for)? No code written for this half.</p>
+
+<p><b>2. Timekeeper: fixed in canon and code, PR <a href="https://github.com/junyanboon/desk-correspondence/pull/820" target="_blank" rel="noopener">#820</a>, not merged.</b></p>
+<p>The live writer is the cloud LLM Timekeeper reading <code>library/timekeeper-overtime.md</code>. Step 9.3</p>
+<p>(held charge) named neither <code>Proof type</code> nor <code>Deadline</code>; runs typed the row <code>paid</code> by habit and</p>
+<p>left the deadline off (Timekeeper Charge rows 09-20 to 09-28 all read <code>paid</code>, no <code>Deadline</code>).</p>
+<p>The coded path (<code>overtime_sweep.file_charge</code>, cutover pending) filed the row untyped. The PR:</p>
+<p>Step 9.3 and <code>file_charge</code> set <code>Proof type = paid</code> and <code>Deadline</code> = 23:59 Toronto, overtime date</p>
+<p>+ 7 days (<code>charge_deadline()</code>); <code>lane_common.action_row</code> refuses any typed row without a</p>
+<p><code>Deadline</code>. <code>stale_sweep</code> reads <code>Process on/after</code> before the deadline, so a parked charge is</p>
+<p>not flagged early. event-gate suite 6678 → 6680 passed.</p>
+
+<p><b>Next:</b> Junyan&#x27;s go for merge + deploy (event-gate <code>target=hostinger mode=update</code> for the code</p>
+<p>half; canon takes effect on the next cloud pass). After deploy: add the daily criterion-F read</p>
+<p>(<code>scripts/phase4_measure.py</code>) to the <code>desk-watch</code> task and a Plumbing Map entry. F&#x27;s 7-day</p>
+<p>clock cannot start until the verifier ruling is applied.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">9</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -20764,5 +20799,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-10-02 06:23 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-10-02 06:28 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
