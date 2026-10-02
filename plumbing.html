@@ -1277,6 +1277,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Deck Charges: Waiting on payment lists every open Stripe invoice, not only Deck-made ones<span class="kind">DECK &middot; src/open-invoices.js &middot; GET /api/open-invoices &middot; sources/deck.html renderCharges &middot; deck-app #192 &middot; merged 3167ca5, deployed (Worker version 50344d52, 2026-10-02 00:05Z)</span></h3></summary>
+      <p><strong>Why.</strong> Nelia Wong&rsquo;s Skedda invoice AVQBL38P-0001 ($528.84) was open in Stripe but missing from the Charges tab: Waiting on payment was built only from Action rows whose newest <code>You</code> line says INVOICED or WAITING. Junyan: &ldquo;All invoices should end up in the charges tab.&rdquo;</p>
+      <p><strong>New route.</strong> The Deck reads Stripe (read-only key) for every invoice with status <code>open</code> and shows the ones no Action card already covers. Source label per card: Skedda (<code>application</code> ca_R1s6vORuKKbwwwWJBiH4VgLL2h2CDydF / <code>metadata.allbooked_originating_invoice</code>), subscription (failed Monthly Billing renewal, <code>parent.type: subscription_details</code>, with Stripe&rsquo;s next retry), or Deck (<code>metadata.deck_action</code>).</p>
+      <p><strong>Failure mode.</strong> If Stripe cannot be read the section shows a red Stripe line and keeps the Action-row cards; it never hides them.</p>
+      <p><strong>Live check 2026-10-01 8:12 PM Toronto.</strong> <code>/api/open-invoices</code> returned 5 open Stripe invoices (Teo Rivas, Janet Zamora, Viktoriia Osipovych, Alison Murray and Carlos Boeri, Nelia Wong). Waiting on payment showed 7 cards: those 5 plus 2 QBO cards from Action rows (Sangah Lee RB1175, Stephanie Brinning RB1174). No red Stripe line.</p>
+      <p><strong>Still missing.</strong> QuickBooks invoices with no Action row: there is no QBO read anywhere in the fleet, so they cannot be listed yet.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Jev takes a second look at every queued draft, in shadow: ledger only, nothing on the Deck<span class="kind">scripts/queue_draft.py &rarr; scripts/jev_draft_check.py &rarr; Jev ledger (site draft.second_look) &middot; EVENT-GATE jev_ledger.py summary &middot; library/specs/jev-intake-plan.md, house-rules.md, response-resolver.md &middot; desk-correspondence #807 (open, not merged)</span></h3></summary>
       <p><strong>Why.</strong> Junyan, 2026-10-02: &ldquo;d13 it&rsquo;s okay it can learn live&rdquo;, &ldquo;d15 yes skip the concierge drafts&rdquo;, &ldquo;d16 yes I do want it said&rdquo; (the book-direct-next-time pitch is wanted, so it is not a breach).</p>
       <p><strong>Route change.</strong> After reply_check passes and before the last queue read, queue_draft asks Jev one question (<code>breaks_rule</code>: policy_claim, unconfirmed_promise, none) about the channel, lane, platform yes/no and the body cut to 3,000 characters. The answer goes to the Jev ledger with the new row&rsquo;s page id. Nothing is written to the row or shown on the Deck. No call for a draft holding the Artist&rsquo;s Alarm Code or code-like text, or raised by the Concierge while [R-jev-paused] stands. Shadow runs 2 weeks from go-live; an amber line on the Deck needs Junyan&rsquo;s OK.</p>
