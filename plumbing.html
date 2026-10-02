@@ -1274,6 +1274,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
   <p class="hint">What actually moved, newest first — click an entry to expand. Each takes the colour of the pipe it touched. Add an entry whenever a route, cadence, or failure mode changes — a map nobody updates becomes a map nobody trusts.</p>
 
   <ul class="log">
+      <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>Jev ledger from the cloud: narrow token set on the VPS; two claude.ai settings remain<span class="kind">EVENT-GATE &middot; /jev-ledger &middot; JEV_LEDGER_TOKEN &middot; cloud env env_01C4WwRd8o9KQUyFg4savhMd &middot; desk-correspondence #821 &middot; Junyan d51</span></h3></summary>
+      <p><strong>Failure mode.</strong> No cloud pass has ever saved a Jev ledger line through event-gate: every Responder pass logs &ldquo;ledger 403&rdquo;. The 403 is the Claude cloud egress proxy (the gate answers 404, never 403); event-gate is not on the cloud environment&rsquo;s network list.</p>
+      <p><strong>Done.</strong> <code>JEV_LEDGER_TOKEN</code> is set on the VPS (<code>enable-jev-ledger-token.sh</code>, 2026-10-02 10:22Z): HTTP 200 on <code>/jev-ledger</code>, 404 on every other route. <strong>Left for Junyan in claude.ai:</strong> add <code>event-gate.srv1948070.hstgr.cloud</code> to the environment&rsquo;s Custom network access, and replace <code>GATE_PATH_TOKEN</code> there with <code>JEV_LEDGER_TOKEN</code>. The one ledger 404 on 2026-10-02 08:26Z was a tokenless test probe from a helper session, not a live caller.</p>
+    </details>
+      </li>
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
