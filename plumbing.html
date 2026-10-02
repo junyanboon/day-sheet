@@ -1278,6 +1278,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>Desk repo mirror pushes main first, follows GitHub branch deletions and pages Junyan when GitHub falls behind<span class="kind">desk-mirror &middot; failure, route &middot; ops/desk-mirror/mirror-to-github.sh, /var/log/desk-mirror.log, d4, d5 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/841">desk-correspondence #841</a></span></h3></summary>
+      <p>Junyan: &ldquo;d4 yes d5 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-02 344 merged branches were deleted on GitHub only. The mirror pushed every branch in one push, tried to recreate all 344, and GitHub refused the whole push, main included. It logged the failure and exited 0, so GitHub main (what cloud lanes and the Mac read) sat 57 commits behind for about 9 hours with nothing red.</p>
+      <p><strong>Route change.</strong> Each run fetches GitHub with prune and deletes a branch GitHub deleted when the VPS copy has nothing extra; a deleted branch with extra commits is held on the VPS and not pushed back. Then <code>main</code> is pushed alone, then other new or fast-forward branches in batches of 50, then tags.</p>
+      <p><strong>Failure mode.</strong> While GitHub main is behind the VPS (or GitHub cannot be reached) the run exits non-zero and logs <code>BEHIND</code>. After 30 minutes it posts to Junyan in #desk-status through owner_notify (not #desk-drops) and files one <code>desk-mirror</code> Run Error row; it posts again every 2 hours and once more when GitHub catches up. A healthy run stamps the desk-mirror Run Monitor row at most every 30 minutes (row id in <code>/etc/danceannex/desk-mirror.env</code>).</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
