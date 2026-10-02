@@ -1277,6 +1277,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Jev ledger: cloud passes were not saving it (network 403); failures now counted; daily Jev line in the Desk Watch<span class="kind">CLOUD Responder &rarr; EVENT-GATE /jev-ledger &middot; scripts/jev_client.py, jev_htr.py, jev_triage.py &middot; services/event-gate/jev_ledger.py summary &middot; desk-correspondence #799 &middot; Desk Watch Section JEV</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-02: &ldquo;fix it so we can measure it and add the measurement to the desk watch&rdquo;. Every cloud Responder pass logged <code>Jev remote ledger 403</code>; the last saved ledger was the Mac&rsquo;s, 2026-09-30.</p>
+      <p><strong>Failure mode found.</strong> The event gate answers 404 to a bad token, never 403. The 403 is the cloud environment&rsquo;s network proxy refusing <code>event-gate.srv1948070.hstgr.cloud</code>, which is not on the allowlist of <code>env_01C4WwRd8o9KQUyFg4savhMd</code> (same as <code>api.typesafe.ai</code> on 2026-09-24). Jev calls still worked; only the record was lost. Fix: add the host to that allowlist (claude.ai, Junyan).</p>
+      <p><strong>Route change.</strong> A Jev call that did not answer is now a ledger row (<code>outcome unavailable</code>, no message text), never reused as an answer. Each script prints <code>jev ledger: N saved, M not saved</code>; a 403 is named as the network. <code>python jev_ledger.py summary --day</code> in the event-gate container counts one Toronto day with no personal data; the Desk Watch reads it with <code>vps-read jev-summary</code> each morning.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Concierge: Jev paused for the time being (every other lane keeps it)<span class="kind">CANON library/concierge-orchestration.md [R-jev-paused] &middot; job-2-triage.md &middot; response-resolver.md step 4 &middot; specs/jev-intake-plan.md &middot; desk-correspondence #798</span></h3></summary>
       <p><strong>Why.</strong> Junyan, 2026-10-02, d2: &ldquo;let&rsquo;s stop it from being used by the concierge for the tiem being&rdquo;.</p>
       <p><strong>Route change.</strong> The Concierge runs no <code>scripts/jev_*.py</code>. Its old Jev steps (inbox pre-sort, How to Respond pre-sort, enquiry duplicate check) take their existing fail-open path every time: the full read, the full How to Respond walk, the full Skedda / board dupe read. No code changed, so the Responder (gate 2b, HTR pre-sort, phone rule), <code>intake_decide.py</code> (SOP pick and SOP check) and the Desk Sort&rsquo;s JOB 35 check still call Jev. The Concierge&rsquo;s report already showed no Jev line on 2026-10-01 (last duplicate-check call 2026-09-24), so the pause should not change what its passes do.</p>
