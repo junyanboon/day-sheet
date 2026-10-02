@@ -1278,6 +1278,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>A relay whose booking has passed is a warning, not a block, for messages<span class="kind">The Deck &middot; route, failure &middot; deck-app src/contacts.js passedRelayWarning, src/recipient-fix.js, src/index.js updatePage, library/relay-addresses.md, d17 &middot; <a href="https://github.com/junyanboon/deck-app/pull/203">deck-app #203</a></span></h3></summary>
+      <p>Junyan: &ldquo;stripe invoices can't go out on a relay. The deck shouldn't block these. A warning will suffice.&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-10-02: "the email actually stil keeps working but we don't need it so it should be cleaned up eventually", then d17. This undoes the message block from deck-app #193, which assumed a relay stops working after its booking.</p>
+      <p><strong>Route change.</strong> An Email row routed to a relay whose booking has passed is released as before; the warning is logged. The contact picker labels the relay "booking &lt;day&gt; passed, own address preferred" and pre-selects the renter's own address. Stripe charges and invoices still never go to a relay.</p>
+      <p><strong>Failure mode.</strong> A message can go to a relay that is no longer needed if staff leave it selected; the warning says so. Relay cleanup is planned, not built.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
