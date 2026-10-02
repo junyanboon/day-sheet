@@ -1277,6 +1277,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Prepaid-hours bot: the Artist database decides plan hours; Stripe drift is reported, not held<span class="kind">EVENT-GATE money lane &middot; plan_allowance_receiver.py &middot; plan_allowance_sweep.py &middot; plan_drift.py &middot; plan_entitlement.py &middot; plan_payment_evidence.py &middot; library/studio-tickets-bookings.md, gotchas.md &middot; desk-correspondence #804 (merged d4db63f, deployed on the VPS runner)</span></h3></summary>
+      <p><strong>Why.</strong> Tanisha Chakma (AAP card and agreement, October paid) was held because Stripe had no active subscription until November. Junyan, 2026-10-02: d47 &ldquo;hold what/ she&rsquo;s on AAP.&rdquo;; d50 &ldquo;What is written in the artist database (agreement) is.&rdquo;; d56 &ldquo;merge&rdquo;.</p>
+      <p><strong>Route change.</strong> Entitlement = the Artist card (AAP/1AP, Active, not paused, Agreement End Date) + the current Rental Agreement record covering the booking. The bot no longer reads Stripe before applying hours (no invoice, charge or subscription gate).</p>
+      <p><strong>Failure mode changed.</strong> The [PLAN-DRIFT-V1] row still lists Stripe vs card vs agreement mismatches, but each line now says &ldquo;report only, does not hold&rdquo; (Stripe) or &ldquo;holds plan hours&rdquo; (card vs its own agreement). Only the second kind holds a renter&rsquo;s plan rows.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Responder pass line carries the Jev ledger count; the gate stops swallowing it<span class="kind">CLOUD Responder pass block &middot; scripts/responder_quiet_gate.py, intake_decide.py, jev_client.py &middot; library/the-responder.md &sect; Run report &middot; desk-correspondence #803 &middot; Desk Watch Section JEV2</span></h3></summary>
       <p><strong>Why.</strong> Junyan, 2026-10-02 (d11): &ldquo;okay great do it&rdquo;, to add one line so every Responder pass reports N saved, M not saved. The Desk Watch counted lost Jev lines by searching pass text for &ldquo;403&rdquo;.</p>
       <p><strong>Failure mode found.</strong> The quiet gate and <code>intake_decide.py</code> run <code>jev_triage.py</code> as a child and kept its stderr, so the child&rsquo;s <code>jev ledger:</code> line from #799 never reached the pass. Now they add it to their own count; the gate prints <code>jev ledger: N saved, M not saved</code> just above its verdict.</p>
