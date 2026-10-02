@@ -1277,6 +1277,23 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Six more canon jobs can no longer fall back to a paid GitHub machine<span class="kind">GITHUB sales-decay, test-sales-decay, Concierge deadline regression, qa-review, scribe, watchlist test-alert &middot; VPS runner hostinger-watchlist &middot; desk-correspondence #810 (open, not merged)</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-09-30: no GitHub-hosted runners on private repos. Junyan, 2026-10-02: &ldquo;d18 yes&rdquo;. Same pattern as the event-gate deploy entry below.</p>
+      <p><strong>Failure mode closed.</strong> These jobs ran on <code>DC_RUNNER || ubuntu-latest</code>, so deleting the repo variable silently moved them onto paid minutes. Now <code>self-hosted</code> is always in the label set and an unset <code>DC_RUNNER</code> means <code>watchlist-hostinger</code>; a hosted label in the variable leaves the job queued. Nothing changes today: <code>DC_RUNNER</code> is already <code>watchlist-hostinger</code>. qa-review (disabled since 2026-09-12) would fail on the VPS at <code>npm install -g</code> if re-enabled. The watchlist refresh job (<code>WATCHLIST_RUNNER</code>) still has a hosted fallback, to be changed separately.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>Jev ledger gets its own token: the cloud never holds the master gate token<span class="kind">CLOUD Responder &rarr; EVENT-GATE /jev-ledger &middot; app.py _jev_ledger_authorized &middot; scripts/jev_client.py &middot; hosting/enable-jev-ledger-token.sh &middot; desk-correspondence #801 &middot; PR open, waiting on merge, deploy and the VPS script</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-02 (d10): &ldquo;okay let&rsquo;s do taht then&rdquo;. Opening the gate host to the claude.ai cloud environment would have let a cloud pass use the master gate token on every route.</p>
+      <p><strong>Route change.</strong> <code>/jev-ledger</code> (POST and GET) also takes <code>JEV_LEDGER_TOKEN</code> in <code>X-Gate-Token</code>; no other route does. <code>jev_client</code> sends it before <code>GATE_PATH_TOKEN</code>. The token is made on the VPS and lives in <code>event-gate.env</code> and the cloud environment only.</p>
+      <p><strong>Failure modes.</strong> Token missing on the gate or wrong in the cloud: 404, and the pass says &ldquo;the gate refused the token&rdquo;. Host not allowed in the cloud: 403 from the network, as before. No rotation overlap: a new token cuts the cloud off until the cloud value is updated.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>The book-direct pitch can never go through a platform: queue refusal, Deck hold, PBF no-phone fallback<span class="kind">EVENT-GATE reply_check.py relay_book_direct &middot; outbound_guard.py release check &middot; gtg_sweep.py PBF step &middot; scripts/queue_draft.py &middot; library/house-rules.md &sect; Marketplace policy &middot; desk-correspondence #811 (open, not merged)</span></h3></summary>
       <p><strong>Why.</strong> Junyan, 2026-10-02: d19 &ldquo;only by direct text. It&rsquo;s restricted on the platforms so it cannot ever go there&rdquo;; d21 &ldquo;yes this is where a block would be useful&rdquo;.</p>
       <p><strong>Failure mode closed.</strong> The PBF step queued the PLATFORM card (&ldquo;book with us directly at www.danceannex.ca/booking&rdquo;) by Email when the Artist card had no phone, and that address is often a Peerspace or Tagvenue relay. Now a platform renter with no phone gets the standard PBF card.</p>
