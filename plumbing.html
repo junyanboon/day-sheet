@@ -1277,6 +1277,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Deck: contact picker on Charge and Message cards; a passed booking&rsquo;s relay is never a target<span class="kind">DECK &middot; src/contacts.js, charge.js, recipient-fix.js, index.js updatePage &middot; library/relay-addresses.md &middot; deck-app #193, desk-correspondence #789 &middot; PRs open, waiting on merge and deploy</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-01 (d7): &ldquo;drop down email / phone number options on the cards &hellip; so I can easily change it if it&rsquo;s blocking me.&rdquo; And: &ldquo;Once a booking has passed the the connected peerspace relay will not longer be useful.&rdquo;</p>
+      <p><strong>Route change.</strong> Charges: the owner may bill another known email (Skedda account, Artist page, Stripe customer) for that one charge; the INVOICED / CHARGED line names it and who picked it. Email messages: a picked address goes in the row&rsquo;s Reply To for that message; SMS: a picked number is saved to the Artist card. The Deck refuses to release an Email row whose route is a relay whose booking day (Contact Points <code>Booking Ref</code>) has passed.</p>
+      <p><strong>Failure modes.</strong> A relay with no Contact Points row is unknown and not blocked. A Contact Points read error does not block. Unattended senders do not pass through the Deck, so they rely on canon. The Stripe name search fails quietly (no Stripe options).</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>AAP: every booking counts toward the 4 prepaid hours, whatever the activity says<span class="kind">SKEDDA-MCP &middot; skedda/plan_allowance.py eligible() &middot; library/studio-tickets-bookings.md &sect; Monthly 1AP/AAP allowance &middot; skedda-cli #29 (merged 0fe681b), desk-correspondence #788 (merged 2cc2a5b) &middot; VPS overlay deploy hosting/vps-deploy/deploy-aap-any-activity-186a34b.sh, run by Junyan</span></h3></summary>
       <p><strong>Why.</strong> Kyle FitzGerald (AAP): four October bookings say &ldquo;ProAm Student&rdquo;, and <code>settle_plan_allowance</code> refused his whole month with &ldquo;Booking activity is outside or ambiguous for the plan&rdquo;. Junyan d34 (2026-10-02): &ldquo;if they are on an aap account it just gets auto counted.&rdquo;</p>
       <p><strong>Failure mode removed.</strong> For AAP the activity text is no longer read: any booking (except overtime, additional time, viewing and comp titles, as before) counts toward the month. 1AP is unchanged: solo attendance and rehearsal / practice / instrument activity, or the month stops.</p>
