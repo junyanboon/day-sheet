@@ -1277,6 +1277,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Timekeeper: no Forgot to Arm when the renter armed, or someone else disarmed, between bookings<span class="kind">EVENT-GATE overtime_sweep.py armed_after_all() (shadow on the VPS) &middot; library/timekeeper-overtime.md Step 4 &middot; CLOUD Timekeeper prompt timekeeper-cloud v1.3.0 (stopgap) &middot; desk-correspondence #808 (merged 3558f52)</span></h3></summary>
+      <p><strong>Why.</strong> Maggie Morrison (509B, Sep 30, 1:00 to 8:00 PM) armed at 8:10:31 PM and Sierra Goulding disarmed with her own code at 8:11:16 PM, both between the bookings. The cloud Timekeeper read the alarm only for Maggie&rsquo;s booked hours and blamed her for Sierra&rsquo;s 9:10 PM arm (a false Forgot to Arm). Junyan, 2026-10-02: &ldquo;d17 yes fix it&rdquo;.</p>
+      <p><strong>Failure mode closed.</strong> Before any Forgot to Arm (Case B) the code reads the named keypad events from the group&rsquo;s last own disarm to the next holder&rsquo;s arm. The group&rsquo;s own arm there is the departure. Anyone else&rsquo;s keypad disarm there proves the panel was armed: no Forgot to Arm, one agent-owned alarm-record Review naming the events. The departure read now starts at the first own disarm when they came early (Rose-Mary Harbans 509A armed 11:58 AM for a 12:00 PM booking, Oct 1).</p>
+      <p><strong>Stopgap.</strong> The cloud prompt (v1.3.0) reads each booking from 2 hours before its start to the next booking&rsquo;s start + 30 minutes and lists the keypad events before any Forgot to Arm. Pushed by the boss with RemoteTrigger.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Deck: helper notes never decide whose turn a row is<span class="kind">DECK sources/deck.html turnOf &middot; deck-app #200 &middot; PR open, waiting on merge and deploy</span></h3></summary>
       <p><strong>Why.</strong> Maggie Morrison&rsquo;s charged cards came back as waiting after a &ldquo;Desk Hand &middot; &hellip;&rdquo; note followed Junyan&rsquo;s &ldquo;You &middot; &hellip; CHARGED&rdquo; line (fix approved 2026-10-02).</p>
       <p><strong>Route change.</strong> Notes from the in-session helpers (Desk Hand, Shipper, Door Checker, Lane Detective, Message Tracer, Jev Keeper, Matt, Boss, Session, Claude Code) stay in the thread but are skipped when the Deck decides whose turn it is. You and Ela lines count as staff; lane answers still hand a row back.</p>
