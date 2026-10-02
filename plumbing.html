@@ -1277,6 +1277,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Treasurer dunning: a blind duplicate check is no longer read as &ldquo;already filed&rdquo;, and the daily check retries<span class="kind">EVENT-GATE &middot; treasurer_sweep.py run_dunning, run &middot; hosting/treasurer/install-treasurer-retry.sh &middot; library/the-treasurer.md &middot; desk-correspondence #792 &middot; open, waiting on merge, deploy and the drop-in install</span></h3></summary>
+      <p><strong>Failure mode closed.</strong> On 2026-10-01 the 08:00 dunning check ran inside a Notion outage (HTTP 500, 07:30 to 08:07). Every duplicate check failed, the code read that as &ldquo;already filed&rdquo;, and the check reported ok. Janet Zamora&rsquo;s $565 and Viktoriia Osipovych&rsquo;s $509.25 declined October rents were never filed. Junyan: &ldquo;Yes fix all of those&rdquo;.</p>
+      <p><strong>Now.</strong> A failed duplicate check is &ldquo;unverified&rdquo;. Any unconfirmed finding makes the check return ok:false, the host runner exits 1, and <code>danceannex-treasurer-dunning.service</code> retries every 15 minutes, up to 4 tries (same drop-in as the monthly passes). The 1st-of-month pass also files one row for new-month rent that failed overnight (<code>[treasurer:new-month-failed:&lt;YYYYMM&gt;]</code>). It leaves bookings Stripe already holds the full price for off the unpaid-bookings row, and fails the pass the same way if either row is unconfirmed. The run report is plain whole lines.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Sales: closed means Position Won, Lost or Done everywhere; Stage is being retired (step 1 of 4)<span class="kind">EVENT-GATE finished_tickets.py &middot; chase_sweep.py agreement-sent lane &middot; invariants.py H &middot; DECK Tickets tab &middot; NOTION Sales view Open (Artifact) &middot; CANON position.md, studio-tickets-intake.md, job-10, job-5 &middot; desk-correspondence #806 &middot; deck-app #195</span></h3></summary>
       <p><strong>Why.</strong> Junyan, 2026-10-02: &ldquo;d18 yes do it&rdquo; (keep Position, retire Stage in four steps), &ldquo;d19 yes&rdquo; (change the Open (Artifact) view filter). Backstops that read Stage Close Ticket as closed let Nick Walsh&rsquo;s half-closed ticket vanish.</p>
       <p><strong>Route change.</strong> The Concierge&rsquo;s finished list, the chase sweep&rsquo;s agreement-sent lane, Desk Invariants and the Deck&rsquo;s Tickets tab treat a Sales ticket as closed only when Position is Won, Lost or Done. The Open (Artifact) view filters on Position not Won, Lost, Done or Review. H no longer counts Close Ticket as booking evidence.</p>
