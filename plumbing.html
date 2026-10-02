@@ -1281,6 +1281,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry alert">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Sentinel sends ledger and repo-mirror alarms to Junyan, not #desk-drops<span class="kind">The Sentinel &middot; route &middot; EVENT-GATE sentinel_sweep.escalate, is_ledger_alarm, actuator.send_ops_text, d5 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/842">desk-correspondence #842</a></span></h3></summary>
+      <p>Junyan: &ldquo;d4 yes d5 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-02 the correspondence ledger on GitHub went stale for about 9 hours (the VPS mirror was refused). The Sentinel's alarm went to #desk-drops for the Concierge, which reads the very data that went stale, and its log said "SMS sent" although no text reached Junyan.</p>
+      <p><strong>Route change.</strong> A new alarm for <code>watchlist-refresh</code> or <code>desk-mirror</code> now goes to Junyan on the owner route (#desk-status with an @mention, SMS only if Slack fails). Every other lane alarm still goes to #desk-drops. When both kinds are new in one pass, each goes to its own place.</p>
+      <p><strong>Failure mode.</strong> The log now says where each alert was posted, or "SEND FAILED", and a recovery says "not posted (nobody needs to act)" instead of "SMS sent". A failed post keeps the old alarm ledger, so the next pass retries.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>Landlord and contractor visits get their own route<span class="kind">The Concierge &middot; route &middot; library/landlord-contractor-visit.md, d40 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/840">desk-correspondence #840</a></span></h3></summary>
+      <p>Junyan: &ldquo;yes&rdquo;</p>
+      <p><strong>Why.</strong> The landlord's office sent a photographer to a studio and the ticket sat at Routing because no SOP matched a visitor who is not a renter.</p>
+      <p><strong>Route change.</strong> A landlord or contractor visit now has a procedure: block the time in Skedda as unavailable, make the visitor an Artist card and give them a door code in an attended run, queue the access text (SMS to the visitor's own number, from the standard HTA card) as an <code>HTA-desk-</code> row at Pending Review for Junyan, and have Junyan or Ela delete the code in Alarm.com the day the visit ends, with a Door Checker panel check after. The access text never goes out unattended.</p>
+      <p><strong>Failure mode.</strong> Landlord mail can land in Junyan's personal inbox, which the desk cannot read; the procedure says to ask him to forward it. Code removal is tracked by an Access/PIN Action row raised when the code is given.</p>
+    </details>
+    </li>
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>FBS Watch ledger alarm points at the repo mirror and repeats every 2 hours<span class="kind">FBS Watch &middot; failure &middot; fbs-watch src/index.js checkLedger, /var/log/desk-mirror.log, d5 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/842">desk-correspondence #842</a></span></h3></summary>
+      <p>Junyan: &ldquo;d4 yes d5 yes&rdquo;</p>
+      <p><strong>Why.</strong> The ledger alarm only said the VPS desk tick may have stopped. On 2026-10-02 the tick was fine and the VPS-to-GitHub mirror was refused, and one post at the start of a 9-hour stall was easy to miss.</p>
+      <p><strong>Route change.</strong> None: the post still goes to #desk-status through the FBS Watch webhook. The text now says to compare VPS main with GitHub main and read <code>/var/log/desk-mirror.log</code>.</p>
+      <p><strong>Failure mode.</strong> While the ledger stays down, FBS Watch posts "still failing" again every 2 hours (it used to post once on the way down and once on recovery).</p>
+    </details>
+    </li>
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Desk repo mirror pushes main first, follows GitHub branch deletions and pages Junyan when GitHub falls behind<span class="kind">desk-mirror &middot; failure, route &middot; ops/desk-mirror/mirror-to-github.sh, /var/log/desk-mirror.log, d4, d5 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/841">desk-correspondence #841</a></span></h3></summary>
       <p>Junyan: &ldquo;d4 yes d5 yes&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-02 344 merged branches were deleted on GitHub only. The mirror pushed every branch in one push, tried to recreate all 344, and GitHub refused the whole push, main included. It logged the failure and exited 0, so GitHub main (what cloud lanes and the Mac read) sat 57 commits behind for about 9 hours with nothing red.</p>
