@@ -1277,6 +1277,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>The book-direct pitch can never go through a platform: queue refusal, Deck hold, PBF no-phone fallback<span class="kind">EVENT-GATE reply_check.py relay_book_direct &middot; outbound_guard.py release check &middot; gtg_sweep.py PBF step &middot; scripts/queue_draft.py &middot; library/house-rules.md &sect; Marketplace policy &middot; desk-correspondence #811 (open, not merged)</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-02: d19 &ldquo;only by direct text. It&rsquo;s restricted on the platforms so it cannot ever go there&rdquo;; d21 &ldquo;yes this is where a block would be useful&rdquo;.</p>
+      <p><strong>Failure mode closed.</strong> The PBF step queued the PLATFORM card (&ldquo;book with us directly at www.danceannex.ca/booking&rdquo;) by Email when the Artist card had no phone, and that address is often a Peerspace or Tagvenue relay. Now a platform renter with no phone gets the standard PBF card.</p>
+      <p><strong>Route change.</strong> queue_draft refuses any draft to a relay address or on Channel Giggster / Manual Send that invites booking directly (rule <code>relay_book_direct</code>, no <code>--allow</code>). The Deck Send check holds the same body against the resolved recipient, reason code <code>relay_book_direct</code>. Gap: a Giggster phone proxy (Channel SMS) still looks like a direct number.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Treasurer dunning: a blind duplicate check is no longer read as &ldquo;already filed&rdquo;, and the daily check retries<span class="kind">EVENT-GATE &middot; treasurer_sweep.py run_dunning, run &middot; hosting/treasurer/install-treasurer-retry.sh &middot; library/the-treasurer.md &middot; desk-correspondence #792 &middot; open, waiting on merge, deploy and the drop-in install</span></h3></summary>
       <p><strong>Failure mode closed.</strong> On 2026-10-01 the 08:00 dunning check ran inside a Notion outage (HTTP 500, 07:30 to 08:07). Every duplicate check failed, the code read that as &ldquo;already filed&rdquo;, and the check reported ok. Janet Zamora&rsquo;s $565 and Viktoriia Osipovych&rsquo;s $509.25 declined October rents were never filed. Junyan: &ldquo;Yes fix all of those&rdquo;.</p>
       <p><strong>Now.</strong> A failed duplicate check is &ldquo;unverified&rdquo;. Any unconfirmed finding makes the check return ok:false, the host runner exits 1, and <code>danceannex-treasurer-dunning.service</code> retries every 15 minutes, up to 4 tries (same drop-in as the monthly passes). The 1st-of-month pass also files one row for new-month rent that failed overnight (<code>[treasurer:new-month-failed:&lt;YYYYMM&gt;]</code>). It leaves bookings Stripe already holds the full price for off the unpaid-bookings row, and fails the pass the same way if either row is unconfirmed. The run report is plain whole lines.</p>
