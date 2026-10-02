@@ -1281,6 +1281,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Treasurer checks next month's Stripe charge against each agreement on the 15th<span class="kind">The Treasurer &middot; tool, failure &middot; EVENT-GATE treasurer_sweep.next_charge_audit, stripe_read.upcoming, library/the-treasurer.md, d38 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/832">desk-correspondence #832</a></span></h3></summary>
+      <p>Junyan: &ldquo;I used to do an agreement audit before&rdquo;</p>
+      <p><strong>Why.</strong> Tanisha Chakma's agreement is AAP at $108.48, but Stripe was moved to 1AP at $85.88 on Aug 31, and nothing caught it until a month had been charged wrong. Junyan's old manual Agreement Audit compared each agreement with the Artist card; this one compares it with what Stripe will charge next.</p>
+      <p><strong>Route change.</strong> On the 15th the Treasurer reads Stripe's upcoming invoice for every live subscription and every schedule not yet started (<code>GET /v1/invoices/upcoming</code>, read only) and compares next month's amount with the agreement. Mismatches go on one Review row for Junyan, <code>[treasurer:next-charge:&lt;YYYYMM&gt;]</code>, with the likely cause.</p>
+      <p><strong>Failure mode.</strong> A Stripe read failure or an unconfirmed row makes the mid-month pass report not ok, and the retry drop-in runs it again. "No upcoming invoice" is treated as nothing scheduled, not as an outage.</p>
+    </details>
+    </li>
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>The finance watch's monthly GitHub token alert goes to Junyan by email, with a text only if the email fails<span class="kind">finance-watch &middot; route, failure &middot; services/finance-watch/finwatch/alert.py, services/finance-watch/hosting/install-finance-watch.sh, d61, d62 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/835">desk-correspondence #835</a></span></h3></summary>
+      <p>Junyan: &ldquo;d62 needs to be emailed to me as I travel and text can be missed&rdquo;</p>
+      <p><strong>Why.</strong> Junyan d62: the token alert must reach him while he travels, and a text can be missed. d61 keeps the daily card reminder text as it is, with card names and amounts.</p>
+      <p><strong>Route change.</strong> The monthly token alert is now an email to Junyan's personal Gmail, sent through Gmail as that same account with an app password (the <code>smtp-password</code> file), as the Mac task did. Before, it was a text unless an email login was set up. The installer now needs <code>smtp-password</code> before it turns on the monthly timer, and switches that timer off if it was on without it. The daily card check is unchanged. Still not installed on the VPS: nothing runs until Junyan runs the installer, and it starts in shadow.</p>
+      <p><strong>Failure mode.</strong> If the email cannot go (password missing, Gmail refuses, network down), the same alert goes as a text from the desk line, and the text opens by saying the email failed. The run log's <code>alert_via</code> says which one carried it. If both fail, nothing is recorded and the unit fails, so the next run tries again. Switch: <code>FINANCE_MONTHLY_DISABLED=1</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>A rejected invoice reminder no longer stops the chase for good<span class="kind">Chase sweep (invoices) &middot; route &middot; EVENT-GATE chase_sweep.invoice_due / restart_after, library/automatic-operational-closure.md, d19 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/831">desk-correspondence #831</a></span></h3></summary>
       <p>Junyan: &ldquo;d19 yes restart KCC reminders&rdquo;</p>
       <p><strong>Why.</strong> KCC's RB1175 reminder 1 was rejected on 2026-09-29, and a <code>Will Not Send</code> reminder stopped the invoice chase for good; nothing on the Action could restart it.</p>
