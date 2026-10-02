@@ -1294,6 +1294,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Treasurer: a signed correction in an agreement wins when its sums add up; it caches each agreement&rsquo;s rate on the Docs row<span class="kind">EVENT-GATE &middot; agreement_read.py &middot; treasurer_sweep.py &middot; library/the-treasurer.md &middot; desk-correspondence #817 &middot; open, waiting on merge and deploy</span></h3></summary>
+      <p><strong>Why.</strong> Junyan d27, 2026-10-02: when an agreement&rsquo;s table and a signed correction note disagree, the correction stands if amount times payments equals the total; otherwise one terms-conflict row for him and no shortfall priced (Janet Zamora $565 not $678; Dana Brookman $1,317.02; Alison Murray $587.60; Enrico Casertano is a conflict).</p>
+      <p><strong>New write.</strong> The 08:00 sweep now writes to the &#128206; Docs rows: after reading an agreement it fills a blank <code>Monthly Rate</code>, <code>Effective From</code> and <code>Effective To</code> and reads them back, so each agreement is read once per term. It never writes a conflict and never overwrites a filled field. A cache write that fails shows in the pass result and the agreement is simply read again next pass. New Decision row <code>[treasurer:terms-conflict:&lt;artist&gt;:&lt;doc&gt;]</code>.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>QuickBooks connects straight to event-gate (no Zapier): invoice log, paid log, and the Record payment write<span class="kind">EVENT-GATE qbo.py, /qbo/connect, /qbo/callback, /qbo/webhook, /qbo/payment, /qbo/status, /qbo/backfill &middot; hosting/qbo/set-qbo-keys.sh &middot; DECK src/reconcile.js &middot; NOTION 🧾 QBO Invoices, 🧾 QBO Payments &middot; desk-correspondence #819 &middot; deck-app #201 &middot; open, waiting on Junyan (Intuit app, merge, deploy, keys, Connect)</span></h3></summary>
       <p><strong>Why.</strong> Junyan, 2026-10-02: &ldquo;d71 option 1, walk me through the setup&rdquo;. Zapier&rsquo;s free plan has no QuickBooks, so the Zapier design (entry below) is retired, and the live <code>qbo-paid-invoice-to-notion</code> workflow likely stops when the Zapier trial ends.</p>
       <p><strong>Route change.</strong> QuickBooks Invoice or Payment webhook (Intuit HMAC) &rarr; event-gate <code>/qbo/webhook</code> &rarr; re-read from QuickBooks &rarr; 🧾 QBO Invoices row updated; paid in full &rarr; 🧾 QBO Payments row (replaces the Zapier feed for the chase sweep and Paid by). First Connect copies every open invoice. Deck Record payment on a QBO card &rarr; event-gate <code>/qbo/payment</code> (gate token plus a Deck-signed owner receipt; the Action must already carry the owner&rsquo;s line) &rarr; QuickBooks Create Payment with <code>requestid</code>.</p>
