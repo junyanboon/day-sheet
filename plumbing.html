@@ -1278,6 +1278,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>The Desk Sort checks the fleet lease before it works, so a Codex pass and a cloud pass never both run<span class="kind">The Desk Sort &middot; failure &middot; library/desk-sort.md, scripts/lease_check.py, library/lanes.md, d67, d71 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/844">desk-correspondence #844</a></span></h3></summary>
+      <p>Junyan: &ldquo;d71 lets' do it as well&rdquo;</p>
+      <p><strong>Why.</strong> When Claude is down Junyan moves a lane to Codex on his Mac by hand (d67). Every cloud lane checked the lease except the Desk Sort, so a Codex Desk Sort and the cloud one could both drain the same rulings the moment Claude came back.</p>
+      <p><strong>Route change.</strong> The cloud pass runs <code>scripts/lease_check.py desk-sort --executor cloud</code> before anything else and again before its Run Monitor stamp. A <code>STOP</code> line ends the pass with no writes and no problem text. A Codex pass runs the same check with <code>--executor codex</code>.</p>
+      <p><strong>Failure mode.</strong> Until the lease has an <code>executors.desk-sort</code> key the check answers OK for both runners, so nothing changes until Junyan adds the key (<code>cloud</code>). An unreadable lease stops the pass with no writes; the Sentinel's missing-lane alarm then shows it.</p>
+    </details>
+    </li>
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>The Sentinel tells Junyan when Claude looks down, with the Codex switch steps (shadow first)<span class="kind">The Sentinel &middot; route, failure &middot; EVENT-GATE claude_down.py, sentinel_sweep.py, registry claude-down, d67, d71 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/845">desk-correspondence #845</a></span></h3></summary>
+      <p>Junyan: &ldquo;d71 lets' do it as well&rdquo;</p>
+      <p><strong>Why.</strong> When Claude is down Junyan covers a lane with Codex on his Mac by hand (d67), but nothing told him Claude was down: the Desk Watch is itself a Claude task, and the Sentinel's "We are missing" posts go to #desk-drops for the Concierge, which is one of the lanes that stopped.</p>
+      <p><strong>Route change.</strong> Each hourly Sentinel pass reads its own verdicts for the hourly Claude cloud lanes (Concierge, Responder, Desk Sort). Two or more of them still placed on <code>cloud</code> in the lease missing together (or one, plus an outage on status.claude.com) posts once to Junyan in #desk-status with the @mention (SMS if Slack fails): the switch, <code>codex-lane</code> and switch-back commands. When a cloud lane runs again it posts "Claude looks back" once, naming the lanes still on Codex. Starts in shadow: it posts nothing and writes what it would have said to <code>/var/lib/eventgate/claude-down/shadow.jsonl</code>.</p>
+      <p><strong>Failure mode.</strong> No LLM. A failed post keeps the old state so the next pass retries. An unreadable lease still allows the down post but never the back post; a lease holder other than <code>hermes</code> means nothing is judged. <code>CLAUDE_DOWN_MODE=live</code> turns posting on; <code>CLAUDE_DOWN_DISABLED=1</code> turns the check off. The Sentinel's own alarms and posts are unchanged.</p>
+    </details>
+    </li>
     <li class="entry alert">
     <details>
       <summary><span class="when">2026-10-02</span>
