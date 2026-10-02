@@ -1278,6 +1278,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>A rejected invoice reminder no longer stops the chase for good<span class="kind">Chase sweep (invoices) &middot; route &middot; EVENT-GATE chase_sweep.invoice_due / restart_after, library/automatic-operational-closure.md, d19 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/831">desk-correspondence #831</a></span></h3></summary>
+      <p>Junyan: &ldquo;d19 yes restart KCC reminders&rdquo;</p>
+      <p><strong>Why.</strong> KCC's RB1175 reminder 1 was rejected on 2026-09-29, and a <code>Will Not Send</code> reminder stopped the invoice chase for good; nothing on the Action could restart it.</p>
+      <p><strong>Route change.</strong> A <code>Process on/after</code> date on the invoice Action, after the day the reminder was rejected, restarts the 2-day chain once that day arrives (Toronto). Routing is unchanged (a WAITING QBO row still emails the payer with the renter cc'd), and every reminder is still held at Pending Review for a human Send.</p>
+      <p><strong>Failure mode.</strong> With no date, or a date on or before the rejection day, the chain stays stopped as before. A date still ahead shows as "stopped, restarts &lt;day&gt;".</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>Junyan's two personal finance checks get a plain-code copy for the VPS, not yet installed<span class="kind">finance-watch &middot; cadence, failure &middot; services/finance-watch, hosting/install-finance-watch.sh, d18, d53 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/833">desk-correspondence #833</a></span></h3></summary>
+      <p>Junyan: &ldquo;move the finance then the skedda watcher&rdquo;</p>
+      <p><strong>Why.</strong> Junyan d18 put his personal finance checks on the business server and d53 started the move. The Mac scheduled tasks for the daily card check and the monthly reconciliation row are still the ones that run.</p>
+      <p><strong>What changed.</strong> The code and its installer are in the repo. Nothing runs on the VPS until Junyan runs the installer, and the installer starts both timers (daily 06:05 and the 1st at 07:00, Toronto) in shadow: they read and log only. It is kept apart from the studio: its own system user, folder and Notion integration, nothing in event-gate or a studio database.</p>
+      <p><strong>Failure mode.</strong> A read error writes nothing and fails the unit. A text counts as sent only when the phone provider accepts it or the line's history shows it. Switches: <code>FINANCE_DRY_RUN=1</code> (shadow, the default), <code>FINANCE_CARD_DUE_DISABLED=1</code>, <code>FINANCE_MONTHLY_DISABLED=1</code>.</p>
+    </details>
+    </li>
     <li class="entry human">
     <details>
       <summary><span class="when">2026-10-02</span>
