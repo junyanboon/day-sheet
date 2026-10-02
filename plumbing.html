@@ -1277,6 +1277,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Charged accepts every card the Charges tab lists; unpaid review re-plans its own collision rows<span class="kind">DECK src/charge-hold.js unpaidBookingRow, charge.js preview &middot; EVENT-GATE unpaid_review.replan &middot; library/desk-sort.md &middot; deck-app #199 (merged, Deck deployed 2026-10-02 10:06 UTC), desk-correspondence #816 (merged 8691308, deploy run 36993620900, VPS runner)</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-02 (d11): &ldquo;I can&rsquo;t charge maggie.. help me fix this. d11 fixes let&rsquo;s do it.&rdquo; Maggie Morrison&rsquo;s <code>[UNPAID-REVIEW-V1:</code> rows (Type Review, fyi card) were listed on the Charges tab and refused by Charged.</p>
+      <p><strong>Route change.</strong> The tab and the worker share one unpaid-booking rule, so any listed unpaid-booking card reaches the live Skedda and Stripe checks; plan entitlement rows stay refused. The unpaid review lane turns its own collision Review row into a Charge once every collision row is closed. The Desk Sort re-cards a past unpaid booking as a charge.</p>
+      <p><strong>Failure modes.</strong> A refused card now says a real reason (Skedda price changed, already paid, Skedda invoice, QBO, relay) instead of &ldquo;not a Charge or Invoice&rdquo;. Rows made by people or tickets are never re-planned.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Chase sweep: one clear Interac deposit closes a QBO invoice row<span class="kind">EVENT-GATE chase-sweep &middot; chase_sweep.rb_interac_plan / close_on_interac / interac_memo &middot; library/automatic-operational-closure.md &middot; desk-correspondence #795 &middot; merged 6032c67, deployed by run 36991378883 (VPS runner)</span></h3></summary>
       <p><strong>Why.</strong> Junyan, 2026-10-02 (d9): &ldquo;whenever we get a interac e-transfer on gmail we can mtach it against the invoice.&rdquo; Instalment rows and unmatched deposits were already handled; a one-off QBO invoice paid by one e-Transfer was never closed by the sweep.</p>
       <p><strong>Route change.</strong> Same daily mailbox read (notify@payments.interac.ca in the studio Gmail). A row naming an RB number closes <code>[INTERAC-PAID-V1:RB&hellip;]</code> on one deposit for its Amount whose sender shares a name word with the row or whose e-Transfer message names the RB number. The notice body is now read for deposits whose amount fits an open RB row.</p>
