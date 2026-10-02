@@ -1277,6 +1277,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Chase sweep: one clear Interac deposit closes a QBO invoice row<span class="kind">EVENT-GATE chase-sweep &middot; chase_sweep.rb_interac_plan / close_on_interac / interac_memo &middot; library/automatic-operational-closure.md &middot; desk-correspondence #795 &middot; merged 6032c67, deployed by run 36991378883 (VPS runner)</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-02 (d9): &ldquo;whenever we get a interac e-transfer on gmail we can mtach it against the invoice.&rdquo; Instalment rows and unmatched deposits were already handled; a one-off QBO invoice paid by one e-Transfer was never closed by the sweep.</p>
+      <p><strong>Route change.</strong> Same daily mailbox read (notify@payments.interac.ca in the studio Gmail). A row naming an RB number closes <code>[INTERAC-PAID-V1:RB&hellip;]</code> on one deposit for its Amount whose sender shares a name word with the row or whose e-Transfer message names the RB number. The notice body is now read for deposits whose amount fits an open RB row.</p>
+      <p><strong>Failure modes.</strong> Two deposits for one invoice, or one deposit fitting two invoices, are raised for staff, never guessed. A mailbox or Actions read error matches nothing. Direct deposits and wires send no notice, so they still need the QBO Payments log or Paid by. Kill switch <code>CHASE_INTERAC_INVOICE_DISABLED=1</code>.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Six more canon jobs can no longer fall back to a paid GitHub machine<span class="kind">GITHUB sales-decay, test-sales-decay, Concierge deadline regression, qa-review, scribe, watchlist test-alert &middot; VPS runner hostinger-watchlist &middot; desk-correspondence #810 (open, not merged)</span></h3></summary>
       <p><strong>Why.</strong> Junyan, 2026-09-30: no GitHub-hosted runners on private repos. Junyan, 2026-10-02: &ldquo;d18 yes&rdquo;. Same pattern as the event-gate deploy entry below.</p>
       <p><strong>Failure mode closed.</strong> These jobs ran on <code>DC_RUNNER || ubuntu-latest</code>, so deleting the repo variable silently moved them onto paid minutes. Now <code>self-hosted</code> is always in the label set and an unset <code>DC_RUNNER</code> means <code>watchlist-hostinger</code>; a hosted label in the variable leaves the job queued. Nothing changes today: <code>DC_RUNNER</code> is already <code>watchlist-hostinger</code>. qa-review (disabled since 2026-09-12) would fail on the VPS at <code>npm install -g</code> if re-enabled. The watchlist refresh job (<code>WATCHLIST_RUNNER</code>) still has a hosted fallback, to be changed separately.</p>
