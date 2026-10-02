@@ -1278,6 +1278,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>Responder drafts nothing for a text the desk already answered, even after a mirror stall<span class="kind">The Responder &middot; route, failure &middot; scripts/intake_decide.py copy_closures, scripts/queue_draft.py sent_after, library/the-responder.md § Every pass 3, d38 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/849">desk-correspondence #849</a></span></h3></summary>
+      <p>Junyan: &ldquo;d38 fix it&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-02 the GitHub message mirror stalled from 8:02 AM to 4:17 PM. A renter's two texts were handled from their Phone.com email copies, and the desk answered at 1:27 PM and 4:17 PM. When the mirror caught up, the 4:20 PM pass saw the texts as new, opened a duplicate ticket with no SOP and queued a best-guess draft.</p>
+      <p><strong>Route change.</strong> <code>intake_decide.py</code> now treats a text as already handled when an audit row from its email copy (last 48 hours, written after the text, no sms-in id, same or blank phone, same words) closed it with any closing disposition. It opens no ticket and queues no Need Help text, and with <code>--apply</code> writes one <code>routed-no-draft</code> audit row naming the text id so the gate stops listing it. <code>queue_draft.py</code> refuses (exit 3, <code>answered by &lt;row&gt;</code>) when a Sent row on the same Artist and channel was created after the message (scheduled sends with a Send After do not count). Canon: a stub or routed message gets dedup 4a to 4c before any draft.</p>
+      <p><strong>Failure mode.</strong> A failed audit read keeps the old path (a ticket and a draft, never a lost message). A failed Sent read refuses after 3 tries, like the waiting-row check: retry next pass. There is no off switch: <code>--not-duplicate "&lt;why&gt;"</code> writes anyway when the later send does not answer the message, and reverting this PR restores the old path.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>The desk stops reading Junyan's personal Gmail again<span class="kind">Desk Hand &middot; tool, route &middot; library/house-rules.md § Mailbox scope, library/landlord-contractor-visit.md, reverses PR 846 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/851">desk-correspondence #851</a></span></h3></summary>
+      <p>Junyan: &ldquo;I see gotcha yes it shouldn't read my personal email. Maybe we should have another wrok aroudn for this.&rdquo;</p>
+      <p><strong>Why.</strong> Junyan took back the 2026-10-02 permission that let the attended Desk Hand read his personal Gmail.</p>
+      <p><strong>Route change.</strong> No desk helper or robot reads <code>junyan.boon@gmail.com</code> for desk work; only his own personal-inbox skills touch it. Landlord or contractor mail that lands there goes back to the interim route: the desk asks Junyan to forward it to <code>thedanceannex@gmail.com</code>. A better workaround is being decided separately.</p>
+      <p><strong>Failure mode.</strong> If the forward never comes, the visit request is invisible to the desk; an empty business search is still not proof there was no request, so the desk asks Junyan rather than assuming none.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>The Desk Hand reads one personal Gmail label, Business Correspondence<span class="kind">Desk Hand &middot; tool, route &middot; library/house-rules.md § Mailbox scope, library/landlord-contractor-visit.md, follows PR 851, d44 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/852">desk-correspondence #852</a></span></h3></summary>
+      <p>Junyan: &ldquo;d44 can you make it for me?&rdquo;</p>
+      <p><strong>Why.</strong> Landlord mail reaches Junyan at his personal address and he cannot reply to it from the business mailbox ("it's tricky because I can't reply from my business email."), so the forward route from PR 851 did not fit.</p>
+      <p><strong>Route change.</strong> The attended Desk Hand may read <code>junyan.boon@gmail.com</code> only through searches that include <code>label:"Business Correspondence"</code>, read only. A Gmail filter labels everything from <code>lennard.com</code>; Junyan labels anything else by hand. The desk never sends, drafts, labels, archives or deletes there; replies stay with Junyan from his own account, worded by the desk in chat. Robots, cloud triggers and scheduled runs stay barred from that mailbox.</p>
+      <p><strong>Failure mode.</strong> Unlabelled mail is invisible to the desk. If a visit is mentioned and neither the studio mailbox nor the label has it, the desk asks Junyan rather than assuming there was no request.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-03</span>
