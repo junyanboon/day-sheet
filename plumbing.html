@@ -1277,6 +1277,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Skedda MCP no longer writes notes into a renter&rsquo;s booking description<span class="kind">SKEDDA-MCP settle_booking_payment, reprice_booking, waive_booking_charge, approved_charge_waiver &middot; library/tags.md &middot; skedda-cli #34, desk-correspondence #818 &middot; PRs open, waiting on merge and the deploy-no-notes.sh overlay</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-02 (d13): &ldquo;stop putting notes in skedda descriptions&rdquo;. Booking 120885374: an appended &ldquo;Paid via Stripe pi_&hellip;&rdquo; made Skedda refuse the save as too long, and nothing read those notes back.</p>
+      <p><strong>Route change.</strong> Settle, reprice and waive change only payment status, price and title; the reference, reason or platform confirmation come back in the tool result for the Notion row. The approved charge waiver leaves the renter&rsquo;s text as it was. The prepaid-hours receipt and the extension robot&rsquo;s copy of the renter&rsquo;s own text stay.</p>
+      <p><strong>Failure modes.</strong> A booking settled or waived after this shows no trace in Skedda itself: the Notion row and Stripe are the record. skedda-cli #33&rsquo;s deploy script is replaced and must not be run.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Timekeeper: a staff app turn-off alone is a Review, never a Forgot to Arm<span class="kind">EVENT-GATE overtime_sweep.py armed_after_all() &middot; library/timekeeper-overtime.md Step 4 &middot; CLOUD Timekeeper prompt timekeeper-cloud v1.3.1 &middot; desk-correspondence #812 (open, not merged)</span></h3></summary>
       <p><strong>Why.</strong> Junyan, 2026-10-02: &ldquo;d24 yes keypad only&rdquo;, &ldquo;d25 review&rdquo;.</p>
       <p><strong>Failure mode changed.</strong> Only a keypad disarm by someone outside the renter group proves the panel was armed. When the only event between the renter&rsquo;s last disarm and the next holder&rsquo;s arm is a remote or app disarm (a staff check), the Timekeeper files one agent-owned Review naming it instead of a Forgot to Arm.</p>
