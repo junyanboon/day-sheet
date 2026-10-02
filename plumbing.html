@@ -1280,6 +1280,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry llm">
     <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>Every cloud lane can run on Codex when Claude is down, and codex-lane checks the lease first<span class="kind">Codex backup (codex-lane) &middot; tool, failure &middot; library/lanes.md, scripts/lease_check.py, failover/codex/codex_lane.py, failover/codex/preamble.md, d67, d76, d77 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/847">desk-correspondence #847</a></span></h3></summary>
+      <p>Junyan: &ldquo;Yes I want everything to be able to run on codex.&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wants every studio lane able to run on Codex on his Mac when Claude is down (d77). Only the Concierge had run there, and the Codex runner trusted the model to obey the lease.</p>
+      <p><strong>Route change.</strong> <code>codex-lane &lt;lane&gt;</code> now reads the lease with <code>scripts/lease_check.py &lt;lane&gt; --executor codex</code> before Codex starts; a lane not set to <code>codex</code> stops at once with the STOP line. The retired Mechanic left its list. On Codex, texts come from this repo's <code>messages/</code> copies instead of Phone.com (call logs, voicemail and sending stay unavailable), Notion calls go through python3 instead of the Notion connector, and Stripe, Slack posting and Skedda or alarm writes are handed back on the pass line for the next cloud pass or Junyan.</p>
+      <p><strong>Failure mode.</strong> An unreadable lease stops the pass before Codex starts. Nothing runs on a schedule: a lane moved to Codex runs only when someone types <code>codex-lane &lt;lane&gt;</code>, so a lane left on <code>codex</code> after Claude is back stays quiet until <code>set-executor &lt;lane&gt; cloud</code>.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>The Desk Hand may read Junyan's personal Gmail, read only<span class="kind">Desk Hand &middot; tool &middot; library/house-rules.md § Mailbox scope, library/landlord-contractor-visit.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/846">desk-correspondence #846</a></span></h3></summary>
+      <p>Junyan: &ldquo;Why forward? I have no issues with my personal email being read by the desk hnd&rdquo;</p>
+      <p><strong>Why.</strong> Landlord mail often lands in Junyan's personal Gmail, and the route used to ask him to forward it. He said the Desk Hand may just read it.</p>
+      <p><strong>Route change.</strong> The attended Desk Hand may search and open threads in the personal mailbox when a desk task needs it (landlord and contractor visits first). It never sends, drafts, labels or deletes there.</p>
+      <p><strong>Failure mode.</strong> Unattended lanes and cloud triggers still may not read that inbox; a robot that does breaks house rules. Studio searches still go to the business mailbox first.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
       <summary><span class="when">2026-10-02</span>
       <h3>The Desk Sort checks the fleet lease before it works, so a Codex pass and a cloud pass never both run<span class="kind">The Desk Sort &middot; failure &middot; library/desk-sort.md, scripts/lease_check.py, library/lanes.md, d67, d71 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/844">desk-correspondence #844</a></span></h3></summary>
       <p>Junyan: &ldquo;d71 lets' do it as well&rdquo;</p>
