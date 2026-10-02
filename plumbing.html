@@ -1331,11 +1331,11 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
-      <h3>Treasurer dunning opens the SOP ticket the same day; the chase sweep yields to it<span class="kind">The Treasurer &middot; route, failure &middot; EVENT-GATE &middot; treasurer_sweep.run_dunning / sop_tickets &middot; chase_sweep.stripe_invoice_lane &middot; stripe_failure.py &middot; library/the-treasurer.md &middot; desk-correspondence #814 &middot; PR open, not merged or deployed (builds on #792, merged 14f8fce)</span></h3></summary>
-      <p>Moved here on 2026-10-02 from day-sheet PR #40, which was never merged.</p>
-      <p><strong>Why.</strong> Junyan d65: &ldquo;fix the reamining&rdquo;. A failed Monthly Billing renewal (Viktoriia Osipovych, Janet Zamora, Oct 1) waited for the next monthly pass for its ticket, and the chase sweep could raise a second staff row beside the Treasurer&rsquo;s.</p>
-      <p><strong>Route change.</strong> A RETRYING or DEAD_CARD finding on a subscription invoice opens the &ldquo;Unable to Bill Card&rdquo; Customer Care ticket that day (one per renter per billing month) with one held draft, unless staff must act first. The chase sweep raises no staff row when the Treasurer&rsquo;s exists, and counts the Treasurer&rsquo;s draft as reminder 1.</p>
-      <p><strong>Failure mode.</strong> Any unconfirmed row or ticket is listed under <code>unfiled</code>, the run returns ok:false and retries; on the last try the owner gets a text outside Notion.</p>
+      <h3>Treasurer dunning opens the SOP ticket the same day; the chase sweep yields to it<span class="kind">The Treasurer &middot; route, failure &middot; EVENT-GATE treasurer_sweep.run_dunning, sop_tickets, chase_sweep.stripe_invoice_lane, stripe_failure.py, library/the-treasurer.md, builds on #792, d65 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/826">desk-correspondence #826</a></span></h3></summary>
+      <p>Junyan: &ldquo;fix the reamining&rdquo;</p>
+      <p><strong>Why.</strong> A failed Monthly Billing renewal (Viktoriia Osipovych, Janet Zamora, Oct 1) waited for the next monthly pass for its ticket, and the chase sweep could raise a second staff row beside the Treasurer's.</p>
+      <p><strong>Route change.</strong> A RETRYING or DEAD_CARD finding on a subscription invoice opens the "Unable to Bill Card" Customer Care ticket that day (one per renter per billing month) with one held draft, unless staff must act first (bank said do not retry, or the subscription charges a card other than the customer's default): then the ticket opens with the reason and no renter draft. Rows name the last decline, card and expiry, next retry and an estimated give-up date. The chase sweep raises no staff row when the Treasurer's exists, and counts the Treasurer's draft as reminder 1.</p>
+      <p><strong>Failure mode.</strong> Any unconfirmed row or ticket is listed under <code>unfiled</code>, the run returns ok:false and retries every 15 minutes; on the last try the owner gets a text outside Notion.</p>
     </details>
     </li>
     <li class="entry det">
