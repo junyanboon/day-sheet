@@ -1277,6 +1277,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Concierge closes put the outcome in Position (ticket_edit.py --close); Desk Invariants W catches a half-close<span class="kind">CLOUD Concierge &rarr; scripts/ticket_edit.py --close &middot; library/concierge-orchestration.md &sect; Closeout C &middot; EVENT-GATE invariants.py W &middot; library/job-10-desk-invariants.md &middot; cloud prompt concierge-cloud v1.9 &middot; desk-correspondence #802</span></h3></summary>
+      <p><strong>Why.</strong> The cloud Concierge closed Nick Walsh&rsquo;s Sales ticket (Oct 1, 20:11 pass) by setting Stage = Close Ticket and writing &ldquo;Closed (Lost)&rdquo; in the note, but Position stayed at Gate: Artist. Canon named the outcome but not the field, and every backstop read Stage Close Ticket as closed. Junyan, 2026-10-02: &ldquo;d13 yes&rdquo;, &ldquo;d14 yes&rdquo;.</p>
+      <p><strong>Route change.</strong> A Concierge close is one command: <code>ticket_edit.py &lt;id&gt; --close Won|Lost|Done --why &hellip;</code>. One PATCH sets Position (Sales Lost also Stage Close Ticket), clears Revisit After, Deck ask and Current Block, appends the Closing note and reads back; a Position that did not stick is a non-zero exit. Stage values outside the canon list (the stray &ldquo;Won&rdquo;) are refused. A Sales Won close leaves Stage alone for now (<code>SALES_WON_STAGE</code>, open question).</p>
+      <p><strong>Failure mode now caught.</strong> Desk Invariants no longer drops Stage Close Ticket from the Sales open set. W: a Sales ticket at Close Ticket with Position not Won, Lost, Done or Review. A Concierge closing note that says Lost lets the checker set Position Lost and read it back (d14, max 5 per run, <code>INVARIANTS_W_AUTO_LOST=0</code> to file only); any other note is one W defect, escalated to a 🩺 row after 3 runs.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Event-gate deploys can no longer fall back to a paid GitHub machine<span class="kind">GITHUB deploy-event-gate.yml (both jobs) &middot; VPS runner hostinger-watchlist &middot; services/event-gate/hosting/README-hostinger.md &middot; desk-correspondence #805 (open, not merged)</span></h3></summary>
       <p><strong>Why.</strong> Junyan, 2026-10-02: &ldquo;d12 option 2&rdquo; (keep the setting, fall back to the VPS instead of GitHub&rsquo;s paid machine). House rule: no GitHub-hosted runners on private repos.</p>
       <p><strong>Failure mode closed.</strong> Both jobs ran on <code>DEPLOY_RUNNER || ubuntu-latest</code>, so deleting the repo variable silently moved deploys onto paid minutes. Now the label set is always <code>self-hosted</code> plus <code>DEPLOY_RUNNER</code> (unset: <code>watchlist-hostinger</code>). A hosted label in the variable leaves the job queued instead of running.</p>
