@@ -1281,6 +1281,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>The Skedda sync never sets a charge to $0 on its own, and takes nothing from a blind read<span class="kind">event-gate (Skedda sync, the Deck's live price) &middot; route, failure &middot; EVENT-GATE skedda_sync.py, skedda_read.is_blind, GET /booking-truth, library/desk-sort.md, d57 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/836">desk-correspondence #836</a></span></h3></summary>
+      <p>Junyan: &ldquo;it is allowed to write over $0 charges but it needs to be during a human session and inform the human&rdquo;</p>
+      <p><strong>Why.</strong> When the Skedda session dies, Skedda still answers but shows every booking at $0 with no name. The sync only skipped a missing price, so a live tick could have rewritten up to 10 open charge rows to $0, and the Desk Sort closes a $0 row as not needed.</p>
+      <p><strong>Route change.</strong> A read where not one booking has a name or a price is blind: the sync changes no row and files one Run Error a day (<code>[skedda-sync-blind:&lt;date&gt;]</code>), and the Deck's live price answers "Skedda could not be read" instead of $0.00. A real $0 in Skedda against a row with a non-zero Amount leaves the row as it is and files one Review row (<code>[skedda-sync-zero:&lt;booking&gt;:&lt;row&gt;]</code>). Only a caller that passes <code>attended=True</code> may set it to $0, and it gets the before and after to show the human. The Desk Sort canon carries the same rule.</p>
+      <p><strong>Failure mode.</strong> If the flag cannot be filed the pass still writes nothing and lists <code>flag_failed</code>. <code>SKEDDA_SYNC_MODE=off</code> turns the whole sync off.</p>
+    </details>
+    </li>
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>A Skedda session watcher notices a mid-day dead session and fixes it once<span class="kind">event-gate (Skedda watch) &middot; route, cadence, failure &middot; EVENT-GATE skedda_watch.py, POST /skedda-watch, danceannex-skedda-watch.timer, booking_sweep._file_run_error, hosting/install-skedda-watch.sh, hosting/scheduler_record.py, library/skedda-session.md, d54 d55 d56 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/837">desk-correspondence #837</a></span></h3></summary>
+      <p>Junyan: &ldquo;d54 yes d55 yes d56 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-09-30 a human sign-in with the robot account killed the shared Skedda session at about 1:24 PM, every lane read bookings with no names or prices for about 45 minutes, and nothing alerted: the booking sweep's blind alarm had been spent since 2026-08-19.</p>
+      <p><strong>Route change.</strong> Every 15 minutes, 06:15 to 23:45 Toronto, the watcher reads Skedda once. On a dead session it may do one fresh sign-in through skedda-mcp's refresh route, at most 2 a day and 2 hours apart, never while a login candidate is pending. One fix that works posts nothing. A second fix in a day, a fix that fails, or Skedda unreachable for 45 minutes posts to #desk-status with Junyan's @mention (SMS if Slack fails), once at start and once at recovery. The booking sweep and the Skedda sync now report a blind read to the watcher instead of filing their own row. The nightly refresh writes a scheduler record so the Sentinel can check it.</p>
+      <p><strong>Failure mode.</strong> Ships in shadow: it alerts instead of signing in until <code>SKEDDA_WATCH_HEAL=live</code>. <code>SKEDDA_WATCH_DISABLED=1</code> stops it. If the watcher stops, the Sentinel raises <code>job:skedda-watch</code> after 45 minutes, and lanes fall back to one Run Error a day of their own.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>A WAIVED ruling zeroes the charge in any Desk Sort pass and closes the booking's CC ticket<span class="kind">Desk Sort (cloud trigger) &middot; failure &middot; library/desk-sort.md (Drain mode, WAIVED), d57, d68 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/839">desk-correspondence #839</a></span></h3></summary>
+      <p>Junyan: &ldquo;it can just change the pricing to 0 and then close off any outstanding cc ticket&rdquo;</p>
+      <p><strong>Why.</strong> The d57 guard says no unattended pass may set a non-zero charge to $0 from a Skedda read. That left it unclear whether carrying out Junyan's own Waive needed a human session.</p>
+      <p><strong>Route change.</strong> It does not. On a <code>WAIVED</code> line any Desk Sort pass, scheduled or cloud, sets <code>Amount</code> to $0 with the before and after in the receipt, closes the Action, then closes each outstanding Customer Care ticket for that booking at <code>Position</code> <code>Done</code> with <code>ticket_edit.py --close Done</code>, one receipt line per ticket. A $0 read from Skedda with no ruling still changes nothing (d57 unchanged).</p>
+      <p><strong>Failure mode.</strong> A ticket another open Action still gates, or one already at <code>Review</code>, is left where it is and the receipt says so.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Treasurer checks next month's Stripe charge against each agreement on the 15th<span class="kind">The Treasurer &middot; tool, failure &middot; EVENT-GATE treasurer_sweep.next_charge_audit, stripe_read.upcoming, library/the-treasurer.md, d38 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/832">desk-correspondence #832</a></span></h3></summary>
       <p>Junyan: &ldquo;I used to do an agreement audit before&rdquo;</p>
       <p><strong>Why.</strong> Tanisha Chakma's agreement is AAP at $108.48, but Stripe was moved to 1AP at $85.88 on Aug 31, and nothing caught it until a month had been charged wrong. Junyan's old manual Agreement Audit compared each agreement with the Artist card; this one compares it with what Stripe will charge next.</p>
