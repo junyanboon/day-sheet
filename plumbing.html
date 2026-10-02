@@ -1277,6 +1277,33 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <li class="entry det">
     <details>
       <summary><span class="when">2026-10-02</span>
+      <h3>Deck Charges shows failed payments: a label on the open invoice, a Failed payments list, and on the failed Charged card<span class="kind">DECK &middot; src/open-invoices.js (failureOf, failedPayments) &middot; sources/deck.html renderCharges &middot; deck-app #194 &middot; PR open, not merged or deployed</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-02: &ldquo;All invoices should end up in the charges tab. Maybe failed transactions should sit there as well.&rdquo;</p>
+      <p><strong>New route.</strong> <code>/api/open-invoices</code> also reads Stripe charges (read only): the newest failed charge on each open invoice Stripe tried (decline, card, expiry, retry or do-not-retry) as a label on that invoice&rsquo;s card, and failed charges of the last 14 days no open invoice explains, under <strong>Failed payments</strong>. A failed Deck Charged click is said on its own Review card.</p>
+      <p><strong>Failure mode.</strong> A failed-charge read error keeps the invoice list and shows a line saying failed payments may be missing. Still blind: QuickBooks invoices with no Action row (no QBO read exists).</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>Chase sweep chases open Skedda invoices and failed renewals that no Action row tracks<span class="kind">EVENT-GATE &middot; chase_sweep.stripe_invoice_lane &middot; library/automatic-operational-closure.md, autonomy.md &middot; desk-correspondence #794 &middot; merged d318388, deployed 6da4d91 2026-10-02 08:58Z (run 36987124650, VPS runner)</span></h3></summary>
+      <p><strong>Why.</strong> Junyan d50 &ldquo;yes&rdquo;, d52 &ldquo;don&rsquo;t wait. It actually is usually an issue&rdquo;. Skedda invoices (Nelia Wong AVQBL38P-0001 $528.84, Alison Murray and Carlos Boeri C62JQ5MB-0005 $176.28) and failed Monthly Billing renewals had no Action row, so the 09:30 sweep never reminded anyone.</p>
+      <p><strong>New route.</strong> Stripe <code>status=open</code> (read-only) &rarr; held <code>INVOICE-CHASE-&lt;n&gt;-&lt;number&gt;-&lt;date&gt;</code> reminder every 2 days (Pending Review, never sent from here). A renewal on a dead card (do-not-retry decline, or the subscription on another card than the customer default) becomes one staff Invoice Action on the Charges tab instead (Viktoriia Osipovych XEFRE3SS-0011). Deck-tracked invoices stay with the invoice lane; <code>CHASE_STRIPE_HOLD</code> (Janet Zamora JPJLVMIC-0017) is skipped.</p>
+      <p><strong>Failure mode.</strong> A Stripe or Actions read error queues nothing. Kill switch <code>CHASE_STRIPE_INVOICES_DISABLED=1</code>.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>One courtesy close per text and per exchange; the email copy&rsquo;s ticket takes the text<span class="kind">EVENT-GATE &middot; holding_reply.py, app.py &middot; RESPONDER &middot; scripts/intake_decide.py &middot; library/the-responder.md &middot; desk-correspondence #790 &middot; merged dee6e74, deployed 6da4d91 2026-10-02 08:58Z (run 36987124650, VPS runner)</span></h3></summary>
+      <p><strong>Why.</strong> Nelia Wong, 2026-10-01: her &ldquo;Thank you!&rdquo; drew two thank-you drafts, and her booking text opened a second Sales ticket (first read from its Phone.com email copy, then as the sms-in record). Junyan d46, d47, d51: leave thank-yous to the courtesy reply bot, no ping-pong, one close after our message and that&rsquo;s it.</p>
+      <p><strong>Route changes.</strong> The Courtesy Reply Lane row now carries the text&rsquo;s sms-in id in Source Email (poll path), so <code>queue_draft</code>&rsquo;s one-message-one-draft check sees it. The Responder declines a plain thank-you text (<code>plain thanks, Courtesy Reply Lane owns it</code>). No close when our last message to the renter is already a close, from any writer. <code>intake_decide</code> routes a text to the open ticket its Phone.com email copy already opened (one audit row, 48 h, same ask).</p>
+      <p><strong>Failure mode.</strong> A failed audit read keeps the old behaviour (a stub). The webhook path has no text id and is unchanged.</p>
+    </details>
+      </li>
+      <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
       <h3>Deck Charges: Waiting on payment lists every open Stripe invoice, not only Deck-made ones<span class="kind">DECK &middot; src/open-invoices.js &middot; GET /api/open-invoices &middot; sources/deck.html renderCharges &middot; deck-app #192 &middot; merged 3167ca5, deployed (Worker version 50344d52, 2026-10-02 00:05Z)</span></h3></summary>
       <p><strong>Why.</strong> Nelia Wong&rsquo;s Skedda invoice AVQBL38P-0001 ($528.84) was open in Stripe but missing from the Charges tab: Waiting on payment was built only from Action rows whose newest <code>You</code> line says INVOICED or WAITING. Junyan: &ldquo;All invoices should end up in the charges tab.&rdquo;</p>
       <p><strong>New route.</strong> The Deck reads Stripe (read-only key) for every invoice with status <code>open</code> and shows the ones no Action card already covers. Source label per card: Skedda (<code>application</code> ca_R1s6vORuKKbwwwWJBiH4VgLL2h2CDydF / <code>metadata.allbooked_originating_invoice</code>), subscription (failed Monthly Billing renewal, <code>parent.type: subscription_details</code>, with Stripe&rsquo;s next retry), or Deck (<code>metadata.deck_action</code>).</p>
