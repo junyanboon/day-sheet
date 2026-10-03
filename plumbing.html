@@ -1281,11 +1281,30 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>The Hermes tunnel's look-only key is accepted again<span class="kind">Hermes tunnel (fleetread) &middot; failure &middot; ops/fleetread/install-fleetread.sh, ca.danceannex.hermes-tunnel, d34, d37 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/872">desk-correspondence #872</a></span></h3></summary>
+      <p><strong>Why.</strong> The tunnel key's line used <code>permitlisten="none"</code>, which sshd does not accept in authorized_keys, so it ignored the key and the Mac's Hermes tunnel was refused after the switch to fleetread.</p>
+      <p><strong>Route change.</strong> The line now allows remote listening only on port 1, which a non-root user can never bind, so the key still cannot open a listener on the VPS and the local forward to the Hermes API works. Live once Junyan runs the installer again.</p>
+      <p><strong>Failure mode.</strong> If the tunnel key is refused, the tunnel log at <code>/tmp/hermes-tunnel.log</code> says "Permission denied (publickey)" and launchd keeps retrying. Undo: restore the <code>.bak-2026-10-03</code> tunnel plist, which logs in as root.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>Traefik drops look-alike request headers before they reach the studio's services<span class="kind">Traefik (VPS front door) &middot; failure &middot; ops/traefik/apply-alias-headers.sh, ops/traefik/README.md, d39 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/873">desk-correspondence #873</a></span></h3></summary>
       <p>Junyan: &ldquo;d39 yes&rdquo;</p>
       <p><strong>Why.</strong> Traefik warned that a header named <code>X_Auth_User</code> could pass as <code>X-Auth-User</code> to services that treat the two alike (Junyan d39).</p>
       <p><strong>Route change.</strong> No message route changes. The script and its checks are in this repo; Junyan runs it on the VPS. After it runs, both entry points delete any request header whose name has a character other than a letter, digit or dash. The request itself still goes through.</p>
       <p><strong>Failure mode.</strong> A service that relied on a header with an underscore or dot in its name would stop receiving it; none of the studio's do. The script checks every public endpoint after the change and puts the old file back by itself if any answers differently. Rollback by hand: restore <code>docker-compose.yml.before-alias-headers</code> in <code>/docker/traefik</code> and run <code>docker compose up -d</code>.</p>
+    </details>
+    </li>
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>The "Claude looks down" post now says one command, codex-takeover on<span class="kind">The Sentinel &middot; route &middot; EVENT-GATE claude_down.py, failover/codex/codex_takeover.py, d80 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/853">desk-correspondence #853</a></span></h3></summary>
+      <p>Junyan: &ldquo;I just need a way to start codex off when there's an outage.&rdquo;</p>
+      <p><strong>Why.</strong> The down post listed three lease and codex-lane commands for one lane at a time. Junyan now has one switch on his Mac, <code>codex-takeover</code>, that moves every Claude cloud lane to Codex and runs each at its usual time.</p>
+      <p><strong>Route change.</strong> The down post tells Junyan to type <code>codex-takeover on</code> (and <code>codex-takeover off</code> when Claude is back); the back post names the lanes still on Codex and says <code>codex-takeover off</code> (and says it too when no lane is on Codex, in case the runner is still on). A lane with no lease key gets its one-time <code>--new</code> command first, above <code>codex-takeover on</code>, so the takeover then moves it too. When and where the posts go is unchanged (shadow until CLAUDE_DOWN_MODE=live).</p>
+      <p><strong>Failure mode.</strong> Text only. Nothing switches by itself: Junyan types the command and answers yes. CLAUDE_DOWN_DISABLED=1 still turns the check off.</p>
     </details>
     </li>
     <li class="entry human">
