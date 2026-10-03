@@ -1281,6 +1281,24 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-03</span>
+      <h3>Deck keeps its request logs (Cloudflare Workers Logs on)<span class="kind">The Deck &middot; failure &middot; wrangler.jsonc observability, d45 &middot; <a href="https://github.com/junyanboon/deck-app/pull/207">deck-app #207</a></span></h3></summary>
+      <p>Junyan: &ldquo;d45 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-03 the Deck failed with Cloudflare 503 pages (the Worker ran out of CPU time) and the only way to see why was a live <code>wrangler tail</code> during the outage. Nothing was kept afterwards.</p>
+      <p><strong>Failure mode.</strong> <code>wrangler.jsonc</code> now sets <code>observability.enabled</code>, so Cloudflare keeps the Worker's request logs and <code>console.log</code> lines (outcome, CPU time, errors) and they can be read in the dashboard after the fact. Nothing about routes or sends changes. To turn it off, set <code>enabled</code> to false and redeploy.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>Deck asks once more when Reject or a release hits an overloaded server<span class="kind">The Deck &middot; failure &middot; sources/deck.html decideReject writeRow, d44b &middot; <a href="https://github.com/junyanboon/deck-app/pull/207">deck-app #207</a></span></h3></summary>
+      <p>Junyan: &ldquo;d44yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-03 rejecting Ajani M.'s draft showed "Rejection sync incomplete ... &lt;!DOCTYPE is not valid JSON": the Worker had hit its CPU limit and Cloudflare answered with an error page. The reject had nothing wrong with it.</p>
+      <p><strong>Failure mode.</strong> When the server is overloaded or unreachable, the Deck now repeats the same call once. Reject is safe to repeat (the server keys it on the decision id), and a release repeats the same property write on the same row, which the server refuses if the row was already sent. Only when the second call also fails does the old warning show, with the reason kept for a retry. Other errors are not retried.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
       <h3>Registrar reads "in half an hour" and sends a vague several-booking move ask to a Review row<span class="kind">The Registrar &middot; route &middot; services/event-gate/move_sweep.py relative_time find_relative several_bookings_why, library/studio-tickets-bookings.md, d37, d38 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/855">desk-correspondence #855</a></span></h3></summary>
       <p>Junyan: &ldquo;d37 yes fix it&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-02 at 5:31 PM Ishfaaq Jookhun (Private Class Add-On) texted that his student had cancelled the private "in half an hour" and asked to move it. The words named no date, so the move lane read every upcoming booking, found several and queued the "which booking?" clarification. The 6:15 PM booking was inside 24 hours, which is a human's call for his account.</p>
