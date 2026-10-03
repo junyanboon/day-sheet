@@ -1278,6 +1278,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>The Deck says "Deck server overloaded, retrying" when Cloudflare stops it, not "problem reaching Notion"<span class="kind">The Deck &middot; failure &middot; deck-app sources/deck.html DeckAPI.call and errorHtml, test/overloaded-screen.test.js, d38 &middot; <a href="https://github.com/junyanboon/deck-app/pull/205">deck-app #205</a></span></h3></summary>
+      <p>Junyan: &ldquo;d38 yes make th echange&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-03 the Messages and Charges tabs kept showing "Temporary problem reaching Notion". The live Worker log (12:02 to 12:09 Toronto) showed 113 of 185 <code>/api/tool</code> reads stopped by Cloudflare with "Worker exceeded CPU time limit" (503). Notion was fine; the screen blamed it because Cloudflare's error page is not JSON.</p>
+      <p><strong>Failure mode.</strong> A non-JSON 5xx from the Deck's own server now shows "Deck server overloaded, retrying" with a Try now button, and the Deck keeps retrying every minute as before. A network failure says the Deck server could not be reached. A Notion 429 ("Waiting on Notion") and a refused token ("token needs renewing") read as before. The overload itself is not fixed by this change (Cloudflare free plan CPU limit, d37).</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-03</span>
