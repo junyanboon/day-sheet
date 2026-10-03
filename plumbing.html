@@ -1281,6 +1281,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>A yes to a move question the desk wrote now moves the booking<span class="kind">The Registrar &middot; route &middot; EVENT-GATE move_sweep.py _desk_consent, library/autonomy.md, library/studio-tickets-bookings.md, d51 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/876">desk-correspondence #876</a></span></h3></summary>
+      <p>Junyan: &ldquo;d51 yes&rdquo;</p>
+      <p><strong>Why.</strong> A renter's yes to a move question the desk wrote by hand had no Registrar key, so it could only become a Review row.</p>
+      <p><strong>Route change.</strong> When the desk's sent text (read from Gmail or Phone.com) names exactly one original booking and exactly one new date, time and room, and they equal the renter's request on file, the yes is made like a yes to the Registrar's own question: every guard is re-checked (length and price, room, 24 h notice from the original request, platform, account terms, moved once, 31 days), then the move is written and read back on both days.</p>
+      <p><strong>Failure mode.</strong> Anything ambiguous or failing stays one Review row quoting the desk's text. An unreadable desk question is a retried error for that request.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>The moved confirmation auto-sends after a verified read-back (seventh send exception)<span class="kind">The Registrar &middot; route, failure &middot; EVENT-GATE move_confirm.verified_confirmation, move_sweep.write_move, library/autonomy.md, d52 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/876">desk-correspondence #876</a></span></h3></summary>
+      <p>Junyan: &ldquo;d52 yes&rdquo;</p>
+      <p><strong>Why.</strong> Junyan signed a seventh standing exception to the no-unattended-send rule: once the robot has moved a booking and Skedda reads it back, the renter gets the confirmation without waiting for a person.</p>
+      <p><strong>Route change.</strong> After <code>/move-booking</code> answers moved and verified, a fresh Skedda read must find the booking at the new studio and times with the same holder, price and payment state; then the approved How to Respond template (double-check line, automated-message notice, no dashes) is queued Ready to Send. This covers every move the lane makes, including a yes to a desk-written question; it used to cover only same-day shifts.</p>
+      <p><strong>Failure mode.</strong> Any failed check, an "already there" answer, a changed template or a channel the send engine does not dispatch queues the past-tense draft at Pending Review with the reason, and the ops text goes as before. <code>MOVE_CONFIRM_AUTO_DISABLED=1</code> holds every confirmation.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Registrar move lane stops dying silently on spacing, skipped renters and robot texts<span class="kind">The Registrar &middot; failure, route &middot; EVENT-GATE registrar_move_intake.py, move_sweep.py, move_confirm.py, inbound.py, booking_sweep.py, scripts/intake_decide.py, d50 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/876">desk-correspondence #876</a></span></h3></summary>
+      <p>Junyan: &ldquo;d50 yes, can we also look at other possible bugs&rdquo;</p>
+      <p><strong>Why.</strong> Every move asked by iPhone email died at the Registrar's source re-read: the live Gmail text and the cloud Responder's saved copy differed only in spacing, so the byte-for-byte check never passed and nothing reached a person.</p>
+      <p><strong>Route change.</strong> The hand-off now saves the raw message from the correspondence log (<code>registrar_move_intake.from_ledger</code>), and both re-reads (email and SMS) compare spacing-blind (<code>inbound.canonical</code>). One Thread ID rule: the Gmail thread id for email, the +1 phone for SMS (intake audits used the message id). Quoted history headers in Spanish, French and Portuguese mail are cut from the renter's words. Only a person's reply makes the lane stand down; robot texts (reminders, access texts, the automated receipt) no longer count as "the desk answered".</p>
+      <p><strong>Failure mode.</strong> One renter's mismatched copy, a ticket with a marker but no journal, or a source on two tickets now skips that one request with an error (a Run Error row after three passes) instead of stopping the whole pass. An unreadable Gmail thread is an error for that request, not a silent skip. A failed outbound duplicate check names its real cause.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>The Hermes tunnel's look-only key is accepted again<span class="kind">Hermes tunnel (fleetread) &middot; failure &middot; ops/fleetread/install-fleetread.sh, ca.danceannex.hermes-tunnel, d34, d37 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/872">desk-correspondence #872</a></span></h3></summary>
       <p><strong>Why.</strong> The tunnel key's line used <code>permitlisten="none"</code>, which sshd does not accept in authorized_keys, so it ignored the key and the Mac's Hermes tunnel was refused after the switch to fleetread.</p>
       <p><strong>Route change.</strong> The line now allows remote listening only on port 1, which a non-root user can never bind, so the key still cannot open a listener on the VPS and the local forward to the Hermes API works. Live once Junyan runs the installer again.</p>
