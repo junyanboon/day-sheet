@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a><a class="tabtab" href="messages.html">💬 Messages</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-03 16:37 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-03 16:47 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2324,7 +2324,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Resolves with:</b> the loop named with evidence, one cap in place, and one full day under 10M on every</p>
 <p>fire with the fleet total reported.</p>
-</div></details></details></div><div class="job"><div class="jnum">#157</div><div class="jhead"><span class="emoji">⏰</span><h4>Two robots leave their to-do rows looking overdue</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sept 22 in the last check of the work-loop ticket (053)</li><li>Oct 2, overnight checker: confirmed it only moves the due date when it reopens a row, not on each nightly update</li><li>But those nights really are failing (custodian reviews, doorman report, timekeeper evidence), so the rows are right to be open</li><li>WAITING ON JUNYAN: should a row that stays open because the problem keeps happening get a new due date each night, or keep the old one so it shows as late?</li><li>Oct 2, Timekeeper: its charge rows said &#x27;closes when paid&#x27; but had no due date; fixed in PR 820 (due date = 7 days after the overtime)</li><li>Oct 3: Junyan said yes; merged and live. The morning watch now checks new charge rows and counts clean days (section AT)</li><li>Still to do: Junyan&#x27;s answer on the overnight checker&#x27;s due dates, then 7 clean days in a row</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Overnight Verifier and Timekeeper rows break the deadline rule</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#157</div><div class="jhead"><span class="emoji">⏰</span><h4>Two robots leave their to-do rows looking overdue</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sept 22 in the last check of the work-loop ticket (053)</li><li>Oct 2, overnight checker: confirmed it only moves the due date when it reopens a row, not on each nightly update</li><li>But those nights really are failing (custodian reviews, doorman report, timekeeper evidence), so the rows are right to be open</li><li>Oct 3, Junyan ruled: a row that stays open because the problem keeps happening keeps its old due date, so it shows as late until someone fixes it</li><li>Oct 2, Timekeeper: its charge rows said &#x27;closes when paid&#x27; but had no due date; fixed in PR 820 (due date = 7 days after the overtime)</li><li>Oct 3: Junyan said yes; merged and live. The morning watch now checks new charge rows and counts clean days (section AT)</li><li>Still to do: 7 clean days in a row, which needs the custodian, doorman and timekeeper overnight checks actually fixed</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Overnight Verifier and Timekeeper rows break the deadline rule</b></p><h2>Question</h2>
 
 <p>Graduated from <b>053</b>, closed 2026-09-25. Its final Phase 4 reading</p>
 <p>(Hermes <code>run_27b769fa…</code>, 2026-09-22 19:11 Toronto, main <code>0c5ee46</code>) failed criterion F: 5 of 8 open</p>
@@ -2397,6 +2397,19 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>their deadline: that waits on d1 (Junyan asked for examples on 10-03; the three rows still fail</p>
 <p>nightly as of 10-03: custodian 3 missing reviews plus a failed report, doorman report failed,</p>
 <p>timekeeper evidence unverified).</p>
+
+<h2>2026-10-03 — d1 ruled: the deadline stays (Junyan: &quot;d1 okay let&#x27;s do b&quot;)</h2>
+
+<p>A rolling row keeps its first <code>Deadline</code> while the same check keeps failing; a new one only on</p>
+<p>create or reopen. No code change: the Overnight Verifier already behaves this way. Recorded in</p>
+<p>canon <code>library/the-loop.md</code> (PR <a href="https://github.com/junyanboon/desk-correspondence/pull/870" target="_blank" rel="noopener">#870</a>,</p>
+<p>merged, with a Plumbing Map entry). Plumbing entry for the Timekeeper fix, PR #865, merged</p>
+<p>(Junyan: &quot;d3 merge and deploy&quot;). Desk Watch AT updated to grade verifier rows in full.</p>
+
+<p><b>What now closes 157:</b> 7 days in a row with zero typed open rows past deadline (Desk Watch AT).</p>
+<p>That needs the three failing overnight checks repaired (custodian: missing reviews and a failed</p>
+<p>report; doorman: report failed; timekeeper: evidence unverified), plus the Planner (09-25) and</p>
+<p>Registrar (09-27) rows past due. Those repairs are not this ticket&#x27;s; they belong to each lane.</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">9</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -20871,5 +20884,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-10-03 16:37 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-10-03 16:47 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
