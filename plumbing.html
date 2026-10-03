@@ -1278,6 +1278,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>Registrar reads "in half an hour" and sends a vague several-booking move ask to a Review row<span class="kind">The Registrar &middot; route &middot; services/event-gate/move_sweep.py relative_time find_relative several_bookings_why, library/studio-tickets-bookings.md, d37, d38 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/855">desk-correspondence #855</a></span></h3></summary>
+      <p>Junyan: &ldquo;d37 yes fix it&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-02 at 5:31 PM Ishfaaq Jookhun (Private Class Add-On) texted that his student had cancelled the private "in half an hour" and asked to move it. The words named no date, so the move lane read every upcoming booking, found several and queued the "which booking?" clarification. The 6:15 PM booking was inside 24 hours, which is a human's call for his account.</p>
+      <p><strong>Route change.</strong> A move ask with no written date now reads relative times ("in half an hour", "in an hour", "in 20 min", "right now", "today", "tonight"): the booking is the one that starts within 3 hours of receipt ("tonight": later the same day), and it goes through the 24 hour notice check before any question. With no date and several matching bookings, the lane files a Review row on the Actions board naming each booking (with its date), as the dated path already did, instead of queueing "which booking?". The row says "less than 24 h notice possible" when any of them starts under 24 hours after the message.</p>
+      <p><strong>Failure mode.</strong> Two or more bookings in the relative window, or none, leave the booking unresolved: never a guess. A Skedda read failure stays a retryable run error as before. Reverting this PR restores the old path; <code>MOVE_SWEEP_DISABLED</code> still stops the lane.</p>
+    </details>
+    </li>
     <li class="entry human">
     <details>
       <summary><span class="when">2026-10-03</span>
