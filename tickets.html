@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a><a class="tabtab" href="messages.html">💬 Messages</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-03 16:50 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-03 16:55 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">3</div><div class="l">🔨 Working on now</div></div>
 <div class="stat"><div class="n">23</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">9</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">121</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">122</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jnum">#145</div><div class="jhead"><span class="emoji">🔑</span><h4>The stale-row checker trips on a charge row somebody just marked done</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sep 16. Twice, right after a person marked a charge row done, the checker looked for a field the row did not have, and the whole ten-minute sweep failed for that pass</li><li>Fix: skip the row with a reason instead of failing the sweep, and test it with that exact row shape</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>stale sweep raises KeyError on a freshly Processed Charge row and fails the reconcile tick</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">3</span></h3><div class="job"><div class="jnum">#145</div><div class="jhead"><span class="emoji">🔑</span><h4>The stale-row checker trips on a charge row somebody just marked done</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sep 16. Twice, right after a person marked a charge row done, the checker looked for a field the row did not have, and the whole ten-minute sweep failed for that pass</li><li>Fix: skip the row with a reason instead of failing the sweep, and test it with that exact row shape</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>stale sweep raises KeyError on a freshly Processed Charge row and fails the reconcile tick</b></p><h2>Question</h2>
 
 <p>Found 2026-09-16 while reading 144&#x27;s 24 h check. Twice since the 144 deploy the 10-min</p>
 <p><code>/reconcile-sweep</code> ended <code>RuntimeError: stale sweep source/readback failed: [{&quot;id&quot;: …, &quot;kind&quot;:</p>
@@ -476,154 +476,6 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- d5 (2026-10-03, Junyan &quot;d5 yes&quot;): Desk Watch Section AS + 🧪 Live Tests card 3ee75032-81c4-8110-aa2b-c2a4d8336577 check the next back-to-back pair; first check 2026-10-04 09:30 Toronto. 150 closes when it passes.</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#153</div><div class="jhead"><span class="emoji">✂️</span><h4>Make the Concierge&#x27;s rule book shorter so each run costs less</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The Concierge reads its whole rule book every time it works. Shorter book, cheaper runs</li><li>Step 1 done Sep 21: old history and stories cut out (pull request 409)</li><li>Sep 28: a bigger clean-up (pull request 662) halved the book. It is now about 44,000 letters, under the 45,000 goal</li><li>Oct 2: checked whether the reply rules could move to the robot that answers messages. That robot already has most of them, but the Concierge still writes replies too, so they should stay</li><li>Waiting on Junyan: keep the reply rules (my pick), and either merge the five &#x27;how a run works&#x27; parts or leave them as they are</li><li>No more &#x27;rebuild the prompt&#x27; step: the Concierge now reads the rule book fresh from GitHub every run</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Shrink the Concierge canon — history out, receiver rules out, one pass-runner section</b></p><h2>Task</h2>
-
-<p>Ruling 2026-09-21 (Junyan, after <b>141</b> step 2): the VPS cron</p>
-<p>prompt holds the whole <code>library/concierge-orchestration.md</code> inline. No pointer design. The</p>
-<p>agents skip a &quot;read the canon file&quot; line; the old prompt proved it (a pointer at line 12, then</p>
-<p>130 lines of hand-pasted rules below it). So the prompt is the file, and the only way to cut</p>
-<p>tokens is to cut the file. Measured 2026-09-21 after #404: 71,073 chars, 19 sections.</p>
-
-<p>Three tiers, three modes:</p>
-
-<p><b>Tier A — history and rationale out, no rule changes. Claude does it, one PR.</b></p>
-<ul>
-<li>- Line 9 (1,857 chars): the 2026-07-24 &quot;Claude and Codex both authorized, one runtime&quot; block.</li>
-</ul>
-<p>Replaced by the fleet lease (HERMES-ACCESS.md §2b). Delete.</p>
-<ul>
-<li>- Line 17 (737 chars): AUTONOMY / HOUSE-RULES / Reference pointers by Notion page id. They are</li>
-</ul>
-<p>git files now. One line naming the files.</p>
-<ul>
-<li>- Line 38 (754 chars): the 2026-07-30 five-pass story. The rule is line 34. Delete the story.</li>
-<li>- Line 13: rename history. Delete.</li>
-<li>- The incident narrative inside bullets and sections (&quot;which is how it was missed&quot;, &quot;the desk</li>
-</ul>
-<p>read it that way&quot;, named renters and dates as evidence). Keep every rule sentence verbatim.</p>
-<p>Drop the story sentences. Where a date credits the ruling (e.g. &quot;(Junyan, 2026-09-13)&quot;) keep it.</p>
-<ul>
-<li>- Not touched: hard-stop sentences (money, access, physical, policy, review-required sends),</li>
-</ul>
-<p>the 1AP/AAP allowance section, JOB 1 pointer and the Routine alarm/board ownership section</p>
-<p>(137), anything <b>140</b> rules on.</p>
-
-<p><b>Tier B — reply rules that belong to the Responder. Investigate first, then rule.</b></p>
-<p>Lines 26–30 (~8,600 chars): availability reply shaping, Giggster SMS, platform relay contact</p>
-<p>points, direct-address contact points. Email intake and replies are the Responder&#x27;s since</p>
-<p>2026-09-11. Question to answer before any cut: what does the Responder read for its reply</p>
-<p>rules today, and can it read these? The HTR db exists on Notion; <code>library/the-responder.md</code> is</p>
-<p>the git file. If the Responder can read them there, the Concierge keeps one pointer.</p>
-<p>Also: the how-to half of <code>Registrar move source intake</code> (redaction masking, request.json</p>
-<p>build) → a runbook file the pass reads only when it holds a move.</p>
-
-<p><b>Tier C — the five pass-runner sections, merged into one. Interactive with Junyan.</b></p>
-<p>Every pass · Full-pass completion and Loop coordination · One-item execution · Mandatory</p>
-<p>deadline worklist · Record of work is the ticket. ~17k chars, added on five dates, overlapping.</p>
-<p>Rewrite as one &quot;How a pass runs&quot; section, sentence by sentence with Junyan, after 140 lands</p>
-<p>so the rewrite happens once.</p>
-
-<p>Every tier ends the same way: PR merged, VPS prompt regenerated by Hermes from canon (the 141</p>
-<p>task file is the template), one natural pass reported. Desk Watch compares nothing yet; a canon</p>
-<p>sha in the prompt header is the follow-up (not this ticket).</p>
-
-<p><b>Resolves with:</b> Tier A merged and regenerated; Tier B answered (moved or ruled to stay);</p>
-<p>Tier C merged and regenerated; the file under 45k chars or Junyan rules the remainder stays.</p>
-
-<h2>Progress 2026-09-21 — Tier A done in one PR; regen task written; Tier B and C not started</h2>
-
-<p><b>Tier A — <a href="https://github.com/junyanboon/desk-correspondence/pull/409" target="_blank" rel="noopener">#409</a>, merged 2026-09-21 as 77cb6e8c0 on Junyan&#x27;s &quot;merge and deploy&quot;:</b></p>
-<p>71,516 → 67,259 chars (−4,257, 6%). Deleted the 07-24 runtime list (its live rules kept in a short</p>
-<p>&quot;Runtime and shared report&quot; block), the Notion-id pointer paragraph (git files named), the rename</p>
-<p>note, the 07-30 story, five incident notes inside bullets (Jessica T., Jesse Dwyre, Diana L., Dennis</p>
-<p>Jun, Brandy Honore Pierre), the JOB 35 / JOB 3-4 / HEAVY histories, and both <b>Why</b> paragraphs.</p>
-<p>Hard-stop grep counts equal before and after. Tier B lines and the Registrar intake how-to untouched.</p>
-
-<p><b>Regen sent 2026-09-21 ~11:30 EDT (Junyan: &quot;merge and deploy&quot;): Hermes run <code>run_7df3041d6ab844c08aacf8ba4a784a9f</code>, key <code>ticket153-tierA-regen-20260921</code>. Task file:</b></p>
-<p><code>Agent Fleet/hermes-business-ops/cold-standby/failover/hermes-tasks/2026-09-21-concierge-prompt-regen-ticket153.txt</code></p>
-<p>(the 141 task with the PR gate and the Tier A grep strings). Send with:</p>
-
-<p>``<code>bash</p>
-<p>hermes peer run vps --idempotency-key ticket153-tierA-regen-20260921 &lt; &quot;/Users/jboon/Documents/Agent Fleet/hermes-business-ops/cold-standby/failover/hermes-tasks/2026-09-21-concierge-prompt-regen-ticket153.txt&quot;</p>
-<p></code>`<code></p>
-
-<p><b>Seen while reading, for Tier C:</b> the HEAVY ⏰ block still ends &quot;ledger it with its </code>deferred-since<code></p>
-<p>count&quot;, which the 2026-09-15 ruling retired. The &quot;Every pass&quot; trailer and the Full-pass note both</p>
-<p>restate that ruling. Three places say the same thing; Tier C merges them.</p>
-
-<p><b>Tier B next step:</b> read </code>library/the-responder.md<code> and the HTR db on Notion to see what the</p>
-<p>Responder reads for reply rules today, before any cut.</p>
-
-<p><b>Tier A regen done (Hermes </code>run_7df3041d…<code>, edited 11:29 EDT in a 41-min gap).</b> Clone at 77cb6e8c0 (the</p>
-<p>#409 merge). Backup </code>cron/jobs.json.bak-153-2026-09-21<code>; prompt sha ec139210… (74,515) → 08d9f361… (69,778</p>
-<p>chars, −4,737). Slots kept: preamble 1,051, STEP 0 1,096, heartbeat 771; canon body 66,855 verbatim. 19/19</p>
-<p>greps before and after the write. Closeout cron untouched (does not embed canon). Hermes caught its own</p>
-<p>extractor bug (first pass cut the preamble to 674 chars, two substitution bullets lost) by dumping the slot</p>
-<p>verbatim before writing; the 1,051 match with the 141 run is the independent check.</p>
-
-<p><b>12:10 natural fire (run 7b8a1e60…, 8 min 55 s, completed):</b> </code>[Hermes] 12:10 pass · advanced 4 · held</p>
-<p>replies 0 · actions raised 0 · sources remaining 121 · Skipped Steps<code>. All eleven retired strings absent from</p>
-<p>the 9,826-char body. Skipped Steps reason stated this time: two required reviews hit the approval gate</p>
-<p>(Vicky and Studio 693 tickets need a human). Per-fire prompt tokens: not recorded on the VPS.</p>
-
-<p><b>Discrepancy found, and it is a canon contradiction, not a regen fault → Tier C item.</b> The 12:10 pass</p>
-<p>did not write </code>JOB3/JOB4: → closeout<code>. Canon says both things: § Every pass step 5 &quot;Its report line is</p>
-<p></code>JOB3/JOB4: → closeout<code>&quot; and § Record of work (09-15) &quot;one line per pass … no per-job lines&quot;. The 10:10</p>
-<p>pass wrote the routing string inside its facts line; the 12:10 pass obeyed the 09-15 ruling. Tier C</p>
-<p>resolves it one way: either the pass line gains a </code>closeout<code> token or step 5 loses the sentence.</p>
-
-<h2>2026-10-02 — resumed (Junyan: &quot;concierge is running now&quot;); Tier B investigated, rulings asked</h2>
-
-<p><b>What moved under this ticket while it was paused.</b></p>
-<ul>
-<li>- <b>#662 (2026-09-28, Junyan &quot;you can clean this out&quot;)</b> did most of what Tier B and Tier C were for: 88,571 →</li>
-</ul>
-<p>41,889 chars, 87 </code>[R-…]<code> rule anchors, history to </code>library/archive/concierge-orchestration-history.md<code>,</p>
-<p></code>test_concierge_rulebook.py<code> guarding the size (now ≤ 44,200), anchors, safety phrases and cited headings.</p>
-<p><b>Main today: 44,085 chars. The &quot;under 45k&quot; condition in Resolves-with is met.</b></p>
-<ul>
-<li>- <b>The Tier A discrepancy is gone.</b> </code>JOB3/JOB4: → closeout<code> no longer appears in the file; the Closer was</li>
-</ul>
-<p>retired 2026-09-26 and its work is § Closeout work inside the pass.</p>
-<ul>
-<li>- <b>The regen step no longer exists.</b> The Concierge is a Claude cloud trigger (</code>trig_011cn9q4oNfsz1TsHrfVnMAQ<code>,</li>
-</ul>
-<p>see 155) that clones main and </code>cat<code>s the rule book on every ACTIVE pass. A merged canon PR is live at the next</p>
-<p>pass; no Hermes regen, no </code>fleet-prompt<code>. Only a change to the trigger prompt itself would need an update, and</p>
-<p>that is a RemoteTrigger edit Junyan approves.</p>
-
-<p><b>Tier B, the question: what does the Responder read for its reply rules, and can it read these?</b></p>
-<p>The Responder reads </code>library/the-responder.md<code> (151,701 chars; its § ⚡ Operating rules is the per-pass read,</p>
-<p>14.7k, with § full rulings behind it). The Tier B block is now lines 16–22, <b>3,426 chars</b> (was ~8,600).</p>
-<p>Rule by rule:</p>
-
-<p>| Concierge rule (anchor) | In the Responder&#x27;s canon? |</p>
-<p>|---|---|</p>
-<p>| Time-slot T1 shape: &quot;We have availability on:&quot;, one-sentence answers, 15-min call ask, </code>Cheers,<code> [R-signoff] | Yes, § Scope line 153 (no &quot;15-minute call&quot; wording) |</p>
-<p>| Two-source check, Board + Skedda [R-two-source] | Yes, same line |</p>
-<p>| Availability shaping, three rules [R-avail-shape] | Yes, § Scope line 154 and Operating rule line 72 |</p>
-<p>| Giggster transactional SMS is never a Contact Point [R-giggster] | <b>No.</b> The Responder has the proxy-reply rule (4b), not the &quot;shared sender is the platform&quot; rule |</p>
-<p>| File every replyable relay, never invent one; hex not a key [R-relay-hex] [R-relay] | Partly: relay-on-file rule (lines 46, 113), </code>library/relay-addresses.md<code> |</p>
-<p>| Every platform booking gets a ticket [R-platform-ticket] | Yes, intake </code>stub<code> path |</p>
-<p>| Any lane minting a card files every address [R-contact-points] | <b>No</b> (applies to every lane that mints a card) |</p>
-
-<p><b>Why they cannot simply move out.</b> The Concierge still writes customer replies: it adopts and fixes the</p>
-<p>Responder&#x27;s first reply on a stub in place (§ Mandatory Responder handoff pickup, &quot;Adopt the Responder&#x27;s first reply on a stub&quot;, 2026-09-27) and drafts the</p>
-<p>follow-ups on tickets it advances. A pointer would be the design the 2026-09-21 ruling rejected (agents skip &quot;go</p>
-<p>read that file&quot;). The Case B runbook (</code>library/concierge-case-b-access.md`, 2026-09-29) shows the one pointer</p>
-<p>shape that has been accepted: a conditional runbook read only when the pass holds that kind of item.</p>
-
-<p><b>Registrar move intake how-to:</b> § Registrar move source intake is 2,940 chars; the how-to half (request.json</p>
-<p>build, fields, thread id, accept checks) is about 2,200. The Responder&#x27;s § Registrar source producer points at this</p>
-<p>section for the contract, so a move would repoint both files and update three guarded anchors</p>
-<p>([R-request-file-read], [R-move-thread-id], [R-move-accept]). Gain: about 5% of the file.</p>
-
-<p><b>Recommendation brought to Junyan (decision block, 2026-10-02):</b> Tier B stays (the Concierge still drafts</p>
-<p>replies; 3.4k is 8% of a file already under target). The Registrar how-to stays (small gain, two files and</p>
-<p>the guard test to touch). Tier C: the five sections are now 11,738 chars (Every pass 1,585, deadline worklist 2,958,</p>
-<p>Full-pass completion 2,669, One-item execution 3,250, Record of work 1,276), down from ~17k; it still waits on</p>
-<p><b>140</b>, open since 09-14. If Junyan rules the remainder stays, 153 closes on its own</p>
-<p>Resolves-with (&quot;or Junyan rules the remainder stays&quot;). No canon edit made this session; no PR opened.</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">23</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
@@ -3323,6 +3175,165 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>there is nothing to resume from. The Mac <code>platform-watch</code> scheduled task</p>
 <p>(<code>fleet/platform-watch/RUNBOOK.md</code>) is the only platform-watch runner. Canon:</p>
 <p><code>library/lanes.md</code> § Retired (desk-correspondence PR 862).</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#153</span><span class="emoji">✂️</span><span class="done-title">Make the Concierge&#x27;s rule book shorter so each run costs less</span><span class="done-date">2026-10-03</span></summary><div class="done-body"><ul class="plain-bullets"><li>The Concierge reads its whole rule book every time it works. Shorter book, cheaper runs</li><li>Step 1 done Sep 21: old history and stories cut out (pull request 409)</li><li>Sep 28: a bigger clean-up (pull request 662) halved the book. It is now about 44,000 letters, under the 45,000 goal</li><li>Oct 2: checked whether the reply rules could move to the robot that answers messages. That robot already has most of them, but the Concierge still writes replies too, so they should stay</li><li>CLOSED Oct 3. Junyan: keep the reply rules, leave the move-request steps in, and leave the five &#x27;how a run works&#x27; parts as they are</li><li>No more &#x27;rebuild the prompt&#x27; step: the Concierge now reads the rule book fresh from GitHub every run</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Shrink the Concierge canon — history out, receiver rules out, one pass-runner section</b></p><h2>Task</h2>
+
+<p>Ruling 2026-09-21 (Junyan, after <b>141</b> step 2): the VPS cron</p>
+<p>prompt holds the whole <code>library/concierge-orchestration.md</code> inline. No pointer design. The</p>
+<p>agents skip a &quot;read the canon file&quot; line; the old prompt proved it (a pointer at line 12, then</p>
+<p>130 lines of hand-pasted rules below it). So the prompt is the file, and the only way to cut</p>
+<p>tokens is to cut the file. Measured 2026-09-21 after #404: 71,073 chars, 19 sections.</p>
+
+<p>Three tiers, three modes:</p>
+
+<p><b>Tier A — history and rationale out, no rule changes. Claude does it, one PR.</b></p>
+<ul>
+<li>- Line 9 (1,857 chars): the 2026-07-24 &quot;Claude and Codex both authorized, one runtime&quot; block.</li>
+</ul>
+<p>Replaced by the fleet lease (HERMES-ACCESS.md §2b). Delete.</p>
+<ul>
+<li>- Line 17 (737 chars): AUTONOMY / HOUSE-RULES / Reference pointers by Notion page id. They are</li>
+</ul>
+<p>git files now. One line naming the files.</p>
+<ul>
+<li>- Line 38 (754 chars): the 2026-07-30 five-pass story. The rule is line 34. Delete the story.</li>
+<li>- Line 13: rename history. Delete.</li>
+<li>- The incident narrative inside bullets and sections (&quot;which is how it was missed&quot;, &quot;the desk</li>
+</ul>
+<p>read it that way&quot;, named renters and dates as evidence). Keep every rule sentence verbatim.</p>
+<p>Drop the story sentences. Where a date credits the ruling (e.g. &quot;(Junyan, 2026-09-13)&quot;) keep it.</p>
+<ul>
+<li>- Not touched: hard-stop sentences (money, access, physical, policy, review-required sends),</li>
+</ul>
+<p>the 1AP/AAP allowance section, JOB 1 pointer and the Routine alarm/board ownership section</p>
+<p>(137), anything <b>140</b> rules on.</p>
+
+<p><b>Tier B — reply rules that belong to the Responder. Investigate first, then rule.</b></p>
+<p>Lines 26–30 (~8,600 chars): availability reply shaping, Giggster SMS, platform relay contact</p>
+<p>points, direct-address contact points. Email intake and replies are the Responder&#x27;s since</p>
+<p>2026-09-11. Question to answer before any cut: what does the Responder read for its reply</p>
+<p>rules today, and can it read these? The HTR db exists on Notion; <code>library/the-responder.md</code> is</p>
+<p>the git file. If the Responder can read them there, the Concierge keeps one pointer.</p>
+<p>Also: the how-to half of <code>Registrar move source intake</code> (redaction masking, request.json</p>
+<p>build) → a runbook file the pass reads only when it holds a move.</p>
+
+<p><b>Tier C — the five pass-runner sections, merged into one. Interactive with Junyan.</b></p>
+<p>Every pass · Full-pass completion and Loop coordination · One-item execution · Mandatory</p>
+<p>deadline worklist · Record of work is the ticket. ~17k chars, added on five dates, overlapping.</p>
+<p>Rewrite as one &quot;How a pass runs&quot; section, sentence by sentence with Junyan, after 140 lands</p>
+<p>so the rewrite happens once.</p>
+
+<p>Every tier ends the same way: PR merged, VPS prompt regenerated by Hermes from canon (the 141</p>
+<p>task file is the template), one natural pass reported. Desk Watch compares nothing yet; a canon</p>
+<p>sha in the prompt header is the follow-up (not this ticket).</p>
+
+<p><b>Resolves with:</b> Tier A merged and regenerated; Tier B answered (moved or ruled to stay);</p>
+<p>Tier C merged and regenerated; the file under 45k chars or Junyan rules the remainder stays.</p>
+
+<h2>Progress 2026-09-21 — Tier A done in one PR; regen task written; Tier B and C not started</h2>
+
+<p><b>Tier A — <a href="https://github.com/junyanboon/desk-correspondence/pull/409" target="_blank" rel="noopener">#409</a>, merged 2026-09-21 as 77cb6e8c0 on Junyan&#x27;s &quot;merge and deploy&quot;:</b></p>
+<p>71,516 → 67,259 chars (−4,257, 6%). Deleted the 07-24 runtime list (its live rules kept in a short</p>
+<p>&quot;Runtime and shared report&quot; block), the Notion-id pointer paragraph (git files named), the rename</p>
+<p>note, the 07-30 story, five incident notes inside bullets (Jessica T., Jesse Dwyre, Diana L., Dennis</p>
+<p>Jun, Brandy Honore Pierre), the JOB 35 / JOB 3-4 / HEAVY histories, and both <b>Why</b> paragraphs.</p>
+<p>Hard-stop grep counts equal before and after. Tier B lines and the Registrar intake how-to untouched.</p>
+
+<p><b>Regen sent 2026-09-21 ~11:30 EDT (Junyan: &quot;merge and deploy&quot;): Hermes run <code>run_7df3041d6ab844c08aacf8ba4a784a9f</code>, key <code>ticket153-tierA-regen-20260921</code>. Task file:</b></p>
+<p><code>Agent Fleet/hermes-business-ops/cold-standby/failover/hermes-tasks/2026-09-21-concierge-prompt-regen-ticket153.txt</code></p>
+<p>(the 141 task with the PR gate and the Tier A grep strings). Send with:</p>
+
+<p>``<code>bash</p>
+<p>hermes peer run vps --idempotency-key ticket153-tierA-regen-20260921 &lt; &quot;/Users/jboon/Documents/Agent Fleet/hermes-business-ops/cold-standby/failover/hermes-tasks/2026-09-21-concierge-prompt-regen-ticket153.txt&quot;</p>
+<p></code>`<code></p>
+
+<p><b>Seen while reading, for Tier C:</b> the HEAVY ⏰ block still ends &quot;ledger it with its </code>deferred-since<code></p>
+<p>count&quot;, which the 2026-09-15 ruling retired. The &quot;Every pass&quot; trailer and the Full-pass note both</p>
+<p>restate that ruling. Three places say the same thing; Tier C merges them.</p>
+
+<p><b>Tier B next step:</b> read </code>library/the-responder.md<code> and the HTR db on Notion to see what the</p>
+<p>Responder reads for reply rules today, before any cut.</p>
+
+<p><b>Tier A regen done (Hermes </code>run_7df3041d…<code>, edited 11:29 EDT in a 41-min gap).</b> Clone at 77cb6e8c0 (the</p>
+<p>#409 merge). Backup </code>cron/jobs.json.bak-153-2026-09-21<code>; prompt sha ec139210… (74,515) → 08d9f361… (69,778</p>
+<p>chars, −4,737). Slots kept: preamble 1,051, STEP 0 1,096, heartbeat 771; canon body 66,855 verbatim. 19/19</p>
+<p>greps before and after the write. Closeout cron untouched (does not embed canon). Hermes caught its own</p>
+<p>extractor bug (first pass cut the preamble to 674 chars, two substitution bullets lost) by dumping the slot</p>
+<p>verbatim before writing; the 1,051 match with the 141 run is the independent check.</p>
+
+<p><b>12:10 natural fire (run 7b8a1e60…, 8 min 55 s, completed):</b> </code>[Hermes] 12:10 pass · advanced 4 · held</p>
+<p>replies 0 · actions raised 0 · sources remaining 121 · Skipped Steps<code>. All eleven retired strings absent from</p>
+<p>the 9,826-char body. Skipped Steps reason stated this time: two required reviews hit the approval gate</p>
+<p>(Vicky and Studio 693 tickets need a human). Per-fire prompt tokens: not recorded on the VPS.</p>
+
+<p><b>Discrepancy found, and it is a canon contradiction, not a regen fault → Tier C item.</b> The 12:10 pass</p>
+<p>did not write </code>JOB3/JOB4: → closeout<code>. Canon says both things: § Every pass step 5 &quot;Its report line is</p>
+<p></code>JOB3/JOB4: → closeout<code>&quot; and § Record of work (09-15) &quot;one line per pass … no per-job lines&quot;. The 10:10</p>
+<p>pass wrote the routing string inside its facts line; the 12:10 pass obeyed the 09-15 ruling. Tier C</p>
+<p>resolves it one way: either the pass line gains a </code>closeout<code> token or step 5 loses the sentence.</p>
+
+<h2>2026-10-02 — resumed (Junyan: &quot;concierge is running now&quot;); Tier B investigated, rulings asked</h2>
+
+<p><b>What moved under this ticket while it was paused.</b></p>
+<ul>
+<li>- <b>#662 (2026-09-28, Junyan &quot;you can clean this out&quot;)</b> did most of what Tier B and Tier C were for: 88,571 →</li>
+</ul>
+<p>41,889 chars, 87 </code>[R-…]<code> rule anchors, history to </code>library/archive/concierge-orchestration-history.md<code>,</p>
+<p></code>test_concierge_rulebook.py<code> guarding the size (now ≤ 44,200), anchors, safety phrases and cited headings.</p>
+<p><b>Main today: 44,085 chars. The &quot;under 45k&quot; condition in Resolves-with is met.</b></p>
+<ul>
+<li>- <b>The Tier A discrepancy is gone.</b> </code>JOB3/JOB4: → closeout<code> no longer appears in the file; the Closer was</li>
+</ul>
+<p>retired 2026-09-26 and its work is § Closeout work inside the pass.</p>
+<ul>
+<li>- <b>The regen step no longer exists.</b> The Concierge is a Claude cloud trigger (</code>trig_011cn9q4oNfsz1TsHrfVnMAQ<code>,</li>
+</ul>
+<p>see 155) that clones main and </code>cat<code>s the rule book on every ACTIVE pass. A merged canon PR is live at the next</p>
+<p>pass; no Hermes regen, no </code>fleet-prompt<code>. Only a change to the trigger prompt itself would need an update, and</p>
+<p>that is a RemoteTrigger edit Junyan approves.</p>
+
+<p><b>Tier B, the question: what does the Responder read for its reply rules, and can it read these?</b></p>
+<p>The Responder reads </code>library/the-responder.md<code> (151,701 chars; its § ⚡ Operating rules is the per-pass read,</p>
+<p>14.7k, with § full rulings behind it). The Tier B block is now lines 16–22, <b>3,426 chars</b> (was ~8,600).</p>
+<p>Rule by rule:</p>
+
+<p>| Concierge rule (anchor) | In the Responder&#x27;s canon? |</p>
+<p>|---|---|</p>
+<p>| Time-slot T1 shape: &quot;We have availability on:&quot;, one-sentence answers, 15-min call ask, </code>Cheers,<code> [R-signoff] | Yes, § Scope line 153 (no &quot;15-minute call&quot; wording) |</p>
+<p>| Two-source check, Board + Skedda [R-two-source] | Yes, same line |</p>
+<p>| Availability shaping, three rules [R-avail-shape] | Yes, § Scope line 154 and Operating rule line 72 |</p>
+<p>| Giggster transactional SMS is never a Contact Point [R-giggster] | <b>No.</b> The Responder has the proxy-reply rule (4b), not the &quot;shared sender is the platform&quot; rule |</p>
+<p>| File every replyable relay, never invent one; hex not a key [R-relay-hex] [R-relay] | Partly: relay-on-file rule (lines 46, 113), </code>library/relay-addresses.md<code> |</p>
+<p>| Every platform booking gets a ticket [R-platform-ticket] | Yes, intake </code>stub<code> path |</p>
+<p>| Any lane minting a card files every address [R-contact-points] | <b>No</b> (applies to every lane that mints a card) |</p>
+
+<p><b>Why they cannot simply move out.</b> The Concierge still writes customer replies: it adopts and fixes the</p>
+<p>Responder&#x27;s first reply on a stub in place (§ Mandatory Responder handoff pickup, &quot;Adopt the Responder&#x27;s first reply on a stub&quot;, 2026-09-27) and drafts the</p>
+<p>follow-ups on tickets it advances. A pointer would be the design the 2026-09-21 ruling rejected (agents skip &quot;go</p>
+<p>read that file&quot;). The Case B runbook (</code>library/concierge-case-b-access.md<code>, 2026-09-29) shows the one pointer</p>
+<p>shape that has been accepted: a conditional runbook read only when the pass holds that kind of item.</p>
+
+<p><b>Registrar move intake how-to:</b> § Registrar move source intake is 2,940 chars; the how-to half (request.json</p>
+<p>build, fields, thread id, accept checks) is about 2,200. The Responder&#x27;s § Registrar source producer points at this</p>
+<p>section for the contract, so a move would repoint both files and update three guarded anchors</p>
+<p>([R-request-file-read], [R-move-thread-id], [R-move-accept]). Gain: about 5% of the file.</p>
+
+<p><b>Recommendation brought to Junyan (decision block, 2026-10-02):</b> Tier B stays (the Concierge still drafts</p>
+<p>replies; 3.4k is 8% of a file already under target). The Registrar how-to stays (small gain, two files and</p>
+<p>the guard test to touch). Tier C: the five sections are now 11,738 chars (Every pass 1,585, deadline worklist 2,958,</p>
+<p>Full-pass completion 2,669, One-item execution 3,250, Record of work 1,276), down from ~17k; it still waits on</p>
+<p><b>140</b>, open since 09-14. If Junyan rules the remainder stays, 153 closes on its own</p>
+<p>Resolves-with (&quot;or Junyan rules the remainder stays&quot;). No canon edit made this session; no PR opened.</p>
+
+<h2>2026-10-03 — Junyan&#x27;s rulings; closed</h2>
+
+<ul>
+<li>- <b>d1, Tier B reply rules:</b> &quot;sure keep hem&quot;. They stay in the Concierge rule book.</li>
+<li>- <b>d2, Registrar move how-to:</b> &quot;leave them in&quot;. Stays in § Registrar move source intake.</li>
+<li>- <b>d3, Tier C:</b> &quot;leave them in and close 153&quot;. The five pass-runner sections stay as they are (11,738 chars).</li>
+</ul>
+
+<p>Resolves by its own clause: Tier A merged (#409), Tier B ruled to stay, and &quot;Junyan rules the remainder stays&quot;.</p>
+<p>The rule book is 44,444 chars on PR #871&#x27;s branch (budget 44,500 in </code>test_concierge_rulebook.py`). Closed 2026-10-03.</p>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#137</span><span class="emoji">🧹</span><span class="done-title">The last leftover chore becomes a program that spots the work and hands it over</span><span class="done-date">2026-10-02</span></summary><div class="done-body"><ul class="plain-bullets"><li>Sep 11: Junyan ruled the program finds the booking, the thinking robot decides. Built the same day, never switched on</li><li>Sep 13: a different program took over the whole chore and was allowed to mark a renter as a no-show by itself. The old chore was cut from the robot&#x27;s list before anyone saw the new program work</li><li>Sep 14/15: Junyan took that back. A program may mark &#x27;in studio&#x27; and &#x27;done&#x27;. A no-show is never marked by a program: it writes a card, the Ops Lead reads it, and once the &#x27;we missed you&#x27; text is queued the job is done</li><li>Checked on the server: the new program is running, reads 2 bookings a pass, has written nothing. Both bookings had no arrival on record, so refusing was right</li><li>Sep 16: the card path (143) and the lock fix (144) are both done and live. Eleven cards have been written; every one was worked. None was a true no-show</li><li>CLOSED Oct 2. All four checks met: the program marks bookings done by itself, says which, hands real doubts to a person, and had three quiet mornings in a row (Sep 28 to 30)</li><li>Earlier note: two checks left: the program has not yet been seen marking a booking done by itself (it keeps refusing because the alarm read looks incomplete), and the daily watch is on day 1 of 3 quiet days</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>JOB 1 remainder — delete only once its cover is seen acting</b></p><h2>Question</h2>
 
 <p>Re-cut 2026-09-11 from <b>092</b>, which had absorbed</p>
@@ -4042,7 +4053,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>What is still wrong with the cells (wrong-renter stamps, a few blanks) is 150&#x27;s acceptance, not</p>
 <p>this ticket&#x27;s: see 150&#x27;s 2026-10-02 close check.</p>
-</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#155</span><span class="emoji">🛎️</span><span class="done-title">Concierge switched off for two weeks; we cleared its pile by hand</span><span class="done-date">2026-10-02</span></summary><div class="done-body"><ul class="plain-bullets"><li>Sep 21: switched off after a month of fixes with little to show. Junyan and Claude worked the pile by hand</li><li>Every pattern seen three times went on a list. Six of those got built as programs (merging duplicate emails, spotting finished work, and more)</li><li>CLOSED Oct 2. Junyan: &#x27;concierge is running now&#x27;. It runs every hour, 8:10am to 10:10pm, in the Claude cloud, and does the old closing-up jobs in the same run</li><li>The old server version stays paused. The by-hand sessions stop</li><li>Three ideas never built: the weekly 901 noise check, booking a renewal series, and letting the &#x27;whose turn is it&#x27; program write for real. Junyan decides if any get their own ticket</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Concierge off for two weeks — work the backlog by hand with Claude, log every automation candidate</b></p><h2>Task</h2>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#155</span><span class="emoji">🛎️</span><span class="done-title">Concierge switched off for two weeks; we cleared its pile by hand</span><span class="done-date">2026-10-02</span></summary><div class="done-body"><ul class="plain-bullets"><li>Sep 21: switched off after a month of fixes with little to show. Junyan and Claude worked the pile by hand</li><li>Every pattern seen three times went on a list. Six of those got built as programs (merging duplicate emails, spotting finished work, and more)</li><li>CLOSED Oct 2. Junyan: &#x27;concierge is running now&#x27;. It runs every hour, 8:10am to 10:10pm, in the Claude cloud, and does the old closing-up jobs in the same run</li><li>The old server version stays paused. The by-hand sessions stop</li><li>Three ideas never built: the weekly 901 noise check, booking a renewal series, and letting the &#x27;whose turn is it&#x27; program write for real. Junyan decides if any get their own ticket</li><li>Oct 3: &#x27;whose turn is it&#x27; program switched off (pull request 871 waits for Junyan&#x27;s merge, plus one server step)</li><li>Oct 3: the Liz and Anita weekly 901 check is fully off. It had stopped Sep 23; now it leaves no report line either</li><li>Still open: whether to automate booking a renewal series. Junyan asked what it means first</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Concierge off for two weeks — work the backlog by hand with Claude, log every automation candidate</b></p><h2>Task</h2>
 
 <p>Ruling 2026-09-21 (Junyan, after a month of repair with no output to show): <b>turn the Concierge off.</b></p>
 <p>On 2026-09-21 four main passes and four closeouts produced one held reply; 102 intake sources sat</p>
@@ -4310,6 +4321,27 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>&quot;as built&quot; in the cloud, with the folds and sweeps above in place. Closed 2026-10-02. Candidates 4, 7 and 8 are</p>
 <p>the only open shapes; Junyan rules on them (session decision block, 2026-10-02), and any he keeps gets its own</p>
 <p>ticket.</p>
+
+<h2>2026-10-03 — Junyan&#x27;s rulings on the three unbuilt shapes</h2>
+
+<ul>
+<li>- <b>d4, candidate 4, ball-in-court sweep:</b> &quot;switch it off&quot;. PR</li>
+</ul>
+<p><a href="https://github.com/junyanboon/desk-correspondence/pull/871" target="_blank" rel="noopener">#871</a> (open, waiting for Junyan&#x27;s merge): registry</p>
+<p>row <code>retired</code>, lanes table → Retired, canon [R-ball] now says the pass sets and clears <code>Gate: Artist</code>, module</p>
+<p>docstring updated. The module stays (three readers import its helpers). It never left shadow: Desk Watch §M graded</p>
+<p>17 proposals, 4 wrong, written 0. <b>Host step, Junyan runs it:</b> on 2.25.139.60</p>
+<p><code>systemctl disable --now danceannex-ball-in-court.timer</code>, and <code>BALL_IN_COURT_DISABLED=1</code> in event-gate.env.</p>
+<ul>
+<li>- <b>d5, candidate 7, 901 neighbour check:</b> &quot;it&#x27;s okay we can turn it off (the one with Liz and anita&quot;. The weekly B2</li>
+</ul>
+<p>loop (T4 to Liz at Pink Lemon about Anita Pandey&#x27;s Wednesday Kathak class) already stopped 2026-09-23; only a report</p>
+<p>line was left. Done 2026-10-03: 🚫 Analyst Skip List row 3e67503281c48145a7bcd3eaac166553 Kind <code>901 sound B2 loop</code></p>
+<p>→ <code>901 sound</code> (read back), Reason records Junyan&#x27;s words. Her Wednesday 901 booking now gets no flag, heads-up or</p>
+<p>report line. Nothing is built.</p>
+<ul>
+<li>- <b>d6, candidate 8, renewal booking leg:</b> Junyan asked what it means; explained in session. Not ruled yet.</li>
+</ul>
 </div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#158</span><span class="emoji">🩹</span><span class="done-title">The attendance program gives up on people who did show up</span><span class="done-date">2026-10-02</span></summary><div class="done-body"><ul class="plain-bullets"><li>Cut Sep 29 from 137. The program now marks most bookings done and says which. That part works</li><li>But every day since Sep 24 it has got stuck on one or two renters who clearly came. The alarm shows them unlocking and locking up</li><li>When stuck, it either writes a wrong &#x27;did they come?&#x27; card, or, worse, says nothing and the booking sits open</li><li>Fix both: let it trust the renter&#x27;s own unlock and lock, and make sure a stuck booking always gets a card</li><li>After that ships, 137 needs three quiet mornings in a row to close</li><li>CLOSED Oct 2. Shipped Sep 30. All three stuck bookings now read done, and 137 got its three quiet mornings</li><li>Sep 29: found both causes. When the next renter unlocked right after someone left, the program threw away the first renter&#x27;s visit. It also ignored a host who unlocks under their own name</li><li>The &#x27;says nothing&#x27; part was the daily watch looking in the wrong place. Each stuck booking did get a to-do row, on the Fixer&#x27;s list. The watch now checks there too</li><li>Also fixed: the &#x27;did they come?&#x27; card no longer fires before a booking starts (Makiko, Sep 28) or right after someone unlocks (Desiree, Sep 26)</li><li>Fix is pull request 706, tested on the real cases. Waiting for Junyan to merge and send it to the server. Thea&#x27;s booking is fixed by pull request 705, merged Sep 29</li><li>Sep 30: merged and on the server (3:50pm UTC). Next: three quiet mornings in a row from the daily watch closes 137</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>attendance errors on attended bookings leave them silent or carded wrong — 137&#x27;s clean-day clock never gets past day 0</b></p><h2>Question</h2>
 
 <p>Cut 2026-09-29 from <b>137</b>. Checks 1, 2 and 3 are met. Check 4</p>
@@ -20935,5 +20967,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-10-03 16:50 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-10-03 16:55 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
