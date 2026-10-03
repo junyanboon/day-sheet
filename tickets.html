@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a><a class="tabtab" href="messages.html">💬 Messages</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-03 16:22 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-03 16:37 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -473,6 +473,9 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <li>- Still open: proof on the next real back-to-back booking that the live lane stamps each renter&#x27;s</li>
 </ul>
 <p>own times. The deploy-branch pin <code>deploy/ca04ed4f…</code> still needs deleting (Junyan&#x27;s terminal).</p>
+<ul>
+<li>- d5 (2026-10-03, Junyan &quot;d5 yes&quot;): Desk Watch Section AS + 🧪 Live Tests card 3ee75032-81c4-8110-aa2b-c2a4d8336577 check the next back-to-back pair; first check 2026-10-04 09:30 Toronto. 150 closes when it passes.</li>
+</ul>
 </div></details></details></div><div class="job"><div class="jnum">#153</div><div class="jhead"><span class="emoji">✂️</span><h4>Make the Concierge&#x27;s rule book shorter so each run costs less</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>The Concierge reads its whole rule book every time it works. Shorter book, cheaper runs</li><li>Step 1 done Sep 21: old history and stories cut out (pull request 409)</li><li>Sep 28: a bigger clean-up (pull request 662) halved the book. It is now about 44,000 letters, under the 45,000 goal</li><li>Oct 2: checked whether the reply rules could move to the robot that answers messages. That robot already has most of them, but the Concierge still writes replies too, so they should stay</li><li>Waiting on Junyan: keep the reply rules (my pick), and either merge the five &#x27;how a run works&#x27; parts or leave them as they are</li><li>No more &#x27;rebuild the prompt&#x27; step: the Concierge now reads the rule book fresh from GitHub every run</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Shrink the Concierge canon — history out, receiver rules out, one pass-runner section</b></p><h2>Task</h2>
 
 <p>Ruling 2026-09-21 (Junyan, after <b>141</b> step 2): the VPS cron</p>
@@ -2321,7 +2324,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Resolves with:</b> the loop named with evidence, one cap in place, and one full day under 10M on every</p>
 <p>fire with the fleet total reported.</p>
-</div></details></details></div><div class="job"><div class="jnum">#157</div><div class="jhead"><span class="emoji">⏰</span><h4>Two robots leave their to-do rows looking overdue</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sept 22 in the last check of the work-loop ticket (053)</li><li>Oct 2, overnight checker: confirmed it only moves the due date when it reopens a row, not on each nightly update</li><li>But those nights really are failing (custodian reviews, doorman report, timekeeper evidence), so the rows are right to be open</li><li>WAITING ON JUNYAN: should a row that stays open because the problem keeps happening get a new due date each night, or keep the old one so it shows as late?</li><li>Oct 2, Timekeeper: its charge rows said &#x27;closes when paid&#x27; but had no due date; fix ready in PR 820 (due date = 7 days after the overtime), not merged</li><li>Then: deploy, add the daily check to the morning watch, watch 7 clean days in a row</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Overnight Verifier and Timekeeper rows break the deadline rule</b></p><h2>Question</h2>
+</div></details></details></div><div class="job"><div class="jnum">#157</div><div class="jhead"><span class="emoji">⏰</span><h4>Two robots leave their to-do rows looking overdue</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sept 22 in the last check of the work-loop ticket (053)</li><li>Oct 2, overnight checker: confirmed it only moves the due date when it reopens a row, not on each nightly update</li><li>But those nights really are failing (custodian reviews, doorman report, timekeeper evidence), so the rows are right to be open</li><li>WAITING ON JUNYAN: should a row that stays open because the problem keeps happening get a new due date each night, or keep the old one so it shows as late?</li><li>Oct 2, Timekeeper: its charge rows said &#x27;closes when paid&#x27; but had no due date; fixed in PR 820 (due date = 7 days after the overtime)</li><li>Oct 3: Junyan said yes; merged and live. The morning watch now checks new charge rows and counts clean days (section AT)</li><li>Still to do: Junyan&#x27;s answer on the overnight checker&#x27;s due dates, then 7 clean days in a row</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Overnight Verifier and Timekeeper rows break the deadline rule</b></p><h2>Question</h2>
 
 <p>Graduated from <b>053</b>, closed 2026-09-25. Its final Phase 4 reading</p>
 <p>(Hermes <code>run_27b769fa…</code>, 2026-09-22 19:11 Toronto, main <code>0c5ee46</code>) failed criterion F: 5 of 8 open</p>
@@ -2380,6 +2383,20 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>half; canon takes effect on the next cloud pass). After deploy: add the daily criterion-F read</p>
 <p>(<code>scripts/phase4_measure.py</code>) to the <code>desk-watch</code> task and a Plumbing Map entry. F&#x27;s 7-day</p>
 <p>clock cannot start until the verifier ruling is applied.</p>
+
+<h2>2026-10-03 — Timekeeper half shipped (Claude session)</h2>
+
+<p>Junyan, d2: &quot;yes merge and deploy&quot;. PR #820 squash-merged <code>188fe004e</code>; event-gate deployed</p>
+<p><code>target=hostinger mode=update</code>, run 37151538202, <code>/health</code> <code>git_sha 188fe00</code>, started</p>
+<p>2026-10-03 20:35:05Z. The canon half reaches the cloud Timekeeper on its next 04:00 pass.</p>
+<p>Plumbing Map entry: PR <a href="https://github.com/junyanboon/desk-correspondence/pull/865" target="_blank" rel="noopener">#865</a></p>
+<p>(log file only), open: merging it was blocked for this session, so Junyan merges it.</p>
+<p>Desk Watch <b>Section AT</b> added (new charge rows graded, plus the daily criterion-F read with a</p>
+<p>streak count); 🧪 Live Tests card <code>3ee75032-81c4-813a-b8f2-cd7f08fcdb34</code>, first check</p>
+<p>2026-10-04 09:30 Toronto. The F streak cannot reach 7 while the Overnight Verifier rows sit past</p>
+<p>their deadline: that waits on d1 (Junyan asked for examples on 10-03; the three rows still fail</p>
+<p>nightly as of 10-03: custodian 3 missing reviews plus a failed report, doorman report failed,</p>
+<p>timekeeper evidence unverified).</p>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">9</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -20854,5 +20871,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-10-03 16:22 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-10-03 16:37 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
