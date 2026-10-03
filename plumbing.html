@@ -1281,6 +1281,56 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-03</span>
+      <h3>A renter who says they have no code alerts Junyan in minutes and can get their own access text automatically<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/stuck_access.py, app.py /poll, owner_text_release.py, library/autonomy.md § 📤 sixth carve-out, library/the-responder.md, d47, d48 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/860">desk-correspondence #860</a></span></h3></summary>
+      <p>Junyan: &ldquo;d48 yes this should have ben sent out automatically&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-03 a renter texted at 10:58 that he had no code for his 11:00 booking. The Responder only runs at :20 and :50, so the text waited for the 11:20 pass, which held his codes as a draft; a person sent them at 11:59. Junyan approved a fast alert (d47) and an automatic send under strict rules (d48).</p>
+      <p><strong>Route change.</strong> The event gate's minute SMS poll, and a new Gmail read every 2 minutes on the same tick, hand any "no code / how do I get in" message to <code>stuck_access.py</code>. For a sender with a Skedda booking today it writes one <code>[urgent:&lt;message id&gt;]</code> owner row and releases it at once to Slack #desk-status (SMS fallback). When every guard holds (sender on exactly one Artist card, a booking starting within 30 minutes or running, the panel confirms the card's code, no access text already queued or sent for that booking, the canonical How to Access body with no dash) it writes <code>HTA-sweep-&lt;stamp&gt;-&lt;studio&gt; [stuck:&lt;id&gt;]</code> held, reads it back and moves it to Ready to Send; the send engine dispatches it. It reads live Skedda, never the FBS board row. A code that does not work or a lockout is alert only.</p>
+      <p><strong>Failure mode.</strong> Any failed guard or failed read writes no customer row and the alert names the reason; the Responder's held draft stays the path. If the owner row cannot be written the alert goes straight through the ops text. <code>STUCK_ACCESS_SEND_DISABLED=1</code> keeps the alert and stops the send; <code>STUCK_ACCESS_DISABLED=1</code> turns the lane off; <code>GATE_DISABLED</code> stops it with the rest of the poll.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>Platform Watch reads page times in the Mac's time zone and converts them by script<span class="kind">Platform Watch &middot; failure &middot; scripts/platform_app_log.py mid, fleet/platform-watch/RUNBOOK.md § Window, d21 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/863">desk-correspondence #863</a></span></h3></summary>
+      <p>Junyan: &ldquo;d21 yes&rdquo;</p>
+      <p><strong>Why.</strong> Giggster shows message times in the browser's zone, which is the Mac's zone (Cairo while Junyan is in Egypt), but the runbook said to read them as Toronto. A literal pass would log a reply 7 hours off, and since the Message ID carries the time, the copy would get a new id and slip past the duplicate check. The 3:45 PM Toronto run caught the gap itself.</p>
+      <p><strong>Route change.</strong> For every staff bubble Platform Watch runs <code>platform_app_log.py mid</code> with the date and time as the page shows them. The script reads the Mac's zone from the system (never a fixed zone) and prints the Message ID, the UTC <code>Date &amp; Time</code> and the Toronto <code>Exact Time</code>. Once per site per run the watch checks one guest bubble against its relay copy; a site that shows another zone gets that <code>--zone</code> for the run and is named in the report.</p>
+      <p><strong>Failure mode.</strong> A page time the script cannot read, or an unknown zone, prints ERROR and that bubble is not logged that pass (named under problems). No relay copy to check against → the Mac's zone is used and the report says <code>zone unchecked</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>Hermes and Buzz backups move off the Mac to a nightly Google Drive copy<span class="kind">VPS backups (Hermes, Buzz) &middot; route, failure &middot; services/offsite-drive, registry offsite-drive-hermes and offsite-drive-buzz, d19, d22, d23 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/861">desk-correspondence #861</a></span></h3></summary>
+      <p>Junyan: &ldquo;I'd prefer danceannex if possible&rdquo;</p>
+      <p><strong>Why.</strong> The backups lived only on the VPS and the Mac. Junyan chose the thedanceannex Google Drive (about 8 GB free) as a third place, with one Hermes copy kept (d19).</p>
+      <p><strong>Route change.</strong> Installed and switched on by Junyan (<code>offsite-drive on</code> on the VPS, after his Google sign-in), not at merge. Then, right after each nightly backup succeeds, a plain-code job copies the newest encrypted archive to Drive folder <code>dance-annex-offsite</code>, reads it back (size and MD5), and only then deletes the older copy: 1 Hermes copy kept, 3 Buzz copies. Google access is the <code>drive.file</code> scope, so it sees only its own files. The decrypt passphrase never leaves the VPS. Once the first two copies are verified, the Mac pulls every 6 hours stop (d23, <code>mac/stop-mac-pulls.sh</code>, reversible); the old local copies are not deleted.</p>
+      <p><strong>Failure mode.</strong> A failed check, a full Drive or a bad upload stops before any delete, so Drive never drops to zero copies. Only a verified upload stamps the job's record, and the Sentinel posts <code>job:offsite-drive-&lt;set&gt;</code> to #desk-drops when no verified copy has landed by about 06:30 Toronto (checked 06:00 to 12:00; a failed backup counts too). The registry rows reach the Sentinel with the next event-gate deploy. Off switch: <code>offsite-drive off</code> on the VPS, or <code>OFFSITE_DRIVE_DISABLED=1</code> in <code>/etc/offsite-drive/offsite-drive.env</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>Grokbot retired, the Mac platform-watch task is the only platform-watch runner<span class="kind">Platform Watch, Grokbot &middot; route &middot; library/lanes.md § Retired, fleet/platform-watch/RUNBOOK.md, d50, d51, d52 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/862">desk-correspondence #862</a></span></h3></summary>
+      <p>Junyan: &ldquo;d52 it's no longer working retire&rdquo;</p>
+      <p><strong>Why.</strong> Junyan switched Grokbot off on 2026-10-03: it had stopped working, and its "Daily Steward" pilot was not useful (d51). He deleted both copies of its brief (d50).</p>
+      <p><strong>Route change.</strong> Platform messages are read only by the Mac <code>platform-watch</code> scheduled task, which follows <code>fleet/platform-watch/RUNBOOK.md</code>. Nothing routes to Grokbot any more; <code>lanes.md</code> lists it under Retired.</p>
+      <p><strong>Failure mode.</strong> If the Mac task misses a pass there is no second runner; the task's own run history shows the gap. No trigger, schedule or enabled state changed in this PR.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>An ended monthly plan no longer blocks the access text<span class="kind">The Registrar, The Planner, The Host &middot; route &middot; EVENT-GATE booking_sweep.py is_agreement_renter, fbs_access.py, host_sweep.py, analyst_sweep.py, prevention_watch.py, library/the-planner.md, library/support-ladder.md, d40 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/854">desk-correspondence #854</a></span></h3></summary>
+      <p>Junyan: &ldquo;Fix the robots so they only skip renters whose monthly plan is still running&rdquo;</p>
+      <p><strong>Why.</strong> The robots skipped any renter whose Artist card carried an agreement Product (1AP, 2AP, AAP, Flex, Fixed, Private Class), even when that plan had ended years ago. On 2026-10-03 a renter with a 2AP tag left from a 2024 plan got no How-to-Access for a Studio 901 booking.</p>
+      <p><strong>Route change.</strong> A renter now counts as an agreement renter only when the plan is still running on the booking date: the agreement Product is on the card, <code>Account Status</code> is not One-Off, Self Serve or Closed, and <code>Agreement End Date</code> is empty or not yet passed. <code>Account Closed On</code> is not read: accounts are moved to One-Off rather than closed, and old closed dates sit on plans that are still running. Anyone else gets the FBS board row, the confirmation and the access text like any casual renter, and the Host tiers them on the ladder.</p>
+      <p><strong>Failure mode.</strong> Missing plan fields on a card still read as a running plan (no change for cards without them). A malformed date reads as an ended plan, so the renter gets the access text rather than a locked door.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
       <h3>Registrar stops drafting "which booking?" and reads four more cases before it would ask<span class="kind">The Registrar &middot; route &middot; services/event-gate/move_sweep.py WHICH_BOOKING_DRAFTS candidates_why desk_offer policy_question named_parts, library/studio-tickets-bookings.md, library/the-responder.md, library/desk-sort.md, d40, d41 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/859">desk-correspondence #859</a></span></h3></summary>
       <p>Junyan: &ldquo;d40 yes / d41 yes&rdquo;</p>
       <p><strong>Why.</strong> All three "which booking?" drafts the Registrar wrote in the 14 days to 2026-10-03 were rewritten by Junyan. The Lane Detective found four reading gaps behind them.</p>
