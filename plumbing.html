@@ -1281,6 +1281,56 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-03</span>
+      <h3>Registrar stops drafting "which booking?" and reads four more cases before it would ask<span class="kind">The Registrar &middot; route &middot; services/event-gate/move_sweep.py WHICH_BOOKING_DRAFTS candidates_why desk_offer policy_question named_parts, library/studio-tickets-bookings.md, library/the-responder.md, library/desk-sort.md, d40, d41 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/859">desk-correspondence #859</a></span></h3></summary>
+      <p>Junyan: &ldquo;d40 yes / d41 yes&rdquo;</p>
+      <p><strong>Why.</strong> All three "which booking?" drafts the Registrar wrote in the 14 days to 2026-10-03 were rewritten by Junyan. The Lane Detective found four reading gaps behind them.</p>
+      <p><strong>Route change.</strong> The original-unclear clarification is no longer drafted to the renter (code constant <code>WHICH_BOOKING_DRAFTS = False</code>); it becomes a Review row on the Actions board with the renter's upcoming bookings and the soonest as the best guess. Also routed to a Review row instead of a renter question: a plain yes to the desk's own offered move (consent, quoting the offer), no booking under the sender, and a partial cancel (notice measured from the part named; a cancel of a part 24 h or more away, or an unclear part, is a human's call). A rules question naming no date, time, studio or booking ("would I be able to reschedule part of this booking?") goes to the Responder only: the move lane drafts nothing (a Registrar-routed one gets a Review row saying so). The Desk Sort no longer holds the "which booking?" draft either.</p>
+      <p><strong>Failure mode.</strong> A Skedda read failure while listing candidates still files the Review row, saying the candidates were unreadable. Reverting this PR restores the drafts; <code>MOVE_SWEEP_DISABLED</code> still stops the lane.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>An app reply is copied once, and robots stop re-answering what Junyan answered in the app<span class="kind">Platform Watch, The Responder, The Concierge &middot; route, failure &middot; scripts/platform_app_log.py, scripts/notion_log_ingest.py, scripts/queue_draft.py answered_in_app, library/the-responder.md, library/concierge-orchestration.md [R-app-reply], fleet/platform-watch/RUNBOOK.md § Dedup, d5 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/857">desk-correspondence #857</a></span></h3></summary>
+      <p>Junyan: &ldquo;d5 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-02 Junyan answered a Giggster guest in the app at 5:10 to 5:12 PM. Platform Watch wrote each reply into the Correspondence Log three times on later passes (same Message ID), the ingest copied all three into the ledger, and the Responder and the Concierge queued answers he had already given.</p>
+      <p><strong>Route change.</strong> <code>platform_app_log.py exists</code> is Platform Watch's Message ID check before every Log write: a Notion filter on <code>Message ID</code> equals, not a search. The ingest keys a <code>platform-app:</code> row on its Message ID (<code>nlog-platform-app-…</code>), so a repeat row is skipped. <code>queue_draft.py</code> refuses (exit 3, <code>answered by &lt;row&gt;</code>) when the Log holds an app reply on the same Artist or Giggster thread dated after the message, and the Responder's stale-draft recheck and the Concierge run <code>platform_app_log.py answered</code> before answering a platform guest. A held reply killed because Junyan answered is closed, never refilled.</p>
+      <p><strong>Failure mode.</strong> A failed Log read in Platform Watch writes nothing that pass and names it under problems. A failed read in <code>queue_draft.py</code> refuses after 3 tries; retry next pass. <code>--not-duplicate "&lt;why&gt;"</code> writes anyway when the app reply does not answer the message; reverting this PR restores the old path.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>Mac business jobs keep Toronto hours while the Mac is on another time zone<span class="kind">Platform Watch, Desk Watch, The Accountant, Alarm monitor (Mac) &middot; cadence, failure &middot; library/house-rules.md § Business runs on Toronto time, workspace bin/clock-gate, d7 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/857">desk-correspondence #857</a></span></h3></summary>
+      <p>Junyan: &ldquo;my business is Toronto so I need that to always operate on Toronto time&rdquo;</p>
+      <p><strong>Why.</strong> Junyan works from Egypt with the Mac on Cairo time (7 hours ahead of Toronto). Mac schedules are written in Mac time, so Platform Watch ran about 1:10 AM to 2:40 PM Toronto (app replies typed in the evening reached the Log after 1 AM), and the alarm morning prep wrote access windows at 11:15 PM Toronto for the day that was ending.</p>
+      <p><strong>Route change.</strong> Each business job checks the America/Toronto clock itself. Platform Watch fires every 30 minutes and runs only 08:00 to 21:59 Toronto; the Desk Watch fires hourly and runs at 09:xx Toronto; the Accountant fires hourly on the 10th and 25th and runs at 08:xx Toronto. The alarm prep, smoke test and morning check (launchd) tick every 15 minutes through <code>clock-gate</code> and run once a day at 06:15, 06:45 and 07:00 Toronto. Every job is labelled BUSINESS or PERSONAL where it is defined.</p>
+      <p><strong>Failure mode.</strong> A run outside its Toronto window stops after one clock read and one line. If the clock read is refused, the run stops without working (no wrong-time work). A Mac asleep through the whole window (2 hours for the alarm jobs) skips that day, as before. To undo, restore the <code>.bak-2026-10-03-d7</code> copies of the task prompts and plists.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>The Analyst never opens a Tight Time Transition ticket or sends handoff texts next to a studio viewing<span class="kind">The Analyst &middot; route &middot; EVENT-GATE analyst_sweep.py transitions() handoffs(), buffer_lane.py, library/analyst-issue-prevention.md Step 5, d42 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/856">desk-correspondence #856</a></span></h3></summary>
+      <p>Junyan: &ldquo;we never need tight time transition tickets between studio viewing and regular bookings; there should be no tight time tnrasition texts sent out when it's a viewing&rdquo;</p>
+      <p><strong>Why.</strong> A short studio viewing (a tour) right before or after a renter was opening a Tight Time Transition ticket and queuing move asks nobody needed. Junyan ruled on 2026-10-03 that viewings never need them, and (d42) that no transition texts go out for a viewing either.</p>
+      <p><strong>Route change.</strong> <code>analyst_sweep.transitions()</code> now skips any pair where either side is a studio viewing (<code>booking_sweep.is_studio_viewing</code>: "viewing" in the title, or a $0 booking of 30 minutes or less titled or described as a tour or viewing), before the EVENT rule. The same check serves the Analyst's 04:06 pass, the Registrar and the Buffer lane through the Transition Guard; the Buffer lane's far-ahead prefilter skips viewing pairs too. <code>handoffs()</code> skips the same pairs, so no wrap-up/arm or arrive/disarm text is queued for a viewing pair, 901 included. Open viewing tickets for today and tomorrow should retire on the next pass through the stale-ticket cleanup.</p>
+      <p><strong>Failure mode.</strong> A paid booking titled "tour" is still a rental and still flags. If a real viewing is missed by the check, the old behaviour returns for that pair (a ticket opens); revert this PR to restore the old rule.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>The Deck shows one bubble per Log Message ID, and every date in Toronto time<span class="kind">The Deck &middot; failure &middot; sources/deck.html buildDeck, test/log-message-id-collapse.test.js, test/toronto-time.test.js, desk-correspondence platform_app_log.py, d5, d7 &middot; <a href="https://github.com/junyanboon/deck-app/pull/208">deck-app #208</a></span></h3></summary>
+      <p>Junyan: &ldquo;d5 yes; d7 yes&rdquo;</p>
+      <p><strong>Why.</strong> Platform Watch wrote each of a Giggster guest's app replies into the Correspondence Log three times (same Message ID), and her card showed every reply three times. Junyan works from Egypt with the Mac on Cairo time and wants the business shown in Toronto time.</p>
+      <p><strong>Route change.</strong> The thread pane keeps the first Log row for each Message ID and drops later copies; rows with no Message ID are never collapsed. The last two date labels that used the browser's zone now name one (every time the Deck shows is America/Toronto; a bare calendar day is read in UTC so it is the same day anywhere), and a test refuses a new one that does not.</p>
+      <p><strong>Failure mode.</strong> Two genuinely different messages sharing one Message ID would show as one; Platform Watch adds <code>:2</code>, <code>:3</code> for a second message in the same minute, so this needs a broken id. Reverting this PR restores the old display.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
       <h3>Deck keeps its request logs (Cloudflare Workers Logs on)<span class="kind">The Deck &middot; failure &middot; wrangler.jsonc observability, d45 &middot; <a href="https://github.com/junyanboon/deck-app/pull/207">deck-app #207</a></span></h3></summary>
       <p>Junyan: &ldquo;d45 yes&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-03 the Deck failed with Cloudflare 503 pages (the Worker ran out of CPU time) and the only way to see why was a live <code>wrangler tail</code> during the outage. Nothing was kept afterwards.</p>
