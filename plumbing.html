@@ -1281,6 +1281,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-03</span>
+      <h3>Traefik reads Docker through a gatekeeper that only lets it look, and stays on a pinned version<span class="kind">Traefik (VPS front door) &middot; failure &middot; ops/traefik/apply-socket-proxy.sh, ops/traefik/README.md, d26, d31 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/867">desk-correspondence #867</a></span></h3></summary>
+      <p>Junyan: &ldquo;yes&rdquo;</p>
+      <p><strong>Why.</strong> Traefik is the one container facing the internet, and it had the full Docker socket, so a break-in there meant root on the VPS (server review d26, Junyan d31).</p>
+      <p><strong>Route change.</strong> No message route changes. What is live is the script and its checks in this repo; Junyan runs it on the VPS himself. After it runs, Traefik finds the studio's services through a filtered socket that answers only ping, version, list, inspect and events, and it stays on v3.7.12 by digest instead of following <code>:latest</code>. Until he runs it, nothing changes on the VPS.</p>
+      <p><strong>Failure mode.</strong> If the gatekeeper stops, Traefik keeps serving the routes it already knows but sees no new or restarted container until the gatekeeper is back (it restarts by itself). The script checks every public endpoint after the switch and puts the old setup back by itself if any answers differently. Rollback by hand: restore <code>docker-compose.yml.before-socket-proxy</code> in <code>/docker/traefik</code> and run <code>docker compose up -d --remove-orphans</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>When the Registrar cannot tell which booking, it drafts a held question naming the candidates<span class="kind">The Registrar, The Desk Sort &middot; route &middot; services/event-gate/move_sweep.py WHICH_BOOKING_DRAFTS which_booking_question no_booking_question, library/studio-tickets-bookings.md, library/desk-sort.md, d40, d46, d49 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/864">desk-correspondence #864</a></span></h3></summary>
+      <p>Junyan: &ldquo;d46 if it can't tell then it should ask for calrification&rdquo;</p>
+      <p><strong>Why.</strong> Earlier today (d40) the "which booking?" ask became a Review row because every such draft had been rewritten by hand. The reading gaps are now fixed (d41), so the cases left are genuinely ambiguous, and Junyan ruled that the robot should ask.</p>
+      <p><strong>Route change.</strong> The Review row becomes a held draft again (Message Queue, Pending Review, never sent by the lane) when the Registrar cannot tell which booking: several bookings and no date, several on the named day with no time range, or a relative time that fits several or none. The question names up to four candidate bookings in plain words ("Which booking do you mean: your Monday, Oct 5 booking at 6:15 PM in Studio 509A or your Friday, Oct 9 booking at 6:15 PM in Studio 509A?"); the generic template is used only when there is none to name. No booking under the sender: a held question asking whose name or which platform the booking is under. The best guess and the "less than 24 h notice possible" mark stay in Reasoning for the reviewer. The Desk Sort holds the same question. Unchanged: a yes to the desk's offer, a rules question (the Responder answers), the 24 h check when one booking is known, an FYI with no clear move ask (Review row), and one upcoming booking with no date (taken as the one meant, d49; watched 2026-10-03 to 10-10).</p>
+      <p><strong>Failure mode.</strong> A failed Skedda read of the candidates falls back to the generic template and says so in Reasoning. <code>WHICH_BOOKING_DRAFTS = False</code> in code restores the d40 Review row.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
       <h3>A renter who says they have no code alerts Junyan in minutes and can get their own access text automatically<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/stuck_access.py, app.py /poll, owner_text_release.py, library/autonomy.md § 📤 sixth carve-out, library/the-responder.md, d47, d48 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/860">desk-correspondence #860</a></span></h3></summary>
       <p>Junyan: &ldquo;d48 yes this should have ben sent out automatically&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-03 a renter texted at 10:58 that he had no code for his 11:00 booking. The Responder only runs at :20 and :50, so the text waited for the 11:20 pass, which held his codes as a draft; a person sent them at 11:59. Junyan approved a fast alert (d47) and an automatic send under strict rules (d48).</p>
