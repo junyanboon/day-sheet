@@ -1281,6 +1281,66 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-03</span>
+      <h3>Treasurer flags every agreement that has ended, so the card goes to One-Off<span class="kind">The Treasurer &middot; route &middot; EVENT-GATE agreement_end.py, treasurer_sweep.py, move_sweep.py, library/autonomy.md, library/the-treasurer.md, library/close-pause-change-accounts.md, d56, d60, d61, d66 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/866">desk-correspondence #866</a></span></h3></summary>
+      <p>Junyan: &ldquo;accounts are changed to one offs, they are never really closed. However agreements can end.&rdquo;</p>
+      <p><strong>Why.</strong> A renter's card kept a 2AP tag from a 2024 plan, so the robots treated him as a plan member and he got no access text. About 196 stale plan tags were cleared by hand, and two current renters still carried closed dates from old terms.</p>
+      <p><strong>Route change.</strong> On the 1st and 15th, the Treasurer pass now reads every Artist card whose agreement end date has passed (and every running plan that still has an Account Closed On) and files one Review row for the Ops Lead per card: switch to One-Off and take the plan product off, move a renewal forward, or clear an old closed date. At most 15 new rows a pass, newest endings first; the rest wait for the next pass. The code never edits the card itself; nothing is charged or sent. The Time Slot Board now treats a One-Off holder like a closed one (HOLDER_CLOSED). The booking move lane no longer refuses a plan member because of an old Account Closed On; it reads only the pause dates and the agreement end date (d66), the same rule the access robots use since PR 854.</p>
+      <p><strong>Failure mode.</strong> Fenced inside the pass: a failed Artist DB read shows on the run report and the money pass goes on. A failed 📎 Docs read runs without renewal evidence. <code>TREASURER_AGREEMENT_END=off</code> stops it; <code>=shadow</code> reads and logs only.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>Timekeeper charge rows say "closes when paid" and carry a due date<span class="kind">The Timekeeper &middot; route, failure &middot; library/timekeeper-overtime.md Step 9.3, EVENT-GATE overtime_sweep.py charge_deadline, lane_common.action_row, PR 820, wayfinder 157, d2 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/820">desk-correspondence #820</a></span></h3></summary>
+      <p>Junyan: &ldquo;d2 yes merge and deploy&rdquo;</p>
+      <p><strong>Why.</strong> Criterion F of wayfinder 053 failed on a Timekeeper charge row typed <code>paid</code> with no <code>Deadline</code> (Taylor Y., 509A, Sep 21). The written rule for a held charge named neither field, so the cloud Timekeeper typed rows by habit and left the date off.</p>
+      <p><strong>Route change.</strong> Every held overtime charge (and platform charge request) on ✅ Actions to Perform now carries <code>Proof type = paid</code> and a <code>Deadline</code> of 23:59 Toronto, seven days after the overtime date. The cloud Timekeeper reads this from canon on its next 04:00 pass; the coded path (<code>overtime_sweep.py</code>, still shadow) writes the same fields.</p>
+      <p><strong>Failure mode.</strong> A charge still unpaid at its deadline gets a dated <code>Deadline passed</code> line in its Ask, shown on the Deck; nothing is charged, closed or sent because of it. <code>lane_common.action_row</code> now refuses to file any typed row without a <code>Deadline</code> (the lane reports the error and files nothing for that row). Reverting PR 820 restores the old fields.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>A robot row that keeps failing keeps its first due date<span class="kind">Overnight Verifier &middot; failure &middot; library/the-loop.md One board, overnight-verifier publish.py _deliver_lane, wayfinder 157, d1 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/870">desk-correspondence #870</a></span></h3></summary>
+      <p>Junyan: &ldquo;okay let's do b&rdquo;</p>
+      <p><strong>Why.</strong> The Overnight Verifier keeps one row per area and updates it every night. Its rows for custodian, doorman and timekeeper sat past their due dates because the same checks kept failing. Junyan ruled that the date should stay put, so a stuck problem keeps looking late.</p>
+      <p><strong>Route change.</strong> None in code: the nightly update already changes only the notes. The rule is now written in canon so no one rolls the date forward.</p>
+      <p><strong>Failure mode.</strong> A lane that stays broken keeps its row past due on the Deck, and criterion F (no robot row past its due date) fails until that lane is repaired.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>Greeter answers a Giggster first inquiry on the guest's proxy SMS, with the amenities line<span class="kind">The Greeter &middot; route, failure &middot; services/event-gate/greeter_sweep.py, services/event-gate/amenities.py, services/event-gate/app.py, scripts/amenities.py, scripts/jev_htr.py, library/the-responder.md, library/response-resolver.md 4.5 and 4.7, library/house-rules.md, d39, d41, d42, d44, d45, d46 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/858">desk-correspondence #858</a></span></h3></summary>
+      <p>Junyan: &ldquo;d41 "yes.. fix it"; d44 "yes"; d45 "yes. 527's chairs and tables are counted. But you need to look on the amenities SOP to find it."&rdquo;</p>
+      <p><strong>Why.</strong> Ajani M. [Giggster] sent a first inquiry for Studio 693 on 2026-10-02. Giggster sends it twice: a mail with the date and time, and a proxy SMS a minute later. The Greeter read the mail as a chat message and the listing name "Alcohol-Free Venue" as alcohol, so it filed a hand-off with no template, and the Responder filtered the SMS as a plain text and asked for a time the mail already gave.</p>
+      <p><strong>Route change.</strong> A Giggster "New Message From" mail carrying an "Inquired Date &amp; Time" card, from a guest the desk has not met, is now an enquiry. The Greeter waits up to 20 minutes for the proxy SMS twin, then queues the event reply (HTR 3e775032) held at Pending Review as <code>Channel = SMS</code> to the proxy, no sign-off, on a card whose Phone is the proxy (d42: a relay the guest wrote through reaches the guest). No proxy after 20 minutes: a manual Giggster send, as before. <code>app.py</code> now files the inquiry twin's proxy in Contact Points. When the guest names chairs, tables or another object, the reply adds "We have ... you're welcome to use, at no extra cost." from the amenities SOP, the one source for renter amenities and capacity (d46, d39); Studio Storage is internal storage only. <code>jev_htr</code> treats a <code>(Giggster)</code> / <code>(Peerspace)</code> / <code>(Tagvenue)</code> SMS as a platform inbound. The Responder is backup only for Giggster first replies (d44). Canon: a relay number on the card is fine when the guest messaged through it; phone.com labels a relay First = guest name, Last = "Giggster Relay".</p>
+      <p><strong>Failure mode.</strong> No paired proxy: manual send after 20 minutes (<code>GREETER_PROXY_WAIT_MINUTES</code>). An item the SOP does not list as confirmed and renter usable is never stated: the row's Reasoning says "amenity line owed". An unreadable SOP owes every item. The SOP reaches the Greeter on each event-gate deploy (bundled as <code>_canon/amenities-sop.md</code>). Kill switch for the lane: <code>GREETER_DISABLED=1</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>The Mac's robot reads of the VPS move from root to a look-only login<span class="kind">vps-read (Desk Watch, helpers), Hermes tunnel &middot; tool, failure &middot; ops/fleetread, ~/bin/vps-read, ca.danceannex.hermes-tunnel, d26, d34 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/869">desk-correspondence #869</a></span></h3></summary>
+      <p>Junyan: &ldquo;okay sure&rdquo;</p>
+      <p><strong>Why.</strong> Every Mac session and robot that read the VPS did it as root, so any of them could change anything (server review d26, Junyan d34).</p>
+      <p><strong>Route change.</strong> The repo now holds the fleetread login: a user whose read key can only run the fixed reads <code>vps-read</code> already offered (plus timer and backup listings), and whose tunnel key can only forward to the Hermes API. <code>vps-read env</code> now reads switch names only. Nothing moves until Junyan runs the installer and swaps in the new <code>vps-read</code> and tunnel settings; backup pulls, the fleet collector and <code>fleet-prompt</code> stay on root for now.</p>
+      <p><strong>Failure mode.</strong> If the fleetread login is missing or its key is not on the Mac, <code>vps-read</code> says so and the Desk Watch marks its VPS sections UNCHECKED, as it does today when a read is refused. Undo: restore <code>~/bin/vps-read.bak-2026-10-03</code>; on the VPS, delete <code>/etc/sudoers.d/60-fleetread</code> and the user. Root access is never touched.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>Courtesy Reply Lane drafts no second close after the desk already closed<span class="kind">Courtesy Reply Lane &middot; route, failure &middot; EVENT-GATE holding_reply.py, library/specs/holding-reply-auto-send.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/868">desk-correspondence #868</a></span></h3></summary>
+      <p>Junyan: &ldquo;Fix the double tap backs&rdquo;</p>
+      <p><strong>Why.</strong> A renter thanked us, the desk closed by hand ("Anytime 🙏 If you need any further assistance please don't hesitate to reach out."), the renter thanked us again, and the lane drafted a second close. The close check read only the Message Queue, and only knew the lane's own closing offer wording.</p>
+      <p><strong>Route change.</strong> Before drafting a courtesy close, the lane now takes our last word to the renter from the newer of the Message Queue and the 📬 Correspondence Log (outbound), and recognises the common closing offers ("any further assistance", "reach out", "feel free to"). If that last word was a close, a bare thank-you gets no draft.</p>
+      <p><strong>Failure mode.</strong> A Correspondence Log read error counts as "already closed": no draft, never a ping-pong. A close typed by hand reaches the log on the 15-minute desk tick, so a thank-you inside that window can still draw one held close. The lane's switch is still <code>HOLDING_REPLY_AUTOSEND</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
       <h3>Traefik reads Docker through a gatekeeper that only lets it look, and stays on a pinned version<span class="kind">Traefik (VPS front door) &middot; failure &middot; ops/traefik/apply-socket-proxy.sh, ops/traefik/README.md, d26, d31 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/867">desk-correspondence #867</a></span></h3></summary>
       <p>Junyan: &ldquo;yes&rdquo;</p>
       <p><strong>Why.</strong> Traefik is the one container facing the internet, and it had the full Docker socket, so a break-in there meant root on the VPS (server review d26, Junyan d31).</p>
