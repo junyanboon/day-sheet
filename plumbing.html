@@ -1280,6 +1280,45 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Traefik drops look-alike request headers before they reach the studio's services<span class="kind">Traefik (VPS front door) &middot; failure &middot; ops/traefik/apply-alias-headers.sh, ops/traefik/README.md, d39 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/873">desk-correspondence #873</a></span></h3></summary>
+      <p>Junyan: &ldquo;d39 yes&rdquo;</p>
+      <p><strong>Why.</strong> Traefik warned that a header named <code>X_Auth_User</code> could pass as <code>X-Auth-User</code> to services that treat the two alike (Junyan d39).</p>
+      <p><strong>Route change.</strong> No message route changes. The script and its checks are in this repo; Junyan runs it on the VPS. After it runs, both entry points delete any request header whose name has a character other than a letter, digit or dash. The request itself still goes through.</p>
+      <p><strong>Failure mode.</strong> A service that relied on a header with an underscore or dot in its name would stop receiving it; none of the studio's do. The script checks every public endpoint after the change and puts the old file back by itself if any answers differently. Rollback by hand: restore <code>docker-compose.yml.before-alias-headers</code> in <code>/docker/traefik</code> and run <code>docker compose up -d</code>.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>The Messages tab asks Notion side by side and shows its cards before the history log; Send waits for the history<span class="kind">The Deck &middot; failure &middot; deck-app src/index.js runNamedQuery mapLimit, sources/deck.html state.historyPending adoptHistory, test/messages-fast-load.test.js, d49 &middot; <a href="https://github.com/junyanboon/deck-app/pull/209">deck-app #209</a></span></h3></summary>
+      <p>Junyan: &ldquo;d49 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-03 the Messages tab took about 3.5 to 5 s to show anything: the queue read asked Notion four questions one after another, the history read one question per Gmail message and thread, and the tab waited for all three reads.</p>
+      <p><strong>Route change.</strong> The queue and history reads ask their questions side by side, at most three at once per read, and file the answers in the old order, so the rows shown are the same. The cards draw as soon as the inbox and the queue are in.</p>
+      <p><strong>Failure mode.</strong> Until the history log's first read lands, each card's thread says "Loading history" and Send, Send via phone.com and Change in Skedda and send wait with "Loading history…"; Reject, Copy text and Sent Manually work. If the history read keeps failing, the Deck shows its error screen as before. More questions at once can meet Notion's rate limit sooner; that shows as "Waiting on Notion" and retries.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>A Notion change notice reruns only the Deck reads it touches, bundled over 5 s; a background tab waits<span class="kind">The Deck &middot; cadence, failure &middot; deck-app sources/deck.html liveNudge LIVE_READS liveFlush liveWake DeckAPI.refresh, test/live-refresh-what-changed.test.js, d50 &middot; <a href="https://github.com/junyanboon/deck-app/pull/211">deck-app #211</a></span></h3></summary>
+      <p>Junyan: &ldquo;d50 yes&rdquo;</p>
+      <p><strong>Why.</strong> Every Notion change notice made every open Deck rerun all four of its reads (inbox, queue, history, Actions). At noon on 2026-10-03 that was 104 notices in 7 minutes, and the reads ran into Cloudflare's CPU limit.</p>
+      <p><strong>Cadence change.</strong> A notice now names its base: inbox reruns the inbox read; queue reruns the queue and history reads; history reruns history; Actions reruns Actions; Artists and Sweep rerun none of the four; anything else, or a reconnect, reruns all four. The first notice opens a 5 s window and everything inside it is one refresh. A Deck tab in the background skips the minute poll and holds notices; opening it reruns every read at once. The minute poll is otherwise unchanged.</p>
+      <p><strong>Failure mode.</strong> A change can take up to about 5 s longer to appear. A change to a base mapped to "none" (an Artist's name or contact) shows on the next minute poll or reload, as names and contacts did before.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>The Deck runs on Cloudflare Workers Paid, so the free plan CPU limit no longer stops it<span class="kind">The Deck &middot; failure &middot; Cloudflare account Workers Paid (renews 2026-11-03), wrangler.jsonc (no limits.cpu_ms), d37, 2026-10-03-deck-server-overloaded-screen.md &middot; <a href="https://github.com/junyanboon/deck-app/pull/210">deck-app #210</a></span></h3></summary>
+      <p>Junyan: &ldquo;I upgrade cloudflare so it now runs on a paid plan&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-03 the Deck kept failing: 12:02 to 12:09 Toronto, Cloudflare stopped 113 of 185 <code>/api/tool</code> reads with "Worker exceeded CPU time limit" (503) at 10 to 15 ms of CPU, the Workers Free limit. Junyan upgraded the Cloudflare account to Workers Paid the same day (d37).</p>
+      <p><strong>Failure mode.</strong> Workers Paid gives every Worker on the account 30 seconds of CPU per request by default, so no config change was needed: <code>wrangler.jsonc</code> sets no <code>limits.cpu_ms</code>, and that setting is only for going above 30 seconds (up to 5 minutes). Live check, wrangler tail, 2026-10-03 16:59 to 17:04 Toronto: 177 requests, none stopped for CPU, 60 of them above 10 ms (up to 68 ms). From now on an <code>exceededCpu</code> 503 or a 1102 error on the Deck is not the free plan; look at the request itself (a runaway loop or a very large read). The 50 subrequests per request ceiling noted in <code>src/index.js</code> is also a free plan number; Paid allows far more. To go back to the free limits, downgrade the account plan in the Cloudflare dashboard.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-03</span>
       <h3>Treasurer flags every agreement that has ended, so the card goes to One-Off<span class="kind">The Treasurer &middot; route &middot; EVENT-GATE agreement_end.py, treasurer_sweep.py, move_sweep.py, library/autonomy.md, library/the-treasurer.md, library/close-pause-change-accounts.md, d56, d60, d61, d66 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/866">desk-correspondence #866</a></span></h3></summary>
       <p>Junyan: &ldquo;accounts are changed to one offs, they are never really closed. However agreements can end.&rdquo;</p>
@@ -1492,7 +1531,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <h3>The Deck says "Deck server overloaded, retrying" when Cloudflare stops it, not "problem reaching Notion"<span class="kind">The Deck &middot; failure &middot; deck-app sources/deck.html DeckAPI.call and errorHtml, test/overloaded-screen.test.js, d38 &middot; <a href="https://github.com/junyanboon/deck-app/pull/205">deck-app #205</a></span></h3></summary>
       <p>Junyan: &ldquo;d38 yes make th echange&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-03 the Messages and Charges tabs kept showing "Temporary problem reaching Notion". The live Worker log (12:02 to 12:09 Toronto) showed 113 of 185 <code>/api/tool</code> reads stopped by Cloudflare with "Worker exceeded CPU time limit" (503). Notion was fine; the screen blamed it because Cloudflare's error page is not JSON.</p>
-      <p><strong>Failure mode.</strong> A non-JSON 5xx from the Deck's own server now shows "Deck server overloaded, retrying" with a Try now button, and the Deck keeps retrying every minute as before. A network failure says the Deck server could not be reached. A Notion 429 ("Waiting on Notion") and a refused token ("token needs renewing") read as before. The overload itself is not fixed by this change (Cloudflare free plan CPU limit, d37).</p>
+      <p><strong>Failure mode.</strong> A non-JSON 5xx from the Deck's own server now shows "Deck server overloaded, retrying" with a Try now button, and the Deck keeps retrying every minute as before. A network failure says the Deck server could not be reached. A Notion 429 ("Waiting on Notion") and a refused token ("token needs renewing") read as before. The overload itself is not fixed by this change (Cloudflare free plan CPU limit, d37). Update: the account moved to Workers Paid the same day, see <code>2026-10-03-cloudflare-paid-plan.md</code>.</p>
     </details>
     </li>
     <li class="entry det">
