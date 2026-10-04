@@ -1278,6 +1278,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Treasurer key swap waits for running jobs; old backups with the Deck key get cleaned up<span class="kind">The Treasurer &middot; failure &middot; services/event-gate/hosting/stripe-key-apply.sh, purge-deck-key-backups.sh, deck-key-backups-vps.sh, library/the-treasurer.md, d63, d64 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/899">desk-correspondence #899</a></span></h3></summary>
+      <p>Junyan: &ldquo;63 yes, 64 yes&rdquo;</p>
+      <p><strong>Why.</strong> The first swap run gave up after 5 minutes because scheduled event-gate jobs were running, so event-gate stayed on the Deck key. About 20 old <code>event-gate.env</code> backups on the VPS also hold that key, which can take money.</p>
+      <p><strong>Route change.</strong> The swap now holds the queue and waits up to 30 minutes for running jobs, as the deployer does, with a line every minute. A new cleanup command lists the backups that hold the Deck key, asks for yes, and removes only those.</p>
+      <p><strong>Failure mode.</strong> If jobs are still running after 30 minutes, the swap stops with nothing changed. The cleanup refuses while event-gate still uses the Deck key, never touches the live env or non-backup files, and keeps the swap's own backup for a day.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>The waiting list on a held time slot asks the holder, starts a 48-hour clock, then hands Junyan the waiters<span class="kind">slot-waitlist (event-gate) &middot; route, cadence &middot; services/event-gate/slot_waitlist.py, services/event-gate/hosting/install-slot-waitlist.sh, library/the-treasurer.md, library/desk-sort.md, d68, d69, d70, d71, d72, d73, d74, d75, d76, d77, d79, d80, d84, d85 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/898">desk-correspondence #898</a></span></h3></summary>
+      <p>Junyan: &ldquo;more like 48 hrs. That's why I haven't offered anything yet for Nada. Once I ask Khalid and Anita then it's go time.&rdquo;</p>
+      <p><strong>Why.</strong> People asking for a regular's slot were noted on the ⏳ Time Slot Board but nothing worked the list (Nada El Masriya, waiting on Khalid's and Anita Pandey's Wednesday slots).</p>
+      <p><strong>Route change.</strong> A new lane, every 30 minutes 08:00 to 22:59 Toronto once Junyan runs the installer, shadow until he switches it live. For a slot with waiters it queues one held "keep your slot?" ask to the holder; when Junyan sends it, the board's Decision By becomes Sent At plus 48 hours. While the holder's own ticket on the row is open, the holder keeps the slot and nothing is drafted; when it closes Lost or Done, the slot is released (d77; the Renew box is not read). If the holder keeps the slot, each waiter gets a held "renewed, here are the closest options" draft. If not, Junyan gets one Decision row with every waiter's card (value, history, stability signals, group fit) and the alternative studios, plus a held "still interested? reply by" draft per waiter. He picks; the Desk Sort drafts the held offer. Nothing is sent, booked or released by the lane.</p>
+      <p><strong>Failure mode.</strong> A failed board read writes nothing and marks the pass failed. A holder card that cannot be read waits for the next pass. Any write that does not read back is reported unverified.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>No lane reads the Renew box any more; an open Sales ticket is the renewal signal<span class="kind">treasurer (event-gate), first refusal (slot_holds) &middot; route &middot; d87, d88, d89, services/event-gate/slot_holds.py, services/event-gate/renewal_notices.py, services/event-gate/treasurer_sweep.py, services/event-gate/agreement_end.py, library/the-treasurer.md, library/house-rules.md, library/close-pause-change-accounts.md, d77, d81 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/897">desk-correspondence #897</a></span></h3></summary>
+      <p>Junyan: &ldquo;I don't know what the point of having this box ticked even is. I assess things based on whether the ticket is open&rdquo;</p>
+      <p><strong>Why.</strong> Junyan judges a renewal by whether the renter's ticket is open, not by the Artist card's <code>Renew</code> box (d77, d81).</p>
+      <p><strong>Route change.</strong> The first-refusal contract test keeps a holder on contract past their end date only while they have an open Sales ticket. Renewal notices no longer skip a renter with Renew ticked (an open ticket still files the "is the renewal under way?" row). The mid-month outlook lists every ending agreement and names each renter's open ticket. An ended agreement with an open Sales ticket files no "switch to One-Off" row (RENEWING, "waiting: open ticket"); a ticked Renew no longer files a "renewed" row on its own. The monthly board pass raises no TERM_LAPSED while the holder has an open Sales ticket (d88). Only Sales tickets count, never Customer Care (d87).</p>
+      <p><strong>Failure mode.</strong> A Sales ticket that cannot be read counts as open in the contract test (fail closed) and files the ended row with "Sales tickets unreadable" in the agreement-end pass.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-04</span>
