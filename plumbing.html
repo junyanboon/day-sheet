@@ -1281,6 +1281,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>Every held draft warns when Junyan already answered in the platform app<span class="kind">event-gate history check, The Concierge &middot; failure &middot; EVENT-GATE history_check.py, scripts/platform_app_log.py, library/concierge-orchestration.md [R-app-reply], d59, d60 &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;yes, i thought it was already built / no warning only&rdquo;</p>
+      <p><strong>Why.</strong> The "already answered in the app" guard lived only in <code>queue_draft.py</code>. The Concierge writes queue rows straight to Notion, so on 2026-10-04 it queued a yes to a Tagvenue guest 7 minutes after Junyan's app reply said no.</p>
+      <p><strong>Route change.</strong> The History Check sweep (every 5 minutes) now reads the Correspondence Log's platform app replies for every Pending Review SMS or Email row, whoever wrote it. A reply on the same Artist or Giggster thread at or after the guest's message (the ledger copy of Source Email, else the row's created time minus 24 h) adds a line to <code>History Check</code>: "Junyan answered in the &lt;Site&gt; app at &lt;time&gt;". The Concierge also re-runs <code>platform_app_log.py answered</code> right before its queue write, not only at triage.</p>
+      <p><strong>Failure mode.</strong> Warning only (d60): it never changes a Status or blocks Send. A Notion read error counts the row as failed and leaves its History Check text as it was. The reader ships in the image as <code>_canon/platform_app_log.py</code>; if it is missing every row fails and the sweep reports <code>ok: false</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>The rates lane finally runs every 5 minutes, replies held for a person<span class="kind">The Registrar &middot; cadence, route &middot; EVENT-GATE rates_sweep.py, hosting/install-rates-sweep.sh, library/autonomy.md, library/job-2-triage.md, d65 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/887">desk-correspondence #887</a></span></h3></summary>
       <p>Junyan: &ldquo;65 yes&rdquo;</p>
       <p><strong>Why.</strong> The rates lane was built on 2026-09-25 but never given a VPS timer, so it never ran and every price question fell to the Responder.</p>
