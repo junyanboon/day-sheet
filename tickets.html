@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a><a class="tabtab" href="messages.html">💬 Messages</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-04 08:59 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-04 09:15 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -476,7 +476,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <ul>
 <li>- d5 (2026-10-03, Junyan &quot;d5 yes&quot;): Desk Watch Section AS + 🧪 Live Tests card 3ee75032-81c4-8110-aa2b-c2a4d8336577 check the next back-to-back pair; first check 2026-10-04 09:30 Toronto. 150 closes when it passes.</li>
 </ul>
-</div></details></details></div><div class="job"><div class="jnum">#159</div><div class="jhead"><span class="emoji">🔁</span><h4>A program books a renter&#x27;s new weekly series once they say yes to renewing</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>From Ivanka&#x27;s renewal in September: she confirmed 13 Mondays and someone had to build them in Skedda by hand</li><li>Oct 4: Junyan said build it. Low risk: nobody is charged, and nothing is final until the agreement is signed</li><li>The program checks the room is free, books the same room, time and price on the confirmed dates, then hands over to Junyan to send the agreement</li><li>Also to write down: what happens after signing (renter&#x27;s page, the signed copy filed, the time slot board)</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Book a confirmed renewal series by program, then hand off to Junyan for the agreement</b></p><h2>Task</h2>
+</div></details></details></div><div class="job"><div class="jnum">#159</div><div class="jhead"><span class="emoji">🔁</span><h4>A program books a renter&#x27;s new weekly series once they say yes to renewing</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>From Ivanka&#x27;s renewal in September: she confirmed 13 Mondays and someone had to build them in Skedda by hand</li><li>Oct 4: Junyan said build it. Low risk: nobody is charged, and nothing is final until the agreement is signed</li><li>The program checks the room is free, books the same room, time and price on the confirmed dates, then hands over to Junyan to send the agreement</li><li>Also to write down: what happens after signing (renter&#x27;s page, the signed copy filed, the time slot board)</li><li>Oct 4: built and tested (pull request 882, checks pass). Practice mode only, not scheduled. For Ivanka it plans exactly the booking Junyan made</li><li>After signing: chasing the signature and filing the signed copy are already automatic. The renter&#x27;s page and the time slot board are still by hand</li><li>Waiting on Junyan: 5 decisions, including who fills in the &#x27;renter confirmed&#x27; form and when to switch it on</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Book a confirmed renewal series by program, then hand off to Junyan for the agreement</b></p><h2>Task</h2>
 
 <p>Ruling 2026-10-04 (Junyan, d6 on <b>155</b> candidate 8): &quot;yes you can build this.</p>
 <p>this is low risk as no one is billed yet and nothing is finalized until the agreement is signed. once this is done</p>
@@ -499,6 +499,49 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p><b>Resolves with:</b> PR merged and live (or Junyan rules it stays dry-run), and the handoff recorded here and in</p>
 <p>canon (<code>library/the-treasurer.md</code> § Renewals).</p>
+
+<h2>Progress (2026-10-04, Shipper)</h2>
+
+<p><b>PR:</b> https://github.com/junyanboon/desk-correspondence/pull/882 (open, not merged; CI <code>test</code> passed).</p>
+
+<p><b>Built:</b> <code>services/event-gate/renewal_series.py</code> with <code>POST /renewal-series</code>, <code>skedda_mcp_write.create_series</code>,</p>
+<p><code>hosting/install-renewal-series.sh</code>, a registry row (planned) and a plumbing change file. Canon: <code>library/the-treasurer.md</code></p>
+<p>§ Renewals 5a (the lane) and 5b (the handoff), and a bullet in <code>library/autonomy.md</code>.</p>
+<p>Input is one Action row with a <code>RENEWAL-SERIES-V1</code> line (artist, prior series, first, last, skips, count, source, Sales ticket).</p>
+<p>It copies the prior series (room, times, title, price) and books only if the prior series is Paid. Then it runs the two-source</p>
+<p>free check (Time Slot Board and live Skedda). If the same series is already on the calendar it adopts it, with no second booking.</p>
+<p>After that comes the dry run, then confirm, then a re-read of every date, then a handoff row for Junyan, then the input row is</p>
+<p>closed. A clash, stop or unverified write files one Review row for the Ops Lead, and an open unverified row blocks any second write.</p>
+<p>Shadow (the dry run only, no writes) is the default; <code>RENEWAL_SERIES=live</code> is Junyan&#x27;s switch.</p>
+
+<p><b>Tests:</b> 43 new tests pass, and so does the full event-gate suite (7132). The canon check, plumbing check and registry</p>
+<p>validate are clean, and CI passed.</p>
+
+<p><b>Ivanka against 121348646:</b> Planned create: space 563327 (509A), 2026-11-02 19:15 to 20:45, title &quot;Iyengar Yoga&quot;,</p>
+<p>holder 5327002, $67.80, paid, weekly until 2027-01-25, no skips. That gives 13 dates, Nov 2 to Jan 25, matching the</p>
+<p>recorded 121348646 (509A, Mondays 19:15 to 20:45, 13 dates, $67.80, Paid). The agreement fields equal the 09-22 packet</p>
+<p>($881.40 = 3 x $293.80, 19.5h, term Nov 1 2026 to Jan 31 2027, $150 rolls over). The fixture is built from the recorded</p>
+<p>facts; the Shipper has no Skedda read. On the live calendar the program should report ALREADY_BOOKED 121348646. To prove</p>
+<p>it: <code>docker exec event-gate python3 renewal_series.py --contract &#x27;&lt;her line&gt;&#x27;</code>.</p>
+
+<p><b>Handoff (plain words):</b></p>
+<p>| Step | Who does it today |</p>
+<p>|---|---|</p>
+<p>| Book the series | This program, once Junyan turns it live |</p>
+<p>| Tell Junyan | One Action row &quot;series booked, send the agreement&quot;, with the series id and the agreement fields filled in |</p>
+<p>| Send the agreement | Junyan, from Dropbox Sign |</p>
+<p>| Notice it was sent and chase the signature | Code, already live: the chase sweep |</p>
+<p>| Signed PDF to Drive and 📎 Docs, plus the 223 draft | Code, already live: DocIntake (send-engine), last seen 2026-10-02 |</p>
+<p>| Artist page (end date, Renew) | Junyan or the desk; a small follow-up build could do it |</p>
+<p>| Time Slot Board Term End | Junyan or the desk; a small follow-up build could do it |</p>
+
+<p><b>Open questions for Junyan:</b> (1) Skedda emails the renter its own booking confirmation when the series is made. Is that OK?</p>
+<p>(2) Should the new series be marked Paid, like 121348646 (the SOP lock, no money moves)? (3) Which lane files the confirmation</p>
+<p>row: the Responder, or an attended session only? (4) Deploy, schedule and turn on live? (5) Build the follow-up for the Artist</p>
+<p>end date, Renew and the Board Term End?</p>
+
+<p><b>Not verified:</b> a live read of 121348646 (exact title and custom fields); whether Skedda&#x27;s confirmation email for a Paid</p>
+<p>series carries any pay link; the times across the DST change (reads are venue-local, but this is untested live).</p>
 </div></details></details></div></div>
 <div class="col"><h3>🟢 Ready to start<span class="cnt">23</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
@@ -21019,5 +21062,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-10-04 08:59 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-10-04 09:15 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
