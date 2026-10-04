@@ -1278,6 +1278,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>The Deck bills the Skedda account email only, and the address pickers are gone<span class="kind">The Deck &middot; route, failure &middot; deck-app src/charge.js preview, src/recipient-fix.js, src/contacts.js, sources/deck.html, d75, d76, d77 (replaces d7, deck-app #193) &middot; <a href="https://github.com/junyanboon/deck-app/pull/217">deck-app #217</a></span></h3></summary>
+      <p>Junyan: &ldquo;It should always match what is on Skedda so this shouldn't be changeable.&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-10-04, after Kyle FitzGerald's Charge box offered his Skedda login and a second Stripe customer email. d75 ("yes") replaces his 2026-10-01 ask for a Bill to dropdown (d7). d76: platform bookings sit under a casual Skedda user with no email. d77: the message-card address picker "seems useless at this time so we can drop this".</p>
+      <p><strong>Route change.</strong> Charged and Send invoice bill the email on the Skedda login that holds the booking, shown as plain text in the confirm box. No Artist page or Stripe customer fallback, and no Stripe name search. A bill-to the page sends that differs is refused, and a confirm whose email does not match is refused. A row naming no Skedda booking (door signs, hand-billed items) still bills the Artist page email. Message cards no longer show "Other addresses / numbers"; the blocked-recipient fixes stay.</p>
+      <p><strong>Failure mode.</strong> A booking whose Skedda account has no email is refused: "No email on the Skedda account ... bill it from Skedda (Send invoices)." Bookings on two Skedda accounts with different emails are refused. A Skedda email that is a platform relay is refused. Nothing is taken in any of these.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
@@ -1819,7 +1829,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <h3>The Desk Hand reads one personal Gmail label, Business Correspondence<span class="kind">Desk Hand &middot; tool, route &middot; library/house-rules.md § Mailbox scope, library/landlord-contractor-visit.md, follows PR 851, d44 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/852">desk-correspondence #852</a></span></h3></summary>
       <p>Junyan: &ldquo;d44 can you make it for me?&rdquo;</p>
       <p><strong>Why.</strong> Landlord mail reaches Junyan at his personal address and he cannot reply to it from the business mailbox ("it's tricky because I can't reply from my business email."), so the forward route from PR 851 did not fit.</p>
-      <p><strong>Route change.</strong> The attended Desk Hand may read <code>junyan.boon@gmail.com</code> only through searches that include <code>label:"Business Correspondence"</code>, read only. A Gmail filter labels everything from <code>lennard.com</code>; Junyan labels anything else by hand. The desk never sends, drafts, labels, archives or deletes there; replies stay with Junyan from his own account, worded by the desk in chat. Robots, cloud triggers and scheduled runs stay barred from that mailbox.</p>
+      <p><strong>Route change.</strong> The attended Desk Hand may read <code>junyan.boon@gmail.com</code> only through searches that include <code>label:"Business Correspondence"</code>, read only. A Gmail filter (saved by Junyan 2026-10-04) labels everything from <code>lennard.com</code>, <code>serruyaequity.com</code> and two landlord addresses at <code>yogenfruz.com</code>, and skips the inbox, so that mail lives under the label; Junyan labels anything else by hand. The desk never sends, drafts, labels, archives or deletes there; replies stay with Junyan from his own account, worded by the desk in chat. Robots, cloud triggers and scheduled runs stay barred from that mailbox.</p>
       <p><strong>Failure mode.</strong> Unlabelled mail is invisible to the desk. If a visit is mentioned and neither the studio mailbox nor the label has it, the desk asks Junyan rather than assuming there was no request.</p>
     </details>
     </li>
