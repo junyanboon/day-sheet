@@ -1281,6 +1281,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>Unpaid-booking review updates its own row when a booking moves, no second row<span class="kind">unpaid-review &middot; route, failure &middot; EVENT-GATE unpaid_review.py, plan_allowance_sweep.py, d82, d83, d84 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/909">desk-correspondence #909</a></span></h3></summary>
+      <p>Junyan: &ldquo;d82 yes d83 yes d84 yes&rdquo;</p>
+      <p><strong>Why.</strong> The review's row key is the Skedda booking number plus its start time, so a moved booking got a new key and a second Actions row (Kyle FitzGerald and Caryl Cuizon). Plan renters skipped the old-row search entirely, and an earlier row of Type Review was never matched by booking number (the new search covers both).</p>
+      <p><strong>Route change.</strong> Before the plan branch, the review looks for its own earlier row by booking number, whatever its Type. One open row of its own under an old key is updated in place: title and key, Booking ref, an evidence line ("moved X to Y, price A to B") and Amount set to the new Skedda price, read back, and the new key recorded against the same row. A prepaid-plan row instead clears Amount and goes back to Type Review so the prepaid-hours bot recalculates (d83). The prepaid-hours bot now treats "Won't Do" rows as closed when it checks for duplicates (d84). Recurring bookings keep one row per date.</p>
+      <p><strong>Failure mode.</strong> A row a person made, a ticket owns or that is already Ruled is never rewritten: the run records a Review finding "booking moved: row says X, Skedda says Y" and makes no new row. A closed earlier row (Processed, Cancelled, Won't Do) means no new row. A readback mismatch stops the write and records nothing. Off switch: <code>UNPAID_REVIEW_LIVE</code> unset stops the whole review.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Waiting-list lane stops at a time budget; its installer turns the timer on first<span class="kind">event-gate &middot; failure &middot; EVENT-GATE slot_waitlist.py, /slot-waitlist, hosting/install-slot-waitlist.sh, d75 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/905">desk-correspondence #905</a></span></h3></summary>
+      <p>Junyan: &ldquo;75 yes&rdquo;</p>
+      <p><strong>Why.</strong> The first shadow pass at install ran past the installer's 270 second wait, and the script stopped before it switched the 30-minute timer on.</p>
+      <p><strong>Route change.</strong> None. The lane stays shadow (reads, writes nothing) until <code>SLOT_WAITLIST=live</code>.</p>
+      <p><strong>Failure mode.</strong> A pass now stops at about 230 seconds and lists the board rows it did not reach (<code>incomplete</code>); a row whose reads ran past the budget is dropped, never written on half-read facts. Ticket bodies are read only as far as the waiter cards need; a failed Skedda history read is tried once a pass, bounded to 60 seconds and to what is left of the budget. Each pass starts one board row further on, so one slow row cannot starve the rest. The installer enables the timer before the first pass, and a slow first pass prints a warning instead of ending the install.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>A free short tour is typed Studio Viewing on every path, so it never gets a rental End-of-Booking text<span class="kind">The Registrar, The Host &middot; route, failure &middot; services/event-gate/booking_sweep.py, services/event-gate/host_sweep.py, library/queue-fbs-messages.md, library/support-ladder.md, d60 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/904">desk-correspondence #904</a></span></h3></summary>
       <p>Junyan: &ldquo;d60 yes&rdquo;</p>
       <p><strong>Why.</strong> A renter's free 15-minute booking titled "Tour" was seeded Pending by the Planner, then the Host typed it FBS because it only looked for the word "viewing". The End-of-Booking lane sent a rental text and a rental thank-you row was made. The $0 tour rule only ran when the Registrar created the row itself.</p>
