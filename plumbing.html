@@ -1281,6 +1281,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>A free short tour is typed Studio Viewing on every path, so it never gets a rental End-of-Booking text<span class="kind">The Registrar, The Host &middot; route, failure &middot; services/event-gate/booking_sweep.py, services/event-gate/host_sweep.py, library/queue-fbs-messages.md, library/support-ladder.md, d60 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/904">desk-correspondence #904</a></span></h3></summary>
+      <p>Junyan: &ldquo;d60 yes&rdquo;</p>
+      <p><strong>Why.</strong> A renter's free 15-minute booking titled "Tour" was seeded Pending by the Planner, then the Host typed it FBS because it only looked for the word "viewing". The End-of-Booking lane sent a rental text and a rental thank-you row was made. The $0 tour rule only ran when the Registrar created the row itself.</p>
+      <p><strong>Route change.</strong> When the Registrar finds a board row already there for a $0 tour of 30 minutes or less, it retypes the row Studio Viewing (EOB Will Not Send) and says so in the Why, unless the Why names a Support Override. The Host's ladder reads the row's Skedda booking and applies the same rule. A Studio Viewing row draws no End-of-Booking text.</p>
+      <p><strong>Failure mode.</strong> If the Host's Skedda read fails or comes back blind, the row stays Pending (unknown is not zero) and shows on the Host report. If the Registrar's retype write fails, it files one Review Action and carries on.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Offsite Drive sign-in works with the VPS's rclone 1.60<span class="kind">Offsite Drive backup (VPS) &middot; failure &middot; services/offsite-drive/offsite_drive.py, services/offsite-drive/tests/fake_rclone.py, d22 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/906">desk-correspondence #906</a></span></h3></summary>
+      <p>Junyan: &ldquo;d22 yes&rdquo;</p>
+      <p><strong>Why.</strong> <code>offsite-drive sign-in</code> stopped before showing the Google link: Ubuntu's rclone 1.60 on the VPS refused the padded <code>{"scope":"drive.file"}</code> setting ("illegal base64 data at input byte 30"). It had only been tried with rclone 1.74 on the Mac.</p>
+      <p><strong>Route change.</strong> No message route changes. The sign-in now passes the same setting without the trailing <code>==</code>, which both rclone 1.60 and 1.74 accept. It still asks Google for the drive.file scope only.</p>
+      <p><strong>Failure mode.</strong> Unchanged: a sign-in that does not finish writes nothing. The test stand-in for rclone now refuses a padded setting the way 1.60 does, so this cannot come back unnoticed.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Renewal-series and chase-sweep installers switch the timer on before the first pass<span class="kind">event-gate &middot; failure &middot; hosting/install-renewal-series.sh, hosting/install-chase-sweep.sh, d91 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/908">desk-correspondence #908</a></span></h3></summary>
+      <p>Junyan: &ldquo;d91 yes&rdquo;</p>
+      <p><strong>Why.</strong> The slot-waitlist install showed that a slow first pass under <code>set -e</code> ends the script before the timer is switched on. These two installers had the same order.</p>
+      <p><strong>Route change.</strong> None. Both timers are already installed; their units and cadence are unchanged, so no rerun is needed.</p>
+      <p><strong>Failure mode.</strong> On a future rerun, the timer is enabled first, and a slow or failed first pass prints a WARNING instead of stopping the install. For the chase sweep this means the timer no longer waits for a clean dry run before it is switched on.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>Renewal series booker no longer stops on a Skedda series with no title<span class="kind">The Treasurer &middot; failure &middot; EVENT-GATE renewal_series.py, renewal_plan.py, wayfinder 159 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/900">desk-correspondence #900</a></span></h3></summary>
       <p><strong>Why.</strong> The first live practice check on Ivanka Moskaliuk stopped with "prior series has no title (a blind read?)": most live series have a null or empty title, and her activity lives in the booking form field.</p>
       <p><strong>Route change.</strong> A null or empty title is copied as empty and counts as the same title either way; the booking form fields (T&amp;C box, attendees, activity) are copied into the new series and checked when deciding a series is already booked. Blindness is still judged by holder, room and price.</p>
