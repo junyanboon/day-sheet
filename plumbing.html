@@ -1281,6 +1281,67 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>The Treasurer gets its own read-only Stripe key back; the Deck keeps the write key<span class="kind">The Treasurer &middot; failure &middot; services/event-gate/hosting/swap-stripe-read-key.sh, stripe-key-apply.sh, library/the-treasurer.md, d53, d54, d60 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/893">desk-correspondence #893</a></span></h3></summary>
+      <p>Junyan: &ldquo;60 yes&rdquo;</p>
+      <p><strong>Why.</strong> event-gate was reading Stripe with the Deck-App key, which can take money since d53/d54, although every Stripe call in event-gate is a read. A no-change probe and a search of every VPS service, timer and container on 2026-10-04 found no Stripe write anywhere outside the Deck.</p>
+      <p><strong>Route change.</strong> None in the code. A one-command swap puts event-gate on its own read-only key: it tests the key refuses every write, refuses the Deck key, backs up <code>event-gate.env</code>, recreates event-gate and proves a Treasurer read.</p>
+      <p><strong>Failure mode.</strong> If the new key cannot read, or event-gate does not come back healthy, the script puts the old <code>event-gate.env</code> back and recreates event-gate. A read-only key that misses a scope makes the Treasurer stop with its usual BLOCKED row, never a wrong answer.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>A signed renewal moves the Artist's end date and the Time Slot Board Term End forward<span class="kind">The Treasurer &middot; route &middot; EVENT-GATE renewal_signed.py, POST /renewal-series, library/the-treasurer.md 5c, wayfinder 159, d12 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/886">desk-correspondence #886</a></span></h3></summary>
+      <p>Junyan: &ldquo;yes&rdquo;</p>
+      <p><strong>Why.</strong> After a renter signed a renewal, a person moved the Agreement End Date and the board's Term End by hand (Ivanka Moskaliuk, 2026-09-22).</p>
+      <p><strong>Route change.</strong> When DocIntake files the signed agreement with the same term as the renewal handoff row, the pass sets the Artist page Agreement End Date and the renter's one Time Slot Board row Term End, reads both back and closes the handoff row.</p>
+      <p><strong>Failure mode.</strong> A different term, an unclear board row or a card that is not Active Fixed Option is one Review row for the Ops Lead and nothing is written. <code>RENEWAL_SIGNED=off</code> stops it; the default <code>shadow</code> writes nothing; <code>live</code> is Junyan's switch.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>The Responder drafts a renewal series confirmation; only Junyan's Confirm releases it<span class="kind">The Responder &middot; route, tool &middot; scripts/renewal_confirm_draft.py, library/the-responder.md, library/the-treasurer.md § 5a, wayfinder 159, d10 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/888">desk-correspondence #888</a></span></h3></summary>
+      <p>Junyan: &ldquo;let's come up with another way that doesn't go through sessions&rdquo;</p>
+      <p><strong>Why.</strong> The renewal series booker needs one confirmation row per renewal, and Junyan wanted it filed without a session.</p>
+      <p><strong>Route change.</strong> When a Fixed Option renter says yes to the dates the desk listed, with every holiday answered, the Responder runs <code>renewal_confirm_draft.py --apply</code>, which files one ✅ Action at Status <code>Drafted</code>. The booking program skips <code>Drafted</code>. The row shows as a card on the Deck's Sales entry. Confirm moves it to <code>Pending Review</code>, which the program books; Decline moves it to <code>Won't Do</code>.</p>
+      <p><strong>Tool change.</strong> The card's room, times and price are read live from the prior Skedda series with the booking program's own plan (<code>renewal_plan.py</code>). The cloud Responder reads it through a new read-only <code>POST /renewal-series/plan</code> on event-gate with its own <code>RENEWAL_PLAN_TOKEN</code>, which opens that route only. A quoted price that differs is shown beside it as a warning.</p>
+      <p><strong>Failure mode.</strong> A failed Skedda read, or a prior series the booker would refuse, drafts nothing. Anything unclear: no row, the Responder asks the renter as before. A failed Notion read files nothing. A second draft for the same renter or message exits 3 and writes nothing.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>A regular's standing slot is held past their entered series (first right of refusal)<span class="kind">greeter-sweep, The Concierge, The Responder &middot; route, failure &middot; services/event-gate/slot_holds.py, services/event-gate/greeter_sweep.py, library/house-rules.md, library/response-resolver.md, d62, d63, d64, d65, d66, d67 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/891">desk-correspondence #891</a></span></h3></summary>
+      <p>Junyan: &ldquo;yes we give them first right of refusal. So this needs to be checked and flagged on the timeslot db.&rdquo;</p>
+      <p><strong>Why.</strong> Skedda only carries a regular's weekly series to their contract end, so a far-off date looked free (CelestialSand Productions, Tagvenue, Studio 527, Mon May 3 2027, on Enrico's and Avante's Monday slots).</p>
+      <p><strong>Route change.</strong> Availability now also reads the ⏳ Time Slot Board. On a date past a held row's Term End, a holder on a contract (Fixed Option, plan running, from their Artist card) makes it a first-refusal clash: the Greeter holds no room on Skedda and the held reply says the time is already booked and asks for another day or time, never naming the regular. A holder with no contract does not block; the reply stays held with an owner note on top and no automatic Skedda hold. Both cases add a dated Notes line on the board row. The Concierge and the Responder run the same check with <code>slot_holds.py check</code> and add the asking ticket under Interested.</p>
+      <p><strong>Failure mode.</strong> If the board read fails, availability is "unknown", never free, and the Greeter does not hold the room. If a holder's card cannot be read, the holder counts as on a contract. Switch off with <code>SLOT_HOLDS=off</code> on the event-gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Platform Watch links the renter's Artist on every app reply it logs<span class="kind">Platform Watch &middot; route, failure &middot; scripts/platform_app_log.py artist, fleet/platform-watch/RUNBOOK.md, d76 &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;yes&rdquo;</p>
+      <p><strong>Why.</strong> Platform Watch linked a Log row's Artist only through a Contact Point, so a Giggster renter whose Contact Point had no Artist got app replies logged with none, and they missed his card and thread.</p>
+      <p><strong>Route change.</strong> Before each Log row, Platform Watch runs <code>platform_app_log.py artist</code>. It tries Contact Points (thread id, relay number, Tagvenue address), then the relay number on an Artist card's Phone, then the Artist named "&lt;name&gt; [Site]". Each step must find exactly one Artist.</p>
+      <p><strong>Failure mode.</strong> No match or two matches: Artist stays blank and the Subject ends "(no Artist match)". A Notion read error: the message is not logged that pass and the run names it under problems.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Sales gets its own Deck sidebar entry, with renewal confirmations on top<span class="kind">The Deck &middot; route &middot; deck-app src/renewals.js, src/renewal-confirm.js, GET /api/renewals, notion-update-page renewal_decision, desk-correspondence scripts/renewal_confirm_draft.py, wayfinder 159, d10 &middot; <a href="https://github.com/junyanboon/deck-app/pull/214">deck-app #214</a></span></h3></summary>
+      <p>Junyan: &ldquo;I want to move the sales tab onto a new left side bar tab only for sales questions like this&rdquo;</p>
+      <p><strong>Why.</strong> A renewal the renter confirmed needs Junyan's yes before the booking program books it, and he wanted that on the Deck, not in a session.</p>
+      <p><strong>Route change.</strong> Sales leaves the Actions entry for its own desktop sidebar entry. On top it lists the Responder's drafted renewal confirmations (✅ Actions at Status <code>Drafted</code>). Junyan can fix the dates, then Confirm (to <code>Pending Review</code>, which the booking program reads) or Decline (to <code>Won't Do</code>). Both go through the Deck's usual Notion write, owner only, with a signed receipt. The open Sales tickets follow below, unchanged.</p>
+      <p><strong>Failure mode.</strong> A refused or failed write changes nothing and says why on the toast. A read that fails shows "Could not read renewal confirmations" above the tickets.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>An app or web reply logged without an Artist now shows on the renter's thread<span class="kind">Correspondence render, Platform Watch &middot; failure &middot; scripts/correspondence_render.py, scripts/notion_log_ingest.py, d61 &middot; desk-correspondence</span></h3></summary>
       <p>Junyan: &ldquo;yes&rdquo;</p>
       <p><strong>Why.</strong> When Platform Watch writes a Correspondence Log row with no Artist, the ingest names the message after the row's Subject ("&lt;name or relay number&gt; — giggster app reply", "— web reply"). Those replies rendered in a thread of their own: a Giggster renter's 5 app replies on 2026-10-02 and 03, and 6 Peerspace web replies since 2026-09-24.</p>
