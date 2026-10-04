@@ -1281,6 +1281,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>An app or web reply logged without an Artist now shows on the renter's thread<span class="kind">Correspondence render, Platform Watch &middot; failure &middot; scripts/correspondence_render.py, scripts/notion_log_ingest.py, d61 &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;yes&rdquo;</p>
+      <p><strong>Why.</strong> When Platform Watch writes a Correspondence Log row with no Artist, the ingest names the message after the row's Subject ("&lt;name or relay number&gt; — giggster app reply", "— web reply"). Those replies rendered in a thread of their own: a Giggster renter's 5 app replies on 2026-10-02 and 03, and 6 Peerspace web replies since 2026-09-24.</p>
+      <p><strong>Route change.</strong> The thread render reads the name or relay number before the " — ... reply" tail and files the message on the matching Artist (by name, or by phone for a relay number).</p>
+      <p><strong>Failure mode.</strong> A reply whose name or number matches no Artist keeps its own thread, as before. The missing Artist link on the Log row itself is not fixed here.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>Every held draft warns when Junyan already answered in the platform app<span class="kind">event-gate history check, The Concierge &middot; failure &middot; EVENT-GATE history_check.py, scripts/platform_app_log.py, library/concierge-orchestration.md [R-app-reply], d59, d60 &middot; desk-correspondence</span></h3></summary>
       <p>Junyan: &ldquo;yes, i thought it was already built / no warning only&rdquo;</p>
       <p><strong>Why.</strong> The "already answered in the app" guard lived only in <code>queue_draft.py</code>. The Concierge writes queue rows straight to Notion, so on 2026-10-04 it queued a yes to a Tagvenue guest 7 minutes after Junyan's app reply said no.</p>
@@ -1385,6 +1395,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> Traefik warned that a header named <code>X_Auth_User</code> could pass as <code>X-Auth-User</code> to services that treat the two alike (Junyan d39).</p>
       <p><strong>Route change.</strong> No message route changes. The script and its checks are in this repo; Junyan runs it on the VPS. After it runs, both entry points delete any request header whose name has a character other than a letter, digit or dash. The request itself still goes through.</p>
       <p><strong>Failure mode.</strong> A service that relied on a header with an underscore or dot in its name would stop receiving it; none of the studio's do. The script checks every public endpoint after the change and puts the old file back by itself if any answers differently. Rollback by hand: restore <code>docker-compose.yml.before-alias-headers</code> in <code>/docker/traefik</code> and run <code>docker compose up -d</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-03</span>
+      <h3>Our own read-only Stripe connector on the VPS replaces the one that keeps dropping<span class="kind">stripe-mcp &middot; tool, failure &middot; services/stripe-mcp/, library/gotchas.md, library/the-treasurer.md, d42, d43, d45, d59 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/848">desk-correspondence #848</a></span></h3></summary>
+      <p>Junyan: &ldquo;stripe disconnects every couple of days. We may need another solution&rdquo;</p>
+      <p><strong>Why.</strong> Stripe's hosted connector signs in with a Stripe session that ends every few days, and the desk loses Stripe until someone reconnects it. Junyan asked for our own connector (d42, d43). It has its own read-only Stripe key in its own file (d45, d59), because the shared event-gate key can write.</p>
+      <p><strong>Route change.</strong> Sessions, Codex and any cloud trigger Junyan adds it to read Stripe through <code>stripe-mcp.srv1948070.hstgr.cloud/mcp</code> (12 read tools, including subscription schedules and the upcoming invoice preview). It uses its own restricted key "stripe-mcp (read)", saved only after a no-change test proves every write is refused. <code>install.sh --rotate</code> swaps the key.</p>
+      <p><strong>Failure mode.</strong> If the key is missing, unreadable or not a restricted key, the service refuses to start and <code>/health</code> fails. A failed Stripe read returns an error, never an empty answer. To turn it off, stop the <code>stripe-mcp</code> container; nothing else depends on it.</p>
     </details>
     </li>
     <li class="entry alert">
