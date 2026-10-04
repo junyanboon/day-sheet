@@ -1281,6 +1281,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>The rates lane finally runs every 5 minutes, replies held for a person<span class="kind">The Registrar &middot; cadence, route &middot; EVENT-GATE rates_sweep.py, hosting/install-rates-sweep.sh, library/autonomy.md, library/job-2-triage.md, d65 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/887">desk-correspondence #887</a></span></h3></summary>
+      <p>Junyan: &ldquo;65 yes&rdquo;</p>
+      <p><strong>Why.</strong> The rates lane was built on 2026-09-25 but never given a VPS timer, so it never ran and every price question fell to the Responder.</p>
+      <p><strong>Route change.</strong> <code>danceannex-rates-sweep.timer</code> calls <code>/rates-sweep</code> every 5 minutes. A plain standard-rates question gets one reply from the How to Respond card "Pricing: standard rates question", queued at Pending Review for a person to send. Only a person's reply makes it stand down (d63).</p>
+      <p><strong>Failure mode.</strong> A missing or unfillable card files one Review row and queues nothing. <code>RATES_SWEEP_DISABLED=1</code> stops it; <code>systemctl disable --now danceannex-rates-sweep.timer</code> removes the schedule.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>A confirmed Fixed Option renewal books its own Skedda series, then hands Junyan the agreement<span class="kind">The Treasurer &middot; route, cadence, tool &middot; EVENT-GATE renewal_series.py, POST /renewal-series, skedda_mcp_write.create_series, library/the-treasurer.md, library/autonomy.md, wayfinder 159, d6 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/882">desk-correspondence #882</a></span></h3></summary>
       <p>Junyan: &ldquo;yes you can build this. this is low risk as no one is billed yet and nothing is finalized until the agreement is signed&rdquo;</p>
       <p><strong>Why.</strong> Between "renter confirmed the dates" and "agreement sent" a person had to book the new recurring series by hand (Ivanka Moskaliuk, series 121348646, 2026-09-21).</p>
