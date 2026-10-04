@@ -1278,6 +1278,45 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Renewal series booker no longer stops on a Skedda series with no title<span class="kind">The Treasurer &middot; failure &middot; EVENT-GATE renewal_series.py, renewal_plan.py, wayfinder 159 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/900">desk-correspondence #900</a></span></h3></summary>
+      <p><strong>Why.</strong> The first live practice check on Ivanka Moskaliuk stopped with "prior series has no title (a blind read?)": most live series have a null or empty title, and her activity lives in the booking form field.</p>
+      <p><strong>Route change.</strong> A null or empty title is copied as empty and counts as the same title either way; the booking form fields (T&amp;C box, attendees, activity) are copied into the new series and checked when deciding a series is already booked. Blindness is still judged by holder, room and price.</p>
+      <p><strong>Failure mode.</strong> Unchanged: anything that does not match is a clash or stop row for the Ops Lead, nothing booked.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Prepaid-hours bot holds only overlapping bookings, cards the rest<span class="kind">plan-allowance-sweep &middot; route, failure &middot; EVENT-GATE plan_allowance_sweep.py, plan_allowance_receiver.py, skedda-cli skedda/plan_allowance.py, d71, d79 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/903">desk-correspondence #903</a></span></h3></summary>
+      <p>Junyan: &ldquo;overlapping charegs shouldn't block the deck from setti gup these charges.&rdquo;</p>
+      <p><strong>Why.</strong> One overlap between two of an AAP renter's bookings stopped the renter's whole month with "Overlapping member bookings", so four days of extra time got no charge cards.</p>
+      <p><strong>Route change.</strong> The Skedda helper (skedda-cli, live once its overlay script <code>deploy-overlap-holds-only-overlap.sh</code> is run) still allocates the month's four hours in booking order, but an overlap now holds only the overlapping bookings (an ask card naming both) and any later booking whose prepaid share depends on how the overlap is fixed. A later booking is decided when every way of fixing the overlap gives it the same prepaid minutes (counting the overlap from nothing up to in full): past the four hours either way it gets its charge card, covered either way it is settled. The event-gate bot now files the overlap stop as an ask card (it was a technical-stop note), puts the charge card back on a row whose card an earlier hold wrote over, and cards the leftover of a part-covered booking that already has a verified receipt (d79) instead of stopping "Helper preview has no receipt to file".</p>
+      <p><strong>Failure mode.</strong> Any other month-wide stop (a changed receipt on a booking outside the overlap, a price off the plan rate) still holds the month as before. The bot also prefers a fresh read of a row over its own stored copy, so a desk edit to a carded row no longer trips its revision check. Off switch: <code>PLAN_ALLOWANCE_RECEIVER</code> unset stops the whole bot.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>A One-Off invoice still open after 24 hours gets a Deck card, and the booking goes only on the owner's click<span class="kind">event-gate &middot; route, tool, failure &middot; services/event-gate/open_invoice_watch.py, chase_sweep.py, library/autonomy.md, deck-app open-invoice-cancel.js, d8 to d12 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/902">desk-correspondence #902</a></span></h3></summary>
+      <p>Junyan: &ldquo;I want a way for a human to be notified and for the human to make the call by clicking something on the deck.&rdquo;</p>
+      <p><strong>Why.</strong> Unpaid One-Off bookings sat on the calendar with nobody deciding. Junyan wants to be told and to decide with a click, never an automatic cancel.</p>
+      <p><strong>Route change.</strong> Every 30 minutes the open-invoice watch reads Stripe's open Skedda invoices sent 24 hours ago or more, matches them to Skedda dates and the Artist card, and for a One-Off or Self Serve renter files one card on the Deck's Charges tab (Review) and posts once to #desk-status. Cancel voids the invoice from the Deck; within 5 minutes event-gate re-reads Stripe and removes each single booking through <code>/cancel-unpaid-booking</code> with every guard, raises a staff Action for any series date, and holds a notice for the renter. Remind queues one held reminder on the chase sweep's chain; Keep leaves the chase sweep reminding every 2 days.</p>
+      <p><strong>Failure mode.</strong> A payment after the click wins: the row closes paid and nothing is cancelled. A booking that changed since the card, or a failed cancel, raises one staff Action and closes nothing. Stripe or Skedda unreadable changes nothing. Switches: <code>OPEN_INVOICE_WATCH=off|shadow|live</code> (shadow is the default and files nothing), <code>OPEN_INVOICE_CANCEL_DISABLED=1</code>, <code>OPEN_INVOICE_DISABLED=1</code>.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Charges tab gets the open-invoice card with Cancel, Keep and Remind<span class="kind">The Deck &middot; route, tool &middot; src/open-invoice-cancel.js, sources/deck.html, POST /api/charge/open-invoice/preview and /run, desk-correspondence open_invoice_watch.py, d8 to d12 &middot; <a href="https://github.com/junyanboon/deck-app/pull/216">deck-app #216</a></span></h3></summary>
+      <p>Junyan: &ldquo;I want a way for a human to be notified and for the human to make the call by clicking something on the deck.&rdquo;</p>
+      <p><strong>Why.</strong> A One-Off invoice still open 24 hours after it went out now waits for a person's decision on the Charges tab.</p>
+      <p><strong>Route change.</strong> The card sits in Review, with a red Urgent pill when the first date is under 24 hours away. Cancel shows every date it removes, voids the Stripe invoice and writes the line event-gate acts on; Keep and Remind write their own lines and move no money. After a click the card waits under Waiting on payment until event-gate closes it.</p>
+      <p><strong>Failure mode.</strong> A paid invoice is never voided (Stripe refuses, and the preview stops first). A void Stripe will not confirm writes nothing. Only Junyan's or Ela's session can press the buttons.</p>
+    </details>
+    </li>
     <li class="entry human">
     <details>
       <summary><span class="when">2026-10-04</span>
