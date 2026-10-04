@@ -1281,6 +1281,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>Stripe connector reads prices and Toronto dates; the Treasurer shares its one read-only key<span class="kind">stripe-mcp, The Treasurer &middot; tool, failure &middot; services/stripe-mcp/, services/event-gate/hosting/swap-stripe-read-key.sh, stripe-key-apply.sh, library/gotchas.md, library/the-treasurer.md, d61, d62 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/896">desk-correspondence #896</a></span></h3></summary>
+      <p>Junyan: &ldquo;62 yes&rdquo;</p>
+      <p><strong>Why.</strong> The Desk Hand's test found schedule phases gave only a price id, dates were raw Unix numbers, and long lists needed manual paging (d61). Junyan chose one read-only Stripe key for both the connector and the Treasurer instead of a second key (d62).</p>
+      <p><strong>Route change.</strong> stripe-mcp gains <code>get_price</code>, expands prices on subscriptions and schedule phases, adds a Toronto date next to every timestamp, and states the next page plainly. event-gate's <code>STRIPE_API_KEY</code> is copied from the connector's key file by <code>swap-stripe-read-key.sh</code> (no paste). <code>install.sh --rotate</code> changes the key in both places in one run, and both scripts run from <code>origin/main</code>.</p>
+      <p><strong>Failure mode.</strong> A key that can write, or lacks a read event-gate or the connector needs, stops before anything changes, and the check names the missing read. If event-gate does not come back healthy with the key, or a later step fails, the old <code>event-gate.env</code> is put back and event-gate recreated.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>Prepaid-hours bot ticks Verified when plan hours cover a booking<span class="kind">plan-allowance-sweep &middot; route, failure &middot; EVENT-GATE plan_allowance_sweep.py finish_action, deck-app skeddaNote, library/lanes.md, d68 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/894">desk-correspondence #894</a></span></h3></summary>
       <p>Junyan: &ldquo;d68 yes&rdquo;</p>
       <p><strong>Why.</strong> A booking fully covered by 1AP/AAP prepaid hours was closed Processed and Reconciled but never Verified, so the Deck kept it under "Closed but not paid, nobody has verified the payment" for 60 days.</p>
