@@ -1281,6 +1281,45 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>Prepaid-hours bot accepts a receipt filed against any record of the current agreement<span class="kind">plan-allowance-sweep &middot; failure &middot; EVENT-GATE plan_allowance_sweep.py verify_booking/recover, plan_allowance_receiver.py, plan_entitlement.current, d79, d80 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/910">desk-correspondence #910</a></span></h3></summary>
+      <p><strong>Why.</strong> A renter's Notion card links two records of the same current agreement (the filed PDF and a summary record; both cover the same term and agree). Receipts were filed against one; the reader now picks the other, so the part-covered leftover card from d79 stopped "Entitlement receipt mismatch".</p>
+      <p><strong>Route change.</strong> A receipt verifies when it names any record of the one current agreement (<code>read_entitlement</code> already stops when those records disagree on term, plan or rate). A carded part-covered row is re-checked each pass against the agreement records saved in its own journal entry, never against the entitlement another renter's row left behind in the same pass.</p>
+      <p><strong>Failure mode.</strong> A receipt naming a record outside the current agreement still stops "Entitlement receipt mismatch" (technical stop card). Off switch: <code>PLAN_ALLOWANCE_RECEIVER</code> unset stops the whole bot.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>The open-invoice card also covers an agreement renter's extra bookings<span class="kind">event-gate &middot; route &middot; services/event-gate/open_invoice_watch.py, library/autonomy.md, library/studio-tickets-bookings.md, d17 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/907">desk-correspondence #907</a></span></h3></summary>
+      <p>Junyan: &ldquo;Alison M actually has an invoice as she has extra bookings outside of her agreement.&rdquo;</p>
+      <p><strong>Why.</strong> The watch skipped anyone whose Account Status was not One-Off, so an agreement renter's unpaid extras (Alison M.'s three Sundays in 527) never got a card.</p>
+      <p><strong>Route change.</strong> The invoice decides now. Any open invoice Skedda made itself qualifies, because agreement hours are never billed that way (Fixed Option series are booked paid and billed by the agreement; 1AP/AAP hours are settled by the allowance robot and their excess is invoiced from the Deck). An active 1AP/AAP holder's card offers Keep and Remind only, with a staff Action, since the allowance may still cover the hours. Still shadow by default.</p>
+      <p><strong>Failure mode.</strong> Unchanged: nothing cancels without the owner's click, and a Stripe or Skedda read error changes nothing.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Offsite Drive sign-in reads rclone's settings blob, and says why when it fails<span class="kind">Offsite Drive backup (VPS) &middot; failure &middot; services/offsite-drive/offsite_drive.py, services/offsite-drive/tests/fixtures/rclone-1.60.1-authorize-with-blob.txt, d22 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/911">desk-correspondence #911</a></span></h3></summary>
+      <p>Junyan: &ldquo;d22 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-04 at 20:43 Junyan's sign-in reached Google and rclone got the code, but the script said "sign-in did not finish; nothing written". When <code>rclone authorize</code> is given a setting (we pass the drive.file scope), it prints a base64 settings blob holding the token, not the bare token. The script only read the bare token, so it threw a good sign-in away. This is how rclone 1.60.1 and current rclone both behave; it was never seen before because the padded setting stopped 1.60 earlier.</p>
+      <p><strong>Route change.</strong> No message route changes. The sign-in now reads the token from either form and writes it to <code>/etc/offsite-drive/rclone.conf</code> with scope drive.file, as before.</p>
+      <p><strong>Failure mode.</strong> A sign-in that does not finish still writes nothing, and now says why in brackets (rclone's exit code, no token block, an unreadable block, or no refresh_token) without showing the token. Tests replay the 1.60 output format.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>The open-invoice card explains a plan holder's Keep or Remind only card<span class="kind">The Deck &middot; route &middot; src/open-invoice-cancel.js, sources/deck.html, desk-correspondence open_invoice_watch.py &middot; <a href="https://github.com/junyanboon/deck-app/pull/218">deck-app #218</a></span></h3></summary>
+      <p>Junyan: &ldquo;Alison M actually has an invoice as she has extra bookings outside of her agreement.&rdquo;</p>
+      <p><strong>Why.</strong> The open-invoice watch now cards any invoice Skedda made itself, extras on an agreement account included. A renter on an active 1AP or AAP plan gets a card that cannot cancel, because the plan's hours may still cover the booking.</p>
+      <p><strong>Route change.</strong> That card says so and offers Keep and Remind; Cancel is refused with the same reason.</p>
+      <p><strong>Failure mode.</strong> None new: Keep and Remind move no money.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>Unpaid-booking review updates its own row when a booking moves, no second row<span class="kind">unpaid-review &middot; route, failure &middot; EVENT-GATE unpaid_review.py, plan_allowance_sweep.py, d82, d83, d84 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/909">desk-correspondence #909</a></span></h3></summary>
       <p>Junyan: &ldquo;d82 yes d83 yes d84 yes&rdquo;</p>
       <p><strong>Why.</strong> The review's row key is the Skedda booking number plus its start time, so a moved booking got a new key and a second Actions row (Kyle FitzGerald and Caryl Cuizon). Plan renters skipped the old-row search entirely, and an earlier row of Type Review was never matched by booking number (the new search covers both).</p>
@@ -1930,6 +1969,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> Junyan wants every studio lane able to run on Codex on his Mac when Claude is down (d77). Only the Concierge had run there, and the Codex runner trusted the model to obey the lease.</p>
       <p><strong>Route change.</strong> <code>codex-lane &lt;lane&gt;</code> now reads the lease with <code>scripts/lease_check.py &lt;lane&gt; --executor codex</code> before Codex starts; a lane not set to <code>codex</code> stops at once with the STOP line. The retired Mechanic left its list. On Codex, texts come from this repo's <code>messages/</code> copies instead of Phone.com (call logs, voicemail and sending stay unavailable), Notion calls go through python3 instead of the Notion connector, and Stripe, Slack posting and Skedda or alarm writes are handed back on the pass line for the next cloud pass or Junyan.</p>
       <p><strong>Failure mode.</strong> An unreadable lease stops the pass before Codex starts. Nothing runs on a schedule: a lane moved to Codex runs only when someone types <code>codex-lane &lt;lane&gt;</code>, so a lane left on <code>codex</code> after Claude is back stays quiet until <code>set-executor &lt;lane&gt; cloud</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-02</span>
+      <h3>HTR Lessons shows a lesson only once it has come up 3 times<span class="kind">The Deck &middot; route, failure &middot; src/examples.js listExamples / sightings, desk-correspondence #834, library/house-rules.md "HTR Lessons shows repeats only", library/job-3-reconcile.md &middot; <a href="https://github.com/junyanboon/deck-app/pull/204">deck-app #204</a></span></h3></summary>
+      <p>Junyan: &ldquo;anything that is a one-off can be auto-removed as it should only be pushed up to the HTR lessons if it has happened a few times&rdquo;</p>
+      <p><strong>Why.</strong> One-off reply examples and HTR suggestions filled the HTR Lessons page. Junyan ruled that only repeats belong there.</p>
+      <p><strong>Route change.</strong> A filing lane (the Desk Sort, the Concierge, the Custodian, the Responder) keeps one Sweep Feedback row per lesson and adds a <code>Seen again &lt;date&gt;: &lt;queue row id&gt; (&lt;lane&gt;)</code> line to "What the sweep did" each time the same situation comes back, instead of filing a second row. The row counts 1 plus one per such line. HTR Lessons lists an undecided reply example or HTR suggestion/proposal only at 3 or more, and the card says how many times it was seen. Design sessions, owner directives and notes Junyan kept for later still show at once. A Deck ruling or Undo keeps the <code>Seen again</code> lines.</p>
+      <p><strong>Failure mode.</strong> A lane that files a duplicate row instead of adding a line leaves both rows parked below 3, so the lesson stays off the page until someone merges them. The bar is <code>MIN_SIGHTINGS</code> in <code>src/examples.js</code>; set it to 1 to show every lesson again.</p>
     </details>
     </li>
     <li class="entry human">
