@@ -1281,6 +1281,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>Prepaid-hours bot ticks Verified when plan hours cover a booking<span class="kind">plan-allowance-sweep &middot; route, failure &middot; EVENT-GATE plan_allowance_sweep.py finish_action, deck-app skeddaNote, library/lanes.md, d68 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/894">desk-correspondence #894</a></span></h3></summary>
+      <p>Junyan: &ldquo;d68 yes&rdquo;</p>
+      <p><strong>Why.</strong> A booking fully covered by 1AP/AAP prepaid hours was closed Processed and Reconciled but never Verified, so the Deck kept it under "Closed but not paid, nobody has verified the payment" for 60 days.</p>
+      <p><strong>Route change.</strong> The amount-zero close now also sets <code>Verified</code>, <code>Verified at</code> and <code>Proof type = paid</code> in the same write. The bot has already read back the paid booking and a verified Plan Allowance Receipt, the same proof chase_sweep's paid closes tick Verified on. An excess (amount above zero) is unchanged: still Pending Review with a charge card.</p>
+      <p><strong>Failure mode.</strong> If Notion does not keep <code>Verified</code>, the read-back raises "Action Verified readback mismatch" and the pass reports the error instead of passing silently. Rows closed before this change are not touched. Off switch: <code>PLAN_ALLOWANCE_RECEIVER</code> unset stops the whole bot.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Deck drops the false "Skedda changed" price note on prepaid-hours rows<span class="kind">The Deck &middot; failure &middot; sources/deck.html skeddaNote, desk-correspondence plan_allowance_sweep.py, d68 &middot; <a href="https://github.com/junyanboon/deck-app/pull/215">deck-app #215</a></span></h3></summary>
+      <p>Junyan: &ldquo;d68 yes&rdquo;</p>
+      <p><strong>Why.</strong> A booking covered by 1AP/AAP prepaid hours keeps its price in Skedda but is paid, and the prepaid-hours bot sets the row's Amount to what is owed ($0 when covered). The Charges tab read the gap as a stale row and said "Skedda changed: now $X, the row still says $0.00".</p>
+      <p><strong>Failure mode.</strong> A row whose Basis carries <code>[PLAN-ALLOWANCE-RECEIVER-V1]</code> no longer gets the price note. The "Skedda no longer shows booking" note still shows on those rows, and every other row keeps the price note.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>The Treasurer gets its own read-only Stripe key back; the Deck keeps the write key<span class="kind">The Treasurer &middot; failure &middot; services/event-gate/hosting/swap-stripe-read-key.sh, stripe-key-apply.sh, library/the-treasurer.md, d53, d54, d60 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/893">desk-correspondence #893</a></span></h3></summary>
       <p>Junyan: &ldquo;60 yes&rdquo;</p>
       <p><strong>Why.</strong> event-gate was reading Stripe with the Deck-App key, which can take money since d53/d54, although every Stripe call in event-gate is a read. A no-change probe and a search of every VPS service, timer and container on 2026-10-04 found no Stripe write anywhere outside the Deck.</p>
