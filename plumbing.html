@@ -1281,6 +1281,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>A confirmed Fixed Option renewal books its own Skedda series, then hands Junyan the agreement<span class="kind">The Treasurer &middot; route, cadence, tool &middot; EVENT-GATE renewal_series.py, POST /renewal-series, skedda_mcp_write.create_series, library/the-treasurer.md, library/autonomy.md, wayfinder 159, d6 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/882">desk-correspondence #882</a></span></h3></summary>
+      <p>Junyan: &ldquo;yes you can build this. this is low risk as no one is billed yet and nothing is finalized until the agreement is signed&rdquo;</p>
+      <p><strong>Why.</strong> Between "renter confirmed the dates" and "agreement sent" a person had to book the new recurring series by hand (Ivanka Moskaliuk, series 121348646, 2026-09-21).</p>
+      <p><strong>Route change.</strong> An Action row carrying a <code>RENEWAL-SERIES-V1</code> line is read every 30 minutes (08:00 to 22:59 Toronto once scheduled). The program copies the prior series (room, times, title, price, Paid), checks the Time Slot Board and live Skedda on every date, books one series, re-reads it, closes the input row and files one "series booked, send the agreement" row for Junyan with the agreement fields filled.</p>
+      <p><strong>Failure mode.</strong> A clash, a stop or an unverified write is one Review row for the Ops Lead and nothing is booked. A rerun adopts a series already on the calendar and never books twice. <code>RENEWAL_SERIES=off</code> stops it; the default <code>shadow</code> reads and dry-runs only; <code>live</code> is Junyan's switch.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>A change notice from a Notion table the Deck does not show reruns none of its reads<span class="kind">The Deck &middot; cadence, failure &middot; deck-app sources/deck.html LIVE_READS, src/live.js classifyNotionEvent, test/live-refresh-what-changed.test.js, d64 &middot; <a href="https://github.com/junyanboon/deck-app/pull/213">deck-app #213</a></span></h3></summary>
+      <p>Junyan: &ldquo;d64 yes&rdquo;</p>
+      <p><strong>Why.</strong> The Deck's Notion connection is shared with many tables it never shows (QBO Invoices and QBO Payments among them). Their notices come in as "other", and "other" reran all four reads. On 2026-10-03 5:28 to 5:37 PM Toronto nearly every refresh reran all four (about 4 reads a refresh, 12.5 a minute).</p>
+      <p><strong>Cadence change.</strong> An "other" notice now reruns none of the four reads. Inbox, queue, history and Actions notices keep their targeted refresh, the 5 s bundle stays, and a notice with no kind (a reconnect) still reruns all four.</p>
+      <p><strong>Failure mode.</strong> If a change in a table the Deck does not show alters what one of its reads returns, it appears on the next minute poll or reload instead of within about 5 s.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>Lanes stop treating a robot text as "the desk already answered", one lane at a time<span class="kind">event-gate lanes &middot; failure, route &middot; EVENT-GATE inbound.reply_state, extension_sweep, credit_sweep, rates_sweep, wrongroom_sweep, stuck_access, climate_requests, answer_watch, library/house-rules.md, d59 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/883">desk-correspondence #883</a></span></h3></summary>
       <p>Junyan: &ldquo;d59 okay&rdquo;</p>
       <p><strong>Why.</strong> Seven lanes skipped a renter whenever any desk text followed the message, robot reminders and access texts included, and an unreadable Gmail thread also counted as answered. The move lane was fixed in #876; this extends it.</p>
