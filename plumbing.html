@@ -1367,6 +1367,81 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>Registrar move handoff accepts the same message saved under an older spelling<span class="kind">registrar-move &middot; failure &middot; EVENT-GATE registrar_move_intake.py, Sweep Feedback 3eb7503281c4814b and 3ed7503281c48147 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/943">desk-correspondence #943</a></span></h3></summary>
+      <p><strong>Why.</strong> The Concierge's handoff of a move was refused when the ticket already held the same renter message saved without an audit link, or with an older Thread ID spelling (<code>sms-+1...</code>, a phone typed with spaces). Vicky Yeung's SMS move (2026-09-29) got "duplicate or changed source" and was never counted as routed. An email YES routed as a continuation was refused too, because its audit stores the reply's own message id as Thread ID (Camila Avendano, 2026-10-02).</p>
+      <p><strong>Failure mode.</strong> Same message (same id, kind, received time, sender, conversation by the one Thread ID rule, words compared spacing-blind) is a retry, not a change: an entry with no audit link gets the audit added in place and read back; the saved source text is kept as it was. A different message, an entry already bound to another audit, or an audit naming another conversation is still refused loudly as before. A continuation's prior is matched by conversation, not by spelling. No message route, send or cadence changes.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>A plan row the desk closed no longer fails the reconcile round<span class="kind">event-gate reconcile sweep (prepaid-hours bot) &middot; failure &middot; EVENT-GATE plan_allowance_sweep.py, money_reconcile.py, reconcile_sweep.py, d99 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/936">desk-correspondence #936</a></span></h3></summary>
+      <p>Junyan: &ldquo;d99 yes&rdquo;</p>
+      <p><strong>Why.</strong> The prepaid-hours bot kept a part-covered booking in its own list after the desk closed the row as paid. Every other round it tried to put a held card on that closed row, the write check failed, and the whole 10-minute reconcile round failed with "money reconcile source/readback failed: []" (ten times from 2026-10-04 4:12 PM to 2026-10-05 11:20 AM Toronto).</p>
+      <p><strong>Route change.</strong> A row in the bot's list that the desk has closed (Processed, Cancelled, Won't Do) is retired from the list, never held. The hold step also leaves alone a row closed while the round runs.</p>
+      <p><strong>Failure mode.</strong> A money failure still fails the round (Run Error, no heartbeat), but the Skedda sync, the paid close and the stale sweep now run first. The failure message names the lane, the row and the reason instead of an empty list.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>The post-booking follow-up waits while the renter already has another message waiting that day<span class="kind">The Registrar &middot; route, failure &middot; EVENT-GATE gtg_sweep.py (pbf_step, waiting_message), library/autonomy.md, Sweep Feedback 3e87503281c48178af1fdb329d343f53 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/942">desk-correspondence #942</a></span></h3></summary>
+      <p><strong>Why.</strong> The post-booking follow-up (PBF) was queued at booking end even when the same renter already had another message waiting to go out that day, so two of our messages stacked up on the Deck for one person. Every other lane joins a waiting row (one renter, one message), but the PBF opts out of that merge because its readers need a standalone PBF row keyed to the booking.</p>
+      <p><strong>Route change.</strong> Before queueing the PBF (or the courtesy reply that stands in for it), the GTG sweep reads the renter's unsent Message Queue rows. If one is on the same channel, not yet dispatched and due today in Toronto (its Send After, or its created date when it has none), no PBF this pass; the sweep asks again every 5 minutes and queues it once that row is sent or rejected. Another PBF does not count (two visits in one day still get two PBFs), nor does a row due another day or on the other channel.</p>
+      <p><strong>Failure mode.</strong> An unreadable queue queues nothing that pass (fails closed) and logs the error. A PBF whose blocking row is still unsent after the board window (yesterday and today) is not queued; the Desk Watch PBF check reports it as missing. A stale held row from an earlier day does not hold it back. Off switch: <code>PBF_STEP_DISABLED=1</code> stops the whole PBF step.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Open-invoice watch stops a Cancel, and reminders, when a separate charge already paid<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/open_invoice_watch.py, chase_sweep.py, stripe_read.py, deck-app src/open-invoice-cancel.js, d22, d24 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/932">desk-correspondence #932</a></span></h3></summary>
+      <p><strong>Why.</strong> If staff charge a renter's card as its own payment instead of on the invoice, Stripe keeps the invoice open, and a Cancel would remove bookings the renter paid for (d22, after Alison M.'s C62JQ5MB-0005).</p>
+      <p><strong>Route change.</strong> On every pass while an open-invoice card is open, and again before it removes any booking after a Cancel click, the watch reads the renter's Stripe charges since the invoice went out. A charge on no invoice (or several together) that equals what the invoice owes writes one SEPARATE CHARGE line on the Action row; the Deck shows it and hides Cancel. After a Cancel click the line stops the removal for good and leaves the bookings to Junyan. While that line stands no reminder is drafted for the invoice: the chase sweep skips it and retires a held one, and a Remind click queues nothing (d24). A refunded charge writes a clear line, and Cancel and reminders come back.</p>
+      <p><strong>Failure mode.</strong> A Stripe read that fails raises: nothing is cancelled that pass, the pass reports an error, and the next pass tries again. <code>OPEN_INVOICE_CANCEL_DISABLED=1</code> still turns off every removal.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>A tapback from a Chinese or other non-English phone is a tapback in every lane<span class="kind">Desk Invariants &middot; route &middot; EVENT-GATE tapback.is_tapback (classifier, inbound.is_reaction, invariants P, climate_sweep, holding_reply, stuck_access), scripts/ticket_coverage.py, scripts/intake_decide.py, library/the-responder.md Tapback test, library/job-10-desk-invariants.md P, messages/2026/10/04/sms-in-3a2166cb &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/938">desk-correspondence #938</a></span></h3></summary>
+      <p>Junyan: &ldquo;(Fixer run 2026-10-05) Bella Zhou's Chinese heart reaction was filed as a missed renter.&rdquo;</p>
+      <p><strong>Why.</strong> Bella Zhou reacted with a heart from a Chinese iPhone on 2026-10-04 (<code>用🫶回应了“Your booking has been successfully moved…”</code>). Invariant P's own tapback test knew English only, so it filed her as an unanswered renter. Six lanes each kept their own copy of the test.</p>
+      <p><strong>Route change.</strong> One shared test, <code>services/event-gate/tapback.py</code>, now decides "tapback" for the SMS classifier, every lane that reads fresh text, invariant P, the climate scan, the courtesy reply lane, stuck access and the Responder's <code>intake_decide.py</code> / <code>ticket_coverage.py</code>. It adds Chinese (<code>用X回应了“…”</code>, <code>以X回應了「…」</code>, <code>喜欢</code>, <code>强调了</code>, <code>笑了</code>, <code>疑问</code> …), Vietnamese, Ukrainian, Russian and Lithuanian wording and the <code>「」</code> <code>„“</code> <code>«»</code> quote marks. Over the 6,047 inbound messages in the log it keeps every tapback the old tests caught and adds 3 (lt, ru, uk) none caught before. The courtesy reply lane and invariant P now treat these as owing no reply.</p>
+      <p><strong>Failure mode.</strong> Words after the closing quote (<code>Loved “…” but can we move it to 3?</code>) now make it a real message in every lane, where the classifier and <code>inbound.is_reaction</code> used to drop it; the SMS classifier and <code>fresh_text</code> read only those added words, never our quoted echo, so a reaction to a fire-alarm notice plus "thanks!" still pages no one. The bare shape rule no longer accepts a Latin or CJK prefix, so <code>Can I book “Studio A on Sunday please”</code> stays a real message. Not covered: German, Korean and Japanese wording (not sourced), and a verb with the quote after it. To undo, revert the PR; the old per-lane regexes come back with it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Desk Invariants flag a waiting-on-payment ticket once its due date passes<span class="kind">Desk Invariants &middot; failure &middot; EVENT-GATE invariants.py invariant L, library/job-10-desk-invariants.md, canon PR 929, Sweep Feedback 3ec7503281c48147a36ec3aa49135bdb, d48 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/941">desk-correspondence #941</a></span></h3></summary>
+      <p>Junyan: &ldquo;d48 yes&rdquo;</p>
+      <p><strong>Why.</strong> A ticket parked at Gate: Money now carries a Revisit After (the payment due day, canon PR 929). Invariant B skips any dated ticket and invariant L only looked at Gate: Artist and Gate: Time, so a money date that passed was seen by nothing.</p>
+      <p><strong>Route change.</strong> Invariant L now also covers Gate: Money: the day after the due day, a ticket not edited since that date is reported as an L lapsed-wait ("check Stripe for the payment, chase it, or set a new due date"), and after 3 runs it is filed as a persistent defect like any other L. It is flagged only: L never moves a Gate: Money ticket to Gate: Staff, even with <code>INVARIANTS_L_LAPSE=1</code>.</p>
+      <p><strong>Failure mode.</strong> A wrong or stale due date shows up as an L row a person clears by setting a new date or advancing Position. To undo, take "Gate: Money" out of L's Position tuple in <code>invariants.py</code> and redeploy event-gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Analyst counts room visits when deciding who is a regular for handoff texts<span class="kind">The Analyst &middot; route, failure &middot; EVENT-GATE analyst_sweep.py, library/analyst-issue-prevention.md, d49, d50, d51 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/945">desk-correspondence #945</a></span></h3></summary>
+      <p>Junyan: &ldquo;d49 no both need messages; d50 yes; d51 yes but let's cut it down to 2 visits in these cases&rdquo;</p>
+      <p><strong>Why.</strong> Renters who come to the same studio every week but have no agreement and no Force Self Serve were still getting the back-to-back wrap-up and arrival texts (Sweep Feedback row 3ea7503281c481a499d7de1f5231d8f2).</p>
+      <p><strong>Route change.</strong> The morning pass now reads the 40 days before the booking day from Skedda (one extra read) and counts each person's visits to that same studio. A renter with 3 or more visits, or a named facilitator with 2 or more, counts as a regular, alongside the existing card rule. Regular is judged on the facilitator when the title names one. The texts are skipped only when both sides are regular; one regular beside a new renter still sends both.</p>
+      <p><strong>Failure mode.</strong> If the visit read fails, the pass reports it and judges by the cards alone, so the texts still go (more texts, never fewer).</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Open-invoice Cancel is blocked when a separate charge already paid<span class="kind">The Deck &middot; failure &middot; src/open-invoice-cancel.js, src/charge.js, sources/deck.html, desk-correspondence open_invoice_watch.py, d22, d24 &middot; <a href="https://github.com/junyanboon/deck-app/pull/219">deck-app #219</a></span></h3></summary>
+      <p><strong>Why.</strong> If staff charge a renter's card as its own payment instead of on the invoice, Stripe keeps the invoice open, and Cancel would void it and remove bookings the renter paid for (d22).</p>
+      <p><strong>Route change.</strong> Before Cancel voids, the Deck reads the renter's Stripe charges since the invoice went out (the invoice's customer and every customer with its email). A charge on no invoice (or several together) that equals what the invoice owes blocks Cancel, and the confirm box names the charge, its amount and time, and says to mark the invoice paid out of band in Stripe or press Keep. The card also shows event-gate's SEPARATE CHARGE line and hides the Cancel and Remind buttons; a Remind click is refused while that line stands (d24). A newer clear line brings both back.</p>
+      <p><strong>Failure mode.</strong> If Stripe cannot be read, the Deck shows the error and voids nothing. Keep and Remind still work.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>Concierge counts a Won't Do action as closed when it retires a review<span class="kind">The Concierge &middot; failure &middot; EVENT-GATE concierge_deadlines.py closed_review_evidence, d38 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/931">desk-correspondence #931</a></span></h3></summary>
       <p>Junyan: &ldquo;38 yes&rdquo;</p>
       <p><strong>Why.</strong> The deadline sweep marks expired Actions rows "Won't Do", but the review check only accepted Processed or Cancelled. A Done ticket whose linked action was Won't Do (901 Sound, 2026-10-05) stayed on the Concierge worklist as <code>missing_evidence</code> and failed every pass.</p>
