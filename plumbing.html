@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>Timekeeper never reads a stitched or nameless alarm turn-off as the renter's arrival<span class="kind">The Timekeeper &middot; failure &middot; EVENT-GATE overtime_sweep.py, library/timekeeper-overtime.md, d29 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/926">desk-correspondence #926</a></span></h3></summary>
+      <p>Junyan: &ldquo;d29 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-01 a renter who never came was given a Forgot to Arm. The next renter disarmed with her own code, a websocket blip made the alarm tool stitch a nameless copy of that disarm three minutes later, and the coded Timekeeper (shadow) read the copy as the no-show's arrival and pinned the next renter's evening arm on him.</p>
+      <p><strong>Route change.</strong> A stitched arm_state row (<code>gap_filled</code>) is never an arrival, and a nameless disarm right after someone else's named disarm, with no arm between, is that person's. When the arrival is still a nameless disarm and the next arm is not the group's, the verdict is one agent-owned Review (basis <code>unnamed_arrival</code>), never Case B. When an outside disarm caps the departure read, a quiet (door or motion) departure now stops 2 minutes before it, so the newcomer's own door and motion are not this renter leaving; the renter's own arm in those 2 minutes still counts.</p>
+      <p><strong>Failure mode.</strong> Errs toward a person looking: a real arrival typed with an unnamed code becomes a Review instead of a Forgot to Arm. Shadow mode only; nothing is charged or sent.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>Concierge deadlines waiting on the Custodian or an owner Action no longer fail the pass<span class="kind">The Concierge &middot; failure &middot; EVENT-GATE concierge_deadlines.py, concierge_pass.py, concierge_gate.py, library/concierge-orchestration.md [R-full-pass], d28 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/925">desk-correspondence #925</a></span></h3></summary>
       <p>Junyan: &ldquo;d28 yes&rdquo;</p>
       <p><strong>Why.</strong> Cloud Concierge passes kept ending Skipped Steps although nothing was left for the Concierge to do: on 2026-10-02 at 10:11 the only reason was two required deadlines on tickets at Position Review, which is the Custodian's audit. Junyan agreed (d28) that items waiting on the Custodian or on him stop counting as unfinished Concierge work.</p>
