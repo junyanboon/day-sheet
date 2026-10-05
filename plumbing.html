@@ -1367,6 +1367,44 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>Overnight checker reads every alert letter and stops counting its own row as an edit<span class="kind">Desk Invariants &middot; failure &middot; EVENT-GATE invariants.py board_escalations own_filing, library/job-10-desk-invariants.md, PR 941 review, d70 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/959">desk-correspondence #959</a></span></h3></summary>
+      <p>Junyan: &ldquo;70 yes&rdquo;</p>
+      <p><strong>Why.</strong> Two gaps found in the PR 941 review. The board read only knew alert letters A to K, so an L row was matched to its ticket alone and could stand in for any other letter on that ticket (a Cancelled L row silenced a new B). And filing the checker's own row bumps the ticket's last edit, so the next pass read it as somebody working the ticket and the lapsed-date alert (L) went quiet at Gate: Artist, Gate: Time and Gate: Money.</p>
+      <p><strong>Route change.</strong> Board rows are keyed by any letter A to Z plus the ticket id. L ignores a ticket edit within 2 minutes of one of the checker's own open linked rows being created; any other edit still quiets L.</p>
+      <p><strong>Failure mode.</strong> A human edit in the same 2 minutes as the checker's filing is treated as the checker's and L keeps alerting, which a human then closes. To undo, revert this PR and redeploy event-gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>A later message never folds into a held post-booking follow-up<span class="kind">The Registrar &middot; route &middot; EVENT-GATE booking_sweep.py (merge_candidate, is_followup_code), gtg_sweep.py (waiting_message), library/autonomy.md, d63, d68 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/947">desk-correspondence #947</a></span></h3></summary>
+      <p><strong>Why.</strong> The reverse of the PBF wait shipped earlier today. When the post-booking follow-up (PBF, or the courtesy reply keyed to it) was queued first and another lane queued a message for the same renter later that day on the same channel, the queue merge folded the new text into the held follow-up. That row waits on the Deck with no expiry, its readers (follow-up coverage, the overtime step, the outbound guard) expect a standalone follow-up, and the overtime step can set a held PBF to Will Not Send, which would have taken the other lane's message with it.</p>
+      <p><strong>Route change.</strong> The queue merge now skips any row whose Message Code starts with <code>PBF</code> or carries a <code>[pbf:…]</code> key, and (d68) any <code>Overtime notice — …</code> row, the Timekeeper's variant that stands in for the PBF. The later message joins another waiting row for the renter if there is one, otherwise it gets its own row. The held follow-up stays as it was, and a person decides when to send it. The PBF wait uses the same follow-up test, so both sides agree on what a PBF row is. An unsent overtime notice still holds a new PBF back for the day, because with no plain PBF the notice carries the thank-you.</p>
+      <p><strong>Failure mode.</strong> No new failure path: the merge either finds another candidate or creates a row, as before. Off switch: <code>QUEUE_MERGE=off</code> stops all merging.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>The morning Desk Watch can read the prepaid hours bot's round receipt<span class="kind">Desk Watch (fleetread) &middot; tool &middot; ops/fleetread/run, ops/fleetread/vps-read, ~/bin/vps-read, plan_allowance_sweep.py, d108 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/962">desk-correspondence #962</a></span></h3></summary>
+      <p>Junyan: &ldquo;d108 yes&rdquo;</p>
+      <p><strong>Why.</strong> Desk Watch sections BN, BO and BP grade the prepaid hours bot from its round receipt, but the look-only VPS login had no read for that file, so they fell back to journal lines that cut off long messages.</p>
+      <p><strong>Route change.</strong> <code>ops/fleetread/run</code> and <code>vps-read</code> gain one fixed read with no arguments, <code>plan-receipt</code>. It opens only <code>/var/lib/eventgate/plan-allowance.receipt.json</code> inside event-gate and prints one JSON object of safe fields: <code>ok</code>, <code>live</code>, <code>at</code>, the known round counts, <code>charged_retry</code> row ids, and per error its exception class, row ids and a reason only when it is plain lowercase words (no digits, names, emails, codes or amounts). Any other field is named in <code>dropped</code>, never printed; the full error text stays in the event-gate journal. Nothing moves until Junyan reinstalls <code>run</code> on the VPS and copies the new <code>vps-read</code> to <code>~/bin</code>.</p>
+      <p><strong>Failure mode.</strong> Before the reinstall the read exits 2 with "unknown read" and the Desk Watch says "receipt not readable" and grades on the journal, as it does today. A missing or broken file prints <code>readable: false</code> with the reason. Rollback: reinstall <code>run</code> from the previous merge commit.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Analyst morning report keeps only the checks Junyan uses<span class="kind">The Analyst &middot; route, failure &middot; EVENT-GATE analyst_sweep.py, library/analyst-issue-prevention.md, d117, d118, d119, d121, d122, d123, d125 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/964">desk-correspondence #964</a></span></h3></summary>
+      <p><strong>Why.</strong> Most of the morning report was noise nobody acted on: all 9 sound Review rows since Sep 21 expired Won't Do untouched, and the anomaly, inspection and low-risk lines were never used.</p>
+      <p><strong>Route change.</strong> The Maintenance section shows only when an urgent issue touches a booked studio. A 901 sound renter who already had a sound heads-up sent in the last 28 days gets no new ticket or text; the report lists them as "already warned" with the date. Quiet 901 bookings (2 people or fewer, no risk sign) are no longer listed. A Skip List row of the new kind "Gap pair" stops the gap check for that pair, in the morning pass and in the Registrar's all-day gap fill. Anomalies is now the double booking check only (night, long, short and back-to-back rules removed). The "Most recent inspection" line is gone; the inspection damage and left-on findings stay. A finding whose held draft already carries the decision (for example a filled gap's T1) no longer files a Review row beside it.</p>
+      <p><strong>Failure mode.</strong> If the sound send history cannot be read, every sound flag stays (the text is held for review anyway) and the pass reports the failed read. A "Gap pair" row added before this code is deployed is reported as a Skip List problem and the pass is marked failed, so add the row only after the deploy.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>Registrar move lane reads an old text by its Phone.com id, not by paging<span class="kind">The Registrar &middot; failure &middot; EVENT-GATE registrar_move_intake.py, inbound.py, app.py, d122 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/958">desk-correspondence #958</a></span></h3></summary>
       <p>Junyan: &ldquo;122 yes&rdquo;</p>
       <p><strong>Why.</strong> Before acting on a texted move request, the move lane re-reads the original text on Phone.com and checks whether the desk already answered. It paged newest first and stopped at 200 texts per line, about two days on the desk line. A renter's 2026-10-02 request fell past that on 2026-10-05 15:36 UTC and the sweep logged an error on every pass.</p>
