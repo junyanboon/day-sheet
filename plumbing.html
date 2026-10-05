@@ -1426,6 +1426,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>A new unpaid row gets its charge card in the same 10-minute round<span class="kind">event-gate money reconcile (unpaid review, prepaid-hours bot) &middot; cadence &middot; EVENT-GATE money_reconcile.py, plan_allowance_sweep.py, d87, d88 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/912">desk-correspondence #912</a></span></h3></summary>
+      <p>Junyan: &ldquo;d88 yes&rdquo;</p>
+      <p><strong>Why.</strong> The prepaid-hours check ran before the unpaid review in each reconcile round, so a row the review opened waited one more round (10 minutes) for its card, and the check worked only 5 waiting rows a round. A same-day booking move on 2026-10-04 took 42 minutes to card.</p>
+      <p><strong>Route change.</strong> Inside the 10-minute reconcile-sweep round the unpaid review now runs first and the prepaid-hours check second, so a row opened this round is carded this round. The check works every waiting row in a round, stopping after a 180-second budget (at least one row) and resuming at the next row the following round. Nothing new is sent or charged.</p>
+      <p><strong>Failure mode.</strong> A round that hits the budget reports <code>budget_stopped</code> in <code>/var/lib/eventgate/plan-allowance.receipt.json</code>; the rest wait one round. <code>PLAN_ALLOWANCE_BUDGET_SECONDS</code> and <code>PLAN_ALLOWANCE_MAX_PER_RUN</code> (default 50) tune it; <code>PLAN_ALLOWANCE_MAX_PER_RUN=5</code> restores the old pace. <code>PLAN_ALLOWANCE_RECEIVER</code> unset still turns the bot off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>Prepaid-hours bot accepts a receipt filed against any record of the current agreement<span class="kind">plan-allowance-sweep &middot; failure &middot; EVENT-GATE plan_allowance_sweep.py verify_booking/recover, plan_allowance_receiver.py, plan_entitlement.current, d79, d80 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/910">desk-correspondence #910</a></span></h3></summary>
       <p><strong>Why.</strong> A renter's Notion card links two records of the same current agreement (the filed PDF and a summary record; both cover the same term and agree). Receipts were filed against one; the reader now picks the other, so the part-covered leftover card from d79 stopped "Entitlement receipt mismatch".</p>
       <p><strong>Route change.</strong> A receipt verifies when it names any record of the one current agreement (<code>read_entitlement</code> already stops when those records disagree on term, plan or rate). A carded part-covered row is re-checked each pass against the agreement records saved in its own journal entry, never against the entitlement another renter's row left behind in the same pass.</p>
