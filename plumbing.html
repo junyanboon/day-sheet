@@ -1367,6 +1367,45 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>Timekeeper never reads a quiet departure past the next booking's start<span class="kind">The Timekeeper &middot; failure &middot; EVENT-GATE overtime_sweep.py, library/timekeeper-overtime.md, d113 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/953">desk-correspondence #953</a></span></h3></summary>
+      <p>Junyan: &ldquo;113 yes, 112 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-04 a renter left a studio without arming. The next group was already in the room, and the coded Timekeeper (shadow) read the next group's door, 18 minutes after the booking ended, as this renter's departure and billed a late block.</p>
+      <p><strong>Route change.</strong> A quiet departure (door or motion, no arm) is read again ending at the next booking's start (or this booking's end, if later) whenever the first read lands past it. Only an arm may still use the 30 minutes after the next start. The remote-arm re-read and the next-arm search (Case B) are unchanged.</p>
+      <p><strong>Failure mode.</strong> Errs toward less late time: a renter who really stayed past the next start without arming is read as leaving at their last door or motion before it. Shadow mode only; nothing is charged or sent.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>The Prevention Watch moves from the Analyst to the Planner, for tomorrow's renters<span class="kind">The Planner &middot; route, failure &middot; library/the-planner.md T6, library/specs/prevention-casebook.md, library/analyst-issue-prevention.md Step 10, d100 to d111 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/952">desk-correspondence #952</a></span></h3></summary>
+      <p><strong>Why.</strong> All three reminders the Analyst's rule-based watch held (Sep 30, Sep 30, Oct 3) rested on a wrong or weak record and were turned down. Junyan moved the watch to the Planner as a judgment step that reads each renter's history the way staff would, a day ahead so there is time to review.</p>
+      <p><strong>Route change.</strong> The Planner's evening pass (T6) checks every non-staff renter booked tomorrow and may hold one reminder per renter: a keyed Proactive Issue Prevention Customer Care ticket plus one Message Queue row at <code>Pending Review</code> (Message Code <code>PREVENT-&lt;date&gt;-&lt;studio&gt;-&lt;card&gt;-&lt;booking id&gt;</code>), or a Review Action when the renter has no phone or email. It never sends. The Analyst's Step 10 is off (<code>PREVENTION_WATCH_DISABLED=1</code>). T6 runs once the Planner's cloud prompt that names it is live.</p>
+      <p><strong>Failure mode.</strong> A renter whose history or the queue cannot be read gets nothing written and is named "check by hand" on the Planner report. A How to Respond card that is archived, empty or malformed queues nothing for that card.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Night checks read the Timekeeper's "to" times, count held reviews, and skip platform leads<span class="kind">Overnight Verifier, The Timekeeper, The Custodian, The Doorman &middot; failure &middot; agent-fleet overnight-verifier (overtime_evidence.py, overtime_findings.py, reviews.py, alarm_evidence.py), d91, d108, d109, d110, d111 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/954">desk-correspondence #954</a></span></h3></summary>
+      <p>Junyan: &ldquo;108 yes, 109 yes, 110 yes, 111 yes&rdquo;</p>
+      <p><strong>Why.</strong> Three night checks stayed red for the checker's own rules, not the robots' work: it could not read "10:45 AM to 12:15 PM" in the Timekeeper's report, it counted Review tickets the Custodian rightly holds as missing, and it counted a Peerspace guest with no door code as a Doorman access failure.</p>
+      <p><strong>Route change.</strong> The Overnight Verifier reads Booked times written with an en dash or "to"; judges each Timekeeper window alone (a window it cannot judge is listed, and one the Timekeeper itself flagged Review or Forgot to Arm counts as covered); counts a Review ticket as handled when the Custodian's report has <code>LEDGER-V1 job=JOB 8 held=&lt;page id&gt; reason=&lt;phrase&gt;</code> for it; and leaves platform leads (no Skedda holder id, platform booking) out of <code>doorman_access</code>. The Doorman's cloud prompt drops the operational feedback receiver step. Failed sources now keep a short error message.</p>
+      <p><strong>Failure mode.</strong> A held ticket with no held line still counts missing; a real renter with <code>manual_no_match</code> still fails the Doorman check. To undo, reinstall the previous verifier release on the host (<code>/opt/danceannex-overnight-verifier/current</code> points at it).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Rare live tests report their own first cases to the Fixer, not the morning watch<span class="kind">The Fixer &middot; route &middot; EVENT-GATE first_case.py, first_case_cloud.py, canon studio-tickets-bookings.md, d101 to d107 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/955">desk-correspondence #955</a></span></h3></summary>
+      <p>Junyan: &ldquo;d101 yes d102 yes d103 yes d104 no need to message me, just put it on the fixer so it can be implemented d105 yes d106 yes d107 yes&rdquo;</p>
+      <p><strong>Why.</strong> The morning Desk Watch graded fourteen rare tests by hand every day, most with no case for days. Junyan is winding it down (d103) and wants results on the Fixer, not in a message (d104).</p>
+      <p><strong>Route change.</strong> The features report their own real cases through <code>first_case.report</code>: the Skedda sync (AM), stuck access (AV), the Registrar move lane (AW, BA), the Greeter (AY, BC), the History Check (BB), the renewal series (BG), the unpaid review (BH), the phone sync (BI) and the booking sweep access path (AU). The reconcile tick reads the cloud lanes' results off the board every 10 minutes (AK Case B creates, AN waived charges). The Responder files the BE row from canon. Two different worked cases file one ✅ Actions row for the Fixer (<code>[first-case:&lt;letter&gt;:worked]</code>, For Junyan, Raised by The Fixer) to retire the test; the first failure files one row (<code>[first-case:&lt;letter&gt;:failed]</code>) with the switch-back as a Shipper brief. Each new case also writes the Live Tests card's Result and Checked. No message goes to anyone.</p>
+      <p><strong>Failure mode.</strong> A case the feature misses entirely is never reported (d105). A Notion error is logged as <code>first-case: ... not recorded</code> and the lane carries on; the state file under <code>/var/lib/eventgate/first-case/</code> retries the row on the next case. Off switch: <code>FIRST_CASE_DISABLED=1</code> on event-gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>Timekeeper never takes a renter's arrival from their own earlier booking, or a departure from before they came<span class="kind">The Timekeeper &middot; failure &middot; EVENT-GATE overtime_sweep.py, library/timekeeper-overtime.md, d89 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/951">desk-correspondence #951</a></span></h3></summary>
       <p>Junyan: &ldquo;d89 yes&rdquo;</p>
       <p><strong>Why.</strong> Two wrong calls by the coded Timekeeper (shadow) held the Desk Watch AI streak at 0 of 3. On 2026-10-02 a renter had two bookings in one studio with a gap; the code read the turn-off from the end of the first booking as the arrival for the second and billed early time. On 2026-10-03 a renter came in late; a staff app arm seconds before their own turn-off was read as their departure, hiding a Forgot to Arm.</p>
