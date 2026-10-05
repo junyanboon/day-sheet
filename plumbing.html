@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>The "Claude looks down" alert now posts for real<span class="kind">The Sentinel &middot; failure &middot; EVENT-GATE claude_down.py, event-gate.env CLAUDE_DOWN_MODE, enable-ensure-artist-live.sh, d88, d114 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/956">desk-correspondence #956</a></span></h3></summary>
+      <p>Junyan: &ldquo;d88 yes&rdquo;</p>
+      <p><strong>Why.</strong> The Claude-down check ran in shadow from 2026-10-02 and passed three clean days (no down verdicts, no false alarms). Junyan said go live (d88) and set the switch himself.</p>
+      <p><strong>Route change.</strong> From 12:48 PM Toronto on 2026-10-05 (<code>CLAUDE_DOWN_MODE=live</code> in event-gate.env) the hourly Sentinel pass posts "Claude looks down" and "Claude looks back" to Junyan in #desk-status for real, instead of only writing them to the shadow file. The first live checks (1:09 PM and 2:09 PM Toronto) found Claude up and posted nothing.</p>
+      <p><strong>Failure mode.</strong> Unchanged from the 2026-10-02 entry. To go back to shadow, Junyan runs the same switch script with <code>KV=CLAUDE_DOWN_MODE=shadow</code>: <code>ssh root@2.25.139.60 'KV=CLAUDE_DOWN_MODE=shadow bash -s' &lt; services/event-gate/hosting/enable-ensure-artist-live.sh</code>. <code>CLAUDE_DOWN_DISABLED=1</code> still turns the check off.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
