@@ -1364,6 +1364,44 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Registrar move lane reads an old text by its Phone.com id, not by paging<span class="kind">The Registrar &middot; failure &middot; EVENT-GATE registrar_move_intake.py, inbound.py, app.py, d122 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/958">desk-correspondence #958</a></span></h3></summary>
+      <p>Junyan: &ldquo;122 yes&rdquo;</p>
+      <p><strong>Why.</strong> Before acting on a texted move request, the move lane re-reads the original text on Phone.com and checks whether the desk already answered. It paged newest first and stopped at 200 texts per line, about two days on the desk line. A renter's 2026-10-02 request fell past that on 2026-10-05 15:36 UTC and the sweep logged an error on every pass.</p>
+      <p><strong>Failure mode.</strong> The original is now read by its Phone.com id (a list read with an id filter) and the desk's replies by a filter on that renter's number after the request, so age no longer matters. The same checks hold: direction, time, sender and the same words. If Phone.com returns anything that fails a filter, misses a recent reply the unfiltered newest page shows (checked every time), or finds no reply at all, the lane goes back to the old paging, reading every phone line before the log; past the cap it takes the original and the desk's later texts from the correspondence log. No log copy, or a log file it cannot read, stays an error ("cap reached"), never "unanswered". The pass log now writes each error on its own line and puts errors first in the summary.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Invariant V keeps one rolling feedback row per lane and exempts composed and attended messages<span class="kind">Desk Invariants &middot; route, failure &middot; EVENT-GATE invariants.py, holding_reply.py, library/house-rules.md, library/job-10-desk-invariants.md, d43 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/939">desk-correspondence #939</a></span></h3></summary>
+      <p>Junyan: &ldquo;43 yes&rdquo;</p>
+      <p><strong>Why.</strong> Invariant V filed a new Sweep Feedback row per lane per day (23 were open on 2026-10-05) and flagged messages that have no saved reply by design. Junyan ruled the class once: a composed courtesy reply and a message written by hand in an attended session are exempt; every other lane links its How to Respond row or marks code wording.</p>
+      <p><strong>Route change.</strong> V now skips a sent row whose Reasoning carries <code>[wording:code]</code>, <code>[wording:composed]</code> or <code>[wording:attended]</code>. It files one rolling row per lane (title tag <code>[invariant-v:&lt;lane&gt;]</code>) and, on each later day it sees that lane again, adds one <code>Seen again &lt;day&gt;:</code> line with that day's rows. Only a rolling row at New or Approved is reused; once someone closes it, the next miss opens a fresh one. The Courtesy Reply Lane's courtesy close (<code>CX-</code> rows) now writes <code>[wording:composed]</code>.</p>
+      <p><strong>Failure mode.</strong> A lane that writes a marker it should not hides its own misses from V. If the Feedback query fails, V logs it and files nothing that run; the rows report again next run. <code>INVARIANTS_V_SINCE</code> still bounds the window.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Regulars' door-record gaps settle after 2 days; a booking moved to another day closes its old row<span class="kind">Attendance Sweep, The Registrar &middot; route, failure &middot; EVENT-GATE board_status.py, booking_sweep.py, booking_reconcile.py, action_routing.py, reconcile_sweep.py, followup_coverage.py, library/job-1-adt-alarm.md, d121, d127 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/961">desk-correspondence #961</a></span></h3></summary>
+      <p>Junyan: &ldquo;121 yes; 127 yes&rdquo;</p>
+      <p><strong>Why.</strong> Self Serve and Monitor Only rows whose door record had a gap sat Upcoming for 4 days. Patrick Park's booking (Skedda 122118538) was moved on Oct 5 from 509B Oct 4 to 509A Oct 5; the new row was made but the Oct 4 row stayed Upcoming and the attendance pass failed on it every hour.</p>
+      <p><strong>Route change.</strong> The attendance pass now settles a Self Serve or Monitor Only row as attended, no charge, 2 days after its date when the door record is missing, stale or has a gap, unless it is the renter's first visit to that room (4 days, as before). When the booking sweep creates a row for a booking's new slot, any other Upcoming row with exactly that Skedda id is set Cancelled with a note naming the new row.</p>
+      <p><strong>Failure mode.</strong> If the earlier-visit read fails the row is treated as a first visit (4 days). If the old-row check fails the new row still stands and the step is logged. The attendance error now says which field differs ("Skedda 122118538 is not on 2026-10-04 any more"), a Sweep Feedback row someone already closed is no longer an hourly "readback mismatch" error, and the reconcile tick logs each row error on its own line with the row title and Skedda id.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Paid close retires only that invoice's own held reminders<span class="kind">The Deck &middot; route &middot; src/invoice-paid.js, test/invoice-paid.test.js, desk-correspondence chase_sweep.py, desk-correspondence #950, d95, d96 &middot; <a href="https://github.com/junyanboon/deck-app/pull/224">deck-app #224</a></span></h3></summary>
+      <p><strong>Why.</strong> When a Stripe invoice reads paid, the Deck closes its Action and retires any held INVOICE-CHASE reminder for it. It found those reminders by the Action's first 8 characters in the title, and Actions made the same week share those 8, so a paid invoice could retire another Action's held reminder, possibly another renter's (d96).</p>
+      <p><strong>Route change.</strong> A held reminder is retired only when its Reasoning <code>action=&lt;full id&gt;</code> names the paid Action (the chase sweep writes that line on every reminder). A reminder with no <code>action=</code> line is retired only when its Artist link is the paid Action's renter. Anything else stays held at Pending Review.</p>
+      <p><strong>Failure mode.</strong> A reminder that cannot be proven this Action's own is left held, never retired; staff can reject it in the Deck. The Action itself still closes on the paid invoice as before.</p>
+    </details>
+    </li>
     <li class="entry alert">
     <details>
       <summary><span class="when">2026-10-05</span>
