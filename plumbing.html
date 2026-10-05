@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>Timekeeper never takes a renter's arrival from their own earlier booking, or a departure from before they came<span class="kind">The Timekeeper &middot; failure &middot; EVENT-GATE overtime_sweep.py, library/timekeeper-overtime.md, d89 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/951">desk-correspondence #951</a></span></h3></summary>
+      <p>Junyan: &ldquo;d89 yes&rdquo;</p>
+      <p><strong>Why.</strong> Two wrong calls by the coded Timekeeper (shadow) held the Desk Watch AI streak at 0 of 3. On 2026-10-02 a renter had two bookings in one studio with a gap; the code read the turn-off from the end of the first booking as the arrival for the second and billed early time. On 2026-10-03 a renter came in late; a staff app arm seconds before their own turn-off was read as their departure, hiding a Forgot to Arm.</p>
+      <p><strong>Route change.</strong> When the window before it in the same studio is the same identity group, no disarm before that booking's departure (or end, whichever is later, never past this start) can be the arrival. The departure read starts at the renter's own arrival, never at the booked start when they came late.</p>
+      <p><strong>Failure mode.</strong> Errs toward the later arrival: a renter who really came back early inside their own previous stay is read as arriving at their later disarm. Shadow mode only; nothing is charged or sent.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>French "❤️ à" and Chinese "赞了：" reactions are tapbacks, and Jev's tapback label names other phones<span class="kind">Desk Invariants &middot; route &middot; EVENT-GATE tapback.is_tapback, scripts/jev_triage.py LANE_CRITERIA tapback, library/the-responder.md Tapback test, messages/2026/10/04/sms-in-59fa9193, messages/2026/06/05/sms-in-e495a8f0 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/949">desk-correspondence #949</a></span></h3></summary>
+      <p>Junyan: &ldquo;(d65, 2026-10-05) "65 yes"&rdquo;</p>
+      <p><strong>Why.</strong> Two reaction styles still read as real renter messages after the localized tapback change: a French phone writes <code>❤️ à "…"</code> with straight quotes (sms-in-59fa9193, 2026-10-04), and a Chinese phone writes <code>赞了：…</code> with a colon and no quote at all (sms-in-e495a8f0, 2026-06-05, which echoed our door and alarm codes). Jev's tapback label still named the English verbs only.</p>
+      <p><strong>Route change.</strong> The shared tapback test now takes an emoji then <code>à</code> before the quote, and <code>赞了</code> / <code>讚了</code> before a quote or the full-width colon <code>：</code> (an ASCII colon or a bare <code>赞</code> stays a real message). Over the 7,113 inbound messages in the log it keeps all 346 tapbacks the old test caught and adds 5 (two French, three Chinese colon), none a real question. Jev's <code>tapback</code> label now describes reactions from Chinese, Spanish, Portuguese, French, Vietnamese, Ukrainian, Russian and Lithuanian phones; the route for that lane is still <code>skip</code>.</p>
+      <p><strong>Failure mode.</strong> When the colon form has a quote (<code>赞了：“…”</code>), words after the closing quote are split off as usual. When it has no quote, nothing can be split off: it counts as a tapback only while the rest holds no Chinese letters (the desk writes English), else the whole text is read as a real message. English words typed after a colon-form echo would be missed; none exist in the log. To undo, revert the PR.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>Treasurer, renewal and chase keys use the full Notion id, so two renters no longer share one key<span class="kind">The Treasurer &middot; failure &middot; EVENT-GATE id_keys.py, treasurer_sweep.py, agreement_end.py, renewal_notices.py, renewal_series.py, chase_sweep.py, scripts/renewal_confirm_draft.py, library/the-treasurer.md, library/automatic-operational-closure.md, d95 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/950">desk-correspondence #950</a></span></h3></summary>
       <p>Junyan: &ldquo;d95 yes&rdquo;</p>
       <p><strong>Why.</strong> Notion ids made the same week share their first 8 characters (<code>3e575032…</code>), and several lanes built their "already filed / already queued" key from those 8. Two renters whose cards were made the same week, ending on the same day or flagged in the same month, got one key: the second renter's Treasurer review row, renewal notice, capped-chase row or renewal-series stop row read as already done and was never made. Two invoice Actions of one renter shared one reminder chain. PR 933 fixed the same fault in the slot waiting list; Junyan asked for the other lanes (d95).</p>
