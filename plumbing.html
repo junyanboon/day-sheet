@@ -1281,6 +1281,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>The Agent OS fleet collector reads the VPS through the look-only login, not root<span class="kind">Agent OS fleet collector (Mac launchd) &middot; tool, failure &middot; ops/fleetread/run, ~/bin/vps-read, ca.junyan.agent-os-fleet-collector, d38, d66 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/918">desk-correspondence #918</a></span></h3></summary>
+      <p>Junyan: &ldquo;d38 yes&rdquo;</p>
+      <p><strong>Why.</strong> The fleet collector was the last 15-minute robot logging in to the VPS as root (d38, d66). Each pass sent three ad hoc programs, so a root key sat behind an unattended job.</p>
+      <p><strong>Route change.</strong> <code>ops/fleetread/run</code> gains three fixed reads with no arguments: <code>fleet-hermes-jobs</code> (Hermes cron jobs, a spec hash, never the prompt), <code>fleet-lease</code> (the lease holder and executors) and <code>fleet-hostinger</code> (event-gate timers, verifier summary, switch values and GIT_SHA). They are the collector's old programs word for word. <code>vps-read</code> offers the same three. Once Junyan reinstalls <code>run</code> on the VPS, the collector calls <code>vps-read</code> instead of <code>ssh root@</code> (its old copy kept as a <code>.bak</code>).</p>
+      <p><strong>Failure mode.</strong> If fleetread is missing the new reads (run not reinstalled), each read exits 2 with "unknown read", the pass fails as it would on a network error, and the Control Map shows the sources stale rather than wrong. Off switch and rollback: restore the collector's <code>.bak</code> copy (root reads again) and reload its launch agent.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>A renter's new Skedda phone now moves their Artist card, so texts follow it<span class="kind">The Registrar &middot; route, failure &middot; EVENT-GATE skedda_phone_sync.py, booking_sweep.py, library/relay-addresses.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/915">desk-correspondence #915</a></span></h3></summary>
       <p>Junyan: &ldquo;update notion when Skedda phone changes is good, email not necessary&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-04 a renter changed his Skedda phone between booking and his session. The card kept the old number, every text went there, and he never got in.</p>
