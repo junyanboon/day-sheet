@@ -1281,6 +1281,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>The finance watch files one "Check &lt;card&gt; payment" row when a paid card's YNAB payment vanishes<span class="kind">finance-watch &middot; route, failure &middot; services/finance-watch/finwatch/card_due.py, services/finance-watch/finwatch/notion.py, d69 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/919">desk-correspondence #919</a></span></h3></summary>
+      <p>Junyan: &ldquo;d69 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-05 the Mac card check found a Pay row marked Done on a bank-confirmed YNAB payment that had since disappeared from YNAB, with the statement unpaid again, and filed a Check row by judgment. The VPS code stayed quiet in that case: the Done row blocked both a new Pay row and the reminder text. Junyan d69: the server should do the same.</p>
+      <p><strong>Route change.</strong> The daily card check now also reads Tasks Inbox rows titled <code>Check...</code>. For each Done Pay row closed on a bank-confirmed YNAB payment whose statement now shows money left and nothing pending, it files one <code>Check &lt;card&gt; payment: row says paid, YNAB now shows &lt;amount&gt; unpaid (due &lt;date&gt;)</code> row, High, due that day. Any <code>Check...</code> row naming the card's number and that due date, in any status and in the Mac's wording too, counts as filed. Still no text for that card while the Pay row is Done.</p>
+      <p><strong>Failure mode.</strong> If the <code>Check...</code> rows cannot be read, no Check row is filed (a duplicate could not be ruled out), the run reports a <code>check-read</code> error and the rest of the pass goes on. The run log shows <code>checked</code> (or <code>would_check</code> in dry run). Switch: <code>FINANCE_CARD_DUE_DISABLED=1</code> stops the whole daily check.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>The Agent OS fleet collector reads the VPS through the look-only login, not root<span class="kind">Agent OS fleet collector (Mac launchd) &middot; tool, failure &middot; ops/fleetread/run, ~/bin/vps-read, ca.junyan.agent-os-fleet-collector, d38, d66 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/918">desk-correspondence #918</a></span></h3></summary>
       <p>Junyan: &ldquo;d38 yes&rdquo;</p>
       <p><strong>Why.</strong> The fleet collector was the last 15-minute robot logging in to the VPS as root (d38, d66). Each pass sent three ad hoc programs, so a root key sat behind an unattended job.</p>
