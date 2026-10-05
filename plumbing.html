@@ -1280,6 +1280,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>A renter's new Skedda phone now moves their Artist card, so texts follow it<span class="kind">The Registrar &middot; route, failure &middot; EVENT-GATE skedda_phone_sync.py, booking_sweep.py, library/relay-addresses.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/915">desk-correspondence #915</a></span></h3></summary>
+      <p>Junyan: &ldquo;update notion when Skedda phone changes is good, email not necessary&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-04 a renter changed his Skedda phone between booking and his session. The card kept the old number, every text went there, and he never got in.</p>
+      <p><strong>Route change.</strong> Each booking sweep pass compares a found card's <code>Phone</code> with the booking's Skedda phone. When the card's number came only from Skedda, the card moves to the new number, the new Contact Point is usable and the old one recognition-only, with a dated comment. When the number came from anywhere else, a Review row flags it and nothing is overwritten. If the access text already went to the old number, an Access / PIN row asks a human to resend it. Nothing is sent and no email copy is added.</p>
+      <p><strong>Failure mode.</strong> Contact Points are written first and the card last, so any Notion error (<code>phone-sync:error</code>) or a card write that does not read back (<code>phone-sync:unverified</code>) leaves the card on the old number and the next pass retries. A flag is raised once per renter and new number. Off switch: <code>SKEDDA_PHONE_SYNC_DISABLED=1</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-04</span>
       <h3>Prepaid-hours bot accepts a receipt filed against any record of the current agreement<span class="kind">plan-allowance-sweep &middot; failure &middot; EVENT-GATE plan_allowance_sweep.py verify_booking/recover, plan_allowance_receiver.py, plan_entitlement.current, d79, d80 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/910">desk-correspondence #910</a></span></h3></summary>
       <p><strong>Why.</strong> A renter's Notion card links two records of the same current agreement (the filed PDF and a summary record; both cover the same term and agree). Receipts were filed against one; the reader now picks the other, so the part-covered leftover card from d79 stopped "Entitlement receipt mismatch".</p>
