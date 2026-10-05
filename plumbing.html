@@ -1367,6 +1367,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>Concierge counts a Won't Do action as closed when it retires a review<span class="kind">The Concierge &middot; failure &middot; EVENT-GATE concierge_deadlines.py closed_review_evidence, d38 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/931">desk-correspondence #931</a></span></h3></summary>
+      <p>Junyan: &ldquo;38 yes&rdquo;</p>
+      <p><strong>Why.</strong> The deadline sweep marks expired Actions rows "Won't Do", but the review check only accepted Processed or Cancelled. A Done ticket whose linked action was Won't Do (901 Sound, 2026-10-05) stayed on the Concierge worklist as <code>missing_evidence</code> and failed every pass.</p>
+      <p><strong>Route change.</strong> A linked Actions row with Status Won't Do now counts as closed evidence, the same as Processed and Cancelled. The ticket's review retires on the next Concierge pass (<code>review_retired</code>). Message Queue rules are unchanged.</p>
+      <p><strong>Failure mode.</strong> Any other open Status still leaves the review as <code>missing_evidence</code>. To undo, remove "Won't Do" from the set in <code>closed_review_evidence</code> and redeploy event-gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Slot waiting list keys each board row and ticket on its full id<span class="kind">The Treasurer &middot; route &middot; EVENT-GATE slot_waitlist.py, library/the-treasurer.md, library/desk-sort.md, d93 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/933">desk-correspondence #933</a></span></h3></summary>
+      <p>Junyan: &ldquo;d93 yes&rdquo;</p>
+      <p><strong>Why.</strong> The waiting list keyed its asks, Decision rows and offers on the first 8 characters of the ⏳ Time Slot Board row id, but every row id starts <code>3a375032</code>, so every row shared one key. With two held rows for one waiter, only one "keep your slot?" ask would be written, and the second row would read the first row's ask and start its 48-hour clock from it. Sales ticket ids share their first 8 characters as well.</p>
+      <p><strong>Route change.</strong> Every <code>[waitlist-ask/open/offer/next/renewed/check/dropped:…]</code> key now carries the full Notion id with dashes removed, for the board row and for the waiter's ticket. The Desk Sort writes the offer key the same way (<code>[waitlist-offer:&lt;row id&gt;:&lt;ticket id&gt;]</code>). Nothing had been written with the old keys: the lane has only run in shadow.</p>
+      <p><strong>Failure mode.</strong> Unchanged: the lane stays <code>SLOT_WAITLIST=shadow</code> (writes nothing) until Junyan switches it live.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Deadline sweep saves its worklist in blocks, and Desk Invariants no longer stops on stale deadline coverage<span class="kind">Concierge deadline sweep, Desk Invariants &middot; failure &middot; services/event-gate/deadline_worklist_store.py, deadline_obligations.py, concierge_deadlines.py, deadline_worker.py, invariants.py, library/job-10-desk-invariants.md, d34 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/928">desk-correspondence #928</a></span></h3></summary>
+      <p>Junyan: &ldquo;34 yes&rdquo;</p>
+      <p><strong>Why.</strong> From 2026-10-02 the deadline sweep could not save: its worklist outgrew the audit row's Basis box (100 parts), and from 2026-10-05 00:23 Toronto Notion refused the whole audit write with HTTP 400. That write ran before the local ledger refresh, so deadline ownership went stale and every Desk Invariants pass from 08:25 failed before checking anything.</p>
+      <p><strong>Route change.</strong> The worklist now lives in <code>DEADLINE-WORKLIST-V1</code> code blocks on the same audit row, written as a new generation, read back, then the older one archived. The Concierge and Custodian pickup reads the newest complete generation (old Basis copy as fallback). Basis keeps only the legacy audit summary and is checked against Notion's limit before the write.</p>
+      <p><strong>Failure mode.</strong> A refused audit write still fails the sweep (ok false, error names the stage) but no longer stops the ledger refresh. If ownership is still unreadable, Desk Invariants skips D, E and L for that pass, runs every other letter, and says so (<code>deadline_skipped</code>).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>Timekeeper never reads a stitched or nameless alarm turn-off as the renter's arrival<span class="kind">The Timekeeper &middot; failure &middot; EVENT-GATE overtime_sweep.py, library/timekeeper-overtime.md, d29 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/926">desk-correspondence #926</a></span></h3></summary>
       <p>Junyan: &ldquo;d29 yes&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-01 a renter who never came was given a Forgot to Arm. The next renter disarmed with her own code, a websocket blip made the alarm tool stitch a nameless copy of that disarm three minutes later, and the coded Timekeeper (shadow) read the copy as the no-show's arrival and pinned the next renter's evening arm on him.</p>
