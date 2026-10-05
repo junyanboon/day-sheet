@@ -1367,6 +1367,43 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>Unpaid-booking review names the Artist on a row only when that Artist owns the Skedda booking<span class="kind">unpaid-review &middot; failure &middot; EVENT-GATE unpaid_review.py, d97, d98, d102 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/968">desk-correspondence #968</a></span></h3></summary>
+      <p>Junyan: &ldquo;d102 yes&rdquo;</p>
+      <p><strong>Why.</strong> The review looked up the Artist for a booking and put it on the row before checking that the Artist's Skedda User ID and email match the booking holder. A row that failed that check was written as Review with the right reason but still linked an Artist who does not own the booking, for one-off and repeating bookings alike.</p>
+      <p><strong>Failure mode.</strong> The Artist link is now set only after both checks pass. A row that fails either check is still written as Type Review with its reason, Skedda number and dates (start, and end for a repeating booking), with no Artist. Nothing removes an Artist already on a row: a failing check never writes to an existing row, so an Artist a person set by hand stays (d97). Rows that pass the check are unchanged. Off switch: <code>UNPAID_REVIEW_LIVE</code> unset stops the review.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Analyst handoff rest counts Deck rejections; unreachable handoff renters get a reach row<span class="kind">The Analyst &middot; route, failure &middot; EVENT-GATE analyst_sweep.py, library/analyst-issue-prevention.md, d127, d134 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/967">desk-correspondence #967</a></span></h3></summary>
+      <p><strong>Why.</strong> A renter whose handoff reminders were rejected on the Deck ("she's a regular") kept getting new ones, because only reminders that reached Sent counted toward the rest after 2. A handoff renter the pass could not text got no row at all, so nobody knew to call them.</p>
+      <p><strong>Route change.</strong> A T3, T4 or MID reminder rejected on the Deck now counts toward the 2-reminder rest, timed at the rejection. Rejections whose cause is stale or not on site, or whose reason says already sent, duplicate, stale or not on site, do not count. Rows queue hygiene retired as expired never count (they carry no Deck rejection). A handoff with its texts held raises no Review row (as before); a renter who could not be texted now gets one Human-confirmed Review row keyed <code>:reach</code>. Tight transitions keep only their Customer Care case.</p>
+      <p><strong>Failure mode.</strong> If the reminder history cannot be read, the reminder is still drafted and held (unchanged). A rejection written before the Deck's cause buttons ship has no Cause line; only its Reason text is checked.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Deck reject finishes on drafts with no review Action, and asks for a one-tap cause<span class="kind">The Deck &middot; route, failure &middot; src/index.js, sources/deck.html, test/reject.test.js, test/reject-feedback.test.js, desk-correspondence analyst_sweep.py handoff_due, d127, d128 &middot; <a href="https://github.com/junyanboon/deck-app/pull/226">deck-app #226</a></span></h3></summary>
+      <p><strong>Why.</strong> Rejecting an Analyst handoff text (T3, T4, MID) on the Deck ended in "deck-reject-sync stuck ... expected one exact review Action" about 20 times since Sep 27: handoff drafts never have a review Action, so the reject note had nowhere to go and the Analyst never learned why. Stuck rows also stayed in the retry query and could fill its 20-row page.</p>
+      <p><strong>Route change.</strong> A rejected Analyst draft with no review Action now finishes at once: the reason stays on the draft's own Reasoning, where the Analyst reads it. Tight transitions still copy the reason to their linked Customer Care case. The reject box has five one-tap causes: Regular, Repeat, Not on site, Stale, Other. A tap rejects, with any typed text as the reason; Other needs text. The draft gets a <code>Cause: &lt;slug&gt;</code> line above its <code>Reason:</code> line.</p>
+      <p><strong>Failure mode.</strong> A rejection that still cannot sync is marked stuck after 8 tries (about two hours) and its pending marker is removed, so it leaves the retry query. Rows marked stuck before this change get one more try on the next pass: handoff drafts finish, the rest drop out.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>The Deck ties series payments to one date, and waits to bill Maggie and 1AP/AAP renters until 24 hours before<span class="kind">The Deck &middot; failure &middot; src/booking-truth.js, src/charge.js, src/charge-hold.js, src/index.js, sources/deck.html, test/charge.test.js, test/charges-tab.test.js, test/bill-day-before.test.js, d101, d103 &middot; <a href="https://github.com/junyanboon/deck-app/pull/228">deck-app #228</a></span></h3></summary>
+      <p>Junyan: &ldquo;d101 yes; d103 "we don't bill AAP, 1AP or maggie's bookings until 24hrs prior to the booking. so those shouldn't show up on here. Everyone else can though."&rdquo;</p>
+      <p><strong>Why.</strong> Stripe tags a payment with the Skedda series number, so one paid date of a repeating booking made every later date look paid to Charged (Maggie Morrison, series 120817227, 509B Mondays 14:00 to 15:00, $18.08: Oct 5 and Oct 19 rows, d101). Separately, Junyan bills 1AP and AAP plan renters and Maggie Morrison only from 24 hours before each booking, so their charges should not sit on the Charges tab before then (d103).</p>
+      <p><strong>Route change.</strong> On a repeating booking, Charged counts only a Stripe payment whose <code>skedda_occurrence</code> is this date's start as paid; untagged series payments show as a warning on the confirm step. Charged and Send invoice now tag every booking charge with <code>skedda_occurrence</code> (the start of the date billed). The Charges tab hides a not yet billed charge for Maggie Morrison (named in <code>src/charge-hold.js</code>) or an active 1AP/AAP renter (Artist Product, one Artist query every 10 minutes) until 24 hours before the booking, and Charged and Send invoice refuse it until then by the same rule.</p>
+      <p><strong>Failure mode.</strong> A series payment Skedda's checkout took for this very date (no <code>skedda_occurrence</code>) no longer blocks Charged: the confirm step names it and the owner checks Stripe before pressing. If the 1AP/AAP Artist read fails, plan renters' rows show on the tab as before, but Charged still reads the Artist page and refuses until 24 hours before. A row naming only a date opens at 23:59 Toronto the day before.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>Watchlist fallback and the QA reviewer can no longer run on GitHub's paid machines<span class="kind">GitHub Actions (watchlist-refresh, qa-review) &middot; failure &middot; .github/workflows/watchlist.yml, .github/workflows/qa-review.yml, scripts/install_claude_cli.sh, ops/watchlist-runner/README.md, d18, d84 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/966">desk-correspondence #966</a></span></h3></summary>
       <p>Junyan: &ldquo;d84 yes&rdquo;</p>
       <p><strong>Why.</strong> Junyan's rule of 2026-09-30: no job in a private repo runs on GitHub's paid machines. #805 and #810 locked every other job to the VPS; these were the last two leftovers.</p>
