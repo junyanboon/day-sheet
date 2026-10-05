@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>Responder intake closes reactions and short acks instead of stubbing them<span class="kind">The Responder &middot; route, failure &middot; scripts/intake_decide.py, EVENT-GATE tapback.py is_tapback, EVENT-GATE holding_reply.py ACK_CLAUSE, d69, d75 to d79 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/944">desk-correspondence #944</a></span></h3></summary>
+      <p>Junyan: &ldquo;d69 yes, d75 yes, d76 yes, d77 yes, d78 yes, d79 yes&rdquo;</p>
+      <p><strong>Why.</strong> A reaction in another language or shape ("Reacted 🙏 to “…”", "Le gustó “…”", "用🫶回应了“…”", a French "❤️ à" with invisible padding) and a bare "Np" were forced to a Customer Care stub and a Need Help text to Junyan on 10-01 and 10-04, because the intake only knew the English tapback verbs and demanded a quoted ask from every intent.</p>
+      <p><strong>Route change.</strong> The intake reads a reaction with the one shared tapback test every lane uses (<code>services/event-gate/tapback.py</code> <code>is_tapback</code>, from #938); it keeps no copy of its own. That shared test also knows the French handset form, an emoji then "à" in hair and zero-width padding (sms-in-59fa9193, sms-in-1522c4cf), so every lane reads it as a tapback (d79; the tapback.py line landed in #949, this PR adds the second real case to its tests). A text that is only a reaction, ok, np, k or an emoji is declined as "acknowledgement, like a tapback": no ticket, no Need Help, no courtesy reply. "No ask quoted" now applies only to ticket and reply intents, and to a text the form calls thanks or not-a-customer that is neither. The Courtesy Reply Lane reads np, k, kk and emoji-only as acknowledgements too; a thank-you ("ty", "thanks") still gets its courtesy close.</p>
+      <p><strong>Failure mode.</strong> Anything with words of the sender's own after the quote, a "?", a problem word (now including "doesn't work") or a distress emoji (🆘, 😡, 🔒) still opens a stub or reply. A plain word before a quote ("Help “locked out”") is the renter's own words, not a reaction. A "Yes" or "ok" the Responder called a booking or care request keeps its ticket. If the tapback test misses a new handset format, the old path runs: a stub and a Need Help text, never a lost message.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>Timekeeper never reads a quiet departure past the next booking's start<span class="kind">The Timekeeper &middot; failure &middot; EVENT-GATE overtime_sweep.py, library/timekeeper-overtime.md, d113 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/953">desk-correspondence #953</a></span></h3></summary>
       <p>Junyan: &ldquo;113 yes, 112 yes&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-04 a renter left a studio without arming. The next group was already in the room, and the coded Timekeeper (shadow) read the next group's door, 18 minutes after the booking ended, as this renter's departure and billed a late block.</p>
