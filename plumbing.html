@@ -1281,6 +1281,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>The finance watch can read YNAB through a read-only app instead of a personal token<span class="kind">finance-watch &middot; tool, failure &middot; services/finance-watch/finwatch/ynab_oauth.py, services/finance-watch/finwatch/ynab_setup.py, hosting/install-finance-watch.sh, ~/bin/place-finance-credentials.sh, d77 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/921">desk-correspondence #921</a></span></h3></summary>
+      <p>Junyan: &ldquo;d77 yes&rdquo;</p>
+      <p><strong>Why.</strong> A YNAB personal token can do anything Junyan can do in YNAB. Junyan d77: switch the finance watch to a YNAB OAuth app approved read-only.</p>
+      <p><strong>Route change.</strong> When <code>ynab-client-id</code>, <code>ynab-client-secret</code> and <code>ynab-refresh-token</code> are all placed, each run trades the saved refresh token for a 2-hour read-only access token and saves the new refresh token in the job's state folder (<code>ynab-oauth.json</code>). Until all three are placed it keeps using the personal <code>ynab-token</code>. Reads now go to <code>api.ynab.com/v1</code> (the documented host) instead of the legacy <code>api.youneedabudget.com</code>. The run log and the installer say which one is in use.</p>
+      <p><strong>Failure mode.</strong> If YNAB refuses the saved approval, Junyan gets one alert (a text from the desk line from the card check; email first, text if that fails, from the monthly job) asking him to approve again (<code>place-finance-credentials.sh ynab-refresh-token</code>), not again until a new approval is placed, and no text in a dry run. The run reports the YNAB error and the rest of the pass still reports. A YNAB outage or network failure sends no text; the next run tries again. Switch: remove the three OAuth files to fall back to <code>ynab-token</code>, or <code>FINANCE_CARD_DUE_DISABLED=1</code> / <code>FINANCE_MONTHLY_DISABLED=1</code>.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>The Registrar's extension lane gets an AI reader that can only stop a booking for two weeks<span class="kind">The Registrar &middot; route, failure &middot; EVENT-GATE extension_reader.py, extension_sweep.py, Dockerfile, hosting/enable-extension-reader-token.sh, library/autonomy.md, library/timekeeper-overtime.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/920">desk-correspondence #920</a></span></h3></summary>
+      <p>Junyan: &ldquo;18 yes, 23 yes, 24 no, 22 yes, 13 yes&rdquo;</p>
+      <p><strong>Why.</strong> Word rules booked time nobody asked for (Patrick Park asked for a refund on 2026-10-04 and nearly got an extension). A model now reads what the renter means; code still checks the booking, the room, the price and the limits.</p>
+      <p><strong>Route change.</strong> Before the lane writes an extension block, <code>claude -p</code> (Sonnet, on the Claude subscription) reads the message, the desk's last words and the booking. In veto mode (default, two weeks) the regex path runs as before and the reader can only turn a booking into a Review row. <code>EXTENSION_READER_MODE=full</code> adds Junyan's per-kind rules: ask how long, offer the free 15 minutes to someone who wants to come earlier, and extend a booking for someone who says they left late (keeping any Timekeeper block). Every verdict is logged to <code>extension-reader/&lt;day&gt;.jsonl</code>.</p>
+      <p><strong>Failure mode.</strong> No <code>CLAUDE_CODE_OAUTH_TOKEN</code>, a timeout (90 s), a CLI error or output that does not fit the schema sends the item to a person as a Review row. Until Junyan installs the token, every would-be extension booking becomes a Review row. Rollback without a deploy: <code>EXTENSION_READER_MODE=off</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>The finance watch files one "Check &lt;card&gt; payment" row when a paid card's YNAB payment vanishes<span class="kind">finance-watch &middot; route, failure &middot; services/finance-watch/finwatch/card_due.py, services/finance-watch/finwatch/notion.py, d69 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/919">desk-correspondence #919</a></span></h3></summary>
       <p>Junyan: &ldquo;d69 yes&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-05 the Mac card check found a Pay row marked Done on a bank-confirmed YNAB payment that had since disappeared from YNAB, with the statement unpaid again, and filed a Check row by judgment. The VPS code stayed quiet in that case: the Done row blocked both a new Pay row and the reminder text. Junyan d69: the server should do the same.</p>
