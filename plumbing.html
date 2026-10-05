@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>Concierge deadlines waiting on the Custodian or an owner Action no longer fail the pass<span class="kind">The Concierge &middot; failure &middot; EVENT-GATE concierge_deadlines.py, concierge_pass.py, concierge_gate.py, library/concierge-orchestration.md [R-full-pass], d28 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/925">desk-correspondence #925</a></span></h3></summary>
+      <p>Junyan: &ldquo;d28 yes&rdquo;</p>
+      <p><strong>Why.</strong> Cloud Concierge passes kept ending Skipped Steps although nothing was left for the Concierge to do: on 2026-10-02 at 10:11 the only reason was two required deadlines on tickets at Position Review, which is the Custodian's audit. Junyan agreed (d28) that items waiting on the Custodian or on him stop counting as unfinished Concierge work.</p>
+      <p><strong>Route change.</strong> The deadline reader marks an item <code>waiting_on: Custodian</code> when its ticket sits at Review, and <code>waiting_on: owner action</code> when the ticket has an open human Action row (an owner decision, or a Charge or Invoice row the chase sweep watches). Those items are no longer <code>required</code>: the gate shows them as <code>deadlines_waiting</code> and they never make a pass ACTIVE or Skipped Steps. At Review a due review, a blocked or expired step and a held draft past its window are released; with an owner Action only a due review and a blocked step are. A message the Concierge must still draft stays its work at any Position. Canon [R-full-pass] counts these, and finished tickets left open for money, an open tour, the chase sweep or a renewal, as waiting, not incomplete.</p>
+      <p><strong>Failure mode.</strong> Proof only: a truncated Action relation, an unreadable Action row, a closed row or the checker's own escalation row is not a wait, and the item stays required as before. A duplicate or unverified send, a bad schedule or missing evidence stays required wherever the ticket sits. An unsent draft on a Review ticket stays visible in the deadline audit. No switch; revert the PR to undo.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>Sales Stage retirement Step 2 runs in shadow beside the live Stage readers<span class="kind">Sales decay, chase sweep, Desk Invariants, Concierge deadlines &middot; failure &middot; services/event-gate/stage_shadow.py, scripts/decay_pass.py, chase_sweep.py, invariants.py H, d18, d27 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/838">desk-correspondence #838</a></span></h3></summary>
       <p>Junyan: &ldquo;d18 yes do it&rdquo;</p>
       <p><strong>Why.</strong> Junyan chose to keep Position and retire the Sales Stage field in four steps (d18). Step 2 moves the readers that still pick tickets by Stage onto Position plus evidence, first in shadow so 2 to 3 days of real passes can be compared (d27).</p>
