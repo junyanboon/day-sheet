@@ -1426,6 +1426,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
+      <h3>A changed Skedda booking gets its charge card within minutes<span class="kind">event-gate booking-change-check (unpaid review, prepaid-hours bot) &middot; cadence, route &middot; EVENT-GATE booking_change_check.py, /booking-change-check, hosting/install-booking-change-check.sh, d87, d89 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/914">desk-correspondence #914</a></span></h3></summary>
+      <p>Junyan: &ldquo;d89 yes&rdquo;</p>
+      <p><strong>Why.</strong> A charge card waited for the 10-minute reconcile round after a booking was made or moved. Junyan asked for a check that runs right after a booking changes (d89); a Skedda webhook was turned down (d90).</p>
+      <p><strong>Route change.</strong> A new VPS timer (<code>danceannex-booking-change-check.timer</code>, every 3 minutes, 10:00 to 23:57 Toronto) calls event-gate <code>/booking-change-check</code>. It reads Skedda once for yesterday and today and compares each booking's times, room, price, paid state and holder with the last read. A new or changed booking runs the unpaid review and then the prepaid-hours bot for just that booking, retrying over the next five passes (at most an hour) while the Google Calendar copy catches up. It starts at 10:00 because the unpaid review does not run earlier. Both lanes keep their own locks and guards; the 10-minute round stays the backstop. Nothing is sent or charged.</p>
+      <p><strong>Failure mode.</strong> A failed Skedda read or lane error logs <code>decision: booking-change-check</code> at ERROR and keeps the booking pending; the round still cards it. <code>BOOKING_CHANGE_CHECK_DISABLED=1</code> turns it off; it is live only when <code>RECONCILE_SWEEP_LIVE=1</code> and <code>MONEY_RECONCILE_LIVE=1</code>. Rollback: <code>systemctl disable --now danceannex-booking-change-check.timer</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
       <h3>A new unpaid row gets its charge card in the same 10-minute round<span class="kind">event-gate money reconcile (unpaid review, prepaid-hours bot) &middot; cadence &middot; EVENT-GATE money_reconcile.py, plan_allowance_sweep.py, d87, d88 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/912">desk-correspondence #912</a></span></h3></summary>
       <p>Junyan: &ldquo;d88 yes&rdquo;</p>
       <p><strong>Why.</strong> The prepaid-hours check ran before the unpaid review in each reconcile round, so a row the review opened waited one more round (10 minutes) for its card, and the check worked only 5 waiting rows a round. A same-day booking move on 2026-10-04 took 42 minutes to card.</p>
