@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>Charge cards open up to 14 days ahead; prepaid-hours cards are worked out early and settled on the day<span class="kind">event-gate unpaid review, prepaid-hours bot, booking-change check &middot; route, cadence &middot; EVENT-GATE unpaid_review.py, plan_allowance_sweep.py, plan_allowance_receiver.py, booking_change_check.py, library/desk-sort.md, d91, d94, d95, d96 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/940">desk-correspondence #940</a></span></h3></summary>
+      <p>Junyan: &ldquo;d92 yes, 93 yes 94 yes 95 yes 96 yes&rdquo;</p>
+      <p><strong>Why.</strong> A charge card only appeared on the booking day, so a renter could not be charged ahead. Junyan approved early cards: card early, settle on the day, the same row is updated, and a charged row is frozen.</p>
+      <p><strong>Route change.</strong> The unpaid review now reads yesterday to 14 days ahead (was yesterday and today), with its coverage guard raised from 25 to 60 events (16 on 2026-10-05). A future booking whose evidence has not changed since its row was found is not re-read each round, and each write re-reads only that booking's day. The booking-change check reads the same window. For a 1AP/AAP booking after today the prepaid-hours bot previews the month and writes the charge card (or a covered note) on the same row, with no Skedda change, no receipt and no journal record; each round previews again so the amount follows earlier bookings. On the booking day the usual flow applies the hours. A row the Deck charged or invoiced early is frozen: on its day the bot applies the hours in Skedda and opens one note row for Junyan when the amount now differs ("charged $X, would now be $Y") or the hours could not be applied. The Desk Sort closes an early charged prepaid card without marking the booking paid in Skedda.</p>
+      <p><strong>Failure mode.</strong> A future booking the helper cannot work out gets the usual ask card. A charged row is never held or rewritten: a stop is one note row, and an edit made mid-round is retried next round. Rollback: <code>UNPAID_REVIEW_DAYS_AHEAD=0</code> returns the unpaid review and the change check to yesterday and today, so no new early rows open (rows already open keep their early card until their day). Nothing is charged or sent by any of this.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>The Deck charges an early prepaid-hours card at what is owed<span class="kind">The Deck &middot; failure &middot; src/booking-truth.js, sources/deck.html, desk-correspondence plan_allowance_sweep.py, d91, d96 &middot; <a href="https://github.com/junyanboon/deck-app/pull/220">deck-app #220</a></span></h3></summary>
+      <p>Junyan: &ldquo;96 yes&rdquo;</p>
+      <p><strong>Why.</strong> Junyan approved charging a 1AP/AAP card before the booking day (d96). Before the day Skedda still shows the full price, because the prepaid-hours bot applies the hours only on the booking day, so Charged refused the card as "Skedda now shows" a different price.</p>
+      <p><strong>Route change.</strong> A row whose Basis carries the bot's <code>[PLAN-ALLOWANCE-RECEIVER-V1] forecast</code> line is charged at its Amount while Skedda still shows the price the bot worked from and the Amount is the one it wrote. The card shows that Amount instead of Skedda's price.</p>
+      <p><strong>Failure mode.</strong> A changed booking or a hand-edited Amount is refused with the usual "Skedda now shows" reason until the bot works the card again (every 10 minutes). Every other Charged guard is unchanged.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>Responder intake closes reactions and short acks instead of stubbing them<span class="kind">The Responder &middot; route, failure &middot; scripts/intake_decide.py, EVENT-GATE tapback.py is_tapback, EVENT-GATE holding_reply.py ACK_CLAUSE, d69, d75 to d79 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/944">desk-correspondence #944</a></span></h3></summary>
       <p>Junyan: &ldquo;d69 yes, d75 yes, d76 yes, d77 yes, d78 yes, d79 yes&rdquo;</p>
       <p><strong>Why.</strong> A reaction in another language or shape ("Reacted 🙏 to “…”", "Le gustó “…”", "用🫶回应了“…”", a French "❤️ à" with invisible padding) and a bare "Np" were forced to a Customer Care stub and a Need Help text to Junyan on 10-01 and 10-04, because the intake only knew the English tapback verbs and demanded a quoted ask from every intent.</p>
