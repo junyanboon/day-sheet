@@ -1367,6 +1367,54 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>Watchlist fallback and the QA reviewer can no longer run on GitHub's paid machines<span class="kind">GitHub Actions (watchlist-refresh, qa-review) &middot; failure &middot; .github/workflows/watchlist.yml, .github/workflows/qa-review.yml, scripts/install_claude_cli.sh, ops/watchlist-runner/README.md, d18, d84 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/966">desk-correspondence #966</a></span></h3></summary>
+      <p>Junyan: &ldquo;d84 yes&rdquo;</p>
+      <p><strong>Why.</strong> Junyan's rule of 2026-09-30: no job in a private repo runs on GitHub's paid machines. #805 and #810 locked every other job to the VPS; these were the last two leftovers.</p>
+      <p><strong>Route change.</strong> None today. The watchlist refresh job already ran on the VPS runner (<code>WATCHLIST_RUNNER=watchlist-hostinger</code>) and is only a hand-run fallback since <code>desk-tick.timer</code> took over on 2026-09-21. The QA reviewer stays switched off (retired 2026-09-12).</p>
+      <p><strong>Failure mode.</strong> If <code>WATCHLIST_RUNNER</code> goes missing, the refresh job now runs on the VPS runner instead of a paid GitHub machine, and a hosted label there leaves it queued. The QA reviewer now installs node and Claude Code into the job's own temp folder, so if anyone switches it back on it can run on the VPS runner, where the old system-wide install had no permission. The switches: repository variable <code>WATCHLIST_RUNNER</code> picks the refresh runner, and <code>qa-review</code> stays off until someone enables the workflow.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Slot waiting list asks a holder only for a recurring waiter, with one end date<span class="kind">The Treasurer &middot; route &middot; EVENT-GATE slot_waitlist.py, library/the-treasurer.md, d98 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/963">desk-correspondence #963</a></span></h3></summary>
+      <p>Junyan: &ldquo;98 yes&rdquo;</p>
+      <p><strong>Why.</strong> The 2026-10-05 12:15 PM shadow pass planned a "keep your slot?" ask to a regular because a platform renter asked, through the Greeter, for one 30-minute window on a single date past the regular's term. First refusal is about the recurring slot, so a one-off date should never trouble a regular. The same planned ask gave the holder's agreement end date in its text but the board's Term End (three days earlier) in its key.</p>
+      <p><strong>Route change.</strong> Only a waiter asking for the slot on a recurring basis sets off the holder ask: its ticket title or body, or the first-refusal line's "wants" text, says weekly, recurring, regularly, ongoing, every or each weekday, or onward. A one-off ask (a Greeter line is one dated window) becomes a note in the plan for Junyan, and a row whose waiters are all one-off shows the new state ONE-OFF-ONLY and writes nothing. Every other state is unchanged. The ask text and its key now use one date: the board's Term End, the holder's agreement end date only when Term End is blank.</p>
+      <p><strong>Failure mode.</strong> A ticket whose page or body could not be read is never called one-off: it keeps its place (an unread page still holds the row at TICKET-UNREAD). The lane stays <code>SLOT_WAITLIST=shadow</code>; live remains Junyan's switch.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Unpaid-booking review gives a repeating booking's row its Skedda number, dates, Artist and Amount<span class="kind">unpaid-review &middot; route, failure &middot; EVENT-GATE unpaid_review.py, skedda_sync.py, analyst_sweep.py, d97, d98 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/965">desk-correspondence #965</a></span></h3></summary>
+      <p>Junyan: &ldquo;98 yes&rdquo;</p>
+      <p><strong>Why.</strong> An unpaid repeating booking reached the Deck's Charges tab with only a calendar id in Booking ref and no Artist (two rows on 2026-10-05), so Charged refused it. Skedda stamps a series with its first start, so the review either matched no booking or stopped at the recurring guard before it read the renter.</p>
+      <p><strong>Route change.</strong> The review now finds the occurrence the series rule puts at the calendar event's own start and end (series number + studio + occurrence start and end). The row is still Type Review, but Booking ref carries <code>skedda:&lt;id&gt; start:&lt;occurrence start&gt; end:&lt;occurrence end&gt;</code> and Artist is set when the Artist owns the Skedda holder (same check as one-offs). Its own older open Review row gets only what is missing (Artist, a missing skedda/start/end token, the new reason) and keeps hand-filled values (d97). The Skedda sync fills Amount on these rows from that one occurrence's Skedda price, as it does for one-off rows; it needs both start and end in Booking ref. Rows for other dates of the series are no longer counted as this date's row; a row naming the series with no start holds as a collision only when it names this date.</p>
+      <p><strong>Failure mode.</strong> No Paid or Charge on series evidence: Stripe tags name the series, not the date, so a recurring row never closes as paid from Stripe and never becomes Type Charge. A plan renter's repeating booking is not handed to the prepaid-hours bot (it refuses series) and gets no Amount, so the Deck will not charge it the full price; a person settles its hours. An event the series rule does not put at that start and end, or an unreadable rule, stays a Review with no booking, as before. A row a person made, a ticket owns, that is Ruled or closed, or that names another Artist or booking number is not touched. A readback mismatch stops the run. Off switches: <code>UNPAID_REVIEW_LIVE</code> unset stops the review, <code>SKEDDA_SYNC_MODE=off</code> stops the Amount fill.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>The Deck finds a renter's Stripe customer whatever the capital letters in its email<span class="kind">The Deck &middot; failure &middot; src/charge.js, src/extension-cancel.js, src/open-invoice-cancel.js, test/charge.test.js, test/extension-cancel.test.js, test/open-invoice-cancel.test.js, d99, d75 &middot; <a href="https://github.com/junyanboon/deck-app/pull/225">deck-app #225</a></span></h3></summary>
+      <p><strong>Why.</strong> Stripe's customer list filter is case sensitive. Skedda gives the email in lower case (avantedancecompany@gmail.com) while Stripe saved the customer as Avantedancecompany@gmail.com, so Charged said No card on file and offered an invoice although a Mastercard was saved (Avante Dance Company, Studio 527, Oct 18, $117.52, d99).</p>
+      <p><strong>Route change.</strong> The Deck still lists the exact spellings, then also runs a Stripe Customer Search on the same email and keeps a hit only when its email equals the bill-to address ignoring case. The search is on the Skedda account email only, never a name (d75). The same lookup feeds Charged and Send invoice, the extension Cancel's invoice find, and the open-invoice Cancel's separate-charge check.</p>
+      <p><strong>Failure mode.</strong> If the search cannot be read, or more than 100 Stripe customers match, the Deck shows the error and charges or voids nothing, as for a failed list read. A customer saved less than about a minute ago may miss the search, but the exact-spelling list still finds it.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>The Deck's renewal confirmations list reads even before any renewal is drafted<span class="kind">The Deck &middot; failure &middot; src/renewals.js, test/sales-renewals.test.js, deck-app #214, d100 &middot; <a href="https://github.com/junyanboon/deck-app/pull/227">deck-app #227</a></span></h3></summary>
+      <p><strong>Why.</strong> The Sales entry asks Notion for Actions rows at Status Drafted or Pending Review. The Actions Status select has no Drafted option until the Responder files its first renewal draft, and Notion refuses the whole query when a filter names an option that does not exist, so the Sales entry showed "Could not read renewal confirmations" since the renewals card went live on 2026-10-04.</p>
+      <p><strong>Route change.</strong> None. The same query, the same rows; Confirm and Decline are unchanged.</p>
+      <p><strong>Failure mode.</strong> When Notion answers that a named Status option does not exist, the Deck drops that status (no row can hold it) and asks again once for the rest, so the list shows the confirmed rows or nothing. Any other Notion error still shows on the card as before.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>Overnight checker reads every alert letter and stops counting its own row as an edit<span class="kind">Desk Invariants &middot; failure &middot; EVENT-GATE invariants.py board_escalations own_filing, library/job-10-desk-invariants.md, PR 941 review, d70 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/959">desk-correspondence #959</a></span></h3></summary>
       <p>Junyan: &ldquo;70 yes&rdquo;</p>
       <p><strong>Why.</strong> Two gaps found in the PR 941 review. The board read only knew alert letters A to K, so an L row was matched to its ticket alone and could stand in for any other letter on that ticket (a Cancelled L row silenced a new B). And filing the checker's own row bumps the ticket's last edit, so the next pass read it as somebody working the ticket and the lapsed-date alert (L) went quiet at Gate: Artist, Gate: Time and Gate: Money.</p>
