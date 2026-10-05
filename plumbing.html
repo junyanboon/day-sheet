@@ -1364,6 +1364,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Spam rescue shadow trial reads the Gmail spam folder every desk tick, until 2026-10-19<span class="kind">Desk tick (spam rescue) &middot; route, failure &middot; scripts/spam_rescue.py, scripts/tick.sh step 2b, state/spam_rescue/, d87, d89 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/975">desk-correspondence #975</a></span></h3></summary>
+      <p>Junyan: &ldquo;d87 yes&rdquo;</p>
+      <p><strong>Why.</strong> Junyan empties the business Gmail spam folder by hand, often unread, and the desk's own spam filter queues no reply. The Jev Keeper's backtest found real renters in both.</p>
+      <p><strong>Route change.</strong> Every desk tick (08:07 to 22:52 Toronto), right after the Gmail pull, <code>spam_rescue.py</code> reads every spam-folder message it has not read yet (read-only token) and what the desk filter marked spam in the last 8 days. Code rules rescue a sender we have written to, a platform or vendor we use (only when Gmail does not mark the From address forged), or a reply quoting a studio email; anything else gets one Jev question. It writes one ledger line per message (site <code>spam_rescue</code>, also in <code>state/spam_rescue/ledger/</code>) and the day's "seen in spam" list in <code>state/spam_rescue/seen/</code>, which the morning Desk Watch shows Junyan before he empties the folder. Shadow only: it never moves, deletes, labels, drafts or sends. The trial stops by itself after 2026-10-19.</p>
+      <p><strong>Failure mode.</strong> A failed Jev call puts the message on the maybe list. A Gmail or script failure is logged and the tick carries on; the position holds and the next tick retries. A message Gmail cannot return three times running is logged and dropped, so one bad id never holds the trial up; the step is capped at 240 seconds of the tick. To stop it early, revert this PR (or delete step 2b in <code>scripts/tick.sh</code> and the matching step in <code>.github/workflows/watchlist.yml</code>).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Maggie, AAP and 1AP charge rows and cards wait until 24 hours before the booking<span class="kind">event-gate (unpaid-booking review, prepaid-hours bot), The Desk Sort &middot; route &middot; EVENT-GATE bill_wait.py, unpaid_review.py, plan_allowance_sweep.py, library/desk-sort.md, deck-app charge-hold.js, d103, d105, d106 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/972">desk-correspondence #972</a></span></h3></summary>
+      <p>Junyan: &ldquo;we don't bill AAP, 1AP or maggie's bookings until 24hrs prior to the booking. so those shouldn't show up on here. Everyone else can though.&rdquo;</p>
+      <p><strong>Why.</strong> Junyan ruled on 2026-10-05 (d103) that these renters are not billed before 24 hours ahead, and with "106 yes" asked the robots to follow the Deck. The robots still made their charge rows and cards up to 14 days early.</p>
+      <p><strong>Route change.</strong> For Maggie Morrison and any renter with exactly one of 1AP/AAP and Account Status Active, the unpaid-booking review opens no Actions row, and makes no existing row chargeable, until 24 hours before the booking starts. The prepaid-hours bot writes its early card only from then. The Desk Sort writes no charge card before then. Everyone else still gets the row up to 14 days ahead; a paused plan bills as before; extensions keep their own pay-by-midnight rule (d105). This replaces the early prepaid-hours charge (d91, d96) for these renters.</p>
+      <p><strong>Failure mode.</strong> A row waiting shows as <code>waiting</code> in the round receipt and comes back on the first round inside 24 hours (the unpaid review runs from 10:00, so an early-morning booking gets its row at 10:00 the day before). To undo, revert this PR and redeploy event-gate.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
