@@ -1278,6 +1278,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>The extension lane's AI reader treats "I came in early, please bill me" like "we left late"<span class="kind">The Registrar &middot; route &middot; EVENT-GATE extension_reader.py, extension_sweep.py, test_extension_reader.py, library/autonomy.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/922">desk-correspondence #922</a></span></h3></summary>
+      <p>Junyan: &ldquo;35 yes&rdquo;</p>
+      <p><strong>Why.</strong> Maggie Morrison wrote on 2026-07-29 that she entered an hour early (12:45 rather than 1:45) and asked to be billed. The reader called that a billing question; Junyan ruled it is a booking request, like a late departure.</p>
+      <p><strong>Route change.</strong> The reader has a new kind, <code>arrived_early</code>. In full mode the lane finds the one booking of theirs that starts near the message and writes an extra block from the time they arrived to the booking's start (code and the AI must agree on the time), then queues the usual confirmation and charge row. If a Timekeeper block already ends at that start, it is kept and a held confirmation goes out instead, never a second block. A clash goes to a person. In veto mode (today) only the classification changes: an <code>arrived_early</code> verdict turns the regex's would-be stay-later booking into a Review row.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
