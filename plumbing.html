@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>Treasurer emails one renter her monthly extra-hours summary, PDF attached<span class="kind">The Treasurer &middot; route, cadence, failure &middot; EVENT-GATE extra_hours.py, booking_summary_pdf.py, treasurer_sweep.run_dunning, library/the-treasurer.md, library/autonomy.md, send-engine v28, d3, d5 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/970">desk-correspondence #970</a></span></h3></summary>
+      <p><strong>Why.</strong> Junyan (2026-10-05, d3 and d5) asked for one Fixed Option renter to get her previous month's extra hours (bookings outside her agreement series) as a booking summary on the 1st, sent automatically. It is a one-renter arrangement, not a general rule.</p>
+      <p><strong>Route change.</strong> On the 1st to the 5th the Treasurer's daily 08:00 check reads Skedda and Stripe, builds the house Booking Summary PDF, files it on a Docs row, and queues one Message Queue email whose attachment is <code>notion:&lt;Docs page id&gt;</code>. When every booking matches a Stripe charge it goes Ready to Send with Send After 10:00; the send engine (v28) fetches the PDF from the Docs page.</p>
+      <p><strong>Failure mode.</strong> A booking not charged yet or not matching Stripe makes it wait a day; on the 5th it is queued at Pending Review with a Review row. A failed read writes nothing. <code>EXTRA_HOURS_AUTOSEND_DISABLED=1</code> holds it; <code>EXTRA_HOURS_SUMMARY=off</code> stops it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>Concierge retires a carried review once the ticket's review gate is gone<span class="kind">The Concierge &middot; route, failure &middot; EVENT-GATE concierge_deadlines.py gate_cleared_review_evidence, d44 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/976">desk-correspondence #976</a></span></h3></summary>
       <p>Junyan: &ldquo;44 yes&rdquo;</p>
       <p><strong>Why.</strong> A Concierge review that clears Revisit After and leaves a plain note (a 901 alarm code ticket, 2026-10-04) left the ticket at Review with no gate. The worklist stops listing a ticket with no gate, but the carried review key could only retire on a Done, Won or Lost ticket with every linked Action closed. Its open Decision Action kept the ticket's review key on the deadline audit as <code>missing_evidence</code> on every sweep.</p>
