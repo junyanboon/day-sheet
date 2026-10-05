@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-05</span>
+      <h3>An early-charged prepaid-hours booking is marked paid in Skedda after its hours are applied<span class="kind">prepaid-hours bot (event-gate), skedda-mcp &middot; route, tool, failure &middot; EVENT-GATE plan_allowance_sweep.py, skedda-mcp /settle-charged-booking (skedda-cli hosting/charged_settle.py), library/desk-sort.md, d103 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/948">desk-correspondence #948</a></span></h3></summary>
+      <p>Junyan: &ldquo;d103 yes&rdquo;</p>
+      <p><strong>Why.</strong> A prepaid-hours booking charged early from the Deck had its hours applied on the booking day, but the leftover stayed unpaid in Skedda while Stripe held the money. Junyan approved the bot marking it paid.</p>
+      <p><strong>Route change.</strong> On the booking day, after the hours are applied (or when no hours are left), the bot compares the Deck's charge with what the booking now costs. When they are equal and the charge is a card payment (a <code>CHARGED</code> line with a Stripe <code>pi_</code> id), it reads that PaymentIntent in Stripe (succeeded, CAD, the same amount, tagged with this booking, not refunded or disputed), then calls the new skedda-mcp route <code>/settle-charged-booking</code>, which marks that one booking paid (payment status only, price unchanged) and reads it back. The charged Action row is still never written. A different amount stays with the existing "charged $X, would now be $Y" note row. An invoiced row is left unpaid.</p>
+      <p><strong>Failure mode.</strong> Stripe or Skedda unreachable, or a lost response: retried next round, and a booking that already reads paid is not written again. Any other refusal (a different price, a refund, a payment tagged with another booking) opens one note row for Junyan, "hours applied, not marked paid in Skedda", and the booking stays unpaid. Nothing is charged or sent. To stop it, roll back the event-gate deploy; until skedda-mcp has the route, each such booking gets that note row instead.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
       <h3>Charge cards open up to 14 days ahead; prepaid-hours cards are worked out early and settled on the day<span class="kind">event-gate unpaid review, prepaid-hours bot, booking-change check &middot; route, cadence &middot; EVENT-GATE unpaid_review.py, plan_allowance_sweep.py, plan_allowance_receiver.py, booking_change_check.py, library/desk-sort.md, d91, d94, d95, d96 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/940">desk-correspondence #940</a></span></h3></summary>
       <p>Junyan: &ldquo;d92 yes, 93 yes 94 yes 95 yes 96 yes&rdquo;</p>
       <p><strong>Why.</strong> A charge card only appeared on the booking day, so a renter could not be charged ahead. Junyan approved early cards: card early, settle on the day, the same row is updated, and a charged row is frozen.</p>
