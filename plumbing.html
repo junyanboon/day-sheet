@@ -1364,6 +1364,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Sales Stage retirement Step 2 runs in shadow beside the live Stage readers<span class="kind">Sales decay, chase sweep, Desk Invariants, Concierge deadlines &middot; failure &middot; services/event-gate/stage_shadow.py, scripts/decay_pass.py, chase_sweep.py, invariants.py H, d18, d27 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/838">desk-correspondence #838</a></span></h3></summary>
+      <p>Junyan: &ldquo;d18 yes do it&rdquo;</p>
+      <p><strong>Why.</strong> Junyan chose to keep Position and retire the Sales Stage field in four steps (d18). Step 2 moves the readers that still pick tickets by Stage onto Position plus evidence, first in shadow so 2 to 3 days of real passes can be compared (d27).</p>
+      <p><strong>Route change.</strong> None. Sales decay, the chase sweep's Sales lane, the decay receipt check, the Concierge deadline owner and invariant H still act on the Stage pick only. Each also computes the Position-based pick and logs both: event-gate readers to <code>/var/lib/eventgate/stage-shadow/&lt;day&gt;.jsonl</code> (<code>python stage_shadow.py summary --day &lt;day&gt; --days 3</code> in the container), sales decay to <code>stage_shadow</code> in <code>decay/&lt;day&gt;.json</code>. The extra work is Notion reads only.</p>
+      <p><strong>Failure mode.</strong> A shadow read or write that fails is recorded in the shadow line and never changes the live pass, its errors or its ok flag. <code>STAGE_SHADOW=0</code> turns every shadow off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-05</span>
+      <h3>Slot waiting list counts only open tickets and live first-refusal asks as waiters<span class="kind">The Treasurer &middot; route, failure &middot; EVENT-GATE slot_waitlist.py, library/the-treasurer.md, d92 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/924">desk-correspondence #924</a></span></h3></summary>
+      <p>Junyan: &ldquo;d92 yes&rdquo;</p>
+      <p><strong>Why.</strong> The shadow passes planned about 19 "keep your slot?" asks where two were expected. Sales tickets name their artist relation <code>🎨 Artist Database</code>, but the lane read <code>Artist</code>, got nothing, and so took every holder's own ticket for a stranger waiting on the slot. Closed tickets, a second holder's ticket and repeated Greeter lines for one asker were also counted.</p>
+      <p><strong>Route change.</strong> A waiter is now only an open Sales ticket (Position not Won, Lost or Done) whose artists include none of the row's holders, or a live <code>[rofr:]</code> Notes line, once per asker. Every holder on a row is a holder, and a ticket with several artists matches on any of them. Closed and holder tickets are read for their Position only, never their body. Each pass logs counts per state and always plans and names the two acceptance rows first.</p>
+      <p><strong>Failure mode.</strong> Unchanged: the lane stays <code>SLOT_WAITLIST=shadow</code> (writes nothing); an unread ticket still holds its row at TICKET-UNREAD for the next pass. Live remains Junyan's switch.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-05</span>
