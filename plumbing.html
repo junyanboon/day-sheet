@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-06</span>
+      <h3>A failed Artist read no longer sends a platform guest down the "no phone" path<span class="kind">The Registrar &middot; failure &middot; services/event-gate/booking_sweep.py platform_artist relay_hta_blocker chase_platform_phone, library/relay-addresses.md, library/queue-fbs-messages.md, d159 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/990">desk-correspondence #990</a></span></h3></summary>
+      <p>Junyan: &ldquo;159 yes&rdquo;</p>
+      <p><strong>Why.</strong> A Peerspace guest had a phone card and an SMS HTA already sent. One overnight pass on 2026-10-06 read the name as "no phone", queued a relay HTA and posted the "starts today with NO phone number" ping. The likely cause is one failed Notion read that <code>platform_artist</code> swallowed into the same answer as a real "no phone".</p>
+      <p><strong>Failure mode.</strong> A failed Artist read on a platform booking now does nothing for that booking this pass: no phone ask, no chase, no relay HTA, no residue Action, no ops post. The pass logs it, counts it under <code>deferred</code> and reads again next pass. Before the booking-day relay HTA and its ping, the Registrar re-reads the name fresh and checks the Message Queue for an HTA for the same date, time and studio, Sent or pending, from any lane. Exactly one phone card or such an HTA holds the relay HTA and the ping; a failed re-check also holds and retries next pass.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-06</span>
       <h3>The Courtesy Reply Lane stops closing on a bare greeting and waits out a burst of texts<span class="kind">Courtesy Reply Lane &middot; route &middot; services/event-gate/holding_reply.py, services/event-gate/app.py, library/specs/holding-reply-auto-send.md, d131, d132 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/987">desk-correspondence #987</a></span></h3></summary>
       <p>Junyan: &ldquo;d131 yes, d132 yes&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-05 Ivanka texted "Hey", "I cant open the door 🙃" and "5998?" within 15 seconds. The lane judged "Hey" on its own, read it as a courtesy close and queued "Our pleasure 🙏 If you need anything else please don't hesitate to ask." (CX-6741-1005-1913) while she stood at a locked door. On 2026-09-26 "Thank you" followed 20 seconds later by "Can I park right at the door?" drew the same close.</p>
