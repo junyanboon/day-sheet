@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-06</span>
+      <h3>A staff member's own name sign-off no longer blocks a queued message<span class="kind">Attended session &middot; failure &middot; services/event-gate/reply_check.py split_staff_signoff, scripts/queue_draft.py, library/house-rules.md Outbound sign-off, d124, MQ 3f17503281c4814e99b0e20078c89f2f &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/983">desk-correspondence #983</a></span></h3></summary>
+      <p>Junyan: &ldquo;house rule should be changed to say that staff will add in their own sign offs&rdquo;</p>
+      <p><strong>Why.</strong> Shamir's held follow-up was Junyan's own text ending "Thank you, Junyan", and the write-time check refused it as a name sign-off. A helper had to override the check to queue his words.</p>
+      <p><strong>Failure mode change.</strong> On a row raised by <code>Attended session</code> or <code>Staff (manual)</code>, a name sign-off (<code>signoff_name</code>, <code>sms_signoff</code>) is now a <code>REPLY-CHECK-NOTE</code> line in Reasoning, not a refusal. A lane's draft (Raised by = the lane's name) is still refused, so robots still never sign with a name. Every other reply rule still blocks a human-raised row. To undo, empty <code>HUMAN_RAISED</code> in <code>reply_check.py</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-06</span>
       <h3>Unsent Gmail drafts are no longer logged as mail<span class="kind">The Responder &middot; route, failure &middot; scripts/gmail_pull.py, scripts/test_desk_addresses.py, scripts/test_ticket_coverage.py, d71 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/981">desk-correspondence #981</a></span></h3></summary>
       <p><strong>Why.</strong> The Gmail poller listed the business mailbox's drafts like any message. A follow-up to a renter that Junyan was holding as a draft on purpose was logged, and since the desk's own mail counts as a desk reply in its thread, the log made it look as if the desk had already written to that renter.</p>
       <p><strong>Route change.</strong> The poller leaves the drafts folder out of its Gmail search and skips any message with the DRAFT label. A draft is never written to the log and never marked as seen, so when it is finally sent, the sent copy is logged as normal. The one logged draft was removed from the log, so that renter's thread again reads as no desk follow-up sent.</p>
