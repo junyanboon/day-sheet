@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-06</span>
+      <h3>Unsent Gmail drafts are no longer logged as mail<span class="kind">The Responder &middot; route, failure &middot; scripts/gmail_pull.py, scripts/test_desk_addresses.py, scripts/test_ticket_coverage.py, d71 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/981">desk-correspondence #981</a></span></h3></summary>
+      <p><strong>Why.</strong> The Gmail poller listed the business mailbox's drafts like any message. A follow-up to a renter that Junyan was holding as a draft on purpose was logged, and since the desk's own mail counts as a desk reply in its thread, the log made it look as if the desk had already written to that renter.</p>
+      <p><strong>Route change.</strong> The poller leaves the drafts folder out of its Gmail search and skips any message with the DRAFT label. A draft is never written to the log and never marked as seen, so when it is finally sent, the sent copy is logged as normal. The one logged draft was removed from the log, so that renter's thread again reads as no desk follow-up sent.</p>
+      <p><strong>Failure mode.</strong> If Gmail ever returns a draft without the DRAFT label, it would be logged again. To undo, revert the PR; the next desk tick reads main.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-06</span>
       <h3>Mail the desk sent from info@ is no longer read as renter mail<span class="kind">The Responder &middot; route, failure &middot; scripts/desk_addresses.py, gmail_pull.py, ticket_coverage.py, jev_triage.py, d64 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/980">desk-correspondence #980</a></span></h3></summary>
       <p><strong>Why.</strong> On 2026-10-05 two emails the desk sent from info@danceannex.ca reached the polled mailbox without a SENT label, so the Gmail poller logged them as incoming. The Responder's quiet gate then asked for a ticket and a reply to our own mail every pass; the Responder rightly refused, ended each pass "skipped steps", and the Sentinel raised an incomplete-streak alert.</p>
       <p><strong>Route change.</strong> One shared list of the desk's own addresses (info@danceannex.ca and the desk Gmail) now decides. The poller logs mail from those addresses as outgoing, to the person it was sent to. The ticket check and Jev triage skip any older copy still logged as incoming, and count it as a desk reply in its thread. Staff addresses such as junyan@ are not on the list and still reach triage.</p>
