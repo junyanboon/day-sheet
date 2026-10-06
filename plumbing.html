@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-06</span>
+      <h3>Alarm codes can be removed by a robot, only for names Junyan approved<span class="kind">The Doorman &middot; tool, failure &middot; danceannex-alarm-monitor PR 35 (access_operation, access_authority_revision), library/doorman-access-lifecycle.md Removal by named owner approval only, d163, d164 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/992">desk-correspondence #992</a></span></h3></summary>
+      <p>Junyan: &ldquo;you can delete the list that you showed me&rdquo;</p>
+      <p><strong>Why.</strong> Junyan approved robots removing alarm codes for people he names in chat, one at a time. Before, every delete was his to do by hand in the Alarm.com UI.</p>
+      <p><strong>Route change.</strong> Each approved batch is one ✅ Actions row (Type Access / PIN) listing every name with its alarm user id. A removal goes through the alarm service's <code>access_operation</code> bound to that row. The new read-only tool <code>access_authority_revision</code> gives the row's exact revision. Done means two all-panel proofs at least 10 minutes apart.</p>
+      <p><strong>Failure mode.</strong> The service refuses a removal when the row is not an open Actions row naming that person and id on one line, or when the person still has a booking, a membership or an authorized-user link. With <code>DOORMAN_ACCESS_REMOVAL_LIVE</code> not <code>1</code> on <code>alarm-mcp</code>, a confirm returns <code>disabled</code> and nothing is removed.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-06</span>
