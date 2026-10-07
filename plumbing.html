@@ -1366,6 +1366,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>The Registrar moves an AAP or 1AP booking to another studio when the plan rate is the same<span class="kind">The Registrar &middot; route &middot; services/event-gate/move_sweep.py plan_studio_refusal plan_refusal account_refusal, library/autonomy.md, library/desk-sort.md, d11, d13 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/997">desk-correspondence #997</a></span></h3></summary>
+      <p>Junyan: &ldquo;d11 yes and 1ap as well ... d13 yes&rdquo;</p>
+      <p><strong>Why.</strong> David Garzon (AAP) asked to move his Oct 15 booking from 509B to 509A. The lane refused every plan studio change as "a human decides", though the plan rate is the same in every studio.</p>
+      <p><strong>Route.</strong> An AAP or 1AP move that names another ordinary studio now goes through the cross-studio <code>/move-booking</code> path when the booking's live Skedda price is the plan rate for its length to the cent, the length is the same, the new room is free with the 15-minute buffer, and every plan guard passes. The read-back checks room, times, holder, price and payment state. A different price, a resize, a clash or a failed guard stays one Review row. Fixed Option studio changes still go to a human. Refusals already filed are not re-judged (RULES_VERSION unchanged), so David's booking, being moved by hand, is left alone.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-07</span>
       <h3>A repeat hold shows on the Deck card, and the second room's access text says "same codes as above"<span class="kind">The Registrar &middot; route, failure &middot; outbound_guard.py, history_check.py, booking_sweep.py compose_next_room_hta, library/support-ladder.md, d2, d3 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/996">desk-correspondence #996</a></span></h3></summary>
       <p>Junyan: &ldquo;d2 yes d3 yes&rdquo;</p>
