@@ -1367,6 +1367,24 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-08</span>
+      <h3>The Registrar moves Maggie Morrison to another studio at her one rate, and studio-change questions name the new studio<span class="kind">The Registrar &middot; route &middot; services/event-gate/move_sweep.py FIXED_OPTION_SAME_RATE rate_studio_refusal fixed_option_refusal, services/event-gate/move_confirm.py render write_ask, library/autonomy.md, library/desk-sort.md, d30, d31 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1001">desk-correspondence #1001</a></span></h3></summary>
+      <p>Junyan: &ldquo;30 yes she only uses 509B though 31 yes&rdquo;</p>
+      <p><strong>Why.</strong> Maggie Morrison (Fixed Option) pays the same rate in every studio, but every Fixed Option studio change went to a human (d13). And a studio-change move question named only the old studio, so a person had to edit it before Send.</p>
+      <p><strong>Route.</strong> A Maggie Morrison move that names another ordinary studio now goes through the cross-studio <code>/move-booking</code> path when her booking's live Skedda price is $18.08 an hour for its length, the length is the same, the new room is free with the 15-minute buffer, and every Fixed Option guard passes. She is matched by Artist id; every other Fixed Option studio change still goes to a human. A studio-change move question (AAP, 1AP, Maggie, Private Class Add-On) now says the new time "in Studio &lt;new&gt;", and is still held at Pending Review for Junyan's Send press.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>A Giggster request accepted but not paid raises a staff Action to cancel it through Giggster<span class="kind">The Greeter &middot; route &middot; services/event-gate/greeter_sweep.py unpaid_accept_pass open_decision_rows, services/event-gate/test_greeter_giggster_unpaid.py, library/job-2-triage.md, library/house-rules.md, library/desk-sort.md, ticket 160 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/999">desk-correspondence #999</a></span></h3></summary>
+      <p>Junyan: &ldquo;If they don't autopay then we will cancel it moving forward ... we will auto cancel right away but it will be a staff action as we will need to reach out to giggster&rdquo;</p>
+      <p><strong>Why.</strong> Giggster lets a renter pay any time up to the booking after the host accepts, and sends nothing at the accept. Parisa B. paid only on the day and was missed (ticket 160).</p>
+      <p><strong>Route.</strong> Each 5-minute Greeter pass reads Giggster ACCEPT or DECLINE rows edited in the last day. A Deck APPROVE or DONE ruling there is the accept moment. If no "Confirmed Booking Details" mail for that renter and date is in the mailbox, the Greeter files one Review Action "Contact Giggster to cancel unpaid booking" (renter, studio, slot, Giggster booking id, <code>Booking ref</code> platform key), keyed <code>[greeter:unpaid:&lt;row id&gt;]</code> so it files once. No text, no renter contact, no robot cancel. A paid mail that lands first closes the Action as Processed and PlatformMirror books the room as usual.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
       <h3>A paid Giggster request reaches Skedda, and a renter at the door with no booking alerts Junyan and Ela<span class="kind">The Greeter, Stuck Access, Urgent Decision Sweep &middot; route &middot; services/event-gate/greeter_sweep.py _SHAPES platform_ref, services/event-gate/stuck_access.py no_booking_text, services/event-gate/urgent_decision_sweep.py PLATFORM_KEY, services/event-gate/owner_notify.py also_ops_lead, services/event-gate/owner_text_release.py release, send-engine PlatformMirror.gs pmParseGiggster_, library/job-2-triage.md, ticket 160, d14, d16, d18 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/998">desk-correspondence #998</a></span></h3></summary>
       <p>Junyan: &ldquo;d14 yes ... d18 yes and tag Ela as well&rdquo;</p>
       <p><strong>Why.</strong> Parisa B. paid for her Giggster request (509A, Oct 7 4:30 PM) at 7:47 AM. No lane read Giggster's "Confirmed Booking Details" mail, so no Skedda booking, code or access text existed. At 4:44 PM she asked for the code; the stuck-access lane found no booking and said nothing.</p>
