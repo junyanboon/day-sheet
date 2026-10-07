@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-07</span>
+      <h3>A repeat hold shows on the Deck card, and the second room's access text says "same codes as above"<span class="kind">The Registrar &middot; route, failure &middot; outbound_guard.py, history_check.py, booking_sweep.py compose_next_room_hta, library/support-ladder.md, d2, d3 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/996">desk-correspondence #996</a></span></h3></summary>
+      <p>Junyan: &ldquo;d2 yes d3 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-07 a renter with two rooms the next day got her first room's confirmation and access text, then the Registrar queued the full access text for the second room. The outbound guard held it as a repeat, but said so only in Reasoning, so the Deck card read "Not a repeat of a recent message".</p>
+      <p><strong>Route change.</strong> When the guard holds a row for shared sentences it now writes a History Check line naming the earlier text and its time, and the 5-minute history check keeps that line. When the renter's access text for another room that day already went (or is released) with the same alarm code written out, the Registrar's next text is short: the room, "the exact same codes as in the text above" with the codes on one line, and that room's walkthrough.</p>
+      <p><strong>Failure mode.</strong> If the earlier text cannot be read or does not carry the code, the Registrar sends the full access text as before. The guard switch <code>OUTBOUND_GUARD_DISABLED</code> still turns the guard off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-07</span>
       <h3>The Registrar no longer offers a move on a replacement or comp booking, and re-checks on the yes<span class="kind">The Registrar &middot; route &middot; services/event-gate/move_sweep.py moved_once_why ticket_history_why, services/event-gate/move_confirm.py perform, library/autonomy.md, library/studio-tickets-bookings.md, library/desk-sort.md, d169, d170 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/993">desk-correspondence #993</a></span></h3></summary>
       <p>Junyan: &ldquo;d170 yes complementary bookings have to be scrutinized for sure.&rdquo;</p>
       <p><strong>Why.</strong> Himanshi Mehta's Skedda 120834065 ($0, "one-time no-charge replacement for September 13") was already her one-time replacement. The guard read only "moved from" in the title, so the Registrar asked on 2026-10-06 and moved it on her yes, a second move against terms 3.4.</p>
