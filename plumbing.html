@@ -1364,6 +1364,42 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>The thank-you step stands down when the desk already thanked the renter, and says so when it fails<span class="kind">The Registrar &middot; route, failure &middot; EVENT-GATE gtg_sweep.py (pbf_step, desk_followed_up_after, pbf_alerts), inbound.py (fetch_desk_sms, fetch_desk_email), followup_coverage.py (hand_sent), end_of_day_review.py, d178, d179 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1015">desk-correspondence #1015</a></span></h3></summary>
+      <p><strong>Why.</strong> Matthew Jadd, Oct 7: his booking ended at 7:30 PM, Ela thanked him by hand at 7:54 PM, and the robot still drafted a follow-up at 8:36 PM that had to be rejected on the Deck. The step was also an hour late, and nothing anywhere said why: its errors were cut off the log line.</p>
+      <p><strong>Route change.</strong> Before drafting, the step reads the desk's own texts and sent email to the renter since the booking ended. If one thanks them or asks how it went, nothing is queued, the board's PBF box is set to Sent and the run logs "PBF skipped, desk already sent at HH:MM". Later passes see the box and stop. The daily coverage checks count that box as covered.</p>
+      <p><strong>Failure mode.</strong> An unreadable text or email log queues nothing that pass (fails closed). Every step error now gets its own log line. A booking more than 20 minutes past its end that failed, or got neither a follow-up nor a skip reason, files one Actions row for the Ops Lead and posts once to #desk-status; a board read failure does the same once a day. Off switch: <code>PBF_STEP_DISABLED=1</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>The move lane stops retrying a request after 3 failed passes and closes it or files one card for a person<span class="kind">The Registrar &middot; failure &middot; EVENT-GATE move_sweep.py, library/studio-tickets-bookings.md, d174, Sweep Feedback 3ee7503281c481ee 3f27503281c4813e 3f27503281c48163 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1011">desk-correspondence #1011</a></span></h3></summary>
+      <p><strong>Why.</strong> A move request that failed every pass filed one agent-owned "The Registrar's move lane keeps failing on one request" Run Error row and then kept retrying every 5 minutes: David Garzon's source logged 648 errors in 48 hours (2026-10-07 and 08), and Parisa B.'s source 7d941138 retried although her Giggster booking was already cancelled and refunded. Junyan, 2026-10-08 (d174): "When the move robot fails on the same request 3 times, it stops retrying. If the booking was already cancelled, refunded or moved, it closes it quietly. Otherwise it files one card for a person naming the renter, the booking and the error."</p>
+      <p><strong>Failure mode change.</strong> At the third failed pass in a row the source is parked and never tried again (kept 180 days after its last failure). If the request's care ticket is Done and its closing note says cancelled, refunded or moved, it closes quietly with that reason and nothing is filed. Otherwise one Review row for the Ops Lead, <code>[mover-parked-&lt;source&gt;]</code>, names the renter, the booking (or the renter's words) and the last error. The agent-owned <code>[mover-error-&lt;source&gt;]</code> Run Error row is no longer filed.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>A Forgot to Arm that staff or the renter already explained gets no reminder<span class="kind">The Timekeeper &middot; route &middot; library/timekeeper-overtime.md Step 10, library/desk-drop-replies.md, EVENT-GATE overtime_sweep.py (fta_explained), d180 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1015">desk-correspondence #1015</a></span></h3></summary>
+      <p><strong>Why.</strong> Jack C, Studio 901, Oct 6: Ela posted in Desk Drops at 6:38 PM that he was rushed out and could not arm, and the Concierge answered "nothing more is needed". Overnight the Timekeeper still drafted the Forgot to Arm reminder, and it went out the next morning.</p>
+      <p><strong>Route change.</strong> When a drop explains a renter's miss, the Concierge writes one dated line on the renter's Customer Care ticket with the tag <code>[miss-explained &lt;studio&gt; &lt;date&gt;]</code>. Before drafting a Forgot to Arm reminder, the Timekeeper reads the renter's texts since the end, that day's Desk Drops and those ticket notes. If the miss is already explained, no reminder is drafted and the ticket is closed with a note.</p>
+      <p><strong>Failure mode.</strong> A source that cannot be read does not count as an explanation: the reminder is drafted, held for review as before, and the report names the unread source.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>"Can't open the door" texts at 509A and 509B get the two-codes door steps, and Junyan is alerted within a minute<span class="kind">event-gate quick-answer cards, Stuck Access &middot; route, failure &middot; services/event-gate/cards.py door-509A, stuck_access.py, presence.py, d161, d164, d165, d166 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1014">desk-correspondence #1014</a></span></h3></summary>
+      <p>Junyan: &ldquo;161 yes, 164 no, 165 yes, 166 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-05 a 509A renter texted "I cant open the door" three minutes before her booking, then tried her alarm code on the street door. No automatic reply reached her and Junyan heard about it only from the Responder's pass 11 minutes later.</p>
+      <p><strong>Route change.</strong> The <code>door-509A</code> card now fires on "can't open the door", "can't get in", "door won't open", "locked out" and "door code isn't working", ahead of the codes card, and only for a renter whose booking runs from 30 minutes before its start to its end. It sends the How to Respond row tagged <code>[door-card: 509A 509B]</code> (street door code first, then their own alarm code inside) with their alarm code from the watchlist; with no alarm code, or before that row exists, it sends the old 509A street-door row. Another studio is added by tagging its own row. It skips windows, the studio's own door, being locked in, a door that will not lock, tapbacks, our own quoted text, another building named, and a bare "front door". The Stuck Access lane now reads "can't open the door" as an access problem and alerts Junyan within a minute; when the card went out, the alert says so, and its urgent tag keeps the Responder from alerting a second time. Email still only alerts.</p>
+      <p><strong>Failure mode.</strong> An unreadable booking window sends nothing (the alert still goes). The 12-hour guard and the <code>QA-door-509A-</code> row check stop a second send. An armed panel no longer counts as "gone" for this card. <code>QUICK_ANSWER_ENABLED</code>, <code>STUCK_ACCESS_DISABLED</code> and demoting the row from Auto-send in Notion turn it off.</p>
+    </details>
+    </li>
     <li class="entry human">
     <details>
       <summary><span class="when">2026-10-08</span>
