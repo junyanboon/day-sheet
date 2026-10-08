@@ -1367,6 +1367,22 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-08</span>
+      <h3>A platform booking whose first name matches several cards keeps the board row's own Artist<span class="kind">The Host &middot; failure &middot; EVENT-GATE booking_reconcile.py, Jessica M. (Giggster, 693, 2026-10-10), FBS board row 3f27503281c481d0a4a3c4c218dec385 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1010">desk-correspondence #1010</a></span></h3></summary>
+      <p><strong>Why.</strong> Jessica M.'s Giggster booking is titled "Jessica Giggster". Six Artist cards start with "Jessica", so booking reconciliation failed every pass with "platform Artist unresolved: ambiguous" and the Host left her row at Pending, although the row already linked the right card. Nothing downstream (tier, code, access text) ran. Junyan, 2026-10-08: "why isn't this just done automatically?"</p>
+      <p><strong>Failure mode change.</strong> When the platform name is ambiguous and the FBS board row links exactly one Artist that is one of the cards the name matches, reconciliation accepts that Artist and the row goes on to the Host ladder. A linked card the name does not match, no linked card, several relay-attached cards, or an adjacent extension block is still held as before; each accepted fallback writes one log line. Used by the Host and the Registrar's daily lanes (both call <code>booking_reconcile.reconcile</code>). The end-of-booking timing check (<code>fbs_access.belongs</code>) accepts the same linked card when it carries a phone.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>Extra-hours summary leaves out an agreement day moved out of its series<span class="kind">The Treasurer &middot; failure &middot; EVENT-GATE extra_hours.py classify, library/the-treasurer.md, d12, booking 119955193 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1017">desk-correspondence #1017</a></span></h3></summary>
+      <p><strong>Why.</strong> The September practice run held on Sep 30 (booking 119955193): Maggie's Wednesday agreement day, moved out of its series as a one-off at the series price, read Paid in Skedda with no Stripe charge, like every agreement day. Junyan (2026-10-08, d12) asked that agreement days count as covered even when booked as a one-off.</p>
+      <p><strong>Failure mode.</strong> A Paid, uncharged one-off with no extra word in its title that has the weekday, start time, room and price of an agreement series seen that month, on a date the series does not cover, is now left out as "agreement day" (named in the queue row's Reasoning under "Left out") instead of holding the summary. Any other Paid booking with no Stripe charge still holds, including the Extra Monday 14:00 and 13:30 shapes.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
       <h3>The thank-you step stands down when the desk already thanked the renter, and says so when it fails<span class="kind">The Registrar &middot; route, failure &middot; EVENT-GATE gtg_sweep.py (pbf_step, desk_followed_up_after, pbf_alerts), inbound.py (fetch_desk_sms, fetch_desk_email), followup_coverage.py (hand_sent), end_of_day_review.py, d178, d179 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1015">desk-correspondence #1015</a></span></h3></summary>
       <p><strong>Why.</strong> Matthew Jadd, Oct 7: his booking ended at 7:30 PM, Ela thanked him by hand at 7:54 PM, and the robot still drafted a follow-up at 8:36 PM that had to be rejected on the Deck. The step was also an hour late, and nothing anywhere said why: its errors were cut off the log line.</p>
       <p><strong>Route change.</strong> Before drafting, the step reads the desk's own texts and sent email to the renter since the booking ended. If one thanks them or asks how it went, nothing is queued, the board's PBF box is set to Sent and the run logs "PBF skipped, desk already sent at HH:MM". Later passes see the box and stop. The daily coverage checks count that box as covered.</p>
