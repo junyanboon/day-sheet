@@ -1364,6 +1364,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>A queued text can carry one picture; queue_draft --attach adds files to emails and texts<span class="kind">Send Engine &middot; route &middot; send-engine Code.gs v29 smsAttachment_ sendSms_, scripts/queue_draft.py --attach, scripts/attach_check.py, d73 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1005">desk-correspondence #1005</a></span></h3></summary>
+      <p>Junyan: &ldquo;d73 approved 2026-10-08 (queued SMS messages may carry pictures)&rdquo;</p>
+      <p><strong>Why.</strong> Phone.com's send call takes pictures (MMS); a live test to Junyan's phone on 2026-10-08 showed a small picture and a receipt-as-picture arrive, a raw PDF did not. Files used to be pasted into the Attachment box by hand, and texts ignored it.</p>
+      <p><strong>Route.</strong> <code>queue_draft.py --attach &lt;Drive id | notion:&lt;Docs page id&gt;&gt;</code> (repeatable) fills the row's Attachment box after checking the file exists and is a PDF, picture or Word file (email: 20 MB total; text: exactly one file). At send time an SMS row with a file sends it as a picture; a PDF goes as a picture of page 1. Over about 280 KB, not convertible, or refused by Phone.com: the text goes with a view-only link to a copy of that one file. An unreadable file turns the row to Error, nothing sent. The path taken is written into Reasoning as an <code>[sms-attachment ...]</code> line. Rows are still queued at Pending Review; only Junyan's Deck Send releases them.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>Greeter queues no first-reply template once the desk has sent a reply, and stops retrying a draft it cannot merge<span class="kind">The Greeter &middot; route, failure &middot; EVENT-GATE greeter_sweep.py, booking_sweep.py DraftConsolidationFailed, d45 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1004">desk-correspondence #1004</a></span></h3></summary>
+      <p>Junyan: &ldquo;45 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-07 a Tagvenue enquiry's Greeter template collided overnight with the Responder's held reply. The two could not be merged, so the Greeter retried every 5 minutes (109 errors). Once the Responder's reply was sent, the next pass queued the stale first-reply template three minutes later.</p>
+      <p><strong>Route change.</strong> Before queueing a Tagvenue or Peerspace enquiry or request template, the Greeter looks for a Message Queue row for the same Artist and the same booking (same relay, and the same <code>[platform-booking:]</code> marker or thread subject) that is Sent, has a Dispatch Receipt, and was sent after the mail landed. If there is one, it writes a Will Not Send row carrying the mail's <code>[greeter:]</code> key and queues nothing. It still only queues; nothing is sent.</p>
+      <p><strong>Failure mode.</strong> When a <code>[platform-booking:]</code> template cannot be composed into an existing unsent draft, the Greeter retries for 3 passes (<code>GREETER_CONSOLIDATION_RETRIES</code>), then keeps the existing draft, writes a Will Not Send row with its key that links the kept draft, and logs "retained". Other merge conflicts keep the old retry and Run Error behaviour. A failed read of the queue fails the pass for that mail and the next pass retries.</p>
+    </details>
+    </li>
     <li class="entry human">
     <details>
       <summary><span class="when">2026-10-08</span>
