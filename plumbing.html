@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>A Deck Send that does not go now says so on its card and files a held Action<span class="kind">The Deck &middot; failure &middot; deck-app src/index.js (updatePage, releaseFailed, /api/client-log), sources/deck.html (SendFail, decideSend, sendViaZapier, decidedPill, DeckAPI) &middot; <a href="https://github.com/junyanboon/deck-app/pull/235">deck-app #235</a></span></h3></summary>
+      <p>Junyan: &ldquo;none yet (boss brief, d77 test text bounced on 2026-10-08)&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-08 Junyan's Send on the d77 test text bounced back to Review several times with nothing written anywhere: no <code>[deck-release:]</code> line, no ⛔ Send blocked Action, only an 8 second toast or nothing at all. Only a failure inside event-gate's release check filed an Action before this.</p>
+      <p><strong>Route.</strong> Unchanged. A Send still goes through the same Deck write and the same event-gate release check.</p>
+      <p><strong>Failure mode.</strong> Every Send that fails in the Deck Worker logs one <code>release failed &lt;row&gt; &lt;step&gt; &lt;error&gt;</code> line (Workers Logs). One that is not a deliberate refusal (a Notion error, or a crash in the Deck's own code, before or after the event-gate check) also files the ⛔ Send blocked Action (code <code>deck_check</code>, Run Error) with the step and the real error, so the card is blocked until that row is Processed, the same as a gate failure. In the browser, the reason stays as a red line above the reply box until the next Send of that card goes through (kept 24 h, survives a reload), and the browser reports it to <code>/api/client-log</code> (a <code>deck client</code> line in Workers Logs). While the write is out (event-gate can take minutes) the pill says "Checking..." instead of "Sent"; if the page closes or reloads before it finishes, or the session signed out, the card says so after the reload.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-08</span>
