@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>The Deck splits Messages into SMS and Email and can put a file on a message before Send<span class="kind">The Deck &middot; route, failure &middot; deck-app sources/deck.html (segbar, attStripHtml), src/attachments.js, /api/attachment, d74 &middot; <a href="https://github.com/junyanboon/deck-app/pull/233">deck-app #233</a></span></h3></summary>
+      <p>Junyan: &ldquo;d74 picked Option A 2026-10-08&rdquo;</p>
+      <p><strong>Why.</strong> Texts and emails sat in one Messages list, and a file had to be pasted into the Attachment box in Notion by hand.</p>
+      <p><strong>Route.</strong> The Messages entry shows one bar: SMS (SMS, WhatsApp, Instagram, Giggster, Manual Send and any other non-email channel), Email, Charges, Exemptions, each with its count. Under the reply box of an SMS or Email message, a paperclip, drag or paste uploads a file to Notion, puts it on a 📎 Docs row (Type "Message Attachment", the renter's Artist linked) as its one file block, and adds <code>notion:&lt;Docs page id&gt;</code> to the row's "Attachment (Drive File ID)". If the Deck's Notion connection cannot reach 📎 Docs, the file goes on a page inside the queue row instead. A text takes one JPEG, PNG, GIF or PDF; an email takes pictures, PDFs and Word files. The x takes the id off the row (the Docs page stays). Nothing is sent: the row stays Pending Review until Send, and the send engine attaches the file (a text's PDF as a picture of page 1, a link if that fails).</p>
+      <p><strong>Failure mode.</strong> An upload that fails, or a row already released, shows "Not attached: ..." in the strip and writes nothing to the row. A file the engine cannot read at send turns the row to Error (send-engine), never a silent drop.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-08</span>
