@@ -1364,6 +1364,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>Deck re-reads the Artist card phone before it calls an SMS a platform relay<span class="kind">The Deck &middot; route, failure &middot; sources/deck.html, test/relay-chip-recheck.test.js, d22 &middot; <a href="https://github.com/junyanboon/deck-app/pull/232">deck-app #232</a></span></h3></summary>
+      <p><strong>Why.</strong> The Deck decides an SMS row is a platform relay when its Reply To differs from the Artist card Phone, but it read the card Phone once per page. Parisa Beygi's card moved from the Giggster relay +13433064673 to her own +17786362029 while the Deck was open, and her row (Reply To +17786362029) kept showing "via platform relay"; Send would have gone straight to phone.com instead of through the engine.</p>
+      <p><strong>Route change.</strong> A Reply To that differs from the cached card Phone now re-reads that one Artist row (at most once a minute per Artist), so the chip clears when the fresh Phone matches. Send on a row still marked relay re-reads the card first, past the once-a-minute limit: a match sends through the engine as usual, a real relay still goes to phone.com. The "Send via phone.com" button re-reads the card before it picks the number. A swipe-right on the phone now takes the same route as Send; before, it always went to the engine, even for a relay row.</p>
+      <p><strong>Failure mode.</strong> If that pre-Send re-read fails, nothing is sent and the Deck says "Not sent: could not re-check the Artist card phone". Press Send again.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-08</span>
