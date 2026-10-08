@@ -1364,6 +1364,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>Renewals no longer open a ticket or ask about past authorized users<span class="kind">The Concierge &middot; route &middot; library/process-studio-tickets.md, library/studio-tickets-intake.md, Skedda Time Slot Renewal SOP, d45, d48 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1008">desk-correspondence #1008</a></span></h3></summary>
+      <p>Junyan: &ldquo;weird yes drop it&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-10-08: "no, helpers dont' make decisions." (d45), then "weird yes drop it" (d48).</p>
+      <p><strong>Route change.</strong> A renewal or new term no longer opens a Customer Care ticket for someone authorized under an earlier term, and no longer queues the held "does this person stay on your account?" question to the account holder. A Customer Care ticket for an authorized user now starts only from the renter's own request to add someone. Case B and Case C provisioning are unchanged.</p>
+      <p><strong>Failure mode.</strong> None new. Until the Notion SOP pages drop the matching step, a lane reading the old SOP text may still open such a ticket; the Desk Hand edits those pages.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>A clean Completed report no longer files a "left work unfinished" Fixer row<span class="kind">The Sentinel &middot; route &middot; EVENT-GATE report_residual_capture.py, report_fixer.py, d138, Fixer row "Sentinel report capture files unfinished-work rows for clean reports" &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1007">desk-correspondence #1007</a></span></h3></summary>
+      <p><strong>Why.</strong> Sentinel's report capture (d138) filed a <code>[report-residual:&lt;report id&gt;]</code> row for every Completed Workflow Report that had no structured unfinished-work block, even a clean tick log ("alerts 0", "ok"). About 35 noise rows in 3 days on the Actions board, Raised by The Fixer.</p>
+      <p><strong>Route change.</strong> A Completed report files a residual row only when it carries a <code>REPORT-RESIDUALS-V1</code> block: one row listing its items, or one "read it" line when the block says its list is incomplete. A Completed report with no block files nothing and is marked read. Ended Early and Skipped Steps reports still file their <code>[report-recovery:]</code> row as before; its "Capture stopped early" note for long reports is only reached by those failed reports, never by a Completed one.</p>
+      <p><strong>Failure mode.</strong> Unchanged: residual capture errors go to the <code>report-residuals-errors:</code> log line and retry next pass. <code>REPORT_RESIDUAL_MODE</code> turns residual capture off.</p>
+    </details>
+    </li>
     <li class="entry human">
     <details>
       <summary><span class="when">2026-10-08</span>
