@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry human">
     <details>
       <summary><span class="when">2026-10-08</span>
+      <h3>The Deck's Send button has a clock: Send later picks a day and a time<span class="kind">The Deck &middot; route, failure &middot; deck-app sources/deck.html (renderVerbs, sendLaterPickerHtml, scheduledSendLater), src/send-later.js, src/send-later-check.js; send-engine SendLater.gs v30; d79 to d85, d90 &middot; <a href="https://github.com/junyanboon/deck-app/pull/234">deck-app #234</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-10-08 "90 yes, 85 yes"&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wanted to write a text or an email now and have it go at a time he picks, the way the robots' timed messages already wait.</p>
+      <p><strong>Route.</strong> An SMS or Email card's Send is a split button: the clock half opens a day and time picker (Toronto time, no quick picks, no quiet hours). Schedule is the same Send press with the same 5 second Undo; after it, one write sets Status Ready to Send, Send After to the picked time, and a <code>[deck-send-later:...]</code> line in Reasoning. The Deck server adds the renter's bookings it will watch (the row's linked Booking plus the renter's 🛎️ FBS AI Support rows up to the day after the send). The send engine's ordinary Send After wait sends it. The Scheduled list tags it "Send later" with only Back to review, like every robot-timed row. A relay text (Zapier path) cannot be scheduled and has no clock.</p>
+      <p><strong>Failure mode.</strong> A watched booking cancelled or moved does not unschedule it: the Deck's 15-minute cron adds a <code>[send-later-booking ...]</code> line and the row shows a red pill and red note, and it still goes. A send that fails retries once 5 minutes later (<code>[send-later-retry ...]</code>, red "Send failed, retrying" pill); a second failure puts the row back at Pending Review with Send After cleared and a <code>[send-later-failed ...]</code> line the card shows as "Not sent" with both reasons, and the engine emails its usual alert. It never goes to Error or Message repairs.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-08</span>
       <h3>The Deck splits Messages into SMS and Email and can put a file on a message before Send<span class="kind">The Deck &middot; route, failure &middot; deck-app sources/deck.html (segbar, attStripHtml), src/attachments.js, /api/attachment, d74 &middot; <a href="https://github.com/junyanboon/deck-app/pull/233">deck-app #233</a></span></h3></summary>
       <p>Junyan: &ldquo;d74 picked Option A 2026-10-08&rdquo;</p>
       <p><strong>Why.</strong> Texts and emails sat in one Messages list, and a file had to be pasted into the Attachment box in Notion by hand.</p>
