@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-09</span>
+      <h3>Picture texts to renters are back on<span class="kind">Send Engine &middot; route &middot; send-engine PR 47, Code.gs smsPictureAllowed_ (v31, v32, v33), Script Property SMS_PICTURES_TO_RENTERS, d95, d96, d106 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1024">desk-correspondence #1024</a></span></h3></summary>
+      <p>Junyan: &ldquo;106 yes&rdquo;</p>
+      <p><strong>Why.</strong> The d95 retest arrived on Junyan's phone as a picture (queue row 3f375032, receipt 262680184, sent as <code>picture.jpg</code>, 69 KB; Phone.com read back <code>delivered</code> at 17:18 on 2026-10-08). Junyan had said to turn pictures back on for renters once it passed.</p>
+      <p><strong>Route change.</strong> An SMS row with a file now goes to a renter as a picture again (<code>picture.jpg</code>), not the text plus a link. The v32 read-back still runs: if Phone.com marks it failed, the text goes once more with the view-only link and the row gets a <code>[sms-delivery-warning]</code> line. Plain texts and emails are unchanged.</p>
+      <p><strong>Switch.</strong> On by default in code since send-engine v33 (PR 47, deployed 2026-10-09): Junyan could not add a Script Property because the editor's Script Properties page is full at 50. Emergency off: run <code>picturesToRentersOff()</code> in the Message Queue Send Engine editor, which sets <code>SMS_PICTURES_TO_RENTERS</code> = <code>off</code> and puts the d96 hold back (renters get the link, Junyan's own number still gets the picture). <code>picturesToRentersOn()</code> removes it. Any value but <code>off</code> means on.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-09</span>
+      <h3>Registrar and Doorman adopt a live alarm user before creating one; /provision refuses duplicates<span class="kind">The Registrar, The Doorman, alarm-mcp &middot; failure, tool &middot; EVENT-GATE booking_sweep.py adopt_live_user, doorman_armcheck.py A7, alarm-mcp /provision, library/doorman-access-lifecycle.md, d172, d174 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1026">desk-correspondence #1026</a></span></h3></summary>
+      <p>Junyan: &ldquo;172 yes; 174 yes&rdquo;</p>
+      <p><strong>Why.</strong> A renter card holding a deleted alarm user id made the Registrar create a second panel user on its pass, and the card kept the dead id because the id stamp only filled empty cards. The alarm service's <code>/provision</code> door had no duplicate check, no capacity check and no record.</p>
+      <p><strong>Route change.</strong> Before any create, the Registrar and the Doorman's A7 share one adopt step: a by-name <code>/code-match</code> with the card's code, one user, all four panels, not paused. A match overwrites the dead card id and nothing is created. A create that does run while the card holds a dead id now overwrites it. <code>/provision</code> records every create (caller, name, user id, time) in the access store, and both callers now send <code>caller</code>.</p>
+      <p><strong>Failure mode.</strong> <code>/provision</code> answers HTTP 422 when a live user already holds the exact name or the panel is at the 200-code cap. The Registrar files its usual access residue row with that reason and does not retry with other digits. A live stored card id is never replaced. When the card's code differs from the live panel user, the old realign (a second same-name user with the card's digits) is gone: the 422 sends it to a person as an Access/PIN row (Junyan, 2026-10-09, d174).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-09</span>
       <h3>Event-gate deploys clear the host's docker build cache after the new version is serving (once the handler is installed)<span class="kind">event-gate deploy (VPS host handler) &middot; failure &middot; services/event-gate/hosting/deploy_hostinger.py, services/event-gate/hosting/install-deploy-handler.sh, d186 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1025">desk-correspondence #1025</a></span></h3></summary>
       <p>Junyan: &ldquo;186 yes (have the Shipper add an automatic cleanup to the end of every server update)&rdquo;</p>
       <p><strong>Why.</strong> Each deploy builds the image on the VPS and leaves about 0.7 GB of docker build cache. On 2026-10-08 13 hours of deploys held 7.3 GB, the disk hit 100% at about 19:40Z, and deploys, CI and live lane SQLite writes failed ("database or disk is full").</p>
