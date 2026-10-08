@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-09</span>
+      <h3>Event-gate deploys clear the host's docker build cache after the new version is serving (once the handler is installed)<span class="kind">event-gate deploy (VPS host handler) &middot; failure &middot; services/event-gate/hosting/deploy_hostinger.py, services/event-gate/hosting/install-deploy-handler.sh, d186 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1025">desk-correspondence #1025</a></span></h3></summary>
+      <p>Junyan: &ldquo;186 yes (have the Shipper add an automatic cleanup to the end of every server update)&rdquo;</p>
+      <p><strong>Why.</strong> Each deploy builds the image on the VPS and leaves about 0.7 GB of docker build cache. On 2026-10-08 13 hours of deploys held 7.3 GB, the disk hit 100% at about 19:40Z, and deploys, CI and live lane SQLite writes failed ("database or disk is full").</p>
+      <p><strong>Route change.</strong> After an update, rollback or activate has passed both health checks and the new version is serving, the handler runs <code>docker builder prune -af</code> and prints the disk free in the deploy log. Build cache is never an image, so the running image and the rollback images (the newest three) stay. Stage mode and any failed or refused deploy prune nothing; their cache waits for the next good update, which clears it all. A slow <code>docker rmi</code> of an old image no longer fails a deploy that already swapped.</p>
+      <p><strong>Failure mode.</strong> A failed prune is logged ("Build cache prune failed") and never fails the deploy. The next build starts without cache and pulls its base image again, so it takes a little longer. The handler is a host file installed by hand (root, <code>install-deploy-handler.sh</code>): until Junyan runs it, deploys keep the old behaviour.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-09</span>
       <h3>Quick-answer cards read the whole renter list, retry a rate-limited read, and log why they stayed quiet<span class="kind">event-gate &middot; failure &middot; services/event-gate/actuator.py lookup_watchlist, cards.py _fetch_autosend_bodies try_quick_answer, app.py process_message, d167, d170 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1022">desk-correspondence #1022</a></span></h3></summary>
       <p>Junyan: &ldquo;170 yes, 167 yes&rdquo;</p>
       <p><strong>Why.</strong> A 509A renter texted "I cant open the door" at 509A on 2026-10-05; the door card matched but no Message Queue row was written and no log said why. The renter-list read took only the first 100 rows and a rate-limited read was not tried again, so a slow or long list could look like "not on the list".</p>
