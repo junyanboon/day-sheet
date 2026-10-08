@@ -1367,6 +1367,57 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-08</span>
+      <h3>VPS runner stops keeping clean test and deploy checkouts, and deletes recovery copies after 7 days<span class="kind">VPS runner (watchlist-hostinger) &middot; failure &middot; ops/watchlist-runner/watchlist-runner-cleanup.py, ops/watchlist-runner/README.md, d183 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1019">desk-correspondence #1019</a></span></h3></summary>
+      <p>Junyan: &ldquo;183 yes (delete recovery copies older than 7 days)&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-08 the VPS disk hit 100% and blocked deploys. <code>/var/lib/watchlist-runner/recovery</code> held about 54G of checkouts from 2026-10-06 to 10-08. The runner's after-job hook kept any checkout with "unpushed commits", judged against <code>origin/main</code> only. PR test runs share this runner, and their checkouts have no <code>origin/main</code> (a depth-1 fetch of the PR merge commit), so every one was kept (45 runs from 10-06 to 10-08).</p>
+      <p><strong>Route change.</strong> "Unpushed" now means a commit no fetched ref reaches (remote branch, PR ref or tag). Clean PR test checkouts are removed like any other. Real unsaved desk state (<code>state/</code>, <code>messages/</code>, <code>watchlist/</code> changes, or a local commit) is still kept. After every job the hook deletes recovery copies whose name stamp is older than 7 days.</p>
+      <p><strong>Failure mode.</strong> A copy kept for real state is gone after 7 days if nobody reconciles it. The hook is a host file installed by hand (root): until it is copied to <code>/usr/local/libexec/</code>, the old behaviour stays.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>Picture texts to renters are on hold; they get the text with a view-only link<span class="kind">Send Engine &middot; route &middot; send-engine Code.gs v31 smsPictureAllowed_, PR 45, d96</span></h3></summary>
+      <p>Junyan: &ldquo;96 yes&rdquo;</p>
+      <p><strong>Why.</strong> Phone.com marked both engine picture texts failed (d73, d77) while the queue said Sent. Until the d95 fix passes its retest, no renter gets a picture text that may never arrive.</p>
+      <p><strong>Route change.</strong> An SMS row with a file, to any number other than Junyan's own, goes as the text plus the view-only link (the v29 link path). Reasoning says <code>sent as link (pictures to renters are on hold until the picture retest passes)</code>. Junyan's own number still gets the picture. Plain texts and emails are unchanged.</p>
+      <p><strong>Switch.</strong> Script Property <code>SMS_PICTURES_TO_RENTERS</code> = <code>on</code> lifts the hold. Junyan's call, after the retest arrives as a picture.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>Picture texts go as picture.jpg and are read back from Phone.com; a daily sweep flags failed texts the queue calls Sent<span class="kind">Send Engine &middot; route, failure, cadence &middot; send-engine Code.gs v32, SmsDelivery.gs smsDeliveryTick_ smsFailedSweep_, PR 46, d95, d97</span></h3></summary>
+      <p>Junyan: &ldquo;95 yes, 97 yes&rdquo;</p>
+      <p><strong>Why.</strong> Phone.com answered 200 to both engine picture texts, then marked them failed; the queue said Sent. The only difference from the hand-sent pictures that arrived was the file name.</p>
+      <p><strong>Route change.</strong> Every picture goes as <code>picture.jpg</code> (PNG, GIF and PDF page renders converted to JPEG). From 45 seconds after a picture send, the engine reads the message back from Phone.com each minute. Delivered: a note line. Failed: if the row is still Sent with that receipt, the same text goes again with the view-only link; the row stays Sent with a <code>[sms-delivery-warning]</code> line, a comment and an alert email.</p>
+      <p><strong>Failure mode.</strong> If the link text is refused, the row goes to Error (a Send later row back to Pending Review, d82) with the reason. If the link text may have gone (5xx, timeout), the row stays Sent with a "check Phone.com" warning. Unconfirmed after 15 minutes: a warning and an alert, nothing resent.</p>
+      <p><strong>Daily sweep.</strong> From 09:00 Toronto, once a day, outbound texts from the last 48 hours that Phone.com marked failed are matched to Sent queue rows (same number, same opening words, within 10 minutes). Each match becomes one Actions row for Junyan, <code>[sms-failed:&lt;id&gt;]</code> in the title. It never resends or changes a queue row. It runs inside the engine's minute run; no new trigger.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>The PBF step logs every skip reason in full, one line each<span class="kind">event-gate &middot; failure &middot; services/event-gate/gtg_sweep.py run, services/event-gate/app.py run_gtg_sweep GTG_LOG_LINE_MAX, follows d179 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1020">desk-correspondence #1020</a></span></h3></summary>
+      <p>Junyan: &ldquo;brief of 2026-10-08 (a renter's late thank-you)&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-07 one renter's thank-you waited from 7:31 PM to 8:36 PM Toronto. Every 5-minute pass listed the booking as skipped, but the pass summary line is cut at 200 characters, so the reason never reached the log.</p>
+      <p><strong>Route change.</strong> None. Each pass now also writes one <code>pbf skipped: &lt;row&gt;: &lt;reason&gt;</code> line per skipped booking, and gtg-sweep lines keep up to 1000 characters instead of 200, so a skip or error line names the other queue row it waited on.</p>
+      <p><strong>Failure mode.</strong> More log lines (about one per skipped booking per 5-minute pass, today and yesterday's rows). Nothing is queued or sent differently.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>An open Deck tab says "New version. Reload" after a deploy<span class="kind">The Deck &middot; failure &middot; deck-app public/app.js checkBuild, scripts/build.mjs deck-build, sources/deck.html deckBusyNow, d100 &middot; <a href="https://github.com/junyanboon/deck-app/pull/236">deck-app #236</a></span></h3></summary>
+      <p>Junyan: &ldquo;100 yes&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-10-08, d100: "100 yes" to "When the Deck gets updated, show a 'New version, reload' note on open tabs." A tab opened before a deploy kept the old page and hid the new Send later clock and file strip.</p>
+      <p><strong>Failure mode.</strong> Before: an open tab ran the old page code until someone reloaded it, with no sign anything was new. Now: every build stamps a hash of the page code into the page and <code>/deck-build.json</code>; the tab reads that file every 5 minutes and when it comes back into view, and shows a small note when they differ. Server-only deploys keep the same id and ask nothing.</p>
+      <p><strong>Guards.</strong> It never reloads on its own. Reload waits while a Send or Say is in its 5 s Undo or its write is still being checked, and asks first when a reply is typed and not sent. Closing the tab while a write is being checked now warns too. Tabs opened before this ships have no build id and never show the note: reload them once by hand.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-08</span>
       <h3>A platform booking whose first name matches several cards keeps the board row's own Artist<span class="kind">The Host &middot; failure &middot; EVENT-GATE booking_reconcile.py, Jessica M. (Giggster, 693, 2026-10-10), FBS board row 3f27503281c481d0a4a3c4c218dec385 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1010">desk-correspondence #1010</a></span></h3></summary>
       <p><strong>Why.</strong> Jessica M.'s Giggster booking is titled "Jessica Giggster". Six Artist cards start with "Jessica", so booking reconciliation failed every pass with "platform Artist unresolved: ambiguous" and the Host left her row at Pending, although the row already linked the right card. Nothing downstream (tier, code, access text) ran. Junyan, 2026-10-08: "why isn't this just done automatically?"</p>
       <p><strong>Failure mode change.</strong> When the platform name is ambiguous and the FBS board row links exactly one Artist that is one of the cards the name matches, reconciliation accepts that Artist and the row goes on to the Host ladder. A linked card the name does not match, no linked card, several relay-attached cards, or an adjacent extension block is still held as before; each accepted fallback writes one log line. Used by the Host and the Registrar's daily lanes (both call <code>booking_reconcile.reconcile</code>). The end-of-booking timing check (<code>fbs_access.belongs</code>) accepts the same linked card when it carries a phone.</p>
