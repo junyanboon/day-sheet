@@ -1367,11 +1367,22 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-08</span>
+      <h3>Renewals ask about past authorized users again (reverses the same-day drop)<span class="kind">The Concierge &middot; route &middot; library/process-studio-tickets.md, library/studio-tickets-intake.md, PR 1008, d54, d45, d48 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1009">desk-correspondence #1009</a></span></h3></summary>
+      <p>Junyan: &ldquo;oh! yes we need to always ask if a past helper is staying. I got confused... I thought we were asking about somethign else.&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-10-08 (d54), withdrew d45 and d48: he had read the question as being about something else. The entry "Renewals no longer open a ticket or ask about past authorized users" from PR 1008 is reversed.</p>
+      <p><strong>Route change.</strong> Back to the route before PR 1008: an earlier-term authorized user who may be returning (trigger (b)) again gets their own Customer Care ticket, and the account holder is asked whether that person is staying. The renter's own add request (trigger (a)) and Case B/C provisioning are unchanged.</p>
+      <p><strong>Failure mode.</strong> Until the Desk Hand restores the matching step on the Notion SOP pages, a lane reading the Notion SOP text may skip the question; canon in library/ is the rule.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-08</span>
       <h3>Renewals no longer open a ticket or ask about past authorized users<span class="kind">The Concierge &middot; route &middot; library/process-studio-tickets.md, library/studio-tickets-intake.md, Skedda Time Slot Renewal SOP, d45, d48 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1008">desk-correspondence #1008</a></span></h3></summary>
       <p>Junyan: &ldquo;weird yes drop it&rdquo;</p>
       <p><strong>Why.</strong> Junyan, 2026-10-08: "no, helpers dont' make decisions." (d45), then "weird yes drop it" (d48).</p>
       <p><strong>Route change.</strong> A renewal or new term no longer opens a Customer Care ticket for someone authorized under an earlier term, and no longer queues the held "does this person stay on your account?" question to the account holder. A Customer Care ticket for an authorized user now starts only from the renter's own request to add someone. Case B and Case C provisioning are unchanged.</p>
       <p><strong>Failure mode.</strong> None new. Until the Notion SOP pages drop the matching step, a lane reading the old SOP text may still open such a ticket; the Desk Hand edits those pages.</p>
+      <p><strong>Reversed the same day.</strong> Junyan withdrew d45 and d48 on 2026-10-08 (d54); the question is back. See "Renewals ask about past authorized users again".</p>
     </details>
     </li>
     <li class="entry det">
@@ -1483,6 +1494,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p>Junyan: &ldquo;d11 yes and 1ap as well ... d13 yes&rdquo;</p>
       <p><strong>Why.</strong> David Garzon (AAP) asked to move his Oct 15 booking from 509B to 509A. The lane refused every plan studio change as "a human decides", though the plan rate is the same in every studio.</p>
       <p><strong>Route.</strong> An AAP or 1AP move that names another ordinary studio now goes through the cross-studio <code>/move-booking</code> path when the booking's live Skedda price is the plan rate for its length to the cent, the length is the same, the new room is free with the 15-minute buffer, and every plan guard passes. The read-back checks room, times, holder, price and payment state. A different price, a resize, a clash or a failed guard stays one Review row. Fixed Option studio changes still go to a human. Refusals already filed are not re-judged (RULES_VERSION unchanged), so David's booking, being moved by hand, is left alone.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-07</span>
+      <h3>Replies under a robot alert now get answered, and robot alerts are filed<span class="kind">drop-sweep &middot; route, failure &middot; services/event-gate/desk_drop_followthrough.py run, services/event-gate/drop_sweep.py desk_alert, library/desk-drop-replies.md, d167 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/995">desk-correspondence #995</a></span></h3></summary>
+      <p><strong>Why.</strong> Robot alerts in #desk-drops never got a Desk Drops row: the capture matched the 🤖 emoji, and Slack's history can return it as <code>:robot_face:</code>. The relay skipped every reply in a thread on the rule that the thread's first row answers, so a reply under a robot alert was never answered (Junyan's reply under a queue-clash alert, 2026-10-06).</p>
+      <p><strong>Route change.</strong> When a reply's thread has no row for its first message, the relay posts the reply row's own update in that thread, and the check mark goes on the reply. When the first message has a row, the reply is still left to it. Only replies filed from 2026-10-08 on take this path, so no old thread gets a late post (the 2026-10-06 Matthew Jadd reply was already answered). Each pass logs how many replies it left to their root and how many it posted this way.</p>
+      <p><strong>Failure mode change.</strong> A robot alert starting with <code>:robot_face: Desk alert</code> from our own bot is now filed like one starting with the emoji. A failed lookup of the thread's first row counts as a failure and posts nothing.</p>
+      <p><strong>Switch.</strong> <code>SLACK_FOLLOWTHROUGH_ENABLED</code> unset stops the relay; the capture follows the drop sweep switch.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-07</span>
+      <h3>A cancelled end-of-booking text now names the renter and tells the board why<span class="kind">EOB live timing &middot; failure &middot; services/event-gate/eob_timing.py note_departure, services/event-gate/booking_sweep.py daily_booking_row_exists, library/eob-timing.md The departure check, d168 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/995">desk-correspondence #995</a></span></h3></summary>
+      <p><strong>Why.</strong> On 2026-10-05 a renter armed Studio 901 and left, so her end-of-booking text went to Will Not Send as designed. The row was titled with a code and no name, nothing on the FBS board said why, and staff asked in #desk-drops why no text went out.</p>
+      <p><strong>Failure mode change.</strong> When the departure check cancels an end-of-booking text, the queue row's title gets the renter's name added, its Reasoning starts "End-of-booking cancelled: renter armed and left at HH:MM", the FBS board row's EOB cell is set to Will Not Send, and the board row gets one comment "End-of-booking cancelled: &lt;name&gt; armed and left at HH:MM." A failed board write never reopens the text. The booking sweep's dedup still matches a code with a name after it.</p>
+      <p><strong>Switch.</strong> <code>EOB_TIMING_LIVE</code> unset stops the whole EOB live timing lane, this included.</p>
     </details>
     </li>
     <li class="entry det">
