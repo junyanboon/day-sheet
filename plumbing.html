@@ -1366,6 +1366,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-09</span>
+      <h3>Quick-answer cards read the whole renter list, retry a rate-limited read, and log why they stayed quiet<span class="kind">event-gate &middot; failure &middot; services/event-gate/actuator.py lookup_watchlist, cards.py _fetch_autosend_bodies try_quick_answer, app.py process_message, d167, d170 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1022">desk-correspondence #1022</a></span></h3></summary>
+      <p>Junyan: &ldquo;170 yes, 167 yes&rdquo;</p>
+      <p><strong>Why.</strong> A 509A renter texted "I cant open the door" at 509A on 2026-10-05; the door card matched but no Message Queue row was written and no log said why. The renter-list read took only the first 100 rows and a rate-limited read was not tried again, so a slow or long list could look like "not on the list".</p>
+      <p><strong>Route change.</strong> None. The watchlist and the Auto-send card bodies are now read page by page (<code>has_more</code>), and a 429 or 529 from Notion is tried once more when its Retry-After is 3 seconds or less (timeouts and 5xx already were). Each whole read has a 20-second budget so retries cannot hold an inbound text for long.</p>
+      <p><strong>Failure mode.</strong> A read that still fails is an error, never "not found", and logs one <code>qa_read_failed</code> line (source, page, error, last four digits). Every exit where a card matched, or could have, and no queue row was written logs one <code>qa_suppressed</code> line with the reason (watchlist_error, not_on_watchlist, departed, outside_booking_window, card_cache_failed, card_body_missing, fill_incomplete, dedup_12h, existing_qa_row, queue_write_failed, card_lane_error, words_excluded and the other gates), the card and the sender's last four digits. No text, codes or full numbers in either line.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-08</span>
       <h3>VPS runner stops keeping clean test and deploy checkouts, and deletes recovery copies after 7 days<span class="kind">VPS runner (watchlist-hostinger) &middot; failure &middot; ops/watchlist-runner/watchlist-runner-cleanup.py, ops/watchlist-runner/README.md, d183 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1019">desk-correspondence #1019</a></span></h3></summary>
       <p>Junyan: &ldquo;183 yes (delete recovery copies older than 7 days)&rdquo;</p>
