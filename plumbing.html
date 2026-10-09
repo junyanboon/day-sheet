@@ -1377,6 +1377,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-09</span>
+      <h3>Deck card warns on a reply about a booking change nobody has checked or made yet<span class="kind">The Responder, The Concierge, The Deck &middot; route &middot; EVENT-GATE history_check.py, scripts/queue_draft.py --booking-unchecked, library/the-responder.md, library/studio-tickets-bookings.md, library/concierge-orchestration.md [R-hour-shift], d66, d67 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1042">desk-correspondence #1042</a></span></h3></summary>
+      <p>Junyan: &ldquo;no, just add a warning in these cases&rdquo;</p>
+      <p><strong>Why.</strong> Tufan Bhattarai asked to move 1 hour from his Nov 29 booking to his Oct 10 booking, and the Responder's held reply stated the new times as settled before anyone had checked Skedda.</p>
+      <p><strong>Route change.</strong> A held reply on a move, resize, extension or two-booking hour shift that the desk has not checked or made yet is queued with <code>queue_draft.py --booking-unchecked</code>, which puts <code>[booking-unchecked]</code> in Reasoning. The history check (every 5 min, and at queue time) turns that mark into a History Check line, "Booking change not checked or made yet. Check Skedda before sending.", which the Deck shows on the card. A well-formed BOOKING-STATE-V1 read-back line clears it. Hours shifted between two bookings of one renter now have their own case: the Responder notes <code>Needs: two-booking hour shift</code> on the ticket, the Concierge prepares it for Junyan, and an attended session extends first, then shortens.</p>
+      <p><strong>Failure mode.</strong> Warning only: Send never refuses for it. A row without the mark gets no warning, as before. No switch: revert the PR to remove it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-09</span>
       <h3>Attended drafts with no saved reply carry the [wording:attended] marker by themselves<span class="kind">Attended session &middot; failure &middot; scripts/queue_draft.py with_wording_marker, services/event-gate/invariants.py V_MARKERS, library/process-studio-tickets.md, d1 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1048">desk-correspondence #1048</a></span></h3></summary>
       <p>Junyan: &ldquo;1 yes&rdquo;</p>
       <p><strong>Why.</strong> Invariant V flags a sent row with no Source HTR Row unless Reasoning carries a marker. Attended sessions often wrote by hand and forgot <code>[wording:attended]</code>, so their rows read as lane defects. The Deck's edit-time note about this was dropped the same day (deck-app, d2), so the marker now has to be right at queue time.</p>
