@@ -1367,6 +1367,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-09</span>
+      <h3>No reply draft when our last send already came after the renter's last message<span class="kind">The Responder, every lane that queues with queue_draft.py &middot; route, failure &middot; scripts/already_answered.py, scripts/queue_draft.py, library/the-responder.md step 4b and Stale-draft re-check, d72 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1041">desk-correspondence #1041</a></span></h3></summary>
+      <p><strong>Why.</strong> 2026-10-09: a renter texted at 3:23 PM, and Junyan's edit of a 2:52 PM row went out from the Deck at 3:38 PM. At 3:54 PM the Responder still queued another courtesy reply to the 3:23 text. The write-time check only looked at Sent rows created after the message, and the row that answered it was created before it.</p>
+      <p><strong>Route change.</strong> <code>scripts/already_answered.py</code> is now the one check for "the turn is ours": our newest send to this renter on this channel, from any lane, typed by hand or released from the Deck, is later than their newest message there. A queue row counts by its Sent At, whatever message it was keyed to, and a text in the ledger counts too. Robot texts (HTA, EOB, AVA, templates, scheduled sends) never count, and a tapback does not reopen the turn. <code>queue_draft.py</code> refuses with exit 3 <code>answered by &lt;row&gt;</code> when it holds, or when any send of ours came after the message itself (every lane), and the Responder logs <code>already answered &lt;time&gt;</code>. In its stale-draft recheck the Responder runs <code>already_answered.py --row &lt;id&gt;</code> on each held row and sets an answered one Will Not Send with a "Human got there first" note, which never counts toward the mute.</p>
+      <p><strong>Failure mode.</strong> A queue or Log read that fails three times makes <code>queue_draft.py</code> write nothing (exit 3, retry next pass), as before. On the recheck, exit 2 leaves the held row alone that pass. A source message with no ledger copy is not checked at write time (no change from before); a held row with no ledger source is timed from when it was created, and a held row queued with <code>--not-duplicate</code> is left alone. Escape hatch for a wrong refusal: <code>queue_draft.py --not-duplicate "&lt;why&gt;"</code>.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-09</span>
+      <h3>The Deck no longer warns that an edited reply has no Source HTR Row<span class="kind">The Deck &middot; failure &middot; sources/deck.html editWarnings, event-gate invariants.py no_source_htr_defects, MQ 3f475032-81c4-81c7, d2 &middot; <a href="https://github.com/junyanboon/deck-app/pull/240">deck-app #240</a></span></h3></summary>
+      <p>Junyan: &ldquo;2 yes&rdquo;</p>
+      <p><strong>Why.</strong> The "no Source HTR Row" note under the reply box fired on every edit of a held draft that has no saved reply (Concierge availability answers, Responder holding replies), even when Junyan only added his name (Nicholas Walsh, MQ 3f475032-81c4-81c7). He cannot act on it at Send, and event-gate invariant V already flags lanes that skip saved replies after the fact.</p>
+      <p><strong>Route change.</strong> None. The edited-reply booking note (a booking change claimed or promised with no BOOKING-STATE-V1 line) stays exactly as before; only the second note is gone.</p>
+      <p><strong>Failure mode.</strong> A lane that drafts without a saved reply is no longer pointed out at Send; invariant V (no_source_htr_defects) is the one place that catches it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-09</span>
       <h3>Registrar matches a one-word platform name only to that platform's card, and never makes a code on a name-only match whose old code was deleted<span class="kind">The Registrar &middot; route, failure &middot; EVENT-GATE booking_reconcile.py same_platform_only, booking_sweep.py platform_artist relay_hta_blocker ensure_access platform_provision, platform_identity.py resolve, fbs_access.py belongs, library/doorman-access-lifecycle.md, d167, d172 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1040">desk-correspondence #1040</a></span></h3></summary>
       <p>Junyan: &ldquo;167 yes, 172 yes&rdquo;</p>
       <p><strong>Why.</strong> After the first fix for Giggster "Daniela" (d162), two holes stayed open. A bare "Daniela" card or "Daniela [Peerspace]" still counted as the Giggster guest, and when a name-only match landed on a card whose old panel user was deleted, the Registrar made a new panel user with that renter's deleted code.</p>
