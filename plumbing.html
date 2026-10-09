@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-09</span>
+      <h3>Alarm code removals run one at a time per approval row, and no longer strand each other's proof<span class="kind">The Door Checker &middot; tool, failure &middot; danceannex-alarm-monitor access_requests.py, library/doorman-access-lifecycle.md, d189 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1028">desk-correspondence #1028</a></span></h3></summary>
+      <p>Junyan: &ldquo;189 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-08 two sessions ran the same removal approval at once. The second removed other approved names while the first removal was still proving, and that proof compared every other panel user to how they looked at preview, so the first removal could never verify.</p>
+      <p><strong>Route change.</strong> A removal's proof now ignores a user who has left the complete roster; a user still on the panels whose code or access changed still fails it. Create and change keep the strict check. <code>access_operation</code> refuses a removal confirm while another removal under the same Actions row is writing, uncertain or awaiting propagation, and names that request in <code>existing_request_id</code>. A run reads every name's request status first and stops if another run owns the batch.</p>
+      <p><strong>Failure mode.</strong> A refused confirm writes nothing to the panels; reconcile the named request (same id, confirm=true) until it reads verified, then carry on. Removals stay off unless <code>DOORMAN_ACCESS_REMOVAL_LIVE=1</code> on alarm-mcp.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-09</span>
+      <h3>The Deck warns when an edited reply promises a booking change Skedda does not show yet<span class="kind">The Deck &middot; failure &middot; sources/deck.html editWarnings, event-gate booking_state_guard.py, MQ 3f475032, d205 &middot; <a href="https://github.com/junyanboon/deck-app/pull/237">deck-app #237</a></span></h3></summary>
+      <p>Junyan: &ldquo;205 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-09 a held "we're checking" reply to David Garzon was edited in the Deck into "we can definitely extend your booking" and sent at 1:29 PM; the Skedda block was only made at 1:31 PM. The gate's release guard reads only past-tense claims, so a promise passed.</p>
+      <p><strong>Route change.</strong> None. Under the reply box, an edited reply now shows a note when it claims or promises a booking change and its Reasoning has no BOOKING-STATE-V1 line, and when the row has no Source HTR Row. The Deck now reads Source HTR Row with the queue.</p>
+      <p><strong>Failure mode.</strong> Advice only, like the dash note: Send never refuses. If the note is wrong or missing, the reviewer still sends; the gate's own past-tense hold is unchanged.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-09</span>
       <h3>Picture texts to renters are back on<span class="kind">Send Engine &middot; route &middot; send-engine PR 47, Code.gs smsPictureAllowed_ (v31, v32, v33), Script Property SMS_PICTURES_TO_RENTERS, d95, d96, d106 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1024">desk-correspondence #1024</a></span></h3></summary>
       <p>Junyan: &ldquo;106 yes&rdquo;</p>
       <p><strong>Why.</strong> The d95 retest arrived on Junyan's phone as a picture (queue row 3f375032, receipt 262680184, sent as <code>picture.jpg</code>, 69 KB; Phone.com read back <code>delivered</code> at 17:18 on 2026-10-08). Junyan had said to turn pictures back on for renters once it passed.</p>
@@ -1402,6 +1422,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> A 509A renter texted "I cant open the door" at 509A on 2026-10-05; the door card matched but no Message Queue row was written and no log said why. The renter-list read took only the first 100 rows and a rate-limited read was not tried again, so a slow or long list could look like "not on the list".</p>
       <p><strong>Route change.</strong> None. The watchlist and the Auto-send card bodies are now read page by page (<code>has_more</code>), and a 429 or 529 from Notion is tried once more when its Retry-After is 3 seconds or less (timeouts and 5xx already were). Each whole read has a 20-second budget so retries cannot hold an inbound text for long.</p>
       <p><strong>Failure mode.</strong> A read that still fails is an error, never "not found", and logs one <code>qa_read_failed</code> line (source, page, error, last four digits). Every exit where a card matched, or could have, and no queue row was written logs one <code>qa_suppressed</code> line with the reason (watchlist_error, not_on_watchlist, departed, outside_booking_window, card_cache_failed, card_body_missing, fill_incomplete, dedup_12h, existing_qa_row, queue_write_failed, card_lane_error, words_excluded and the other gates), the card and the sender's last four digits. No text, codes or full numbers in either line.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-08</span>
+      <h3>The robots leave a Send later message alone; it goes at the time Junyan picked<span class="kind">event-gate &middot; failure &middot; services/event-gate/send_later.py, booking_sweep.py, eob_timing.py, transition_guard.py, outbound_guard.py (dispatch); test_send_later_exempt.py; d80, d93 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1012">desk-correspondence #1012</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-10-08 "93 yes"&rdquo;</p>
+      <p><strong>Why.</strong> A message Junyan scheduled with the Deck's Send later could still be held or retired by event-gate robots before its time: the booking sweep voided it when the booking was cancelled or moved and retimed an EOB or AVA to the board, the EOB live timing retimed or expired it, the tight-transition cleanup voided it, and the send engine's dispatch check treated it as a robot row once the press was more than 24 hours old, so it could go back to Pending Review.</p>
+      <p><strong>Failure mode.</strong> A released row whose latest <code>[deck-send-later:...]</code> marker still stands (no <code>[send-later-failed ...]</code> after it) is now skipped by all of those. A booking change only gets the Deck's red pill and note (d80) and the message still goes. At dispatch it takes the same path as a fresh human release: no booking-contract hold and no overlap review; the "identical copy already released" twin hold still applies. A row the send engine gave back after two failed tries, or one Junyan unscheduled, is an ordinary row again.</p>
     </details>
     </li>
     <li class="entry det">
