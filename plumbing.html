@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-09</span>
+      <h3>Report capture keeps one Fixer card per lane and updates it daily<span class="kind">The Sentinel &middot; route &middot; EVENT-GATE report_fixer.py, sentinel_sweep.py, d138, d208 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1031">desk-correspondence #1031</a></span></h3></summary>
+      <p><strong>Why.</strong> Sentinel's report capture (d138) filed a new Fixer card for every failed or unfinished Workflow Report. The Responder and The Concierge write one Rolling Daily report a day, so the same repeat problem got a new card each day, about three a day.</p>
+      <p><strong>Route change.</strong> The card key is now the lane: <code>[report-recovery:&lt;lane slug&gt;]</code> or <code>[report-residual:&lt;lane slug&gt;]</code>, the lane being the report's Run title without its date. Before filing, capture looks for an open card (Pending Review or Ruled) of the same lane and kind, matching the lane key or the old per-report key. If one is open, the report becomes a dated Notes entry on it (report link, date, what it said failed) and the Request reads like <code>🔧 Report: &lt;lane&gt; skipped steps (N days, latest &lt;date&gt;)</code>. If more than one is open, the newest is kept (a card already Ruled is kept first) and the others are folded into it and closed Cancelled with <code>Folded into &lt;card&gt; (d208, &lt;date&gt;)</code>; this runs when the lane reports again and once every capture pass, so duplicates fold even after a clean report. Rows are never deleted. No open card: a new one is filed. The <code>report-recovery:</code> and <code>report-residuals:</code> log lines gain a <code>filed</code> count (<code>created</code>, <code>appended</code>, <code>existing</code>) and a <code>folded</code> count.</p>
+      <p><strong>Failure mode.</strong> A failed board read or write is a capture error as before (logged on the <code>-errors:</code> line, retried next pass). A closed card is never reopened: the lane's next report opens a fresh card. <code>REPORT_RECOVERY_MODE</code> and <code>REPORT_RESIDUAL_MODE</code> still turn capture off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-09</span>
       <h3>Alarm code removals run one at a time per approval row, and no longer strand each other's proof<span class="kind">The Door Checker &middot; tool, failure &middot; danceannex-alarm-monitor access_requests.py, library/doorman-access-lifecycle.md, d189 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1028">desk-correspondence #1028</a></span></h3></summary>
       <p>Junyan: &ldquo;189 yes&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-08 two sessions ran the same removal approval at once. The second removed other approved names while the first removal was still proving, and that proof compared every other panel user to how they looked at preview, so the first removal could never verify.</p>
