@@ -1366,6 +1366,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-10</span>
+      <h3>Invoice reminders wait for a payer's reply and a promised day, and reply in the payer's thread<span class="kind">Chase sweep &middot; route, failure &middot; EVENT-GATE chase_sweep.py, library/automatic-operational-closure.md, library/desk-sort.md, library/concierge-orchestration.md, d4, d5, d6 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1052">desk-correspondence #1052</a></span></h3></summary>
+      <p>Junyan: &ldquo;3 yes, 4 yes, 5 yes, 6 yes&rdquo;</p>
+      <p><strong>Why.</strong> A payer wrote that a direct deposit would go out on a set day, and the chase sweep still queued the next reminder three days later, because its 2-day clock reads only timestamps.</p>
+      <p><strong>Route change.</strong> Before queueing a reminder on a QuickBooks (RB) invoice, the sweep reads the studio mailbox once, by the payer's address and by the RB number. An unanswered inbound from the payer holds the reminder and files one Review per message, tagged <code>[payer-replied:&lt;gmail id&gt;]</code>. A <code>PROMISED YYYY-MM-DD</code> line on the money Action (written by the Desk Sort or the Concierge) parks the chase through that day, and the reminder after it quotes the day. A reminder to a payer now replies in the payer's existing thread (Source Email, reply-all) and greets them by their first name.</p>
+      <p><strong>Failure mode.</strong> A Gmail read error queues no reminder that pass (<code>payer mail read failed (no reminder)</code> in the sweep's result). A thread or name it cannot find falls back to a new email and "Hi there".</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-09</span>
+      <h3>Attended drafts with no saved reply carry the [wording:attended] marker by themselves<span class="kind">Attended session &middot; failure &middot; scripts/queue_draft.py with_wording_marker, services/event-gate/invariants.py V_MARKERS, library/process-studio-tickets.md, d1 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1048">desk-correspondence #1048</a></span></h3></summary>
+      <p>Junyan: &ldquo;1 yes&rdquo;</p>
+      <p><strong>Why.</strong> Invariant V flags a sent row with no Source HTR Row unless Reasoning carries a marker. Attended sessions often wrote by hand and forgot <code>[wording:attended]</code>, so their rows read as lane defects. The Deck's edit-time note about this was dropped the same day (deck-app, d2), so the marker now has to be right at queue time.</p>
+      <p><strong>Route change.</strong> None. <code>queue_draft.py --raised-by "Attended session"</code> with no <code>--htr</code> appends <code>[wording:attended]</code> on its own Reasoning line unless it is already there. Lanes, <code>--htr</code> rows and Staff (manual) rows are untouched.</p>
+      <p><strong>Failure mode.</strong> A row an attended session edits directly in Notion does not pass through the script; that session must add the marker by hand, or invariant V flags the row after it sends.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-09</span>
       <h3>Stuck Access no longer raises a second alert from Phone.com's email copy of a text<span class="kind">event-gate &middot; route &middot; services/event-gate/stuck_access.py _email_pass, services/event-gate/test_stuck_access.py, mail_rules.json _excluded, PR 998, PR 1014, d183 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1044">desk-correspondence #1044</a></span></h3></summary>
       <p>Junyan: &ldquo;183 yes&rdquo;</p>
