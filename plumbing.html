@@ -1364,6 +1364,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-11</span>
+      <h3>Deck Failed payments names the renter, groups repeat tries, and moves dead Skedda checkouts to a quiet line<span class="kind">The Deck &middot; failure &middot; src/open-invoices.js failedPayments splitCheckouts, sources/deck.html failedRow declinedLine, event-gate GET /booking-truth, d65 &middot; <a href="https://github.com/junyanboon/deck-app/pull/249">deck-app #249</a></span></h3></summary>
+      <p>Junyan: &ldquo;d65 approved&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-10 the Charges tab showed three "cus_VOpGekW9FyHrNX · $235.04" Failed payment cards. They were Hema Nathan (Sago Social) trying three times to book Studio 527 for Fri 6 Nov; every try declined and none of the three Skedda bookings exists, so nothing is owed.</p>
+      <p><strong>Route change.</strong> /api/open-invoices now reads failed charges with the Stripe customer expanded (the name shows, Skedda's [tag] stripped), groups tries by one customer, amount and booking day into one card ("3 tries"), and makes one event-gate /booking-truth read (read only) for the Skedda bookings those charges name. A card whose booking is still in Skedda shows the studio and booking time. When every booking a card names is gone from Skedda (and it is not a Deck Charged click), it leaves Failed payments for one line "Declined at checkout, no booking, nothing owed". No message is queued or sent.</p>
+      <p><strong>Failure mode.</strong> If Skedda cannot be read, nothing moves out of Failed payments and the list says so. A charge with no booking id or no customer is never moved or grouped.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-10</span>
+      <h3>One door picker decides where each kind of renter message goes<span class="kind">The Registrar &middot; route &middot; services/event-gate/doors.py, d252, d253 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1062">desk-correspondence #1062</a></span></h3></summary>
+      <p><strong>Why.</strong> Junyan chose one Artist card per person, with the bot picking the contact ("door") by message type (d252), built in stages (d253). Stage one is the picker alone, with no record changes. Two failures this week (a Giggster guest at 693, a Peerspace guest at 901) came from lanes each guessing which card or address to read.</p>
+      <p><strong>Route change.</strong> <code>services/event-gate/doors.py</code> holds the whole table in one function, <code>pick(kind, person)</code>: a platform reply goes to this booking's own relay (a Giggster reply to the guest's chat proxy); access codes and texts go to the guest's own phone, with the platform door only as a fallback marked platform-safe; the phone ask goes to the relay; another booking's relay found only on the card is never sent by itself (a hold for a human); a Stripe link goes only to the guest's own real email; the book-direct pitch goes only by text to the guest's own phone. Two relays filed on one booking, or a failed read, hold instead of picking. The Registrar's phone ask and booking-day relay access text now take their address from the picker. Their address, channel and status are exactly as before (tests prove it). The picker's wording rules (<code>doors.violations</code>) are written but nothing runs them yet. No other lane is moved yet.</p>
+      <p><strong>Failure mode.</strong> A wrong row in the table would send every routed message the wrong way; the two routed lanes keep their old answers for every case the tests cover, including the held "card relay, may be an older booking" fallback. A Notion read failure inside <code>person_for_booking</code> holds rather than picks. No switch: reverting the PR restores the old inline choice.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-10</span>
