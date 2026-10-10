@@ -1386,6 +1386,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-09</span>
+      <h3>The Registrar's second phone ask goes even after the relay access text, in its own words, and sends by itself like the first ask<span class="kind">The Registrar &middot; route &middot; EVENT-GATE booking_sweep.py chase_platform_phone, queue_phone_request, d230, d231, d232, d233 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1047">desk-correspondence #1047</a></span></h3></summary>
+      <p>Junyan: &ldquo;230 no, I want us to just request their number (we need it to coordinate with you). 231 yes, 232 yes, 233 yes&rdquo;</p>
+      <p><strong>Why.</strong> Since PR 1035 (d219) the held relay access text, queued the day before, replaced the second phone ask, so a platform guest with no number was asked only once. Junyan wants the number asked for regardless. The reminder also reused the first-ask card, which promises "a text message 24 hours prior", false at 20 hours out.</p>
+      <p><strong>Route change.</strong> Inside 20 h of start with still no number, <code>chase_platform_phone</code> queues the reminder whether or not the relay access text is queued (also on the booking day). It reads its own How to Respond card <em>Phone reminder — PLATFORM guest, no number yet</em> (Send Mode Auto-send, the same lookup as the first-ask card), first name in, "tomorrow" becomes "today" for a same-day booking, signed "Kindly, Junyan" (approved for this card only). It sends by itself exactly like the first ask (d233, 2026-10-10): Ready to Send on this booking's own relay found on the guest's card; Giggster, a relay not yet on a card, or an unread card hold it at Pending Review. If the card cannot be read, Junyan's words are used and the row is held. A number found in her relay mail (d220) still skips it. The first ask is unchanged.</p>
+      <p><strong>Failure mode.</strong> A card that cannot be read (missing, or not set to Send Mode Auto-send) falls back to Junyan's words in code, held at Pending Review (fail closed). A relay HTA guard that holds for "unread" or "hta-exists" no longer stops the reminder; "phone-card" (a number is on a card) still does. No new switch: <code>SWEEP_PHONE_CHASE_REMIND_H</code> still sets the 20 h window.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-09</span>
       <h3>Deck card warns on a reply about a booking change nobody has checked or made yet<span class="kind">The Responder, The Concierge, The Deck &middot; route &middot; EVENT-GATE history_check.py, scripts/queue_draft.py --booking-unchecked, library/the-responder.md, library/studio-tickets-bookings.md, library/concierge-orchestration.md [R-hour-shift], d66, d67 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1042">desk-correspondence #1042</a></span></h3></summary>
       <p>Junyan: &ldquo;no, just add a warning in these cases&rdquo;</p>
       <p><strong>Why.</strong> Tufan Bhattarai asked to move 1 hour from his Nov 29 booking to his Oct 10 booking, and the Responder's held reply stated the new times as settled before anyone had checked Skedda.</p>
