@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-10</span>
+      <h3>The Registrar knows a platform guest by the booking's own link before her first name<span class="kind">The Registrar &middot; failure &middot; services/event-gate/booking_sweep.py, library/queue-fbs-messages.md, d235, d237 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1056">desk-correspondence #1056</a></span></h3></summary>
+      <p>Junyan: &ldquo;235 yes, 237 yes&rdquo;</p>
+      <p><strong>Why.</strong> Jessica M.'s Giggster booking in 693 on 2026-10-10 came through as "Jessica Giggster". The first-name rule (d162) rightly would not match "Jessica" to her card "Jessica M.", so the Registrar said she had no phone, queued a phone reminder and a second access text for the relay, although her card had her phone, her board row linked that card, and a hand-queued "How to Access 693" text was Sent on Oct 9.</p>
+      <p><strong>Route change.</strong> Before the name rule, the Registrar (<code>platform_artist</code>, <code>platform_artist_card</code>, the relay access text guard <code>relay_hta_blocker</code>, and the mail backstop <code>phone_in_relay_mail</code>) asks the booking's own evidence: for Giggster the card linked on the Bookings board row, only when that card holds a Giggster Contact Point; for Peerspace and Tagvenue the card on this booking's relay Contact Point. Exactly one card means that card and its phone; otherwise the name rule runs as before. The relay access text is also held when any Sent or pending access row is linked to this booking's board row, whatever its Message Code. The mail backstop reads the guest's mail since the booking was made, not just the last 48 hours.</p>
+      <p><strong>Failure mode.</strong> A failed board row or Contact Point read now holds gate 1 for that booking this pass (the d159 rule), where before only the name read could. A board row linked to the wrong card would be believed only if that card also holds a Giggster Contact Point and its name matches the guest's first name. A hand-queued access row with no Booking link still does not count. No switch: reverting the PR restores the old checks.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-10</span>
       <h3>Arrival texts greet a platform guest's onsite person by name<span class="kind">The Registrar &middot; failure &middot; EVENT-GATE booking_sweep.py arrival_first_name, greeter_sweep.py onsite_greeting_name, fbs_access.py, stuck_access.py, library/house-rules.md, d14 d15 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1053">desk-correspondence #1053</a></span></h3></summary>
       <p>Junyan: &ldquo;d14 yes, d15 yes&rdquo;</p>
       <p><strong>Why.</strong> The Greeter files the onsite person's number on the account's card, so the access text reaches her, but it still opened "Hi &lt;account name&gt;," until the desk finished the authorized-user setup (Junyan, d14). Giggster stays in with Peerspace and Tagvenue (d15).</p>
