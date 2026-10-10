@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-10</span>
+      <h3>A Giggster chat proxy is never a guest's phone, and every reader knows a second Skedda account<span class="kind">The Registrar &middot; route, failure &middot; services/event-gate/booking_sweep.py, greeter_sweep.py, guest_lookup.py, closing_reminder.py, booking_message_reply.py, stray_code_watch.py, skedda_sync.py, reconcile_sweep.py, registrar_move_intake.py, inbound.py, fbs_access.py, library/house-rules.md, library/relay-addresses.md, library/studio-tickets-messaging.md, library/the-responder.md, d243, d250 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1060">desk-correspondence #1060</a></span></h3></summary>
+      <p>Junyan: &ldquo;243 yes, 250 yes&rdquo;</p>
+      <p><strong>Why.</strong> A Giggster chat proxy reaches the guest's Giggster thread, not their phone, yet since d42 it could sit in an Artist card's Phone, where How-to-Access and codes read it (d243). And seven readers still compared a booking's holder with the card's own Skedda User ID only, so a booking under a renter's second Skedda account read as someone else's (d250).</p>
+      <p><strong>Route change.</strong> The Greeter no longer writes the inquiry proxy into a new card's Phone; the card is linked to the proxy's Giggster Contact Point and the reply still goes to the proxy as the row's Reply To. The Greeter's phone writer refuses a number that is a Giggster proxy. The Registrar's phone question and relay-HTA check read a proxy on a card's Phone as no phone (<code>is_giggster_proxy</code>). The closing reminder, booking-message review, stray-code watch, Skedda sync, reconcile sweep, Registrar move intake (Instagram) and FBS access check now read every Skedda account a card answers to (<code>guest_lookup.card_skedda_ids</code> / <code>skedda_cards</code>).</p>
+      <p><strong>Failure mode.</strong> One extra Contact Points read per phone answer and per holder check; a failed read holds (Registrar: read-failed, this pass; FBS access: not this person). A guest whose only number on file is a proxy now gets the phone ask and a relay HTA instead of an SMS HTA to the proxy. No switch: reverting the PR restores the old reads.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-10</span>
+      <h3>Event-gate deploys get their own VPS runner instead of queuing behind PR checks<span class="kind">event-gate &middot; route, failure &middot; ops/deploy-runner/install-deploy-runner.sh, deploy-event-gate.yml, DEPLOY_RUNNER, d190 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1055">desk-correspondence #1055</a></span></h3></summary>
+      <p>Junyan: &ldquo;190 yes&rdquo;</p>
+      <p><strong>Why.</strong> Deploys and every "Concierge deadline regression" PR check shared the one VPS runner <code>hostinger-watchlist</code>. On 2026-10-09 deploys waited 20 to 30+ minutes behind PR runs, and each newer dispatch cancelled the pending deploy, so a merge in between restarted the wait.</p>
+      <p><strong>Route change.</strong> Available, not yet routed: this adds the installer for a second runner, <code>hostinger-deploy</code> (label <code>eventgate-deploy</code>, its own user and hardened unit). Deploys move to it only when Junyan installs it and sets the repo variable <code>DEPLOY_RUNNER</code> to <code>eventgate-deploy</code>; until then they run on <code>hostinger-watchlist</code> as before. PR checks and other workflows stay on <code>hostinger-watchlist</code>; a test fails if any other workflow routes to the deploy runner. The deploy command and checks are unchanged.</p>
+      <p><strong>Failure mode.</strong> If the deploy runner is offline, deploys sit queued (never on paid minutes). Switch back with <code>gh variable set DEPLOY_RUNNER -R junyanboon/desk-correspondence -b watchlist-hostinger</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-10</span>
       <h3>A platform guest's relay card no longer hides their phone card from the Registrar<span class="kind">The Registrar &middot; route, failure &middot; services/event-gate/booking_sweep.py, services/event-gate/test_platform_guest_evidence.py, library/relay-addresses.md, d249, d235 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1059">desk-correspondence #1059</a></span></h3></summary>
       <p>Junyan: &ldquo;249 no (keep the two-card design)&rdquo;</p>
       <p><strong>Why.</strong> A Peerspace or Tagvenue guest who gave a number has two cards by design: the relay card (this booking's relay, no phone) and the phone card (their number and code). Since the booking's own evidence came first (d235), the Registrar's phone question and the relay-HTA check looked only at the relay card the booking's relay names, found no phone, and would ask the guest for a number again and queue a relay How-to-Access although their phone card was in place (the Jack C. [Peerspace] shape).</p>
