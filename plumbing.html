@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-10</span>
+      <h3>The Responder drafts nothing for a text an automatic quick answer already answered<span class="kind">The Responder &middot; route &middot; scripts/already_answered.py, library/the-responder.md, d184 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1051">desk-correspondence #1051</a></span></h3></summary>
+      <p>Junyan: &ldquo;184 yes&rdquo;</p>
+      <p><strong>Why.</strong> In Junyan's staged test on 2026-10-09, his "I can't open the door" text at 4:34 PM got the event-gate door card reply at 4:37 PM, and the Responder still put its own holding reply on the Deck for the same text.</p>
+      <p><strong>Route change.</strong> <code>already_answered.py</code>, as the Responder runs it (<code>--source</code> before a draft and <code>--row</code> on each held draft), now also counts an event-gate quick-answer card row (<code>QA-&lt;card&gt;-MMDD-HHMM</code>) on the same renter and channel at Ready to Send, not only Sent, after the text. A card held at Pending Review or suppressed (Will Not Send) does not count, so the Responder drafts as before. The urgent-access path runs the same check before its step 2 reply; the <code>[urgent:&lt;id&gt;]</code> text to Junyan still goes. <code>queue_draft.py</code>'s write-time refusal for every lane is unchanged (Sent rows only).</p>
+      <p><strong>Failure mode.</strong> A card the Responder skipped for, that then fails (Error or Needs Fix) instead of sending, leaves the text with no reply from either lane; nothing re-opens it for the Responder. A card on a renter with no linked Artist is not seen, so the Responder drafts as before. No switch: reverting the PR restores the old check.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-10</span>
