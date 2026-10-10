@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-10</span>
+      <h3>An alarm code removal is no longer blocked by someone else's booking that shares a first name<span class="kind">alarm-mcp &middot; failure &middot; danceannex-alarm-monitor PR 39 (access_request_live.snapshot, bookings.STRONG_RULES), library/doorman-access-lifecycle.md, d179 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1050">desk-correspondence #1050</a></span></h3></summary>
+      <p>Junyan: &ldquo;179 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-09 the approved removal of Nanu's alarm user was refused twice as "active or unknown access entitlement": the guard read the holder-less Skedda booking "Daniela Giggster" (Oct 14, 509A, a different Daniela) as hers because her alias shares the first name.</p>
+      <p><strong>Failure mode.</strong> Once deployed, a removal is refused for a future booking only when the booking matches by the Artist's Skedda User ID, the holder's full name, or the full name in the title. The new risk is the other way: a real renter whose only booking is holder-less and titled with just a first name, with no Skedda User ID on the Artist card, no longer blocks their own removal; Junyan's by-name approval, Account Status and authorized-user links still guard it. Code changes and the retirement sweep keep the loose first-name match. <code>DOORMAN_ACCESS_REMOVAL_LIVE=0</code> on alarm-mcp still turns removals off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-10</span>
       <h3>Invoice reminders wait for a payer's reply and a promised day, and reply in the payer's thread<span class="kind">Chase sweep &middot; route, failure &middot; EVENT-GATE chase_sweep.py, library/automatic-operational-closure.md, library/desk-sort.md, library/concierge-orchestration.md, d4, d5, d6 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1052">desk-correspondence #1052</a></span></h3></summary>
       <p>Junyan: &ldquo;3 yes, 4 yes, 5 yes, 6 yes&rdquo;</p>
       <p><strong>Why.</strong> A payer wrote that a direct deposit would go out on a set day, and the chase sweep still queued the next reminder three days later, because its 2-day clock reads only timestamps.</p>
