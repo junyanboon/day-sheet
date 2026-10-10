@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-11</span>
+      <h3>Deck attendance read logs why Notion refused it, and stops calling a refusal "could not reach"<span class="kind">The Deck &middot; failure &middot; src/index.js attendanceFail, GET /api/attendance/unmarked, POST /api/attendance/mark, d68 &middot; <a href="https://github.com/junyanboon/deck-app/pull/251">deck-app #251</a></span></h3></summary>
+      <p>Junyan: &ldquo;d68 approved&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-10 evening (Toronto) every GET /api/attendance/unmarked on the live Deck answered 502 in about 0.2 s, so the temporary "Mark attended" button never showed. The Worker log held nothing, and the reply text said "Could not reach Notion" for any error, so the cause could not be read. The same board query with the canon token answers fine.</p>
+      <p><strong>Route change.</strong> When the board read or the mark write fails without its own status, the Worker logs <code>attendance read failed</code> (or <code>write</code>) with Notion's status and message. A Notion refusal now reads "Notion refused the read (404): ..."; only an error with no answer from Notion keeps "Could not reach Notion". Status codes are unchanged (502), so the page behaves as before.</p>
+      <p><strong>Failure mode.</strong> Unchanged: a failed read shows no Mark attended button; nothing is written.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-11</span>
