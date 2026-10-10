@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-10</span>
+      <h3>A platform guest's relay card no longer hides their phone card from the Registrar<span class="kind">The Registrar &middot; route, failure &middot; services/event-gate/booking_sweep.py, services/event-gate/test_platform_guest_evidence.py, library/relay-addresses.md, d249, d235 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1059">desk-correspondence #1059</a></span></h3></summary>
+      <p>Junyan: &ldquo;249 no (keep the two-card design)&rdquo;</p>
+      <p><strong>Why.</strong> A Peerspace or Tagvenue guest who gave a number has two cards by design: the relay card (this booking's relay, no phone) and the phone card (their number and code). Since the booking's own evidence came first (d235), the Registrar's phone question and the relay-HTA check looked only at the relay card the booking's relay names, found no phone, and would ask the guest for a number again and queue a relay How-to-Access although their phone card was in place (the Jack C. [Peerspace] shape).</p>
+      <p><strong>Route change.</strong> When the booking's own evidence is a Peerspace or Tagvenue relay card with no phone, <code>platform_artist</code> and <code>relay_hta_blocker</code> fall back to the name rule, which finds the same-name phone card. Giggster (one card per guest, no relay card) is unchanged: its board-linked card's answer stands. Platform-thread replies still go to the relay card (<code>guest_lookup.find</code> answers <code>booking</code> with the relay card).</p>
+      <p><strong>Failure mode.</strong> The name rule's own guards (one-word names, same platform, closed accounts, two phone cards is a question) apply as before. Unchanged and still open: when a relay-only guest has no phone card yet, the gate-1 mail backstop (<code>phone_in_relay_mail</code>) still files a number it finds onto the relay card, as it did before d235. No switch: reverting the PR restores the relay-card-only answer.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-10</span>
       <h3>Every lane finds a renter's card by ID first, through one shared lookup<span class="kind">The Registrar &middot; route, failure &middot; services/event-gate/guest_lookup.py, booking_sweep.py, booking_reconcile.py, lane_common.py, overtime_sweep.py, inbound.py, artist_ensure.py, greeter_sweep.py, scripts/artist_card.py, library/relay-addresses.md, library/studio-tickets-intake.md, d238, d242 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1058">desk-correspondence #1058</a></span></h3></summary>
       <p>Junyan: &ldquo;238 yes, 242 yes&rdquo;</p>
       <p><strong>Why.</strong> Lanes each had their own way of finding a renter's card, and some leaned on names. Junyan's rule (d238): the Artist card is the person, IDs link people, names are labels.</p>
