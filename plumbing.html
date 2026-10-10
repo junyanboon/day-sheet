@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-10</span>
+      <h3>The Registrar's move intake reads a gmail- email id as the bare Gmail id, and refuses a gmail- id on an SMS<span class="kind">The Registrar &middot; failure &middot; services/event-gate/registrar_move_intake.py, services/event-gate/move_sweep.py, library/concierge-orchestration.md, d8 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1061">desk-correspondence #1061</a></span></h3></summary>
+      <p>Junyan: &ldquo;8 yes&rdquo;</p>
+      <p><strong>Why.</strong> trisha tolentino's move request (Gmail 1a123914ba7af36f, 2026-10-09) was handed over with source.id <code>gmail-1a123914ba7af36f</code>, the correspondence log's file name. The move lane sent that to Gmail, got a 400 on 3 passes and parked her before it ever looked in Skedda. David Garzon's (2026-10-08) SMS handoff carried a gmail- notification id.</p>
+      <p><strong>Failure mode change.</strong> An email source id with a leading <code>gmail-</code> or <code>gmail:</code> is stripped to the bare Gmail id at intake (before the digest), in the log lookup, in the move lane's record and before the Gmail re-read. Old journals keep their stored id; a bare retry of one is the same request. A new SMS handoff whose id starts <code>gmail-</code> is refused at intake ("SMS source id must be sms-in-&lt;id&gt;"). A source parked under its <code>gmail-</code> spelling stays parked under both spellings, so trisha's hand-handled request is not retried or asked again. A parked card with no booking now says "no booking looked up (the lane failed before it searched Skedda)".</p>
+      <p><strong>Still open.</strong> A relay email (Tagvenue, Peerspace, Giggster) still fails the body check after the id fix; where those go is Junyan's open decision. No switch: reverting the PR restores the old reading.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-10</span>
       <h3>A Giggster chat proxy is never a guest's phone, and every reader knows a second Skedda account<span class="kind">The Registrar &middot; route, failure &middot; services/event-gate/booking_sweep.py, greeter_sweep.py, guest_lookup.py, closing_reminder.py, booking_message_reply.py, stray_code_watch.py, skedda_sync.py, reconcile_sweep.py, registrar_move_intake.py, inbound.py, fbs_access.py, library/house-rules.md, library/relay-addresses.md, library/studio-tickets-messaging.md, library/the-responder.md, d243, d250 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1060">desk-correspondence #1060</a></span></h3></summary>
       <p>Junyan: &ldquo;243 yes, 250 yes&rdquo;</p>
       <p><strong>Why.</strong> A Giggster chat proxy reaches the guest's Giggster thread, not their phone, yet since d42 it could sit in an Artist card's Phone, where How-to-Access and codes read it (d243). And seven readers still compared a booking's holder with the card's own Skedda User ID only, so a booking under a renter's second Skedda account read as someone else's (d250).</p>
