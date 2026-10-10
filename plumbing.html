@@ -1367,6 +1367,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-10</span>
+      <h3>Every lane finds a renter's card by ID first, through one shared lookup<span class="kind">The Registrar &middot; route, failure &middot; services/event-gate/guest_lookup.py, booking_sweep.py, booking_reconcile.py, lane_common.py, overtime_sweep.py, inbound.py, artist_ensure.py, greeter_sweep.py, scripts/artist_card.py, library/relay-addresses.md, library/studio-tickets-intake.md, d238, d242 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1058">desk-correspondence #1058</a></span></h3></summary>
+      <p>Junyan: &ldquo;238 yes, 242 yes&rdquo;</p>
+      <p><strong>Why.</strong> Lanes each had their own way of finding a renter's card, and some leaned on names. Junyan's rule (d238): the Artist card is the person, IDs link people, names are labels.</p>
+      <p><strong>Route change.</strong> A new shared lookup (<code>guest_lookup</code>) checks the Skedda User ID (the card's own, or a new <code>skedda</code> Contact Point for a second Skedda account), then Contact Points (relay, Giggster chat, phone, email), then the booking's own relay or board link. The Registrar (direct and platform), the Timekeeper's holder card, the Doorman and Analyst card read, the Host's holder identity, the inbound sender lookup and the Concierge's card-on-first-contact all read the Skedda rung through it; the inbound sender lookup now also finds a card through a Contact Point when the card's own Email or Phone names nobody. Name matching also reads <code>name</code> Contact Points, so a card renamed "Luciana Govea" is still found as "Luciana" from Peerspace. New cards get a cleaned name. <code>scripts/artist_card.py</code> gains <code>--find</code> (the Concierge links a ticket at intake by ID), <code>--rename</code> (keeps the old name as a Contact Point) and <code>--add-skedda</code>. The Doorman and Analyst read never matches a one-word name.</p>
+      <p><strong>Failure mode.</strong> One Skedda id or contact on two cards is now "ambiguous" and no weaker rung is asked. A failed Contact Point read during name matching raises as a card read failure did before (the lane holds this pass). A sender reached only through an old Contact Point is now linked where before they were "not linked". No switch: reverting the PR restores the old lookups.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-10</span>
+      <h3>The Desk Watch reports name drift each morning<span class="kind">The Desk Watch &middot; route &middot; scripts/name_drift.py, d242 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1057">desk-correspondence #1057</a></span></h3></summary>
+      <p>Junyan: &ldquo;242 yes&rdquo;</p>
+      <p><strong>Why.</strong> Renters keep reaching the desk under names and addresses no card holds: a Contact Point filed with no card, a card named after the platform ("Luciana Peerspace"), a ticket opened with no card although one card holds the sender's address, a Skedda holder whose user id is on no card. Junyan asked for one standing line that counts them (d242).</p>
+      <p><strong>Route change.</strong> New, report only. <code>scripts/name_drift.py</code> reads the Contact Points and Artist DB (Notion, read-only), the canon ticket and message mirrors, and the next 14 days of Skedda bookings, and prints one paragraph with four counts and at most three examples each (first name and last initial, tickets by title). The Desk Watch copies it into its morning report. Nothing is fixed or written anywhere.</p>
+      <p><strong>Failure mode.</strong> A read that fails prints <code>name drift: UNCHECKED (...)</code> for that count, never 0, and the script still exits 0. The Mac's own Skedda cookies are anonymous (holders stripped), so count 4 reads the Skedda connector's <code>list_bookings_range</code> result passed with <code>--skedda-json</code>; without it count 4 says UNCHECKED. No switch: drop the step from the Desk Watch.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-10</span>
+      <h3>The alarm connector can rename an existing alarm user, attended only<span class="kind">alarm-mcp &middot; tool &middot; danceannex-alarm-monitor PR 40 (user_codes.rename_user, MCP tool rename_user), d21, d22 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1054">desk-correspondence #1054</a></span></h3></summary>
+      <p>Junyan: &ldquo;use the account name&rdquo;</p>
+      <p><strong>Why.</strong> Until now a panel user's name could only be changed in the Alarm.com web UI: <code>access_operation</code> "change" changes a code, and only a create ever set a name. Junyan asked to try a rename now (d21), with the account name as the last name when only a first name is known (d22).</p>
+      <p><strong>Route change.</strong> New guarded tool <code>rename_user(user_id, first_name, last_name, account_name, confirm)</code> on alarm-mcp. Without <code>confirm=True</code> it only shows the before and after names and the exact save body. With it, it changes only the first and last name, then re-reads the user and checks the name, the code slots, the panel count and the access type. No robot lane calls it; the first live rename is an attended test.</p>
+      <p><strong>Failure mode.</strong> A save Alarm.com accepts but ignores reads as not renamed; a save that cannot be read back reads as outcome unknown; anything besides the name that moves reads as renamed but not verified. It refuses read-only names, the primary user, a deleted user's shell, and a name another user already holds. Nothing turns it on for robots; the off switch is simply not calling it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-10</span>
       <h3>The Registrar knows a platform guest by the booking's own link before her first name<span class="kind">The Registrar &middot; failure &middot; services/event-gate/booking_sweep.py, library/queue-fbs-messages.md, d235, d237 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1056">desk-correspondence #1056</a></span></h3></summary>
       <p>Junyan: &ldquo;235 yes, 237 yes&rdquo;</p>
       <p><strong>Why.</strong> Jessica M.'s Giggster booking in 693 on 2026-10-10 came through as "Jessica Giggster". The first-name rule (d162) rightly would not match "Jessica" to her card "Jessica M.", so the Registrar said she had no phone, queued a phone reminder and a second access text for the relay, although her card had her phone, her board row linked that card, and a hand-queued "How to Access 693" text was Sent on Oct 9.</p>
