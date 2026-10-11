@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-11</span>
+      <h3>Alarm codes refuse only at about 230 live users, and one prune list is filed once the panel goes over 200<span class="kind">The Doorman (alarm-mcp) &middot; route, failure &middot; alarm-monitor alarm_monitor/capacity.py, access_requests.py, provision_guard.py, retirement_sweep.py, library/doorman-access-lifecycle.md, d297 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1085">desk-correspondence #1085</a></span></h3></summary>
+      <p>Junyan: &ldquo;the real limit is something like 230 but we should start pruning once it goes over 200&rdquo;</p>
+      <p><strong>Why.</strong> Since d172 both ways of making an alarm user refused at 200 live users, so a renter could be left without a code while the panel still had room. Dealer listings give the IQ Panel 4 242 codes.</p>
+      <p><strong>Route change.</strong> <code>access_operation</code> create and <code>/provision</code> now refuse only at 230 live users. After any successful robot create, alarm-mcp checks in the background: over 200 live users, it runs the retirement sweep once and files ONE Human-confirmed Access / PIN row, "Retire N idle alarm codes", for a person to approve by name. Once per crossing (a durable marker), not once a day. Nothing is deleted automatically.</p>
+      <p><strong>Failure mode.</strong> A sweep that files nothing (nobody eligible, an unreadable source, an error) is retried at most once a day while the panel stays over 200. No ledger bucket means no watch. The watch never delays or undoes the create. A user made by hand in the Alarm.com UI is noticed at the next robot create.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-11</span>
       <h3>A Studio 693 alarm trigger row now names the known front door sensor fault<span class="kind">Alarm Watch (event-gate), The Desk Sort &middot; route &middot; services/event-gate/alarm_watch.py KNOWN_FAULTS, library/just-so-you-know.md § Known hardware faults, library/desk-sort.md step 3, d298 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1083">desk-correspondence #1083</a></span></h3></summary>
       <p>Junyan: &ldquo;I've mentioned it many times but I don't know how to make it durable.&rdquo;</p>
       <p><strong>Why.</strong> Studio 693's front door sensor has a known fault: someone trying the door, or arriving early, can trip the alarm. It was written only in passing in the prevention casebook, so every 693 trigger came back to Junyan as an unknown (Oct 10 and Oct 11). Junyan ruled d298.</p>
