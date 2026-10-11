@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-11</span>
+      <h3>Deck tells event-gate who released a Message Queue row<span class="kind">The Deck &middot; route &middot; src/outbound-guard.js guardRelease, src/index.js updatePage, event-gate POST /message-release-check, #ela-feed, d8 &middot; <a href="https://github.com/junyanboon/deck-app/pull/254">deck-app #254</a></span></h3></summary>
+      <p>Junyan: &ldquo;d8 yes&rdquo;</p>
+      <p><strong>Why.</strong> For the #ela-feed manual-work feed (d8), which names the person who released a Message Queue row in the Deck. event-gate's release ledger needs that name, and only the Deck knows who is signed in.</p>
+      <p><strong>Route change.</strong> When the Deck asks event-gate to check a release (Approve, Send later, the direct SMS Send), the request body to /message-release-check now carries a top-level <code>who</code>: the signed-in Deck user's name from the session, or an empty string for the team password. <code>body</code> and <code>context</code> and their hashes are unchanged; <code>who</code> is not in <code>context</code>. Today's event-gate reads only <code>body</code> and <code>context</code>, so the field is ignored there for now.</p>
+      <p><strong>Failure mode.</strong> None new: <code>who</code> is a label only and never decides a release. If the name is missing the Deck sends an empty string and the release check runs as before. No switch; reverting this PR removes the field.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-11</span>
