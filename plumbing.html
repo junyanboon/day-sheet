@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-12</span>
+      <h3>The Deck's file chips open the file and show its real name; a new email no longer says to reply by hand<span class="kind">The Deck &middot; tool &middot; sources/deck.html attChip attHref attNameInText threadHtml, src/drive-meta.js driveFileMeta, src/attachments.js describeFiles, src/gcal.js googleToken(scope), send-engine v36 docQueue223_, d301 d304 &middot; <a href="https://github.com/junyanboon/deck-app/pull/256">deck-app #256</a></span></h3></summary>
+      <p>Junyan: &ldquo;d304 approved&rdquo;</p>
+      <p><strong>Why.</strong> On the held 223 renter copy rows (Shamir Panchal, Megan Cartwright) the file chip under THE REPLY read "Drive file" and clicking it did nothing. Junyan (d304): "I want to be able to go to the file if I click on it." The same card said "No source email on this row ... Reply by hand", which is wrong for a new outbound email: Send gives the Send Engine a fresh email with the files attached.</p>
+      <p><strong>Tool change.</strong> A chip is now a link that opens the file in a new tab: a Drive id opens <code>drive.google.com/file/d/&lt;id&gt;/view</code>, a <code>notion:&lt;page id&gt;</code> opens its Notion page. The × beside it still only takes the file off. <code>/api/attachment-info</code> now reads a Drive file's name, type and size (metadata only, never the file) through the Deck's Google grant (GMAIL_* secrets) and, if that cannot, the service account with <code>drive.metadata.readonly</code>. When Drive cannot be read the chip shows the name the row's own Reasoning gives next to that file's Drive link (DocIntake writes it), else the id. An Email row with no Source Email and no "Re:" subject now says "A new email, not a reply"; a "Re:" with no Source Email still says to reply by hand. Nothing is sent by any of this.</p>
+      <p><strong>Failure mode.</strong> A refused or failed Drive read is logged as <code>attachment drive name via &lt;grant|service account&gt;: HTTP &lt;code&gt;</code> and the chip falls back to the Reasoning name or the id; it never blocks the card or Send.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-11</span>
