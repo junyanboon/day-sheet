@@ -1364,6 +1364,35 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-11</span>
+      <h3>The Registrar waits for the Greeter instead of matching a new Peerspace or Tagvenue booking by name<span class="kind">The Registrar &middot; route, failure &middot; services/event-gate/booking_sweep.py, services/event-gate/platform_identity.py, library/relay-addresses.md, d279 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1080">desk-correspondence #1080</a></span></h3></summary>
+      <p><strong>Why.</strong> A returning Peerspace or Tagvenue guest's new booking could reach the Registrar before the Greeter filed its relay. The Registrar then matched the name to the guest's OLD card, minted the code on it and queued the access text to its phone (the d248 exception). Junyan closed it (d279).</p>
+      <p><strong>Route change.</strong> For a Peerspace or Tagvenue booking made on or after 2026-10-12 with no evidence of its own (no relay Contact Point naming a card), the Registrar holds the booking while it is younger than 40 minutes (step <code>platform:waiting-for-greeter</code>): no code, no text, no ask. Once the Greeter files the relay, the booking runs on the card it names and the "Is this the same X?" question (PR 1072) decides any link. Past 40 minutes with still no evidence, gate 1 runs with the name rungs off: a same-name card is the "Which X?" ask (<code>identity:name-rule-off-ask</code>), never a link; the phone ask goes out as usual. Giggster and bookings made before 2026-10-12 are unchanged.</p>
+      <p><strong>Failure mode.</strong> A held booking writes nothing and is retried next pass (every 30 min); it stays out of the access-done snapshot, and its id is kept in the snapshot's <code>greeter_wait</code> list so the next pass still treats it as a new booking (its confirmation is owed then, not lost). If the Greeter never files the relay, the guest gets the "Which X?" ask and a phone ask about 40 to 70 minutes after booking instead of a name link. A booking with no Skedda created time is never held and never name-linked. Wait length: <code>REGISTRAR_GREETER_WAIT_MIN</code> (default 40). Rollback: revert the PR (no switch turns the name rule back on).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-11</span>
+      <h3>AAP and 1AP agreements get their 223 copy without a Booking Summary<span class="kind">DocIntake (send-engine) &middot; route, failure &middot; send-engine DocIntake.gs docQueue223_ v35, library/rental-agreement-onboarding.md, d294 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1081">desk-correspondence #1081</a></span></h3></summary>
+      <p>Junyan: &ldquo;1ap and aap do not need booking summaries&rdquo;</p>
+      <p><strong>Why.</strong> David Garzon's Annual Artist Plan agreement filed on 2026-10-11 and the 223 renter copy stopped on "Missing Booking Summary". Junyan ruled plan agreements need none.</p>
+      <p><strong>Route change.</strong> For an AAP or 1AP agreement (plan read from the Dropbox Sign title), DocIntake drafts the 223 Gmail copy with the signed agreement alone, subject "Your Signed Rental Agreement", and raises Junyan's manual-send Action. Fixed Option still merges the term's Booking Summary.</p>
+      <p><strong>Failure mode.</strong> A Fixed Option agreement with no matching summary still holds and says so on the "SIGNED AGREEMENT FILED" row. Live after the send-engine <code>clasp push</code> of v35.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-11</span>
+      <h3>The Doorman renames a platform guest's onsite person on the panel after the booking ends<span class="kind">The Doorman &middot; route, cadence, tool, failure &middot; alarm-mcp POST /onsite-rename, access_operation action=rename, danceannex-alarm-onsite-rename.timer, library/doorman-access-lifecycle.md, d17, d18, d22, d32 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1078">desk-correspondence #1078</a></span></h3></summary>
+      <p>Junyan: &ldquo;32 yes&rdquo;</p>
+      <p><strong>Why.</strong> When a platform guest names someone else to be onsite, the access text goes to that person under an alarm user named for the guest account, so the door log shows the wrong person. Junyan approved a robot rename under five rules (d17), only after the booking ends (d18), with a one-word name taking the account name as its last name (d22), and the build on 2026-10-11 (d32).</p>
+      <p><strong>Route change.</strong> New VPS timer <code>doorman-onsite-rename</code>, every 10 minutes 08:05 to 22:55 Toronto, calls <code>POST /onsite-rename</code> on alarm-mcp. Each pass reads the authorized-user tickets that carry a Greeter onsite key, and for each one whose booking has ended it previews and confirms <code>access_operation action=rename</code> (name only, no code or access change), then reconciles the same request on later passes. After two all-panel proofs it sets the card's Alarm Display Name and comments on the ticket. The desk no longer renames the panel user by hand.</p>
+      <p><strong>Failure mode.</strong> Any refusal after the booking ended, an uncertain write or a proof that later changes files one Review row on Actions to Perform (Raised by The Doorman, Basis <code>doorman:onsite-rename:&lt;ticket id&gt;:&lt;reason hash&gt;</code>) and changes nothing. A booking not ended yet, or a ticket with no onsite card or alarm id, is skipped quietly. Off switch: <code>DOORMAN_ACCESS_RENAME_LIVE=0</code> in the alarm-mcp compose environment, or <code>systemctl disable --now danceannex-alarm-onsite-rename.timer</code>.</p>
+    </details>
+    </li>
     <li class="entry human">
     <details>
       <summary><span class="when">2026-10-11</span>
