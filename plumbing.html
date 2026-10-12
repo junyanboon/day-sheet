@@ -1366,6 +1366,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-13</span>
+      <h3>#ela-feed no longer posts Junyan's own Deck approvals<span class="kind">event-gate &middot; route &middot; services/event-gate/ela_feed.py, d8 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1089">desk-correspondence #1089</a></span></h3></summary>
+      <p>Junyan: &ldquo;the ela feed doesn't need to have items done by 'Deck by Junyan'&rdquo;</p>
+      <p><strong>Why.</strong> Junyan asked for it on 2026-10-13. The feed is for watching the desk's human work by others; his own Deck Sends were noise.</p>
+      <p><strong>Route change.</strong> A desk text or business email whose Message Queue row was released in the Deck by Junyan (the release ledger's <code>who</code> is "Junyan") is marked seen and never posted. "approved in Deck by Ela", "approved in Deck" with no name (team password), "Ela or Junyan" manual lines, calls, alarm, Slack and shift claims post as before. Nudges stay shadow (d9).</p>
+      <p><strong>Failure mode.</strong> A Junyan release recorded under another Deck login (the team password gives no name) still posts as "approved in Deck". Nothing else changes; <code>ELA_FEED_DISABLED=1</code> still turns the whole lane off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-13</span>
+      <h3>A Studio 693 known door fault close now posts one line to #desk-status<span class="kind">The Desk Sort, owner text release (event-gate) &middot; route &middot; library/desk-sort.md step 3, library/just-so-you-know.md § Known hardware faults, services/event-gate/owner_text_release.py, d307, d310 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1090">desk-correspondence #1090</a></span></h3></summary>
+      <p>Junyan: &ldquo;push it on the desk status&rdquo;</p>
+      <p><strong>Why.</strong> Since d307 the Desk Sort closes a Studio 693 alarm row that the known front door sensor fault explains, with no card, so nothing told Junyan it had happened. He ruled d310 on 2026-10-13: post it on #desk-status.</p>
+      <p><strong>Route change.</strong> After the close reads back, the Desk Sort queues one owner Message Queue row tagged <code>[owner:desksort693:&lt;Action row id&gt;]</code> (Raised by The Desk Sort, Junyan's card only, Pending Review), and <code>owner_text_release.py</code> posts it to #desk-status within a minute with the usual @mention and marks it Sent. One line: the trigger time, the door events, no keypad entry, "Closed, no action" and the Action link. It is not a "Just so you know" line (the row stays its filed <code>Type</code>, not FYI) and does not count as the Desk Sort's one problem text per pass.</p>
+      <p><strong>Failure mode.</strong> If the post fails, <code>owner_text_release.py</code> falls back to Ready to Send and the Send Engine texts it, as for every owner row. A row older than 60 minutes is never released. The close itself does not depend on the post. No switch of its own: removing the d310 sentence from <code>library/desk-sort.md</code> stops it; <code>OWNER_TEXT_RELEASE_DISABLED=1</code> stops every owner post.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-12</span>
       <h3>#ela-feed tells robot texts by their Phone.com receipt, and "527 all good" counts as Ela's report<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/ela_feed.py, services/event-gate/outbound_guard.py, d8 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1088">desk-correspondence #1088</a></span></h3></summary>
       <p><strong>Why.</strong> Review of the #ela-feed launch (d8): a robot's closing-check text could show as "Ela or Junyan", because the feed matched texts to Message Queue rows by words and phone only, and the closing check writes its row after it sends. Ela's short reports ("527 all good") did not count, because a report had to name the renter.</p>
