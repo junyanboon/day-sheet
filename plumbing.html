@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-12</span>
+      <h3>A Deck card whose Artist name did not load says "Loading name…" and asks again<span class="kind">The Deck &middot; failure &middot; deck-app sources/deck.html displayName fetchNames, test/artist-names.test.js, d304 &middot; <a href="https://github.com/junyanboon/deck-app/pull/258">deck-app #258</a></span></h3></summary>
+      <p>Junyan: &ldquo;Or "Loading name.." so I know to wait&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-12 a Treasurer waitlist card for Anita Pandey read "Your Wednesday": the Artists name lookup failed, the name was kept as empty for the whole session, and the title fell back to words from the Message Code (d304).</p>
+      <p><strong>Route change.</strong> None. A card with an Artist link now never takes its title from the Message Code; that guess is kept only for cards with no Artist link.</p>
+      <p><strong>Failure mode.</strong> When the name lookup errors or comes back without a Name, the card says "Loading name…" and the Deck asks Notion again, uncached, after 30 seconds, then 1, 2, 4 and 5 minutes. If the sixth try still has no name (Notion still down, or the Artist card has no Name), the card says "Name not loaded" and stops asking until the page is reloaded. It never falls back to words from the Message Code.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-12</span>
       <h3>The Desk Sort closes a Studio 693 known door fault alarm row itself<span class="kind">The Desk Sort, Alarm Watch (event-gate) &middot; route &middot; library/desk-sort.md step 3, library/just-so-you-know.md § Known hardware faults, services/event-gate/alarm_watch.py KNOWN_FAULTS, d298, d307, d225 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1086">desk-correspondence #1086</a></span></h3></summary>
       <p>Junyan: &ldquo;307 yes&rdquo;</p>
       <p><strong>Why.</strong> Since d298 a Studio 693 alarm trigger that the front door sensor fault explains got a <code>fyi</code> card and the row stayed open, so it still sat on the Deck under Bot work until someone closed it by hand (the pile-up d211 and d215 were about). Junyan ruled d307 on 2026-10-12: the desk may close it itself.</p>
