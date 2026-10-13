@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-13</span>
+      <h3>One unpaid booking the review cannot finish no longer fails the whole reconcile pass<span class="kind">event-gate reconcile sweep, unpaid-booking review &middot; failure &middot; EVENT-GATE unpaid_review.py, row_refusals.py, plan_allowance_sweep.py, money_reconcile.py, library/desk-sort.md, d4, d5 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1105">desk-correspondence #1105</a></span></h3></summary>
+      <p>Junyan: &ldquo;d4 yes&rdquo;</p>
+      <p><strong>Why.</strong> The unpaid-booking review (<code>unpaid_review.py</code>, every reconcile pass) ran all its bookings inside one try. One booking it refused (its source changed under it, a write that did not read back, or an earlier row write it could not confirm, which is sticky) failed the whole pass and set off the "robot stopped" alerts until someone edited its journal. The prepaid-hours bot had the same weak spot until PR 1097 (d2).</p>
+      <p><strong>Change.</strong> Same pattern as PR 1097, now shared in <code>row_refusals.py</code> (both lanes use it). A refused booking is skipped with nothing written and listed under <code>unheld</code> in the round's receipt; the other bookings run and the pass reports ok. Once refused three rounds running it gets one Review note row for Junyan (<code>[UNPAID-REVIEW-STUCK-V1:&lt;key&gt;]</code>, no Booking ref), never a second. The count clears when the booking goes through, or after a day with no refusal; a booking a fast check did not reach keeps its count.</p>
+      <p><strong>Failure mode.</strong> The checks themselves are unchanged: a changed source is still never acted on, and an unconfirmed earlier write is still never posted again. Anything that is not one of those refusals (Notion down, a network error, a write that timed out) still fails the pass, so a real outage still alerts. Rollback: revert the PR.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-13</span>
       <h3>Alarm codes come off in batches under one approval, and the robot can prune idle codes itself over 200 (switch off until set)<span class="kind">The Doorman (alarm-mcp) &middot; route, tool, failure &middot; alarm-monitor PR 44 alarm_monitor/access_batch.py, auto_prune.py, access_request_live.py, capacity.py, library/doorman-access-lifecycle.md, d314 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1104">desk-correspondence #1104</a></span></h3></summary>
       <p>Junyan: &ldquo;Why does it take so long to remove the codes? I want it to be able to remove codes through the mcp. (then "314 yes")&rdquo;</p>
       <p><strong>Why.</strong> Removing approved people one at a time took about 20 minutes each, because each removal waited for its own two panel proofs. Five people took close to two hours.</p>
