@@ -1367,6 +1367,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-13</span>
+      <h3>Alarm codes come off in batches under one approval, and the robot can prune idle codes itself over 200 (switch off until set)<span class="kind">The Doorman (alarm-mcp) &middot; route, tool, failure &middot; alarm-monitor PR 44 alarm_monitor/access_batch.py, auto_prune.py, access_request_live.py, capacity.py, library/doorman-access-lifecycle.md, d314 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1104">desk-correspondence #1104</a></span></h3></summary>
+      <p>Junyan: &ldquo;Why does it take so long to remove the codes? I want it to be able to remove codes through the mcp. (then "314 yes")&rdquo;</p>
+      <p><strong>Why.</strong> Removing approved people one at a time took about 20 minutes each, because each removal waited for its own two panel proofs. Five people took close to two hours.</p>
+      <p><strong>Tool change.</strong> New alarm-mcp tools <code>access_batch_remove</code> and <code>access_batch_status</code>. Several people approved on one Actions row are previewed together, deleted together, and proven by one shared pair of panel proofs (everyone gone, nobody else changed), about 20 to 25 minutes for the whole batch. Every per-person refusal of the single route still runs.</p>
+      <p><strong>Route change.</strong> With <code>DOORMAN_AUTO_PRUNE_LIVE=1</code> on alarm-mcp, the robot removes idle codes itself between 02:00 and 05:00 Toronto when more than 200 users are live: back to 190, oldest idle first, at most 10 a day, only people the retirement sweep finds eligible in the same call. Each batch gets its own Actions row, closed Processed when verified, and one line on #desk-status. With the switch off, the prune list is filed for a person as before.</p>
+      <p><strong>Failure mode.</strong> Any unreadable source means nothing is removed. A refused or failed batch cancels its row and waits an hour. A batch not verified in 2 hours posts once to #desk-status and blocks new batches until it verifies. A row the robot raised never counts as an approval. Revoking the standing policy row (Won't Do, Cancelled, archived) brings back the proposal list.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-13</span>
       <h3>Same-day shifts to a named time move at once; a failed move handoff gets an Ops Lead Action and a shift DM<span class="kind">The Registrar (event-gate move lane), The Responder, The Concierge &middot; route, failure &middot; services/event-gate/move_sweep.py same_day_shift direct_same_day_move fold_follow_ups offset_minutes, move_confirm.py, scripts/intake_decide.py, move_handoff_fallback.py, registrar_move_intake.py, library/the-responder.md, library/concierge-orchestration.md, library/studio-tickets-bookings.md, library/autonomy.md, d4, d5, d6, d7, d11 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1103">desk-correspondence #1103</a></span></h3></summary>
       <p>Junyan: &ldquo;this sould have been auto-mvoed&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-12 a renter texted at 2:05 PM to shift her 2:30 PM booking by 15 minutes. The move lane sent the held "within 24 hours" reply, the Responder's handoff to the Registrar was refused, and every later pass only pushed a phone notification. Junyan ruled d4 to d7, then d11.</p>
