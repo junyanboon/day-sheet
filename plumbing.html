@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-14</span>
+      <h3>skedda-mcp /bookings-range keeps the recurring marker, and an unexpanded series keeps an alarm code<span class="kind">The Doorman (alarm-mcp) &middot; tool, failure &middot; skedda-cli PR 43 hosting/server_http.py, alarm-monitor PR 46 alarm_monitor/bookings.py, access_request_live.py, library/doorman-access-lifecycle.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1115">desk-correspondence #1115</a></span></h3></summary>
+      <p>Junyan: &ldquo;321 yes&rdquo;</p>
+      <p><strong>Why.</strong> The Skedda client returns a repeating booking it cannot expand as one row stamped with the series' first start, marked <code>recurring="unexpanded"</code>. The <code>/bookings-range</code> route dropped that mark, so the alarm robot read the series as an old booking: the nightly prune could remove a regular's code, and the "unknown occurrence timing" refusal on code changes could never fire.</p>
+      <p><strong>Tool change.</strong> <code>/bookings-range</code> rows now carry <code>recurring</code> (empty for a one-off, true for an expanded occurrence, <code>unexpanded</code> for a series the client could not expand). Still no money or contact fields.</p>
+      <p><strong>Failure mode.</strong> The retirement sweep and the auto prune count an unexpanded series as an upcoming booking, so the code stays. A code change or removal for someone whose name matches such a series is refused with "unknown occurrence timing"; inside a nightly prune batch that refusal stops the night's batch and nothing is removed.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-14</span>
       <h3>The alarm auto-prune runs every night by time, not over 200, and any upcoming booking keeps a code<span class="kind">The Doorman (alarm-mcp) &middot; route, failure &middot; alarm-monitor PR 45 alarm_monitor/auto_prune.py, bookings.py, retirement.py, library/doorman-access-lifecycle.md, d314 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1112">desk-correspondence #1112</a></span></h3></summary>
       <p>Junyan: &ldquo;let's set it up so the pruning happens based on time (i.e. they haven't used the studio in 1 month and the have no upcoming bookings)&rdquo;</p>
       <p><strong>Why.</strong> The auto prune only ran with more than 200 live users and stopped at 190, so idle codes sat on the panels until the count crossed the line.</p>
