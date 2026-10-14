@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-14</span>
+      <h3>A charge row already charged or invoiced says "Charged, waiting for check" and offers no Charge button<span class="kind">The Deck &middot; failure &middot; deck-app sources/deck.html chargeBilled chargeTail chargeRowPlain, src/charge-hold.js billed billedLine, test/charges-tab.test.js, d3 &middot; <a href="https://github.com/junyanboon/deck-app/pull/260">deck-app #260</a></span></h3></summary>
+      <p>Junyan: &ldquo;d3 approved (2026-10-14)&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-14 Junyan pressed Charge on Aakanksha Patel's $12.71 overtime row and got "This row is already charged or invoiced. See the thread." He had charged it in the Deck on 2026-10-13 at 18:06; the cloud Desk Sort could not read Stripe to close it, so the row sat in Review looking unpaid. Vicky Yeung's $11.30 row was the same (d3).</p>
+      <p><strong>Route change.</strong> None. The Charges tab now uses the worker's own rule (ChargeHold.billed: a <code>CHARGED — Stripe pi_/in_</code> or <code>· INVOICED</code> line in Notes) to mark such a row. It stays listed with a "Charged, waiting for check" tag, and the open card names the amount, date and Stripe id.</p>
+      <p><strong>Failure mode.</strong> While the row waits in Review (or on the phone sheet, whose header shows the same tag), Charge, Send invoice and Paid by are not offered on it and it no longer counts on the Charges badge; Waive stays. A stale card clicked anyway says the same line in a toast, and the worker still refuses the charge as before. The row leaves the list only when the Desk Sort reads Stripe and closes it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-14</span>
       <h3>A reply merged into a waiting row goes in before the row's sign-off, so one sign-off goes out<span class="kind">The Responder &middot; failure &middot; scripts/queue_draft.py, services/event-gate/reply_check.py, library/the-responder.md, tv2 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1106">desk-correspondence #1106</a></span></h3></summary>
       <p><strong>Why.</strong> Saneea Clarke, Tagvenue, 2026-10-14 09:28 UTC: the Greeter's held welcome ended "Kindly, Junyan", and the Responder's answer was appended after it with its own "Cheers,", so she got two replies pasted together. Junyan approved the fix the same day (tv2, "tv2 yes").</p>
       <p><strong>Failure mode.</strong> <code>queue_draft.py --merge-into-waiting</code> now joins instead of appending: it cuts the reply's greeting and sign-off and puts the reply before the waiting row's own closing line (a row with no closing takes the reply's closing). If the joined body would still carry two sign-offs, or text after a sign-off (<code>reply_check.merged_signoff_problem</code>), the merge is refused and the reply is written as its own Pending Review row with a <code>NOT-MERGED</code> note, the same path as a body past 1900 characters. Canon step 4d now tells the Responder to write the addition as plain sentences and, on a Peerspace or Tagvenue row, to quote the platform price.</p>
@@ -1379,6 +1389,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> From Oct 11 to 14 the cloud Desk Sort left six Deck CHARGED rows waiting because Stripe's hosted connector had lapsed. Its passes said "not signed in" without ever calling a Stripe tool, and texted Junyan more than once.</p>
       <p><strong>Route change.</strong> The Desk Sort's canon now reads Stripe only through <code>stripe-mcp</code> (the read-only connector on the VPS, 30-day refresh, the Treasurer's read key). A Deck charge is found by searching PaymentIntents on <code>metadata['deck_action']</code>; an invoice with <code>get_invoice</code>. The old "Stripe read through Hermes" wording is gone, since cloud passes cannot reach Hermes. Junyan swaps the connector on the routine himself.</p>
       <p><strong>Failure mode.</strong> A pass must call a Stripe read tool before it writes that Stripe is down, and quotes the exact error (or "no Stripe tool in this session"). A search miss on a charge under an hour old waits for the next pass, since Stripe search lags. A connector outage gets one text for the whole outage, not one per pass.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-13</span>
+      <h3>Every filed insurance certificate queues one held thank-you<span class="kind">Insurance Intake &middot; route &middot; send-engine InsuranceIntake.gs v38, send-engine INSURANCE-INTAKE.md, library/job-2-triage.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1101">desk-correspondence #1101</a></span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-13: "we always need to acknowledge when people send us insurance." A routine renewal used to be filed with no word back to the renter.</p>
+      <p><strong>Route change.</strong> When Insurance Intake (send-engine <code>docIntakeTick</code>, hourly) files a certificate that reads and names the renter, on the keyword path or the owed-sender scan, it writes one Message Queue row at Pending Review: Email, on the renter's own thread (<code>Source Email</code>, plus <code>Reply To</code> when they wrote from a contact-point address), or a new email to the card address when a broker sent it. It links the open Needs Insurance for Bookings ticket when there is one. Message Code <code>INSURANCE-THANKS-&lt;artist id&gt;-&lt;pdf hash&gt;</code>; none when a thank-you for this renter is already on the queue from the last 30 days. Nothing sends until Junyan presses Send in the Deck. A certificate filed by hand gets the same row from whoever filed it.</p>
+      <p><strong>Failure mode.</strong> The filing is saved before the row is written. A failed write leaves <code>thanksPending</code> on the checkpoint, fails the tick so it shows, and the next pass retries. A failed ticket lookup still queues the row, unlinked, and says so in Reasoning. <code>INSURANCE_THANKS=off</code> (Run <code>insuranceThanksOff()</code>) stops the rows and leaves filing unchanged.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-13</span>
+      <h3>The desk writes the ledger entry for an already-Processed booking credit<span class="kind">registrar &middot; route &middot; library/autonomy.md, library/house-rules.md, SOP 803170c5, d20 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1108">desk-correspondence #1108</a></span></h3></summary>
+      <p>Junyan: &ldquo;d20 yes&rdquo;</p>
+      <p><strong>Why.</strong> Alison Murray's $293.80 Case M credit was Processed but waited on staff to land on the 💳 Artist Credits ledger.</p>
+      <p><strong>Route change.</strong> After a booking credit row flips to Processed, the desk writes the Credit Issued ledger entry itself (one per Credit row), re-reads it and confirms with <code>credit_balance.py &lt;artist&gt; --holder</code>. Deciding to issue a credit and setting its amount stay human.</p>
+      <p><strong>Failure mode.</strong> If the re-read or the balance check does not show the entry, the desk stops and raises it for staff instead of writing a second entry.</p>
     </details>
     </li>
     <li class="entry det">
