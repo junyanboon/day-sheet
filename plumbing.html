@@ -1366,6 +1366,23 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-14</span>
+      <h3>A reply merged into a waiting row goes in before the row's sign-off, so one sign-off goes out<span class="kind">The Responder &middot; failure &middot; scripts/queue_draft.py, services/event-gate/reply_check.py, library/the-responder.md, tv2 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1106">desk-correspondence #1106</a></span></h3></summary>
+      <p><strong>Why.</strong> Saneea Clarke, Tagvenue, 2026-10-14 09:28 UTC: the Greeter's held welcome ended "Kindly, Junyan", and the Responder's answer was appended after it with its own "Cheers,", so she got two replies pasted together. Junyan approved the fix the same day (tv2, "tv2 yes").</p>
+      <p><strong>Failure mode.</strong> <code>queue_draft.py --merge-into-waiting</code> now joins instead of appending: it cuts the reply's greeting and sign-off and puts the reply before the waiting row's own closing line (a row with no closing takes the reply's closing). If the joined body would still carry two sign-offs, or text after a sign-off (<code>reply_check.merged_signoff_problem</code>), the merge is refused and the reply is written as its own Pending Review row with a <code>NOT-MERGED</code> note, the same path as a body past 1900 characters. Canon step 4d now tells the Responder to write the addition as plain sentences and, on a Peerspace or Tagvenue row, to quote the platform price.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-14</span>
+      <h3>Desk Sort reads Stripe through our own stripe-mcp and proves an outage before saying so<span class="kind">The Desk Sort &middot; tool, failure &middot; library/desk-sort.md, scripts/test_desk_sort_stripe_rule.py, d7 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1107">desk-correspondence #1107</a></span></h3></summary>
+      <p><strong>Why.</strong> From Oct 11 to 14 the cloud Desk Sort left six Deck CHARGED rows waiting because Stripe's hosted connector had lapsed. Its passes said "not signed in" without ever calling a Stripe tool, and texted Junyan more than once.</p>
+      <p><strong>Route change.</strong> The Desk Sort's canon now reads Stripe only through <code>stripe-mcp</code> (the read-only connector on the VPS, 30-day refresh, the Treasurer's read key). A Deck charge is found by searching PaymentIntents on <code>metadata['deck_action']</code>; an invoice with <code>get_invoice</code>. The old "Stripe read through Hermes" wording is gone, since cloud passes cannot reach Hermes. Junyan swaps the connector on the routine himself.</p>
+      <p><strong>Failure mode.</strong> A pass must call a Stripe read tool before it writes that Stripe is down, and quotes the exact error (or "no Stripe tool in this session"). A search miss on a charge under an hour old waits for the next pass, since Stripe search lags. A connector outage gets one text for the whole outage, not one per pass.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-13</span>
       <h3>One unpaid booking the review cannot finish no longer fails the whole reconcile pass<span class="kind">event-gate reconcile sweep, unpaid-booking review &middot; failure &middot; EVENT-GATE unpaid_review.py, row_refusals.py, plan_allowance_sweep.py, money_reconcile.py, library/desk-sort.md, d4, d5 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1105">desk-correspondence #1105</a></span></h3></summary>
       <p>Junyan: &ldquo;d4 yes&rdquo;</p>
