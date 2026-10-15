@@ -1367,11 +1367,39 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-15</span>
+      <h3>The send-timing robot never changes or releases a send time a person decided<span class="kind">event-gate &middot; failure &middot; services/event-gate/decided_send_after.py, services/event-gate/send_verifier.py, scripts/queue_draft.py, library/studio-tickets-messaging.md, library/queue-fbs-messages.md, d66, d69, d70, d93 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1120">desk-correspondence #1120</a></span></h3></summary>
+      <p>Junyan: &ldquo;70 yes&rdquo;</p>
+      <p><strong>Why.</strong> Since d69 a draft meant to go at a later time carries it in Send After. The Send-Timing Verifier (every sweep pass, overnight too) still re-timed any Ready to Send access or reminder row from the booking board's rule, and released any held access row it judged due, so a time a person picked could be dragged back (an access resend decided for a later morning, d66). Junyan approved the fix (d70, "70 yes").</p>
+      <p><strong>Route change.</strong> A row's time is person-decided when its code starts <code>HTA-desk-</code>, its Reasoning carries <code>[send-after-decided:&lt;time&gt;]</code> (which <code>queue_draft.py --send-after</code> now writes), or Junyan scheduled it with the Deck's Send later (d93). The verifier then never writes its Send After, never releases it while held (it stays Pending Review for the Deck press), and its pass line counts it as "kept" when the board rule disagrees. A Ready to Send row with a Not Before still ahead is not retimed either. Robot-timed rows (<code>HTA-sweep-</code>, attended <code>How to Access</code> rows timed by a page update) are timed and released as before. The verifier never writes Not Before.</p>
+      <p><strong>Failure mode.</strong> A decided row whose booking moves keeps its old time; the Deck's red pill and a person catch it. Turning the verifier off (<code>SWEEP_VERIFIER</code> empty) stops all of its timing and releases.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-15</span>
+      <h3>A draft that says we sent an invoice is refused until Stripe shows that invoice<span class="kind">queue_draft (attended sessions and cloud lanes) &middot; failure &middot; scripts/invoice_sent_check.py, scripts/queue_draft.py, library/studio-tickets-messaging.md, d86 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1121">desk-correspondence #1121</a></span></h3></summary>
+      <p>Junyan: &ldquo;86 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-14 a "booking entered and invoice sent" reply was queued before any invoice existed. The How to Respond row's own notes asked for the invoice to be checked first, and nothing checked it.</p>
+      <p><strong>Failure mode.</strong> <code>queue_draft.py</code> now refuses, and writes nothing, when a draft uses that How to Respond row or says we sent an invoice, unless every booking it names with <code>--booking-state</code> has an open or paid Stripe invoice (invoice metadata <code>skedda_booking</code>, or a line's <code>booking_id</code>). Three refusals, each with its own reason: no booking named, no invoice found (exit 2), Stripe cannot be read (no <code>STRIPE_API_KEY</code> in the env or <code>~/.env</code>, or a failed read; exit 3). A draft that passes carries an <code>INVOICE-CHECK-V1</code> line in Reasoning naming the invoice. <code>--allow invoice_sent=&lt;reason&gt;</code> is the one escape, for an invoice sent outside Stripe; the reason goes in Reasoning.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-15</span>
       <h3>A charge row whose Skedda booking already has Skedda's own open invoice waits on payment, listed once<span class="kind">The Deck &middot; failure &middot; deck-app sources/deck.html invoiceSent skeddaInvoiceFor skeddaInvoiceLine cardsShow liveGroups, src/open-invoices.js summarize bookings, test/skedda-invoice-match.test.js, d85 &middot; <a href="https://github.com/junyanboon/deck-app/pull/264">deck-app #264</a></span></h3></summary>
       <p>Junyan: &ldquo;d85 approved (2026-10-15)&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-14 at 4:12 PM Skedda sent Aakanksha Jha's extension invoice LEJUKBAJ-0001 ($16.95, in_1UQYXdPunGOWPTflvu1hpNOZ) by itself. Her Charge row (3f97503281c481de8feed7bf8529f379) never got an INVOICED line, so it sat in Review asking to be charged, and the same bill was listed again under Waiting on payment as a stray Stripe invoice. Skedda puts the booking id on the invoice's line items, not on the invoice (d85).</p>
       <p><strong>Route change.</strong> None. The Charges tab now reads the line-item booking ids the open-invoices feed already carried. An open invoice Skedda made that names a Charge row's Skedda booking counts as that row's invoice: the row moves to Waiting on payment (an extension shows its due-by-midnight card) and the invoice is not listed on its own. A live Skedda booking with no row but such an invoice gets no Charge card; the invoice waits once.</p>
       <p><strong>Failure mode.</strong> Read only; nothing is charged, sent or written. A row the Deck already charged or invoiced keeps its own line, a row whose last owner line is a Waive, Not needed, Match or Reject ruling keeps that ruling, and a second invoice for the same booking is still listed. If Stripe cannot be read, the tab falls back to the old view (row in Review). Once the invoice is paid it leaves Stripe's open list and the row returns to Review until the Desk Sort verifies it, as before.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-14</span>
+      <h3>The chase sweep reminds a listed payer once a week on a set day, starting with Stephanie Brinning on Wednesdays<span class="kind">Chase sweep, event-gate &middot; cadence, failure &middot; services/event-gate/chase_sweep.py, services/event-gate/chase_cadence.json, library/automatic-operational-closure.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1119">desk-correspondence #1119</a></span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-14: "stephanie brinning has not been sending payments on time. Let's make sure to send out a reminder to her each wednesday if we don't receive it." Her RB1174 row ($145.00 of $705.12 paid by $25 Interac instalments) was never reminded: instalment rows are recorded and closed, never chased.</p>
+      <p><strong>Cadence.</strong> A payer listed in <code>chase_cadence.json</code> (Artist card id and weekday) gets ONE held reminder on that weekday's 09:30 pass, for every unpaid invoice row of theirs, instead of the 2-day clock, naming the balance left. A payment received since the same weekday a week before skips that week; a held reminder blocks the next; a Will Not Send one stops only its own week; a PROMISED day parks it; a payer's unanswered reply still holds it. Paid in full closes the row and stops it. Same Pending Review hold; nothing is sent from here. Their rows are read past the 120-day lookback. First: Stephanie Brinning, Wednesdays, first possible reminder Wed 2026-10-21.</p>
+      <p><strong>Failure mode.</strong> An unreadable or bad <code>chase_cadence.json</code> (unknown weekday) is logged as a <code>cadence_file</code> error and nobody is on the weekly cadence that pass (Stephanie back to no reminders). <code>CHASE_CADENCE_DISABLED=1</code> switches it off. An Interac read failure still queues nothing for an instalment row.</p>
     </details>
     </li>
     <li class="entry det">
