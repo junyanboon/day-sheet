@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-15</span>
+      <h3>Skedda's own invoice match ignores a failed Stripe read and the original booking of an extension<span class="kind">The Deck &middot; failure &middot; deck-app sources/deck.html rowBookingIds skeddaInvoiceFor, test/skedda-invoice-match.test.js, d85 &middot; <a href="https://github.com/junyanboon/deck-app/pull/267">deck-app #267</a></span></h3></summary>
+      <p>Junyan: &ldquo;d85 approved (2026-10-15)&rdquo;</p>
+      <p><strong>Why.</strong> Code review of d85 (deck-app PR 264) found two holes. When the open-invoices read failed, the tab kept the old invoice list in memory and still matched rows to it, so a row could keep waiting on an invoice already paid. And a ref that names several bookings, such as "122830387 (extension of 122700001)", matched on every id, so an open invoice for the original booking marked the extension row as invoiced and hid that invoice.</p>
+      <p><strong>Route change.</strong> None. A row now matches Skedda's invoice only on the booking it bills: its one Skedda id, or the <code>block=</code> id on an EXT-V1 extension row. A row with neither matches nothing.</p>
+      <p><strong>Failure mode.</strong> Read only. If Stripe cannot be read, no row and no live booking is matched to Skedda's invoice: the tab shows the old view (row in Review), as the d85 entry promised. The open invoices from the last good read still show on their own under Waiting on payment, beside the "Stripe could not be read" note, as before d85.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-15</span>
       <h3>The send-timing robot never changes or releases a send time a person decided<span class="kind">event-gate &middot; failure &middot; services/event-gate/decided_send_after.py, services/event-gate/send_verifier.py, scripts/queue_draft.py, library/studio-tickets-messaging.md, library/queue-fbs-messages.md, d66, d69, d70, d93 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1120">desk-correspondence #1120</a></span></h3></summary>
       <p>Junyan: &ldquo;70 yes&rdquo;</p>
       <p><strong>Why.</strong> Since d69 a draft meant to go at a later time carries it in Send After. The Send-Timing Verifier (every sweep pass, overnight too) still re-timed any Ready to Send access or reminder row from the booking board's rule, and released any held access row it judged due, so a time a person picked could be dragged back (an access resend decided for a later morning, d66). Junyan approved the fix (d70, "70 yes").</p>
@@ -1391,6 +1401,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> On 2026-10-14 at 4:12 PM Skedda sent Aakanksha Jha's extension invoice LEJUKBAJ-0001 ($16.95, in_1UQYXdPunGOWPTflvu1hpNOZ) by itself. Her Charge row (3f97503281c481de8feed7bf8529f379) never got an INVOICED line, so it sat in Review asking to be charged, and the same bill was listed again under Waiting on payment as a stray Stripe invoice. Skedda puts the booking id on the invoice's line items, not on the invoice (d85).</p>
       <p><strong>Route change.</strong> None. The Charges tab now reads the line-item booking ids the open-invoices feed already carried. An open invoice Skedda made that names a Charge row's Skedda booking counts as that row's invoice: the row moves to Waiting on payment (an extension shows its due-by-midnight card) and the invoice is not listed on its own. A live Skedda booking with no row but such an invoice gets no Charge card; the invoice waits once.</p>
       <p><strong>Failure mode.</strong> Read only; nothing is charged, sent or written. A row the Deck already charged or invoiced keeps its own line, a row whose last owner line is a Waive, Not needed, Match or Reject ruling keeps that ruling, and a second invoice for the same booking is still listed. If Stripe cannot be read, the tab falls back to the old view (row in Review). Once the invoice is paid it leaves Stripe's open list and the row returns to Review until the Desk Sort verifies it, as before.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-14</span>
+      <h3>The chase sweep says why it held a reminder back, and retires reminders for paid rows<span class="kind">Chase sweep &middot; route, failure &middot; services/event-gate/chase_sweep.py note_skip, paid_reminder_pass, library/automatic-operational-closure.md, library/autonomy.md, d72, d74, d76 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1122">desk-correspondence #1122</a></span></h3></summary>
+      <p>Junyan: &ldquo;yes this needs to be automatic.. in fact when it's on invoice there shouldn't even be a payment queued up&rdquo;</p>
+      <p><strong>Why.</strong> A held-back invoice reminder left no trace on the row, and a reminder already waiting in Messages stayed there after the row was closed paid outside the sweep (Junyan 2026-10-14, d74, d76).</p>
+      <p><strong>Route change.</strong> When a due reminder is skipped for <code>spoke recently</code>, <code>promised until</code> or <code>payer replied</code>, the Action gets one <code>Chase sweep · &lt;stamp&gt; · No reminder: &lt;reason&gt;</code> line, at most one per row per reason per day. Each pass also retires <code>Will Not Send</code> any held <code>INVOICE-CHASE</code> reminder whose Action reads Verified (closed on the Deck, by hand or by the Desk Sort). Canon now names the owner's Record payment click on the Deck as the staff route for matching an e-transfer to an invoice.</p>
+      <p><strong>Failure mode.</strong> A failed note write or reminder read is logged in the run's errors and changes nothing else; the reminder stays held until the next pass. <code>CHASE_PAID_REMINDER_RETIRE=0</code> turns the retire pass off.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-14</span>
+      <h3>Every Waiting on payment card can be closed with any unmatched e-transfer<span class="kind">The Deck &middot; route, failure &middot; deck-app src/reconcile.js, src/paid-by.js, src/invoice-paid.js, src/charge-hold.js, sources/deck.html, d71, d73, d76, d78, d79, d80 &middot; <a href="https://github.com/junyanboon/deck-app/pull/266">deck-app #266</a></span></h3></summary>
+      <p>Junyan: &ldquo;if a human selects it, this means it's correct&rdquo;</p>
+      <p><strong>Why.</strong> KCC's RB1175 sat on Waiting on payment with no way to mark it paid: Record payment only showed deposits of the exact amount, and none matched (Junyan 2026-10-14, d71 to d78).</p>
+      <p><strong>Route change.</strong> Every Waiting on payment card (Action rows, open QuickBooks invoices, open Stripe invoices, kept open-invoice cards, unpaid extensions) has Record payment. Pressing it reads event-gate <code>/payment-sources</code> fresh and lists every unmatched Interac e-Transfer, closest amount first. Junyan or Ela picks one and confirms; any amount is accepted and the difference is written on the <code>PAID — Interac</code> line. The row closes Processed, Verified, Proof type paid; the <code>[interac:&lt;id&gt;]</code> tag takes the deposit off every list. Closing a row from the Deck (Record payment or Paid by) now retires its held INVOICE-CHASE reminders Will Not Send. A QuickBooks invoice paid on the Deck moves to its own "Paid on the Deck · QuickBooks not updated yet" list. The button shows only where the Worker takes the row (one rule, <code>ChargeHold.recordable</code>: a Charge or Invoice row whose newest You line opens INVOICED or WAITING, or a kept open-invoice card; not instalment, verified or cancelled), so no card shows a button that is refused. No $2000 cap (d79). Paid by on Review cards also takes any amount (d80): every payment is listed, closest amount first, a different amount opens a confirm box that says the difference, and the difference is written on the <code>PAID</code> line. E-transfers only: no cash, cheque or direct deposit option.</p>
+      <p><strong>Failure mode.</strong> A QuickBooks or Stripe write that fails, or is not connected, no longer blocks the close: the row closes and its line says to do it by hand (<code>[qbo-pay-hand:RB…]</code>, <code>[stripe-pay-hand:in_…]</code>). A server refusal is said on the card. Each press is logged in the Worker log as <code>reconcile press</code>. A failed reminder read leaves the reminder for the chase sweep's own retire pass.</p>
     </details>
     </li>
     <li class="entry det">
