@@ -1366,6 +1366,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-15</span>
+      <h3>A charge row whose Skedda booking already has Skedda's own open invoice waits on payment, listed once<span class="kind">The Deck &middot; failure &middot; deck-app sources/deck.html invoiceSent skeddaInvoiceFor skeddaInvoiceLine cardsShow liveGroups, src/open-invoices.js summarize bookings, test/skedda-invoice-match.test.js, d85 &middot; <a href="https://github.com/junyanboon/deck-app/pull/264">deck-app #264</a></span></h3></summary>
+      <p>Junyan: &ldquo;d85 approved (2026-10-15)&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-14 at 4:12 PM Skedda sent Aakanksha Jha's extension invoice LEJUKBAJ-0001 ($16.95, in_1UQYXdPunGOWPTflvu1hpNOZ) by itself. Her Charge row (3f97503281c481de8feed7bf8529f379) never got an INVOICED line, so it sat in Review asking to be charged, and the same bill was listed again under Waiting on payment as a stray Stripe invoice. Skedda puts the booking id on the invoice's line items, not on the invoice (d85).</p>
+      <p><strong>Route change.</strong> None. The Charges tab now reads the line-item booking ids the open-invoices feed already carried. An open invoice Skedda made that names a Charge row's Skedda booking counts as that row's invoice: the row moves to Waiting on payment (an extension shows its due-by-midnight card) and the invoice is not listed on its own. A live Skedda booking with no row but such an invoice gets no Charge card; the invoice waits once.</p>
+      <p><strong>Failure mode.</strong> Read only; nothing is charged, sent or written. A row the Deck already charged or invoiced keeps its own line, a row whose last owner line is a Waive, Not needed, Match or Reject ruling keeps that ruling, and a second invoice for the same booking is still listed. If Stripe cannot be read, the tab falls back to the old view (row in Review). Once the invoice is paid it leaves Stripe's open list and the row returns to Review until the Desk Sort verifies it, as before.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-14</span>
       <h3>The Deck's booking check ignores the marker word in prose notes, and a decided send time goes in Send After<span class="kind">event-gate &middot; failure &middot; services/event-gate/booking_state_guard.py, scripts/queue_draft.py, scripts/booking_state_set.py, library/studio-tickets-messaging.md, d68, d69 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1118">desk-correspondence #1118</a></span></h3></summary>
       <p><strong>Why.</strong> Trisha Tolentino's HTA resend (MQ 3f67503281c481aa94ebe4fc27100c86) was held by the Deck release check as booking_state_malformed on 2026-10-14 13:32 Toronto. Its real booking check line was valid; two later prose notes (a Concierge JOB3 note and a Desk Hand note) named the marker word in a sentence. The same row was meant to go Fri Oct 16 10:00 AM (d66), but that time was only in Reasoning prose and Send After was empty, so a release on Oct 14 would have sent it two days early. Junyan approved both fixes ("68 yes, 69 yes").</p>
