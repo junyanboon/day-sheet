@@ -1501,6 +1501,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Failure mode.</strong> Read only; nothing is charged, sent or written. A row the Deck already charged or invoiced keeps its own line, a row whose last owner line is a Waive, Not needed, Match or Reject ruling keeps that ruling, and a second invoice for the same booking is still listed. If Stripe cannot be read, the tab falls back to the old view (row in Review). Once the invoice is paid it leaves Stripe's open list and the row returns to Review until the Desk Sort verifies it, as before.</p>
     </details>
     </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-14</span>
+      <h3>A robot alert the Concierge cannot fix ends Resolved or Picked up, and Needs decision always carries a link<span class="kind">The Concierge &middot; route, failure &middot; library/desk-drop-replies.md, services/event-gate/desk_drop_followthrough.py, d263, d270 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1114">desk-correspondence #1114</a></span></h3></summary>
+      <p>Junyan: &ldquo;270 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-13 about 12:15 UTC the Concierge followed the old "when you cannot fix a robot alert" rule, set two robot alerts to <code>Needs decision</code> with no <code>Work URL</code>, and the desk-drop relay refused both every 15 minutes from 12:17 UTC. A separate block on 2026-10-14 at 11:17 UTC logged only <code>DropSweepError</code>, which said nothing about the cause.</p>
+      <p><strong>Route.</strong> For a robot alert it cannot fix, the Concierge first re-reads the newest robot health alert: no longer listed means <code>Resolved</code> (that alert named as evidence); the Fixer holding it means <code>Picked up</code>. <code>Needs decision</code> is only for something a person must do, and only with the <code>ops-lead</code> or <code>decision</code> Action raised first and linked in <code>Work URL</code>.</p>
+      <p><strong>Failure mode.</strong> When the relay blocks a row, the log now carries the message of a Slack error (<code>DropSweepError</code>, <code>SlackRejected</code>), not just its name. Those messages hold only the Slack method, an HTTP or Slack error code or an exception class name. Any other error still logs its class name alone.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-14</span>
+      <h3>skedda-mcp /bookings-range carries the holder's Skedda user id, and a booking on the Artist's own account keeps an alarm code<span class="kind">The Doorman (alarm-mcp) &middot; tool, failure &middot; skedda-cli hosting/server_http.py, alarm-monitor alarm_monitor/bookings.py, retirement_sweep.py, access_request_live.py, library/doorman-access-lifecycle.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1131">desk-correspondence #1131</a></span></h3></summary>
+      <p>Junyan: &ldquo;322 yes&rdquo;</p>
+      <p><strong>Why.</strong> The alarm robot decides whose code stays by matching bookings to people. The <code>/bookings-range</code> route sent no Skedda user id, so it could only match by name: a booking on someone's own Skedda account that showed a partner's name or a class title did not count, and the nightly prune could remove a code its holder still books under.</p>
+      <p><strong>Tool change.</strong> <code>/bookings-range</code> rows now carry <code>user_id</code>, the booking holder's Skedda user id as text (empty when the booking has no linked user, as on platform bookings). Still no money or contact fields.</p>
+      <p><strong>Failure mode.</strong> The retirement sweep, the nightly auto prune (and its preview and confirm re-checks) and approved removals now also count a booking whose holder id equals the Artist card's <code>Skedda User ID</code>. Two Artist cards on one alarm user now count as one person, so a blank duplicate card cannot hide the live card's match. It only ever keeps more codes. A card with no <code>Skedda User ID</code> matches by name as before, and a skedda-mcp without the field behaves as before.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-14</span>
