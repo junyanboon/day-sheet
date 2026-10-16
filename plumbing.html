@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-16</span>
+      <h3>Insurance mail asking for a code stays with the Responder, and the processor shows its pulse<span class="kind">The Responder &middot; route, failure &middot; scripts/insurance_owned.py, send-engine InsuranceIntake.gs, services/event-gate/insurance_processor.py, app.py /health, d75, d80, d81 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1128">desk-correspondence #1128</a></span></h3></summary>
+      <p><strong>Why.</strong> The urgent-access check missed "please send my code" and "lockout" (d80). And a quiet Insurance Processor pass writes no log line, so an empty journal could not show the 10-minute pass runs at all (d81).</p>
+      <p><strong>Route change.</strong> A certificate email whose own new text mentions any code, or a lockout ("lockout", "lock-out", "locked-out"), is not owned by the Insurance Processor: it stays in the inbox for the Responder. The PDF is still filed; only the label and archive step is skipped (d75). A code phrase plainly not about getting in (postal, post, zip, dress, area, promo, discount, coupon, QR or bar code, code of conduct) is set aside first, so it alone never trips. Python and Apps Script read the same case table.</p>
+      <p><strong>Failure mode.</strong> GET /health now carries <code>insurance_processor</code>: <code>passes</code>, <code>last_pass_at</code>, <code>last_ok</code>, <code>last_ok_at</code> and counts for the last timed pass (counts and times only). It starts at <code>passes: 0</code> after each deploy. A <code>last_pass_at</code> older than about 15 minutes while <code>disabled</code> is false means the pass stopped; <code>last_ok: false</code> means the last pass failed (its errors are in the journal). Some certificate notes that mention a code for another reason will now reach the Responder too, which costs a duplicate look, never a missed lockout.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-16</span>
       <h3>A paid Deck invoice now marks its Skedda booking paid<span class="kind">event-gate &middot; route &middot; services/event-gate/invoice_settle.py, services/event-gate/money_reconcile.py, library/autonomy.md, library/studio-tickets-bookings.md, library/desk-sort.md, d66, d67 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1127">desk-correspondence #1127</a></span></h3></summary>
       <p>Junyan: &ldquo;66 yes, 67 yes&rdquo;</p>
       <p><strong>Why.</strong> When a renter paid a Stripe invoice the Deck sent, the Deck's closer (and the chase sweep) closed the Action with <code>[INVOICE-PAID-V1:in_…]</code>, but nothing told Skedda, so the booking kept showing unpaid. Mia Vescarelli (122832894) and Kimberly Rampersad (121645656) were settled by hand on 2026-10-16. Canon also said "never mark Skedda paid" in one place and allowed it in another.</p>
