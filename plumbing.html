@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-16</span>
+      <h3>Google review alerts fill the Google Reviews directory, and the review ask skips anyone already in it<span class="kind">The Responder &middot; route &middot; scripts/google_review_alert.py, library/the-responder.md, library/response-resolver.md, library/desk-sort.md, d2 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1130">desk-correspondence #1130</a></span></h3></summary>
+      <p>Junyan: &ldquo;d2 yes&rdquo;</p>
+      <p><strong>Why.</strong> Junyan does not want anyone reviewing us on Google twice, and every review needs an owner reply. The new 🌟 Google Reviews directory (Notion, seeded 2026-10-16 with 36 rows) is the record of who already reviewed us.</p>
+      <p><strong>Route change.</strong> The Responder's intake now reads each Google review alert (<code>businessprofile-noreply@google.com</code>, "&lt;Name&gt; left a review for Dance Annex - Studio NNN") with <code>scripts/google_review_alert.py</code>, adds one directory row (dedupe on Google Review ID, then Alert Email), matches it to an Artist, sets Replied = Not replied, and makes sure a <code>Respond to &lt;name&gt;'s Google review [google-review:&lt;gmail id&gt;]</code> task is on Actions to Perform for Junyan; when that task closes, the Desk Sort sets Replied = Replied. Before, the alert was declined as a notification with no record. The review ask now reads the directory first: a row linked to the renter, or a Reviewer name that plausibly is them (Likely counts), means no ask and the courtesy path. The 90-day Message Queue guard stays.</p>
+      <p><strong>Failure mode.</strong> If the script cannot find the alert in the correspondence log (mirror lag), the lane reads the fields from Gmail itself. A missed directory row means the ask can go out again; the pass line names every alert's row and task so a gap shows in the report. Nothing here sends: the ask stays a Pending Review draft and the Google reply is Junyan's.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-16</span>
