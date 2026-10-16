@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-16</span>
+      <h3>An open Skedda invoice whose bookings are all gone from Skedda is voided by the robot<span class="kind">event-gate &middot; route &middot; services/event-gate/open_invoice_watch.py, services/event-gate/stripe_void.py, library/autonomy.md, d3, d4 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1134">desk-correspondence #1134</a></span></h3></summary>
+      <p>Junyan: &ldquo;3 yes, 4 yes&rdquo;</p>
+      <p><strong>Why.</strong> A booking cancelled directly in Skedda left its Skedda-made Stripe invoice open: the renter could still pay it and the Deck's open-invoice card stayed up. Charlie Vernon James Foster, Skedda 122948121, in_1URCFBPunGOWPTflNld2DlWZ (H7CV4RQ7-0001, $207.92) was voided by hand on 2026-10-16. The Deck's Cancel already handled the other direction.</p>
+      <p><strong>Route change.</strong> New <code>auto_void</code> pass in the open-invoice watch, on its 30-minute cadence and before the click pass. For an open Skedda-made invoice whose every line's booking is absent from one good Skedda read (60 days back, 400 ahead), with each booking's date known and inside that window, and absent again on a read at least 20 minutes later, it re-reads Stripe and voids the invoice only if nothing was paid, nothing is in flight, and there is no refund, dispute or separate charge. The void goes through <code>stripe_void.py</code> with its own restricted key <code>STRIPE_VOID_KEY</code>; the Treasurer's Stripe key stays read-only. After Stripe reads it back void: one <code>#desk-status</code> line (renter, invoice number, amount, booking ids) and an <code>[OI-AUTOVOID-V1 &lt;in_id&gt;]</code> proof line on the invoice's card, its staff rows and any Charge row waiting on it, closing the open ones Cancelled.</p>
+      <p><strong>Failure mode.</strong> A failed, empty or blind Skedda read, a Stripe read failure, some bookings still present, or an unknown date voids nothing. A void that does not read back void closes nothing and fails the pass. A failed Notion write is finished on the next pass. Switch <code>OPEN_INVOICE_AUTO_VOID=off|shadow|live</code>, shadow by default (reports "would void", writes nothing); live with no <code>STRIPE_VOID_KEY</code> voids nothing.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-16</span>
       <h3>The Deck opens only with a person's own login; the shared team password is off<span class="kind">The Deck &middot; tool, failure &middot; deck-app src/index.js POST /api/login checkToken LOGIN_HTML /account, test/own-login-only.test.js, test/nameless-session.js, wayfinder mini-apps ticket 07-own-logins, d22, d100 to d106 &middot; <a href="https://github.com/junyanboon/deck-app/pull/273">deck-app #273</a></span></h3></summary>
       <p>Junyan: &ldquo;d22 and d100 to d106 ruled 2026-10-16 ("Everyone gets their own Deck login")&rdquo;</p>
       <p><strong>Why.</strong> Only Junyan and Ela use the Deck, and both already have their own login in <code>DECK_STAFF</code>. The shared team password opened the Deck with no name on the session, so nobody could tell who pressed what. Kyjah has left and has no login.</p>
