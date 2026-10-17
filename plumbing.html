@@ -1367,6 +1367,39 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
+      <h3>Insurance tickets wait on the renter only once a message to them is queued<span class="kind">event-gate &middot; route, failure &middot; EVENT-GATE insurance_sweep.py, chase_sweep.py, insurance_processor.py, library/studio-tickets-intake.md, d112 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1180">desk-correspondence #1180</a></span></h3></summary>
+      <p>Junyan: &ldquo;112 yes&rdquo;</p>
+      <p><strong>Why.</strong> Every insurance ticket the robots created said "Gate: Artist, waiting on the renter" at once. The monthly validity check never messages the renter, and the renewal ticket said the request was queued before it was.</p>
+      <p><strong>Route change.</strong> A renewal or chase ticket is created <code>In Progress</code> ("not queued yet") and flips to <code>Gate: Artist</code> with the waiting Deck ask only after its Message Queue row comes back queued and linked. A validity-check ticket is <code>Gate: Staff</code>, its Deck ask asks the owner to check the certificate on the Review Action and says nothing was sent. An unreadable-certificate ticket from the Insurance Processor is <code>Gate: Staff</code> too. Existing tickets are never edited.</p>
+      <p><strong>Failure mode.</strong> If the queue write fails, or the flip itself fails (logged), the ticket keeps the true "not queued yet" text. No switch: it only changes the wording and Position of tickets the robot creates.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The Responder's code-ask wait is decided by a script, and an unreadable state falls back<span class="kind">The Responder &middot; failure &middot; scripts/code_ask_decide.py, services/event-gate/code_ask_wait.py, library/the-responder.md, d4 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1177">desk-correspondence #1177</a></span></h3></summary>
+      <p>Junyan: &ldquo;d4 approved 2026-10-05 (build)&rdquo;</p>
+      <p><strong>Why.</strong> Thea asked for her door codes on 2026-09-25 at 2:38 PM; the codes card wrote no <code>QA-codes-*</code> row and the codes went out by hand 18 minutes later. The Responder judged "under 10 minutes" and "a row exists" by its own reading of the clock and the queue.</p>
+      <p><strong>Route change.</strong> For a code ask the Responder runs <code>python3 scripts/code_ask_decide.py &lt;ledger id&gt;</code>. The script reads the inbound's time and sender from the J28 ledger (a Gmail id also carries its own time) and the Message Queue for a non-Error <code>QA-codes-*</code> row for that sender made since the inbound (Artist card, or the number the card wrote into Reasoning) or the stuck-access How to Access row tagged <code>[stuck:&lt;this inbound&gt;]</code>, and prints <code>covered</code>, <code>wait</code> or <code>fallback</code>. Reads only.</p>
+      <p><strong>Failure mode.</strong> Anything the script cannot prove (no ledger record and no time, unknown sender, the queue unreadable) waits only while the inbound is under 10 minutes old, then falls back: a held duplicate costs less than a renter at a locked door. A <code>QA-codes-*</code> row in Error no longer counts as covered.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>Send right away (built, off): after a Texts-tab Send the Deck asks the Send Engine to run now<span class="kind">The Deck &middot; route, cadence, failure &middot; deck-app src/send-kick.js (kickReady, sendsNow, SendKicker), src/send-kick-object.js (SEND_KICK Durable Object), src/texts-send.js sendText, src/index.js GET /api/texts/kick-status, scripts/send-engine-sign-in.mjs, wrangler.jsonc SEND_RIGHT_AWAY, test/send-kick.test.js, test/texts-send.test.js; send-engine test_kick_lock.js; mini-apps/texts slice 10 (b) &middot; <a href="https://github.com/junyanboon/deck-app/pull/292">deck-app #292</a></span></h3></summary>
+      <p>Junyan: &ldquo;"315 yes" (d315, 2026-10-17, after his first live send from the Texts tab took about 20 s); "333 yes" (d333: the Messages tab too)&rdquo;</p>
+      <p><strong>Why.</strong> A text typed in the Texts tab waited for the Send Engine's next minute run, so it took up to a minute after the 5 s Undo window. Junyan asked for it to leave in seconds.</p>
+      <p><strong>Trigger change.</strong> After a release that sends now (not Send later, not held or merged by the history check) from the Texts tab's Send or the Messages tab's Send (direct SMS) and Approve (any channel, d333), the Worker sets an alarm on one <code>SendKick</code> Durable Object. The alarm calls the Apps Script API <code>scripts.run</code> for <code>main</code> (<code>devMode: true</code>: the last saved code, the code the minute trigger runs) with Junyan's Google sign-in, and holds the line until main returns (up to Google's 6 minutes; the route's own background time is only 30 s). Each alarm is one run; kicks that arrive during a run set one new alarm when it ends, never two runs at once. If a minute run holds the lock at that moment, the text goes on the next minute, as today. The minute trigger is unchanged and still the backstop. The Send Engine is unchanged and still the only sender: the kick only starts the same pass, with every guard, the claim and the receipt.</p>
+      <p><strong>No double send.</strong> <code>main</code> takes the script lock (<code>tryLock(5000)</code>) and returns without reading the queue when a minute run holds it; a run handed a stale query re-reads the row live and skips one already Sent (send-engine <code>test_kick_lock.js</code>, against the real Code.gs).</p>
+      <p><strong>Failure mode.</strong> A refused sign-in, a refused run, a failed main or a network error is logged in one line ("no run (...); the minute run still sends") and stored as the last run; the row is not touched and the minute run sends it. <code>GET /api/texts/kick-status</code> shows <code>{on, last: {at, ok, seconds, error?}}</code>.</p>
+      <p><strong>Switch.</strong> Off: <code>SEND_RIGHT_AWAY</code> is "false" until Junyan's one-time Google sign-in (the Send Engine moves to its own Google Cloud project, deployed as an API executable; three Worker secrets) and his yes.</p>
+      <p><strong>Side effect.</strong> With it on, the engine usually takes a text a few seconds after the 5 s Undo window, so the Undo after the window mostly finds it already gone. The 5 s window itself is unchanged.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
       <h3>A time ask written on a Skedda booking now changes that booking, never adds a second one<span class="kind">The Registrar &middot; route &middot; services/event-gate/extension_titles.py stretch, extension_quiet_renters.json, skedda-cli hosting/stretch_booking.py /stretch-booking, d121, d124 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1176">desk-correspondence #1176</a></span></h3></summary>
       <p>Junyan: &ldquo;modify the other booking not have two bookings"; "121 no just drop the cheers"; "do not queue up anything for her. These will always be automatic for Maggie and Caryl&rdquo;</p>
       <p><strong>Why.</strong> The lane booked Maggie Morrison's first two title asks as separate "Booking Extension Request" blocks (Oct 21 122985852, Oct 29 122985873). Junyan: "For maggie those are an error. What we want to is to modify the other booking not have two bookings".</p>
