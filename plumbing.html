@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
+      <h3>event-gate gives freed memory back instead of climbing to its cap<span class="kind">event-gate &middot; failure &middot; EVENT-GATE memory_guard.py, Dockerfile MALLOC_ARENA_MAX=2, d129 (2026-10-17) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1157">desk-correspondence #1157</a></span></h3></summary>
+      <p><strong>Why.</strong> event-gate was killed six times on 2026-10-16/17 at its 1 GB memory cap. Each big Notion read (the hourly Desk Invariants pass most of all) left its high-water mark behind in its worker thread's heap, so memory climbed from about 200 MB to a 550 to 610 MB floor that never came down, and two big reads at once reached the cap.</p>
+      <p><strong>Route change.</strong> None. After a request ends, event-gate now hands freed memory back to the system (at most once a minute, only above 250 MB), and the image uses two malloc arenas instead of one per thread. A request that ran while memory grew 40 MB or more logs a <code>memory:</code> line naming its route.</p>
+      <p><strong>Failure mode.</strong> If trimming fails it logs <code>memory: trim failed</code> and the request is unaffected. <code>MEMORY_GUARD_DISABLED=1</code> turns it off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
       <h3>A yes to an hour-shift question Junyan already approved makes the move, even when a person wrote the question<span class="kind">The Registrar &middot; route &middot; services/event-gate/hour_shift_mover.py, library/desk-sort.md, library/autonomy.md, library/studio-tickets-bookings.md, library/concierge-orchestration.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1155">desk-correspondence #1155</a></span></h3></summary>
       <p>Junyan: &ldquo;119 yes, 120 yes once she accepts it it should be done&rdquo;</p>
       <p><strong>Why.</strong> Shaka Lee said YES to a confirm question an attended session wrote and Junyan approved. The robot only read yeses to its own <code>[mover-ask:]</code> questions, so it ignored hers, and the Desk Sort carded a second APPROVE on a cancel-and-extend plan Junyan had already turned down. She waited more than 5 hours.</p>
