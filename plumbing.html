@@ -1364,6 +1364,66 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>A Skedda-linked card with a short platform name or relay email now asks Junyan to approve the fuller one<span class="kind">The Registrar &middot; route &middot; EVENT-GATE skedda_name_check.py, booking_sweep.py, d21 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1165">desk-correspondence #1165</a></span></h3></summary>
+      <p>Junyan: &ldquo;21 yes&rdquo;</p>
+      <p><strong>Why.</strong> Luciana came via Peerspace as "Luciana G." with a relay email, then booked direct on Skedda as "Luciana Govea". The desk linked her Skedda account but never offered the fuller name or her real email, so every row and the correspondence log kept the short name.</p>
+      <p><strong>Route change.</strong> Each booking sweep pass, for a found card linked to the booking holder (its <code>Skedda User ID</code>, or a <code>skedda</code> Contact Point for a second account), compares the card with Skedda. When Skedda's name is a fuller form of the card Name, or the card Email is a Peerspace, Tagvenue or Giggster relay and Skedda has a real address, one ✅ Actions row (Type Decision, For Junyan, Raised by The Registrar, linked to the card) asks him to approve the change. Nothing renames the card on its own and nothing is sent.</p>
+      <p><strong>Failure mode.</strong> One row per card ever (key <code>skedda-fuller-name:&lt;card id&gt;</code>, status-blind), so a declined row is not raised again. A failed write returns <code>name-check:error</code> and the next pass retries. Cards linked to Skedda but with no Skedda booking in the sweep's window are not checked until they book. Off switch: <code>SKEDDA_NAME_CHECK_DISABLED=1</code>.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The Responder can read Skedda, so it answers booking questions instead of stalling<span class="kind">The Responder &middot; tool &middot; trig_01KJESx9iiMFqpKuXSRTEMk7, trig_01WiNCNS3QeR3L8oALzQKF2K, library/the-responder.md, house-rules.md d42, d13 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1164">desk-correspondence #1164</a></span></h3></summary>
+      <p>Junyan: &ldquo;13 yes&rdquo;</p>
+      <p><strong>Why.</strong> Both cloud Responder routines carried only Notion and Gmail. Every other cloud lane had the Skedda connector. The resolver forbids a booking fact without a live Skedda read, so the Responder wrote "we're checking and will get back to you" even when the answer was on the calendar (Alison Murray on Oct 11: "Skedda is unreadable from the cloud"; Tanya Guimond on Oct 13). Junyan rewrote this kind of hold about 15 times between Sep 26 and Oct 16.</p>
+      <p><strong>Route change.</strong> Both routines (:20 and :50) now carry <code>skedda-mcp-hostinger</code> with its permitted tools limited to reads: <code>list_bookings_range</code>, <code>list_bookings</code>, <code>list_booking_requests</code>, <code>find_user</code>, <code>list_spaces</code>. The operating rules tell the lane to read before it holds and to cite the read.</p>
+      <p><strong>Failure mode.</strong> A failed read leaves the old behaviour, a hold with <code>Skedda read failed</code> in Reasoning. The routines cannot write to Skedda. To undo, remove the connector from both routines.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The Responder skips the review ask after a rough booking, and points layout and viewing asks to the 3D walkthroughs<span class="kind">The Responder &middot; route &middot; library/the-responder.md § Drafting lessons, services/event-gate/amenities.py, d15, d16, d17, d18 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1164">desk-correspondence #1164</a></span></h3></summary>
+      <p>Junyan: &ldquo;if something went wrong then be a good host and write a response making sure they were okay&rdquo;</p>
+      <p><strong>Why.</strong> Junyan's drafting training round 2. He dropped the review link after bookings where something went wrong (Daniela M., Natalie Fasheh), cut long speaker instructions down to the one answer asked, and sent viewers to the 3D walkthroughs before booking a viewing.</p>
+      <p><strong>Route change.</strong> A review ask is skipped when the booking day had a problem; the reply checks they were okay instead. Space and equipment questions answer only from the amenities table; a layout question gets the studio's Matterport link. A viewing ask offers the 3D walkthrough first and books a viewing only if they still want one. "dongle" and "adapter" now read as the speaker cord in <code>amenities.py</code>.</p>
+      <p><strong>Failure mode.</strong> All held drafts at Pending Review, as before. To undo, revert the PR.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>Stuck access and answer watch count only a person's reply<span class="kind">Stuck access, Answer watch &middot; route &middot; EVENT-GATE inbound.py person_rule_on, hosting/enable-person-reply-last-two.sh, library/house-rules.md, d59, d63, d361 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1163">desk-correspondence #1163</a></span></h3></summary>
+      <p>Junyan: &ldquo;361 yes&rdquo;</p>
+      <p><strong>Why.</strong> The other five lanes have run under the person-only reply rule since 2026-10-04; Junyan switched on the last two.</p>
+      <p><strong>Route change.</strong> <code>HUMAN_REPLY_LANES</code> takes <code>lane@&lt;UTC time&gt;</code>, a lane's own switch-on time. <code>stuck-access</code> and <code>answer-watch</code> are added that way, so for messages after that time a robot send (access text, quick answer, reminder) no longer counts as the desk having answered, and neither lane wakes on a message from the two weeks it was off.</p>
+      <p><strong>Failure mode.</strong> A bad time on an entry keeps that lane on the old rule; an unreadable thread is still never "answered" (third failure files one Run Error row).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The 8:30 Fixer text is retired<span class="kind">The Fixer ping &middot; route, cadence &middot; EVENT-GATE app.py /fixer-ping, hosting/retire-fixer-ping.sh, library/lanes.md, d369 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1163">desk-correspondence #1163</a></span></h3></summary>
+      <p>Junyan: &ldquo;drop the morning text altogether&rdquo;</p>
+      <p><strong>Why.</strong> Junyan no longer wants the morning Fixer list; the Deck Fixer tab and <code>/fixer</code> are where he reads those items.</p>
+      <p><strong>Route change.</strong> <code>/fixer-ping</code> now answers "retired" and reads or queues nothing, so no <code>[owner:fixer:&lt;date&gt;]</code> row is made. <code>retire-fixer-ping.sh</code> disables and removes <code>danceannex-fixer-ping.timer</code> and its schedule entry; <code>install-fixer-ping.sh</code> refuses to run, so nothing brings it back. The d54 "code repairs overdue" lines went out with it.</p>
+      <p><strong>Failure mode.</strong> A timer still left on the host only gets a quiet 200 and a "retired" log line.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The Deck gets a Cleaning tab and limited logins that open only it<span class="kind">The Deck &middot; tool, failure &middot; deck-app src/index.js limitedTabs limitedMayReach, public/app.js, public/cleaning-tab.js, test/limited-login.test.js, test/cleaning-tab-page.test.js, wayfinder cleaner-app slice 01, S1, S2, S21, S22 &middot; <a href="https://github.com/junyanboon/deck-app/pull/290">deck-app #290</a></span></h3></summary>
+      <p>Junyan: &ldquo;S1, S2 ruled 2026-10-17 (Stefan gets his own Deck login that opens only his tab)&rdquo;</p>
+      <p><strong>Why.</strong> Stefan, the studio cleaner, gets a phone-first Cleaning tab in the Deck and his own login that opens only that tab. This first slice adds the empty tab (Today, Checks, Problems &amp; items, Report, each "coming next") and the limited login; later slices fill it in.</p>
+      <p><strong>Route change.</strong> None. No message route, cadence or robot changes. The tab reads and writes nothing yet. Junyan and Ela see Cleaning in the desktop rail after Texts and at the end of the phone bottom bar.</p>
+      <p><strong>Failure mode.</strong> A <code>DECK_STAFF</code> entry with <code>"tabs": ["cleaning"]</code> is a limited login. Every <code>/api/*</code> request it makes other than <code>/api/cleaning/*</code> and <code>/api/me</code>, and the monitor's <code>/version.json</code>, answers 403 <code>limited_login</code> before any route runs; its pages are marked <code>&lt;meta name="deck-tabs"&gt;</code>, so the menu shows only Cleaning, the monitor never starts and the page opens on Cleaning. The tab list is read from <code>DECK_STAFF</code> on every request; the cookie still carries only the name. A <code>tabs</code> key that is not a list, or names no known tab, reaches no <code>/api</code> route but <code>/api/me</code>. New for every login: a session whose name does not have exactly one <code>DECK_STAFF</code> entry (removed, renamed, shared by two entries, or <code>DECK_STAFF</code> unreadable) is sent back to sign in, so removing a limited login never leaves a full one behind; before, it stayed signed in until the 30-day cookie ran out. A name two entries share is refused at sign-in (409 <code>duplicate_name</code>).</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-17</span>
