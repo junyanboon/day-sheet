@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The Desk Sort closes a row only when the close gate says so<span class="kind">The Desk Sort &middot; route, failure &middot; services/event-gate/close_gate.py, scripts/close_decide.py, library/desk-sort.md, d2, d367 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1169">desk-correspondence #1169</a></span></h3></summary>
+      <p>Junyan: &ldquo;"d2" approved 2026-10-05; build started as d367 on 2026-10-17&rdquo;</p>
+      <p><strong>Why.</strong> The Desk Sort closed Actions on its own reading. Isabel Campo Jurado's ($21.47) and Teo Rivas's ($11.30) overtime rows were closed <code>Processed</code> on 2026-09-20 while both Skedda blocks were unpaid, and on 2026-10-07 four stale held drafts reached the reviewer because nothing retired them.</p>
+      <p><strong>Route change.</strong> For every money row, every self-close, every stale-draft retirement and the Studio 693 known-fault close, the Desk Sort now fills one form (row, a reason from a fixed list, the Stripe or Skedda read, the linked page, a word-for-word quote) and runs <code>scripts/close_decide.py --apply</code>. The script (<code>close_gate.py</code>) reads the row and its linked pages from Notion itself and writes the close, with <code>Verified</code> and <code>Verified at</code> in the same write on a payment close, only when every fixed-field check passes.</p>
+      <p><strong>Failure mode.</strong> Anything missing, unreadable or not matching keeps the row open and prints why; nothing is written. A money row closes only on a paid Stripe read bound to the row with the same cents, a paid Skedda read of the exact block with the same price, or Junyan's own WAIVED / NOT NEEDED / MATCHED / PAID line. Without the script the Desk Sort closes nothing under these rules.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-17</span>
