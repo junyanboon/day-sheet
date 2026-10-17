@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
+      <h3>Texts tab shows renter names even when Contact Points cannot be read<span class="kind">The Deck &middot; failure &middot; deck-app src/texts-cards.js cardsFor, src/index.js GET /api/texts secondNumbers, test/texts-routes.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/276">deck-app #276</a></span></h3></summary>
+      <p>Junyan: &ldquo;"300 yes, 301 done" (first live look showed "Renter names could not load", 2026-10-17)&rdquo;</p>
+      <p><strong>Why.</strong> On the first live load every Conversation said "Not on a card" with "Renter names could not load". The name lookup read the Artist cards and ☎️ Contact Points in one step, so a failure on Contact Points (most likely not shared with the Deck's Notion connection; the Deck's only earlier read of it hides its errors) dropped every name.</p>
+      <p><strong>Failure mode.</strong> Now only an Artist card read failure shows "Renter names could not load". A Contact Points failure is logged (<code>texts second numbers failed (Contact Points)</code>), returned as <code>secondNumbers</code> on <code>GET /api/texts</code>, and costs only second-number names; no miss is remembered, so names from second numbers appear once the table is readable.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
       <h3>The unpaid review no longer files a second card for a plan renter's extension block<span class="kind">The Bookkeeper &middot; route &middot; services/event-gate/unpaid_review.py extension_owner, extension_sweep.py charge_row, d104 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1146">desk-correspondence #1146</a></span></h3></summary>
       <p>Junyan: &ldquo;104 yes&rdquo;</p>
       <p><strong>Why.</strong> David Garzon (AAP) asked for more time on Oct 15. The extension lane booked Skedda 122914803 and filed its own Charge row. The unpaid review then saw the same block as an AAP booking and filed a second card, "Review payment evidence" (Action 3fa75032-81c4-81f7), for the prepaid-hours bot.</p>
