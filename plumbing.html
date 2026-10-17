@@ -1367,6 +1367,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
+      <h3>A time ask written on a Skedda booking now changes that booking, never adds a second one<span class="kind">The Registrar &middot; route &middot; services/event-gate/extension_titles.py stretch, extension_quiet_renters.json, skedda-cli hosting/stretch_booking.py /stretch-booking, d121, d124 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1176">desk-correspondence #1176</a></span></h3></summary>
+      <p>Junyan: &ldquo;modify the other booking not have two bookings"; "121 no just drop the cheers"; "do not queue up anything for her. These will always be automatic for Maggie and Caryl&rdquo;</p>
+      <p><strong>Why.</strong> The lane booked Maggie Morrison's first two title asks as separate "Booking Extension Request" blocks (Oct 21 122985852, Oct 29 122985873). Junyan: "For maggie those are an error. What we want to is to modify the other booking not have two bookings".</p>
+      <p><strong>Route change.</strong> The title-ask source calls skedda-mcp <code>/stretch-booking</code>, which moves the renter's own UNPAID booking's start earlier or end later and prices the whole new window, read back. A paid booking, an AAP/1AP plan booking, a clash, a booking that changed, or a server without the route is one Review row; it never falls back to an extra block. Renters on <code>extension_quiet_renters.json</code> (Maggie, Caryl; d124) get nothing queued and no Charge row. Everyone else gets the held confirmation, now ending with no "Cheers," (d121, the email and SMS path too), and a Charge row for the whole booking at its new price (<code>EXT-STRETCH-V1</code>, Booking ref <code>Skedda &lt;id&gt; start: end:</code>).</p>
+      <p>The email and SMS path still writes an extra block. To undo, revert both PRs and redeploy event-gate and skedda-mcp.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>Tight Time Transition tickets carry the SOP case, a Deck ask and an honest block<span class="kind">The Analyst (Transition Guard) &middot; failure &middot; EVENT-GATE analyst_sweep.py, transition_ticket.py, ticket_body.py, library/analyst-issue-prevention.md, d109, d113 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1175">desk-correspondence #1175</a></span></h3></summary>
+      <p>Junyan: &ldquo;109 if a ticket is made, it should always use the tight transition SOP..&rdquo;</p>
+      <p><strong>Why.</strong> The guard's Customer Care tickets had one plain paragraph and no Deck ask, so the Deck's step drawer showed them blank. Their Current Block said to review held drafts even when the pass drafted none (a Studio 527 pair where neither booking came from a platform), and no other lane fills a robot ticket in afterwards.</p>
+      <p><strong>Route change.</strong> A new ticket is created with <code>### Situation</code>, <code>### SOP</code>, the one SOP case (B in 901, A elsewhere, the same rule the drafts use), that case's "Which case is this?" row and its verbatim checklist, plus a one-line Deck ask. Names are single spaced and the Situation has no dashes. After queueing, a ticket whose planned draft the queue did not hold gets its Current Block and Deck ask rewritten to say "Not drafted". An existing keyed ticket with no SOP heading gets the SOP part and checklist appended on the next pass and its Current Block and Deck ask rewritten to match its real drafts, and one with an SOP heading but no steps gets the checklist; a ticket that already has steps is not touched.</p>
+      <p><strong>Failure mode.</strong> If the checklist append fails, the ticket still exists with its Situation, SOP heading, case and Deck ask (the drawer shows the plain card) and the pass logs "checklist not written"; the next pass appends the checklist. If reading or appending an existing body fails, the pass logs "SOP body not repaired" and tries again next pass. No second ticket is made.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The emergency robot wakes on the Gmail copy of a text, asks Jev when its words miss, and drafts with a model in watch-only mode<span class="kind">event-gate &middot; route, cadence, failure &middot; EVENT-GATE sms_wake.py, emergency_jev.py, emergency_writer.py, app.py no_card_followup, hosting/enable-emergency-jev.sh, d414 d415 d416 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1162">desk-correspondence #1162</a></span></h3></summary>
+      <p>Junyan: &ldquo;it sends it to gmail actually so you can pick it up fast there; 415 yes; if the robot can't figure it out then the LLM needs to be woken&rdquo;</p>
+      <p><strong>Why.</strong> A person answered in as little as 18 s while the robot waited for its minute check, and its word list missed how renters say things.</p>
+      <p><strong>Route change.</strong> A thread reads the business Gmail every 3 s; Phone.com's email copy of a text (about 5 s after it) runs the text check at once, and the minute check stays the backup (d414). When no card's words match a renter whose booking is on now, Jev picks among the emergency cards; at 0.70 or more, and only if that card's own checks pass, the card goes out like a word match (d415). When no card fits an urgent text, a model drafts 1 to 3 sentences from the renter's own facts; code checks it (no new digits or links, no dashes, short, a Jev second look). When the writer wakes, on-call is paged unless the classifier or the escalation check already did. For the first week it sends nothing and shows Junyan each draft in Slack, with codes, phone numbers and emails masked (d416).</p>
+      <p><strong>Failure mode.</strong> Gmail unreadable: the minute check still runs. No Jev key or Jev down: today's behaviour, and a ledger row says so. Writer down: Junyan sees "no draft" in the shadow line. Switches: <code>SMS_WAKE_DISABLED</code>, <code>EMERGENCY_JEV_DISABLED</code>, <code>EMERGENCY_WRITER_DISABLED</code>; the writer sends only with <code>EMERGENCY_WRITER_LIVE=1</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
       <h3>Offsite Drive signs in with our own Google client, not rclone's shared one<span class="kind">Offsite Drive backup (VPS) &middot; failure, tool &middot; services/offsite-drive/offsite_drive.py, services/offsite-drive/hosting/install-offsite-drive.sh, Notion Actions 3f37503281c481659bdcc8a833ef062b, d371 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1172">desk-correspondence #1172</a></span></h3></summary>
       <p>Junyan: &ldquo;371 lets' do it&rdquo;</p>
       <p><strong>Why.</strong> The nightly Hermes copy to Google Drive failed on 2026-10-16 and 10-17 with Google <code>rateLimitExceeded</code> after about 90 minutes of retries. The sign-in used rclone's built-in Google app, whose Drive quota every rclone user shares; the 2 GB Hermes archive hit it, the 1 MB Buzz copy did not.</p>
