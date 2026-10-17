@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
+      <h3>A Gate ticket with every SOP step ticked goes to Review without waiting<span class="kind">Auto-review (reconcile tick) &middot; route &middot; EVENT-GATE auto_review.py, library/position.md, d128, d126 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1184">desk-correspondence #1184</a></span></h3></summary>
+      <p>Junyan: &ldquo;128 yes.. obviously?&rdquo;</p>
+      <p><strong>Why.</strong> Natalia C's studio viewing ticket showed 3 of 3 steps done and every linked row closed, and a Done ticket had taken over its work, but the closer robot kept it at Gate: Artist until its Revisit After date (2026-10-19). Junyan closed it by hand.</p>
+      <p><strong>Route change.</strong> When only a wait holds a Gate ticket (a future Revisit After, the 7 quiet days, a young ticket), the closer now reads the ticket body. If the SOP checklist has at least one step and every step is ticked, with no unanswered loose "⛔ Blocked" line and no toggle or callout after the SOP heading that could hide a step, every linked Action, queue and Next Action row closed, at least one linked row on a staff or money gate, and nothing sent from a linked queue row in the last 24 hours, it moves the ticket to Review now. Tickets with no checklist or any unticked step keep the old rules exactly. JOB 8's Review audit still makes the final close.</p>
+      <p><strong>Failure mode.</strong> If the body cannot be read, the ticket keeps the old verdict for that tick and the tick output counts it as <code>sop_unread</code>; the next tick tries again. A ticket moved too early is bounced back by JOB 8's audit, as before.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
       <h3>Insurance tickets wait on the renter only once a message to them is queued<span class="kind">event-gate &middot; route, failure &middot; EVENT-GATE insurance_sweep.py, chase_sweep.py, insurance_processor.py, library/studio-tickets-intake.md, d112 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1180">desk-correspondence #1180</a></span></h3></summary>
       <p>Junyan: &ldquo;112 yes&rdquo;</p>
       <p><strong>Why.</strong> Every insurance ticket the robots created said "Gate: Artist, waiting on the renter" at once. The monthly validity check never messages the renter, and the renewal ticket said the request was queued before it was.</p>
