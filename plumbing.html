@@ -1367,6 +1367,27 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-18</span>
+      <h3>Maggie's and Caryl's gapped bookings are closed up by stretching their booking, not filled with a second one<span class="kind">The Registrar &middot; route &middot; services/event-gate/extension_titles.py gap_close owns_gap, analyst_sweep.py gaps, extension_quiet_renters.json gap_partners, skedda-cli hosting/stretch_booking.py adjoin_booking_id, d146 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1195">desk-correspondence #1195</a></span></h3></summary>
+      <p>Junyan: &ldquo;Also if they make a gapped booking, it will automatically be closed up."; "caryl makes gapped bookings against ifreestyle bookings. Maggie does it against her own booking&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-10-18 (d146), on the extension lane's quiet renters: their gapped bookings should close up on their own, as one booking per piece of time, never a separate 15-minute filler.</p>
+      <p><strong>Route change.</strong> For Maggie Morrison and Caryl Cuizon only, a booking with a 15 to 30 minute gap to their own booking (or, for Caryl, an Ifreestyle booking) in the same studio on the same day is stretched across the gap through skedda-mcp <code>/stretch-booking</code>, every 5 minutes, today to 30 days ahead. The later booking starts earlier; the earlier one ends later only when the later is a series or Ifreestyle's. The other booking is never touched. Nothing is queued to them; a MANUAL ONLY Charge row goes to the Deck's Charges tab (a plan booking gets none). The Analyst's gap filler no longer fills these gaps or queues a T1 for them; anyone else's gaps are unchanged.</p>
+      <p><strong>Failure mode.</strong> A paid booking, anything in the gap, a gap on both sides or a server refusal is one Review row and nothing is written. Caryl's Ifreestyle side waits on <code>gap_partners_live</code> in the quiet list, flipped after the skedda-mcp overlay <code>deploy-stretch-adjoin.sh</code> runs; until then her Ifreestyle gaps are handled exactly as before.</p>
+      <p>To undo, revert this PR and redeploy event-gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-18</span>
+      <h3>A "(moved from ...)" title no longer stalls a platform booking, and a held one is a Review note<span class="kind">The Registrar &middot; route, failure &middot; event-gate platform_identity.py, platform_hold_note.py, booking_sweep.py, library/relay-addresses.md § Names, d5, d6, PR 1140 (d348) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1192">desk-correspondence #1192</a></span></h3></summary>
+      <p>Junyan: &ldquo;5 yes, 6 yes (48 h)&rdquo;</p>
+      <p><strong>Why.</strong> Trisha T.'s Tagvenue title "trisha tolentino Tagvenue (moved from Oct 10)" read as a six-word name, so the Registrar held her at gate 1, asked twice for a phone already on her card, and the daily lanes built no AVA or EOB. The only trace was an INFO journald line every 30 minutes.</p>
+      <p><strong>Route change.</strong> The name cleaner drops "(moved from ...)", "(rescheduled from ...)", "(rebooked from ...)" and a trailing "moved from ..." for every lane that matches a platform name. The Registrar's identity check now reads the Bookings board row's linked Artist first and accepts it when that card's relay sits under the start the booking moved from (<code>relay_moved</code>, d348), before any name. Before a phone ask, the relay chase or the 20 h reminder, the Registrar checks the resolved or linked card for a phone and skips the ask when one is there.</p>
+      <p><strong>Failure mode.</strong> A platform booking held within 48 h of its start (identity <code>unusable</code> at gate 1, or the daily lanes' reconcile holding a platform row) files ONE Review note for Junyan, keyed <code>[registrar:platform-hold:&lt;studio&gt;:&lt;date&gt;:&lt;hhmm&gt;]</code>, naming the reason and that AVA/EOB were not built; it closes itself when the booking clears gate 2 or the reconcile accepts the row. A failed note write is logged and never stops the pass. Kill switch <code>PLATFORM_HOLD_NOTES_DISABLED=1</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-18</span>
       <h3>Email and text extension asks change the booking too; plan bookings are stretched; Maggie and Caryl get a Charge row<span class="kind">The Registrar &middot; route &middot; services/event-gate/extension_sweep.py stretch_extension, extension_titles.py stretch_price money_row_why plan_receipt_why stretch_charge_row, d137, d138, d139, d140 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1189">desk-correspondence #1189</a></span></h3></summary>
       <p>Junyan: &ldquo;yes"; "prepaid hours are billed at the beginning of the month. Why does a person need to be asked?"; "yes unless it's already been paid"; "both of them will have it put in but nothing will be charged except by a human. It will be on the charge tab&rdquo;</p>
       <p><strong>Why.</strong> Junyan's rulings of 2026-10-17 on the one-booking rule (PR 1176): a paid booking still goes to a person (d137), a plan booking should not (d138), email and text asks should change the booking too (d139), and Maggie's and Caryl's stretched bookings should show on the Charges tab for a person to bill (d140).</p>
