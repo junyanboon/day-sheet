@@ -1367,11 +1367,31 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
+      <h3>A thank-you text Jev calls fbs_lifecycle gets the Responder's held reply when the Courtesy Reply Lane will not close it<span class="kind">The Responder, event-gate &middot; route &middot; scripts/intake_decide.py, services/event-gate/invariants.py, d342, d314 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1136">desk-correspondence #1136</a></span></h3></summary>
+      <p><strong>Why.</strong> Jack C. texted "All sorted -- thank you!" on 2026-10-13 and Mia V. texted "Sounds good! Thank you :) I just paid :)" on 2026-10-14. Nobody replied to either. Jev read both as <code>fbs_lifecycle</code>, and the d314 guard ("a thank-you the lane will not close goes to the Responder") skipped that Jev lane, so intake declined them as plain thanks while the Courtesy Reply Lane would not close them.</p>
+      <p><strong>Route change.</strong> Under Jev's <code>fbs_lifecycle</code> lane, intake now declines a thank-you text only when the Courtesy Reply Lane will close it (courtesy close, ack only, bare greeting) or it is "Good to go" with only thanks and a "see you ..." (the GTG sweep reads those). Any other one becomes <code>feedback</code> with <code>lane will not close this</code> and the Responder queues its held reply. Invariant P also counts "All sorted" / "Sorted" with thanks as an acknowledgment; dashes were already filler.</p>
+      <p><strong>Failure mode.</strong> An arrival or departure note with thanks ("Arrived, thanks!") that Jev calls <code>fbs_lifecycle</code> now gets a held Responder reply instead of none. A payment claim ("I just paid", "Paid!") still fires invariant P.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
       <h3>The Send Engine leaves a row for the next minute instead of claiming it in its last 90 seconds<span class="kind">Send Engine &middot; failure &middot; send-engine Code.gs v40 (processRow_, run_, main), send-engine PR 57, d250 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1135">desk-correspondence #1135</a></span></h3></summary>
       <p>Junyan: &ldquo;250 yes&rdquo;</p>
       <p><strong>Why.</strong> Fourteen engine runs since 9/16 were killed at Google's 6-minute limit, because the time budget was checked only between rows. When Notion slows down (7 to 9 s a call on 10/16, against 2 s normally), the calls for a single row can take minutes. A kill between the claim and the send would leave a row reading Sent that never left.</p>
       <p><strong>Route change.</strong> None. Rows go out the same way, with the same guards and in the same order (claim first, then send).</p>
       <p><strong>Failure mode.</strong> Once a run is more than 270 s in, a due row is not claimed. It stays Ready to Send, the log says so in one line, and the next minute's run sends it. The exception is a managed reply that event-gate may already have reserved: that row is claimed anyway, because a reservation cannot be replayed. Late runs also skip the board poke, the picture delivery check and the failed-text sweep, and the next minute runs them. If Notion stays slow for long, rows keep waiting, and desk invariant G (row did not leave) raises them. To undo, revert PR 57 and run <code>clasp push</code>. There is no switch.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-16</span>
+      <h3>Customer Care tickets open as a step drawer; each step button files one Ruled Action for the Desk Sort<span class="kind">The Deck &middot; tool &middot; deck-app src/sop-steps.js, src/tickets.js readTicketBody fileTicketRuling (step-done, step-answer, step-instruct), src/index.js GET /api/ticket-body, sources/deck.html step drawer (sdCard, ruleStep, sdSend), test/sop-steps.test.js, test/cc-step-drawer.test.js, prototype C &middot; <a href="https://github.com/junyanboon/deck-app/pull/272">deck-app #272</a></span></h3></summary>
+      <p>Junyan: &ldquo;picked prototype C ("84 C is the best for me as it's simple and tells me what I need to do. Let's push it live", 2026-10-16)&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wants to work a Customer Care ticket step by step from the Deck: see which SOP step needs him, and act on that step.</p>
+      <p><strong>Route change.</strong> None for messages. A held draft on a step goes out only through the Messages tab's own Send (the same press, 5 s Undo and guards); a draft the Messages card could not send plainly shows "Open in Messages". Nothing new sends.</p>
+      <p><strong>Tool surface.</strong> New read <code>GET /api/ticket-body?ticket=&lt;id&gt;</code> (Customer Care only): the ticket's page body as Markdown, at most 41 Notion reads, <code>partial</code> when capped. <code>POST /api/ticket-ruling</code> takes three new kinds with a <code>step</code> ({key s&lt;n&gt; | b&lt;n&gt; | d&lt;n&gt;, text}): <code>step-done</code> (note optional), <code>step-answer</code>, <code>step-instruct</code>. Each files ONE signed Ruled Action linked to the ticket (Request <code>🎫 Step 4 done — &lt;title&gt;</code>, <code>🎫 Block 1 answer — …</code>, <code>🎫 Step 5 instruction — …</code>), the same shape as the ticket tab's Approve / Reply / Instruct. The Deck never edits the ticket; the Desk Sort drains the row and ticks the step with <code>scripts/ticket_edit.py --check</code> / <code>--note</code>.</p>
+      <p><strong>Failure mode.</strong> A ticket with no <code>### SOP</code> checklist, or a body read that fails before it ever loaded, shows the old ticket card. A failed refresh keeps the last steps and says so.</p>
     </details>
     </li>
     <li class="entry det">
