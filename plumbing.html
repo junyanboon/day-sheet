@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The Responder files vendor marketing email to Junyan - Inbox with no draft<span class="kind">The Responder &middot; route &middot; scripts/spam_filter.py, scripts/intake_decide.py, library/the-responder.md, library/job-2-triage.md, d365, d366 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1161">desk-correspondence #1161</a></span></h3></summary>
+      <p>Junyan: &ldquo;365 yes, 366 yes&rdquo;</p>
+      <p><strong>Why.</strong> Zapier's webinar invite (2026-10-07), Bell's Small Business Month promo (10-08) and DragApp's ChatGPT plugin news (10-15) were each closed <code>reply</code> because their senders are "not spam", so every Responder pass listed them as <code>needs-draft:</code> and ended unfinished, for up to ten days.</p>
+      <p><strong>Route change.</strong> <code>spam_filter.screen()</code> has a new verdict, <code>vendor marketing</code> (<code>spam_filter.marketing</code>): an inbound email with an unsubscribe / "view in browser" / "manage your preferences" sign, no customer ask (CLEAR_ASK_RE, or CUSTOMER_RE once "All rights reserved" is cut), no quoted studio email, from an exact address the desk never wrote to, and not a booking platform, the desk, desk money (Chexy, Interac) or a no-reply sender. It is skipped as not spam and filed to <code>Junyan - Inbox</code>. <code>intake_decide.py</code> no longer forces a form's <code>spam</code> to <code>question</code> when the filter files the message, and a form <code>question</code> on vendor marketing is filed too, so these close <code>declined — filed to Junyan - Inbox</code> with no draft. <code>ticket_coverage.py</code> is unchanged: it already skips filed mail as noise before reading the audit row, so the three stuck ids drop off <code>needs-draft:</code> on the next pass with no audit-row edit. A 60-day ledger backtest files 11 emails, all bulk promos (Zapier, Bell, Pilot, Ploy, Shopify store, BeProud tees, DragApp).</p>
+      <p><strong>Failure mode.</strong> A stranger's real question with an unsubscribe footer and none of the customer words (rent, booking, rates, availability, a studio number and the like) would be filed with no reply; it still lands in <code>Junyan - Inbox</code>, where he sees it. No switch: reverting the PR restores the old verdicts.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
