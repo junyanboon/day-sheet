@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
+      <h3>Texts tab list loads older Conversations on scroll, and its search finds renter cards<span class="kind">The Deck &middot; tool, cadence &middot; deck-app src/phonecom-read.js readNewest(before), src/texts-cache.js older, src/deck-live-object.js textsOlder, src/index.js GET /api/texts?before=, public/texts-tab.js loadOlderList searchCards, test/texts-routes.test.js, test/texts-tab-page.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/282">deck-app #282</a></span></h3></summary>
+      <p>Junyan: &ldquo;"also where are the older renters on this liek Serena james?" (2026-10-17)&rdquo;</p>
+      <p><strong>Why.</strong> The list held only the newest 100 texts per inbox (about a day or two), and search only looked inside it, so older renters such as Serena James could not be found.</p>
+      <p><strong>Tool surface.</strong> <code>GET /api/texts?before=&lt;epoch&gt;</code> returns the Conversations of the 100 texts per inbox before that time (2 Phone.com calls, <code>filters[created_at]=lt:</code>, not cached), with <code>oldest</code> and <code>more</code>. The plain list now also returns <code>oldest</code> and <code>more</code>. Search in the tab also asks the existing <code>GET /api/texts/cards?q=</code> (Notion, no Phone.com call) and lists matching renter cards that have no chat loaded.</p>
+      <p><strong>Cadence.</strong> Only on a person's scroll to the end of the list, or a press of "Load older texts"; the 10 s poller is unchanged.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
       <h3>A lost item nobody has found yet gets a held "come and take a look" reply<span class="kind">event-gate &middot; route &middot; services/event-gate/lost_found.py LOOK_REPLY, hosting/enable-lost-found.sh, library/lost-and-found.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1151">desk-correspondence #1151</a></span></h3></summary>
       <p>Junyan: &ldquo;L5 yes if we don't know if it's there then maybe we can just let them know they can come to take a look.&rdquo;</p>
       <p><strong>Why.</strong> Junyan, 2026-10-17: when we do not know whether the item is there, tell the renter they can come and look.</p>
