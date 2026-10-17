@@ -1398,6 +1398,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
+      <h3>Money rows close only on a Stripe read, and the Desk Sort's bot-work closes go through the gate<span class="kind">The Desk Sort, Stale Sweep &middot; route, failure &middot; services/event-gate/close_gate.py, services/event-gate/stale_sweep.py, library/desk-sort.md, library/autonomy.md, library/studio-tickets-bookings.md, d380, d381 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1187">desk-correspondence #1187</a></span></h3></summary>
+      <p>Junyan: &ldquo;"380 no stripe only" and "381 yes", 2026-10-17&rdquo;</p>
+      <p><strong>Why.</strong> A renter's $11.30 overtime row was closed on 2026-10-17 by the Stale Sweep on a Skedda paid read alone, and the close gate still took <code>paid_skedda</code>. Junyan ruled that only Stripe proves paid (d380), and that the Desk Sort's remaining self-closes go through the gate too (d381).</p>
+      <p><strong>Route change.</strong> The close gate drops <code>paid_skedda</code>: a form naming it stays open and says a Stripe read is needed. The Stale Sweep, when every Skedda booking a money row names reads paid, now reads Stripe (<code>stripe_paid.booking_paid</code>, read only) and closes only when Stripe holds the payment. The gate gains <code>run_passed</code> (a "could not run" Run Error row and its lane's later Run Monitor heartbeat), <code>defect_parked</code> (a Persistent defect row and its CC ticket's future Revisit After), <code>move_confirmed</code> (the Hours shifted or Desk Sort confirmation row with a BOOKING-STATE-V1 read-back of a booking on the Action) and <code>clarify_held</code> (a held clarification on the two clarification HTRs).</p>
+      <p><strong>Failure mode.</strong> A money row Skedda reads paid but Stripe does not show paid, or Stripe cannot be read, is reported as <code>unproven</code> in the Stale Sweep result and left untouched. Bot-work and move closes that do not pass the fixed checks stay open with the reason printed, for a card.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
       <h3>Screenshot hand-backs and reviewer verdicts go through a form the code checks<span class="kind">The Concierge, The Custodian &middot; route, failure &middot; services/event-gate/screenshot_verdict.py, scripts/screenshot_decide.py, services/event-gate/reviewer_verdict.py, scripts/verdict_route.py, library/job-4-handback.md, library/the-custodian.md, d4 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1181">desk-correspondence #1181</a></span></h3></summary>
       <p>Junyan: &ldquo;"d4" approved 2026-10-05 (build)&rdquo;</p>
       <p><strong>Why.</strong> Two judgment calls had no check behind them: the Concierge marked a parked ticket's Action row Processed on its own reading of a staff screenshot, and the Custodian routed the reviewer's Deck rejections from its own paraphrase of them.</p>
