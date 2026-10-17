@@ -1636,6 +1636,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Failure mode.</strong> Read only; nothing is charged, sent or written. A row the Deck already charged or invoiced keeps its own line, a row whose last owner line is a Waive, Not needed, Match or Reject ruling keeps that ruling, and a second invoice for the same booking is still listed. If Stripe cannot be read, the tab falls back to the old view (row in Review). Once the invoice is paid it leaves Stripe's open list and the row returns to Review until the Desk Sort verifies it, as before.</p>
     </details>
     </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-14</span>
+      <h3>Prepaid-hours bookings keep their full Skedda price; the bot marks them paid once the overage is charged<span class="kind">event-gate &middot; route, tool, failure &middot; services/event-gate/plan_allowance_sweep.py, skedda-cli plan_allowance.py settle_plan_overage /plan-overage, deck-app booking-truth.js, library/desk-sort.md, d15, d16 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1116">desk-correspondence #1116</a></span></h3></summary>
+      <p>Junyan: &ldquo;It should charge the lower amount but show the proper full amount on skedda&rdquo;</p>
+      <p><strong>Why.</strong> The prepaid-hours bot used to reprice a partly covered 1AP/AAP booking down to its overage in Skedda, and after the Deck charged that overage nobody marked the booking paid.</p>
+      <p><strong>Route change.</strong> A partly covered booking now keeps its full price in Skedda. The split (prepaid minutes, overage, full price) lives in the receipt log and on the Action row, whose Amount is the overage; the Deck charges only that and tags the Stripe payment with the split. Once the card charge is in Stripe, the bot reads it, calls skedda-mcp <code>/plan-overage</code>, which re-counts the month and marks the booking paid at its full price, then writes an <code>overage-settled</code> line on the row and closes the row's "hours not applied" note. A row the Deck charged after the hours were applied (d342) takes the same path when its booking kept the full price; one repriced before this change keeps the d342 paid mark. The Desk Sort no longer marks these bookings paid itself. A booking repriced to its overage before this change is only marked paid at that price, because Skedda emails the renter when an admin changes a price; the two Junyan named are put back to their full price, kept paid (d16).</p>
+      <p><strong>Failure mode.</strong> A Stripe amount that is not exactly the overage, a changed booking or month, or a Skedda write that does not read back paid at the full price stops with one <code>paid</code> note row; if Skedda drops the paid flag on the write, the old price and status are written back first. A Stripe or Skedda blip retries next round. Switch: <code>PLAN_ALLOWANCE_RECEIVER</code> turns the whole bot off.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-14</span>
