@@ -1377,6 +1377,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
+      <h3>Screenshot hand-backs and reviewer verdicts go through a form the code checks<span class="kind">The Concierge, The Custodian &middot; route, failure &middot; services/event-gate/screenshot_verdict.py, scripts/screenshot_decide.py, services/event-gate/reviewer_verdict.py, scripts/verdict_route.py, library/job-4-handback.md, library/the-custodian.md, d4 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1181">desk-correspondence #1181</a></span></h3></summary>
+      <p>Junyan: &ldquo;"d4" approved 2026-10-05 (build)&rdquo;</p>
+      <p><strong>Why.</strong> Two judgment calls had no check behind them: the Concierge marked a parked ticket's Action row Processed on its own reading of a staff screenshot, and the Custodian routed the reviewer's Deck rejections from its own paraphrase of them.</p>
+      <p><strong>Route change.</strong> For a screenshot, the Concierge fills one form (verdict from <code>cleared</code>, <code>partial</code>, <code>unrelated</code>, <code>unreadable</code>, a confidence and a quote of what it read) and runs <code>scripts/screenshot_decide.py --apply</code>. The script reads the ticket, its body and the Action row itself and marks the row Processed only for a sure <code>cleared</code> with a quote, on an unread image on that ticket, with a linked non-money row still Pending Review. For reviewer verdicts, the Custodian fills <code>{row, class, quote}</code> per verdict and runs <code>scripts/verdict_route.py</code>, which checks each quote word for word inside the reviewer's stamp on the live row, counts the window (two of a class files, a singleton gets a QA line) and prints the destination. It writes nothing.</p>
+      <p><strong>Failure mode.</strong> A missing, off-list or unsure screenshot verdict re-parks the ticket and writes nothing. A verdict quote that is a paraphrase, comes from the robot's own reasoning, or disagrees with the reviewer's own Deck Cause becomes a QA line and does not count toward filing.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The Custodian sets Done, Won, Lost or a bounce only through the terminal gate script<span class="kind">The Custodian &middot; route, failure &middot; services/event-gate/terminal_gate.py, scripts/terminal_decide.py, library/job-8-review.md, d4 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1178">desk-correspondence #1178</a></span></h3></summary>
+      <p><strong>Why.</strong> Junyan's d4 (2026-10-05): the model fills a form, a script decides. JOB 8 used to write a terminal Position on its own reading of the ticket.</p>
+      <p><strong>Route change.</strong> For each Review ticket the Custodian fills one form (verdict <code>done</code>, <code>won</code>, <code>lost</code> or <code>bounce</code>, with pasted Skedda or Stripe reads) and runs <code>scripts/terminal_decide.py --apply</code>. The script reads the ticket, its linked rows and body live, and writes Position only on <code>close</code> or <code>bounce</code>, then reads it back.</p>
+      <p><strong>Failure mode.</strong> Missing, unbound or unreadable evidence decides <code>keep_open</code>: the ticket stays at Review and the Custodian lists it as held. A Notion error on apply exits 3 and writes nothing else. Off switch: revert the "terminal gate decides" section of <code>library/job-8-review.md</code>; without <code>--apply</code> the script writes nothing.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
       <h3>The Cleaning tab's Today list ticks Stefan's checklist on the day's Notion cleaning page<span class="kind">The Deck &middot; route, tool, failure &middot; deck-app src/cleaning.js, src/cleaning-checklist.js, src/cleaning-day-object.js, src/notion.js, public/cleaning-tab.js, test/cleaning-day.test.js, test/cleaning-routes.test.js, test/cleaning-day-runtime.test.js, test/cleaning-today-ui.test.js, wayfinder cleaner-app slice 02, S12, S21, S22 &middot; <a href="https://github.com/junyanboon/deck-app/pull/300">deck-app #300</a></span></h3></summary>
       <p>Junyan: &ldquo;S21, S22 ruled 2026-10-17 (spec and slices); S12 (ticking is optional)&rdquo;</p>
       <p><strong>Why.</strong> Stefan's Cleaning tab now shows Today: the four buildings folded, each opening its checklist in the template's wording (Priority, Once a week, Monthly, must-do marked), with a ticked count per building. A tick lands on the day's 🧹 Studio Cleaning &amp; Inspections page, the same page he fills in Notion today, so the Timekeeper (04:00), the Analyst (04:06) and Lost &amp; Found read it unchanged.</p>
