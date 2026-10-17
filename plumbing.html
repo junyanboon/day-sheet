@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
+      <h3>Offsite Drive signs in with our own Google client, not rclone's shared one<span class="kind">Offsite Drive backup (VPS) &middot; failure, tool &middot; services/offsite-drive/offsite_drive.py, services/offsite-drive/hosting/install-offsite-drive.sh, Notion Actions 3f37503281c481659bdcc8a833ef062b, d371 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1172">desk-correspondence #1172</a></span></h3></summary>
+      <p>Junyan: &ldquo;371 lets' do it&rdquo;</p>
+      <p><strong>Why.</strong> The nightly Hermes copy to Google Drive failed on 2026-10-16 and 10-17 with Google <code>rateLimitExceeded</code> after about 90 minutes of retries. The sign-in used rclone's built-in Google app, whose Drive quota every rclone user shares; the 2 GB Hermes archive hit it, the 1 MB Buzz copy did not.</p>
+      <p><strong>Route change.</strong> No message route changes. <code>offsite-drive sign-in</code> now reads our own Google "Desktop app" OAuth client from <code>/etc/offsite-drive/google-client.json</code> (root, 600), hands it to rclone in the environment (never argv) and writes <code>client_id</code> and <code>client_secret</code> into rclone.conf beside the token, so uploads and token refreshes use our own quota. Every rclone call is capped at 8 Drive calls a second (<code>--tpslimit=8</code>). The installer also accepts <code>REF=&lt;sha&gt;</code> for a merged commit the VPS bare repo has not picked up yet.</p>
+      <p><strong>Failure mode.</strong> Sign-in refuses with a plain reason and runs nothing when the client file is missing, unreadable, not JSON, not a Desktop app client, or lacks a client_id or client_secret; there is no fallback to rclone's shared app. A failed upload's message now names rclone's real error lines instead of JSON fragments ("} | ] | , rateLimitExceeded"). The Google app must be Published (In production) or its refresh token dies after 7 days and the Sentinel's <code>job:offsite-drive-*</code> alarm fires. Switch: <code>OFFSITE_DRIVE_DISABLED=1</code> as before.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
       <h3>The Desk Sort closes a row only when the close gate says so<span class="kind">The Desk Sort &middot; route, failure &middot; services/event-gate/close_gate.py, scripts/close_decide.py, library/desk-sort.md, d2, d367 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1169">desk-correspondence #1169</a></span></h3></summary>
       <p>Junyan: &ldquo;"d2" approved 2026-10-05; build started as d367 on 2026-10-17&rdquo;</p>
       <p><strong>Why.</strong> The Desk Sort closed Actions on its own reading. Isabel Campo Jurado's ($21.47) and Teo Rivas's ($11.30) overtime rows were closed <code>Processed</code> on 2026-09-20 while both Skedda blocks were unpaid, and on 2026-10-07 four stale held drafts reached the reviewer because nothing retired them.</p>
