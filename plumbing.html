@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
+      <h3>A yes to an hour-shift question Junyan already approved makes the move, even when a person wrote the question<span class="kind">The Registrar &middot; route &middot; services/event-gate/hour_shift_mover.py, library/desk-sort.md, library/autonomy.md, library/studio-tickets-bookings.md, library/concierge-orchestration.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1155">desk-correspondence #1155</a></span></h3></summary>
+      <p>Junyan: &ldquo;119 yes, 120 yes once she accepts it it should be done&rdquo;</p>
+      <p><strong>Why.</strong> Shaka Lee said YES to a confirm question an attended session wrote and Junyan approved. The robot only read yeses to its own <code>[mover-ask:]</code> questions, so it ignored hers, and the Desk Sort carded a second APPROVE on a cancel-and-extend plan Junyan had already turned down. She waited more than 5 hours.</p>
+      <p><strong>Route change.</strong> A hand-written confirm question for a whole booking given up now carries one Reasoning line, <code>SHIFT-ASK-MANUAL drop=&lt;id&gt; drop_date=YYYY-MM-DD keep=&lt;id&gt; keep_date=YYYY-MM-DD minutes=&lt;n&gt; side=after|before</code>. Once the row is Sent, the move lane reads the renter's first reply after it, as it does for its own questions. A clear yes is the approval: it reads both bookings live by id, checks every narrow-case gate, and moves the given-up booking flush against the kept one. A no, a late yes or a failed gate is one Review row. A question still at Pending Review is never read. The Desk Sort cards no second APPROVE in that case, and an hour shift is always the flush move, never cancel-and-extend.</p>
+      <p><strong>Held.</strong> The confirmation is still queued at Pending Review for Junyan's Send. To undo, revert the PR and redeploy event-gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
       <h3>Texts tab list loads older Conversations on scroll, and its search finds renter cards<span class="kind">The Deck &middot; tool, cadence &middot; deck-app src/phonecom-read.js readNewest(before), src/texts-cache.js older, src/deck-live-object.js textsOlder, src/index.js GET /api/texts?before=, public/texts-tab.js loadOlderList searchCards, test/texts-routes.test.js, test/texts-tab-page.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/282">deck-app #282</a></span></h3></summary>
       <p>Junyan: &ldquo;"also where are the older renters on this liek Serena james?" (2026-10-17)&rdquo;</p>
       <p><strong>Why.</strong> The list held only the newest 100 texts per inbox (about a day or two), and search only looked inside it, so older renters such as Serena James could not be found.</p>
