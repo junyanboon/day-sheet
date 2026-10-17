@@ -1364,6 +1364,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>A reply to a message logged from Junyan's own phone is queued as SMS, never WhatsApp<span class="kind">The Responder &middot; route, failure &middot; scripts/queue_draft.py offsystem_channel_refusal, library/response-resolver.md step 6, library/the-responder.md Operating rules &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1158">desk-correspondence #1158</a></span></h3></summary>
+      <p>Junyan: &ldquo;make sure it goes to her number ... as the one that is queued up is going to some weird whatsapp&rdquo;</p>
+      <p><strong>Why.</strong> A renter wrote to Junyan's personal WhatsApp on Oct 17; the turn was logged with <code>log_drop.py --channel text-offsystem</code>. The Responder queued the reply as Channel WhatsApp. The Deck refused it ("this channel needs its own dispatch validation"), and our WhatsApp is not the number they wrote to. Junyan had the row switched to SMS to their phone.</p>
+      <p><strong>Route change.</strong> A reply to a <code>text-offsystem</code> inbound (Junyan's personal WhatsApp, RCS, iMessage) goes as Channel SMS with Reply To = the person's phone. Canon says so in the resolver's channel step and in the Responder's Operating rules line for every row.</p>
+      <p><strong>Failure mode.</strong> <code>queue_draft.py</code> now refuses Channel WhatsApp when the Source Email or Reasoning names a <code>drop-text-offsystem-in-</code> message id: nothing is written, exit 1, and the message says to use <code>--channel SMS --reply-to &lt;their phone&gt;</code>. The lane then requeues it as SMS; if it cited the drop id nowhere, the guard does not fire and the canon rule is the only check. Other WhatsApp rows (an international number, a business WhatsApp inbound) are not affected. Off switch: revert the commit.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The Doorman holds a renter's open room to end + 20; the closing lane can arm it then<span class="kind">The Doorman &middot; route, failure &middot; danceannex-alarm-monitor auto_arm.py, POST /auto-arm, EVENT-GATE closing_reminder.py, library/the-doorman.md, library/closing-reminder.md, d346 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1147">desk-correspondence #1147</a></span></h3></summary>
+      <p>Junyan: &ldquo;I want it to arm on them if they are inside but don't inform us after 20 minutes&rdquo;</p>
+      <p><strong>Why.</strong> The Doorman armed 527 on Kyle FitzGerald (2026-10-02) and 693 on Amandeep Kaur (2026-10-12) minutes after their bookings ended, because a quiet door log read as an empty room.</p>
+      <p><strong>Route change.</strong> One shared rule set (alarm-monitor <code>auto_arm.py</code>) decides whether a disarmed room may be armed. The Doorman's pre-opening check now holds a room the renter's own keypad code left open until end + 20 (<code>skip_hold</code>), and skips it for the day when the renter texted, came back in after a robot arm, or staff were last to disarm (<code>skip_auto_arm_off</code>). With <code>CLOSING_AUTO_ARM_LIVE=1</code> the end + 20 closing lane arms the room through alarm-mcp <code>POST /auto-arm</code> and then sends the renter one after-arm text from its How to Respond row, in place of the "please arm" reminder.</p>
+      <p><strong>Failure mode.</strong> An unreadable inbox, calendar, door log or auto-arm store arms nothing. An arm that does not read back sends no text and raises one Fixer row. <code>CLOSING_AUTO_ARM_LIVE</code> unset keeps the old reminder; alarm-mcp stays a dry run without <code>WATCHDOG_ARMED=true</code>.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
