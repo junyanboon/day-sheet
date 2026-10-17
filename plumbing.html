@@ -1364,6 +1364,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The Responder reads its whole rule book, with the drafting rules first<span class="kind">The Responder &middot; failure &middot; library/the-responder.md, Responder cloud prompt v24 (Notion 3e575032), d20 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1167">desk-correspondence #1167</a></span></h3></summary>
+      <p>Junyan: &ldquo;20 yes&rdquo;</p>
+      <p><strong>Why.</strong> The cloud prompt said the rule book was "about 9K chars", so passes read it with <code>head -c 12000</code> (runs at 19:21Z and 20:20Z on Oct 17). The section had grown to about 20,600 chars, so everything after 12,000 went unread, including every Drafting line: use the How to Respond row first, read the approved reply examples, the house voice and the review ask.</p>
+      <p><strong>Route change.</strong> Cloud prompt v24 says "about 21K chars; read ALL of it, never head or tail". The Drafting block, now with the Skedda read line, moves to the top of the operating rules, so even a cut read gets it.</p>
+      <p><strong>Failure mode.</strong> A pass that still cuts the read loses the bottom of the list (scope and reporting pointers), not the drafting rules. To undo, revert the PR and restore prompt v23 from failover/live-prompts.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The emergency robot sends its card itself, checks first, steps back for a person, and hears more ways of asking<span class="kind">event-gate &middot; route, failure &middot; EVENT-GATE app.py check_new_texts, poller.py, direct_send.py, humans_first.py, cards.py, classifier.py, drafter.py, d401 d402 d403 d404 d406 d407 d408 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1159">desk-correspondence #1159</a></span></h3></summary>
+      <p>Junyan: &ldquo;401 yes, 402 yes, 403 yes, 404 yes, 406 yes, 407 yes, 408 yes&rdquo;</p>
+      <p><strong>Why.</strong> The 60-day review (emergency-bot-review.md) found the robot took 1.5 to 3 minutes and answered 3 of 15 real emergencies.</p>
+      <p><strong>Route change.</strong> The minute check runs the emergency path for every new text first and does the Correspondence Log, board poke, card on first contact and courtesy retire after (d402). The door, codes, won't-lock, leak and 901 door and stuck-inside cards are sent by the gate itself through Phone.com and their queue row is written as Sent with the receipt; the Send Engine never sees them (d401). Before any robot card goes out, a text from a person to that renter after the renter's text sets the row to Will Not Send with a note (d407). New words reach the door, codes and won't-lock cards (d404), and "the alarm went off" pages on-call (d406); in the 60 days that would also have paged for about 5 after-the-fact reports. A door card booking that runs past midnight still counts after midnight.</p>
+      <p><strong>Failure mode.</strong> Phone.com refuses the direct send: the row falls back to Ready to Send. Phone.com does not answer, or the gate dies mid-send: the row goes to Needs Fix, it is never sent twice, and Junyan gets one text to check. A humans-first check that breaks still sends the card. A text is claimed before it is handled and marked done after (d408), so a restart mid-text hands it out again within 5 minutes. A check stops starting texts after 45 s (d403) and the next check takes the rest. Switches: <code>EMERGENCY_DIRECT_SEND_DISABLED=1</code> (back to Ready to Send), <code>POLL_TEXT_BUDGET_S</code>, <code>POLL_RECLAIM_AFTER_S</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>A script, not the Concierge, picks each feedback route<span class="kind">The Concierge &middot; route, failure &middot; concierge_feedback_route.py, concierge_feedback_backlog.py, library/concierge-orchestration.md [R-feedback-router], d6 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1170">desk-correspondence #1170</a></span></h3></summary>
+      <p>Junyan: &ldquo;6 yes&rdquo;</p>
+      <p><strong>Why.</strong> The Concierge picked fyi or blocked for Desk Drops, FBS feedback and Sweep Feedback rows itself, and a marked row was never looked at again (Megan Chapman's reply was never read, PR 412). Ruling 2026-10-05, d6.</p>
+      <p><strong>Route change.</strong> The Concierge now fills a short form per row (kind, done, ticket, customer message, lane, a verbatim quote, next step) and <code>concierge_feedback_route.py</code> decides the route. Money, door code, alarm or broken-equipment words go to a worker or the ops lead, never fyi. An unsure or incomplete form goes to the ops lead. Blocked only means the row was withdrawn.</p>
+      <p><strong>Failure mode.</strong> From 2026-10-18 the backlog only counts a row as handled when its marker is the script's own line and the route matches the form inside it; a hand-written fyi keeps the row on the worklist for the next pass. The script is read-only; if it fails it prints <code>ok: false</code> and the item waits. To turn it off, revert this PR.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
