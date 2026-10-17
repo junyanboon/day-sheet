@@ -1366,6 +1366,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The Send Engine leaves a row for the next minute instead of claiming it in its last 90 seconds<span class="kind">Send Engine &middot; failure &middot; send-engine Code.gs v40 (processRow_, run_, main), send-engine PR 57, d250 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1135">desk-correspondence #1135</a></span></h3></summary>
+      <p>Junyan: &ldquo;250 yes&rdquo;</p>
+      <p><strong>Why.</strong> Fourteen engine runs since 9/16 were killed at Google's 6-minute limit, because the time budget was checked only between rows. When Notion slows down (7 to 9 s a call on 10/16, against 2 s normally), the calls for a single row can take minutes. A kill between the claim and the send would leave a row reading Sent that never left.</p>
+      <p><strong>Route change.</strong> None. Rows go out the same way, with the same guards and in the same order (claim first, then send).</p>
+      <p><strong>Failure mode.</strong> Once a run is more than 270 s in, a due row is not claimed. It stays Ready to Send, the log says so in one line, and the next minute's run sends it. The exception is a managed reply that event-gate may already have reserved: that row is claimed anyway, because a reservation cannot be replayed. Late runs also skip the board poke, the picture delivery check and the failed-text sweep, and the next minute runs them. If Notion stays slow for long, rows keep waiting, and desk invariant G (row did not leave) raises them. To undo, revert PR 57 and run <code>clasp push</code>. There is no switch.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-16</span>
       <h3>An open Skedda invoice whose bookings are all gone from Skedda is voided by the robot<span class="kind">event-gate &middot; route &middot; services/event-gate/open_invoice_watch.py, services/event-gate/stripe_void.py, library/autonomy.md, d3, d4 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1134">desk-correspondence #1134</a></span></h3></summary>
       <p>Junyan: &ldquo;3 yes, 4 yes&rdquo;</p>
