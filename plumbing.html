@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
+      <h3>The Registrar asks, then moves, a whole booking given up for an extra hour on another<span class="kind">The Registrar &middot; route &middot; services/event-gate/hour_shift_mover.py, move_sweep.py, extension_sweep.py, skedda-cli /move-booking adjoin_booking_id, d114, d116, d117 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1148">desk-correspondence #1148</a></span></h3></summary>
+      <p>Junyan: &ldquo;114 yes, 116 yes&rdquo;</p>
+      <p><strong>Why.</strong> Shaka Lee texted on Oct 16 to give up his 1-hour Tuesday booking for an extra hour on his Friday booking. A person had to make that change by hand. Junyan: "why does a person need to maek this change?"</p>
+      <p><strong>Route change.</strong> When both Registrar lanes read an hour shift and every gate holds (one Artist card, One-Off or Self Serve, both bookings paid, same studio and rate, same length, 24 h notice, the slot next to the kept booking free), the lane queues a question keyed <code>[mover-ask:&lt;message id&gt;]</code> instead of the "🔁 Two-booking hour shift needs a human" row. On a clear yes the move lane moves the given-up booking to sit flush against the kept one (skedda-mcp <code>/move-booking</code> with <code>adjoin_booking_id</code>), reads both back and queues the confirmation. Nothing reaches Stripe. Anything else still files the human row, now saying why the robot left it.</p>
+      <p><strong>Held.</strong> The question and the confirmation are Pending Review for Junyan's Send until he approves their wording (d117). Until the skedda-mcp overlay is deployed, a yes ends in a Review row (the old server keeps the 15-minute buffer). To undo, revert the PR and redeploy event-gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
       <h3>Texts tab shows renter names even when Contact Points cannot be read<span class="kind">The Deck &middot; failure &middot; deck-app src/texts-cards.js cardsFor, src/index.js GET /api/texts secondNumbers, test/texts-routes.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/276">deck-app #276</a></span></h3></summary>
       <p>Junyan: &ldquo;"300 yes, 301 done" (first live look showed "Renter names could not load", 2026-10-17)&rdquo;</p>
       <p><strong>Why.</strong> On the first live load every Conversation said "Not on a card" with "Renter names could not load". The name lookup read the Artist cards and ☎️ Contact Points in one step, so a failure on Contact Points (most likely not shared with the Deck's Notion connection; the Deck's only earlier read of it hides its errors) dropped every name.</p>
