@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
+      <h3>A lost item nobody has found yet gets a held "come and take a look" reply<span class="kind">event-gate &middot; route &middot; services/event-gate/lost_found.py LOOK_REPLY, hosting/enable-lost-found.sh, library/lost-and-found.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1151">desk-correspondence #1151</a></span></h3></summary>
+      <p>Junyan: &ldquo;L5 yes if we don't know if it's there then maybe we can just let them know they can come to take a look.&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-10-17: when we do not know whether the item is there, tell the renter they can come and look.</p>
+      <p><strong>Route change.</strong> When Stefan's next cleaning of the studio says nothing about a reported item, the Lost &amp; Found loop now also queues one held reply (code <code>LOST-FOUND-&lt;row&gt;-LOOK</code>, Pending Review) inviting the renter to look in the Lost &amp; Found box at a time we confirm. The Actions row to Junyan stays. The switch-on script now waits for running sweeps to release the deploy lock (up to 30 minutes, like the deploy) and accepts an already-created list id.</p>
+      <p>To undo, revert the PR and redeploy event-gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>Texts tab reads more picture shapes, marks a picture it cannot show, and lists that text's field names<span class="kind">The Deck &middot; tool, failure &middot; deck-app src/texts.js mediaOf shapeOf, src/texts-cache.js shape, src/deck-live-object.js textsShape, src/index.js GET /api/texts/shape, public/texts-tab.js, test/texts-builder.test.js, test/texts-routes.test.js, test/texts-tab-page.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/279">deck-app #279</a></span></h3></summary>
+      <p>Junyan: &ldquo;"2 picture was a no show" (live click-through, 2026-10-17)&rdquo;</p>
+      <p><strong>Why.</strong> Junyan's test picture to the studio line came through blank in the Texts tab. Phone.com documents no picture field for <code>/messages</code>, and the first guesses (<code>media</code>, <code>attachments</code>) were wrong.</p>
+      <p><strong>Tool surface.</strong> New read behind the session cookie: <code>GET /api/texts/shape?id=&lt;uuid&gt;</code> gives the field names and value types (never the values) of a text the Deck showed blank, from the DECK_LIVE cache; no Phone.com call. The reader also tries <code>files</code>, <code>parts</code>, <code>mms</code>, <code>media_urls</code> and <code>{items}</code> forms.</p>
+      <p><strong>Failure mode.</strong> A text with no words and no readable picture now says "A picture or file the Deck cannot show yet. See it in the Phone.com app." with a Details link to that page, instead of an empty space.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
       <h3>The Deck can create a Message Queue row: a text typed in the Texts tab becomes one held row, released through the Messages tab's own check<span class="kind">The Deck &middot; route, tool, failure &middot; deck-app src/texts-send.js, src/texts.js (deckSendFrom, routeFor, timeline join), src/texts-advice.js, src/texts-cards.js searchCards, src/index.js POST /api/texts/send, GET /api/texts/cards, GET /api/texts/conversation, public/texts-tab.js, public/texts-shared.js (built), scripts/build.mjs, test/texts-send.test.js, test/texts-reply-builder.test.js, test/texts-reply-page.test.js, mini-apps/texts slice 02 &middot; <a href="https://github.com/junyanboon/deck-app/pull/277">deck-app #277</a></span></h3></summary>
       <p>Junyan: &ldquo;"d174 yes (spec), d175 yes (10 pieces)" (ticket 08, 2026-10-17)&rdquo;</p>
       <p><strong>Why.</strong> Slice 02 of the Texts mini-app: reply to a text from the Deck instead of the Phone.com app (stories 12, 14 to 21).</p>
@@ -1388,11 +1408,11 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-17</span>
-      <h3>The Registrar asks, then moves, a whole booking given up for an extra hour on another<span class="kind">The Registrar &middot; route &middot; services/event-gate/hour_shift_mover.py, move_sweep.py, extension_sweep.py, skedda-cli /move-booking adjoin_booking_id, d114, d116, d117 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1148">desk-correspondence #1148</a></span></h3></summary>
-      <p>Junyan: &ldquo;114 yes, 116 yes&rdquo;</p>
+      <h3>The Registrar asks, then moves, a whole booking given up for an extra hour on another<span class="kind">The Registrar &middot; route &middot; services/event-gate/hour_shift_mover.py, move_sweep.py, extension_sweep.py, skedda-cli /move-booking adjoin_booking_id, d114, d116, d117, d120, d121 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1148">desk-correspondence #1148</a></span></h3></summary>
+      <p>Junyan: &ldquo;114 yes, 116 yes, 120 done, 117 see above, 121 yes&rdquo;</p>
       <p><strong>Why.</strong> Shaka Lee texted on Oct 16 to give up his 1-hour Tuesday booking for an extra hour on his Friday booking. A person had to make that change by hand. Junyan: "why does a person need to maek this change?"</p>
       <p><strong>Route change.</strong> When both Registrar lanes read an hour shift and every gate holds (one Artist card, One-Off or Self Serve, both bookings paid, same studio and rate, same length, 24 h notice, the slot next to the kept booking free), the lane queues a question keyed <code>[mover-ask:&lt;message id&gt;]</code> instead of the "🔁 Two-booking hour shift needs a human" row. On a clear yes the move lane moves the given-up booking to sit flush against the kept one (skedda-mcp <code>/move-booking</code> with <code>adjoin_booking_id</code>), reads both back and queues the confirmation. Nothing reaches Stripe. Anything else still files the human row, now saying why the robot left it.</p>
-      <p><strong>Held.</strong> The question and the confirmation are Pending Review for Junyan's Send until he approves their wording (d117). Until the skedda-mcp overlay is deployed, a yes ends in a Review row (the old server keeps the 15-minute buffer). To undo, revert the PR and redeploy event-gate.</p>
+      <p><strong>Held.</strong> The question and the confirmation are Pending Review for Junyan's Send. He approved their wording on 2026-10-17 (d117, the confirmation now ends "You should receive an email confirmation with the change. Please double check to make sure everything is correct."), so both rows cite their How to Respond rows as Source HTR Row; auto-send is not approved. The skedda-mcp overlay is live since 2026-10-17 (d120, <code>skedda-mcp:adjoin-own-booking-783781e</code>), so a yes moves the booking. To undo, revert the PR and redeploy event-gate.</p>
     </details>
     </li>
     <li class="entry det">
