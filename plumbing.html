@@ -1364,6 +1364,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The Deck reads every open Actions row instead of the oldest 120, and logs loudly if a 1000-row safety ceiling is ever hit<span class="kind">The Deck &middot; failure &middot; deck-app src/index.js queryDS (onTruncated), ACTIONS_OPEN_CEILING, the DS.actions branch of the tool route, test/actions-open-no-cap.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/291">deck-app #291</a></span></h3></summary>
+      <p>Junyan: &ldquo;"370 yes" (d370, 2026-10-17)&rdquo;</p>
+      <p><strong>Why.</strong> The Worker read open Actions rows (Pending Review and Ruled) oldest first and stopped at 120. Past 120 open rows, the newest would have dropped off the Fixer, Actions and Charges tabs with no word anywhere. About 100 were open on 2026-10-17.</p>
+      <p><strong>Route change.</strong> None. Nothing sends; no row data changes.</p>
+      <p><strong>Cadence.</strong> Same reads, same trigger (each Deck refresh). Notion pages at 100, so today's ~100 open rows still cost 1 or 2 calls; each further 100 open rows adds one call.</p>
+      <p><strong>Tool surface.</strong> None.</p>
+      <p><strong>Failure mode.</strong> Before: past 120 open rows the newest dropped in silence. Now: the Worker follows Notion's cursor to the end. Only if it reads 1000 open rows and Notion still has more does it stop and write <code>ACTIONS OPEN CEILING HIT</code> with the count to the Worker log (<code>console.error</code>, seen in <code>wrangler tail</code> and Workers Logs); the Deck still shows the 1000 it read.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-17</span>
