@@ -1367,6 +1367,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-18</span>
+      <h3>Every Codex pass records its outcome, a reason and where its log is; Codex usage on the Robots tab<span class="kind">The Codex runner &middot; failure &middot; scripts/lane_heartbeat.py --reason --log --runner, services/event-gate/claude_usage_cloud.py merge, failover/codex/codex_lane.py, failover/codex/codex_usage.py, d433, d434, d426 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1201">desk-correspondence #1201</a></span></h3></summary>
+      <p>Junyan: &ldquo;yes and put it on the robots tab&rdquo;</p>
+      <p><strong>Why.</strong> The 10:00Z and 10:29Z Codex Doorman passes on 2026-10-18 ended early and wrote nothing on the Run Monitor, so the Robots tab could not show them (d433).</p>
+      <p><strong>Failure mode change.</strong> <code>lane_heartbeat.py</code> now writes <code>Last Outcome Reason</code> (one cleaned sentence, no names, emails, phones or codes) and <code>Last Run Log</code> in the same update as Last Outcome. A complete pass clears the reason; the failed fallback writes the error. After every Codex pass, the runner records the outcome from the pass's header line (or <code>failed</code> on a non-zero exit or crash) when the lane did not record one itself, with the run folder and machine as the log. The Desk Sort, the Responder and the Treasurer rows can now take that record too.</p>
+      <p><strong>Usage.</strong> After each Codex pass the runner also writes Codex's weekly usage into the CLAUDE USAGE V1 block's <code>plans.codex</code> (d434); the cloud usage merge now keeps <code>plans</code>.</p>
+      <p>To undo, revert this PR and redeploy event-gate; restore codex_lane.py from its .bak-2026-10-18-d433 copy.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-18</span>
       <h3>A no-show is proven from the booked room's own hour, and only an undecided day or a fee-risk no-show reaches a person<span class="kind">The Attendance Sweep &middot; route, failure &middot; services/event-gate/board_status.py narrow_sealed timeline(window_only) presence undecided fee_owed, gtg_sweep.py no_arrival_yet, team/lane-detective/journal/2026-10-18-attendance-sweep-strict-window-and-default-complete.md, d12, d13 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1200">desk-correspondence #1200</a></span></h3></summary>
       <p>Junyan: &ldquo;12 yes"; "13 yes&rdquo;</p>
       <p><strong>Why.</strong> One recording gap anywhere in an 11 hour, five room window blocked every no-show proof (18 rows 10-14 to 10-17), so a no-show like Trisha Tolentino's (509B 10-17) sat Upcoming and errored hourly. Junyan, 2026-10-18 (d13): he is not alerted for every no-show; only when a row stays undecided a day, or when a fee or platform report may be owed.</p>
