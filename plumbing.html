@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-18</span>
+      <h3>The quiet renters (Maggie, Caryl) are switched from the Deck's Exemptions tab<span class="kind">The Registrar &middot; route, failure &middot; services/event-gate/extension_titles.py quiet_renters _quiet_rows, analyst_sweep.py SKIP_KINDS, extension_quiet_renters.json, deck-app src/exemptions.js KINDS, d159 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1203">desk-correspondence #1203</a></span></h3></summary>
+      <p>Junyan: &ldquo;they won't ever join it so it's moot, put them on the exemptions tag so we know this happens&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-10-18 (d159): the extension lane's quiet renters should be visible on the Deck's Exemptions tab, so anyone can see this happens.</p>
+      <p><strong>Route change.</strong> The 🚫 Analyst Skip List has a new Kind <code>Quiet renter</code>. The extension lane reads every row of that Kind (cached 10 minutes): a ticked row puts the renter on the quiet list (bookings stretched or gap-filled, nothing queued unless they ask by email or text, MANUAL ONLY Charge row), an unticked row with no ticked one takes them off, so their asks get the normal held confirmation again. <code>extension_quiet_renters.json</code> keeps the Skedda ids and Caryl's <code>gap_partners</code>, and decides alone for a renter with no row. The Analyst accepts the Kind and ignores it.</p>
+      <p><strong>Failure mode.</strong> A Skip List that cannot be read falls back to the file (remembered 2 minutes, logged), never an empty list. Deploy order: event-gate first (an unknown Kind fails the Analyst's pass), then the Deck, then the two rows. To undo, revert this PR and redeploy event-gate; untick the rows first.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-18</span>
+      <h3>Cleaning tab notes can be removed; the paragraph and its photo go to Notion's trash<span class="kind">The Deck &middot; route, failure &middot; deck-app src/cleaning.js CleaningDesk.removeNote, drainRemovals, notesOf, readNotes (photoBlock); src/cleaning-day-object.js; src/index.js /api/cleaning/note/remove, /api/cleaning/status (removals); public/cleaning-tab.js; test/cleaning-notes-*.test.js; wayfinder cleaner-app slice 03 &middot; <a href="https://github.com/junyanboon/deck-app/pull/309">deck-app #309</a></span></h3></summary>
+      <p>Junyan: &ldquo;"There needs to be an otpions as well to remove a note" (2026-10-18)&rdquo;</p>
+      <p><strong>Why.</strong> A wrong or test note on the day's 🧹 page is read at 04:06 by the Analyst (tickets, Actions rows) and by Lost &amp; Found, so Stefan needs a way to take one back.</p>
+      <p><strong>New Notion write.</strong> <code>POST /api/cleaning/note/remove {day, id}</code>: the tab's own note (by its id) or one typed in Notion (by its block id). Kept in the CleaningDay object (<code>remove:&lt;day&gt;:&lt;id&gt;</code>) and answered at once; the note leaves Today and <code>/status</code> at once. The alarm sends <code>DELETE /blocks/&lt;paragraph&gt;</code> and <code>DELETE /blocks/&lt;its image&gt;</code> (Notion's trash, so it can be restored there). The wish to remove is its own record, which the note's writer never writes over and checks before the photo upload, before the append and after a failure: a note not yet in Notion is never written, and one removed while its append was on its way is found by its words (if it landed) and taken off. The photo is the image block right after the paragraph, found on the page when it was not recorded. Remove asks "Remove this note?" first.</p>
+      <p><strong>Failure mode.</strong> A block already gone counts as removed. A busy Notion is retried (six tries, growing waits); then the removal is marked failed (logged <code>cleaning note not removed</code>), the note shows again and the tab says "Notion did not answer, so the note was not removed. Tap Remove again." Every removal is logged <code>cleaning note removed</code> with who asked.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-18</span>
       <h3>Every Codex pass records its outcome, a reason and where its log is; Codex usage on the Robots tab<span class="kind">The Codex runner &middot; failure &middot; scripts/lane_heartbeat.py --reason --log --runner, services/event-gate/claude_usage_cloud.py merge, failover/codex/codex_lane.py, failover/codex/codex_usage.py, d433, d434, d426 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1201">desk-correspondence #1201</a></span></h3></summary>
       <p>Junyan: &ldquo;yes and put it on the robots tab&rdquo;</p>
       <p><strong>Why.</strong> The 10:00Z and 10:29Z Codex Doorman passes on 2026-10-18 ended early and wrote nothing on the Run Monitor, so the Robots tab could not show them (d433).</p>
