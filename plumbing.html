@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-18</span>
+      <h3>A Deck card's name lookup gives up after 20 seconds and shows who the message goes to<span class="kind">The Deck &middot; failure &middot; sources/deck.html fetchNames recipientLabel displayName, src/exemptions.js KINDS (Quiet renter, d159) &middot; <a href="https://github.com/junyanboon/deck-app/pull/308">deck-app #308</a></span></h3></summary>
+      <p>Junyan: &ldquo;screenshot of three Email Review cards (The Treasurer, The Greeter, The Responder) stuck on "Loading name..."&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-10-18: three Email Review cards sat on "Loading name…". A name lookup that never answered kept the lookup marked busy, so no later card asked for its name until a reload.</p>
+      <p><strong>Route change.</strong> None for messages. The Exemptions tab also gets the Kind "Quiet renter" (d159), which event-gate's extension lane reads.</p>
+      <p><strong>Failure mode.</strong> The Artist name lookup now counts as failed after 20 s and retries on the usual back-off (30 s up to 5 min, 6 tries). Once a try has failed, the card shows the name in Reply To, else Reply To itself, else the Artist card's email or phone, instead of "Loading name…"; "Name not loaded" only when none of those exist. The browser console logs each time limit hit.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-18</span>
       <h3>The quiet renters (Maggie, Caryl) are switched from the Deck's Exemptions tab<span class="kind">The Registrar &middot; route, failure &middot; services/event-gate/extension_titles.py quiet_renters _quiet_rows, analyst_sweep.py SKIP_KINDS, extension_quiet_renters.json, deck-app src/exemptions.js KINDS, d159 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1203">desk-correspondence #1203</a></span></h3></summary>
       <p>Junyan: &ldquo;they won't ever join it so it's moot, put them on the exemptions tag so we know this happens&rdquo;</p>
       <p><strong>Why.</strong> Junyan, 2026-10-18 (d159): the extension lane's quiet renters should be visible on the Deck's Exemptions tab, so anyone can see this happens.</p>
