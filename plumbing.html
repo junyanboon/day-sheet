@@ -1539,6 +1539,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p>To undo, revert this PR and redeploy event-gate.</p>
     </details>
     </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>The Responder runs its allow-listed scripts as a call of their own<span class="kind">The Responder &middot; failure &middot; library/the-responder.md, CLAUDE.md, .claude/settings.json, Responder cloud prompt v25 (Notion 3e575032) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1182">desk-correspondence #1182</a></span></h3></summary>
+      <p>Junyan: &ldquo;1 yes, 2 yes&rdquo;</p>
+      <p><strong>Why.</strong> The cloud permission check refused <code>intake_decide.py --apply</code> on 4 of 49 :20 passes between 2026-10-16 13:24Z and 10-17 19:23Z ("Real-World Transactions" twice, "External System Writes" twice); the :50 routine was refused 0 times in 48. Each refused pass wrote no audit rows, tickets or drafts and ended <code>skipped steps</code> (10-17 19:23Z: Parmida Azizi's thank-you and four other texts waited a pass). The allow-list from 2026-10-05 already names the script, but an allow rule only counts when every part of a command matches one. The lane always wrote the form and ran the script in one bundled command (<code>mkdir … &amp;&amp; cat &gt; f.json &lt;&lt;'E' … &amp;&amp; python3 scripts/intake_decide.py f.json --apply</code>), so the bundle fell through to the classifier, a model whose answer varies. Settings and prompt had not changed; the first refusal came before the v24 prompt edit.</p>
+      <p><strong>Route change.</strong> Write the form in one call; run the exports line plus the script, nothing else, as the next call (rule book § Operating rules and § Full rulings; cloud prompt v25, STEP 1b and QUEUE). The same holds for <code>urgent_access.py</code> and <code>queue_draft.py</code>. CLAUDE.md now says these runs are the routine's sanctioned job, because the permission check reads CLAUDE.md (it does not see the Notion prompt page: tool results are stripped from what it reads).</p>
+      <p><strong>Failure mode.</strong> A pass that still bundles can still be refused, and then does what it does today: marks intake blocked and the next pass picks it up. To undo, revert this PR and restore prompt v24 from failover/live-prompts.</p>
+    </details>
+    </li>
     <li class="entry alert">
     <details>
       <summary><span class="when">2026-10-17</span>
