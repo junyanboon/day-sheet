@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-20</span>
+      <h3>A Notion caller that gives up no longer takes a place in the shared line<span class="kind">event-gate &middot; failure &middot; EVENT-GATE notion_http.py, booking sweep notion ledger &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1210">desk-correspondence #1210</a></span></h3></summary>
+      <p>Junyan: &ldquo;a yes = do the quick Notion fixes now&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-20 from 02:15 to 12:31 Toronto every booking sweep Notion call took about 20 s, but Notion itself answered in 0.28 s (p50). About 99% was waiting in our own shared pacing line. A caller that could not wait (stage budget too short, or more than 60 s) left the line but kept its place, so every give-up pushed everyone behind it back another half second with no call made, and the line grew on its own.</p>
+      <p><strong>Route change.</strong> None. The pacing line now checks, in the same locked step, whether a caller can afford the wait before giving it a place; a caller that will give up takes nothing. A caller that trades its place after a 429 cooldown hands the old place back when it was the last one taken. event-gate also writes one <code>notion_calls</code> log line a minute at most: calls, 429s, give-ups, pace wait and Notion time per thread and path shape (ids replaced by <code>*</code>), so we can see who fills the line.</p>
+      <p><strong>Failure mode.</strong> Give-ups still raise the same <code>BudgetExpired</code> or <code>RateLimitDeferred</code> and the original work stays deferred, as before. <code>NOTION_RATE_RPS=0</code> still turns pacing off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-20</span>
       <h3>Cleaning tab notes take up to six photos, each an image block after the note, in order<span class="kind">The Deck &middot; route, failure &middot; deck-app src/cleaning.js noteRefused (MAX_PHOTOS), CleaningDesk.note, drainNotes, uploadPhoto, drainRemovals, readNotes (photos, photoBlocks), photosOf; src/index.js /api/cleaning/note; public/cleaning-tab.js; test/cleaning-notes-*.test.js, test/cleaning-note-canon.test.js; wayfinder cleaner-app slice 03 &middot; <a href="https://github.com/junyanboon/deck-app/pull/315">deck-app #315</a></span></h3></summary>
       <p>Junyan: &ldquo;relayed Stefan, "Seems to work, only issue i can see is only one photo per note" (2026-10-19)&rdquo;</p>
       <p><strong>Why.</strong> Stefan could attach one photo per note; a problem often needs a few angles.</p>
