@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-20</span>
+      <h3>Every open Deck tab shares one set of Notion reads<span class="kind">The Deck &middot; route, cadence, failure &middot; src/shared-reads.js, src/deck-reads-object.js, DECK_READS, test/shared-reads-measure.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/316">deck-app #316</a></span></h3></summary>
+      <p>Junyan: &ldquo;a yes&rdquo;</p>
+      <p><strong>Why.</strong> Each open Deck tab ran its own Queue, History, Actions and Inbound reads every minute (and the Fixer's HTR lessons), about 20 to 60 Notion calls per tab per minute, on the Notion rate limit the fleet shares.</p>
+      <p><strong>Route change.</strong> Those reads now go through one DeckReads Durable Object for the whole desk. It keeps one copy of each list, at most 45 s old, and refreshes it once however many tabs ask: tabs asking during a refresh wait for that same one. Measured with a fake Notion over ten minutes: 1 tab stays at 1 read set a minute, 5 tabs drop from 5 to 1.3. Any Deck write (a button, a card edit, a decision), each 15-minute cron pass, and a Notion webhook nudge mark the affected copies old, so the next poll shows the change. Checks right before a send or a write still read Notion directly. The Actions read's own write (closing a held row once the Artist card has its phone or email) runs once per shared refresh, not once per tab.</p>
+      <p><strong>Failure mode.</strong> A failed or slow refresh (over 25 s) serves the last good copy, marked stale with the time it was read, so the Deck's stamp shows its age instead of an error; the next try waits 10 s. With no copy yet the usual error shows. If the object cannot be reached, the Worker reads Notion itself as before. Turn it off by removing the <code>DECK_READS</code> binding from <code>wrangler.jsonc</code> and deploying.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-20</span>
       <h3>A Notion caller that gives up no longer takes a place in the shared line<span class="kind">event-gate &middot; failure &middot; EVENT-GATE notion_http.py, booking sweep notion ledger &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1210">desk-correspondence #1210</a></span></h3></summary>
       <p>Junyan: &ldquo;a yes = do the quick Notion fixes now&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-20 from 02:15 to 12:31 Toronto every booking sweep Notion call took about 20 s, but Notion itself answered in 0.28 s (p50). About 99% was waiting in our own shared pacing line. A caller that could not wait (stage budget too short, or more than 60 s) left the line but kept its place, so every give-up pushed everyone behind it back another half second with no call made, and the line grew on its own.</p>
