@@ -1366,6 +1366,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-20</span>
+      <h3>Deck Send asks the double-text check again on a gateway error<span class="kind">The Deck &middot; failure &middot; src/outbound-guard.js guardRelease, test/release-check-retry.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/312">deck-app #312</a></span></h3></summary>
+      <p>Junyan: &ldquo;11 yes"; "I don't like my messages being blocked like this&rdquo;</p>
+      <p>Deck Send showed "Outbound history could not be verified" while event-gate logged no release check at all: something in front of the gate answered 5xx or a non-JSON 429. The read-only /message-release-check is now asked again up to twice (1.5 s, then 4 s) for 429, 502, 503, 504 and 520 to 530 with no gate reason code. A gate verdict, a timeout and every queue write are never retried. If it still fails the draft stays held (fail-closed) and the banner says the status and "Nothing was sent". Each call logs release_check with row id, attempt, status, ms (Workers Logs).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-19</span>
       <h3>Alarms Today list and Studios check-in read the live named arm stream<span class="kind">The Deck &middot; route &middot; src/alarm-panel.js liveArmEvents, src/index.js /api/alarm/activity, public/alarm-live.js mergeArm applyLive, test/alarm-live-stream.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/311">deck-app #311</a></span></h3></summary>
       <p>Junyan: &ldquo;d1 and d2, 2026-10-19 "1 yes 2 yes"&rdquo;</p>
