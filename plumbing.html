@@ -1555,6 +1555,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p>To undo, revert this PR and redeploy event-gate.</p>
     </details>
     </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-17</span>
+      <h3>Emergency robot covers the night, and the minute text check runs alone at :00<span class="kind">event-gate &middot; cadence, route &middot; scripts/watchlist_build.py, ops/desk-tick/desk-tick.timer, EVENT-GATE cards.py booking_current, EVENT-GATE hosting/stagger_sweep_timers.py, d405, d403 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1191">desk-correspondence #1191</a></span></h3></summary>
+      <p>Junyan: &ldquo;405 yes, 403 yes&rdquo;</p>
+      <p><strong>Why.</strong> The renter list the emergency robot reads was rebuilt 8 AM to 11 PM only and held today only, so a renter arriving after midnight was never on it. On the five-minute marks 35 event-gate jobs started together with the minute text check, which then took 15.7 s at the median instead of 3.9 s.</p>
+      <p><strong>Route change.</strong> The desk tick also runs hourly at :02 from 11 PM to 7 AM. From 10 PM a build also holds tomorrow's bookings that start before 8 AM, their window written with the weekday ("Mon 12:30 AM–3:00 AM"); the door card opens those at their own time and never reads them as today's. The renter list in Notion is now updated before stale rows are archived, so it is never empty at midnight. A booking past midnight stays covered: the 12:02 AM build keeps it, because the calendar read takes every booking that overlaps the day, and writes it with its own weekday so it is not read as tonight's the next evening. Each sweep that started at :00 on a five-minute mark now starts 20 to 40 seconds later; the minute text check is unchanged.</p>
+      <p><strong>Failure mode.</strong> A night tick that fails files a Run Error row as by day. The timers go back with <code>bash services/event-gate/hosting/stagger-sweep-timers.sh --undo</code>; the night ticks stop by removing the second OnCalendar line from desk-tick.timer.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-17</span>
