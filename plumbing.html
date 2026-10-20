@@ -4195,6 +4195,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Failure mode.</strong> Contact Points are written first and the card last, so any Notion error (<code>phone-sync:error</code>) or a card write that does not read back (<code>phone-sync:unverified</code>) leaves the card on the old number and the next pass retries. A flag is raised once per renter and new number. Off switch: <code>SKEDDA_PHONE_SYNC_DISABLED=1</code>.</p>
     </details>
     </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>The Custodian reviews what Codex did while Claude was down<span class="kind">The Custodian &middot; route, failure &middot; library/the-custodian.md JOB 11, agent-fleet failover/codex/codex_takeover.py, d89, d90 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/874">desk-correspondence #874</a></span></h3></summary>
+      <p>Junyan: &ldquo;d89 yes&rdquo;</p>
+      <p><strong>Why.</strong> When Claude is down Junyan runs the cloud lanes on Codex on his Mac (<code>codex-takeover on</code>). Codex wrote its hand-backs only on its <code>[Codex]</code> pass lines, and nothing in the cloud read them, so open items could be lost when Claude came back.</p>
+      <p><strong>Route change.</strong> On its first pass after a Lease Log row <code>executors.&lt;lane&gt; codex→cloud</code>, the Custodian reads the Codex window: the <code>Codex takeover</code> Workflow Report that <code>codex-takeover off</code> now posts, every <code>[Codex]</code> pass line, and the records they name. It files one Action row per hand-back still open, flags any draft Codex did not leave Pending Review, re-reads the writes Codex claims, and turns a repeated defect into a Sweep Feedback row. It never redoes the work itself. The window it reviewed is kept as <code>codex_review_through</code> in its state block.</p>
+      <p><strong>Failure mode.</strong> No takeover report (the post failed): the review runs from the pass lines and says the report is missing. An unfinished review leaves <code>codex_review_through</code> unchanged, so the next pass runs the whole window again; Action rows are deduped by <code>[codex-window:&lt;date&gt;]</code>. The rule reaches the cloud Custodian only once its trigger prompt carries the JOB 11 step.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-04</span>
+      <h3>Codex passes make door codes only through the hosted access_operation<span class="kind">The Doorman &middot; tool, route &middot; danceannex-alarm-monitor access_request_live.py (PR 33), agent-fleet failover/codex lane_profiles.py, library/doorman-access-lifecycle.md, d84, d91 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/875">desk-correspondence #875</a></span></h3></summary>
+      <p>Junyan: &ldquo;d91 yes&rdquo;</p>
+      <p><strong>Why.</strong> While Claude is down the Doorman and the Concierge run on Codex on Junyan's Mac. Their door code requests always handed back: the hosted alarm service refused every caller once those lanes were on <code>codex</code> in the lease, and the Mac's own alarm server has no live switch.</p>
+      <p><strong>Route change.</strong> The alarm service's lease rule now accepts executor <code>codex</code> (holder still <code>hermes</code>). Codex reaches the same hosted service as the cloud through a new connector, <code>alarm-hosted</code>, that shows only <code>access_operation</code> and its read-only status check. In Codex lane passes the raw code tools (create user, set code, grant access, set window) are switched off; door codes go through the guarded tool only.</p>
+      <p><strong>Failure mode.</strong> If <code>alarm-hosted</code> is not signed in on the Mac, or the tool answers disabled or blocked, the pass records the blocked step and hands it back; it never falls back to another alarm tool. Removing <code>codex</code> from <code>ACCESS_EXECUTORS</code> in the alarm service turns it off.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-04</span>
