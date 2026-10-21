@@ -1367,6 +1367,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-21</span>
+      <h3>The Send Engine pauses its event-gate checks when event-gate stops answering<span class="kind">Send Engine &middot; failure &middot; send-engine Code.gs v43 (gateFetch_, gateTripCheck_, processRow_), send-engine PR 61, d343 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1230">desk-correspondence #1230</a></span></h3></summary>
+      <p>Junyan: &ldquo;a timeout after v40 goes back to the Shipper to tighten the limits&rdquo;</p>
+      <p><strong>Why.</strong> From 02:07 to 12:04 Toronto on 10/20, and from 21:46 on 10/20 to 07:57 on 10/21, every engine run was killed at Google's 6-minute limit (about 200 kills). event-gate was jammed (its own requests took over an hour), and the engine's call to it for the EOB check never came back, so no row behind that one went out. Apps Script cannot put a timeout on a call.</p>
+      <p><strong>Route change.</strong> None. Rows go out the same way, with the same guards in the same order.</p>
+      <p><strong>Failure mode.</strong> Each engine call to event-gate leaves a mark while it runs. When a run is killed inside the call, the next run finds the mark and pauses event-gate calls for 10 minutes, then 20, 40 and 60 while it keeps happening. A call that times out pauses them too. While paused, EOB reminders wait unclaimed, and the duplicate and reply checks are skipped with a warning on the row, which then sends (the same as when event-gate is down). The call that closes a granted reply reservation is always made. A run that tries event-gate again after a pause can still be killed if event-gate is still jammed. That is one kill per pause, not one every 6 minutes. One alert email a day: "[Send Engine] event-gate not answering, its checks are paused". No event-gate call starts unless a 60 s call still fits in the 6 minutes. To end a pause by hand, delete the Script Property GATE_PAUSED_UNTIL. To undo, revert PR 61 and run <code>clasp push</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
+      <h3>The Concierge reads a typed Pickup field to decide an inbound needs no pickup, not the Responder's wording<span class="kind">The Concierge &middot; route, failure &middot; EVENT-GATE concierge_intake.py, scripts/intake_decide.py, library/concierge-orchestration.md, d6 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1229">desk-correspondence #1229</a></span></h3></summary>
+      <p><strong>Why.</strong> A routed inbound with no ticket was set aside as "nothing to answer" when its free-text rationale said "no reply" or "no action required". Wording drifts, so a real reply could match and be dropped unread.</p>
+      <p><strong>Route change.</strong> <code>intake_decide.py</code> now sets the Email Triage Audit Log <code>Pickup</code> select on every row it writes: <code>no_reply_needed</code> (declined, not-customer, insurance-owned), <code>replied</code>, <code>handed_off</code> (stub, routed, routed-no-draft), else <code>unclear</code>. For rows from 2026-10-21 18:00 Toronto the Concierge intake reader sets a no-ticket routed row aside only when <code>Pickup</code> is <code>no_reply_needed</code>. Older rows keep the old wording check.</p>
+      <p><strong>Failure mode.</strong> A blank <code>Pickup</code> on a newer row is not set aside: it shows as <code>unresolved_route</code> for a person to look at. A changed <code>Pickup</code> re-proves the row on the next pass.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
       <h3>The Sunday cleaning report for Junyan and Stefan<span class="kind">event-gate cleaning-report (new) &middot; cadence, route &middot; EVENT-GATE cleaning_report.py, /cleaning-report, overtime_sweep.stefan_presence, overtime_sweep.session_minutes, hosting/install-cleaning-report.sh, library/cleaning-tab.md, library/lanes.md, fleet/wayfinder/cleaner-app/slices/08-weekly-report.md, deck-app src/cleaning-report.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1226">desk-correspondence #1226</a></span></h3></summary>
       <p>Junyan: &ldquo;S19, S20&rdquo;</p>
       <p><strong>Why.</strong> Ticking in the Cleaning tab is optional (S12), so Junyan and Stefan need one weekly picture of how much cleaning happened where, what was missed and what to improve (S19: looks A and B together; S20: fixed rules, not the AI). Both see the same report in the Deck; nobody is texted.</p>
