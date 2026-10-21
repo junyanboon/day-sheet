@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-21</span>
+      <h3>event-gate opens a store API at /store/v1/, one token per caller, one probe table<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/store_api.py, store_db.py, store_tokens.py, store_migrations/002_store_api.sql, docs/store-api.md, d453 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1219">desk-correspondence #1219</a></span></h3></summary>
+      <p>Junyan: &ldquo;453 yes, Done next&rdquo;</p>
+      <p><strong>Why.</strong> The robot tables are moving from Notion to event-gate's own Postgres store, one table at a time. The Deck, the send engine, the FBS Monitor, the cloud lanes and Hermes do not run inside event-gate, so they need a way in over event-gate's existing HTTPS address. This is that door. No robot table moves and no robot uses it yet.</p>
+      <p><strong>Route change.</strong> New routes under <code>/store/v1/</code> on event-gate: query rows (filters, sorts, page cursor), get one row, create, and update with a required <code>if_version</code>. Each caller has its own token (only its sha256 is stored) with read or write rights per table; Junyan makes, lists and revokes them with <code>store_tokens.py</code> inside the event-gate container. Only tables listed in the <code>store_tables</code> registry are open; this slice opens one, <code>store_probe</code>, for the end-to-end check. Every write records who and when in <code>store_audit</code>. <code>/health</code>'s store block adds <code>tables</code> (how many are open).</p>
+      <p><strong>Failure mode.</strong> Store down or not configured: <code>/store/v1/</code> answers 503 at once (a 10 s breaker after a failed connect) and every other route behaves exactly as before. A token over its rate (default 1200 a minute, burst 300; <code>STORE_API_RATE_PER_MIN</code>, <code>STORE_API_BURST</code>) gets 429 with Retry-After. A wrong or revoked token gets 404, a token without the right gets 403. Off switch: revoke the tokens (<code>store_tokens.py revoke &lt;id&gt;</code>); removing <code>STORE_DATABASE_URL</code> and deploying closes the API with the rest of the store.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
       <h3>The Registrar moves a booking on a clear yes written in the renter's own words<span class="kind">event-gate &middot; route &middot; EVENT-GATE move_confirm.is_yes, library/autonomy.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1217">desk-correspondence #1217</a></span></h3></summary>
       <p>Junyan: &ldquo;d1 1 yes&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-21 David Garzon (AAP) answered the Registrar's 08:07 move question with "Yes! Thanks so much". The strict yes list did not allow "so much", so the move went to a human as "something other than a clear yes" (Action 40075032-81c4-81bd-a8ba-f7baa60d0b9a).</p>
