@@ -1366,6 +1366,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-21</span>
+      <h3>A dispatch check that hits a passing upstream error asks again, and a send stuck 30 minutes reaches the board<span class="kind">event-gate &middot; failure &middot; EVENT-GATE app.py /message-dispatch-check, reconcile_sweep.py stuck-send branch &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1214">desk-correspondence #1214</a></span></h3></summary>
+      <p>Junyan: &ldquo;d52 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-21 David Garzon's text was ready at 02:49Z and did not go until 12:07Z. Every minute the dispatch check held it with <code>check_incomplete</code> / <code>HTTPError</code>, and the reconcile sweep wrote "stuck send ... never dispatched" five times, but only to its own log (the board write runs only when the sweep is live).</p>
+      <p><strong>Route change.</strong> The dispatch check now asks again up to three times (after 2, 5 and 10 s) when the hold comes from an upstream <code>HTTPError</code>; a gate verdict is never asked again. A send stuck 30 minutes or more past its time is raised as one Actions row (the existing stuck-send row, deduped by message code) even when the sweep runs in shadow. <code>STUCK_SEND_ALERT=0</code> turns that off; <code>STUCK_SEND_ALERT_MIN</code> sets the 30.</p>
+      <p><strong>Failure mode.</strong> The <code>dispatch_check_held</code> log line now also names the failing upstream host and path (<code>upstream</code>, no query string), its HTTP status and how many tries were made. Nothing is sent; the queue row is never changed.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-20</span>
+      <h3>event-gate gets its own Postgres store, backed up nightly and restore-tested monthly<span class="kind">event-gate &middot; route, cadence, failure &middot; services/event-gate/store.py, store_migrations/, hosting/install-store.sh, hosting/store_backup.py, registry eventgate-store-backup, eventgate-store-restore-drill, offsite-drive-store, d453 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1212">desk-correspondence #1212</a></span></h3></summary>
+      <p>Junyan: &ldquo;453 yes&rdquo;</p>
+      <p><strong>Why.</strong> Notion is slow and allows about 3 calls a second, and robot calls waited about 20 seconds each on 2026-10-20. The robot tables will move to a database on our own server, one table at a time. This is the first step: the database itself. No robot table moves and no robot behaviour changes.</p>
+      <p><strong>Route change.</strong> A Postgres container (<code>eventgate-store</code>) runs next to event-gate on the VPS, reachable only inside the server (no public port). event-gate applies its schema on start and shows <code>"store"</code> (ok, schema version, latency) on <code>/health</code>. Two new host timers: a nightly encrypted backup at 02:47 Toronto (14 days kept on the VPS, 3 on the thedanceannex Google Drive through offsite-drive) and a monthly restore drill on the 2nd at 05:17 Toronto that restores the newest backup into a scratch database, checks the schema version and row counts, and drops it.</p>
+      <p><strong>Failure mode.</strong> A down or slow store never fails <code>/health</code> or anything else: event-gate behaves exactly as before and <code>/health</code> shows <code>"store": {"ok": false}</code>. A failed backup, offsite copy or drill writes no record, so its registry row goes stale and the Sentinel alarms. Off switch: remove <code>STORE_DATABASE_URL</code> from <code>event-gate.env</code> and deploy; stop the timers with <code>systemctl disable --now eventgate-store-backup.timer eventgate-store-restore-drill.timer</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-20</span>
       <h3>Cleaning notes save their words at once; the photos follow one by one, each in its place<span class="kind">The Deck &middot; route, failure &middot; deck-app src/cleaning.js CleaningDesk.note (expect), notePhoto, keepPhoto, drainNotes (words, then photo runs), photosOf, noteState (shots), photoRefused, drainRemovals; src/cleaning-day-object.js notePhoto; src/index.js /api/cleaning/note/photo; public/cleaning-tab.js sendPhotos, sendPhoto, retryPhoto, photoViews; scripts/measure-cleaning-note-save.mjs; wayfinder cleaner-app slice 03 &middot; <a href="https://github.com/junyanboon/deck-app/pull/318">deck-app #318</a></span></h3></summary>
       <p>Junyan: &ldquo;Took a while to save" (2026-10-20, a 527 note with three photos); "33 yes&rdquo;</p>
