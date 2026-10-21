@@ -1367,6 +1367,33 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-21</span>
+      <h3>The Registrar moves a booking on a clear yes written in the renter's own words<span class="kind">event-gate &middot; route &middot; EVENT-GATE move_confirm.is_yes, library/autonomy.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1217">desk-correspondence #1217</a></span></h3></summary>
+      <p>Junyan: &ldquo;d1 1 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-21 David Garzon (AAP) answered the Registrar's 08:07 move question with "Yes! Thanks so much". The strict yes list did not allow "so much", so the move went to a human as "something other than a clear yes" (Action 40075032-81c4-81bd-a8ba-f7baa60d0b9a).</p>
+      <p><strong>Route change.</strong> A reply now counts as yes when it is a yes word with only a greeting, thanks and courtesy phrases around it ("thanks so much", "that works", "perfect", "much appreciated"). Any other word, a new time, room or condition, or a question mark still goes to a human. AAP and 1AP holders were already movable on a yes (2026-09-28); this changes nothing there.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
+      <h3>Notion call counts name the robot behind each call, and the pace goes to 2.7 a second<span class="kind">event-gate &middot; failure &middot; EVENT-GATE notion_http.py, app.py, NOTION-RATE-LIMITS.md, NOTION_RATE_RPS, d?k, d?l &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1216">desk-correspondence #1216</a></span></h3></summary>
+      <p>Junyan: &ldquo;k yes, l yes&rdquo;</p>
+      <p><strong>Why.</strong> Over 20 hours on 2026-10-20/21 the shared Notion line ran at 1.96 calls a second against a 2 a second pace, full all day, with booking sweep calls waiting about 20 s each from about 21:00 to 07:00 Toronto. 96% of calls were labelled "AnyIO worker thread", because the timer sweeps run as event-gate routes, so the count could not say which robot fills the line at night (l). Notion allows an average of 3 calls a second per integration, and we saw 27 rate-limit (429) answers in a week, so Junyan raised <code>NOTION_RATE_RPS</code> from 2 to 2.7 on 2026-10-21 in <code>/docker/danceannex-mcp/event-gate.env</code> (k).</p>
+      <p><strong>Route change.</strong> None. Each <code>notion_calls</code> line now labels calls by the route that caused them (the route template, such as <code>/rows/{row_id}/apply</code>, ids never shown), and falls back to the thread name for background loops. Each line also carries <code>ts</code>, the UTC time it was written. The shared pace is 2.7 calls a second.</p>
+      <p><strong>Failure mode.</strong> Labelling and the timestamp only change the log line; a log write never changes a Notion call's result. If 429s climb after the raise, set <code>NOTION_RATE_RPS</code> back to 2 and restart event-gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
+      <h3>A Deck Send is finished on the server, so closing the phone mid-check no longer stops it<span class="kind">The Deck &middot; failure &middot; src/send-job.js SendJobs, src/send-job-object.js SendJob, src/index.js notion-update-page runDeckRelease handOffToSender setStage /api/send-job, wrangler.jsonc SEND_JOB, sources/deck.html writeRow pollSendJob SendJobWatch SendFail, test/send-job.test.js, test/send-fail-sticky.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/322">deck-app #322</a></span></h3></summary>
+      <p>Junyan: &ldquo;54 yes"; "56 yes&rdquo;</p>
+      <p>Before this, pressing Send made the browser wait for the event-gate check, which can take minutes. If the phone app closed or the page reloaded during the check, the Worker request was cancelled and the Send never finished (Aris Wu, Sabrina Pollitt and others at 3:21 AM on 2026-10-21). Now the Deck hands each Send, with its release id, to one Durable Object per queue row (SendJob). Its alarm runs the same release with every guard and then hands off to the Send Engine kick, whether or not the page stays open. The Worker waits up to 20 s for a quick answer, otherwise answers "checking", and the Deck polls GET /api/send-job. When the page reopens, every card whose Send was in flight reads the real outcome (sent, held, Check first, Can't send, failed) instead of the old "page closed" guess. A second press while a Send is checking joins it, and an alarm retried after a cut never releases twice. The Worker also logs one send_stage line per stage (gate check, gate result, Notion write, hand-off to the sender) for every Send (d56).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
       <h3>A dispatch check that hits a passing upstream error asks again, and a send stuck 30 minutes reaches the board<span class="kind">event-gate &middot; failure &middot; EVENT-GATE app.py /message-dispatch-check, reconcile_sweep.py stuck-send branch &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1214">desk-correspondence #1214</a></span></h3></summary>
       <p>Junyan: &ldquo;d52 yes&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-21 David Garzon's text was ready at 02:49Z and did not go until 12:07Z. Every minute the dispatch check held it with <code>check_incomplete</code> / <code>HTTPError</code>, and the reconcile sweep wrote "stuck send ... never dispatched" five times, but only to its own log (the board write runs only when the sweep is live).</p>
