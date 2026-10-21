@@ -1364,6 +1364,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-21</span>
+      <h3>event-gate raises one alarm when the server's disk passes 85% full, and an urgent one at 95%<span class="kind">event-gate &middot; route, failure &middot; EVENT-GATE disk_watch.py, ops/fleetread/run disk &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1222">desk-correspondence #1222</a></span></h3></summary>
+      <p>Junyan: &ldquo;p yes, in fact it should have 50 gb avialble&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-21 the VPS disk was 91% full (9 GB free of 96 GB) and about 5 GB went in a few hours of deploys, with nothing raising it. A full disk already stopped deploys and CI on 2026-10-08.</p>
+      <p><strong>Route change.</strong> Every 5 minutes the <code>/poll</code> tick measures the server's disk and Docker's storage from inside event-gate (no host timer). Crossing 85% posts one message to #desk-status with the percent and the GB left; crossing 95% posts one urgent message. The same level on later passes sends nothing; a level re-arms only once the disk is 2 points under its line. The levels live in <code>/var/lib/eventgate/disk-watch.json</code>. A new <code>vps-read disk</code> read shows <code>df</code>, <code>docker system df</code> and the biggest folders under <code>/var</code> without root.</p>
+      <p><strong>Failure mode.</strong> A failed post keeps the old level, so the next pass tries again. An unreadable disk is skipped and named in the poll log. If the levels file cannot be written (a full disk), the running process keeps them in memory so it still sends once. <code>DISK_WATCH_DISABLED=1</code> turns it off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
+      <h3>Every event-gate deploy now cleans the VPS disk after it goes live<span class="kind">event-gate deploy &middot; failure &middot; services/event-gate/hosting/deploy_hostinger.py host_cleanup, install-deploy-handler.sh, PR 1222 (disk alarm) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1223">desk-correspondence #1223</a></span></h3></summary>
+      <p>Junyan: &ldquo;Yes I need a way to auto-prune when we're merging.&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-21 the VPS disk was 92% full (8G free of 96G). The Codex lane kept a full canon copy for every pass (201 copies, 41G) and the fbs-monitor runner's <code>_diag</code> folder held 3.1G.</p>
+      <p><strong>Route change.</strong> None. Not live yet: deploys keep the old handler until Junyan runs <code>bash services/event-gate/hosting/install-deploy-handler.sh</code> from the canon checkout on main.</p>
+      <p><strong>Failure mode.</strong> Once installed, after a verified swap (never on a failed or refused deploy, never on <code>stage</code>) the handler also removes dangling (untagged) images, <code>/opt/fbs-runner/_diag</code> files older than 7 days, and Codex lane canon copies untouched for 3 hours (deleted as user <code>codexlane</code>, their pass logs stay). The deploy log then gets one line: <code>Host cleanup: disk free X before, Y after</code>, with what each step removed. The newest 3 event-gate images, the running one and the build cache prune stay as before. Hermes data, store backups, <code>/var/backups</code> and docker volumes are never touched. Every step is best effort with a time limit: a failed cleanup never fails a deploy that is already live. To switch it off, put back the dated backup the installer kept (<code>/usr/local/sbin/eventgate-deploy.bak-&lt;stamp&gt;</code>). The Codex lane's own end-of-pass delete is a separate change in agent-fleet <code>failover/codex/codex_lane.py</code> (untracked there), live on the VPS after <code>codex-vps update</code>.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-21</span>
