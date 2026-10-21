@@ -1367,6 +1367,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-21</span>
+      <h3>A French iPhone "a attribué la mention « Aime » à « … »" reaction is a tapback, so it no longer draws a card<span class="kind">event-gate &middot; route &middot; EVENT-GATE tapback.is_tapback, app.py tapback drop, cards.could_match, messages/2026/10/19/sms-in-42c6f8bd &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1234">desk-correspondence #1234</a></span></h3></summary>
+      <p>Junyan: &ldquo;(Fixer row 4007503281c48146b355fda82111e70d, 2026-10-21) "5 yes"&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-19 at 6:02 PM Natalia C. (studio 901) liked our "no staff available" text from a French iPhone, which writes <code>a attribué la mention « Aime » à « … »</code>. The shared tapback test did not know that wording, so the gate read our own quoted words, the codes card matched them, and the robot texted her the codes card 23 seconds later.</p>
+      <p><strong>Route change.</strong> The shared tapback test now takes <code>a attribué la mention «word» à</code> (any reaction word up to 24 letters, straight, curly or « » quotes, an optional sender name of letters only in front) before the quoted echo. Every lane that asks <code>tapback.is_tapback</code> agrees: the gate's card lane drops it, invariant P counts it as answered, and the Courtesy Reply Lane queues nothing. Over the 8,083 inbound messages in the log (3,235 in the last 60 days) the new wording changes exactly one verdict, Natalia's, and no real message.</p>
+      <p><strong>Failure mode.</strong> Words she types after the closing quote are split off and read as a real message, as for every other reaction. A French phone's other wordings (for example removing a reaction) are not listed yet; they stay real messages until one arrives. To undo, revert the PR.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-21</span>
+      <h3>Doorman counts Job B done on a clean code mirror until a code change list exists<span class="kind">The Doorman &middot; failure &middot; library/doorman-access-lifecycle.md, d448, d450 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1224">desk-correspondence #1224</a></span></h3></summary>
+      <p>Junyan: &ldquo;448 yes&rdquo;</p>
+      <p><strong>Why.</strong> Job B asked for every alarm code changed in the last 48 hours by anyone. No tool lists hand edits made in the Alarm.com app, so every Doorman pass since 2026-10-18 ended <code>skipped steps</code> even when all access was fine.</p>
+      <p><strong>Failure mode.</strong> Until the alarm service's daily code change list ships (d450), Job B is complete when the same pass's <code>code_mirror</code> returned no errors and every access request id agents recorded in the last 48 hours got a fresh status read. A mirror error or a missed read still ends the pass <code>skipped steps</code>. Hand edits to known users' codes are caught by the code mirror; users added or deleted by hand in the Alarm.com app stay unchecked until the change list ships. To undo, revert the canon block; the next Doorman pass reads it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
+      <h3>The Desk Sort's move on a "can't read it" refusal now asks the renter first, and three gates got stricter<span class="kind">The Desk Sort &middot; route &middot; services/event-gate/desk_move_ask.py, scripts/desk_move_question.py, services/event-gate/move_confirm.py, services/event-gate/close_gate.py, services/event-gate/terminal_gate.py, services/event-gate/screenshot_verdict.py, library/desk-sort.md, library/autonomy.md, library/job-8-review.md, library/job-4-handback.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1232">desk-correspondence #1232</a></span></h3></summary>
+      <p>Junyan: &ldquo;382 yes, 383 yes, 384 no, 385 yes&rdquo;</p>
+      <p><strong>Why.</strong> Since 2026-09-26 every booking move asks the renter first, but the Desk Sort's simple move on a Registrar reading refusal still moved the booking with no question. Three gates also accepted weaker proof than Junyan wants.</p>
+      <p><strong>Route change (d382).</strong> On a Registrar <code>Class: reading</code> refusal the Desk Sort no longer moves the booking. It fills a form and <code>scripts/desk_move_question.py --apply</code> queues the Registrar's own confirm question (<code>[mover-ask:&lt;source id&gt;]</code>, How to Respond wording) at Pending Review for Junyan's Send. Once Sent, the renter's clear yes makes the Registrar re-check and move it and queue its confirmation, which closes the Action through the close gate. The Registrar's own refusal row no longer counts as "already answered" for that question.</p>
+      <p><strong>Stricter gates.</strong> JOB 8 Won needs a Stripe read per booking, never a Skedda paid read or a Processed Money row alone (d383). An Access / PIN row never clears from a screenshot (d384). The close gate's <code>move_confirmed</code> takes a Registrar confirmation only when its <code>[mover:]</code> key is this Action's own question, and <code>clarify_held</code> only closes a Registrar <code>Class: reading</code> refusal (d385).</p>
+      <p><strong>Held.</strong> Nothing new is sent: the question waits for Junyan's Send. To undo, revert the PR and redeploy event-gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
       <h3>The Send Engine pauses its event-gate checks when event-gate stops answering<span class="kind">Send Engine &middot; failure &middot; send-engine Code.gs v43 (gateFetch_, gateTripCheck_, processRow_), send-engine PR 61, d343 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1230">desk-correspondence #1230</a></span></h3></summary>
       <p>Junyan: &ldquo;a timeout after v40 goes back to the Shipper to tighten the limits&rdquo;</p>
       <p><strong>Why.</strong> From 02:07 to 12:04 Toronto on 10/20, and from 21:46 on 10/20 to 07:57 on 10/21, every engine run was killed at Google's 6-minute limit (about 200 kills). event-gate was jammed (its own requests took over an hour), and the engine's call to it for the EOB check never came back, so no row behind that one went out. Apps Script cannot put a timeout on a call.</p>
