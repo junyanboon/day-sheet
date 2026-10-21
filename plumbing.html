@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-21</span>
+      <h3>The Concierge intake tick runs one at a time, so a slow full check can no longer pile up and jam event-gate<span class="kind">event-gate &middot; failure &middot; EVENT-GATE concierge_intake_ledger.py, test_intake_tick_single_flight.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1233">desk-correspondence #1233</a></span></h3></summary>
+      <p>Junyan: &ldquo;7 yes&rdquo;</p>
+      <p><strong>Why.</strong> event-gate jammed for hours twice: 2026-10-20 02:07 to 12:04 and 2026-10-20 21:46 to 2026-10-21 07:57 Toronto. A full intake check (about 1,600 Notion calls) takes longer than the 10-minute tick, and the scheduler's 600 s deadline does not stop it inside event-gate. Every tick while a full check was due started another one: 59 full checks ran at once on the shared Notion line, 58 then failed to save ("ledger page changed during this run"), and every route (/poll, /eob-check, the sweeps) waited 2000 to 6600 s. The Send Engine runs died waiting.</p>
+      <p><strong>Failure mode.</strong> A tick that finds the previous tick still running returns at once with <code>skipped: running</code>, makes no Notion call and writes nothing. The running tick finishes and saves; the next timer tick after it carries on as before. A tick that fails still frees the turn. Nothing else changes: same cadence, same full-check rules, same ledger.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
       <h3>A French iPhone "a attribué la mention « Aime » à « … »" reaction is a tapback, so it no longer draws a card<span class="kind">event-gate &middot; route &middot; EVENT-GATE tapback.is_tapback, app.py tapback drop, cards.could_match, messages/2026/10/19/sms-in-42c6f8bd &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1234">desk-correspondence #1234</a></span></h3></summary>
       <p>Junyan: &ldquo;(Fixer row 4007503281c48146b355fda82111e70d, 2026-10-21) "5 yes"&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-19 at 6:02 PM Natalia C. (studio 901) liked our "no staff available" text from a French iPhone, which writes <code>a attribué la mention « Aime » à « … »</code>. The shared tapback test did not know that wording, so the gate read our own quoted words, the codes card matched them, and the robot texted her the codes card 23 seconds later.</p>
