@@ -1364,6 +1364,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
+      <h3>The Analyst, Lost &amp; Found and the Timekeeper skip the Cleaning tab's "&lt;building&gt; Weekly check" pages<span class="kind">event-gate &middot; route &middot; EVENT-GATE lane_common.is_weekly_check_title, inspection_findings.recent_inspections, lost_found._visits, overtime_sweep.day_pages, library/cleaning-tab.md, fleet/wayfinder/cleaner-app/slices/07-weekly-check.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1220">desk-correspondence #1220</a></span></h3></summary>
+      <p>Junyan: &ldquo;S14, S15, S16&rdquo;</p>
+      <p><strong>Why.</strong> Piece 7 of the Cleaning tab saves Stefan's weekly studio inspection as its own 🧹 Studio Cleaning &amp; Inspections page, "&lt;building&gt; Weekly check", with Date and Owner Stefan (S15). Without a skip, the Analyst would read its Not OK remarks as findings and blame renters for them (they are already 🛠️ Maintenance Tasks), Lost &amp; Found would take it as one of his visits (a remark naming an item would mark it Found; ticks with no mention would raise the "silent" row), and the Timekeeper would find two pages for the day and update none.</p>
+      <p><strong>Route change.</strong> <code>inspection_findings.recent_inspections</code> asks Notion only for pages whose title does not contain "Weekly check" and drops any that slip through (<code>lane_common.is_weekly_check_title</code>), so the Analyst step and <code>lost_found._visits</code>, which both read through it, never see them, and they take none of the ten earlier-cleaning slots. <code>inspection_findings.run</code> checks again and says so in <code>skipped</code>. <code>overtime_sweep.day_pages</code> (used by <code>stefan_cleaning</code> and <code>stefan_notes</code>) leaves them out of the day's rows. Canon: <code>library/timekeeper-overtime.md</code>, <code>library/analyst-issue-prevention.md</code> Step 8a, <code>library/lost-and-found.md</code>, <code>library/cleaning-tab.md</code>. Pages titled "Studio Cleaning" or "Stefan" are read as before. <code>policy_physical.py</code> still accepts any staff page linked to a Maintenance Task as repair evidence for a person to verify; a weekly check page could be offered there, which is fine.</p>
+    </details>
+    </li>
     <li class="entry alert">
     <details>
       <summary><span class="when">2026-10-21</span>
