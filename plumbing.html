@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-21</span>
+      <h3>Weekly and monthly jobs no longer read overdue in their first weeks<span class="kind">Sentinel &middot; failure &middot; scripts/jobs_registry.py threshold_min, registry/README.md, services/event-gate/jobs_watch.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1221">desk-correspondence #1221</a></span></h3></summary>
+      <p>Junyan: &ldquo;n yes&rdquo;</p>
+      <p><strong>Why.</strong> The jobs check halves a row's time limit for its first weeks under a new owner. For the monthly store restore drill (first run 2026-11-02) that made the limit 16 days, so the Sentinel would have raised a false "overdue" alarm about 2026-11-18 while the drill was healthy.</p>
+      <p><strong>Route change.</strong> None.</p>
+      <p><strong>Failure mode.</strong> A row whose limit is over two days (weekly, monthly) is never halved now: half its limit falls before its next run is even due. A weekly or monthly job that really misses its run is still caught at its full limit. Daily and faster rows keep the halved first-days limit.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
+      <h3>The documents' Drive folder is copied to the server every Sunday, read only<span class="kind">offsite-drive &middot; route, cadence, failure &middot; services/offsite-drive/drive_docs.py, hosting/drive-docs-weekly.timer, hosting/drive-docs-check.timer, registry drive-docs-weekly, fast store slice 1b, d456 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1218">desk-correspondence #1218</a></span></h3></summary>
+      <p>Junyan: &ldquo;456 yes&rdquo;</p>
+      <p><strong>Why.</strong> Renter documents (agreements, insurance, booking summaries) live only in the "Rental Agreements &amp; Insurance" Google Drive folder. Junyan asked for a weekly copy of that folder in the server's backup, so a file deleted in Drive or a problem with the Drive account does not lose them.</p>
+      <p><strong>Route change.</strong> Every Sunday at 23:23 Toronto the VPS copies the send engine's documents folder into <code>/var/backups/drive-docs</code> with its own read-only Google sign-in (<code>drive.readonly</code>). Drive is only ever the source: nothing in Drive is changed or deleted. Files deleted in Drive stay in the copy, a changed file keeps its old version, and 8 weekly snapshots are kept. The copy stays on the VPS, not offsite, because the folder already lives on the same Drive as the offsite backups.</p>
+      <p><strong>Failure mode.</strong> A failed or missed copy writes no record; a daily 05:07 check keeps the record fresh only while the last good copy is at most a week and 3 hours old, so the Sentinel's <code>drive-docs-weekly</code> row goes stale and posts on Monday morning. A good week makes no message. A run refuses when the disk would have under 1 GB left. Off switch: <code>drive-docs off</code>, or <code>DRIVE_DOCS_DISABLED=1</code> in <code>/etc/offsite-drive/drive-docs.env</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
       <h3>event-gate opens a store API at /store/v1/, one token per caller, one probe table<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/store_api.py, store_db.py, store_tokens.py, store_migrations/002_store_api.sql, docs/store-api.md, d453 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1219">desk-correspondence #1219</a></span></h3></summary>
       <p>Junyan: &ldquo;453 yes, Done next&rdquo;</p>
       <p><strong>Why.</strong> The robot tables are moving from Notion to event-gate's own Postgres store, one table at a time. The Deck, the send engine, the FBS Monitor, the cloud lanes and Hermes do not run inside event-gate, so they need a way in over event-gate's existing HTTPS address. This is that door. No robot table moves and no robot uses it yet.</p>
