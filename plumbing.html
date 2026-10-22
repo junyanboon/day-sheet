@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-22</span>
+      <h3>The cleaning report now updates every night, and says who ticked what<span class="kind">event-gate cleaning-report &middot; cadence &middot; S85, S86, EVENT-GATE cleaning_report.py, /cleaning-report, hosting/install-cleaning-report.sh, library/cleaning-tab.md, library/lanes.md, registry/jobs.json, deck-app src/cleaning-report.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1255">desk-correspondence #1255</a></span></h3></summary>
+      <p>Junyan: &ldquo;85 yes build it now for example so I can see what it looks like 86 yes&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wants to see the week's cleaning report before Sunday night (S85: "85 yes build it now"), and to see who ticked each task once the Deck records it (S86: "86 yes").</p>
+      <p><strong>Cadence change.</strong> <code>danceannex-cleaning-report.timer</code> moves from Sunday 21:00:30 to every night 21:00:30 America/Toronto (a host systemd timer, BUSINESS, never a GitHub-hosted runner). Each night's run rewrites the current week's one 📊 Workflow Reports row ("Cleaning Report &lt;Monday&gt;", Started At the Monday) in place with Monday to that day; no second row. Sunday's run is the week's final one. The "visited fewer times than its target" and "weekly check not done" lines wait for Sunday. The JSON stays <code>version</code> 1 with new optional fields: <code>final</code>, <code>through</code>, and, when a day page has the Deck's "Who ticked" toggle, <code>who[]</code>, <code>buildings[].ticked_by[]</code> and <code>missed[].by[]</code>. Sends nothing and raises nothing on any day, Sunday included.</p>
+      <p><strong>Failure mode.</strong> A night the run fails or the VPS is down leaves the row as the night before wrote it (the timer does not catch up); the next night rewrites it. A day page without the "Who ticked" toggle adds nothing, and a line that does not parse is skipped. <code>CLEANING_REPORT_DISABLED=1</code> stops every run; a missed week is written by hand with <code>POST /cleaning-report?week=&lt;Monday&gt;</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>A Deck Send's gate checks go to the front of the shared Notion line<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/notion_http.py, /message-release-check, /message-dispatch-check, NOTION_RATE_RPS &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1256">desk-correspondence #1256</a></span></h3></summary>
+      <p>Junyan: &ldquo;d1 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-22 a reply Junyan sent from the Texts tab sat on "Sending" about a minute: the shared Notion line was at its cap (157 calls a minute, sweeps first) and the Send's gate calls waited about 21 s behind them.</p>
+      <p><strong>Route change.</strong> Notion calls made inside <code>/message-release-check</code> and <code>/message-dispatch-check</code> now take the next free turn, ahead of sweep calls already waiting; those move back one turn each. On a quiet line nothing changes. The overall pace (NOTION_RATE_RPS) and 429 cooldowns still hold for every call.</p>
+      <p><strong>Failure mode.</strong> If many Sends land at once, sweeps wait a little longer (one turn per priority call) and may defer their work to the next pass, as they already do when the line is full. To turn it off, empty <code>PRIORITY_ROUTES</code> in <code>notion_http.py</code> and deploy.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
       <h3>A Deck card charge now marks its Skedda booking paid<span class="kind">event-gate &middot; route &middot; services/event-gate/invoice_settle.py, services/event-gate/test_charge_settle.py, library/autonomy.md, library/desk-sort.md, skedda-cli PR 49 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1253">desk-correspondence #1253</a></span></h3></summary>
       <p>Junyan: &ldquo;3 yes (2026-10-22, Charges tab clean-up)&rdquo;</p>
       <p><strong>Why.</strong> A Deck card charge (<code>You · … · CHARGED — Stripe pi_…</code>) was marked paid in Skedda only by the hourly Desk Sort pass: nothing between 21:05 and 08:05, and nothing while its Stripe connector was down (six rows left Ruled Oct 11 to 14). On 2026-10-22 Viktoriia Osipovych (123208939, $14.69) and Sorina Colyn (123187014, $90.40), charged at 04:29, still read unpaid, so the Charges tab kept listing paid charges. Deck invoices had a deterministic settle since 2026-10-16; card charges did not.</p>
