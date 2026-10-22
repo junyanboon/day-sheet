@@ -1364,6 +1364,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>Treasurer's 1st-of-month pass files one guest-reviews look-back for Junyan<span class="kind">The Treasurer &middot; route, failure &middot; library/the-treasurer.md, Reviews list, treasurer-cloud prompt, d225, d291 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1249">desk-correspondence #1249</a></span></h3></summary>
+      <p>Junyan: &ldquo;put it into the already occurring 1st of the month bot&rdquo;</p>
+      <p><strong>Why.</strong> Nobody looked back at the reviews to see what to improve (Reviews spec, slice 04).</p>
+      <p><strong>Route change.</strong> On the 1st only, the Treasurer's cloud half (10:00) reads last month's rows on the Reviews list, every platform, and files one ✅ Actions row for Junyan keyed <code>[reviews:monthly:&lt;YYYYMM&gt;]</code>: what guests loved, what they complained about, and 2 or 3 things to improve, each naming the reviewers behind it. A month with no reviews still gets a row saying so. This merge puts the step in canon; the cloud trigger runs it from the first 1st after Junyan pushes its prompt v1.2.0, which names the step.</p>
+      <p><strong>Failure mode.</strong> A failed read of the Reviews list, or of the Actions dedup query, files nothing and says so in the Cloud follow-up section of the Treasurer's report. A rerun finds the key and files no second row. Off switch: drop the step from the cloud prompt.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>An instalment payer's Stripe plan payments count toward their balance<span class="kind">event-gate &middot; route &middot; services/event-gate/chase_sweep.py, services/event-gate/test_chase_sweep.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1264">desk-correspondence #1264</a></span></h3></summary>
+      <p>Junyan: &ldquo;"Stephanie is now paying directly through Stripe so we will need to track it through there as well" (2026-10-22)&rdquo;</p>
+      <p><strong>Why.</strong> Stephanie Brinning pays her $705.12 balance (QBO RB1174) $25 a week. Until Oct 20 she paid by Interac and the chase sweep recorded each deposit; since Oct 21 she pays through a weekly Stripe subscription (sub_1USqhgPunGOWPTflgALQE4QL), which nothing counted, so the Deck stuck at $170.00 of $705.12.</p>
+      <p><strong>Route change.</strong> An instalment row (<code>WAITING … Interac from "&lt;PAYER&gt;"</code>) may also carry <code>[stripe-plan:sub_…]</code> in its Notes. Each pass the chase sweep reads that subscription's paid invoices from the row's <code>since</code> on and, for each not yet tagged, appends <code>Chase sweep · &lt;stamp&gt; · Stripe $25.00 from &lt;PAYER&gt; received YYYY-MM-DD [stripe:&lt;in_id&gt;] · paid $X of $Y, $Z left</code>. Interac and Stripe lines make one running total, in the order the money arrived; the row closes at its Amount as before (<code>[INTERAC-PAID-V1]</code>). A Stripe payment counts as a payment received for the weekly reminder. Other charges on the customer (a late fee) are not counted.</p>
+      <p><strong>Failure mode.</strong> A Stripe read error writes nothing on that row that pass and sends no reminder; other rows go on. <code>CHASE_STRIPE_PLAN_DISABLED=1</code> turns the Stripe half off (Interac only, as before).</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>The Platform Watch copies Peerspace, Giggster and Tagvenue reviews of us into the Reviews list once a day<span class="kind">Platform Watch &middot; route, cadence, failure &middot; scripts/platform_review.py, platform-watch/RUNBOOK.md § Reviews, Reviews spec slice 02, d290, d291 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1251">desk-correspondence #1251</a></span></h3></summary>
+      <p>Junyan: &ldquo;we have the platofmr watch it can go in and read the reviews&rdquo;</p>
+      <p><strong>Why.</strong> Platform reviews of us show their words only inside the logged-in host pages, never in an email or a public page, so nothing kept them. Junyan changed d290 on 2026-10-17 so the Platform Watch, already logged in, reads them; the Reviews spec was approved the same day ("291 yes").</p>
+      <p><strong>Route change.</strong> This merge and the runbook's new § Reviews of us section go live together. Once a day, on the Platform Watch's first run after 08:00 Toronto, it opens each site's host reviews page read only and, for every review from the last 60 days, runs <code>scripts/platform_review.py upsert</code>. The script keys each review <code>&lt;site&gt;:&lt;review or booking id&gt;</code> in the Reviews list's <code>Booking</code> column and writes <code>Posted on</code>, <code>Reviewer</code>, <code>Review Date</code>, <code>Stars</code>, <code>Review Text</code>, <code>Review Link</code>, <code>Booked Via</code>, and <code>Artist</code> with <code>Match</code> from the same artist match as the Log rows. A rerun writes nothing; on a row already there it fills only empty words, stars, link, studio and Artist (a hand-set Match is kept); a Peerspace review whose words are hidden until we review back gets <code>Review Text</code> "hidden until we review" and its words on a later day. Google rows are never touched (the Responder keeps owning them). The report line gains <code>reviews &lt;site&gt; &lt;read&gt;/&lt;new&gt;/&lt;filled&gt;</code>. Nothing is posted, typed or sent on any platform.</p>
+      <p><strong>Failure mode.</strong> A failed Notion read, bad input, two rows on one key, a Google row on the key, or a write that does not read back prints <code>ERROR</code> and writes nothing for that review; the watch names it under <code>problems</code> and tries again the next day. A login page goes through <code>autofill_credential</code>; a CAPTCHA stops that site. To switch it off, delete the § Reviews of us section from the runbook (backup <code>RUNBOOK.md.bak-2026-10-22-reviews</code>).</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-22</span>
