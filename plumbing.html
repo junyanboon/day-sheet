@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>The Texts list marks every chat with a waiting draft, with a Drafts button to show only those<span class="kind">The Deck &middot; tool, cadence &middot; deck-app src/texts.js draftsByKey and buildList, src/texts-cards.js cardsById, src/index.js GET /api/texts textDrafts, public/texts-tab.js, test/texts-drafts-builder.test.js, test/texts-drafts-routes.test.js, test/texts-drafts-page.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/330">deck-app #330</a></span></h3></summary>
+      <p>Junyan: &ldquo;"how will I be able to know that a message draft is sitting in here without going to the messeage tab?" then "461 yes" (2026-10-22)&rdquo;</p>
+      <p><strong>Why.</strong> A robot draft showed only inside its chat, so nobody knew it was there without opening the chat or the Messages tab.</p>
+      <p><strong>Tool surface.</strong> <code>GET /api/texts</code> (the newest page) also reads Message Queue rows with Channel SMS at Pending Review, Needs Fix or Error (one query, 100 rows) and reads the Artist cards they link to by id (at most 10 new page reads a list, cached 10 minutes). Each chat with a waiting draft carries <code>draft: &lt;count&gt;</code>; a renter with a draft and no recent text gets a row of its own. Nothing is written.</p>
+      <p><strong>Cadence.</strong> The Texts tab now reloads its list on every Message Queue nudge (bursts fold into one read), so a pill comes and goes as drafts are made, sent or rejected. A failed drafts read leaves the list without pills.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-22</span>
