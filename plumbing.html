@@ -1367,6 +1367,24 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-21</span>
+      <h3>The waiting-list robot counts a keep-your-slot ask the desk retitled, so it never queues a second one<span class="kind">slot-waitlist &middot; failure &middot; EVENT-GATE slot_waitlist.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1237">desk-correspondence #1237</a></span></h3></summary>
+      <p>Junyan: &ldquo;3 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-20 an attended session rewrote Anita Pandey's held keep-your-slot ask (901, Wednesday) and replaced its Message Code, so the <code>[waitlist-ask:&lt;row&gt;:&lt;term&gt;]</code> key left the row. The next pass at 19:11Z found no ask and queued a second one, which the desk then set to Will Not Send (Fixer row BT).</p>
+      <p><strong>Failure mode.</strong> When no keyed ask for the term is open or sent, the robot now also reads the holder's own queue rows. An open or sent row counts as the ask when it names the board row (its id or its name), or is a keep-your-slot message naming the row's day and studio. Its Sent At starts the 48-hour clock as before. Closed rows (Will Not Send, Cancelled), access texts and messages about another day or studio do not count. If that read fails, the row is reported as an error and nothing is queued for it. The SLOT_WAITLIST mode is unchanged.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-21</span>
+      <h3>The Desk Sort closes a no-longer-relevant or stale row only through the close gate<span class="kind">desk-sort &middot; failure &middot; CANON library/desk-sort.md rules A and D, step 3; scripts/close_decide.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1238">desk-correspondence #1238</a></span></h3></summary>
+      <p>Junyan: &ldquo;4 yes&rdquo;</p>
+      <p><strong>Why.</strong> Aakanksha Jha's 509B Scheduling row (Actions 3fb7503281c4811499b0e0bb0e400210) was closed Cancelled as "no longer relevant" with no <code>Close gate ·</code> line (Fixer row EV). Rule D already sent every rule A close to <code>close_decide.py</code>, but the rule A bullets, the step 3 stale close and the artist-gated decline still told the Desk Sort to set the closing Status itself.</p>
+      <p><strong>Failure mode.</strong> Each of those lines now names the close gate and the reason to fill (<code>date_passed</code>, <code>booking_gone</code>, <code>linked_closed</code>, <code>answered_elsewhere</code>, <code>paid_stripe</code>, <code>run_passed</code>), for every row type, Scheduling included. When the gate keeps a row open, or no reason fits, the row is carded for Junyan instead of closed. Rule D says there is no other way: a self-close with no <code>Close gate ·</code> line was made outside the gate. The local fallback skill says the same.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
       <h3>A Peerspace "booked your space" email always opens a Sales ticket<span class="kind">The Responder &middot; route &middot; scripts/intake_decide.py, library/the-responder.md, d472 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1239">desk-correspondence #1239</a></span></h3></summary>
       <p>Junyan: &ldquo;472 yes&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-19 a pass formed Jack C.'s Peerspace booking email as an automated notice and intake declined it, so no Sales ticket opened. Every other first "booked your space" email since October has its own ticket.</p>
