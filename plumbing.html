@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-22</span>
+      <h3>A hand-linked platform booking with an unreadable name is no longer held<span class="kind">The Host &middot; failure &middot; event-gate booking_reconcile.py (_or_linked, hand_linked_artist), d73, d74, PR 1192 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1244">desk-correspondence #1244</a></span></h3></summary>
+      <p>Junyan: &ldquo;73 yes, 74 yes&rdquo;</p>
+      <p><strong>Why.</strong> Trisha T.'s Tagvenue booking (509B, Skedda 122314671) sat at Needs Fix with "platform Artist unresolved: unusable" although the Bookings board row already linked her card by hand. The reconcile only trusted that link when the name matched several cards (<code>ambiguous</code>), so an unreadable name never reached it. Fix A (d73, the "(moved from ...)" stamp coming off) already shipped in PR 1192 on 2026-10-18.</p>
+      <p><strong>Failure mode.</strong> When the platform resolver answers <code>unusable</code> or <code>no-evidence</code>, the daily lanes' reconcile now keeps the board row's linked Artist and logs "kept the board row's linked Artist", as it already did for <code>ambiguous</code>. Only when: the booking has no Skedda holder, it is not a relay conflict, the live occurrence matched uniquely, the end time matches, and the linked card is open or merges to one open card. A read failure, a relay conflict, a closed card with no merge, a card the pass would create, or an empty link still holds the row and its messages.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
       <h3>A renter's repeat of dates goes to the ticket holding them, and a merged reply must read as one message<span class="kind">The Responder &middot; route, failure &middot; scripts/intake_decide.py scripts/queue_draft.py services/event-gate/reply_check.py library/the-responder.md library/studio-tickets-intake.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1241">desk-correspondence #1241</a></span></h3></summary>
       <p>Junyan: &ldquo;5 yes, 6 no age cap&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-21 Nina Li texted "Could i book Nov 29 and Dec 6 from 5:30-7:30 as i mentioned prior?". The Responder opened a new "Heels Classes" Sales ticket instead of her open Rehearsal ticket, which waited on exactly those dates, and its holding reply was merged under a two-day-old draft on her other ticket, so the text had two openers and two topics.</p>
