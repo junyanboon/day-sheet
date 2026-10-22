@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>The Analyst drafts our review of each Peerspace and Giggster guest as one task for Junyan<span class="kind">The Analyst &middot; route, failure &middot; EVENT-GATE guest_review.py, analyst_sweep.py, library/analyst-issue-prevention.md (Step 8b), library/desk-sort.md, d223, d224, d291 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1252">desk-correspondence #1252</a></span></h3></summary>
+      <p>Junyan: &ldquo;it actually should be done the day after. The mess is usually determined the day after by stefan&rdquo;</p>
+      <p><strong>Why.</strong> The platforms ask us to review every guest and nobody did. Junyan ruled that a robot drafts it from the booking's facts, the day after, once Stefan's inspection is in, and he pastes it (d223, d224; Reviews spec approved, d291). This is slice 03.</p>
+      <p><strong>Route change.</strong> A new Step 8b runs in the Analyst's daily pass (04:06), right after the inspection step, on today's pass only. For each Peerspace or Giggster booking that ended yesterday or earlier (last 5 days) it waits for Stefan's inspection of that studio after the booking, or 3 days. Then it writes one ✅ Actions row for Junyan, keyed <code>[guest-review:&lt;platform&gt;:&lt;booking id&gt;]</code>: a fixed-pattern draft (warm when clean, short and honest naming a pinned inspection finding or a Timekeeper alarm or extra-time ticket), the review link, the facts, and "Paste it on the platform and tick this done". When he ticks it done the Desk Sort notes "our review posted &lt;date&gt;" on the guest's Reviews row. Nothing is posted or sent and no message is queued.</p>
+      <p><strong>Failure mode.</strong> A failed Skedda, inspection or Notion read files nothing for that booking and shows on the IPR report and in the pass failures; the next pass tries again (the key stops a second task). An uncertain inspection finding never names a renter. Writes follow <code>ANALYST_LIVE</code>; <code>GUEST_REVIEW_DISABLED=1</code> turns the step off.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-22</span>
