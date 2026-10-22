@@ -1364,6 +1364,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>The emergency scorecard judges only a renter's own words after a reaction, and "still" counts only when they are still stuck<span class="kind">event-gate &middot; failure &middot; EVENT-GATE emergency_scorecard.py text_done and STILL_RE, tapback.py split, test_emergency_scorecard.py, d417 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1254">desk-correspondence #1254</a></span></h3></summary>
+      <p>Junyan: &ldquo;for the emergency robot error is this supposed to be here? Isn't it fixed? (2026-10-22, Natalia C. card)&rdquo;</p>
+      <p><strong>Why.</strong> Natalia C. (901, 2026-10-19) "liked" our no-staff text, then asked "Is that still ok?". The week card listed her as an emergency that wrote back still stuck. PR 1234 already makes a bare French reaction a tapback; two gaps were left.</p>
+      <p><strong>Failure mode.</strong> A reaction with words of its own was judged on the whole text, quoted echo included, so door words in our own message could open a line; now only the renter's own words are judged (<code>tapback.split</code>), and a bare reaction is never a line or a repeat. "Wrote back still stuck" matched any "still"; now it needs a stuck sense ("still can't", "still locked", "still not working", "still going off", "stuck"), so a question like "Is that still ok?" leaves the line as it was. Paging is unchanged.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-22</span>
