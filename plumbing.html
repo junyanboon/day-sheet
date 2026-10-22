@@ -1367,6 +1367,37 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-22</span>
+      <h3>Platform guests with no phone get a phone ask the day before, never an access text by relay<span class="kind">The Registrar &middot; route, failure &middot; services/event-gate/booking_sweep.py, services/event-gate/send_verifier.py, services/event-gate/outbound_guard.py, services/event-gate/test_relay_hta_retired.py, library/autonomy.md, library/queue-fbs-messages.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1269">desk-correspondence #1269</a></span></h3></summary>
+      <p>Junyan: &ldquo;we need to fix it so that HTA's no longer get queued up to platform bookings. and just a request for phone number is sent instead one day prior.&rdquo;</p>
+      <p><strong>Why.</strong> For a Peerspace, Tagvenue or Giggster guest with no phone on file, the Registrar queued the access text (door and alarm codes) for the platform relay the day before, held for a person. On 2026-10-22 the Send-Timing Verifier released one of these rows with nobody pressing Send: <code>HTA-relay-</code> was not on its hold list, so with the same-day hold switch off the row read as a normal access text.</p>
+      <p><strong>Route change.</strong> The relay access text step is gone. About a day before the booking (20 h or less before start) the Registrar queues one phone reminder through the relay, from its own How to Respond card, with no codes; its card's Send Mode decides whether it sends by itself, as before. Once a number arrives, the Greeter files it and the normal SMS access text goes. The 3 h escalation still asks a person.</p>
+      <p><strong>Failure mode.</strong> Two new guards for any relay access row still waiting: the verifier holds every <code>HTA-relay-</code> code or <code>[platform-booking:]</code> row whatever the hold switch says, and dispatch refuses an <code>HTA-relay-</code> row without a Deck release stamp (reason <code>relay_access_unreleased</code>). Reverting the PR restores the old step.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>The Custodian's terminal gate call is on the allow-list, and a lost Stripe connector files one Action<span class="kind">The Custodian &middot; tool, failure &middot; .claude/settings.json, library/job-8-review.md, scripts/terminal_decide.py, scripts/test_job8_terminal_call.py, Actions 3fd7503281c48165bc4bfe049a5c17dc &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1267">desk-correspondence #1267</a></span></h3></summary>
+      <p>Junyan: &ldquo;17 yes&rdquo;</p>
+      <p><strong>Why.</strong> The 02:35 pass of 2026-10-22 ran <code>terminal_decide.py</code> with 20 Sales forms on stdin. The script was not on <code>.claude/settings.json</code>'s allow-list, so the cloud permission check judged the call afresh and refused it as an external write; all 20 Sales tickets were held. The same pass had no <code>stripe-mcp</code> tool, so every Won would have been held anyway, and nothing told Junyan.</p>
+      <p><strong>Tool surface.</strong> <code>.claude/settings.json</code> now allows <code>python3 scripts/terminal_decide.py *</code> and the exports line <code>export NOTION_TOKEN=injected NOTION_RATE_STATE=/tmp/rate.sqlite3</code>. The script's code is unchanged (only its usage text): it writes to Notion only with <code>--apply</code>, through the terminal gate's one PATCH.</p>
+      <p><strong>Route change.</strong> JOB 8 writes the forms with the Write tool to <code>/tmp/f/&lt;name&gt;.json</code> (at most 10 per file) in its own call, then runs exactly <code>export NOTION_TOKEN=injected NOTION_RATE_STATE=/tmp/rate.sqlite3 &amp;&amp; python3 scripts/terminal_decide.py /tmp/f/&lt;name&gt;.json</code> (plus <code>--apply</code> to write), the Responder's "call of its own" shape.</p>
+      <p><strong>Failure mode.</strong> A refused call is retried once in the same shape; refused again, those tickets stay at Review with the refusal on the <code>LEDGER-V1 held=</code> line. With no <code>stripe-mcp</code> tool in the session the pass files ONE Action for Junyan, <code>Custodian trigger lost stripe-mcp</code> (one per outage), instead of holding every Won in silence.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>The code change list counts a run up to 3 h into the window as its baseline<span class="kind">The Doorman &middot; failure &middot; alarm-monitor alarm_monitor/code_changes.py, tests/test_code_changes_read.py, library/doorman-access-lifecycle.md, d21 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1266">desk-correspondence #1266</a></span></h3></summary>
+      <p>Junyan: &ldquo;20 yes&rdquo;</p>
+      <p><strong>Why.</strong> Job B reads <code>code_changes(hours=48)</code> after the morning <code>code_mirror</code> run. <code>covered</code> needed a run at or before the window start to the second, but that run lands between 06:11 and 06:17, so the run 48 h back was often a few minutes inside the window and <code>covered</code> read false at random, which made Job B skip.</p>
+      <p><strong>Route change.</strong> None. <code>changes_in</code> now takes a run up to <code>SLACK_HOURS = 3</code> after the window start as the baseline; a baseline reset or degraded run only breaks coverage when it is more than 3 h inside the window. <code>FRESH_HOURS</code> stays 26.</p>
+      <p><strong>Failure mode.</strong> For the first two passes after a baseline run <code>covered</code> still reads false: the Doorman reports "change list warming up, covered from &lt;date&gt;", never "no changes", and Job B is not counted complete (d21: no).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
       <h3>A robot's own feedback rows go back to that robot, and stuck Fixer rows reach the Ops Lead<span class="kind">The Concierge, The Timekeeper, The Doorman, The Responder, The Custodian &middot; route, failure &middot; lane_feedback.py, concierge_feedback_route.py, concierge_feedback_backlog.py, operational_feedback.py, library/action-board-routing.md, library/timekeeper-overtime.md, library/concierge-orchestration.md [R-feedback-overdue] [R-evidence-row-wait], d82 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1268">desk-correspondence #1268</a></span></h3></summary>
       <p>Junyan: &ldquo;82 yes&rdquo;</p>
       <p><strong>Why.</strong> Amandeep K.'s Timekeeper review row (3fd7503281c481779a49ca2a76401178) sat New from Oct 18. The router gave it to the Fixer, which only runs when Junyan opens it; the Timekeeper never looked at its own row again; the Concierge pushed her ticket a day each morning. Staff had already added her 15 minutes on Oct 18. About 37 rows sat with the Fixer this way.</p>
