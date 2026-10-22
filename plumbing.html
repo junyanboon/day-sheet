@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-22</span>
+      <h3>The Concierge closes a finished ticket only after the close gate says close<span class="kind">The Concierge (Closeout C) &middot; failure &middot; EVENT-GATE close_gate.py, test_close_gate_ticket.py, scripts/close_decide.py, library/concierge-orchestration.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1243">desk-correspondence #1243</a></span></h3></summary>
+      <p>Junyan: &ldquo;d386&rdquo;</p>
+      <p><strong>Why.</strong> Concierge Closeout C closed Sales and Customer Care tickets on the model's own say-so with <code>ticket_edit.py --close</code>; the close gate only knew Actions rows and held drafts. Junyan, 2026-10-22: "d386 A: build the ticket_finished reason, merge, canon only, no deploy."</p>
+      <p><strong>Failure mode.</strong> Closeout C fills one close form per candidate (<code>reason</code> <code>ticket_finished</code>, <code>outcome</code>, <code>linked</code> = the ticket's newest Sent queue row, <code>quote</code> from it) and runs <code>scripts/close_decide.py</code>. The script reads the ticket, its queue rows and Actions, its body to-dos and the Correspondence Log, and says <code>close</code> only when the ticket is open (not Review, not Gate: Money, Revisit After not ahead), nothing waits, the newest row is Sent with a receipt and holds the quote, no <code>[AI]</code>/<code>[STAFF]</code> step is unticked, the renter wrote nothing since, and the outcome fits the board. It never writes the ticket: on <code>close</code> it prints the <code>ticket_edit.py --close</code> command with its evidence in the why. Any unread record keeps the ticket open. The model still judges the SOP outcome, Won vs Lost, a ticket Junyan ruled open and the 48-hour How-to-Access check.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
       <h3>A hand-linked platform booking with an unreadable name is no longer held<span class="kind">The Host &middot; failure &middot; event-gate booking_reconcile.py (_or_linked, hand_linked_artist), d73, d74, PR 1192 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1244">desk-correspondence #1244</a></span></h3></summary>
       <p>Junyan: &ldquo;73 yes, 74 yes&rdquo;</p>
       <p><strong>Why.</strong> Trisha T.'s Tagvenue booking (509B, Skedda 122314671) sat at Needs Fix with "platform Artist unresolved: unusable" although the Bookings board row already linked her card by hand. The reconcile only trusted that link when the name matched several cards (<code>ambiguous</code>), so an unreadable name never reached it. Fix A (d73, the "(moved from ...)" stamp coming off) already shipped in PR 1192 on 2026-10-18.</p>
