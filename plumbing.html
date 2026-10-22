@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>The Google Reviews list becomes one Reviews list for every platform, and the review ask skips a review on any of them<span class="kind">The Responder &middot; route &middot; scripts/google_review_alert.py, library/the-responder.md, library/response-resolver.md, library/desk-sort.md, d222 (2026-10-17), d291 (2026-10-17) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1246">desk-correspondence #1246</a></span></h3></summary>
+      <p>Junyan: &ldquo;291 yes&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wants every review of us in one place, whichever platform it was posted on (2026-10-17, d222). The Reviews spec was approved the same day ("291 yes"); this is its slice 01.</p>
+      <p><strong>Route change.</strong> The 🌟 Google Reviews Notion list (same data source, <code>b06989f1-300a-4c9d-afa5-2c268fa7ad0c</code>) is renamed Reviews and gains a <code>Posted on</code> choice (Google, Peerspace, Giggster, Tagvenue) and a <code>Booking</code> text column. Every existing row is set to Google. <code>scripts/google_review_alert.py</code> now prints <code>posted_on: Google</code>, and the Responder writes <code>Posted on = Google</code> on each new row from a Google alert. The review ask reads the whole list: a review on any platform means no ask. The Google alert path itself is unchanged (row, reply task, Replied when the Desk Sort closes the task).</p>
+      <p><strong>Failure mode.</strong> Same as before: a failed or throttled read of the list writes nothing and defers the ask (<code>review-ask deferred: reviews unreadable</code>). Nothing here sends; the ask stays a Pending Review draft and the Google reply is Junyan's. No switch: to undo, revert this PR; the extra Notion columns are harmless to the old canon.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-22</span>
