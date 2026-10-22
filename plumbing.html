@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-22</span>
+      <h3>Texts tab opens a chat at once, never hangs on "Loading texts…", and a sent text keeps one steady "Sending" until its time shows<span class="kind">The Deck &middot; route, failure &middot; deck-app public/texts-tab.js, src/phonecom-read.js list, src/texts-cache.js conversation and cached, src/deck-live-object.js textsCached, src/index.js /api/texts/conversation, src/texts.js buildList and buildTimeline, test/texts-smooth-page.test.js, test/texts-smooth-server.test.js, test/texts-routes.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/331">deck-app #331</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-10-22 "Can we make the text loading and sending a lot more smooth" and "sending then saving then sending again and then later finally it shows the time"&rdquo;</p>
+      <p><strong>Why.</strong> On the phone a chat could sit on a blank "Loading texts…" (Stephanie Brinning, 09:52), and a sent text's line flipped Sending, Saving, Sending, then the time.</p>
+      <p><strong>Route change.</strong> <code>GET /api/texts/conversation?key=…&amp;cached=1</code> answers from what the DeckLive object already holds for that number (no Phone.com, no Notion read), so the page draws the chat at once while the full read runs. The full read is unchanged. Nothing sends from here; the Send Engine is still the only sender.</p>
+      <p><strong>Failure mode.</strong> Each Phone.com read now gives up after 10 s (504 "Phone.com did not answer in 10 s"); a chat the cache already holds is then shown as it is. Two reads of the same chat at once share one Phone.com read. The page drops a chat read after 20 s, tries again twice, then shows the error inside the chat with Try again, keeping Back and the typing box. Coming back to the page re-asks a stuck read. A queue row that is Sent with no Phone.com copy yet shows as sent at its Sent At instead of "Sending".</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
       <h3>The Texts list marks every chat with a waiting draft, with a Drafts button to show only those<span class="kind">The Deck &middot; tool, cadence &middot; deck-app src/texts.js draftsByKey and buildList, src/texts-cards.js cardsById, src/index.js GET /api/texts textDrafts, public/texts-tab.js, test/texts-drafts-builder.test.js, test/texts-drafts-routes.test.js, test/texts-drafts-page.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/330">deck-app #330</a></span></h3></summary>
       <p>Junyan: &ldquo;"how will I be able to know that a message draft is sitting in here without going to the messeage tab?" then "461 yes" (2026-10-22)&rdquo;</p>
       <p><strong>Why.</strong> A robot draft showed only inside its chat, so nobody knew it was there without opening the chat or the Messages tab.</p>
