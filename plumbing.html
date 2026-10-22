@@ -1364,6 +1364,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>A Deck card charge now marks its Skedda booking paid<span class="kind">event-gate &middot; route &middot; services/event-gate/invoice_settle.py, services/event-gate/test_charge_settle.py, library/autonomy.md, library/desk-sort.md, skedda-cli PR 49 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1253">desk-correspondence #1253</a></span></h3></summary>
+      <p>Junyan: &ldquo;3 yes (2026-10-22, Charges tab clean-up)&rdquo;</p>
+      <p><strong>Why.</strong> A Deck card charge (<code>You · … · CHARGED — Stripe pi_…</code>) was marked paid in Skedda only by the hourly Desk Sort pass: nothing between 21:05 and 08:05, and nothing while its Stripe connector was down (six rows left Ruled Oct 11 to 14). On 2026-10-22 Viktoriia Osipovych (123208939, $14.69) and Sorina Colyn (123187014, $90.40), charged at 04:29, still read unpaid, so the Charges tab kept listing paid charges. Deck invoices had a deterministic settle since 2026-10-16; card charges did not.</p>
+      <p><strong>Route change.</strong> <code>invoice_settle.py</code> now also reads every Action created since the same floor with a Deck <code>CHARGED — Stripe pi_…</code> line and no <code>[SKEDDA-SETTLED-V1:&lt;pi_id&gt;]</code>. The PaymentIntent must read succeeded in CAD with <code>deck_action</code> = that Action, not refunded or disputed; its <code>skedda_booking</code> on its <code>skedda_occurrence</code> day must be one unpaid, non-repeating booking priced the same to the cent and held by the Artist card's Skedda account or the receipt email. Then the same <code>/settle-charged-booking</code> preview, confirm and re-read, and a <code>Charge settle · …</code> line with the marker. The Desk Sort now only closes such rows.</p>
+      <p><strong>Also.</strong> skedda-cli PR 49 (deployed 2026-10-22) fixes the reader behind a false alarm from <code>settle_charged_occurrence</code>. skedda-mcp read a "repeat N times" series (<code>COUNT=N</code>) as repeating forever, so the tool's series check counted dates that do not exist: on Avante's 122025470 (2 real dates, Oct 18 and Nov 1) the correct Nov 1 settle ended <code>series_unchanged: false</code> over 14 phantom dates. PR 49 reads COUNT and keeps the series check before the paid mark.</p>
+      <p><strong>Failure mode.</strong> Same as invoices: a mismatch or a repeating date files one Ops Lead Action <code>[skedda-settle:&lt;pi_id&gt;]</code> and marks the row; an outage writes nothing and is retried. <code>CHARGE_SETTLE_DISABLED=1</code> turns off the card half alone; <code>INVOICE_SETTLE_DISABLED=1</code> turns off both.</p>
+    </details>
+    </li>
     <li class="entry alert">
     <details>
       <summary><span class="when">2026-10-22</span>
