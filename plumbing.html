@@ -1366,6 +1366,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>Order emails move the Cleaning tab's shopping list to Ordered and Shipped by themselves<span class="kind">event-gate procurement (new) &middot; cadence, route &middot; EVENT-GATE procurement_sweep.py, test_procurement_sweep.py, /procurement-sweep, library/cleaning-tab.md, library/lanes.md, registry procurement-sweep, fleet/wayfinder/cleaner-app/slices/10-weekly-inspection-and-supplies.md, deck-app src/cleaning-supplies.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1240">desk-correspondence #1240</a></span></h3></summary>
+      <p>Junyan: &ldquo;S66, S67&rdquo;</p>
+      <p><strong>Why.</strong> The Cleaning tab's Supplies segment raises one ✅ Actions to Perform row "Buy supplies: &lt;item&gt; (&lt;building&gt;)" for the Ops Lead when an item runs low (S66). Junyan wants the list to track itself from his order emails (S67: "it gets automatically paired and tracked on the shopping list"), so nobody types Ordered or Shipped by hand.</p>
+      <p><strong>Route change.</strong> A new pass rides the minute poll at most every 30 minutes (no timer), plus <code>POST /procurement-sweep</code> by hand (<code>dry_run=true</code> writes nothing). It reads the business mailbox's mail under the label "Junyan - Procurement" from the last 14 days, keeps the order emails (Ordered / order confirmation; Shipped / Delivered), matches each order's item lines to the open "Buy supplies:" rows by their words, and adds one Notes line per row: "&lt;date&gt; Ordered|Shipped: &lt;order&gt;[, arrives &lt;day&gt;] [mail &lt;id&gt;]". The Deck reads that line as the row's stage. Keyed by the email, never backwards, never deleting; only Notes is written. <code>PROCUREMENT_SWEEP_DISABLED=1</code> stops it, <code>PROCUREMENT_SWEEP_DRY_RUN=1</code> reads only. conftest turns it off for every other test.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
+      <h3>event-gate gets a Notion copy tool for the fast store; the nightly store backup counts rows inside its own snapshot<span class="kind">event-gate &middot; tool, failure &middot; services/event-gate/store_copy.py, store_copy_maps.py, store_migrations/003_notion_copy.sql, hosting/store_backup.py, d453 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1235">desk-correspondence #1235</a></span></h3></summary>
+      <p>Junyan: &ldquo;453 yes, (2) build the copy tool (slice 3)&rdquo;</p>
+      <p><strong>Why.</strong> The robot tables are moving from Notion to event-gate's own Postgres store one table at a time. Each move starts by copying the Notion table into the store. This is the tool that does it. Notion stays the source of truth; no robot reads or writes the copy yet, and the copied table is not opened to the store API.</p>
+      <p><strong>Tool change.</strong> <code>store_copy.py</code> (run by hand inside the event-gate container) copies one mapped Notion data source into its store table: insert or update by Notion page id, never delete, keep Notion's edit times, archived and trash flags and the raw properties. A <code>--dry-run</code> reads and reports and writes nothing. Each run prints one report line (seen, inserted, updated, unchanged, failed, calls, why it stopped, row count and checksum) and records it in <code>store_copy_runs</code>. First table: Live Tests (<code>live_tests</code>, migration 003). It shares the robots' Notion line (<code>notion_http</code>): its own cap is 0.25 calls a second (the line is 2.7), at most 200 calls a run by default (1000 hard cap), and it will not start between 01:00 and 11:00 UTC unless forced. The nightly store backup now counts rows inside the same database snapshot <code>pg_dump</code> uses, so the restore drill stays exact once tables take writes.</p>
+      <p><strong>Failure mode.</strong> The copy stops cleanly and can be rerun to carry on when it hits its call budget, a Notion rate limit, a line wait over 10 s, 01:00 UTC, or another copy of the same table (exit 3); a Notion or store error stops it with exit 1. Every finished 100-row batch is already saved. A page whose values do not fit is kept raw and counted as failed. If the backup's snapshot session fails, that night's backup fails with no archive (as a failed <code>pg_dump</code> did before) and the Sentinel sees the stale record. Off switch: do not run the tool; the tables it fills are read by nothing.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-21</span>
       <h3>The waiting-list robot counts a keep-your-slot ask the desk retitled, so it never queues a second one<span class="kind">slot-waitlist &middot; failure &middot; EVENT-GATE slot_waitlist.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1237">desk-correspondence #1237</a></span></h3></summary>
       <p>Junyan: &ldquo;3 yes&rdquo;</p>
