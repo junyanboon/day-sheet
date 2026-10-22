@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-21</span>
+      <h3>A Peerspace "booked your space" email always opens a Sales ticket<span class="kind">The Responder &middot; route &middot; scripts/intake_decide.py, library/the-responder.md, d472 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1239">desk-correspondence #1239</a></span></h3></summary>
+      <p>Junyan: &ldquo;472 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-19 a pass formed Jack C.'s Peerspace booking email as an automated notice and intake declined it, so no Sales ticket opened. Every other first "booked your space" email since October has its own ticket.</p>
+      <p><strong>Route change.</strong> <code>intake_decide.py</code> now reads Peerspace's own "&lt;Guest&gt; booked your space on &lt;date&gt;" email (sender on peerspace.com, subject not "Re:" or "Fwd:") as <code>platform_booking</code>, whatever the form says: a Sales ticket, or the open ticket the form names. A form that says a care intent and quotes the guest's ask keeps its Customer Care ticket.</p>
+      <p><strong>Failure mode.</strong> The guard only moves a message toward a ticket, so a miss costs at most one extra ticket. Our own reply copies, relay messages, texts and lookalike senders are not matched. Each booking email opens its own stub unless the form names the guest's open ticket or the thread key finds one. There is no switch: revert this change to turn it off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-21</span>
       <h3>One booking whose payer matches no single Artist no longer fails the whole money check<span class="kind">reconcile-sweep &middot; failure &middot; EVENT-GATE unpaid_review.py, money_reconcile.py, reconcile_sweep.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1236">desk-correspondence #1236</a></span></h3></summary>
       <p>Junyan: &ldquo;2 yes&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-20 at 00:46Z the reconcile sweep failed with "money reconcile source/readback failed: SweepError: secondary holder phone has no unique Artist" and named neither the lane nor the booking. It was Skedda 123113024 (509A, Oct 29) in the unpaid-booking review, and that one booking stopped the review for every other booking in the round (Fixer row BN).</p>
