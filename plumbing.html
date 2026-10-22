@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-22</span>
+      <h3>A renter's repeat of dates goes to the ticket holding them, and a merged reply must read as one message<span class="kind">The Responder &middot; route, failure &middot; scripts/intake_decide.py scripts/queue_draft.py services/event-gate/reply_check.py library/the-responder.md library/studio-tickets-intake.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1241">desk-correspondence #1241</a></span></h3></summary>
+      <p>Junyan: &ldquo;5 yes, 6 no age cap&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-21 Nina Li texted "Could i book Nov 29 and Dec 6 from 5:30-7:30 as i mentioned prior?". The Responder opened a new "Heels Classes" Sales ticket instead of her open Rehearsal ticket, which waited on exactly those dates, and its holding reply was merged under a two-day-old draft on her other ticket, so the text had two openers and two topics.</p>
+      <p><strong>Route.</strong> For a text from a known renter that no thread key placed, intake_decide.py now reads the renter's open Sales and Customer Care tickets. Exactly one whose Current Block or Situation names a date in the ask (else a time) gets the message, <code>found_by: artist and date match</code>. Open tickets with no match refuse the form (exit 2) until it names the ticket or gives <code>new_because</code>.</p>
+      <p><strong>Failure mode.</strong> queue_draft.py --merge-into-waiting no longer joins a reply when the merged body would carry a second greeting or acknowledgement opener ("Hi Nina!", "Got it, thanks Nina.") past its first line, or when the waiting row is on another ticket. The reply is written as its own row with a NOT-MERGED note. A waiting row with no ticket takes the reply's ticket on its relation. No age limit.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
       <h3>Order emails move the Cleaning tab's shopping list to Ordered and Shipped by themselves<span class="kind">event-gate procurement (new) &middot; cadence, route &middot; EVENT-GATE procurement_sweep.py, test_procurement_sweep.py, /procurement-sweep, library/cleaning-tab.md, library/lanes.md, registry procurement-sweep, fleet/wayfinder/cleaner-app/slices/10-weekly-inspection-and-supplies.md, deck-app src/cleaning-supplies.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1240">desk-correspondence #1240</a></span></h3></summary>
       <p>Junyan: &ldquo;S66, S67&rdquo;</p>
       <p><strong>Why.</strong> The Cleaning tab's Supplies segment raises one ✅ Actions to Perform row "Buy supplies: &lt;item&gt; (&lt;building&gt;)" for the Ops Lead when an item runs low (S66). Junyan wants the list to track itself from his order emails (S67: "it gets automatically paired and tracked on the shopping list"), so nobody types Ordered or Shipped by hand.</p>
