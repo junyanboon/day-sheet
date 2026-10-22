@@ -1367,6 +1367,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-22</span>
+      <h3>Cleaning tab Supplies: a Buy row the sweep made shows at once (no stuck Saving); shopping rows lay out at every width<span class="kind">The Deck &middot; failure &middot; deck-app src/cleaning-supplies.js (SuppliesDesk.ask, supplies, refresh, sweep, listed); public/cleaning-tab.js (shopHtml, .shoprow CSS); test/cleaning-supplies-desk.test.js; test/cleaning-inspection-ui.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/350">deck-app #350</a></span></h3></summary>
+      <p>Junyan: &ldquo;"It's not formatted correctly" (2026-10-22, screenshot of the shopping list stuck on Saving)&rdquo;</p>
+      <p><strong>Why.</strong> After PR 346 the list showed every low item as "Saving…" though the sweep had made "Buy supplies: Large Garbage Bags (42.5L) (527)" and "Small Garbage Bags (20 x 21L) (527)" (20:47 UTC). The kept copy was written only after the whole sweep, one Notion create after another, so until the last raise finished (or for good, if the alarm was cut short) no row it had made showed. Saving sat beside the row's text with the list's full-width rule, squeezing the name into a narrow column.</p>
+      <p><strong>Failure mode, now.</strong> The refresh keeps the copy before the sweep, and each row the sweep makes or finds goes into the copy as it lands. A raise Notion refuses outright (4xx, such as 429 rate limited) clears its guard and is tried on the next read; only a raise that may have landed (no answer, or 5xx) still waits 5 minutes under <code>sp:raise:&lt;b&gt;:&lt;key&gt;</code>. While any low item has no row yet, a read asks for a fresh copy after 10 seconds instead of 60. The refresh ask <code>sp:refresh</code> now holds its time: one older than 2 minutes (an alarm cut short, or the old <code>true</code>) is asked again, so the copy never freezes.</p>
+      <p><strong>Layout.</strong> A shopping row is two parts: the text (name, then the status pill and building beside it, wrapping only when needed; the pill never wraps) and the actions on the right, where Saving… now sits.</p>
+      <p><strong>Storage.</strong> <code>sp:refresh</code> changes from <code>true</code> to a time in ms. No new key, binding, migration or secret.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
       <h3>Every stuck Fixer row gets its Ops Lead Action on the next pass, no cap of 5<span class="kind">The Concierge &middot; route &middot; concierge_feedback_backlog.py, library/concierge-orchestration.md [R-feedback-overdue], library/action-board-routing.md, d82, d99 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1272">desk-correspondence #1272</a></span></h3></summary>
       <p>Junyan: &ldquo;99 why/ I want to drain them asap&rdquo;</p>
       <p><strong>Why.</strong> PR 1268 (d82) raised one Ops Lead Action per overdue Fixer row but only 5 a pass, so the ~37 stuck rows would have reached the Deck over about a week. Junyan wants them all showing so he can work them through the day.</p>
