@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
+      <h3>Concierge accepts a no-message receipt on a ticket at Review<span class="kind">The Concierge &middot; route, failure &middot; EVENT-GATE concierge_intake.py, library/concierge-orchestration.md, d35 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1295">desk-correspondence #1295</a></span></h3></summary>
+      <p>Junyan: &ldquo;yes&rdquo;</p>
+      <p><strong>Why.</strong> An answered inbound whose ticket sat at Review (waiting for the Custodian's JOB 8 close) could never leave needs_pickup, because the reader only took a no-message receipt on a ticket at Gate. Concierge passes reported "advanced 0" and Skipped Steps.</p>
+      <p><strong>Route change.</strong> <code>non_message_proves</code> now takes a receipt on a ticket at Gate or Review. The receipt must still match the ticket's position, Current Block digest and Revisit After exactly. Routing, In Progress, New and Won/Lost/Done tickets are still refused, and the receipt never closes or moves the ticket.</p>
+      <p><strong>Failure mode.</strong> If the ticket changes after the receipt (block edited, moved to Gate or Routing), the receipt stops proving and the inbound is listed again. A ticket later closed by JOB 8 is reported as handled elsewhere. There is no switch: to undo it, revert this PR and redeploy event-gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
       <h3>A ticket with no SOP, or no checklist, gets a Fixer row and never goes to Review; intake copies the checklist; a viewing-only ask is one Customer Care ticket<span class="kind">event-gate invariants, auto-review, concierge intake reader; Responder intake_decide &middot; route &middot; EVENT-GATE no_sop_watch.py, invariants.py, auto_review.py, concierge_intake.py, scripts/sop_attach.py, scripts/intake_decide.py, library/concierge-orchestration.md [R-sop-attach], library/the-responder.md, library/job-10-desk-invariants.md, team/lane-detective/journal/2026-10-23-no-sop-sales-ticket-read-the-jev-line-in-the-audit-row.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1288">desk-correspondence #1288</a></span></h3></summary>
       <p>Junyan: &ldquo;d51, d52, d53, d55 (d54 no)&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-23, 11 of 35 open Sales tickets and 10 of 38 open Customer Care tickets had no SOP, and about 6 more Sales tickets had an SOP but no checklist. Intake linked an SOP only on a confident Jev pick and never wrote the steps; the Concierge's pickup and its done-test did not check; nothing looked afterwards; auto-review moved SOP-less tickets to Review.</p>
