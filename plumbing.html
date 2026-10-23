@@ -1367,6 +1367,33 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
+      <h3>PR test runs stop holding the VPS runner for merged PRs and timed-out runs<span class="kind">ci tests &middot; cadence, failure &middot; .github/workflows/test-concierge-deadlines.yml, test-claude-settings.yml, test-sales-decay.yml, scripts/test_workflow_runners.py, d17 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1311">desk-correspondence #1311</a></span></h3></summary>
+      <p>Junyan: &ldquo;d17&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-23 the Concierge test queue on the one VPS test runner reached 10 runs. 4 of the 8 queued runs were for PRs already merged, and 7 runs that afternoon hit the 10 minute cap on the busy 2-core VPS and ended "cancelled" with no result.</p>
+      <p><strong>Route change.</strong> Closing or merging a PR now cancels its queued or running Concierge test run (a <code>closed</code> trigger joins the per-PR concurrency group and runs nothing). The Concierge cap is 20 minutes, not 10. Test Claude settings and Test sales decay now keep one run per PR, so a newer push to a PR cancels its older run (pushes to main are never cancelled). Deploys are untouched; they already run on their own runner (<code>DEPLOY_RUNNER</code> = eventgate-deploy).</p>
+      <p><strong>Failure mode.</strong> A run that truly hangs now holds the test runner up to 20 minutes instead of 10. To undo, revert this PR.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
+      <h3>The Send Engine can write the Queue and Run Monitor through event-gate's Notion door (off until switched on)<span class="kind">Send Engine &middot; route, failure &middot; send-engine PR https://github.com/junyanboon/send-engine/pull/62 (v44, StoreRouter.gs, notionFetchOnce_), desk-correspondence PR https://github.com/junyanboon/desk-correspondence/pull/1287 (the door), fast store slice 5b, d122 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1297">desk-correspondence #1297</a></span></h3></summary>
+      <p><strong>Why.</strong> The Send Engine writes the Message Queue and Run Monitor straight into Notion, so event-gate's fast store only learns those writes at the daily copy. Sending the same call through event-gate's Notion door keeps the store in step (fast store slice 5b).</p>
+      <p><strong>Route change.</strong> New in v44 and <strong>off by default</strong>: with the router off, every Notion call goes exactly as in v43. Once Junyan switches a table on (<code>storeRouterQueueOn</code>, <code>storeRouterRunMonitorOn</code>, Script Property <code>STORE_ROUTER_LIVE</code>), the engine sends that table's row creates and its patches of rows it has already seen to the door at <code>/store/v1/notion/</code>, which makes the Notion call with event-gate's token. Queries go to the door only for a table event-gate has flipped. Page reads never go to the door (d113): the last checks before a send read Notion. Comments, blocks, <code>SweepWatch.gs</code> and other tables stay on Notion. Door calls use the v43 event-gate pause.</p>
+      <p><strong>Failure mode.</strong> If the door refuses a call (busy, off, store down, unknown row), the engine makes the same call to Notion itself, then files a touched report (<code>/store/v1/notion/touched</code>, kept as <code>STORE_TOUCHED_&lt;id&gt;</code> properties, at most 300, sent after the heartbeat) so event-gate re-reads that page into the store. A create that the door may have sent (no answer, Notion's own 5xx, a timeout) is never resent: the engine stops on it with "NOT resent", the same as a Notion timeout today, so no message goes twice. <code>InsuranceIntake.gs</code> keeps its own one-shot Queue create on Notion and reports it as touched. Off switch: <code>storeRouterOff</code> in the editor.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
+      <h3>Alarms page shows app arm and disarm in Today, and the pill follows the live feed<span class="kind">The Deck &middot; failure &middot; d3 and d5 2026-10-23, src/alarm-panel.js liveArmEventsOf, public/alarm-live.js mergeArm attribute fromFeed notes, test/alarm-remote-events.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/377">deck-app #377</a></span></h3></summary>
+      <p>Junyan: &ldquo;5 yes&rdquo;</p>
+      <p>An app or web arm / disarm (studio_activity actor_source remote_login) now shows in the Alarms Today log as "&lt;login&gt; (app)" ("Remote (app)" when unnamed, "You · from the Deck" for the signed-in person's own press). A board "Studio (remote)" row is no longer taken for the late twin of a nearby keypad row, which is how the 509A app arm at 15:10 vanished behind Katherine's 15:07 keypad arm. The Armed / Disarmed pill now follows the newest timed feed event when the panel read disagrees, unless that read was taken more than 10 minutes after the event; while it does, a quiet line says "Armed 15:10 by ... from the live feed. The panel read has not caught up yet." The pill's button acts on the state it shows. After a Deck press the page re-reads the feed at once.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
       <h3>A booking-on-credit text gets one reply: the Responder stands down for the credit lane, and the Desk Sort rewrites the waiting draft<span class="kind">The Responder, The Desk Sort &middot; route, failure &middot; scripts/credit_claim.py, scripts/queue_draft.py, services/event-gate/reply_check.py (credit_self_book), library/the-responder.md, library/desk-sort.md, library/job-2-triage.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1306">desk-correspondence #1306</a></span></h3></summary>
       <p>Junyan: &ldquo;4 yes&rdquo;</p>
       <p><strong>Why.</strong> Ishfaaq Jookhun texted at 11:46 asking to use his $20 credit for Sunday. The credit lane filed its Review row keyed <code>[credit:c37fd99a-...]</code> at 11:50. The Responder still queued a quick answer at 11:56 telling him to book on Skedda himself, and the Desk Sort held a second reply at 12:08 on the Action ("no need to book it yourself, we will confirm") with no Sales ticket link. Two replies to one text, saying opposite things.</p>
