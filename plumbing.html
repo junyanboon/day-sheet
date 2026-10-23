@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
+      <h3>The move robot shifts a platform renter's booking on the day when they text an exact new time<span class="kind">event-gate registrar move &middot; route &middot; EVENT-GATE move_sweep.py, test_platform_same_day_shift.py, library/studio-tickets-bookings.md, sops/pages/803170c5-efc8-4608-bb17-512d84f9d7a5.md, sops/ROUTING.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1304">desk-correspondence #1304</a></span></h3></summary>
+      <p>Junyan: &ldquo;d1 (2026-10-23)&rdquo;</p>
+      <p><strong>Why.</strong> Anjay F (Peerspace, Skedda 122946238, Studio 901) asked on the day to shift 2:30 to 4:00 PM to 3:00 to 4:30 PM and it was moved by hand. Junyan: "We need to set up a real system that can be auto-done by the bot."</p>
+      <p><strong>Route change.</strong> A platform renter's SMS on the booking's own day that names an exact new time (same studio, same length, booking not started) now finds the booking through the Artist card's platform booking link (<code>platform_shift_target</code>), skips the 24 h notice and the account-class guard, and moves at once through <code>/move-booking</code> (room and 15-min buffer checked there; a clash is the held counter-offer). The confirmation goes out like any verified move. When the new end is later, one Access/PIN Actions row asks the Door Checker to make sure the alarm window reaches new end + 15 min. A platform-chat (relay email) ask still gets the platform move card for a person. Vague asks, longer windows and other dates are unchanged.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
       <h3>Test runs can now run on Junyan's Mac as well as the VPS<span class="kind">ci tests &middot; failure &middot; .github/workflows/test-claude-settings.yml, test-concierge-deadlines.yml, test-sales-decay.yml, ~/actions-runner-mac (runner junyan-mac) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1309">desk-correspondence #1309</a></span></h3></summary>
       <p>Junyan: &ldquo;d11, d10 no, d13 no&rdquo;</p>
       <p><strong>Why.</strong> Test runs queued for hours behind the one VPS runner (hostinger-watchlist, 2 cores, load 10; 9 queued on 2026-10-23). d11: add a free runner on Junyan's Mac. No second VPS runner (d10 no), no paid GitHub minutes (d13 no).</p>
