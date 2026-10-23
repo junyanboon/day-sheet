@@ -1367,6 +1367,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
+      <h3>A Deck card charge marks its Skedda booking paid on the press, prepaid-hours cards too, instead of waiting up to 10 minutes for the round<span class="kind">event-gate, The Deck &middot; route, failure &middot; services/event-gate/invoice_settle.py settle_now, POST /charge-settle, test_charge_settle.py, plan_allowance_sweep.py, deck-app src/charge-settle-now.js, deck-app PR 366, PRs 1285 and 1290, d8, d96 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1285">desk-correspondence #1285</a></span></h3></summary>
+      <p>Junyan: &ldquo;8 yes&rdquo;</p>
+      <p><strong>What happened.</strong> Junyan charged Maggie Morrison's Oct 20 and Oct 22 509B bookings on the Deck at 11:51 and looked at Skedda: still unpaid. The charge-settle half of invoice_settle (2026-10-22) only runs in the 10-minute reconcile round, so Skedda lagged up to 10 minutes. It settled both at the next round. His words: "It needs to match skedda and the skedda still is showing unpaid even though I billed maggie's oct 20 and oct 22 bookings." "8 yes".</p>
+      <p><strong>Fix.</strong> <code>invoice_settle.settle_now(action, pi)</code> runs the round's own step (<code>_handle</code>, pulled out of <code>run</code>) for the one charge the press just wrote, under the same switches (RECONCILE_SWEEP_LIVE and MONEY_RECONCILE_LIVE; INVOICE/CHARGE_SETTLE_DISABLED), guards and note. A lock keeps the press and the round from settling at the same time; a busy round, an outage or a row without the CHARGED line yet leaves the charge to the round. Route: <code>POST /charge-settle</code> (gate token). The Deck worker calls it right after a successful card charge (deck-app src/charge-settle-now.js).</p>
+      <p><strong>Prepaid-hours cards too (later on 2026-10-23).</strong></p>
+      <p>Junyan charged David Garzon's AAP extra time (Skedda 122769140, $40.68, Oct 23 19:30) and the Deck said "Skedda is marked paid within 10 minutes": settle_now skipped it on purpose (the prepaid-hours bot marks a plan booking paid at full price and writes the split). Now settle_now runs that bot for the one booking on the press (<code>plan_allowance_sweep.run(only=[id])</code>, its own guards) on or after the booking day, and before the day reports <code>booking_day</code> (the bot waits for the day by design, d96), so the Deck can say which.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
       <h3>Concierge accepts a no-message receipt on a ticket at Review<span class="kind">The Concierge &middot; route, failure &middot; EVENT-GATE concierge_intake.py, library/concierge-orchestration.md, d35 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1295">desk-correspondence #1295</a></span></h3></summary>
       <p>Junyan: &ldquo;yes&rdquo;</p>
       <p><strong>Why.</strong> An answered inbound whose ticket sat at Review (waiting for the Custodian's JOB 8 close) could never leave needs_pickup, because the reader only took a no-message receipt on a ticket at Gate. Concierge passes reported "advanced 0" and Skipped Steps.</p>
@@ -1569,6 +1580,18 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> The first live Gmail tab listed no email at all. The search is built from pieces (not spam, not only our own mail, the hide list, each Robot mail label), and no helper session may read the mailbox to see which piece Gmail misreads.</p>
       <p><strong>Tool surface.</strong> New read behind the session cookie: <code>GET /api/gmail/check</code>. For each piece of the list search, added one at a time, it returns Gmail's estimate of matching threads and how many one page of 10 holds, plus two plain searches to compare with (<code>in:inbox</code>, <code>-in:spam</code>) and which Robot mail labels exist in the mailbox. Numbers and label names only, never a subject, sender or word of an email. About 20 <code>threads.list</code> calls (200 units) per open. Each <code>GET /api/gmail</code> now logs one line of numbers: threads from Gmail, threads listed, Robot mail labels known.</p>
       <p><strong>Failure mode.</strong> A list read that fails now tries again after 10 s while the tab is in view; before, the note said "Trying again shortly" and nothing came until a reload.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>The Skedda sync fills the Amount of unpaid-review rows (no-match and collision reasons) once their Booking ref names one booking<span class="kind">event-gate &middot; route &middot; services/event-gate/skedda_sync.py, test_skedda_sync.py, unpaid_review NO_MATCH_REASON and COLLISION_REASON, PRs 1275 and 1278 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1275">desk-correspondence #1275</a></span></h3></summary>
+      <p>Junyan: &ldquo;6 yes&rdquo;</p>
+      <p><strong>What happened.</strong> On the Deck's new Charges list, Maggie Morrison's Oct 20 509B booking (Skedda 122897275, $18.08) showed Charge card, and the press answered "Skedda now shows $18.08 ... this row says $0.00. The sync updates the row within 10 minutes." It never would. The row is unpaid_review's <code>[UNPAID-REVIEW-V1:]</code> Review row with Verify by "no unique exact booking ID/studio/occurrence match"; the Desk Sort later wrote <code>skedda:122897275</code> into Booking ref, but skedda_sync only owned Charge rows, Review rows with a KIND charge card, and recurring-occurrence rows. Its Amount stayed empty.</p>
+      <p><strong>Fix.</strong> <code>skedda_sync.candidate</code> also owns a Review <code>[UNPAID-REVIEW-V1:]</code> row whose Verify by starts with the no-match reason (<code>NO_MATCH_REASON</code>, shared with unpaid_review) once its Booking ref names one booking. The usual verdict then fills Amount from Skedda. Other Review reasons still need a charge card.</p>
+      <p><strong>By hand today.</strong> Maggie's Oct 20 row Amount set to $18.08 from a live Skedda read, with a Notes line. Two more rows of this shape (Skedda 121547496 Oct 22, 121547497 Oct 29) fill on the first tick after deploy.</p>
+      <p><strong>2026-10-23: collision rows too (Junyan "6 yes").</strong></p>
+      <p>The two other Maggie rows (Skedda 121547496 Oct 22, 121547497 Oct 29, 7:15 PM) carry unpaid_review's <code>COLLISION</code> reason ("duplicate or legacy booking references need consolidation"), not the no-match reason, so the first fix did not reach them (the note above said it would; it was wrong). The sync now owns both reasons (<code>COLLISION_REASON</code>, shared with unpaid_review). Oct 22's Amount was set by hand ($13.56, 2026-10-23 04:37); Oct 29 fills on the first tick after deploy.</p>
     </details>
     </li>
     <li class="entry det">
