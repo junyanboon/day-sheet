@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
+      <h3>An opened email in the Gmail tab reads like a letter; platform tracking links, HTML codes and small print fold away<span class="kind">The Deck &middot; tool &middot; deck-app src/email.js cleanPlain, splitSmall, tidy; public/gmail-tab.js paragraphs; test/email-builder.test.js; test/gmail-tab-page.test.js; branch prototype/gmail-email-look (look A) &middot; <a href="https://github.com/junyanboon/deck-app/pull/357">deck-app #357</a></span></h3></summary>
+      <p>Junyan: &ldquo;"Yes it does but the formatting is bad" and "Clean letter looks good to me" (d280), "This one from Karly V is just a garble" (2026-10-23)&rdquo;</p>
+      <p><strong>Why.</strong> Opened emails showed every line as its own paragraph, platform small print as loud as the guest's words, and Peerspace's plain-text copy as a wall of tracking links with <code>&quot;</code> codes left in.</p>
+      <p><strong>Tool surface.</strong> Display only; no new route, no new Gmail call, nothing sent or changed in Gmail. The email builder now cleans a plain-text body (drops links in brackets or angle brackets, decodes HTML codes, collapses blank lines), joins short label lines into one paragraph, and moves platform small print (Tagvenue's T&amp;C and response sections, footer lines such as "Unsubscribe" in the back half of an email, a lone "Reply" button word) into a new <code>small</code> field on each email. The page shows paragraphs, "Label:value" lines with the label in bold, long links shortened (opening in a new tab), and the small print behind a "&lt;platform&gt; small print" button.</p>
+      <p><strong>Failure mode.</strong> A rule that folds too much hides words behind the button; they are never dropped, one click shows them.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
       <h3>The Gmail tab's search uses only Robot mail labels the mailbox has, so one bad label can no longer empty the list<span class="kind">The Deck &middot; failure &middot; deck-app src/email.js listQuery, src/gmail-cache.js readPage, src/index.js GET /api/gmail/check, test/email-builder.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/356">deck-app #356</a></span></h3></summary>
       <p>Junyan: &ldquo;"it worked but there's no mail here" (2026-10-23); "278 yes" (the counts-only check that found it)&rdquo;</p>
       <p><strong>Why.</strong> The first live Gmail tab listed no email. The counts-only check showed the search matched 201 threads until the piece <code>-label:instagram-&amp;-whatsapp-copies</code>, then 0: that label does not exist in the mailbox yet, and its "&amp;" made Gmail match nothing.</p>
@@ -1381,6 +1391,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> The first live Gmail tab listed no email at all. The search is built from pieces (not spam, not only our own mail, the hide list, each Robot mail label), and no helper session may read the mailbox to see which piece Gmail misreads.</p>
       <p><strong>Tool surface.</strong> New read behind the session cookie: <code>GET /api/gmail/check</code>. For each piece of the list search, added one at a time, it returns Gmail's estimate of matching threads and how many one page of 10 holds, plus two plain searches to compare with (<code>in:inbox</code>, <code>-in:spam</code>) and which Robot mail labels exist in the mailbox. Numbers and label names only, never a subject, sender or word of an email. About 20 <code>threads.list</code> calls (200 units) per open. Each <code>GET /api/gmail</code> now logs one line of numbers: threads from Gmail, threads listed, Robot mail labels known.</p>
       <p><strong>Failure mode.</strong> A list read that fails now tries again after 10 s while the tab is in view; before, the note said "Trying again shortly" and nothing came until a reload.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-22</span>
+      <h3>A guest replying from a fresh Peerspace relay is asked about by booking, with a deadline; card merges move queue and Actions rows<span class="kind">The Responder &middot; failure &middot; services/event-gate/same_person.py, scripts/artist_card.py --same-person-ask, scripts/merge_cards.py, library/the-responder.md, d25 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1273">desk-correspondence #1273</a></span></h3></summary>
+      <p>Junyan: &ldquo;25 yes&rdquo;</p>
+      <p><strong>Why.</strong> Hsu Lab H. booked Studio 693 on Peerspace for Oct 30 and replied through the Peerspace app, which forwards from a fresh relay nothing links to the booking. The Responder made a second card, his phone landed on it, and the Oct 30 access text had no number. The hand merge then left his queued messages and Actions rows on the closed card.</p>
+      <p><strong>Change.</strong> The "Is this the same &lt;name&gt;?" question now names the earlier card's upcoming booking (card, studio, date) and carries an answer-by time, an hour before the access text is written (8 AM the day before for an evening booking), also set as the Actions row's Deadline. When the name is too short to match, the Responder files the question itself with <code>artist_card.py --same-person-ask</code> and names the booking in Reasoning. <code>merge_cards.py</code> also finds Message Queue and Actions rows linked to the merged card and moves them to the surviving card, and running it on a card merged by hand moves the leftovers.</p>
     </details>
     </li>
     <li class="entry det">
