@@ -1367,6 +1367,24 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
+      <h3>The Concierge's wait notes survive its own ticket write, read through the intake ledger, and an unexplained skipped pass says so<span class="kind">The Concierge &middot; failure, route &middot; EVENT-GATE concierge_items.py, concierge_intake.py, concierge_intake_ledger.py, scripts/lane_heartbeat.py, library/concierge-orchestration.md, d40, d41 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1298">desk-correspondence #1298</a></span></h3></summary>
+      <p>Junyan: &ldquo;d40 yes, d41 yes with the rate set to 2&rdquo;</p>
+      <p><strong>Why.</strong> The cloud Concierge kept ending passes as Skipped Steps. Each wait note (checkpoint) was refused "source changed" because the pass's own ticket write moved the ticket's edit time, and every cursor call re-read every source in full, which ran the Notion line out.</p>
+      <p><strong>Route change.</strong> <code>concierge_items.py</code> and <code>concierge_intake.py</code> now read the intake through the tick's ledger (read-only; anything edited since the ledger's stamp is proved again), never the tick's stored inventory. Each listed item carries <code>checkpoint_core</code>; a checkpoint that sends it with the ticket's read-back <code>ticket_edited_at</code> is accepted when only that stamp moved. The cloud prompt v1.11, pushed right after this merge, adds <code>NOTION_RATE_RPS=2</code> to the line it already uses for the ledger page, and asks for the read-back stamp and a reason.</p>
+      <p><strong>Failure mode.</strong> No ledger page set, or an unreadable ledger: a full read, as before. Any other edit, or a different stamp, is still refused "source changed" and the pass re-lists once. A pass that is not complete and gives no reason now shows "No reason given by the lane; read the report" on its Run Monitor row instead of a blank.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
+      <h3>An app or web disarm no longer checks a booking in on the Deck<span class="kind">The Deck &middot; failure &middot; d6 2026-10-23, deck-app PR 377 follow-up, src/alarm-panel.js liveArmEventsOf, public/alarm-live.js applyLive contextLine, test/alarm-remote-not-arrival.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/378">deck-app #378</a></span></h3></summary>
+      <p>Junyan: &ldquo;6 yes&rdquo;</p>
+      <p>Only a keypad disarm (studio_activity actor_source keypad) may mark a booking arrived or set its "in" time on the Studios tab and the Alarms booking cards, and only a keypad disarm names who "came in" on the Alarms per-studio line. An app or web disarm (remote_login or remote), or a row with no actor_source, still shows in the Alarms Today log but is never written onto a booking, so the login email (e.g. info@danceannex.ca) no longer appears as a renter's check-in. This matches fbs-monitor build.py, which already skips non-keypad presses when pairing arrivals. Departures and billing are unchanged.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
       <h3>PR test runs stop holding the VPS runner for merged PRs and timed-out runs<span class="kind">ci tests &middot; cadence, failure &middot; .github/workflows/test-concierge-deadlines.yml, test-claude-settings.yml, test-sales-decay.yml, scripts/test_workflow_runners.py, d17 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1311">desk-correspondence #1311</a></span></h3></summary>
       <p>Junyan: &ldquo;d17&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-23 the Concierge test queue on the one VPS test runner reached 10 runs. 4 of the 8 queued runs were for PRs already merged, and 7 runs that afternoon hit the 10 minute cap on the busy 2-core VPS and ended "cancelled" with no result.</p>
