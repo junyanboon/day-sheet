@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
+      <h3>Test runs can now run on Junyan's Mac as well as the VPS<span class="kind">ci tests &middot; failure &middot; .github/workflows/test-claude-settings.yml, test-concierge-deadlines.yml, test-sales-decay.yml, ~/actions-runner-mac (runner junyan-mac) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1309">desk-correspondence #1309</a></span></h3></summary>
+      <p>Junyan: &ldquo;d11, d10 no, d13 no&rdquo;</p>
+      <p><strong>Why.</strong> Test runs queued for hours behind the one VPS runner (hostinger-watchlist, 2 cores, load 10; 9 queued on 2026-10-23). d11: add a free runner on Junyan's Mac. No second VPS runner (d10 no), no paid GitHub minutes (d13 no).</p>
+      <p><strong>Change.</strong> The three test-*.yml jobs now ask for <code>[self-hosted, ci-test]</code> instead of <code>watchlist-hostinger</code>. Both hostinger-watchlist (label added) and the Mac runner junyan-mac (labels mac-ci, ci-test; launchd service for user jboon under ~/actions-runner-mac) carry <code>ci-test</code>, so whichever is free takes the run. The Mac skips setup-python (v5 hardcodes a root-only tool folder on macOS) and uses Python 3.12.15 from its runner PATH. The Mac only works while it is awake; when it sleeps the VPS still takes every run. Deploy, decay, qa-review, watchlist and scribe still use DC_RUNNER / their own labels and stay on the VPS.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
       <h3>The Concierge's wait notes survive its own ticket write, read through the intake ledger, and an unexplained skipped pass says so<span class="kind">The Concierge &middot; failure, route &middot; EVENT-GATE concierge_items.py, concierge_intake.py, concierge_intake_ledger.py, scripts/lane_heartbeat.py, library/concierge-orchestration.md, d40, d41 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1298">desk-correspondence #1298</a></span></h3></summary>
       <p>Junyan: &ldquo;d40 yes, d41 yes with the rate set to 2&rdquo;</p>
       <p><strong>Why.</strong> The cloud Concierge kept ending passes as Skipped Steps. Each wait note (checkpoint) was refused "source changed" because the pass's own ticket write moved the ticket's edit time, and every cursor call re-read every source in full, which ran the Notion line out.</p>
