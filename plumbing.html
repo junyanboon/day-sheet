@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
+      <h3>The Gmail tab labels each platform email (Booked, Booking request, Inquiry, Message, Cancelled) and folds emails like Gmail<span class="kind">The Deck &middot; tool &middot; deck-app src/email.js NOTICES, noticeOf, NOISE; public/gmail-tab.js notice, fold, Expand all; test/email-builder.test.js; test/gmail-tab-page.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/360">deck-app #360</a></span></h3></summary>
+      <p>Junyan: &ldquo;"booked your space and these types of things.. would it make sense for these to be more clear? This way I know it's an instant book or inquiry. Also I want to be able to easily expand and collapse older emails (like gmail)" (2026-10-23)&rdquo;</p>
+      <p><strong>Why.</strong> A platform email's subject was the only clue to whether it was an instant booking or an inquiry, and an opened email could not be folded again.</p>
+      <p><strong>Tool surface.</strong> Display only; no new route or Gmail call. The builder adds <code>notice</code> ({k, name}) to a platform thread's list row and thread, read from the newest platform email's subject and Gmail snippet, the two things the list's metadata read has (cancelled or declined, booked or approved, booking request, inquiry, message; first match wins). Peerspace sends a first inquiry as "X sent you a new message" with "Inquiry For" in the words, so it shows Inquiry when the snippet reaches those words, else Message. The page shows it as a coloured label before the subject in the list and in the opened thread's header. A click on any email's header (or Enter on it) folds or opens it, except when it ends a text selection; what you folded stays folded and the email you were reading stays open when a new one arrives; "Expand all" / "Collapse all" sits beside the labels. Peerspace's "Send message", "Send them a message to coordinate their arrival." and "Reply to this email to message …" lines join the folded small print.</p>
+      <p><strong>Failure mode.</strong> A subject that fits no pattern gets no label (as before); a wrong match shows the wrong label, never hides mail.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
       <h3>An opened email in the Gmail tab reads like a letter; platform tracking links, HTML codes and small print fold away<span class="kind">The Deck &middot; tool &middot; deck-app src/email.js cleanPlain, splitSmall, tidy; public/gmail-tab.js paragraphs; test/email-builder.test.js; test/gmail-tab-page.test.js; branch prototype/gmail-email-look (look A) &middot; <a href="https://github.com/junyanboon/deck-app/pull/357">deck-app #357</a></span></h3></summary>
       <p>Junyan: &ldquo;"Yes it does but the formatting is bad" and "Clean letter looks good to me" (d280), "This one from Karly V is just a garble" (2026-10-23)&rdquo;</p>
       <p><strong>Why.</strong> Opened emails showed every line as its own paragraph, platform small print as loud as the guest's words, and Peerspace's plain-text copy as a wall of tracking links with <code>&quot;</code> codes left in.</p>
