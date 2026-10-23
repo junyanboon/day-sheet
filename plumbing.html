@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
+      <h3>The Gmail tab's search uses only Robot mail labels the mailbox has, so one bad label can no longer empty the list<span class="kind">The Deck &middot; failure &middot; deck-app src/email.js listQuery, src/gmail-cache.js readPage, src/index.js GET /api/gmail/check, test/email-builder.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/356">deck-app #356</a></span></h3></summary>
+      <p>Junyan: &ldquo;"it worked but there's no mail here" (2026-10-23); "278 yes" (the counts-only check that found it)&rdquo;</p>
+      <p><strong>Why.</strong> The first live Gmail tab listed no email. The counts-only check showed the search matched 201 threads until the piece <code>-label:instagram-&amp;-whatsapp-copies</code>, then 0: that label does not exist in the mailbox yet, and its "&amp;" made Gmail match nothing.</p>
+      <p><strong>Failure mode.</strong> The list search is now built from the labels the mailbox has (<code>labels.list</code>, read once an hour), and only labels whose Gmail search name is plain letters, digits, dots and dashes go in it. A missing or oddly named Robot mail label is left out of the search; the builder still drops Robot mail by label id, and Instagram and WhatsApp copies by their subject. The check now tests each label piece on its own and the whole search the tab uses.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
       <h3>The Gmail tab gets a counts-only check of its Gmail search, and really retries after a failed read<span class="kind">The Deck &middot; tool, failure &middot; deck-app src/index.js GET /api/gmail/check, "gmail list" log line, src/email.js QUERY_PIECES, src/gmail-read.js listThreads estimate, public/gmail-tab.js retry, test/gmail-routes.test.js, test/gmail-tab-page.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/355">deck-app #355</a></span></h3></summary>
       <p>Junyan: &ldquo;"it worked but there's no mail here" (2026-10-23, first click-through of the Gmail tab)&rdquo;</p>
       <p><strong>Why.</strong> The first live Gmail tab listed no email at all. The search is built from pieces (not spam, not only our own mail, the hide list, each Robot mail label), and no helper session may read the mailbox to see which piece Gmail misreads.</p>
