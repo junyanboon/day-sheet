@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
+      <h3>A lost-and-found pickup or drop-off booking gets no renter texts<span class="kind">event-gate booking sweep and host &middot; route &middot; EVENT-GATE booking_sweep.py, host_sweep.py, test_booking_sweep.py, test_host_sweep.py, library/lost-and-found.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1303">desk-correspondence #1303</a></span></h3></summary>
+      <p>Junyan: &ldquo;approved 2026-10-23&rdquo;</p>
+      <p><strong>Why.</strong> Katherine Chung's "Pick up shoes" (Skedda 123390580, 509A, $0, 14:30 to 14:45) was tiered FBS on 0 visits, so the sweep auto-sent the How-to-Access text and the no-staff AVA and queued an EOB. Junyan: stop texting renters for pickups and drop-offs.</p>
+      <p><strong>Route change.</strong> New <code>booking_sweep.is_pickup</code>: pickup words in the title or activity (pick up, drop off, lost and found, retrieve, collect, get an item) AND price $0 AND 30 minutes or less. The Registrar's seed and the Host's ladder (<code>tier_for</code>, right after Studio Viewing, before the visit count) type it Self Serve (EOB, AVA, PBF Will Not Send, GTG Yes), so the daily lanes and <code>fbs_access</code> skip it. The same-day sweep skips the confirmation (<code>confirmation:not-needed-pickup</code>) and the access text (<code>hta:not-needed-pickup</code>). An existing row already typed FBS is retyped Self Serve on the next sweep pass (<code>correct_pickup_type</code>, beside <code>correct_viewing_type</code>; a Scheduled or Sent EOB/AVA/PBF is kept). A Support Override still wins. Backtest over 6,609 Skedda bookings (Oct 2025 to Nov 2026): 40 matched, no paid rental.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
       <h3>event-gate has a Notion door other robots can hand their Notion calls to; no robot uses it yet<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/store_door.py, notion_http.py, store_tokens.py, store_db.py, store_shadow.py, store_flip.py, store_copy_maps.py, store_migrations/008_notion_door.sql, docs/store-api.md, d110, d114, d115, d116 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1287">desk-correspondence #1287</a></span></h3></summary>
       <p>Junyan: &ldquo;approved d110 to d116 (2026-10-23)&rdquo;</p>
       <p><strong>Why.</strong> Stage 3 of the move off Notion: the send engine, the Deck, the cloud lanes and Hermes write the moved tables straight into Notion, so the store only learns their writes at the daily copy pass and a flipped table is almost never served from the store. The door lets each of them hand event-gate the same Notion call instead; event-gate does the Notion write and the shadow keeps the store in step (d110).</p>
