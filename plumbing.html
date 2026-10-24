@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-24</span>
+      <h3>Test jobs ask for the Mac-only label mac-ci, so they can never land on the VPS<span class="kind">event-gate deploy &middot; route &middot; .github/workflows/deploy-event-gate.yml (test-event-gate), .github/workflows/test-claude-settings.yml, .github/workflows/test-sales-decay.yml, .github/workflows/test-concierge-deadlines.yml, scripts/test_workflow_runners.py, library/house-rules.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1322">desk-correspondence #1322</a></span></h3></summary>
+      <p>Junyan: &ldquo;"6 yes: pin the deploy test job to a Mac-only runner label." (2026-10-23, d6)&rdquo;</p>
+      <p><strong>Why.</strong> The test jobs asked for <code>[self-hosted, ci-test]</code>. The 2026-10-23 plumbing note put <code>ci-test</code> on the VPS runner hostinger-watchlist as well as on junyan-mac, so a test run could land on the overloaded VPS whenever the Mac was busy or asleep. On 2026-10-23 the live runner list showed <code>ci-test</code> only on junyan-mac, but nothing stopped it coming back.</p>
+      <p><strong>Route change.</strong> test-event-gate and the three PR test workflows now ask for <code>[self-hosted, mac-ci]</code>. <code>mac-ci</code> was already on junyan-mac (no runner was re-registered or restarted) and on no other runner. junyan-mac keeps <code>ci-test</code> too, unused. <code>scripts/test_workflow_runners.py</code> now fails if any job asks for <code>ci-test</code>.</p>
+      <p><strong>Failure mode.</strong> If the Mac is asleep or offline, PR checks and the deploy's test job wait in the queue until it is back; a deploy no longer has any path to test on the VPS (deploy-gate gives up after 90 minutes). Inline safety tests inside the VPS bot runs (decay.yml, watchlist.yml) are unchanged. To undo, revert this PR.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-24</span>
       <h3>Event-gate pre-deploy tests move from the VPS to Junyan's Mac<span class="kind">event-gate deploy &middot; route &middot; .github/workflows/deploy-event-gate.yml (test-event-gate, deploy-hostinger), library/house-rules.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1320">desk-correspondence #1320</a></span></h3></summary>
       <p>Junyan: &ldquo;"29 yes" and "also I want to make this the standard moving forward." (2026-10-24)&rdquo;</p>
       <p><strong>Why.</strong> The full test suite ran inside the VPS deploy job and took 23+ minutes, draining Hostinger CPU credits (KVM 2 drops to 30% when they run out). On the Mac runner it takes a few minutes.</p>
