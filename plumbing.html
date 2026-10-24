@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-24</span>
+      <h3>The order-email robot ships the Buy rows of an approved New supply? card<span class="kind">event-gate procurement &middot; route &middot; EVENT-GATE procurement_sweep.py, test_procurement_sweep.py, library/cleaning-tab.md, deck-app PR 395 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1327">desk-correspondence #1327</a></span></h3></summary>
+      <p>Junyan: &ldquo;S134 ("134 yes")&rdquo;</p>
+      <p><strong>Why.</strong> When Junyan approves a New supply? card, the Deck raises Buy rows carrying the card's Ordered line. A Shipped email could miss them: when he approved after the email came in (before a pass copied it to the card), the rows were newer than the email; when he saved the item under his own name, its words did not match. Then no Put away card ever showed.</p>
+      <p><strong>Route change.</strong> A Shipped email now also adds its line to any open Buy supplies row that carries its order's Ordered line, whatever the row's age, by the item whose words name the row or else the order's only item. Keyed by mail id, never backwards, dry run writes nothing: unchanged. Every other row keeps the old rules.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-24</span>
       <h3>deploy-gate no longer reports FAILED for someone else's deploy<span class="kind">event-gate deploy &middot; failure &middot; scripts/deploy_gate.py, scripts/test_deploy_gate.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1325">desk-correspondence #1325</a></span></h3></summary>
       <p>Junyan: &ldquo;"31 yes" (2026-10-24)&rdquo;</p>
       <p><strong>Why.</strong> On Oct 23 Junyan deployed 1cd760d. Its run was cancelled and replaced; deploy-gate followed a replacement (54b5fb2) that did not include 1cd760d, and when that run failed it printed FAILED, while 1cd760d had actually gone live through run 40054066144.</p>
