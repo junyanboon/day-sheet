@@ -1367,11 +1367,40 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-24</span>
+      <h3>Event-gate pre-deploy tests move from the VPS to Junyan's Mac<span class="kind">event-gate deploy &middot; route &middot; .github/workflows/deploy-event-gate.yml (test-event-gate, deploy-hostinger), library/house-rules.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1320">desk-correspondence #1320</a></span></h3></summary>
+      <p>Junyan: &ldquo;"29 yes" and "also I want to make this the standard moving forward." (2026-10-24)&rdquo;</p>
+      <p><strong>Why.</strong> The full test suite ran inside the VPS deploy job and took 23+ minutes, draining Hostinger CPU credits (KVM 2 drops to 30% when they run out). On the Mac runner it takes a few minutes.</p>
+      <p><strong>Route change.</strong> A new job, test-event-gate, runs the suite on <code>[self-hosted, ci-test]</code> (junyan-mac). deploy-hostinger <code>needs:</code> it and keeps only the deploy guard, packing, the send to the host and the swap, on the eventgate-deploy runner. The production approval now comes after the tests pass. Job cap drops from 70 to 30 minutes. <code>deploy-gate</code> is unchanged: it watches the whole run and prints LIVE or FAILED.</p>
+      <p><strong>Failure mode.</strong> If the Mac is asleep or offline, a deploy waits at the test job until it is back (the run stays queued, then deploy-gate gives up after 90 minutes). A failing test skips the deploy job, so nothing is sent; deploy-gate prints FAILED with the run link. To undo, revert this PR.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-24</span>
       <h3>Event-gate deploys stop being cut off mid-send by the job time cap<span class="kind">event-gate deploy &middot; failure &middot; .github/workflows/deploy-event-gate.yml (deploy-hostinger), runs 40045771437, 40037316335, 40007703031 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1316">desk-correspondence #1316</a></span></h3></summary>
       <p>Junyan: &ldquo;"11 yes" (2026-10-23)&rdquo;</p>
       <p><strong>Why.</strong> On the evening of 2026-10-23, three hostinger deploys in a row were cancelled ("The operation was canceled") in the step "Send image through restricted deployment key". The deploy-hostinger job had a 25 minute cap, and the Test step now takes about 23 minutes (run 40045771437: Test 00:36:49Z to 00:59:55Z, cancelled at 01:01:19Z, 25 minutes after the job started). On 10-23 the same tests took 6 to 13 minutes and the send took 1 to 8.</p>
       <p><strong>Route change.</strong> Each slow step now has its own cap: Test 40 minutes, Send 20 minutes. The job cap is 70 minutes, so a slow Test can no longer use up the send's time.</p>
       <p><strong>Failure mode.</strong> A deploy that truly hangs now holds the deploy runner for up to 70 minutes instead of 25. A Test step that goes past 40 minutes fails the deploy before anything is sent, so nothing reaches the host. To undo, revert this PR.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
+      <h3>Extension lane full mode books the answer to the free-15-minutes note, checks the Timekeeper's overtime row before a left-late block, and gives the reader the renter's bookings<span class="kind">event-gate extension lane (The Registrar), AI reader full mode &middot; route &middot; EVENT-GATE extension_sweep.py, extension_reader.py, test_extension_full_mode_gaps.py, library/autonomy.md "The extension lane has an AI reader" &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1300">desk-correspondence #1300</a></span></h3></summary>
+      <p>Junyan: &ldquo;36 yes (2026-10-05), d37 yes (2026-10-23)&rdquo;</p>
+      <p><strong>Why.</strong> Junyan ruled on 2026-10-05 ("36 yes") that three gaps close before the extension reader's full mode goes on: nothing booked the renter's answer to the "come up to 15 minutes early" reply; a left-late report could book time the Timekeeper had already filed an overtime row for; and in full mode the reader saw none of the renter's bookings.</p>
+      <p><strong>Route change.</strong> Only with <code>EXTENSION_READER_MODE=full</code> (still off: veto is the default, and veto mode is unchanged). (1) Each pass reads the lane's free-15-minutes notes from the last 72 hours (one Message Queue query) and, when any wait on an email address, one more Gmail search by those senders. A message from a waiting renter is read even with no extension word. Once the note is Sent, an earlier start that code and the AI agree on moves the booking's start back in place (skedda-mcp <code>/stretch-booking</code>, d139 rules), with the held T1 and a Charge row. A held note, an ask inside the free 15 minutes, a disagreement or a clash is a Review row. (2) Before a left-late or arrived-early block, one Actions query for <code>[ot:&lt;studio&gt;:&lt;day&gt;:</code> (any status); a hit is a Review row and nothing is booked; a failed read books nothing that pass. (3) Before the reader's call, one Skedda range read for the renter's bookings (two days back to 14 ahead, eight closest); a cached verdict skips it; a failed read skips the message until the next pass. Nothing is sent by any of this: every reply stays as before (held, or the same-day release).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
+      <h3>The Deck has a read-only checker login for Claude ("ClaudeCheck"), so Claude can click through the live Deck itself<span class="kind">The Deck &middot; tool &middot; deck-app src/index.js staffMap, CHECKER, the read-only check in the session middleware; test/deck-checker-login.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/389">deck-app #389</a></span></h3></summary>
+      <p>Junyan: &ldquo;"304 I want to give you a way tot access and check this app on your own", then "Just make your own log in so you can test." (2026-10-23)&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wants Claude to check the Deck on its own (the Gmail slice 01 click-through), rather than asking him for screenshots. Claude never types or sees a password, so the login is filled by Junyan's 1Password in his Chrome.</p>
+      <p><strong>Tool surface.</strong> - A login with username <code>ClaudeCheck</code>, shown as "Claude (checker)". - Its password is the Worker secret <code>DECK_CHECKER_PASSWORD</code> (12+ characters, set by Junyan, kept in his 1Password). It is never a DECK_STAFF entry, and a DECK_STAFF entry with the same username wins. - It reads every tab. Its POSTs pass only when they are the Deck's own reads: <code>/api/tool</code> with a read tool (<code>notion-query-data-sources</code>, <code>notion-fetch</code>, the recipient find) and the <code>*/preview</code> routes. Every other request that is not GET or HEAD answers 403 <code>read_only</code> ("This login only reads. Nothing was changed."): no send, edit, Done or seen mark, or log line. - It is never shown the Notion webhook signing token (<code>/api/live/status</code>), and its alarm reads never start a rebuild. Its reads still fill the Deck's shared read caches, as any login's do. - Without the secret, or with one shorter than 12 characters, there is no checker login.</p>
+      <p><strong>Failure mode.</strong> Take the access away by deleting the secret (<code>npx wrangler secret delete DECK_CHECKER_PASSWORD</code>). The next request from the checker's cookie signs it out, because its name no longer has an entry. Changing the password does NOT sign out a checker already signed in (the cookie carries only the name, for 30 days); delete the secret to revoke it.</p>
     </details>
     </li>
     <li class="entry det">
