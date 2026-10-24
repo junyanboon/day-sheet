@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-24</span>
+      <h3>The 8 desk lanes run on Claude cloud (account A); Codex on the VPS is only the outage backup<span class="kind">all desk lanes &middot; route &middot; library/lanes.md, codex-takeover, codex-vps &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1328">desk-correspondence #1328</a></span></h3></summary>
+      <p>Junyan: &ldquo;"454 yes" (2026-10-24); "432 move it back to A" (2026-10-19)&rdquo;</p>
+      <p><strong>Why.</strong> The lanes had moved to Codex on the VPS on 2026-10-18 while account A was out of usage. Account A reset (94% free, d455) and the lanes went back to cloud on 2026-10-19.</p>
+      <p><strong>Route change.</strong> No code changed; canon now states the route. Lanes run as Claude cloud triggers on account A. Codex on the VPS is the backup, switched on only by Junyan with <code>codex-takeover on</code>. Account B (info@danceannex.ca) runs no robots and is only Junyan's chat fallback. Verified 2026-10-24: all 8 lanes show executor cloud, takeover off, and the Mac runner <code>ca.danceannex.codex-takeover</code> is not loaded.</p>
+      <p><strong>Failure mode.</strong> The VPS Codex timers still fire; each pass exits 3 at the lease check ("lane assigned to cloud") and does no work. If account A runs out, nothing moves by itself: Junyan runs <code>codex-takeover on</code>. To undo, revert this PR.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-24</span>
       <h3>The order-email robot ships the Buy rows of an approved New supply? card<span class="kind">event-gate procurement &middot; route &middot; EVENT-GATE procurement_sweep.py, test_procurement_sweep.py, library/cleaning-tab.md, deck-app PR 395 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1327">desk-correspondence #1327</a></span></h3></summary>
       <p>Junyan: &ldquo;S134 ("134 yes")&rdquo;</p>
       <p><strong>Why.</strong> When Junyan approves a New supply? card, the Deck raises Buy rows carrying the card's Ordered line. A Shipped email could miss them: when he approved after the email came in (before a pass copied it to the card), the rows were newer than the email; when he saved the item under his own name, its words did not match. Then no Put away card ever showed.</p>
