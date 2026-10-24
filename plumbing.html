@@ -1397,6 +1397,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
+      <h3>Lost &amp; Found held replies now come from How to Respond cards that follow the SOP<span class="kind">event-gate &middot; route, failure &middot; EVENT-GATE lost_found.py, library/lost-and-found.md, SOP Request to Pick up / Drop off an Item, d4 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1321">desk-correspondence #1321</a></span></h3></summary>
+      <p>Junyan: &ldquo;yes.. but it should follow the SOP&rdquo;</p>
+      <p><strong>Why.</strong> The "we found it" and "come and look" replies were written in code, so the held row had no Source HTR Row and its words drifted from the SOP (no "please don't come in until we confirm a time", no quarterly donation).</p>
+      <p><strong>Route change.</strong> Each held reply is rendered from one of three 💬 How to Respond cards (found and in the box, found and set aside, come and look), read live by page id, and the Message Queue row names that card as its Source HTR Row. Still held at Pending Review, one reply per item.</p>
+      <p><strong>Failure mode.</strong> A card that cannot be read, is archived, has a dash or the wrong slots: no reply is queued and one ✅ Actions row asks a person to fix the card or write the reply from the SOP. A found reply is tried again on the next pass; a come-and-look reply is not. <code>LOST_FOUND_DISABLED=1</code> still stops the whole loop.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
+      <h3>Frost watch covers Studio 901 too, and the climate sweep runs every hour<span class="kind">event-gate climate-sweep (The Weatherman) &middot; cadence &middot; EVENT-GATE climate_sweep.py, test_climate_sweep.py, hosting/climate-sweep-hourly.sh, library/climate-controller.md, registry/jobs.json &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1324">desk-correspondence #1324</a></span></h3></summary>
+      <p>Junyan: &ldquo;d20&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, d20: "see if the temperature drops in either 509 or 901". Frost (below 8°C, HEAT 10) only covered 509, and only on the 03:10 and 09:10 to 23:10 passes.</p>
+      <p><strong>Change.</strong> <code>climate_sweep.safety_901</code> adds the same frost rule for 901 on every full pass; it beats Liz's window, the season and the COOL 20 re-assert. The <code>danceannex-climate-sweep.timer</code> on the VPS moves to every hour at :10 (<code>hosting/climate-sweep-hourly.sh</code>, run by Junyan after the deploy). The old hours stay full passes; the new hours (00, 01, 02, 04 to 08 Toronto) are frost watch passes: a live thermostat temperature read for both rooms and HEAT 10 for a room below 8°C, nothing else (no COOL, no OFF, no Notion reads, a Thermal Log row only when frost acts). Nothing is sent to renters.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
       <h3>Extension lane full mode books the answer to the free-15-minutes note, checks the Timekeeper's overtime row before a left-late block, and gives the reader the renter's bookings<span class="kind">event-gate extension lane (The Registrar), AI reader full mode &middot; route &middot; EVENT-GATE extension_sweep.py, extension_reader.py, test_extension_full_mode_gaps.py, library/autonomy.md "The extension lane has an AI reader" &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1300">desk-correspondence #1300</a></span></h3></summary>
       <p>Junyan: &ldquo;36 yes (2026-10-05), d37 yes (2026-10-23)&rdquo;</p>
       <p><strong>Why.</strong> Junyan ruled on 2026-10-05 ("36 yes") that three gaps close before the extension reader's full mode goes on: nothing booked the renter's answer to the "come up to 15 minutes early" reply; a left-late report could book time the Timekeeper had already filed an overtime row for; and in full mode the reader saw none of the renter's bookings.</p>
