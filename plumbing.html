@@ -1377,6 +1377,33 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
+      <h3>A platform-chat ask to shift today's booking is moved and confirmed by SMS, and Peerspace chat gets a reply too<span class="kind">event-gate registrar move &middot; route &middot; EVENT-GATE platform_chat_shift.py, move_sweep.py, test_platform_chat_shift.py, library/studio-tickets-bookings.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1307">desk-correspondence #1307</a></span></h3></summary>
+      <p>Junyan: &ldquo;d8 (2026-10-23)&rdquo;</p>
+      <p><strong>Why.</strong> Junyan: "auto-send just like in skedda changes", "it should go to their phone number", "peerspace chat also can be responded to as well via email".</p>
+      <p><strong>Route change.</strong> A Peerspace / Tagvenue / Giggster relay email asking on the booking's own day for an exact new time (same studio and length, not started) no longer goes straight to the platform move card. <code>platform_chat_shift.run_live</code> moves it through <code>/move-booking</code>, then queues Ready to Send: one SMS (approved move template) to the Artist card's phone, and for Peerspace one email reply to the per-thread relay (<code>reply.peerspace.com</code>), with the Skedda website line removed and a guard refusing any website, email or phone. A later end files one Access/PIN row for the Door Checker. Not eligible, room taken, or nobody to tell (no phone, not Peerspace): the platform move card as before, nothing moved.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
+      <h3>The Greeter files a new Peerspace message-thread relay on the booking's card, or asks<span class="kind">The Greeter &middot; failure &middot; services/event-gate/greeter_sweep.py file_thread_relay, same_guest_label, run (message branch); booking_sweep.link_relay_contact_point; library/relay-addresses.md § One card per person item 7; test_greeter_thread_relay.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1318">desk-correspondence #1318</a></span></h3></summary>
+      <p>Junyan: &ldquo;"fix this gap" (2026-10-23, Tiphanny C. showed No card in the Deck's Gmail tab)&rdquo;</p>
+      <p><strong>Why.</strong> Tiphanny C. booked 509A for Oct 27 on one Peerspace relay; Peerspace then opened a new message thread on a second relay. The Greeter skipped that mail as an in-thread turn before any relay handling, so the second relay was never filed as a ☎️ Contact Point and the Deck showed the thread as "No card".</p>
+      <p><strong>Failure mode.</strong> Every Peerspace and Tagvenue message mail now has its relay checked before the in-thread skip. A relay already on a card costs nothing more (memoised per process); a relay nothing ties yet is re-read at most every 30 minutes. A new relay is filed on a card only when the mail names a booking whose own relay names exactly one card and the name agrees, with no Booking Ref (the booking's own relay stays its door). Two cards, a different name, or an in-thread turn no booking ties is one Review row <code>[thread-relay:&lt;relay&gt;]</code>. A read failure writes nothing and the next pass tries again.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
+      <h3>The Gmail tab says so when platform guest names cannot load, instead of a silent "No card"<span class="kind">The Deck &middot; failure &middot; deck-app src/texts-cards.js cardsForEmails, src/index.js GET /api/gmail and /api/gmail/thread, public/gmail-tab.js, test/gmail-relay-names.test.js, test/gmail-routes.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/387">deck-app #387</a></span></h3></summary>
+      <p>Junyan: &ldquo;"fix this gap" (2026-10-23, Tiphanny C. showed No card)&rdquo;</p>
+      <p><strong>Why.</strong> A Peerspace or Tagvenue guest's card has a blank Email (one card per person, d267): the relay lives only as a ☎️ Contact Points row on the card. The Gmail tab already names a conversation from that row, but when Contact Points could not be read it only logged the error, and every platform guest read "No card" with nothing on screen to say why.</p>
+      <p><strong>Failure mode.</strong> <code>cardsForEmails</code> now returns <code>relayNames</code> (why the Contact Points read failed, or empty), the list and thread routes pass it on, and the list shows "Platform guest names could not load (Contact Points)". Names from the cards' own Email still show, and no miss is cached, so the next list asks again. A relay that no Contact Points row holds still shows "No card": filing it is event-gate's job (the Greeter).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
       <h3>The climate sweep now does the IFTTT safety jobs itself (frost heat, nightly OFF, below-26 note, summer-only over-temp cool)<span class="kind">event-gate climate-sweep (The Weatherman) &middot; route &middot; EVENT-GATE climate_sweep.py, test_climate_sweep.py, library/climate-controller.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1305">desk-correspondence #1305</a></span></h3></summary>
       <p>Junyan: &ldquo;d16, d17&rdquo;</p>
       <p><strong>Why.</strong> The IFTTT applets beside the climate controller mostly timed out in October 2026 ("service took too long"), and Junyan wants IFTTT dropped (d16; his IFTTT Pro cancels on its own, d17).</p>
