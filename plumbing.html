@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-24</span>
+      <h3>deploy-gate no longer reports FAILED for someone else's deploy<span class="kind">event-gate deploy &middot; failure &middot; scripts/deploy_gate.py, scripts/test_deploy_gate.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1325">desk-correspondence #1325</a></span></h3></summary>
+      <p>Junyan: &ldquo;"31 yes" (2026-10-24)&rdquo;</p>
+      <p><strong>Why.</strong> On Oct 23 Junyan deployed 1cd760d. Its run was cancelled and replaced; deploy-gate followed a replacement (54b5fb2) that did not include 1cd760d, and when that run failed it printed FAILED, while 1cd760d had actually gone live through run 40054066144.</p>
+      <p><strong>Failure mode change.</strong> When its run is replaced, deploy-gate only follows a deploy that includes its sha (the replacement or any other unfinished deploy run). If none does, it checks /health: if live already includes the sha it ends <code>LIVE &lt;live sha&gt; (already live, deployed by run &lt;id&gt;)</code>; otherwise it ends <code>NOT DEPLOYED: replaced by &lt;sha&gt; which does not include yours; run deploy-gate again</code>. FAILED now only comes from a run that carries your sha. To undo, revert this PR.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-24</span>
       <h3>Test jobs ask for the Mac-only label mac-ci, so they can never land on the VPS<span class="kind">event-gate deploy &middot; route &middot; .github/workflows/deploy-event-gate.yml (test-event-gate), .github/workflows/test-claude-settings.yml, .github/workflows/test-sales-decay.yml, .github/workflows/test-concierge-deadlines.yml, scripts/test_workflow_runners.py, library/house-rules.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1322">desk-correspondence #1322</a></span></h3></summary>
       <p>Junyan: &ldquo;"6 yes: pin the deploy test job to a Mac-only runner label." (2026-10-23, d6)&rdquo;</p>
       <p><strong>Why.</strong> The test jobs asked for <code>[self-hosted, ci-test]</code>. The 2026-10-23 plumbing note put <code>ci-test</code> on the VPS runner hostinger-watchlist as well as on junyan-mac, so a test run could land on the overloaded VPS whenever the Mac was busy or asleep. On 2026-10-23 the live runner list showed <code>ci-test</code> only on junyan-mac, but nothing stopped it coming back.</p>
@@ -1397,10 +1406,32 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
-      <h3>Lost &amp; Found held replies now come from How to Respond cards that follow the SOP<span class="kind">event-gate &middot; route, failure &middot; EVENT-GATE lost_found.py, library/lost-and-found.md, SOP Request to Pick up / Drop off an Item, d4 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1321">desk-correspondence #1321</a></span></h3></summary>
+      <h3>The reconcile tick writes a daily "what I would do" list over every Gate ticket (shadow, nothing changes)<span class="kind">event-gate auto-review &middot; route, failure &middot; EVENT-GATE gate_rules.py, gate_rules_shadow.py, auto_review.py, reconcile_sweep.py, ops/fleetread gate-list, library/position.md, d98, d100, d102 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1302">desk-correspondence #1302</a></span></h3></summary>
+      <p>Junyan: &ldquo;d100 yes, a list over the live Gate tickets before go-live&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-22, 43 tickets sat at a Gate and 6 had no owner. Junyan ruled every Gate ticket has one owner and one dated next step, worked out from what the ticket already has (d98), and asked to read what the rules would do before any of them goes live (d100).</p>
+      <p><strong>Route change.</strong> Once per Toronto day (first tick at or after 07:00) the reconcile tick works out owner, next step, date and verdict for each Gate ticket auto-review looked at, and writes <code>/var/lib/eventgate/gate-rules/&lt;day&gt;.md</code> and <code>.jsonl</code> (ticket titles, as on the Deck). Read it with <code>vps-read gate-list &lt;day&gt;</code>. Nothing is written to Notion. Reads: the rows auto-review already read for each ticket, plus one query of open Actions a day. Auto-review now reads each linked row once a pass (a per-ticket cache), so it makes fewer Notion calls, with the same verdicts; its unchanged dated tickets are still skipped (d64).</p>
+      <p><strong>Failure mode.</strong> Nothing here stops the tick. A failed Actions query, or a pass where auto-review saw no ticket, writes no list and the next tick tries again; an odd ticket gets one <code>unreadable</code> line. Off with <code>GATE_RULES_SHADOW=0</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
+      <h3>A new email shows in the Gmail tab as soon as Gmail's change feed has it, not when Gmail's search catches up<span class="kind">The Deck &middot; tool &middot; deck-app src/gmail-read.js history (added); src/gmail-cache.js added, readPage, poll; test/gmail-fresh-mail.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/392">deck-app #392</a></span></h3></summary>
+      <p>Junyan: &ldquo;"332 yes" (find out why a new email took about 31 seconds to appear, and fix it), 2026-10-23&rdquo;</p>
+      <p><strong>Why.</strong> It was measured on the live Deck with the read-only checker login. Junyan's "test 2" email: - arrived in the mailbox at 03:03:11 UTC - reached the poller's change feed (<code>history.list</code>), and the tabs' nudge, at 03:03:30 - appeared in Gmail's search (<code>threads.list</code>), which the list reads, only at 03:03:41</p>
+      <p>The tab waited for the search: 11 s of the delay. The first 19 s are before the change feed sees the email. That is mostly delivery from his personal Gmail to info@danceannex.ca, plus up to one 5 s poll.</p>
+      <p><strong>Tool surface.</strong> - The change feed's <code>messagesAdded</code> thread ids are kept for 2 minutes. - The first page of the list reads those threads at once (<code>threads.get</code>, metadata) and lists them first, newest first, until the search lists them itself. - Spam, trash and chat are never listed this way. Robot mail and the hide list are still dropped by the builder.</p>
+      <p><strong>Review fixes.</strong> - A reply in a thread already listed is read at once too (the search's stale historyId no longer hides it). - The newest five new emails are read first, each once. - A thread listed early stays listed until the search lists it, or for 2 minutes. - Autosaved drafts in the change feed are ignored. - A failed early read is logged, and the list reads again on the next ask.</p>
+      <p><strong>Failure mode.</strong> A thread that cannot be read early waits for the search, as before. At most 5 such reads per list read.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
+      <h3>Lost &amp; Found held replies now come from Junyan's How to Respond cards<span class="kind">event-gate &middot; route, failure &middot; EVENT-GATE lost_found.py, library/lost-and-found.md, SOP Request to Pick up / Drop off an Item, d4, d7, d9 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1321">desk-correspondence #1321</a></span></h3></summary>
       <p>Junyan: &ldquo;yes.. but it should follow the SOP&rdquo;</p>
-      <p><strong>Why.</strong> The "we found it" and "come and look" replies were written in code, so the held row had no Source HTR Row and its words drifted from the SOP (no "please don't come in until we confirm a time", no quarterly donation).</p>
-      <p><strong>Route change.</strong> Each held reply is rendered from one of three 💬 How to Respond cards (found and in the box, found and set aside, come and look), read live by page id, and the Message Queue row names that card as its Source HTR Row. Still held at Pending Review, one reply per item.</p>
+      <p><strong>Why.</strong> The "we found it" and "come and look" replies were written in code, so the held row had no Source HTR Row and its words drifted from the SOP (no quarterly donation, no pickup question in the SOP's words).</p>
+      <p><strong>Route change.</strong> Each held reply is rendered from one of two 💬 How to Respond cards in Junyan's words (our cleaner found the item; not found yet, you may come and look), read live by page id, and the Message Queue row names that card as its Source HTR Row. When the row says where the item is (the box, or still in the studio), the found reply gets one sentence saying so. Still held at Pending Review, one reply per item.</p>
       <p><strong>Failure mode.</strong> A card that cannot be read, is archived, has a dash or the wrong slots: no reply is queued and one ✅ Actions row asks a person to fix the card or write the reply from the SOP. A found reply is tried again on the next pass; a come-and-look reply is not. <code>LOST_FOUND_DISABLED=1</code> still stops the whole loop.</p>
     </details>
     </li>
