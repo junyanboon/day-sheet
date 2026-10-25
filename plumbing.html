@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-25</span>
+      <h3>Deck send checks no longer jump ahead of robot sweeps on the shared Notion line (EY switched back)<span class="kind">event-gate &middot; failure &middot; services/event-gate/notion_http.py (PRIORITY_ROUTES), services/event-gate/test_notion_pacing_priority.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1332">desk-correspondence #1332</a></span></h3></summary>
+      <p>Junyan: &ldquo;"Start a session that can deploy and have the Shipper switch EY back" (2026-10-25)&rdquo;</p>
+      <p><strong>Why.</strong> PR 1256 (merge a783c07) let /message-release-check and /message-dispatch-check take the next free turn on the shared Notion request line ahead of waiting sweep calls. The 2026-10-25 Desk Watch graded live test EY failed: on Oct 23 at 19:23Z, 19:48Z, 23:17Z and 23:18Z send checks still waited over 1 s while a sweep waited longer.</p>
+      <p><strong>Route change.</strong> PRIORITY_ROUTES is now empty, so every Notion call, Deck send checks included, waits its turn in arrival order as before PR 1256. The priority machinery stays in place, unused.</p>
+      <p><strong>Failure mode.</strong> A Deck Send can again wait behind sweep calls when the line is at its cap (the Camila Avendano case of 2026-10-22). Nothing is sent, charged or written differently.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-25</span>
       <h3>The Stale Sweep closes a Charge or Invoice row whose Skedda booking now reads $0, Cancelled and never Verified<span class="kind">event-gate &middot; failure &middot; services/event-gate/stale_sweep.py (zero_booking, close_props), services/event-gate/test_stale_sweep.py, library/studio-tickets-bookings.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1331">desk-correspondence #1331</a></span></h3></summary>
       <p>Junyan: &ldquo;"If someone's booking gets changed and it goes to $0 this charge should be dropped automatically" (2026-10-25)&rdquo;</p>
       <p><strong>Why.</strong> Ishfaaq Jookhun, Skedda 123392392, Studio 901, Sun 2026-10-25 09:30 to 10:15, holder 4654352: booked on a $20 credit that left $0.34 unpaid. Stripe cannot charge under $0.50 CAD, so the Deck's charge failed (amount_too_small). Someone then set the booking price to $0 in Skedda. The Stale Sweep only treated payment_status 3 (paid) as settled, so on 2026-10-24 09:00 and 2026-10-25 00:00 it wrote "row carried open, not closed" and the Actions row stayed Pending Review.</p>
