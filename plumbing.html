@@ -1366,6 +1366,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-25</span>
+      <h3>The Charges tab shows a booking the plan's prepaid hours cover in full as "Covered by plan", with no Charge card or Send invoice<span class="kind">The Deck &middot; failure &middot; deck-app src/live-unpaid.js classify, src/booking-truth.js forecastCovers and skeddaRefusal, sources/deck.html chargeCovered, test/live-unpaid.test.js, test/booking-truth.test.js, test/charges-live.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/407">deck-app #407</a></span></h3></summary>
+      <p>Junyan: &ldquo;"204 yes, 205 no" (2026-10-25)&rdquo;</p>
+      <p><strong>Why.</strong> Geunseop Lee (1AP), Skedda 123413580, Studio 693, Sun 2026-10-25 18:30 to 22:30, $85.88: his first 4 hours of the month cover it, and the prepaid-hours bot's Review row carries a forecast with nothing outstanding. Skedda stays unpaid until the bot applies the hours on the booking day (Junyan d94 to d96, 2026-10-05), so within 24 hours of the start the Deck listed it at the full price with Charge card and Send invoice.</p>
+      <p><strong>Failure mode.</strong> When a live (not Cancelled or Won't Do) Actions row for the booking has a latest <code>[PLAN-ALLOWANCE-RECEIVER-V1] forecast</code> line with outstanding_amount 0 and an original_price equal to Skedda's price now, the booking is "covered": the tab shows "Covered by plan" with "Covered by 1AP prepaid hours, nothing to charge. The bot marks it paid on the booking day." and offers no Charge card, Send invoice or Waive. The worker refuses it too: the live-row step and the charge and invoice preview answer 409 with the same reason. A changed price (stale forecast), an amount outstanding (a partly covered booking) or a waived row leave today's behaviour. The bot and Skedda are unchanged (d205 no).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-24</span>
       <h3>The 8 desk lanes run on Claude cloud (account A); Codex on the VPS is only the outage backup<span class="kind">all desk lanes &middot; route &middot; library/lanes.md, codex-takeover, codex-vps &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1328">desk-correspondence #1328</a></span></h3></summary>
       <p>Junyan: &ldquo;"454 yes" (2026-10-24); "432 move it back to A" (2026-10-19)&rdquo;</p>
