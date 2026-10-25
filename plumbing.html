@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-25</span>
+      <h3>The Stale Sweep no longer reads a failed Deck charge press as money moved, so a $0 booking's row can close<span class="kind">event-gate &middot; failure &middot; services/event-gate/stale_sweep.py (money_moved, zero_booking), services/event-gate/test_stale_sweep.py, library/studio-tickets-bookings.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1333">desk-correspondence #1333</a></span></h3></summary>
+      <p>Junyan: &ldquo;"d208" (2026-10-25, approved the narrow fix)&rdquo;</p>
+      <p><strong>Why.</strong> Ishfaaq Jookhun's row (Actions 40275032, Skedda 123392392, $0.34) carries a bare "You · 2026-10-24 09:00 · CHARGED" line plus an "Ops instruction receipt" JSON from a Deck button press. The Deck's charge had failed (Stripe amount_too_small, "Charge failed, nothing taken") and Stripe has no PaymentIntent. The zero-price close treated the CHARGED word as money moved and never closed the row, and the Deck now hides it from the Charges tab, so the sweep was the only closer.</p>
+      <p><strong>Route change.</strong> <code>stale_sweep.money_moved</code> replaces the plain pattern match. A bare <code>You · &lt;date&gt; · CHARGED</code> line no longer counts when all hold: its only follow-on is the Ops instruction receipt JSON; the row also has a Deck "Charge failed, nothing taken" line; no <code>pi_</code> or <code>in_</code> id is anywhere on the row; and nothing else still matches (no "CHARGED by hand", INVOICED or "· PAID — "). The Desk Sort's own "CHARGED ruling not carried out" line is read the same way. Closing is unchanged: Cancelled, appended CLOSED note, never Verified, no Skedda or Stripe writes.</p>
+      <p><strong>Failure mode.</strong> Every other CHARGED, INVOICED, PAID or Stripe id case still keeps the row open. A press with extra text, no receipt JSON, or no Deck failure line still blocks.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-25</span>
       <h3>Deck send checks no longer jump ahead of robot sweeps on the shared Notion line (EY switched back)<span class="kind">event-gate &middot; failure &middot; services/event-gate/notion_http.py (PRIORITY_ROUTES), services/event-gate/test_notion_pacing_priority.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1332">desk-correspondence #1332</a></span></h3></summary>
       <p>Junyan: &ldquo;"Start a session that can deploy and have the Shipper switch EY back" (2026-10-25)&rdquo;</p>
       <p><strong>Why.</strong> PR 1256 (merge a783c07) let /message-release-check and /message-dispatch-check take the next free turn on the shared Notion request line ahead of waiting sweep calls. The 2026-10-25 Desk Watch graded live test EY failed: on Oct 23 at 19:23Z, 19:48Z, 23:17Z and 23:18Z send checks still waited over 1 s while a sweep waited longer.</p>
