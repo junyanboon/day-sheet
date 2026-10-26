@@ -1364,6 +1364,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-25</span>
+      <h3>A renter handed to a person now texts Junyan's phone, once per case, not overnight<span class="kind">event-gate &middot; route &middot; services/event-gate/handoff_text.py, library/house-rules.md, d74, d185 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1337">desk-correspondence #1337</a></span></h3></summary>
+      <p>Junyan: &ldquo;d74 yes&rdquo;</p>
+      <p><strong>Why.</strong> The Lane Detective found about 20 renter asks in a week where the move, extra-time and credit robots stopped at "needs a human" and nobody heard. Junyan said yes to "Send stuck-robot warnings to your phone by text instead of Slack, at most one text per renter, not between 10:30 PM and 8 AM".</p>
+      <p><strong>Route change.</strong> Every minute, event-gate looks for new open Review rows from those three lanes and texts the on-call phone from the desk line through Phone.com. One text per renter per case; everything new in a pass goes in one text; nothing from 10:30 PM to 8 AM, when it waits until 8 AM and is dropped if someone already handled it.</p>
+      <p><strong>Failure mode.</strong> A Phone.com refusal is tried again on the next pass; a send with an unknown outcome is never repeated. At most 20 texts a day. HANDOFF_TEXT_DISABLED=1 turns it off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-25</span>
+      <h3>Credit lane records missing credits on the ledger and reads the balance back before replying<span class="kind">The Registrar &middot; failure &middot; services/event-gate/credit_issued.py, services/event-gate/credit_sweep.py, library/autonomy.md, d72, d20 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1336">desk-correspondence #1336</a></span></h3></summary>
+      <p>Junyan: &ldquo;d72 yes&rdquo;</p>
+      <p><strong>Why.</strong> Anastasia Markevitch's $381.94 credit was Processed on Oct 23 but never written to the Artist Credits ledger, so on Oct 25 the credit lane would have read her balance as $0. A person found it by hand. Junyan approved the fix with "d72 yes" (no AI).</p>
+      <p><strong>Route change.</strong> Before reading a renter's balance, the credit lane writes a Credit Issued entry for any Processed Credit Action of theirs that is missing from the ledger, copying the Amount and expiry from the Action, then reads it back. Once an hour the same check runs over every recent Processed credit. After writing Credit Used, the lane reads the ledger back and the held reply quotes that balance.</p>
+      <p><strong>Failure mode.</strong> A credit it cannot record (no expiry, no single Artist card, no Amount, a bad read-back) becomes one Review row and the lane stops for that renter. A Credit Used row that does not read back takes the red draw-down path and no reply is queued. CREDIT_ISSUED_DISABLED=1 turns the ledger check off.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-25</span>
