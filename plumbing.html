@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-26</span>
+      <h3>The same-evening overtime pass is removed; the renter's reply to the end + 20 text leads to a booking extension instead<span class="kind">event-gate &middot; route &middot; services/event-gate/overtime_evening.py (removed), services/event-gate/app.py, library/timekeeper-overtime.md § No same-evening pass, library/closing-reminder.md, library/autonomy.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1339">desk-correspondence #1339</a></span></h3></summary>
+      <p>Junyan: &ldquo;"i don't want any same eevening overtime check. The reason why we dont' si because we want people to inform us that htye are going overtime. Once it's 20 minutes past the booking a messages gets auto-sent wher ethey can reply and then based on that reply we can do a bookign extension for example." (2026-10-26)&rdquo;</p>
+      <p><strong>Why.</strong> PR 1338 built an evening pass (17:00 to 01:00, the Timekeeper's Step 9 ten minutes after a studio armed late), off by default. Junyan does not want the desk to find overtime on its own that evening: the renter should tell us.</p>
+      <p><strong>Route change.</strong> <code>overtime_evening.py</code>, its <code>OVERTIME_EVENING</code> switch, its minute-poll hook and its lanes row are gone. The end + 20 after-arm text invites a reply; a reply asking for more time is an extension ask, answered with the How to Respond row "Booking extension: confirm before extending", and carried out by Junyan's Book and send press on the Deck. The 04:00 Timekeeper run is the only overtime pass. The end + 20 early-arrival and held-PBF fix from PR 1338 stays.</p>
+      <p><strong>Failure mode.</strong> Nothing new runs. A renter who stays without replying is caught by the 04:00 run as before.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-26</span>
       <h3>The end + 20 closing text no longer goes silent for early arrivals or a held PBF, and a same-evening overtime pass is built (off until switched on)<span class="kind">event-gate &middot; failure &middot; services/event-gate/closing_reminder.py (EARLY_ARRIVAL, queue_conflict, skipped), services/event-gate/overtime_evening.py, services/event-gate/overtime_sweep.py (judged_windows), services/event-gate/app.py, library/closing-reminder.md, library/timekeeper-overtime.md § Evening pass &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1338">desk-correspondence #1338</a></span></h3></summary>
       <p>Junyan: &ldquo;"I want this to be auto-processed moving forward by a proactive agent like Dots." (2026-10-26)&rdquo;</p>
       <p><strong>Why.</strong> Avishek Bhattacharjee (509A, 2026-10-25, 6:00 to 7:30 PM) was still inside at end + 20 and got no text. The lane checked his booking at 7:50 to 7:54 PM and stopped twice over: it looked for his own disarm only from 15 minutes before the start (he disarmed at 5:42 PM), and his held PBF, queued at 7:43 PM, counted as a waiting text. The PBF rule silences the lane for nearly every renter with an HTA (Tyler Yan, 901, the same night). Since 2026-10-20 the lane armed or texted nobody.</p>
