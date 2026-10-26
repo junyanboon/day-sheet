@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-26</span>
+      <h3>The end + 20 closing text no longer goes silent for early arrivals or a held PBF, and a same-evening overtime pass is built (off until switched on)<span class="kind">event-gate &middot; failure &middot; services/event-gate/closing_reminder.py (EARLY_ARRIVAL, queue_conflict, skipped), services/event-gate/overtime_evening.py, services/event-gate/overtime_sweep.py (judged_windows), services/event-gate/app.py, library/closing-reminder.md, library/timekeeper-overtime.md § Evening pass &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1338">desk-correspondence #1338</a></span></h3></summary>
+      <p>Junyan: &ldquo;"I want this to be auto-processed moving forward by a proactive agent like Dots." (2026-10-26)&rdquo;</p>
+      <p><strong>Why.</strong> Avishek Bhattacharjee (509A, 2026-10-25, 6:00 to 7:30 PM) was still inside at end + 20 and got no text. The lane checked his booking at 7:50 to 7:54 PM and stopped twice over: it looked for his own disarm only from 15 minutes before the start (he disarmed at 5:42 PM), and his held PBF, queued at 7:43 PM, counted as a waiting text. The PBF rule silences the lane for nearly every renter with an HTA (Tyler Yan, 901, the same night). Since 2026-10-20 the lane armed or texted nobody.</p>
+      <p><strong>Route change.</strong> Closing lane: arrival reads from 60 minutes before the start (alarm-mcp's own span); held follow-ups (PBF, <code>[pbf:]</code> courtesy, Overtime notice) are not a conflict; each tick logs why a checked booking sent nothing. New <code>overtime_evening.py</code> on the minute poll: 17:00 to 01:00, 10 minutes after a studio arms, the Timekeeper's Step 9 for plain billable late arms (block, held charge, notice held at Pending Review). The 04:00 pass is unchanged and reuses its rows.</p>
+      <p><strong>Failure mode.</strong> Closing lane: every other guard stands (renter's own code, no later arm or other disarm, fresh log, alarm-mcp re-checks). Evening pass: off until <code>OVERTIME_EVENING=shadow|live</code>; any review, staff arm, re-entry or read failure files nothing and waits for 04:00; money is never charged.</p>
+    </details>
+    </li>
     <li class="entry alert">
     <details>
       <summary><span class="when">2026-10-25</span>
