@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-27</span>
+      <h3>Paid booking, the credit offer sent instead of a paid offer now sends itself, and plan renters get the same flow<span class="kind">event-gate &middot; route &middot; services/event-gate/paid_offer.py, services/event-gate/paid_booking_live.py, services/event-gate/credit_sweep.py (offer_body clock), services/event-gate/extension_sweep.py (paid_ask), services/event-gate/unpaid_review.py (paid_booking_owner), library/specs/paid-booking.md, library/autonomy.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1364">desk-correspondence #1364</a></span></h3></summary>
+      <p>Junyan: &ldquo;"109 yes, 110 yes" and "actually 110 it can be auto as well as you don't need to track hours. THey are all already on the calnedar or in credi form" (2026-10-27)&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wants the credit offer the paid lane sends in place of a paid offer to go out by itself, and plan renters (1AP, 2AP, AAP) handled like anyone else.</p>
+      <p><strong>Route change.</strong> The d108 credit offer (key <code>credit:&lt;message id&gt;</code>) is now written at the status <code>paid_booking.release</code> gives (Ready to Send, Send After 9 AM at night) through the same row writer as the paid offer; before it was always Pending Review. A plan no longer stops the paid offer or the far-extension paid question. The unpaid review now treats a plan renter's booking that carries the robot's Charge row (<code>[paid-booking:&lt;key&gt;]</code>, Booking ref <code>skedda:&lt;id&gt;</code>) as owned, so no prepaid-hours card is filed for it.</p>
+      <p><strong>Failure mode.</strong> Wording with a dash, a colon outside a link or an unfilled bracket stays at Pending Review (a half-hour time like "6:30 PM" is held this way). Without the robot's Charge row, a plan booking still gets the prepaid-hours card as before. The credit lane's own offers are unchanged (Pending Review). All behind <code>PAID_BOOKING_AUTO=1</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
       <h3>Paid booking on the renter's YES, book and bill with no press, reply sends itself, Cancel card after 24 h<span class="kind">event-gate &middot; route &middot; services/event-gate/paid_booking.py, services/event-gate/paid_booking_live.py, services/event-gate/app.py (/paid-booking-sweep), services/event-gate/open_invoice_watch.py (is_paid_booking), services/event-gate/hosting/enable-paid-booking.sh, library/specs/paid-booking.md, library/autonomy.md (Grant: a paid booking on the renter's YES) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1361">desk-correspondence #1361</a></span></h3></summary>
       <p>Junyan: &ldquo;"95 yes, 97 yes, 99 we will just miss it that's fine, 98 yes" and "100 yes, 101 by itself, 102 yes, 103 yes" (2026-10-27)&rdquo;</p>
       <p><strong>Why.</strong> Junyan wants a paid booking to finish itself on the renter's yes: book, charge the card on file or invoice, one reply that sends by itself, and an easy Cancel if the invoice sits unpaid 24 h.</p>
