@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>AI draft writer answers in a reply or no-reply contract, so its reasoning never lands in the box<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/ai_draft.py, services/event-gate/app.py, c17, c18 &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;approved 2026-10-27 (c17 "17 Yes see you tomorrow, Nicole is good for me", c18 "18 yes")&rdquo;</p>
+      <p><strong>Why.</strong> Nicole Drury loved our booking confirmation and AI draft put the writer's reasoning in the text box ("The renter's last message was a "Loved" reaction ... so no reply is needed.").</p>
+      <p><strong>Route change.</strong> <code>POST /ai-draft/write</code> now asks the model for one JSON object, <code>{"reply": ...}</code> or <code>{"no_reply": &lt;why&gt;}</code>. When every renter message since our last text is a plain reaction (the shared tapback test), it answers <code>{"text": "", "no_reply": true, "note": "No reply needed: Nicole loved the confirmation."}</code> with no model call. A body with <code>asked: true</code> (the person pressed Concierge again after the note; Write one is gone since d350) or a redo always gets a reply: a short warm closing tied to the booking when nothing is owed.</p>
+      <p><strong>Failure mode.</strong> An answer that is not the contract is 503 <code>model_unavailable</code> (the box stays empty, the Deck says the writer did not answer). A no_reply even when asked, or a reply that reads like reasoning ("so no reply is needed", "the renter"), becomes a no-reply note, never box text. Deploy the Deck first: an older Deck sends no <code>asked</code>, so a second press would get the note again.</p>
+    </details>
+    </li>
     <li class="entry alert">
     <details>
       <summary><span class="when">2026-10-27</span>
