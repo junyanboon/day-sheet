@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-26</span>
+      <h3>Insurance Processor marks the booking "received insurance"<span class="kind">Insurance Processor &middot; route, failure &middot; services/event-gate/insurance_title.py, insurance_processor.py, skedda_mcp_write.py, library/autonomy.md, library/job-2-triage.md, d1, d2, d3 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1341">desk-correspondence #1341</a></span></h3></summary>
+      <p><strong>Why.</strong> Karly VanEvery's Duuo certificate (Gmail 1a169606e5f75796) was filed and her Artist dates set, but the SOP step "Mark received insurance on Booking Title" had no owner, so the Concierge raised a human Action for it. Junyan ruled the processor does it (d1, d2, d3).</p>
+      <p><strong>Route change.</strong> Every Insurance Processor pass (event-gate, every 10 minutes) reads Certificate of Insurance Docs rows made in the last 3 days with one Artist. It finds that renter's one matching one-off Skedda booking (per-event renters: on the certificate's event date; others: the coming booking in the next 14 days inside the term) and appends " (received insurance)" to its title through skedda-mcp <code>edit_booking</code>, title only, then re-reads the day to prove it.</p>
+      <p><strong>Failure mode.</strong> Zero or several matching bookings, a series, a block-out, no Skedda User ID or not exactly one Artist: nothing is written and the pass reports why; the SOP step stays for a person. A title that did not stick on re-read is an error in the pass log and <code>/insurance-processor</code> result. <code>INSURANCE_TITLE_DISABLED=1</code> stops it; <code>INSURANCE_PROCESSOR_DRY_RUN=1</code> reports only.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-26</span>
       <h3>Book and send, one Deck press books on credit (or extends), proves it, then sends the held reply<span class="kind">event-gate &middot; route &middot; services/event-gate/prepared_action.py, services/event-gate/booking_apply.py, services/event-gate/credit_sweep.py (book_on_press, _prepare), services/event-gate/booking_state_guard.py (_prepared_not_run), library/autonomy.md (fourth Skedda write), library/specs/live-reader.md § 7a &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1340">desk-correspondence #1340</a></span></h3></summary>
       <p>Junyan: &ldquo;82 yes" (2026-10-26, d82); "Then why do i ened this whole card, cna't it be just under the draft text directly?&rdquo;</p>
       <p><strong>Why.</strong> Junyan wants his one approval to do the work: press Send on a held reply and the booking is made and proved before the reply goes (live-reader.md § 7a, "Approve means do it").</p>
