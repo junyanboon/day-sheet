@@ -1367,6 +1367,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-27</span>
+      <h3>Stayed-late / came-early Charge row names its waiting reply, so the Deck fills the pay link<span class="kind">event-gate &middot; failure &middot; services/event-gate/extension_sweep.py (PAY_LINK_TAG, PAY_LINK_WAIT, CARD_UNREAD, report_reply, charge_row), deck-app src/ext-pay-link.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1385">desk-correspondence #1385</a></span></h3></summary>
+      <p>Junyan: &ldquo;d50" approved 2026-10-27; "I don't want to ever copy and paste.&rdquo;</p>
+      <p><strong>Why.</strong> The no-card reply's note told Junyan to make the pay link on the Charges tab and paste it in place of [PAY LINK].</p>
+      <p><strong>Failure mode.</strong> The Charge row's Basis now carries <code>[PAY-LINK-MQ:&lt;reply id&gt;]</code> on the line after EXT-V1 when the reply needs a link (no card, or the card could not be read). The reply's note says the Deck puts the link in by itself at the Charged click; nothing to paste. A relay renter with no phone stays HELD for staff and gets no tag, so no link is ever written into a relay chat.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>Charged puts the short pay link into the waiting stayed-late / came-early reply<span class="kind">deck &middot; route &middot; src/ext-pay-link.js, src/index.js (/api/charge/run fill, /api/charge/pay-link-fill/preview, fillPayLinksPass cron), sources/deck.html (Charged toast), canon services/event-gate/extension_sweep.py (PAY-LINK-MQ tag) &middot; <a href="https://github.com/junyanboon/deck-app/pull/461">deck-app #461</a></span></h3></summary>
+      <p>Junyan: &ldquo;d50" approved 2026-10-27; "I don't want to ever copy and paste.&rdquo;</p>
+      <p><strong>Why.</strong> The no-card stayed-late / came-early reply waited at Pending Review with [PAY LINK] in it, and Junyan had to make the link on the Charges tab and paste it in.</p>
+      <p><strong>Route change.</strong> The extension lane writes <code>[PAY-LINK-MQ:&lt;reply id&gt;]</code> on the Charge row's Basis, on the line after EXT-V1. When Charged sends the Stripe invoice, the Deck makes the short pay.danceannex.ca link and writes it into that reply (the [PAY LINK] spot, or the card sentence when the card could not be read), and swaps the reply's waiting note for "PAY LINK IN". The reply stays at Pending Review for Junyan's send. A 15-minute cron pass retries rows whose invoice went out but whose reply has no link yet. <code>PAY_LINK_FILL_DISABLED=true</code> stops the cron pass.</p>
+      <p><strong>Failure mode.</strong> Notion or KV down: a retry line on the Charge row and the cron tries again; after 8 tries both rows say PAY LINK FAILED and the reply text is left alone. A reply no longer at Pending Review, or a page not on the Message Queue, is never changed (a stop line on the Charge row). Never a long Stripe URL.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
       <h3>Stayed late and came early replies say how the extra time is paid<span class="kind">event-gate &middot; route &middot; services/event-gate/extension_sweep.py (report_reply, report_body, card_on_file), d22, d23, d24 &middot; desk-correspondence</span></h3></summary>
       <p>Junyan: &ldquo;d22 yes, d28 yes, d23 "I will need to press charge", d24 "replies should go to the source"&rdquo;</p>
       <p><strong>Why.</strong> A renter who stayed late or came in early got the plain extension wording. Junyan wants a thank you, the new time, how it is paid, and how to ask next time.</p>
