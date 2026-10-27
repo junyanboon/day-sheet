@@ -1366,6 +1366,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>The phone-supplied booking text auto-sends only when the guest just sent their number<span class="kind">event-gate &middot; route &middot; services/event-gate/booking_sweep.py phone_just_supplied, services/event-gate/greeter_sweep.py queue_phone_ack, library/autonomy.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1356">desk-correspondence #1356</a></span></h3></summary>
+      <p>Junyan: &ldquo;"d31 no: as we already have their numbers and are messaging them on there so no need" (2026-10-27)&rdquo;</p>
+      <p><strong>Why.</strong> After d28 the Registrar's Peerspace or Tagvenue booking text could auto-send to any guest with a phone on their card, including a returning renter whose number we already had and already text.</p>
+      <p><strong>New route.</strong> The booking text auto-sends only when the Greeter's Phone ack row for that card was made after the booking, and the number the guest sent (now recorded on that row) is the card's Phone. Anyone else gets the held row from before d28, and within 24 hours the access text merges as before.</p>
+      <p><strong>Off switch.</strong> Unchanged: set the HTR cards to Needs review.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-26</span>
       <h3>A Peerspace or Tagvenue guest who sends their number gets both replies by themselves<span class="kind">event-gate &middot; route &middot; services/event-gate/greeter_sweep.py queue_phone_ack, services/event-gate/booking_sweep.py queue_confirmation, scripts/jev_htr.py d28_owned, library/autonomy.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1354">desk-correspondence #1354</a></span></h3></summary>
       <p>Junyan: &ldquo;"d28 yes" (2026-10-26)&rdquo;</p>
