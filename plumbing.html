@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>A scheduled reply stuck because its booking was never made texts Junyan once<span class="kind">event-gate &middot; route &middot; services/event-gate/handoff_text.py, services/event-gate/outbound_guard.py, d93, d74, d82 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1358">desk-correspondence #1358</a></span></h3></summary>
+      <p>Junyan: &ldquo;d93 sure&rdquo;</p>
+      <p><strong>Why.</strong> Since PR 1340, a scheduled reply carrying a prepared booking that was never made is held at send time and retried silently every minute, so nobody knows it is stuck. Junyan said "93 sure" to one alert per row.</p>
+      <p><strong>Route change.</strong> The first time the Send Engine's check holds such a row, event-gate texts the on-call phone from the desk line: "A reply to &lt;renter&gt; is stuck: it was never booked. Open it in the Deck and press Book and send." Once per row, never again for the same row.</p>
+      <p><strong>Failure mode.</strong> Nothing from 10:30 PM to 8 AM (the next retry after 8 AM sends it). A Phone.com refusal tries again on the next retry; an unknown outcome is never repeated. Shares the 20-a-day cap with the handoff text. PREPARED_STUCK_TEXT_DISABLED=1 turns it off.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-27</span>
