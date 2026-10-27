@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>The Deck's Skedda check now names bookings Skedda deleted<span class="kind">event-gate &middot; failure &middot; services/event-gate/skedda_sync.py, deck-app PR 445, d16, d20 &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;20 yes&rdquo;</p>
+      <p><strong>Why.</strong> The Charges tab says "Skedda no longer shows booking X. Nothing to charge." only for an id in <code>gone</code> (deck-app PR 445, d16), and event-gate never sent <code>gone</code>, so a deleted booking still showed as a normal card.</p>
+      <p><strong>Read change.</strong> Skedda has no read of one booking by id (GET /bookings/&lt;id&gt; answers 405) and a deleted booking just drops out of every date read with no flag. So when /booking-truth finds an id missing, it sweeps today plus or minus 400 days in four 200-day reads; an id absent from every good read goes in <code>gone</code>.</p>
+      <p><strong>Failure mode.</strong> A failed, empty or blind sweep read names nothing gone and sets <code>gone_unchecked</code>; the card shows as before and the server still refuses to charge a booking it cannot find. Up to four extra Skedda reads, only when an id is missing, cached 60 s with the rest.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-27</span>
