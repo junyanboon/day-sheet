@@ -1364,6 +1364,22 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>Concierge and Desk Sort follow the Low / High Tokens setting<span class="kind">The Sentinel, The Concierge, The Desk Sort &middot; cadence &middot; services/event-gate/claude_quota_low.py (--lane), services/event-gate/sentinel_sweep.py (quota_low_words), ticket 161 Build 3c &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1362">desk-correspondence #1362</a></span></h3></summary>
+      <p><strong>Why.</strong> Junyan 2026-10-27: "I want to be able to turn it up to high tokens if I have a lot of tokens", "Only two settings: low and high tokens".</p>
+      <p><strong>What it does.</strong> <code>claude_quota_low.py --lane concierge|desk-sort</code> reads <code>tokens</code> ("low"/"high", no expiry; the old <code>quota_low_until</code> form still reads). High runs every slot. Low runs the Concierge only at 00, 12, 16, 20 UTC and the Desk Sort only at 00, 12, 21 UTC. Unreadable = High. On Low the Sentinel logs "Low Tokens set by Junyan" (no date) and raises no per-lane missing alarms for Claude cloud lanes; on High it alarms as normal. The triggers go back to hourly once this is live.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>Low Tokens / High Tokens switch on the Robots tab<span class="kind">The Deck, The Sentinel, The Concierge, The Desk Sort &middot; failure &middot; src/claude-quota-low.js, src/index.js (/api/claude-quota-low), sources/fbs-template.html (qlowHtml), desk-correspondence services/event-gate/claude_quota_low.py, ticket 161 Build 3c &middot; <a href="https://github.com/junyanboon/deck-app/pull/428">deck-app #428</a></span></h3></summary>
+      <p><strong>Why.</strong> Junyan 2026-10-27: "Only two settings: low and high tokens", make Low red, and "no need the until nov 2".</p>
+      <p><strong>What it does.</strong> The button beside CLAUDE becomes a two-setting switch: Low Tokens (red) or High Tokens (green), exactly one lit, no date shown. It writes <code>{"tokens":"low"|"high"}</code> into the <code>CLAUDE QUOTA LOW V1</code> block on the Claude usage page and stays until Junyan changes it. The old <code>quota_low_until</code> form still reads. Never set or unreadable shows High.</p>
+    </details>
+    </li>
     <li class="entry alert">
     <details>
       <summary><span class="when">2026-10-27</span>
