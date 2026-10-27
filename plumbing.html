@@ -1367,6 +1367,33 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry alert">
     <details>
       <summary><span class="when">2026-10-27</span>
+      <h3>A reply stuck because its booking was never made files one desk row, not a text<span class="kind">event-gate &middot; route &middot; services/event-gate/prepared_action.py, services/event-gate/outbound_guard.py, d93, d94, PR 1358 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1360">desk-correspondence #1360</a></span></h3></summary>
+      <p>Junyan: &ldquo;94 no it can just get sent ot eh desk drops or another robot that can fix it&rdquo;</p>
+      <p><strong>Why.</strong> PR 1358 texted Junyan's phone once when a scheduled reply was held because its prepared booking was never made. Junyan said no to the text (d94): send it to the desk for a robot instead.</p>
+      <p><strong>Route change.</strong> The first time the Send Engine's check holds such a row, event-gate files ONE Review row on the Actions board, keyed <code>[prepared-stuck:&lt;row id&gt;]</code>: "A reply to &lt;renter&gt; is held: its booking was never made." Ask: book it from the prepared line and release, or press Book and send in the Deck. The phone text and PREPARED_STUCK_TEXT_DISABLED are gone. Nothing is written to the Desk Drops board.</p>
+      <p><strong>Failure mode.</strong> Once per queue row. If the Notion write fails, the next minute retry tries again. The reply stays held either way; nothing is sent to the renter.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>Junyan's "Claude quota low" mark quiets the Sentinel for cloud lanes and halves the Concierge and Desk Sort<span class="kind">The Sentinel, The Concierge, The Desk Sort &middot; failure &middot; services/event-gate/claude_quota_low.py, sentinel_sweep.py, library/desk-sort.md (Concierge rule lives in its cloud prompt STEP 0; the orchestration canon is at its size budget), deck-app src/claude-quota-low.js, ticket 161 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1359">desk-correspondence #1359</a></span></h3></summary>
+      <p><strong>Why.</strong> Ticket 161 fix 3b, Junyan 2026-10-27 ("9 yes, 10 yes"): no script can read the weekly Claude quota, so Junyan marks it low himself from the Deck Robots tab.</p>
+      <p><strong>Failure mode.</strong> While <code>quota_low_until</code> (block <code>CLAUDE QUOTA LOW V1</code> on the Claude usage page) is in the future, the Sentinel moves Claude cloud lanes (runtime <code>trig_...</code>) out of missing and not finishing and logs one line "Claude quota marked low by Junyan until &lt;Toronto time&gt;". No text is sent. It ends by itself at the Monday 21:00 UTC reset or when Junyan presses Clear.</p>
+      <p><strong>Cadence.</strong> The Concierge and Desk Sort cloud passes read the mark at STEP 0 (<code>claude_quota_low.py</code>) and, while it is on, run only when the UTC hour is 0 or 1 modulo 4; other slots exit with one line and write nothing. Live only after the prompt edits are applied.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>"Claude quota low" button on the Robots tab<span class="kind">The Deck, The Sentinel, The Concierge, The Desk Sort &middot; failure &middot; src/claude-quota-low.js, src/index.js (/api/claude-quota-low), sources/fbs-template.html (rbUsage), desk-correspondence services/event-gate/claude_quota_low.py, ticket 161 &middot; <a href="https://github.com/junyanboon/deck-app/pull/422">deck-app #422</a></span></h3></summary>
+      <p><strong>Why.</strong> Ticket 161 fix 3b, Junyan 2026-10-27 ("9 yes, 10 yes"): no script can read the weekly Claude quota, so Junyan tells the fleet by pressing a button.</p>
+      <p><strong>What it does.</strong> The Claude group on the Robots tab has a "Claude quota low" button. Pressing it writes <code>quota_low_until</code> (the next Monday 21:00 UTC reset, shown in Toronto time) into a <code>CLAUDE QUOTA LOW V1</code> code block on the Claude usage page (<code>CLAUDE_USAGE_PAGE</code>); Clear writes null. Named sign-ins only. The Sentinel and the Concierge and Desk Sort cloud passes read it (desk-correspondence <code>claude_quota_low.py</code>).</p>
+    </details>
+    </li>
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-27</span>
       <h3>A scheduled reply stuck because its booking was never made texts Junyan once<span class="kind">event-gate &middot; route &middot; services/event-gate/handoff_text.py, services/event-gate/outbound_guard.py, d93, d74, d82 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1358">desk-correspondence #1358</a></span></h3></summary>
       <p>Junyan: &ldquo;d93 sure&rdquo;</p>
       <p><strong>Why.</strong> Since PR 1340, a scheduled reply carrying a prepared booking that was never made is held at send time and retried silently every minute, so nobody knows it is stuck. Junyan said "93 sure" to one alert per row.</p>
