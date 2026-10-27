@@ -1377,6 +1377,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-26</span>
+      <h3>Out of weekly Claude quota is one alert, not every cloud lane "missing"; parked Concierge work is not re-read<span class="kind">The Sentinel, The Concierge &middot; failure &middot; services/event-gate/claude_quota.py, sentinel_sweep.py, claude_usage_cloud.py, concierge_parked.py, concierge_gate.py, library/concierge-orchestration.md, ticket 161 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1357">desk-correspondence #1357</a></span></h3></summary>
+      <p><strong>Why.</strong> Ticket 161, Junyan 2026-10-26 (d1 "1 yes"): on 2026-10-26 the account hit its weekly Claude limit and the Sentinel reported each cloud lane "missing"; the Concierge closed passes "Skipped Steps" only because of its per-pass caps.</p>
+      <p><strong>Failure mode.</strong> When the usage block shows the newest cloud run refused by the seven-day limit, the Sentinel moves every cloud lane (runtime <code>trig_...</code>) out of missing and not finishing and raises one alarm <code>quota:weekly</code> to Junyan's line: "Out of weekly Claude quota until &lt;reset&gt;". It clears when a cloud run succeeds or the reset passes. Needs <code>TRIGGER_API_TOKEN</code> and <code>CLAUDE_USAGE_CLOUD_ENABLED=1</code> on event-gate; without them nothing changes.</p>
+      <p><strong>Concierge.</strong> <code>concierge_gate.py --last-pass auto</code> counts person-gated handbacks and finished tickets that did not move since the last pass as waiting, not work. Leftovers only over a cap close the pass Completed.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-26</span>
+      <h3>A booking request replaces its enquiry, and a phone that arrives reaches the ticket<span class="kind">Auto-review, the Responder (intake_decide), The Greeter &middot; route, failure &middot; EVENT-GATE auto_review.py, greeter_sweep.py, scripts/intake_decide.py, library/position.md, library/job-2-triage.md, library/the-responder.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1355">desk-correspondence #1355</a></span></h3></summary>
+      <p>Junyan: &ldquo;3 yes 4 yes 5 yes alwasy dedupe 6 yes&rdquo;</p>
+      <p><strong>Why.</strong> A Tagvenue guest's enquiry and booking request for the same slot ran as two tickets. Auto-review moved the booking ticket to Review straight after our message went out, and the phone number she sent on the enquiry thread never reached it.</p>
+      <p><strong>Route change.</strong> - Auto-review holds a <code>Gate: Staff</code> / <code>Gate: Money</code> ticket for 24 hours after its newest <code>Sent</code> queue row (<code>sent-recently</code>) and while an unticked <code>[AI</code> step is open on a ticket edited in the last 3 days (<code>ai-steps-open</code>). <code>Revisit After</code> is compared with today's Toronto date. - <code>intake_decide.py --apply</code>: a platform booking request on the same relay, studio and date/time as an open enquiry ticket notes both tickets, sets the enquiry's held replies to Will Not Send and moves the enquiry to Review (<code>supersedes</code>). Another relay or slot is never merged. - The Greeter, on <code>phone:filed</code>: each open ticket from the card, or keyed on a message from the relay, with an unticked Phone.com step gets the step ticked (contact confirmed in Phone.com, via <code>scripts/ticket_edit.py</code>), else goes from Review or a Gate back to In Progress with "phone arrived, Phone.com contact due".</p>
+      <p><strong>Failure mode.</strong> A failed follow-up never undoes the phone filing; it is logged and the next phone arrival retries. A supersede read-back mismatch fails the intake run loudly. <code>AUTO_REVIEW_DISABLED=1</code> still turns auto-review off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-26</span>
       <h3>A Peerspace or Tagvenue guest who sends their number gets both replies by themselves<span class="kind">event-gate &middot; route &middot; services/event-gate/greeter_sweep.py queue_phone_ack, services/event-gate/booking_sweep.py queue_confirmation, scripts/jev_htr.py d28_owned, library/autonomy.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1354">desk-correspondence #1354</a></span></h3></summary>
       <p>Junyan: &ldquo;"d28 yes" (2026-10-26)&rdquo;</p>
       <p><strong>Why.</strong> A guest who sent their number waited on two held messages: a thank-you in the platform chat and the booking text. Junyan: "it's essentially a handoff to confirm that we will continue the conversation via text. The only exception is if the booking is happening within 24 hours."</p>
