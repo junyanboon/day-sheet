@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-26</span>
+      <h3>The insurance sweep reads its ticket checklist straight from the SOP mirror<span class="kind">event-gate &middot; failure &middot; services/event-gate/ticket_body.py sop_case_checklist, services/event-gate/insurance_sweep.py case_checklist, .github/workflows/deploy-event-gate.yml &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1348">desk-correspondence #1348</a></span></h3></summary>
+      <p>Junyan: &ldquo;"18 yes" (2026-10-26)&rdquo;</p>
+      <p><strong>Why.</strong> The insurance sweep kept a hand copy of the Needs Insurance SOP's checklists. When the SOP gained two first steps on 2026-10-27 the copy fell behind and the test went red for everyone (PR 1346 patched it by hand). d18: robots read their steps from the SOP itself.</p>
+      <p><strong>Route change.</strong> The deploy workflow bundles every <code>sops/pages/*.md</code> into the image at <code>_canon/sops/</code>. The insurance sweep reads the Professional Liability and Event Insurance cases from there at run time, so an SOP mirror refresh reaches tickets on the next event-gate deploy.</p>
+      <p><strong>Failure mode.</strong> If the mirror page is missing, the case heading is gone, or the case has no <code>- [ ]</code> steps, no insurance ticket is created and the run log says <code>SOP MIRROR ERROR: insurance ticket for &lt;artist&gt; not created ...</code>. An empty checklist is never posted.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-26</span>
+      <h3>Extension and credit lanes skip robot mail; owner notices raise one Action<span class="kind">The Registrar &middot; route &middot; services/event-gate/robot_mail.py, services/event-gate/extension_sweep.py, services/event-gate/credit_sweep.py, library/job-2-triage.md, d7 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1345">desk-correspondence #1345</a></span></h3></summary>
+      <p>Junyan: &ldquo;yes but also we can set it up so gmail filters can auto handle it&rdquo;</p>
+      <p><strong>Why.</strong> A TELUS alarm notice from secure.business@telus.com tripped the extension lane on the word "extension" (Actions row 3f77503281c481f1ada8c9f494711cb9). Junyan, d7: "yes but also we can set it up so gmail filters can auto handle it."</p>
+      <p><strong>Route change.</strong> The extension and credit lanes drop an email before reading it when it carries bulk headers, comes from a no-reply style address (noreply, no-reply, donotreply, notifications, mailer-daemon and the like), comes from telus.com, meta.com, facebookmail.com, google.com or github.com (or a subdomain), or carries a Gmail Promotions, Updates or Forums label (<code>services/event-gate/robot_mail.py</code>). Their Gmail searches also leave out noreply and no-reply senders. Intake canon (<code>job-2-triage.md</code> item 1d): landlord or legal e-signature mail and cloud account lifecycle notices raise one Action for Junyan, filed <code>Junyan - Inbox</code>, never a renter ticket.</p>
+      <p><strong>Failure mode.</strong> A renter writing from one of those vendor domains, or whose mail Gmail sorts into Updates, is not read by these two lanes; the Responder's intake still sees it and tickets it. No switch: reverting the PR restores the old reads.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-26</span>
       <h3>Desk alerts speak plainly, and the "Claude looks back" note stops pinging Junyan<span class="kind">event-gate &middot; route &middot; scripts/intake_decide.py need_help_text, services/event-gate/gtg_sweep.py pbf_alert_text, services/event-gate/claude_down.py, services/event-gate/sentinel_sweep.py ops_text &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1344">desk-correspondence #1344</a></span></h3></summary>
       <p>Junyan: &ldquo;"13 yes, 14 yes" (2026-10-26)&rdquo;</p>
       <p><strong>Why.</strong> Junyan could not act on alerts written in robot words ("No idea which SOP to use", "PBF waited ... Disarmed blank"). d13: every post says who, what happened in plain words, one question and the exact reply. d14: posts that need nothing from him stop pinging him.</p>
