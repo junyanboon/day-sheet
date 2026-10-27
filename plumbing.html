@@ -1367,6 +1367,47 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-27</span>
+      <h3>Paid booking on the renter's YES, book and bill with no press, reply sends itself, Cancel card after 24 h<span class="kind">event-gate &middot; route &middot; services/event-gate/paid_booking.py, services/event-gate/paid_booking_live.py, services/event-gate/app.py (/paid-booking-sweep), services/event-gate/open_invoice_watch.py (is_paid_booking), services/event-gate/hosting/enable-paid-booking.sh, library/specs/paid-booking.md, library/autonomy.md (Grant: a paid booking on the renter's YES) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1361">desk-correspondence #1361</a></span></h3></summary>
+      <p>Junyan: &ldquo;"95 yes, 97 yes, 99 we will just miss it that's fine, 98 yes" and "100 yes, 101 by itself, 102 yes, 103 yes" (2026-10-27)&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wants a paid booking to finish itself on the renter's yes: book, charge the card on file or invoice, one reply that sends by itself, and an easy Cancel if the invoice sits unpaid 24 h.</p>
+      <p><strong>Route change.</strong> New 5-minute <code>/paid-booking-sweep</code> (timer at second :26, <code>enable-paid-booking.sh</code>): a clear YES to the desk's paid offer text books the slot (dry run, confirm, read-back), files one Charge row and bills it through the Deck's robot charge, then queues one reply at Ready to Send (Send After 9 AM at night). The open-invoice watch now also cards the invoices the robot makes (<code>approved_by</code> <code>robot:paid-booking</code>), so the existing Charges-tab Cancel covers them. Off until <code>PAID_BOOKING_AUTO=1</code> and <code>ROBOT_CHARGE_TOKEN</code> are set.</p>
+      <p><strong>Failure mode.</strong> Any failed check (room, rate, Artist card, Skedda profile, passed start, read-back, billing) books or sends nothing more and files one Review row. A second YES reuses the booking and the same Stripe idempotency keys. Reply wording with a dash, a colon outside a link or an unfilled bracket is held at Pending Review. With <code>OPEN_INVOICE_WATCH</code> not live, no Cancel card is filed (the enable script says so).</p>
+      <p><strong>Credit first (d108, "108 we should always offer to use their credit first.").</strong> Before the paid offer or the far-extension question, the robot reads the renter's credit ledger and plan. Credit: the credit lane's own offer (Pending Review, keyed <code>credit:&lt;id&gt;</code>, part-credit when short) goes instead of the paid offer. A plan, expiring credit or an unreadable read: no paid offer, a person keeps it (extensions: one Review row).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>Paid booking offer sends by itself, and extensions after tomorrow ask first then bill on YES<span class="kind">event-gate &middot; route &middot; services/event-gate/paid_offer.py, services/event-gate/paid_booking_live.py (offers, extension_yes), services/event-gate/paid_booking.py (run_extension_yes), services/event-gate/extension_sweep.py (paid_ask), services/event-gate/prepared_action.py (run_extension charge=False), scripts/credit_claim.py (KEY_PREFIXES), library/specs/paid-booking.md, library/job-2-triage.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1361">desk-correspondence #1361</a></span></h3></summary>
+      <p>Junyan: &ldquo;"104 yes, 105 yes, 106 yes" (2026-10-27)&rdquo;</p>
+      <p><strong>Why.</strong> Step 1 of the paid booking had no sender, so no YES could ever arrive; and extensions after tomorrow were booked at once with no question and no robot billing.</p>
+      <p><strong>Route change.</strong> <code>/paid-booking-sweep</code> now first sends the paid offer by itself for a simple paid booking request (every d97 check passes), keyed <code>[paid-offer:&lt;id&gt;]</code>; the Concierge's <code>queue_draft</code> refuses a draft for that message. The extension lane, for a booking after tomorrow, sends the confirm-before-extending question by itself instead of booking; the renter's YES (read by <code>/paid-booking-sweep</code>) writes the extra block, bills it through the Deck's robot charge and sends the reply. Today and tomorrow extensions are unchanged. All of it only with <code>PAID_BOOKING_AUTO=1</code>.</p>
+      <p><strong>Failure mode.</strong> A request that fails any offer check gets nothing from the lane and stays with the Concierge. The lane stands down when the desk replied, another lane keyed the message, or a reply for the renter is already waiting. An extension YES that cannot be matched to its ask row is skipped; a refused extension or billing failure files one Review row and sends nothing.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>Event-gate answers the Deck's AI draft button (pick a card, or write a reply)<span class="kind">event-gate &middot; route &middot; services/event-gate/ai_draft.py, services/event-gate/app.py, Texts slice 06 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1363">desk-correspondence #1363</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending (PR open, not deployed)&rdquo;</p>
+      <p><strong>Why.</strong> Texts slice 06: the Deck's AI draft button needs a near instant card pick and a model draft when no card fits.</p>
+      <p><strong>Route change.</strong> Two new read-only routes. <code>POST /ai-draft/pick</code> asks Jev (two calls, about 3 s budget) which of the How to Respond cards the Deck sent fits, and answers pick, narrow, full or unavailable with the top 3. A card that needs a door code or a money amount is never a pick. <code>POST /ai-draft/write</code> asks the model for a reply or a redo from the whole conversation and checks every 4-digit code and $ amount against the input. Neither sends, queues or writes anything except one Jev ledger line (site <code>deck.ai_draft</code>).</p>
+      <p><strong>Failure mode.</strong> No TypeSafe key, a Jev timeout or a bad answer: pick answers 200 with route <code>unavailable</code>. Model down: write answers 503 <code>model_unavailable</code>. A code or amount not in the input comes back with warnings for the person who reviews it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>The paid-booking robot charges its own Charge row through the Deck, token only<span class="kind">deck &middot; route &middot; src/robot-charge.js, src/charge.js (robotRow, opts.robot), src/index.js (/api/robot/charge), desk-correspondence services/event-gate/paid_booking_live.py, library/autonomy.md (Grant: a paid booking on the renter's YES) &middot; <a href="https://github.com/junyanboon/deck-app/pull/427">deck-app #427</a></span></h3></summary>
+      <p>Junyan: &ldquo;95 yes, 97 yes, 99 we will just miss it that's fine, 98 yes" (2026-10-27); "when they say yes book it and auto-bill card on file. if no card on file then send invoice&rdquo;</p>
+      <p><strong>Why.</strong> On a renter's YES the event-gate paid-booking lane books the slot and must bill it with no press (d97). The Stripe charge key lives only on the Deck.</p>
+      <p><strong>Route change.</strong> New <code>POST /api/robot/charge</code>, bearer <code>ROBOT_CHARGE_TOKEN</code>, registered before the session check. It runs the same <code>charge.js</code> preview and run as the owner's Charged press, with the same Stripe idempotency keys, then settles Skedda paid as the press does. Invoice mode does not text the pay link (the lane's own reply carries it).</p>
+      <p><strong>Failure mode.</strong> No token on the Deck: 503, nothing charged. Wrong token: 401. Any row that is not a Charge row titled <code>[paid-booking:&lt;key&gt;]</code> with <code>[PAID-BOOKING-V1:&lt;key&gt;]</code> in Basis: 403. A declined card answers 402 and the lane falls back to an invoice; any other error answers its status and the lane files a Review row.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
       <h3>Concierge and Desk Sort follow the Low / High Tokens setting<span class="kind">The Sentinel, The Concierge, The Desk Sort &middot; cadence &middot; services/event-gate/claude_quota_low.py (--lane), services/event-gate/sentinel_sweep.py (quota_low_words), ticket 161 Build 3c &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1362">desk-correspondence #1362</a></span></h3></summary>
       <p><strong>Why.</strong> Junyan 2026-10-27: "I want to be able to turn it up to high tokens if I have a lot of tokens", "Only two settings: low and high tokens".</p>
       <p><strong>What it does.</strong> <code>claude_quota_low.py --lane concierge|desk-sort</code> reads <code>tokens</code> ("low"/"high", no expiry; the old <code>quota_low_until</code> form still reads). High runs every slot. Low runs the Concierge only at 00, 12, 16, 20 UTC and the Desk Sort only at 00, 12, 21 UTC. Unreadable = High. On Low the Sentinel logs "Low Tokens set by Junyan" (no date) and raises no per-lane missing alarms for Claude cloud lanes; on High it alarms as normal. The triggers go back to hourly once this is live.</p>
