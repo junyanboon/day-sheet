@@ -1364,6 +1364,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>Extension lane full mode goes on, limited to bookings that start today in Toronto<span class="kind">event-gate extension lane (The Registrar), AI reader full mode &middot; route &middot; EVENT-GATE extension_sweep.py, extension_reader.py, test_extension_full_same_day.py, library/autonomy.md "The extension lane has an AI reader" &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1372">desk-correspondence #1372</a></span></h3></summary>
+      <p>Junyan: &ldquo;d20 yes (2026-10-27)&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-10-27 (d20): "20 yes it can auto-exend same day bookings". The three gaps he named first were closed in PR 1300.</p>
+      <p><strong>Route change.</strong> <code>EXTENSION_READER_MODE=full</code> is set on event-gate. A new setting <code>EXTENSION_FULL_SCOPE</code> (default <code>same_day</code>) limits full mode's own Skedda writes (left late, arrived early, the answer to the free-15-minutes note) to a booking that starts today in Toronto. A booking on any other day files a Review row naming the day, and nothing is written. On a same-day write the Timekeeper overtime check and the room-free check still run first. The stay-later path is the same as in veto mode. No new send path: replies stay held, or the existing same-day release.</p>
+      <p><strong>Failure mode.</strong> An unreadable day or an unknown scope value reads as <code>same_day</code>. Rollback without a code change: <code>EXTENSION_READER_MODE=veto</code> (or <code>off</code>) and restart event-gate.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>AI draft never sits on "Writing a reply..." forever, a chip press shows it took, and two chips never share a name<span class="kind">The Deck &middot; failure, tool &middot; deck-app public/tab-kit.js AI_WAIT, aiAsk; public/texts-tab.js aiCall, aiWrite, aiChip, drawAi; public/gmail-tab.js aiCall, aiWrite, aiAct, drawAi; src/ai-draft.js distinctChips, pickDraft; test/ai-draft.test.js; test/gmail-ai-draft.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/444">deck-app #444</a></span></h3></summary>
+      <p>Junyan: &ldquo;"When I click the things nothing happens" (2026-10-27, Fabio Hernandez's thread)&rdquo;</p>
+      <p><strong>Why.</strong> On Fabio Hernandez's thread the AI draft line sat on "Writing a reply from the best cards..." with an empty box and AI draft and Write one greyed. Every press of a chip started a new write with the same line, so it looked like nothing happened. Two chips both read "Which studio / room". The writer itself was down (event-gate /ai-draft/write answered 503 model unavailable on every press that day).</p>
+      <p><strong>Failure mode.</strong> Every AI draft call on the Texts and Gmail tabs now gets an answer within 30 s even if the request or its body never finishes: the wait stops, the note says AI draft did not answer, and AI draft, Write one and the chips can all be pressed again. A chip pressed while the writer works is marked and the wait line names it ("Writing a reply from "Parking"..."). Nothing sends from the Deck.</p>
+      <p><strong>Tool surface.</strong> Chip names: the same card words twice are one chip; two different cards whose short names match each get the words after their title's dash, e.g. "Which studio / room: full answer" and "Which studio / room: asks which of our rooms...".</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-27</span>
