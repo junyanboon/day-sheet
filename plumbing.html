@@ -1364,6 +1364,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-26</span>
+      <h3>Desk alerts speak plainly, and the "Claude looks back" note stops pinging Junyan<span class="kind">event-gate &middot; route &middot; scripts/intake_decide.py need_help_text, services/event-gate/gtg_sweep.py pbf_alert_text, services/event-gate/claude_down.py, services/event-gate/sentinel_sweep.py ops_text &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1344">desk-correspondence #1344</a></span></h3></summary>
+      <p>Junyan: &ldquo;"13 yes, 14 yes" (2026-10-26)&rdquo;</p>
+      <p><strong>Why.</strong> Junyan could not act on alerts written in robot words ("No idea which SOP to use", "PBF waited ... Disarmed blank"). d13: every post says who, what happened in plain words, one question and the exact reply. d14: posts that need nothing from him stop pinging him.</p>
+      <p><strong>Route change.</strong> The Responder's Need Help line and the Registrar's thank-you alert use the new pattern. When Claude's lanes recover and no lane is left on Codex, the "Claude looks back" note is written to the pass log only, not posted. The Sentinel's signature uses a dot instead of an em dash.</p>
+      <p><strong>Failure mode.</strong> Wording only, plus one post fewer. A recovery that still leaves a lane on Codex is still posted, since Junyan must type the off command.</p>
+      <p>Second pass (same PR): the Sentinel's stopped, not finishing and not producing posts and Hermes's could-not-fix and gone-quiet posts are in plain words with no dashes, and the Responder canon now asks for <code>artist_name</code> plus <code>booking</code> or <code>studio</code> on the intake form.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-26</span>
+      <h3>Insurance Processor marks per-event bookings "EVENT" and texts Stefan<span class="kind">Insurance Processor &middot; route, failure &middot; services/event-gate/event_title.py, insurance_processor.py, skedda_mcp_write.py, library/autonomy.md, stefan_text.py, B, E &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1342">desk-correspondence #1342</a></span></h3></summary>
+      <p><strong>Why.</strong> Junyan ruled (2026-10-26, B) that a one-off booking by a Per-event (Duuo) renter is an event and its title should say so, so the desk can see it at a glance.</p>
+      <p><strong>Route change.</strong> Every Insurance Processor pass (event-gate, every 10 minutes) reads the Artist rows whose Insurance Model is "Per-event (Duuo)", then the Skedda bookings from today through 30 days. Each one-off booking held by one of those renters whose title does not already say EVENT gets " EVENT" appended through skedda-mcp <code>edit_booking</code>, title only, then the day is re-read to prove it. At most 15 edits per pass. For each EVENT booking starting within 7 days (not Justin Blayney's or Anastasia's), Stefan gets one text from the desk line with the date, studio and end time (Junyan, 2026-10-26, E), through <code>stefan_text.send</code> (key <code>event:&lt;booking id&gt;</code>, 08:00 to 20:00 Toronto, daily cap).</p>
+      <p><strong>Failure mode.</strong> Series and block-outs are never touched. A failed read writes nothing and the pass reports not ok. A title that did not stick on re-read is an error in the pass log (<code>event-title:</code>) and the <code>/insurance-processor</code> result's <code>events</code>. <code>EVENT_TITLE_DISABLED=1</code> stops it; <code>INSURANCE_PROCESSOR_DRY_RUN=1</code> reports only. A text outside the window waits for a later pass; an uncertain or failed text is an <code>events</code> error in the pass log and is never re-sent. <code>EVENT_STEFAN_TEXT_DISABLED=1</code> stops the texts only.</p>
+    </details>
+    </li>
     <li class="entry alert">
     <details>
       <summary><span class="when">2026-10-26</span>
