@@ -1364,6 +1364,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>Claude calls fall back to the Claude CLI when the relay is down, and a dead relay login texts Junyan once<span class="kind">event-gate &middot; failure, route &middot; services/event-gate/drafter.py, services/event-gate/relay_login.py, services/event-gate/sentinel_sweep.py, c15, c16 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1378">desk-correspondence #1378</a></span></h3></summary>
+      <p>Junyan: &ldquo;14 done 15 yes 16 yes&rdquo;</p>
+      <p><strong>Why.</strong> The cliproxy relay's Claude login expired (cliproxy logged "Refresh token expired" every 5 minutes from at least 2026-10-21) and every Claude call through it got a 503, with nothing telling anyone. Junyan re-logged it on 2026-10-27 and asked for an alert (c15) and a fallback for every robot that uses it (c16).</p>
+      <p><strong>Route change.</strong> <code>drafter._anthropic_post</code>, the one Claude call every event-gate lane uses (card review, judge, operational feedback, physical policy, reply service, the Deck's AI draft), now tries the relay first and, when the relay answers 401/403/404/408/429/5xx/529 or cannot be reached, runs the same prompt once on the <code>claude</code> CLI with the Claude subscription. A 400 or an empty model answer is not retried. The Sentinel's hourly pass now sends one tiny Claude call through the relay alone; after two failed checks in a row it posts once to #desk-status (SMS fallback) with the re-login steps. A good check marks it back in the pass log without a post.</p>
+      <p><strong>Failure mode.</strong> Both paths down: the caller gets nothing, as before, and the log names both reasons (<code>http-503; cli:...</code>). The alert posts once per outage; a failed post retries next pass. RELAY_LOGIN_DISABLED=1 turns the check off, RELAY_LOGIN_MODE=shadow records instead of posting.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>Extension full mode also books a left-late report about yesterday's booking<span class="kind">event-gate extension lane (The Registrar), AI reader full mode &middot; route &middot; EVENT-GATE extension_sweep.py full_write_not_today, test_extension_full_same_day.py, library/autonomy.md "The extension lane has an AI reader" &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1379">desk-correspondence #1379</a></span></h3></summary>
+      <p>Junyan: &ldquo;d21 yes (2026-10-27)&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-10-27 (d21): "those can be auto-extended as well". Renters often report staying late the next morning.</p>
+      <p><strong>Route change.</strong> With <code>EXTENSION_FULL_SCOPE=same_day</code>, a left-late report about a booking that started yesterday in Toronto now books itself like a same-day one. Every guard still runs: the Timekeeper overtime check, the room-free check, code and AI agreeing on the end, platform bookings staff-gated, no doubled block. Arrived early and the answer to the 15 minute note stay today-only. Two or more days back, and future days, stay a Review row. No new send path.</p>
+      <p><strong>Failure mode.</strong> An unreadable day reads as not yesterday and files a Review row. Rollback without a code change: <code>EXTENSION_READER_MODE=veto</code> (or <code>off</code>) and restart event-gate.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-27</span>
