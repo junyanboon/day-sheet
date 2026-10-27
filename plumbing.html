@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>Credit lane, offers to use credit now send themselves; converting to credit stays with a person<span class="kind">event-gate &middot; route &middot; services/event-gate/credit_sweep.py (offer_clock, offer_release, parse_window), services/event-gate/move_sweep.py (queue_row status and send_after, default unchanged), services/event-gate/paid_offer.py, library/specs/paid-booking.md, library/autonomy.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1365">desk-correspondence #1365</a></span></h3></summary>
+      <p>Junyan: &ldquo;"Sorry I'm confused fi they ask to use their credit htat's automatic. If they ask to convert something to credit that should go through a human first for decision" (2026-10-27)&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wants an offer to spend a renter's credit to go out on its own; turning something into credit stays a person's call.</p>
+      <p><strong>Route change.</strong> The credit lane's own offers (one date, part credit, a list of dates) are written at the status <code>paid_booking.release</code> gives: Ready to Send, Send After 9 AM between 9 PM and 9 AM Toronto. Before they were always Pending Review. Offer times now read "6 PM" or "6.30 PM" (no colon), and the lane reads that form back when the renter says yes.</p>
+      <p><strong>Failure mode.</strong> Wording with a dash, a colon outside a link or an unfilled bracket stays at Pending Review. The studio question, the after-booking confirmations and the move lane are unchanged. The lane never issues credit.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-27</span>
