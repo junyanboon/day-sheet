@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-27</span>
+      <h3>Chase reminders and the open-invoice Remind carry the short pay link, never the long Stripe URL<span class="kind">chase-sweep &middot; route, failure &middot; services/event-gate/pay_link.py, services/event-gate/chase_sweep.py (invoice_link, invoice lane, stripe_invoice_lane), services/event-gate/open_invoice_watch.py (remind), deck-app src/robot-charge.js (POST /api/robot/pay-link) &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;"d59" approved 2026-10-27&rdquo;</p>
+      <p><strong>Why.</strong> Invoice reminders put the long hosted Stripe URL in the renter's text or email. The Deck already makes short pay.danceannex.ca/invoice-&lt;n&gt;-&lt;xx&gt; links (deck-app PR 457).</p>
+      <p><strong>Route change.</strong> When a reminder needs a pay link, event-gate asks the Deck for the short one: POST fbs.danceannex.ca/api/robot/pay-link with the shared ROBOT_CHARGE_TOKEN (d103). The Deck makes it or returns the one already made. This covers the chase sweep's Action-row invoice lane, its untracked Stripe invoice lane, and the open-invoice watch's Remind press. An invoice with no Stripe pay page still says "You can pay it from the invoice we sent you."</p>
+      <p><strong>Failure mode.</strong> No token, the Deck down or an odd answer (three quick tries): no reminder that pass, never the long URL. The Action row gets one "No reminder: pay link not made (...)" line a day and the next pass retries; an untracked Stripe invoice shows the reason in the sweep's errors; Remind writes "Reminder not queued: the short pay link could not be made (...); press Remind again later" on the row.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>The Charged invoice text and the robot's invoice reply carry the short pay link; no second link on a waiting extension reply<span class="kind">deck &middot; route &middot; src/invoice-text.js, src/robot-charge.js (invoiceReply, POST /api/robot/pay-link), src/index.js (/api/charge/run, retryInvoiceTextsPass cron), sources/deck.html (Charged toast) &middot; deck-app</span></h3></summary>
+      <p>Junyan: &ldquo;"d59" and "d60" approved 2026-10-27&rdquo;</p>
+      <p><strong>Why.</strong> The d3 invoice text and the paid-booking robot's invoice reply sent the long Stripe hosted URL. On a no-card stayed-late / came-early row, Charged also put the link into the waiting reply, so the renter got it twice.</p>
+      <p><strong>Route change.</strong> Charged's invoice text now says "Click here: pay.danceannex.ca/invoice-&lt;n&gt;-&lt;xx&gt;". The robot's invoice answer gives event-gate the short link too. <code>POST /api/robot/pay-link</code> (bearer ROBOT_CHARGE_TOKEN) makes the short link for event-gate's chase reminders and Remind. d60: Charged fills the waiting reply first, and sends no d3 text when that reply has the link (or will on the 15-minute retry). If at the click the reply cannot carry it (older reply with no [PAY LINK] spot, reply no longer waiting, stopped on an earlier pass), the d3 text still goes. If the fill errored outright, the d3 text is held and queued at Pending Review, so a person checks before the renter could get the link twice.</p>
+      <p><strong>Failure mode.</strong> The short link is tried three times. Still no link: no text goes, the Charge row says INVOICE TEXT HELD with <code>[INVOICE-TEXT-WAIT-V1:&lt;in_id&gt;]</code>, and the 15-minute pass makes the link and queues the text in Messages at Pending Review (never sent by itself). Invoice no longer open: a stop line. After 8 failed passes: INVOICE TEXT FAILED with <code>[INVOICE-TEXT-STOP-V1:&lt;in_id&gt;]</code>. <code>INVOICE_TEXT_RETRY_DISABLED=true</code> stops the pass. The robot gets <code>url: ""</code> with a why, and its lane holds the reply for a person. Never a long Stripe URL.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
       <h3>Stayed-late / came-early Charge row names its waiting reply, so the Deck fills the pay link<span class="kind">event-gate &middot; failure &middot; services/event-gate/extension_sweep.py (PAY_LINK_TAG, PAY_LINK_WAIT, CARD_UNREAD, report_reply, charge_row), deck-app src/ext-pay-link.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1385">desk-correspondence #1385</a></span></h3></summary>
       <p>Junyan: &ldquo;d50" approved 2026-10-27; "I don't want to ever copy and paste.&rdquo;</p>
       <p><strong>Why.</strong> The no-card reply's note told Junyan to make the pay link on the Charges tab and paste it in place of [PAY LINK].</p>
