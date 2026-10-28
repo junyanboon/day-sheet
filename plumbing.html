@@ -1367,6 +1367,24 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>A Stripe draft invoice can bill a Skedda series one date per line<span class="kind">stripe-mcp &middot; tool &middot; services/stripe-mcp/stripe_mcp/server.py, services/stripe-mcp/tests/test_stripe_mcp.py, library/invoicing.md, deck-app open-invoices.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1432">desk-correspondence #1432</a></span></h3></summary>
+      <p>Junyan: &ldquo;43 yes (2026-10-28)&rdquo;</p>
+      <p><strong>Why.</strong> A Skedda series has one booking id for every date. A draft invoice line named only that id, so the Deck read it as billing the whole series and took every later date off "To charge".</p>
+      <p><strong>Tool change.</strong> stripe-mcp <code>create_draft_invoice</code> lines take an optional <code>occurrence</code> (the date's local start, e.g. <code>2026-11-03T19:00</code>), stored as line metadata <code>skedda_occurrence</code> in the Deck's own format (<code>2026-11-03T19:00:00-05:00</code>). The same <code>booking_id</code> may repeat on several lines only with distinct dates; a repeated date, or the same booking with and without a date, is refused before any write. The Deck (deck-app PR for d43) clears only the dated rows. Paying is unchanged: each date is marked paid in Skedda with <code>settle_charged_occurrence</code> (<code>library/invoicing.md</code> § Series).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
+      <h3>A stale live SOP folder files one Fixer row; the robots keep reading the last copy<span class="kind">Desk Invariants &middot; failure &middot; EVENT-GATE no_sop_watch.stale_pass, ticket_body.sop_source_status, SOP_STALE_AFTER_S, d73 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1431">desk-correspondence #1431</a></span></h3></summary>
+      <p>Junyan: &ldquo;73 yes&rdquo;</p>
+      <p><strong>Why.</strong> The ticket robots read SOP steps from the live folder the desk tick refreshes about every 15 minutes. If the refresh stops, they quietly read an old copy.</p>
+      <p><strong>Failure change.</strong> Each hourly Desk Invariants pass checks the folder. Once its last refresh is over 2 hours old, it files one Fixer row "🧭 SOP folder stale" (key <code>[sop-stale]</code>, at most one open). The row closes itself when the folder refreshes again and reopens if it goes stale again. Reading does not change: no fallback, no failure.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>Two same-name platform cards no longer stop the access text<span class="kind">The Registrar &middot; failure &middot; services/event-gate/booking_sweep.py, Junyan 2026-10-28 "19 yes" &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1430">desk-correspondence #1430</a></span></h3></summary>
       <p><strong>Why.</strong> Tiphanny C. (Peerspace 509A Oct 28) had two same-name cards. Gate 2 put the access text on the phone card, the booking's board row linked the other card, and dispatch stopped on "booking recipient binding is ambiguous".</p>
       <p><strong>Route change.</strong> When the board row links one of the same-name cards and the name rule picked the other (the only phone card), gate 2 keeps the board's card, which holds the relay and the alarm code, and uses the phone from the other card. One same-person question goes to Junyan.</p>
