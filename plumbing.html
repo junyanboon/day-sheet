@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>A Need Help text to Junyan no longer counts as the customer being answered<span class="kind">The Concierge &middot; failure &middot; EVENT-GATE concierge_intake.py, concierge_intake_ledger.py, d21 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1407">desk-correspondence #1407</a></span></h3></summary>
+      <p><strong>Why.</strong> Maryna Stupak's text of 2026-10-27 read verified and was skipped: the Need Help note sent to Junyan on Slack carried her sms-in id, and the intake reader took any Sent queue row with that id as her answer. Her ticket had no SOP and nobody picked it up.</p>
+      <p><strong>Route change.</strong> handled_elsewhere rule (a) skips owner texts (Message Code tag <code>[needhelp:</code>, <code>[urgent:</code> or <code>[owner:</code>, Artist is Junyan's card, or Reasoning holds NEED-HELP-V1). A handled_elsewhere item on an open ticket now also gets the SOP check, so a ticket with no SOP or no SOP steps reads needs_sop or needs_sop_steps. The intake ledger version moved to 2, so the next pass rereads every cached item.</p>
+      <p><strong>Failure mode.</strong> An owner text alone leaves the item needs_pickup (or needs_sop); only a Sent reply to the customer, a Processed Action, a closed ticket or a later outbound log row proves it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>A credit Junyan gives on the Deck now closes and lands on the credit ledger<span class="kind">The Desk Sort &middot; route, failure &middot; EVENT-GATE close_gate.py, library/desk-sort.md, d39 &middot; desk-correspondence</span></h3></summary>
       <p><strong>Why.</strong> A renter's torn mat credit stayed Ruled after Give credit: the close gate asked for payment proof on a credit, so the row never closed and the Deck showed it as "Credit to give" again.</p>
       <p><strong>Route change.</strong> The close gate takes a CREDIT GIVEN ruling on a Type Credit row. With <code>--apply</code> it fills an empty Deadline by the credit_expiry rules, finds the 💳 Artist Credits entry already recording the row or writes the one Credit Issued entry (Deadline as Expiry Date), then closes Processed, Verified and Reconciled.</p>
