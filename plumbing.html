@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>A platform booking request not in the ledger yet is read from Gmail before a ticket is opened<span class="kind">responder &middot; failure &middot; desk-correspondence scripts/intake_decide.py supersede_records, LedgerLag (exit 4) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1437">desk-correspondence #1437</a></span></h3></summary>
+      <p>Junyan: &ldquo;d87 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-28 Sass E Silver's Tagvenue booking request (gmail-1a184b640bcdeab0) arrived 22:51Z and the Responder opened a second ticket at 22:52Z, because the message only reached the ledger at 23:02Z and the enquiry dedupe saw nothing to compare.</p>
+      <p><strong>Failure mode.</strong> <code>intake_decide.py</code> now fetches a gmail source id that has no ledger file straight from Gmail for the dedupe check. If that also fails on a Peerspace, Tagvenue or Giggster booking, the plan says "supersede not checked: message not in the ledger yet" and <code>--apply</code> exits 4 with nothing written; the Responder leaves the message for its next pass.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>Charges tab can combine one renter's ticked charges into one Stripe charge or invoice; 1AP/AAP plan bookings get an Approve card<span class="kind">deck &middot; route, failure &middot; src/charge.js (previewCombined, runCombined, ownsRow, planOk, planUse), src/index.js (/api/charge/combine/preview, /api/charge/run page_ids, /api/charge/plan-ok), src/invoice-paid.js, src/live-unpaid.js, sources/deck.html (combine bar, cl-tick, plan cards), desk-correspondence services/event-gate/invoice_settle.py (combo_line) &middot; deck-app</span></h3></summary>
       <p>Junyan: &ldquo;"Build it" (2026-10-28, d25 "separate invoices and things should be separate unless I explicitly set them to be one invoice"; d24 "only for 1ap or AAp bookings I want this")&rdquo;</p>
       <p><strong>Why.</strong> Junyan wants each charge on its own row, with a way to bill several of one renter's bookings on one invoice only when he picks them. Plan bookings inside the plan's hours needed a plain "nothing to charge" card he can approve.</p>
