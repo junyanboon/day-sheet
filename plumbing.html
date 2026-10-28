@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>The overtime notice goes out 10 minutes after a late lock-up, from the closing lane<span class="kind">The Timekeeper &middot; route, cadence &middot; EVENT-GATE closing_overtime.py, overtime_sweep.release_at, library/timekeeper-overtime.md, PR 1412 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1412">desk-correspondence #1412</a></span></h3></summary>
+      <p>Junyan: &ldquo;I want it to send it out 5 or 10 minutes after someone arms and leaves&rdquo;</p>
+      <p>Junyan, 2026-10-28: send the overtime notice with the post-booking follow-up shortly after the renter locks up late, attached to an existing bot, live right away, 5 or 10 minutes after the arm so they can tell us if something is off.</p>
+      <ul><li><code>closing_overtime.py</code> on the closing lane's minute poll: 10 minutes after an arm, the Timekeeper's judgment and Step 9 for plain late-only lock-ups by the renter; a text from the renter since the end, a later booking or any unclear case waits for 04:00.</li><li>New same-day card 4077503281c481cf820dc34b8d9dcf99 ("went well today"); sends only while its Send Mode is Auto-send, in 08:00 to 22:30 Toronto. Created at Needs review.</li><li><code>overtime_sweep.release_at</code> shared by the early notice and this send.</li><li>Same keys as the 04:00 run, so nothing is filed twice.</li></ul>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>Stripe connector draft invoices carry the Deck's Action and booking tags<span class="kind">stripe-mcp &middot; tool &middot; services/stripe-mcp server.py client.py, Junyan 2026-10-28 "15 yes" &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1415">desk-correspondence #1415</a></span></h3></summary>
       <p><strong>Why.</strong> A draft made with create_draft_invoice had no tags, so the Deck's Charges tab showed it as a loose invoice (Maryna Stupak, in_1UVZh5PunGOWPTflKuMXkoXB).</p>
       <p><strong>Tool change.</strong> create_draft_invoice takes deck_action (the Actions row's Notion page id), skedda_bookings and approved_by, written as invoice metadata, and a booking_id per line, written as line metadata. New tool tag_draft_invoice sets the same invoice metadata on an existing draft. The client may now also POST to <code>/invoices/&lt;id&gt;</code>; only tag_draft_invoice uses it, with metadata only.</p>
