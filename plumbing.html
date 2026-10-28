@@ -1364,6 +1364,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>A renter agreeing to the extra-move fee now moves the booking; mixed asks open two tickets<span class="kind">event-gate &middot; route &middot; services/event-gate/move_confirm.py, services/event-gate/move_sweep.py, scripts/intake_decide.py, scripts/sop_attach.py, d13, d14, d15 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1403">desk-correspondence #1403</a></span></h3></summary>
+      <p>Junyan: &ldquo;d13 "13 yes", d14 "make two separate tickets if there are two things", d15 "15 yes and update the booking move SOP with this new process"&rdquo;</p>
+      <p><strong>Why.</strong> Himanshi Mehta answered the $20 + HST extra-move offer with "okay sure I am okay to pay $20" (SMS sms-in-a4e078f5, 2026-10-27) and the move robot did not read it as a yes. Maryna Stupak and Enrico Casertano got tickets with no SOP.</p>
+      <p><strong>Route change.</strong> When the last question (the robot's or the desk's) offered a further move for the fee, a reply that only accepts paying it, naming no amount above the fee, counts as yes: the move is made and read back, and one held Charge row for $22.60 is filed (never charged by the robot). "instead of nov 8th" now names the original date even when "not november 8th" follows. At intake, Jev's top SOP at 0.55 or above goes on a ticket as "provisional SOP (Jev p=…)" when nothing else chose one, and the Need Help text still goes. A form's <code>second_ask</code> opens a second ticket with its own SOP, cross-linked. sop_attach.py copies lettered cases written as plain bullets as to-dos.</p>
+      <p><strong>Failure mode.</strong> Any other word in the reply (a new date, "but", "not", a question) keeps the old path: a Review row. JEV_SOP_PROVISIONAL sets the bar (default 0.55).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>The bot sets every credit's expiry before anyone presses<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/credit_expiry.py, services/event-gate/credit_sweep.py, library/autonomy.md, d29, d30, d35 &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;d29 yes, d30 yes&rdquo;</p>
+      <p><strong>Why.</strong> Credit rows stalled because nothing set an expiry (Tufan Bhattarai, $611.13, waiting since Oct 22). Junyan: "this actually can be determined by the bot easily and should be done before the human needs to press anything."</p>
+      <p><strong>Route change.</strong> Each credit-lane pass (every 5 min) writes the Deadline on every open Credit Action that has no expiry, with a dated Notes line naming the rule: one-off and private class accounts 3 months after the row was created, 1AP, 2AP and AAP the end of that month, other agreements the Agreement End Date. Up to 20 rows a pass.</p>
+      <p><strong>Failure mode.</strong> When the account type or the agreement end cannot be read, nothing is written and one Review row <code>[credit-expiry:&lt;action id&gt;]</code> goes to the board. CREDIT_EXPIRY_DISABLED=1 turns it off.</p>
+    </details>
+    </li>
     <li class="entry human">
     <details>
       <summary><span class="when">2026-10-27</span>
