@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry human">
     <details>
       <summary><span class="when">2026-10-27</span>
+      <h3>Process makes door codes, and the Concierge skips steps Process holds<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/process_ticket.py, services/event-gate/process_io.py, scripts/ticket_edit.py, library/concierge-orchestration.md, d355, d364, d368, d370 &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;368 yes, 370 yes&rdquo;</p>
+      <p><strong>Why.</strong> Junyan said Process may make a new door code (d355) and that Process and the Concierge skip steps the other has claimed or ticked (d364).</p>
+      <p><strong>Route change.</strong> /ai-draft/process now does an AI step that asks for an alarm, door, access or PIN code. A renter whose Artist card has an Alarm User ID is left alone. Otherwise it asks the alarm service's guarded access_operation for a create (code from the renter's phone, the ticket as authority): status first, then a four-panel preview, then one commit. ticket_edit.py gains --claim and refuses --check on a step someone else holds.</p>
+      <p><strong>Failure mode.</strong> A request the panels already know is never sent again. A short preview or a refusal stops the step with the service's reason and "ask the Door Checker". Panels not confirmed yet stops the step unticked; the next press re-reads the same request. PROCESS_MODE=dry previews nothing.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-27</span>
       <h3>The Deck's Process button walks a ticket's steps through event-gate<span class="kind">event-gate &middot; route &middot; services/event-gate/process_ticket.py, services/event-gate/process_io.py, services/event-gate/app.py, d353, d354, d355, d356, d357, d361, d364 &middot; desk-correspondence</span></h3></summary>
       <p>Junyan: &ldquo;d361 yes, d357 yes&rdquo;</p>
       <p><strong>Why.</strong> Junyan renamed the Deck's Concierge button to Process (d361) and said pressing it is the approval (d353 no). First case: a renter used a studio with no booking (Enrico Casertano, "I already passed by", d357).</p>
