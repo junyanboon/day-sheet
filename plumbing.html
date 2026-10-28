@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>The Deck's Process button walks a ticket's steps through event-gate<span class="kind">event-gate &middot; route &middot; services/event-gate/process_ticket.py, services/event-gate/process_io.py, services/event-gate/app.py, d353, d354, d355, d356, d357, d361, d364 &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;d361 yes, d357 yes&rdquo;</p>
+      <p><strong>Why.</strong> Junyan renamed the Deck's Concierge button to Process (d361) and said pressing it is the approval (d353 no). First case: a renter used a studio with no booking (Enrico Casertano, "I already passed by", d357).</p>
+      <p><strong>Route change.</strong> New POST /ai-draft/process {ticket, renter, thread, ...}. It reads the ticket's last SOP checklist, and for each open step: an AI step it knows (book a window already used, from the door log at the renter's normal rate; file a Charges list row, never billed) is claimed, done and ticked; any other step stops it, and a YOU, ARTIST or reply step gets a drafted reply for the Deck's box. A step claimed by someone else in the last 30 minutes stops it (d364). Full gate token only; the read-only AI draft token is refused.</p>
+      <p><strong>Failure mode.</strong> PROCESS_MODE=live is the default (Junyan, d366 and d367). dry reads everything and writes nothing; off answers 404 and is the kill switch. A failed step is unclaimed with a plain note and nothing after it runs. No rate on record, no door visit, or a Skedda refusal stops before any booking. Nothing is ever sent or queued.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-27</span>
