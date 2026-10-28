@@ -1367,6 +1367,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>Every Treasurer renewal notice now comes with an open Sales ticket, linked on the message row<span class="kind">event-gate &middot; route &middot; services/event-gate/renewal_notices.py ensure_sales_ticket, scripts/renewal_ticket_backfill.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1435">desk-correspondence #1435</a></span></h3></summary>
+      <p>Junyan: &ldquo;d29 yes&rdquo;</p>
+      <p><strong>Why.</strong> Viktoriia Osipovych's renewal text (Message Queue 3fa75032-81c4-8158-99bd-f74c1f686577) sat on the Deck with no ticket, so the steps strip was empty.</p>
+      <p><strong>Route.</strong> When the Treasurer queues a renewal notice it reuses the renter's open Sales ticket (Position not Won, Lost or Done) or makes a "Time Slot Renewal" ticket (Gate: Message, Leads, Prior Renter, SOP Skedda — Time Slot Renewal attached by sop_attach.py), and sets the row's Sales Ticket. If the ticket cannot be made the notice is still queued, held, and an Action row asks for the ticket by hand.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
+      <h3>A waiting text and its money row show as one card on Messages; one Send bills, then texts<span class="kind">deck &middot; route, tool, failure &middot; src/bundle.js, src/bundle-server.js, src/index.js (/api/bundle/link, /api/bundle/mark, /api/charge/run bundle_queue, Action CC/Sales Ticket), sources/deck.html (bundleHtml, bundleVerbs, moneyThen, bundleAfter, Charges list "With text") &middot; deck-app</span></h3></summary>
+      <p>Junyan: &ldquo;"28 yes" (d28); d23 "just leave it on the charges tab no messages" (2026-10-28)&rdquo;</p>
+      <p><strong>Why.</strong> A renter often gets a text and a charge or invoice for the same event. They lived on two tabs and drifted apart (one sent, the other forgotten).</p>
+      <p><strong>Route change.</strong> A Pending Review queue row and an open Charge/Invoice Action row pair when the Action names the reply (<code>[PAY-LINK-MQ:&lt;id&gt;]</code>), the draft's <code>DECK-INVOICE-V1</code> invoice id is on the Action, or they share one Customer Care / Sales ticket with exactly one waiting text and one open money row (anything else: no pair). The Messages card shows "With this text: Charge $X". A reply with its own invoice shows the real pay.danceannex.ca link in place of <code>{invoice_link}</code> (KV only, no Stripe call), Send finalizes it, <code>/api/bundle/mark</code> writes <code>INVOICED ... (BUNDLE-V1 MQ &lt;id&gt;)</code> on the Action (it checks the pair again server side), then the text releases. A reply with no invoice reads "Charge $X + send": the press shows the Charges tab's own preview, the second press runs <code>/api/charge/run</code> with <code>bundle_queue</code> (no separate pay-link text, no fill; the short link comes back for the reply), then the text releases. The Charges tab lists the paired row as "With text" with no Charge or Invoice button. A money row with no text is unchanged on Charges (d23).</p>
+      <p><strong>Failure mode.</strong> Charge refused or failed: nothing sent, the card says why. Invoice sent but no short link: the text is not sent and the card says so. The Deck cannot bill the row: the card offers "Send text only" and the row returns to Charges. Mark fails: the text still goes and a toast says to check the row on Charges before billing it. Manual, relay, booking-change and engine-blocked cards never bundle.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>Charges tab flags "New card added" when a renter saves a card after a Deck decline; a new card gets its own pay key<span class="kind">deck &middot; route &middot; src/invoice-card-charge.js (payKey), src/new-card.js (recordDecline, onCardEvent, verifyStripeSignature), src/open-invoices.js (markNewCards), src/index.js (POST /stripe-webhook, deckSlackDm), sources/deck.html (cardBtnHtml, liveNudge, Charges poll) &middot; deck-app</span></h3></summary>
       <p>Junyan: &ldquo;d49 "yes"; d51 "really useful whenever a card is declined. We often have a small window of time to make the charge so we should take advantage" (2026-10-28)&rdquo;</p>
       <p><strong>Why.</strong> A re-press within 24 h of a decline replayed the decline even with a new card, and nobody knew when a renter had saved a new card.</p>
