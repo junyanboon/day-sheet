@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>A credit's expiry is set when the Credit row is created, no expiry bot<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/credit_expiry.py, services/event-gate/lane_common.py, services/event-gate/credit_sweep.py, scripts/credit_expiry_for.py, library/autonomy.md, library/desk-sort.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1410">desk-correspondence #1410</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-10-28 "At the time of the credit queueing up on the deck it should be assessed", "as part of the SOP"&rdquo;</p>
+      <p><strong>Why.</strong> The 5-minute expiry fill (2026-10-27) never set a Deadline on the live board (Maryna Stupak's torn-mat credit sat empty). Junyan: "why do we even use an expiry bot?"</p>
+      <p><strong>Route change.</strong> The credit lane's 5-minute pass no longer fills expiries. Any Credit row made by code (lane_common.action_row) gets its Deadline and a dated why line in the same create. Rows made by a lane or by hand follow the SOP step "Set the credit's expiry (Deadline) by the rule", using <code>python3 scripts/credit_expiry_for.py &lt;artist page id&gt;</code>. The close gate still fills an empty Deadline at close time. <code>python credit_expiry.py --write</code> stays as a hand-run backfill.</p>
+      <p><strong>Failure mode.</strong> When the rule cannot tell (no single Artist card, card unreadable, mixed plan products, agreement with no end date), the Credit row is still created with Deadline empty and one Review row <code>[credit-expiry:&lt;action id&gt;]</code> goes to the board. A rule error never blocks the Credit row. CREDIT_EXPIRY_DISABLED=1 skips the stamp.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>A Need Help text to Junyan no longer counts as the customer being answered<span class="kind">The Concierge &middot; failure &middot; EVENT-GATE concierge_intake.py, concierge_intake_ledger.py, d21 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1407">desk-correspondence #1407</a></span></h3></summary>
       <p><strong>Why.</strong> Maryna Stupak's text of 2026-10-27 read verified and was skipped: the Need Help note sent to Junyan on Slack carried her sms-in id, and the intake reader took any Sent queue row with that id as her answer. Her ticket had no SOP and nobody picked it up.</p>
       <p><strong>Route change.</strong> handled_elsewhere rule (a) skips owner texts (Message Code tag <code>[needhelp:</code>, <code>[urgent:</code> or <code>[owner:</code>, Artist is Junyan's card, or Reasoning holds NEED-HELP-V1). A handled_elsewhere item on an open ticket now also gets the SOP check, so a ticket with no SOP or no SOP steps reads needs_sop or needs_sop_steps. The intake ledger version moved to 2, so the next pass rereads every cached item.</p>
