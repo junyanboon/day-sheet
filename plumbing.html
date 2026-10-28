@@ -1367,6 +1367,34 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>A platform guest's phone number now always lands on an Artist card<span class="kind">The Greeter &middot; failure &middot; services/event-gate/greeter_sweep.py, scripts/artist_card.py, Junyan 2026-10-28 "4 yes", "9 yes" &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1425">desk-correspondence #1425</a></span></h3></summary>
+      <p><strong>Why.</strong> Tiphanny C. (Peerspace 509A, moved Oct 27 to Oct 28) replied with only her number. The relay lookup used the old start, so the Greeter found no card and dropped the number. Junyan: "a phone number just creates an Artist card obviously."</p>
+      <p><strong>Route change.</strong> A new relay on a moved booking is tied through the Bookings board row at the new start when it links one card with the guest's label. The Responder's <code>--artist auto</code> uses the same lookup before it makes a card.</p>
+      <p><strong>Failure mode.</strong> Before: <code>phone:no-card</code> filed nothing. Now: the Greeter makes a new card with the relay and the number; when the mail's booking starts within 48 h, or no card can be made, it raises one Review row (<code>phone-untied:&lt;mail id&gt;</code>) naming the number and the booking. Off switch: none of its own; the Greeter's kill switch (GREETER_DISABLED) stops it with the rest of the lane.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
+      <h3>A hand-sent text or email that already says the same thing holds the queued row for a person<span class="kind">send-engine &middot; route &middot; event-gate outbound_guard.compare off_queue and _same_meaning; send-engine OutboundGuard.gs, Code.gs duplicateHold_ (v47) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1427">desk-correspondence #1427</a></span></h3></summary>
+      <p>Junyan: &ldquo;d15 yes, d16 yes&rdquo;</p>
+      <p><strong>Why.</strong> Tiphanny C. got her access text twice on 2026-10-28 (<code>HTA-sweep-1028-1700-509A</code> and a hand-sent Phone.com text 264458229). Even on a clean retry the overlap verdict only warned and the row sent.</p>
+      <p><strong>Route change.</strong> The final dispatch check now names hand-sent provider messages (no queue send within 5 minutes of them) in <code>off_queue</code>. A hand-sent message matches on a shared 4+ word sentence, or in other words: an access text whose codes all appear in it with no other studio named, or 60% shared content words. When one matches, the Send Engine puts the row back at Pending Review with a <code>[duplicate-hold]</code> line instead of sending. Matches against queue sends still warn and send. Nothing is ever dropped.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
+      <h3>Send message &amp; invoice puts the pay.danceannex.ca short link in the text, never the long Stripe URL<span class="kind">deck &middot; route, failure &middot; src/invoice-finalize.js, src/invoice-send.js (withLink, releaseProblem), src/index.js (deck-finalize-invoice) &middot; <a href="https://github.com/junyanboon/deck-app/pull/484">deck-app #484</a></span></h3></summary>
+      <p>Junyan: &ldquo;"for invoices we have a new way of sending invoices through pay.danceannex.ca" (2026-10-28); canon d59, d65&rdquo;</p>
+      <p><strong>Why.</strong> The first version of Send message &amp; invoice put the long invoice.stripe.com URL in the renter's text, against d59.</p>
+      <p><strong>Route change.</strong> After finalizing, <code>deck-finalize-invoice</code> makes or reuses the short link with <code>makePayLink</code> (server side, KV only) and returns only that. The link replaces <code>{invoice_link}</code> or goes last, and always stands on its own line (d65).</p>
+      <p><strong>Failure mode.</strong> No short link can be made: nothing is sent, never a fallback to the long URL. The release check now refuses a marked row whose text carries any invoice.stripe.com URL, or no pay.danceannex.ca/invoice-&lt;n&gt;-&lt;xx&gt; link.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>A duplicate check that cannot be read now holds the row instead of sending with a warning<span class="kind">send-engine &middot; failure &middot; send-engine OutboundGuard.gs historyUnreadable_, Code.gs processRow_ (v46) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1424">desk-correspondence #1424</a></span></h3></summary>
       <p>Junyan: &ldquo;d10 yes&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-28 Tiphanny C.'s HTA (<code>HTA-sweep-1028-1700-509A</code>) went out at 19:35Z with "[duplicate-warning] Outbound history unavailable (HTTP 409)". The gate had held it (<code>conversation_changed</code>: a hand-sent text landed during the check), but the Send Engine treated the 409 as a warning and sent anyway, so she got the HTA twice.</p>
