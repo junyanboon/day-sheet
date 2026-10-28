@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>The Stripe connector can now write draft invoices and finalize them<span class="kind">stripe-mcp &middot; tool, failure &middot; services/stripe-mcp client.py server.py, Junyan 2026-10-28 "4 yes" &middot; desk-correspondence</span></h3></summary>
+      <p><strong>Why.</strong> Junyan wants sessions to make a Stripe invoice and get its pay link without the Dashboard.</p>
+      <p><strong>Tool change.</strong> Two new tools on stripe-mcp: <code>create_draft_invoice</code> (CAD, send_invoice, auto_advance off, line amounts are final totals with HST included) and <code>finalize_invoice</code> (returns hosted_invoice_url). The client POSTs only to <code>/invoices</code>, <code>/invoiceitems</code> and <code>/invoices/&lt;id&gt;/finalize</code>; every other path stays GET-only. The key needs Invoices: Write; check-key-readonly.sh now expects exactly that write.</p>
+      <p><strong>Failure mode.</strong> Neither tool emails the invoice, charges a card, refunds or voids. finalize refuses an invoice that is not a draft. A key without Invoices: Write fails with HTTP 403 more_permissions_required.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>A credit's expiry is set when the Credit row is created, no expiry bot<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/credit_expiry.py, services/event-gate/lane_common.py, services/event-gate/credit_sweep.py, scripts/credit_expiry_for.py, library/autonomy.md, library/desk-sort.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1410">desk-correspondence #1410</a></span></h3></summary>
       <p>Junyan: &ldquo;2026-10-28 "At the time of the credit queueing up on the deck it should be assessed", "as part of the SOP"&rdquo;</p>
       <p><strong>Why.</strong> The 5-minute expiry fill (2026-10-27) never set a Deadline on the live board (Maryna Stupak's torn-mat credit sat empty). Junyan: "why do we even use an expiry bot?"</p>
@@ -1390,6 +1399,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> A renter's torn mat credit stayed Ruled after Give credit: the close gate asked for payment proof on a credit, so the row never closed and the Deck showed it as "Credit to give" again.</p>
       <p><strong>Route change.</strong> The close gate takes a CREDIT GIVEN ruling on a Type Credit row. With <code>--apply</code> it fills an empty Deadline by the credit_expiry rules, finds the 💳 Artist Credits entry already recording the row or writes the one Credit Issued entry (Deadline as Expiry Date), then closes Processed, Verified and Reconciled.</p>
       <p><strong>Failure mode.</strong> No Amount, an expiry the bot cannot set, more or fewer than one Artist card, or a failed ledger write or read-back keeps the row open with the reason; nothing is closed without the ledger entry. CREDIT_EXPIRY_DISABLED=1 stops the Deadline fill (the row then stays open).</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>Process offers the 3 closest SOPs and a New SOP button when no SOP is a sure fit, and learns each pick<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/process_ticket.py, services/event-gate/process_io.py, services/event-gate/app.py, d386, d390, d391 &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;386 yes, 390 yes a New SOP button, 391 yes&rdquo;</p>
+      <p><strong>Why.</strong> Round 2 stopped with "no SOP clearly fits" and left the ticket stuck. Every ticket should get an SOP, and the same kind of ticket should match on its own next time.</p>
+      <p><strong>Route change.</strong> When the match is not sure, /ai-draft/process answers with <code>choices</code>: the 3 closest SOPs (id, case, name). The Deck shows them as buttons under Process; a tap sends <code>sop</code> (and <code>case</code>) back, Process attaches it with scripts/sop_attach.py and carries on in the same press. A picked SOP with several cases answers with its cases as the choices. The New SOP box sends <code>new_sop</code> words: one Review Action holding a DRAFT SOP (capture-sop-update shape) is filed for Junyan, the ticket's Current Block says "New SOP drafted, waiting for your approval.", and Process stops. Each pick that attaches is appended to /var/lib/eventgate/sop-examples.jsonl (env SOP_EXAMPLES: title, latest renter message, SOP, case), which the SOP matcher reads next to sops/routing.json.</p>
+      <p><strong>Failure mode.</strong> A failed attach after a pick is not learned and says why. No words in the New SOP box: nothing filed. The draft is never a live SOP or routing row; that waits on Junyan's yes. PROCESS_MODE=dry describes the attach, the example and the Action instead of writing them.</p>
+    </details>
+    </li>
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-10-27</span>
+      <h3>Process works one ticket per press, attaches a missing SOP and files maintenance tickets<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/process_ticket.py, services/event-gate/process_io.py, d376, d377, d378, d379, d380, d381, d382 &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;381 yes, 382 yes, 383 yes, 377-380 yes, 376 yes&rdquo;</p>
+      <p><strong>Why.</strong> A chat with several open tickets needs one clear pick per press, a ticket with no steps stopped Process cold, and hands-on studio steps (fix, label, clean, move) waited on Junyan instead of going to staff.</p>
+      <p><strong>Route change.</strong> The Deck sends every open ticket for the chat; event-gate works ONE: the one the latest renter message is about, else the newest waiting on YOU or AI, never ARTIST. Switch names another. A ticket with no steps gets its SOP attached (scripts/sop_attach.py, now copied into the image with sops/routing.json) when one clearly fits. A "File a maintenance ticket" step writes one 🛠️ Maintenance Task row (studio, what to do, link to the renter ticket), which shows under Open problems in the Cleaning tab; Close out then sets the renter ticket to Review.</p>
+      <p><strong>Failure mode.</strong> No clear SOP, no single studio, a held reply or a Sales ticket: Process stops and says so, nothing written. The maintenance row is keyed in Notes, so a second press never files two. PROCESS_MODE=dry describes every write instead.</p>
     </details>
     </li>
     <li class="entry det">
