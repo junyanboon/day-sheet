@@ -1367,6 +1367,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>A direct viewing ask gets its reply, a time question and the $0 tour booking on the renter's yes<span class="kind">The Registrar &middot; route, cadence, failure &middot; event-gate viewing_book.py, POST /viewing-sweep, hosting/enable-viewing-sweep.sh &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1429">desk-correspondence #1429</a></span></h3></summary>
+      <p>Junyan: &ldquo;d47 to d53 (2026-10-28)&rdquo;</p>
+      <p><strong>Why.</strong> Natalia C. texted asking to see a studio and offered two times. The Responder's reply was held and a person had to book the tour, after a few back and forths.</p>
+      <p><strong>Route.</strong> New 5 minute <code>/viewing-sweep</code> (event-gate, off until <code>enable-viewing-sweep.sh</code> installs its timer). A direct email or text that only asks to view: no Skedda account gets the viewing sign-up link (invite 850380), one account gets "which studio, and what date and time?". The renter's named times get "Studio X is free for your viewing ... Want me to book it?" for the earliest time that passes (08:00 to 22:30, 60 minutes ahead, 15 minute buffer). Their YES books a $0 15 minute "Studio Viewing" under their account, then the Registrar's existing viewing carve-out sends T3 and the How-to-Access. Platform relays are never read here (the phone ask comes first, d51).</p>
+      <p><strong>Failure mode.</strong> Anything unclear writes nothing and the Responder keeps it. A refused YES (room taken, too late, not exactly one account, no read-back) files one Review Action and books nothing. Every text stays at Pending Review through <code>VIEWING_AUTO_HELD_UNTIL</code> (unset means held, d50). No sign-up link set means that reply is held. Kill switch <code>VIEWING_AUTO_DISABLED=1</code>.</p>
+      <p>## Junyan's rulings on the build (2026-10-28) "54 yes, 55yes 56 yes so they can go there and avoid us needing to even have them in the studio if necessary, 57 email replies yes, 58 yes" - d54 merge and switch on (first week held). d55 no Studio Viewing tag for account holders; the desk books them at $0 itself. - d56 both first replies offer the 3D tour (www.danceannex.ca/studio-tour). d57 email follow-ups stay with the Responder. d58 the Studio Viewing SOP is updated in Notion. - Timer second moved from :41 to :32 (the stagger test allows 20 to 40).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>A Stripe draft invoice can bill a Skedda series one date per line<span class="kind">stripe-mcp &middot; tool &middot; services/stripe-mcp/stripe_mcp/server.py, services/stripe-mcp/tests/test_stripe_mcp.py, library/invoicing.md, deck-app open-invoices.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1432">desk-correspondence #1432</a></span></h3></summary>
       <p>Junyan: &ldquo;43 yes (2026-10-28)&rdquo;</p>
       <p><strong>Why.</strong> A Skedda series has one booking id for every date. A draft invoice line named only that id, so the Deck read it as billing the whole series and took every later date off "To charge".</p>
