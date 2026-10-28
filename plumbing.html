@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>Charges tab flags "New card added" when a renter saves a card after a Deck decline; a new card gets its own pay key<span class="kind">deck &middot; route &middot; src/invoice-card-charge.js (payKey), src/new-card.js (recordDecline, onCardEvent, verifyStripeSignature), src/open-invoices.js (markNewCards), src/index.js (POST /stripe-webhook, deckSlackDm), sources/deck.html (cardBtnHtml, liveNudge, Charges poll) &middot; deck-app</span></h3></summary>
+      <p>Junyan: &ldquo;d49 "yes"; d51 "really useful whenever a card is declined. We often have a small window of time to make the charge so we should take advantage" (2026-10-28)&rdquo;</p>
+      <p><strong>Why.</strong> A re-press within 24 h of a decline replayed the decline even with a new card, and nobody knew when a renter had saved a new card.</p>
+      <p><strong>Route change.</strong> The Charge card pay key is now <code>deck-card-pay-&lt;invoice&gt;-&lt;card id&gt;</code>: the same card on the same invoice still replays Stripe's first answer, a new card is a fresh try. A decline from the Deck press is remembered in KV (<code>cardfail:&lt;invoice&gt;</code>, 30 days). Stripe posts <code>customer.updated</code> (a new default card) to <code>POST /stripe-webhook</code> (signature checked with <code>STRIPE_WEBHOOK_SECRET</code>); if an open Deck invoice of that customer was declined on another card, the Deck pushes a live "charges" nudge to open pages and DMs Junyan and Ela on Slack once per invoice and card (<code>NEW_CARD_ALERT_DISABLED=true</code> stops the DM). The Charges read marks that row "New card added: declined on •••• X, now •••• Y. Not charged yet." and its button names the new card. The Charges tab re-reads Stripe every 45 s while open. Nothing here charges: the press is still Junyan's or Ela's own (d48).</p>
+      <p><strong>Failure mode.</strong> No <code>STRIPE_WEBHOOK_SECRET</code>: the webhook answers 503 and the marker still appears on the next 45 s read. A bad signature answers 400 and does nothing. A decline Stripe made itself (not a Deck press) counts only when the default card was created after it. A Slack failure leaves no DM record, so the next card event tries the DM again.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>Charges tab gets "Charge card •••• 4242" on a Deck invoice, pressed only by Junyan or Ela<span class="kind">deck &middot; route &middot; src/invoice-card-charge.js (chargeCardOnFile), src/index.js (POST /api/charge/card-on-file, cardPressAllowed), src/open-invoices.js (attachCards), src/booking-truth.js (stripePaidFor), sources/deck.html (cardPress, deckDatedUnreadable, lookRow) &middot; deck-app</span></h3></summary>
       <p>Junyan: &ldquo;d47 "yes", d46 "yes", d48 "both of us have to physically press it. that's all" (2026-10-28)&rdquo;</p>
       <p><strong>Why.</strong> A renter with a saved card still had to open the pay link for a Deck invoice. Also, three gaps let a series date sit with a live Charge button next to a Deck invoice that bills it.</p>
