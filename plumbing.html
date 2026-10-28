@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>A duplicate check that cannot be read now holds the row instead of sending with a warning<span class="kind">send-engine &middot; failure &middot; send-engine OutboundGuard.gs historyUnreadable_, Code.gs processRow_ (v46) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1424">desk-correspondence #1424</a></span></h3></summary>
+      <p>Junyan: &ldquo;d10 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-28 Tiphanny C.'s HTA (<code>HTA-sweep-1028-1700-509A</code>) went out at 19:35Z with "[duplicate-warning] Outbound history unavailable (HTTP 409)". The gate had held it (<code>conversation_changed</code>: a hand-sent text landed during the check), but the Send Engine treated the 409 as a warning and sent anyway, so she got the HTA twice.</p>
+      <p><strong>Failure mode.</strong> When the duplicate check cannot be read (no answer, any non-200 such as event-gate's 409, gate calls paused, an unreadable or stale verdict) the row stays Ready to Send, nothing is written, and the next minute asks again. A row still held 30 minutes past its time is raised by event-gate's existing stuck-send Action. A real verdict (drop, review, merge, contact changed) still warns and sends. While event-gate calls are paused, rows now wait instead of going out unchecked.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>A broken SOP case files tickets with no steps and one "SOP needs fixing" Fixer row<span class="kind">event-gate &middot; failure &middot; services/event-gate ticket_body.py no_sop_watch.py auto_review.py, Junyan 2026-10-28 "72 yes drop back up steps. I want to know if the SOP needs to be fixed" &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1423">desk-correspondence #1423</a></span></h3></summary>
       <p><strong>Why.</strong> The hand-kept fallback copies (<code>sop_fallback.py</code>) hid a broken SOP page behind old steps, and Junyan wants to know when an SOP needs fixing.</p>
       <p><strong>Change.</strong> <code>sop_fallback.py</code> and <code>sop_fallback_build.py</code> are gone. When the live and baked SOP folders cannot give a case, the robot files the ticket with no steps under a "⚠️ No steps" line and a <code>[sop-broken:&lt;sop&gt;:&lt;case&gt;]</code> key line. The hourly Desk Invariants pass raises one Fixer row per SOP case and adds later tickets to it.</p>
