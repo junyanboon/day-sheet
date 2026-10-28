@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>Charges tab gets "Charge card •••• 4242" on a Deck invoice, pressed only by Junyan or Ela<span class="kind">deck &middot; route &middot; src/invoice-card-charge.js (chargeCardOnFile), src/index.js (POST /api/charge/card-on-file, cardPressAllowed), src/open-invoices.js (attachCards), src/booking-truth.js (stripePaidFor), sources/deck.html (cardPress, deckDatedUnreadable, lookRow) &middot; deck-app</span></h3></summary>
+      <p>Junyan: &ldquo;d47 "yes", d46 "yes", d48 "both of us have to physically press it. that's all" (2026-10-28)&rdquo;</p>
+      <p><strong>Why.</strong> A renter with a saved card still had to open the pay link for a Deck invoice. Also, three gaps let a series date sit with a live Charge button next to a Deck invoice that bills it.</p>
+      <p><strong>Route change.</strong> A Deck-tagged draft or open invoice whose Stripe customer has a default card shows "Charge card •••• last4" (list and Detailed views). The press holds 5 s with Undo, then <code>POST /api/charge/card-on-file</code> finalizes a draft (auto_advance=false) and calls <code>/invoices/&lt;id&gt;/pay</code> with that card, key <code>deck-card-pay-&lt;id&gt;</code>. The route answers only Junyan's or Ela's own full login from the Deck page (same-origin, <code>X-Deck-Press</code>, <code>pressed</code>); no robot, tool or timer calls it. The worker's paid check (<code>stripePaidFor</code>) now also counts a paid Deck invoice by its lines' booking_id + skedda_occurrence. A series row whose date cannot be read while a Deck invoice bills dates of it, and (Detailed view) a held charge with a draft on the same booking, show "Needs a look" with no buttons.</p>
+      <p><strong>Failure mode.</strong> A decline leaves the invoice open, shows the reason on the row, and the pay link still works. Paid, void, untagged or cardless invoices are refused with nothing charged. More than 100 paid Deck invoices in 180 days blocks the Charge preview ("Stripe could not be searched") rather than risk a double charge.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>A direct viewing ask gets its reply, a time question and the $0 tour booking on the renter's yes<span class="kind">The Registrar &middot; route, cadence, failure &middot; event-gate viewing_book.py, POST /viewing-sweep, hosting/enable-viewing-sweep.sh &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1429">desk-correspondence #1429</a></span></h3></summary>
       <p>Junyan: &ldquo;d47 to d53 (2026-10-28)&rdquo;</p>
       <p><strong>Why.</strong> Natalia C. texted asking to see a studio and offered two times. The Responder's reply was held and a person had to book the tour, after a few back and forths.</p>
