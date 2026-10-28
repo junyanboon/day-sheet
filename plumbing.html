@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>Expired credits are written off the ledger once a day<span class="kind">The Registrar &middot; cadence, failure &middot; EVENT-GATE credit_expired.py, credit_sweep.py, library/autonomy.md &middot; desk-correspondence</span></h3></summary>
+      <p><strong>Why.</strong> Junyan, 2026-10-28: "when credit expires then it needs to be removed (i.e. set up a -3.50 transaction to cancel it out)". Nothing wrote an expiry entry, so an expired credit kept counting in every balance.</p>
+      <p><strong>Route change.</strong> The credit sweep runs credit_expired.run once a Toronto day: each Credit Issued or Adjustment entry past its Expiry Date with balance left gets one Expired entry for the unused amount, keyed [credit-expired:&lt;entry id&gt;], then the balance is read back.</p>
+      <p><strong>Failure mode.</strong> A bad read-back raises one Review row keyed [credit-expired:&lt;entry id&gt;]; a failed pass is retried on the next sweep that day. Kill switch CREDIT_EXPIRED_DISABLED=1.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>The Stripe connector can now write draft invoices and finalize them<span class="kind">stripe-mcp &middot; tool, failure &middot; services/stripe-mcp client.py server.py, Junyan 2026-10-28 "4 yes" &middot; desk-correspondence</span></h3></summary>
       <p><strong>Why.</strong> Junyan wants sessions to make a Stripe invoice and get its pay link without the Dashboard.</p>
       <p><strong>Tool change.</strong> Two new tools on stripe-mcp: <code>create_draft_invoice</code> (CAD, send_invoice, auto_advance off, line amounts are final totals with HST included) and <code>finalize_invoice</code> (returns hosted_invoice_url). The client POSTs only to <code>/invoices</code>, <code>/invoiceitems</code> and <code>/invoices/&lt;id&gt;/finalize</code>; every other path stays GET-only. The key needs Invoices: Write; check-key-readonly.sh now expects exactly that write.</p>
