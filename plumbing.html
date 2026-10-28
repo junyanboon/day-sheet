@@ -1367,6 +1367,65 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>Ticket robots copy SOP steps from the mirror, with a last-known fallback<span class="kind">event-gate &middot; failure &middot; services/event-gate ticket_body.py sop_fallback.py overtime_sweep.py, Junyan 2026-10-28 "67 yes 66 yes" &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1417">desk-correspondence #1417</a></span></h3></summary>
+      <p><strong>Why.</strong> Junyan: "the issue is the going into notino is very expensive for tokns and rate limiting". One source of truth for a robot ticket's steps, with no Notion call and no model tokens.</p>
+      <p><strong>Change.</strong> The Timekeeper (overtime Cases B and C, Forgot to Arm A and B) no longer keeps SOP text in code; it reads <code>sops/pages/&lt;id&gt;.md</code> at filing time through <code>ticket_body.sop_steps</code>, like the transition, facilitator, inspection, 901 sound, prevention and failed-payment robots.</p>
+      <p><strong>Failure mode.</strong> Before, a missing page, renamed case or page with no steps meant no ticket and a <code>SOP MIRROR ERROR</code> log line. Now the ticket is still filed with the last-known copy from <code>sop_fallback.py</code>, headed by a "Steps from fallback copy, check SOP" note and a <code>[STAFF]</code> to-do to check it, and the run log says <code>SOP MIRROR FALLBACK</code>. The container reads the copy of <code>sops/pages</code> bundled at deploy, so an SOP edit reaches tickets at the next event-gate deploy.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
+      <h3>Desk-made bookings are released when the renter does not answer the ask, or does not pay the invoice in its window (shadow first)<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/open_invoice_watch.py (invoice_first, consent_first), services/event-gate/chase_sweep.py (invoice_first_invoice), library/autonomy.md (Grant: invoice-first release), deck-app src/charge.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1409">desk-correspondence #1409</a></span></h3></summary>
+      <p>Junyan: &ldquo;"63 yes but further out we can give htem an extra 24 hours grace with a re minder"; "55 yes 56 yes, 57 yes book and charge is good 53 they will reply yes, we will book it for them and then inform them to pay within a certain window, if they don't then we release it"; "49 yes I would like to auto-charge cards on file whenever possible then as this would remove a step but they would need to confirm still so it would ask them if htey want to proceed and if they say yes we bill and book."; "47 yes 48 yes 50 yes 51 yes."; "32 I want actually the booking to be auto-removed if it's still unpaid"; "38 yes"; "40 platform is completel different" (2026-10-28)&rdquo;</p>
+      <p><strong>Why.</strong> A booking the desk makes for a renter (Case C, Last-Minute) is billed card first with consent, or by invoice with no card, and released if unpaid or unanswered (d32, d47 to d51).</p>
+      <p><strong>Route change.</strong> Every 5 minutes (OPEN_INVOICE_FIRST_EVERY_MIN). No reply: a money row with [INVOICE-FIRST-V1] and [CONSENT-ASKED-V1:&lt;time&gt;] and no yes, CHARGED, INVOICED or PAID line gets one held check-in (30 min same or next day, 24 h further out) and is released at 1 h or the start, or 48 h or 2 h before the start. After the yes with no card: a Deck invoice with metadata invoice_first is released when still unpaid at its due time (1 h or the start, same or next day); further out, unpaid at the 24 h due time gets one held reminder and 24 h grace (OPEN_INVOICE_FIRST_GRACE_HOURS), never past 2 h before the start, then is released. The invoice is voided through stripe_void.py first. Release removes the Skedda booking with every expect guard, logs one Action and holds one released text. The chase sweep skips these rows. Switch OPEN_INVOICE_FIRST, shadow by default.</p>
+      <p><strong>Failure mode.</strong> Any failed or unclear Stripe, Notion or Skedda read does nothing that pass. A payment or a CHARGED line found at any step keeps the booking. Platform and self-booked Skedda bookings are never on the timer.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
+      <h3>Ticket robots read the VPS's live SOP folder, not only the deploy-time copy<span class="kind">event-gate &middot; failure &middot; services/event-gate ticket_body.py hosting/mount-canon-sops.sh scripts/tick.sh, Junyan 2026-10-28 "70 yes" &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1421">desk-correspondence #1421</a></span></h3></summary>
+      <p><strong>Why.</strong> After PR 1417 the robots read SOP steps from the copy of <code>sops/pages</code> baked in at deploy, so an SOP edit waited for the next event-gate deploy.</p>
+      <p><strong>Change.</strong> event-gate mounts <code>/srv/desk/desk-correspondence/sops/pages</code> read-only at <code>/run/canon-sops</code> with <code>SOP_PAGES_DIR</code> pointing there, so an edit reaches robot tickets within one desk tick. The tick stamps <code>sops/pages/.refreshed</code> after each good fetch, and the gate logs <code>sop_source</code> at startup with the folder and its age.</p>
+      <p><strong>Failure mode.</strong> A missing or empty live folder, or a page missing from it, falls back per file to the baked copy. If the checkout stops refreshing the robots keep reading it as of its last refresh, and startup logs <code>sop_source_stale</code> once the stamp is over 2 hours old; it does not fall back, because the baked copy is normally older.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
+      <h3>Late lock-ups have one owner; the closing lane posts its misses to Desk Drops and the Sentinel watches it<span class="kind">The Timekeeper &middot; route, failure &middot; EVENT-GATE closing_overtime.py, overtime_sweep.closing_owns, library/timekeeper-overtime.md, d8 d9 d10 d11 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1420">desk-correspondence #1420</a></span></h3></summary>
+      <p>Junyan: &ldquo;Let's just have the closign bot report its misses and the sentinel watch it&rdquo;</p>
+      <p><strong>Why.</strong> Two bots handled late lock-ups (the closing lane minutes after the arm, the 04:00 Timekeeper as backup). Junyan wanted one owner.</p>
+      <p><strong>Route change.</strong> The 04:00 run skips late-only lock-ups while the closing lane's overtime is live. Each one the closing lane skips is posted once to #desk-drops. The closing lane stamps its own Run Monitor row; an open miss past 10:00 next morning turns it to "skipped steps" so the Sentinel alarms.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
+      <h3>Send message &amp; invoice finalizes the reply's Stripe draft invoice and puts its link in the text<span class="kind">deck &middot; route, tool, failure &middot; src/invoice-send.js, src/invoice-finalize.js, src/index.js (deck-finalize-invoice, release check), sources/deck.html (invoiceThen, sendVerb) &middot; <a href="https://github.com/junyanboon/deck-app/pull/480">deck-app #480</a></span></h3></summary>
+      <p>Junyan: &ldquo;"yes it should say send message &amp; invoice or something like that" (d17); "yes" (d18) (2026-10-28)&rdquo;</p>
+      <p><strong>Why.</strong> A reply that goes with a Stripe draft invoice took two steps: finalize in Stripe, paste the link, then Send.</p>
+      <p><strong>Route change.</strong> A queue row whose Reasoning carries <code>DECK-INVOICE-V1 in_...</code> shows "Send message &amp; invoice". After the Undo, the Deck's new <code>deck-finalize-invoice</code> tool finalizes that invoice (auto_advance=false, idempotency key <code>deck-finalize-&lt;id&gt;</code>; an open invoice reuses its link), the hosted link replaces <code>{invoice_link}</code> or goes on the last line, and the reply releases the usual way. Stripe never charges or emails.</p>
+      <p><strong>Failure mode.</strong> Finalize fails, the invoice is paid/void or charge_automatically, or no link comes back: nothing is sent and the card says why. The release itself refuses any marked row whose text has no <code>https://invoice.stripe.com/</code> link (<code>invoice_link_missing</code>), whichever button released it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
+      <h3>Desk-made bookings charge the card on file after the renter's yes, or send a Stripe invoice due at the release time<span class="kind">deck &middot; route &middot; src/charge.js (INVOICE_FIRST, invoiceFirstDue, markCredit, NO_PERMANENT_CODE), src/invoice-text.js (textBody), desk-correspondence services/event-gate/open_invoice_watch.py (invoice-first timer), library/autonomy.md (Grant: invoice-first release) &middot; <a href="https://github.com/junyanboon/deck-app/pull/479">deck-app #479</a></span></h3></summary>
+      <p>Junyan: &ldquo;"63 yes but further out we can give htem an extra 24 hours grace with a re minder"; "55 yes 56 yes, 57 yes book and charge is good 53 they will reply yes, we will book it for them and then inform them to pay within a certain window, if they don't then we release it"; "49 yes I would like to auto-charge cards on file whenever possible then as this would remove a step but they would need to confirm still so it would ask them if htey want to proceed and if they say yes we bill and book."; "47 yes 48 yes 50 yes 51 yes."; "40 platform is completel different" (2026-10-28)&rdquo;</p>
+      <p><strong>Why.</strong> A booking the desk makes for someone (Booking Inquiry Case C, the Last-Minute SOP) is charged to the card on file once the renter says yes, or invoiced when there is no card (d49).</p>
+      <p><strong>Route change.</strong> A money row whose Basis carries <code>[INVOICE-FIRST-V1]</code>: with a card on file, the owner's Charged press charges the card (no invoice); the robot charge is refused on these rows. With no card, after the renter's yes, a Stripe invoice (send_invoice, auto_advance false) due at the end of the pay window: 1 hour or the start for a same or next day booking, 24 hours or 2 hours before the start further out (INVOICE_FIRST_NEAR_PAY_MIN, INVOICE_FIRST_FAR_PAY_HOURS). Further out, event-gate adds one reminder and 24 hours of grace before it releases (d63). Metadata <code>invoice_first</code>, <code>invoice_first_window</code>, <code>invoice_first_due</code>, <code>booking_start</code> feed the event-gate timer. The pay link text names the release time, and adds "Your door codes come once it is paid." only when Basis carries <code>[NO-PERMANENT-CODE]</code>. A <code>[credit-action:&lt;id&gt;]</code> is its own negative invoice line or comes off the card amount, and is marked <code>[CREDIT-USED-V1:&lt;id&gt;]</code> once.</p>
+      <p>A row the desk asked on (<code>[CONSENT-ASKED-V1:...]</code> in Notes) is refused until Notes carries <code>[RENTER-YES-V1]</code>. "The start" means 10 minutes before it.</p>
+      <p><strong>Out of scope.</strong> Platform bookings (Peerspace, Tagvenue, Giggster) are never invoice first.</p>
+      <p><strong>Failure mode.</strong> A linked credit that is not a Credit row, has no Amount, is already used, cannot be read, or covers the whole price: the press is refused and nothing is billed.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>The overtime notice goes out 10 minutes after a late lock-up, from the closing lane<span class="kind">The Timekeeper &middot; route, cadence &middot; EVENT-GATE closing_overtime.py, overtime_sweep.release_at, library/timekeeper-overtime.md, PR 1412 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1412">desk-correspondence #1412</a></span></h3></summary>
       <p>Junyan: &ldquo;I want it to send it out 5 or 10 minutes after someone arms and leaves&rdquo;</p>
       <p>Junyan, 2026-10-28: send the overtime notice with the post-booking follow-up shortly after the renter locks up late, attached to an existing bot, live right away, 5 or 10 minutes after the arm so they can tell us if something is off.</p>
