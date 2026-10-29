@@ -1366,6 +1366,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-29</span>
+      <h3>The first refusal flag splits long Notes pieces and refuses instead of dropping old notes<span class="kind">event-gate &middot; failure &middot; services/event-gate/slot_holds.py flag_rofr &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1445">desk-correspondence #1445</a></span></h3></summary>
+      <p>Junyan: &ldquo;d5 yes&rdquo;</p>
+      <p><strong>Why.</strong> PR 1443 found that Notion refuses (HTTP 400) a rewrite of a slot row's Notes when one existing piece is over 2000 characters. The first refusal flag in <code>slot_holds.py</code> re-sent Notes the same way, and it also kept only the last 100 pieces, which could silently drop the oldest notes.</p>
+      <p><strong>Failure mode.</strong> A piece over 2000 characters now goes back as 2000-character chunks with the same formatting and link. When Notes already holds 100 pieces after that split, nothing is written and the step logs <code>rofr-flag:&lt;row&gt;:unverified: Notes is too long to append to, add the line by hand</code>; no old note is ever cut.</p>
+    </details>
+    </li>
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-10-29</span>
+      <h3>event-gate's alarm watch pages once per alarm, and its Staff Call Queue rows are written again<span class="kind">event-gate &middot; route, failure &middot; EVENT-GATE alarm_watch.py, actuator.py, escalation.py; alarm-mcp /panel-states last_trip_at (danceannex-alarm-monitor PR 54) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1444">desk-correspondence #1444</a></span></h3></summary>
+      <p>Junyan: &ldquo;d12 yes, d14 yes (2026-10-29)&rdquo;</p>
+      <p><strong>Why.</strong> Oct 28: Studio 693's one 01:41 alarm was paged again after event-gate restarts, because the restart check compared the day row's created time. Oct 23: an alarm was missed while the watchdog held the panel session and every read timed out. Oct 25: alarm-mcp marked a fast-disarmed alarm as memory and the gate ignored it. And every Staff Call Queue write had failed silently since 2026-08-14.</p>
+      <p><strong>Route change.</strong> alarm-mcp's <code>/panel-states</code> sends each partition's <code>last_trip_at</code> (watchdog TripLedger, else the alarm trouble's <code>since</code>). The gate pages when that time is newer than the last it paged, sounding, cleared or in memory, and writes it as the "Alarm start:" line that opens the day Actions row's Basis. A restart reads it back (or the row's latest title time on older rows), so it never re-pages; a flap with no new start never re-pages. The title gets each paged alarm's start time. Without <code>last_trip_at</code> the old in_alarm edge still pages. Staff Call Queue rows are created on the data source (Notion-Version 2025-09-03) and every write logs one <code>scq_write</code> line with Notion's reply. Live Staff Call Queue rows at Ready make Zapier ring on-call and bridge the renter again.</p>
+      <p><strong>Failure mode.</strong> Timed-out reads while alarm-mcp reports the session busy count on their own and file the Run Error row after 30 in a row; other failures still file it after 15. A failed Staff Call Queue write never stops the page and carries <code>scq_errors</code> in the page log. An unreadable day row reads as "not paged yet": a duplicate page beats a missed alarm. <code>ALARM_WATCH_DISABLED=1</code> still turns the lane off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-28</span>
       <h3>A rate-only question the rates lane answered opens no Sales ticket; "same price if I book direct?" gets its own rates reply<span class="kind">event-gate &middot; route &middot; services/event-gate/rates_sweep.py, services/event-gate/rates_words.py, scripts/intake_decide.py rates_lane_rows &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1441">desk-correspondence #1441</a></span></h3></summary>
       <p>Junyan: &ldquo;d97 yes, d98 yes&rdquo;</p>
