@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-29</span>
+      <h3>Peerspace overtime is a ready claim within 72 hours, and a paid base booking never closes it<span class="kind">event-gate &middot; route &middot; services/event-gate/overtime_sweep.py file_charge; services/event-gate/stale_sweep.py booking_targets claim_overdue &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1447">desk-correspondence #1447</a></span></h3></summary>
+      <p>Junyan: &ldquo;d126 ruling, d127 yes, d144 yes, d145 yes&rdquo;</p>
+      <p><strong>Why.</strong> KerriAnn M. (Peerspace, Studio 901, Oct 16) was 29 minutes over. The Timekeeper filed a Platform charge request with the Amount blank and a 7-day Deadline, and the Stale Sweep then closed it because her base booking read paid. Peerspace's 72-hour claim window passed and the time was never billed.</p>
+      <p><strong>Route.</strong> A platform overtime bills by the d144/d145 table (17-44 min = 30 min, 45-74 = 60, 75-104 = 90, then +30 per 30) at the booking's own rate (studio standard rate when the booking has no price), so the Amount is never blank. A Peerspace request gets Deadline = booking end + 72 h, For = Junyan, an Ask naming amount and deadline, and one held claim draft on the Message Queue (Manual Send, Pending Review, <code>[ot:…:claim]</code>). Nothing is sent by a robot.</p>
+      <p><strong>Failure mode.</strong> The Stale Sweep never closes a Platform charge request on Skedda, a sent message or a done ticket; an <code>[ot:…]</code> Charge closes only on its own extra-time block. A Peerspace request whose claim row is not Sent 48 h after filing (or 24 h before its Deadline) posts once to #desk-status for Junyan and notes <code>Claim watch: Junyan alerted</code> on the row. A failed post writes nothing and retries next tick.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-29</span>
       <h3>The first refusal flag splits long Notes pieces and refuses instead of dropping old notes<span class="kind">event-gate &middot; failure &middot; services/event-gate/slot_holds.py flag_rofr &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1445">desk-correspondence #1445</a></span></h3></summary>
       <p>Junyan: &ldquo;d5 yes&rdquo;</p>
       <p><strong>Why.</strong> PR 1443 found that Notion refuses (HTTP 400) a rewrite of a slot row's Notes when one existing piece is over 2000 characters. The first refusal flag in <code>slot_holds.py</code> re-sent Notes the same way, and it also kept only the last 100 pieces, which could silently drop the oldest notes.</p>
