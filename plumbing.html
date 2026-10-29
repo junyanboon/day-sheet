@@ -2294,6 +2294,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-23</span>
+      <h3>Drop sweep reads Slack only; its Buzz path is deleted<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/drop_sweep.py, d16, d17 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1291">desk-correspondence #1291</a></span></h3></summary>
+      <p>Junyan: &ldquo;17 yes&rdquo;</p>
+      <p><strong>Why.</strong> The Buzz relay was removed from the VPS earlier the same day, and the drop sweep had already run Slack-only (<code>DROP_SWEEP_SOURCE=slack</code>) since September. Its Buzz read, Buzz receipts and Buzz verdict replies were dead code that still named the relay (d17).</p>
+      <p><strong>Route change.</strong> <code>drop_sweep.py</code> now always reads Slack #desk-drops. It no longer reads <code>DROP_SWEEP_SOURCE</code>, <code>DROP_SWEEP_CHANNEL</code>, <code>BUZZ_RELAY_URL</code>, <code>BUZZ_PRIVATE_KEY</code> or <code>BUZZ_BIN</code>, and nothing reads the old rows' <code>Buzz Event ID</code> any more: Slack dedup has always used <code>Slack Message TS</code>, and a Buzz-era row gets no verdict reaction (it has no Slack message). The pass result drops its <code>buzz_messages_read</code> and <code>buzz_filed</code> counts. Slack capture, receipts, verdict reactions and the follow-through relay are unchanged. The <code>buzz</code> binary stays in the image because the Sentinel's incident post (<code>sentinel_buzz.py</code>) still uses it.</p>
+      <p><strong>Failure mode.</strong> Missing <code>SLACK_BOT_TOKEN</code> or <code>SLACK_DROP_CHANNEL</code> now always reads as "not configured" naming only those two; before, a missing source switch would have fallen back to Buzz and asked for Buzz settings. Undo: revert this PR.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
       <h3>The reconcile tick writes a daily "what I would do" list over every Gate ticket (shadow, nothing changes)<span class="kind">event-gate auto-review &middot; route, failure &middot; EVENT-GATE gate_rules.py, gate_rules_shadow.py, auto_review.py, reconcile_sweep.py, ops/fleetread gate-list, library/position.md, d98, d100, d102 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1302">desk-correspondence #1302</a></span></h3></summary>
       <p>Junyan: &ldquo;d100 yes, a list over the live Gate tickets before go-live&rdquo;</p>
       <p><strong>Why.</strong> On 2026-10-22, 43 tickets sat at a Gate and 6 had no owner. Junyan ruled every Gate ticket has one owner and one dated next step, worked out from what the ticket already has (d98), and asked to read what the rules would do before any of them goes live (d100).</p>
