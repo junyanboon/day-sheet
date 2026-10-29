@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-29</span>
+      <h3>Auto-review clears a Gate: Money blocker once its Skedda booking reads paid; closes need every step settled<span class="kind">auto-review &middot; failure &middot; services/event-gate/auto_review.py (money_reconcile, clear_money_gate), services/event-gate/ticket_steps.py, services/event-gate/terminal_gate.py, scripts/ticket_edit.py (--skip, --close), scripts/sop_attach.py, library/automatic-operational-closure.md, library/tags.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1453">desk-correspondence #1453</a></span></h3></summary>
+      <p>Junyan: &ldquo;"113 yes, 114 yes, 115 yes, 116 yes" (2026-10-29)&rdquo;</p>
+      <p><strong>Why.</strong> Enrico Casertano's 40675032-81c4-81be sat at Gate: Money with Skedda 123647136 already paid, and 3fc75032-81c4-81cb closed Done with a step never ticked.</p>
+      <p><strong>Change.</strong> On the reconcile tick, a <code>Gate: Money</code> ticket whose Current Block holds a "⛔ ... unpaid" blocker naming one Skedda booking has that booking re-read (Skedda, then Stripe proof as the stale sweep does). Paid: the blocker paragraph is replaced by one dated line, unticked billing steps are ticked <code>[done:auto-review &lt;iso&gt;]</code>, one ✅ line goes on the body, then the usual Review rules run. <code>ticket_edit.py --close</code> and JOB 8 (<code>terminal_decide.py</code>) refuse a close while a step is neither ticked nor <code>[skipped:&lt;by&gt; &lt;iso&gt; &lt;reason&gt;]</code>; the close-out step is no longer copied from SOPs.</p>
+      <p><strong>Failure mode.</strong> Skedda or Stripe unreadable, a blind Skedda read, two booking ids, the booking not on the dates named, or no Stripe proof: nothing is written and the ticket stays put (<code>money_held</code> in the pass result). An unreadable ticket body keeps a JOB 8 ticket at Review.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-29</span>
       <h3>stripe-mcp gets ensure_customer, so a first-time renter can get a draft invoice<span class="kind">stripe-mcp &middot; tool, failure &middot; services/stripe-mcp/stripe_mcp/deck.py, services/stripe-mcp/stripe_mcp/server.py (ensure_customer), library/invoicing.md (Make the draft); deck-app src/ensure-customer.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1450">desk-correspondence #1450</a></span></h3></summary>
       <p>Junyan: &ldquo;"78 yes, 79 let's just build it now" (2026-10-29)&rdquo;</p>
       <p><strong>Why.</strong> <code>create_draft_invoice</code> needs a <code>cus_</code> id and this connector's key cannot make customers, so Gemma Giles (2026-10-29) could not be invoiced from a session.</p>
