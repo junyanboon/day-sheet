@@ -1367,6 +1367,28 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-29</span>
+      <h3>Giggster guests are answered on the proxy SMS only, and the Responder waits for the Greeter<span class="kind">responder &middot; route, failure &middot; scripts/queue_draft.py (giggster_relay_refusal, --giggster-proxy), services/event-gate/greeter_sweep.py (FOOD_OK, asks_about_food), library/the-responder.md (d44, 4b, House voice), library/relay-addresses.md, library/response-resolver.md 4.7 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1451">desk-correspondence #1451</a></span></h3></summary>
+      <p>Junyan: &ldquo;"5 yes" (2026-10-29)&rdquo;</p>
+      <p><strong>Why.</strong> Marcia D. [Giggster], 2026-10-29: a Responder pass 1.5 minutes after her mail found no Greeter row yet and queued a No SOP Email row to the <code>@reply.giggster.com</code> relay, with no dry-venue ask and "we'll confirm the food question". The Greeter's later SMS asked the dry question but skipped her food question.</p>
+      <p><strong>Route change.</strong> <code>queue_draft.py</code> refuses any row addressed to <code>@reply.giggster.com</code>; <code>--giggster-proxy &lt;number&gt;</code> writes Channel = SMS, Reply To = the proxy and the <code>[giggster-proxy:&lt;number&gt;]</code> marker, Phone left blank. The Responder writes nothing for a Giggster inquiry under 25 minutes old with no Greeter row (<code>deferred (Greeter wait)</code>); after that, one reply on the proxy, or Manual Send when no proxy exists.</p>
+      <p><strong>Wording.</strong> The Greeter adds "You're welcome to bring your own food." after the amenities line, before the dry-venue ask, when the guest asks about bringing food. Every event reply carries the dry-venue ask.</p>
+      <p><strong>Failure mode.</strong> A refused queue_draft writes nothing and prints why; the lane retries next pass on the proxy.</p>
+      <p><strong>Sign-off.</strong> Every platform reply (Giggster proxy SMS, Giggster app, Manual Send, Peerspace or Tagvenue relay) now ends "Kindly," / "Junyan" (Junyan, 2026-10-29: "Giggster replies do go with a signoff. All platform messages do."), replacing d221 and d294. <code>lane_common.text_ends_bare</code> signs platform rows, <code>queue_draft.py</code> signs platform and <code>[giggster-proxy:]</code> rows, and <code>reply_check</code> no longer refuses that sign-off there. Texts to a renter's own phone still end bare.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-29</span>
+      <h3>Gate rules go live behind settings; no robot moves a ticket to Review with SOP steps left<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/gate_rules_live.py review_gate.py auto_review.py terminal_gate.py gate_rules.py gate_rules_shadow.py invariants.py staff_reply_sweep.py chase_sweep.py scripts/terminal_decide.py &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;d149 yes; d85, d100, d102 (gate rules spec)&rdquo;</p>
+      <p><strong>Why.</strong> Gate rules slice 02: the slice 01 verdicts act, each reason behind its own <code>GATE_RULES_LIVE_*</code> setting (all off by default). On 2026-10-29 eight tickets sat at Review with SOP steps left (Nyanpass Chen: Gate: Staff, rows closed, 0 of 3 steps); Junyan ruled d149, Review only when every step is done, always.</p>
+      <p><strong>What changed.</strong> <code>review_gate.check</code> is the one "every step ticked or Not needed" test; auto-review (<code>sop-steps-open</code>), Desk Invariants H, the staff reply sweep and the terminal gate (bounce to Gate: Staff) use it. <code>gate_rules_live.py</code> files one Ops Lead Action per ticket per reason, keeps it current, closes it when the reason goes away, wakes Gate: Time tickets and reopens tickets closed with steps left. The daily list now includes robot work. The chase sweep follows up again when we wrote after our follow-up (BELT Collective).</p>
+      <p><strong>Failure mode.</strong> Every live pass is once a Toronto day and never raises into the tick; a failed write is logged and retried the next day. d149 is on with no setting: a ticket whose body cannot be read stays at its Gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-29</span>
       <h3>Auto-review clears a Gate: Money blocker once its Skedda booking reads paid; closes need every step settled<span class="kind">auto-review &middot; failure &middot; services/event-gate/auto_review.py (money_reconcile, clear_money_gate), services/event-gate/ticket_steps.py, services/event-gate/terminal_gate.py, scripts/ticket_edit.py (--skip, --close), scripts/sop_attach.py, library/automatic-operational-closure.md, library/tags.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1453">desk-correspondence #1453</a></span></h3></summary>
       <p>Junyan: &ldquo;"113 yes, 114 yes, 115 yes, 116 yes" (2026-10-29)&rdquo;</p>
       <p><strong>Why.</strong> Enrico Casertano's 40675032-81c4-81be sat at Gate: Money with Skedda 123647136 already paid, and 3fc75032-81c4-81cb closed Done with a step never ticked.</p>
