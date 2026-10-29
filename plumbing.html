@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>A returning platform renter's confirmation SMS now carries the same codes as before, and the 24h HTA is skipped<span class="kind">The Greeter &middot; route, failure &middot; event-gate greeter_sweep.compose_returning_access_sms, returning_access_code; booking_sweep.verified_card_code, greeter_returning_access_key, hta_queued &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1440">desk-correspondence #1440</a></span></h3></summary>
+      <p>Junyan: &ldquo;d100 yes&rdquo;</p>
+      <p><strong>Why.</strong> SOP "Platform — Instant Book or Booking Request" T1 (edited 2026-10-28, d93/d96): a platform renter who has a phone on their card and a past booking with us gets one SMS with the booking and the same door and alarm codes, not "24 hours prior we will send a text". Example sent by hand: Sass E Silver, 509B.</p>
+      <p><strong>Route.</strong> When the card has a Phone and a completed booking before this one, the Greeter queues ONE Pending Review SMS, Message Code <code>Returning Access &lt;studio&gt; RA-greeter-&lt;MMDD-HHMM&gt;-&lt;studio&gt; · Greeter ...</code>. Door code is the shared house code; the alarm code is the card's, checked read-only on the panel (verify_only). No terms or refund paragraph (platform bookings), no Artist Care intro. The Registrar's <code>hta_queued</code> now reads that booking key (any time in the 60 days before the booking), so no second access text is queued.</p>
+      <p><strong>Failure mode.</strong> If the past bookings cannot be read, the card has no code, the panel check fails, or the card and panel disagree, the row keeps today's wording and its Reasoning starts "⚠️ codes not included: &lt;why&gt;". The row is Pending Review either way. A card with a phone but no past booking keeps today's wording.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>A returning platform guest's new relay links to their one known card; a matching phone merges duplicates<span class="kind">greeter &middot; route &middot; event-gate card_autolink.py, greeter_sweep.ensure_platform_artist / file_guest_phone, scripts/artist_card.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1438">desk-correspondence #1438</a></span></h3></summary>
       <p>Junyan: &ldquo;d91 yes, d92 yes&rdquo;</p>
       <p><strong>Why.</strong> Sass E Silver's Oct 28 Tagvenue enquiry came on a new relay and made a second card (4077503281c4...) although her real card (4047503281c4..., same full name, Tagvenue history, past bookings, phone) existed.</p>
