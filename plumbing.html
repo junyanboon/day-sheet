@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-29</span>
+      <h3>stripe-mcp gets ensure_customer, so a first-time renter can get a draft invoice<span class="kind">stripe-mcp &middot; tool, failure &middot; services/stripe-mcp/stripe_mcp/deck.py, services/stripe-mcp/stripe_mcp/server.py (ensure_customer), library/invoicing.md (Make the draft); deck-app src/ensure-customer.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1450">desk-correspondence #1450</a></span></h3></summary>
+      <p>Junyan: &ldquo;"78 yes, 79 let's just build it now" (2026-10-29)&rdquo;</p>
+      <p><strong>Why.</strong> <code>create_draft_invoice</code> needs a <code>cus_</code> id and this connector's key cannot make customers, so Gemma Giles (2026-10-29) could not be invoiced from a session.</p>
+      <p><strong>Tool change.</strong> <code>ensure_customer(email, name)</code> asks the Deck (<code>POST /api/robot/ensure-customer</code>, bearer <code>DECK_CUSTOMER_TOKEN</code>) for the renter's customer: found ignoring case, else made by the Deck (<code>created_by=deck</code>). The stripe-mcp key and <code>WRITE_PATHS</code> are unchanged. Canon <code>invoicing.md</code>: use it when <code>find_customers</code> finds nobody; never fall back to a Skedda invoice or <code>queue_draft --allow invoice_sent</code>.</p>
+      <p><strong>Failure mode.</strong> Token not set, Deck down or no <code>cus_</code> id in the answer: the tool raises and nothing is made; the session hands back the error.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-29</span>
+      <h3>Sessions can find or make a renter's Stripe customer, so a first-time renter can be invoiced<span class="kind">deck &middot; tool, failure &middot; src/ensure-customer.js, src/charge.js (createCustomer), src/index.js (/api/robot/ensure-customer); desk-correspondence services/stripe-mcp ensure_customer &middot; <a href="https://github.com/junyanboon/deck-app/pull/517">deck-app #517</a></span></h3></summary>
+      <p>Junyan: &ldquo;"78 yes, 79 let's just build it now" (2026-10-29)&rdquo;</p>
+      <p><strong>Why.</strong> The Messages tab's "Send message &amp; invoice" needs a Stripe draft invoice, and stripe-mcp's <code>create_draft_invoice</code> needs a <code>cus_</code> id. Its key is Write on Invoices only, so a first-time renter (Gemma Giles, 2026-10-29) could not be invoiced from a session.</p>
+      <p><strong>Tool change.</strong> <code>POST /api/robot/ensure-customer {email, name}</code> (bearer <code>DECK_CUSTOMER_TOKEN</code>, its own token) returns the newest customer whose email matches ignoring case, else makes one with the Deck's key (<code>metadata.created_by=deck</code>, email stored lowercased, Idempotency-Key from the lowercased email). stripe-mcp's <code>ensure_customer</code> calls it. The agents' Stripe key is unchanged.</p>
+      <p><strong>Failure mode.</strong> No token set: 503, nothing made. Wrong token: 401. Bad email or no name: 400. More than 100 search lookalikes, or Stripe down: an error, nothing made; the session stops and says so rather than invoicing through Skedda.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-29</span>
       <h3>Peerspace overtime is a ready claim within 72 hours, and a paid base booking never closes it<span class="kind">event-gate &middot; route &middot; services/event-gate/overtime_sweep.py file_charge; services/event-gate/stale_sweep.py booking_targets claim_overdue &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1447">desk-correspondence #1447</a></span></h3></summary>
       <p>Junyan: &ldquo;d126 ruling, d127 yes, d144 yes, d145 yes&rdquo;</p>
       <p><strong>Why.</strong> KerriAnn M. (Peerspace, Studio 901, Oct 16) was 29 minutes over. The Timekeeper filed a Platform charge request with the Amount blank and a 7-day Deadline, and the Stale Sweep then closed it because her base booking read paid. Peerspace's 72-hour claim window passed and the time was never billed.</p>
