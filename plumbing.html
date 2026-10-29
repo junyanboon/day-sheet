@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-28</span>
+      <h3>A rate-only question the rates lane answered opens no Sales ticket; "same price if I book direct?" gets its own rates reply<span class="kind">event-gate &middot; route &middot; services/event-gate/rates_sweep.py, services/event-gate/rates_words.py, scripts/intake_decide.py rates_lane_rows &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1441">desk-correspondence #1441</a></span></h3></summary>
+      <p>Junyan: &ldquo;d97 yes, d98 yes&rdquo;</p>
+      <p><strong>Why.</strong> Sass E Silver texted on 2026-10-28 "Is the rental fee the same to book directly on the website?". The rates lane queued a reply, and the Responder's intake also opened Sales ticket 4077503281c481c2b421cdaf4988bb74 because Jev reads any price ask as a booking. A question with "cheaper" in it made the lane stand down as a discount ask.</p>
+      <p><strong>Route.</strong> The rates lane now reads a price question that compares booking direct on our website with a platform as a rates question ("cheaper" there is the comparison, not a discount ask; every other veto still stands). It answers from the How to Respond card "Pricing: booking direct vs a platform", whose <code>[standard rates]</code> slot is filled from the standard card's rate lines; with no such card it files one Review row and queues nothing. The reply is still held at Pending Review. The intake declines a rate-only message (no date, no studio, no booking ask) with no Sales ticket when the lane's <code>[rates:&lt;id&gt;]</code> row is already on the queue, and says so on the audit row; with no row it opens the ticket as before.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-28</span>
       <h3>A returning platform renter's confirmation SMS now carries the same codes as before, and the 24h HTA is skipped<span class="kind">The Greeter &middot; route, failure &middot; event-gate greeter_sweep.compose_returning_access_sms, returning_access_code; booking_sweep.verified_card_code, greeter_returning_access_key, hta_queued &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1440">desk-correspondence #1440</a></span></h3></summary>
       <p>Junyan: &ldquo;d100 yes&rdquo;</p>
       <p><strong>Why.</strong> SOP "Platform — Instant Book or Booking Request" T1 (edited 2026-10-28, d93/d96): a platform renter who has a phone on their card and a past booking with us gets one SMS with the booking and the same door and alarm codes, not "24 hours prior we will send a text". Example sent by hand: Sass E Silver, 509B.</p>
