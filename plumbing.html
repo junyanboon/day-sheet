@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-29</span>
+      <h3>Treasurer flags double charges, billing past the term and unmatched Fixed Option extras; reads Deck-signed agreements<span class="kind">The Treasurer &middot; route, failure &middot; EVENT-GATE billing_drift.py, extra_hours.py, agreement_read.py, library/the-treasurer.md, d126, d128 &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;we usually do a scan of the agreements as well&rdquo;</p>
+      <p><strong>Why.</strong> Junyan approved a daily check for money Stripe should not have taken (d126) and an extras check for every Fixed Option renter (d128), and asked for the agreement scan to use the agreements now signed in the Deck.</p>
+      <p><strong>Route change.</strong> The daily 08:00 dunning run now also files Review rows <code>[treasurer:doublecharge:...]</code> (urgent) and <code>[treasurer:pastterm:...]</code>, and on the 3rd to the 5th one staff row <code>[treasurer:extras:&lt;YYYYMM&gt;]</code>. No renter email. The 1st and 15th agreement checks read the signed record on Deck-made Docs rows instead of parsing a PDF.</p>
+      <p><strong>Failure mode.</strong> A Stripe or Notion read failure files nothing and returns ok false, so the 15-minute retry runs again. <code>BILLING_DRIFT=off</code> and <code>EXTRA_HOURS_SUMMARY=off</code> turn the new parts off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-29</span>
+      <h3>Platform replies end "Kindly," and the Deck adds the signed-in sender's name<span class="kind">responder &middot; route &middot; services/event-gate/lane_common.py (platform_signed), services/event-gate/greeter_sweep.py (_signed), scripts/queue_draft.py, library/house-rules.md § Outbound sign-off, deck-app src/kindly-name.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1456">desk-correspondence #1456</a></span></h3></summary>
+      <p>Junyan: &ldquo;"no the name should auto-populate depending on who's signed in. if that's not doable then just drop the ending altogether" (2026-10-29, d7)&rdquo;</p>
+      <p><strong>Why.</strong> PR 1451 signed every platform reply "Kindly," / "Junyan" in the robot's draft, so a reply Ela sends would carry Junyan's name.</p>
+      <p><strong>Change.</strong> Robots (every lane, the Greeter, <code>queue_draft.py</code>) end a platform reply on a bare "Kindly,". The Deck adds the signed-in sender's first name under it when a person presses Send (worker release) or copies a Manual Send or Giggster row to paste by hand. A body that already has a name under its closing is left alone. A team-password session (no name) sends "Kindly," as is.</p>
+      <p><strong>Failure mode.</strong> None new: the name fill never blocks a Send.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-29</span>
       <h3>A feedback note about several people links each Action only to its own person, and the close gate skips another person's Action<span class="kind">concierge &middot; failure &middot; services/event-gate/concierge_feedback_route.py person_links; services/event-gate/terminal_gate.py elsewhere &middot; desk-correspondence</span></h3></summary>
       <p>Junyan: &ldquo;d159 yes&rdquo;</p>
       <p><strong>Why.</strong> One staff note (Ela, about Oct 18) named Bella and Pulga (sensor bypass) and Jennifer Lee (34 min early). Its one Ops Lead Action was linked to Jennifer's overtime ticket, and the close gate held her ticket at Review for 9 days behind it.</p>
