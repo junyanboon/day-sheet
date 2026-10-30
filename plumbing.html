@@ -1367,6 +1367,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>The Charges tab shows a red "Bot Error" pill when the prepaid-hours count could not be read, and blocks nothing<span class="kind">The Deck &middot; failure &middot; deck-app src/live-unpaid.js planPreviews and markBotError, sources/deck.html clRow, test/charges-prepaid.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/550">deck-app #550</a></span></h3></summary>
+      <p>Junyan: &ldquo;"We don't block human actions we only inform them." (2026-10-30, d8)&rdquo;</p>
+      <p><strong>Why.</strong> Each load asks event-gate /plan-preview for every unpaid 1AP/AAP booking. When that read fails (timeout, the 25 s budget, more than 40 plan bookings, an error, or an <code>unknown</code> answer), the row silently showed Skedda's full price with Charge, so nobody could tell the count was missing.</p>
+      <p><strong>Failure mode.</strong> A 1AP/AAP row the bot gave no covered, extra or used-up answer for keeps Skedda's price and Charge exactly as before, and now carries a red "Bot Error" pill (the tab's existing red pill style). Hovering it says "Couldn't count prepaid hours (reason). Skedda's price stands; Charge works as usual." Nothing is blocked or hidden.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>Alarms tab photos load one at a time when opened; the list covers two days with no 12 / 10 caps<span class="kind">deck &middot; tool, failure &middot; src/alarm-panel.js (photos, photoImage, mailPhotos, gmailBatchMeta, parsePhotoSubject, studioOfLabel), src/index.js (GET /api/alarm/photo), public/alarm-live.js (src, inStudio, chipsHtml) &middot; <a href="https://github.com/junyanboon/deck-app/pull/551">deck-app #551</a></span></h3></summary>
+      <p>Junyan: &ldquo;approved 2026-10-30 (photos list without bytes, image on click, parallel Gmail, no 12/10 caps, all studios' Post-Disarm mails)&rdquo;</p>
+      <p><strong>Why.</strong> Every 60 s poll of <code>/api/alarm/photos</code> carried every photo as base64 (about 1 MB for 12 frames), and the TELUS mails were read one by one, capped at 10.</p>
+      <p><strong>Tool change.</strong> <code>/api/alarm/photos</code> returns metadata only (id, source, studio, camera, reason, at). New <code>GET /api/alarm/photo?id=</code> returns one JPEG, cached in the isolate, the Worker cache and the browser (private, a week, immutable). Mail subjects are read with one Gmail batch call per 100 mails (two days, up to 300). Alarm.com asks alarm-mcp for 30 frames, its own maximum. Subjects for 509A, 509B, 527 and 693 parse; a label naming both 509 studios (or bare 509) matches an event in either, never guessed.</p>
+      <p><strong>Failure mode.</strong> Gmail batch fails: single reads 6 at a time, at most 40 this poll, the source says "partial" and the rest come next poll. A photo whose bytes are gone from Alarm.com's recent list and from the cache answers 404 and the box shows a broken image.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>Deck Charges tab reads the prepaid-hours bot's own count on every load; Approve asks the bot to settle<span class="kind">The Treasurer &middot; route, tool, failure &middot; EVENT-GATE app.py /plan-preview /plan-now, plan_allowance_sweep.preview_booking, invoice_settle.plan_now, deck-app live-unpaid.js, library/studio-tickets-bookings.md § Monthly 1AP/AAP allowance, d7 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1473">desk-correspondence #1473</a></span></h3></summary>
       <p>Junyan: &ldquo;approved 2026-10-30 (Brad Wong's Nov 6 509A booking showed $27.12 inside his 4 prepaid hours)&rdquo;</p>
       <p><strong>Why.</strong> The Charges tab showed Skedda's full price and Charge for any unpaid 1AP/AAP booking the prepaid-hours bot had not reached yet (it waits until 24 hours before, d106).</p>
