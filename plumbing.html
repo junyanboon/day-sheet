@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-29</span>
+      <h3>Vendor promos with "cancel" in the footer no longer open a Care ticket<span class="kind">The Concierge intake (intake_decide) &middot; route, failure &middot; scripts/spam_filter.py, scripts/intake_decide.py, d20 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1467">desk-correspondence #1467</a></span></h3></summary>
+      <p>Junyan: &ldquo;20 yes do it&rdquo;</p>
+      <p><strong>Why.</strong> A Jiffy promo on 2026-10-27 opened a Customer Care ticket "problem word 'cancel'": its footer said "Cancel anytime" and "to cancel these emails, unsubscribe".</p>
+      <p><strong>Route change.</strong> <code>spam_filter.marketing()</code> now cuts the footer (from "unsubscribe", "you're receiving this" and the like) and "cancel anytime" before it looks for customer words, so the promo is filed to Junyan - Inbox. <code>intake_decide</code> skips the problem-word override when every record is vendor marketing. A renter's "please cancel my booking" still opens a Care ticket.</p>
+      <p><strong>Failure mode.</strong> If a renter writes only below a marketing footer, their words are not read as customer words and the mail may be filed; revert this file's PR to turn it off.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-29</span>
       <h3>Registrar no longer confirms or access-texts a renewing renter's next-year series slots<span class="kind">The Registrar &middot; route &middot; EVENT-GATE booking_sweep.py is_agreement_booking, library/support-ladder.md, d159 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1465">desk-correspondence #1465</a></span></h3></summary>
       <p>Junyan: &ldquo;d159 yes&rdquo;</p>
       <p><strong>Why.</strong> Khalid, Janet, Nada, Enrico and iFreestyle have Agreement End Date 2026-12-31 and their 2027 series already booked, so the Registrar treated their Jan 2027 slots as one-off bookings and drafted five "all confirmed, no refunds" texts (set Will Not Send).</p>
