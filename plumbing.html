@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>Ops Lead feedback cards are one per cause, and Fixer rows no longer spill to the Ops Lead<span class="kind">The Concierge &middot; route &middot; EVENT-GATE lane_feedback.cause_key, lane_feedback.escalate, concierge_feedback_backlog._status_of, concierge_feedback_route.plan, library/concierge-orchestration.md [R-feedback-overdue], library/action-board-routing.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1482">desk-correspondence #1482</a></span></h3></summary>
+      <p>Junyan: &ldquo;approved 2026-10-30 ("6 yes 7 yes", from 94 open Operational feedback cards)&rdquo;</p>
+      <p><strong>Why.</strong> 94 "Operational feedback" cards stood open for the Ops Lead. Most came from five causes filed once per instance (Invariant P, V, B, the Analyst inspection report, Custodian JOB 9 drafts), and about 45 went overdue only because the attended-only Fixer was their reader.</p>
+      <p><strong>Change.</strong> Each escalation now prints a mode against the one open card for its cause (the row's bracket tag minus its per-instance part): create, update (one dated <code>Cause member:</code> line in Notes) or noop. A row with no shared tag keeps its own card. A Fixer row past its 48 h deadline stays on the Fixer's worklist instead of becoming an Ops Lead card; lane-owned rows keep the 4-day backstop.</p>
+      <p><strong>Failure mode.</strong> If the card lookup cannot run, the script reports ok=false and nothing is written; a card that already lists the row is a noop, so a missed escalation-line write never makes a second card.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>A reply whose Invoice Action is already sent in Stripe is a plain Send; one Action never gets a second invoice<span class="kind">deck &middot; route, failure &middot; src/bundle.js (sentInvoice, sentLine), sources/deck.html (bundleSentOf, bundleOf, bundleHtml, bundleVerbs), src/charge.js (preview deck_action search), src/open-invoices.js (summarizePaid created) &middot; <a href="https://github.com/junyanboon/deck-app/pull/559">deck-app #559</a></span></h3></summary>
       <p>Junyan: &ldquo;40 yes" (2026-10-30), after "There's an issue with the invoicing situation.&rdquo;</p>
       <p><strong>Why.</strong> Maryna Stupak's invoice in_1UVd7OPunGOWPTflXxUEsbh9 ($107.35) went out Oct 28 with her reply. Her Oct 30 reminder paired with the same Invoice Action through her care ticket and showed "Invoice $107.35 + send" again.</p>
