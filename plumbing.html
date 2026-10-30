@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>A reply whose Invoice Action is already sent in Stripe is a plain Send; one Action never gets a second invoice<span class="kind">deck &middot; route, failure &middot; src/bundle.js (sentInvoice, sentLine), sources/deck.html (bundleSentOf, bundleOf, bundleHtml, bundleVerbs), src/charge.js (preview deck_action search), src/open-invoices.js (summarizePaid created) &middot; <a href="https://github.com/junyanboon/deck-app/pull/559">deck-app #559</a></span></h3></summary>
+      <p>Junyan: &ldquo;40 yes" (2026-10-30), after "There's an issue with the invoicing situation.&rdquo;</p>
+      <p><strong>Why.</strong> Maryna Stupak's invoice in_1UVd7OPunGOWPTflXxUEsbh9 ($107.35) went out Oct 28 with her reply. Her Oct 30 reminder paired with the same Invoice Action through her care ticket and showed "Invoice $107.35 + send" again.</p>
+      <p><strong>Route change.</strong> On Messages, a reply paired with a money row whose Stripe invoice is open or paid (metadata deck_action is the row, or its in_ id is on the row) is a plain Send. The card reads "Invoice already sent Oct 28 · open · $107.35" with the pay link. Invoice + send stays only when the row has a draft invoice or none. While Stripe is being read the button reads "Checking Stripe".</p>
+      <p><strong>Failure change.</strong> Charged / Send invoice (and the bundle's invoice step) search Stripe for an invoice tagged with the row; an open, paid or uncollectible one blocks a new invoice whatever its amount. If that search fails, nothing is billed ("Stripe could not be searched ...").</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>Move questions auto-send only for today or tomorrow; farther ones wait for Junyan<span class="kind">The Registrar &middot; route &middot; EVENT-GATE move_confirm.ask, move_confirm.near, move_confirm.write_ask, move_sweep.run, library/autonomy.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1479">desk-correspondence #1479</a></span></h3></summary>
       <p>Junyan: &ldquo;approved 2026-10-30 ("10 yes 11 yes")&rdquo;</p>
       <p><strong>Why.</strong> Junyan: "if someone is moving something today and tomorrow the message goes out automatically and then if it's farther ... the messages get queued up instead".</p>
