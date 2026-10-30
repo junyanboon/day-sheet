@@ -1366,6 +1366,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>Deck Charges tab reads the prepaid-hours bot's own count on every load; Approve asks the bot to settle<span class="kind">The Treasurer &middot; route, tool, failure &middot; EVENT-GATE app.py /plan-preview /plan-now, plan_allowance_sweep.preview_booking, invoice_settle.plan_now, deck-app live-unpaid.js, library/studio-tickets-bookings.md § Monthly 1AP/AAP allowance, d7 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1473">desk-correspondence #1473</a></span></h3></summary>
+      <p>Junyan: &ldquo;approved 2026-10-30 (Brad Wong's Nov 6 509A booking showed $27.12 inside his 4 prepaid hours)&rdquo;</p>
+      <p><strong>Why.</strong> The Charges tab showed Skedda's full price and Charge for any unpaid 1AP/AAP booking the prepaid-hours bot had not reached yet (it waits until 24 hours before, d106).</p>
+      <p><strong>Route change.</strong> On every Charges tab load the Deck sends the unpaid 1AP/AAP bookings to event-gate <code>POST /plan-preview</code>, which runs the bot's own forecast path with <code>settle_plan_allowance</code> confirm=false (no receipt, no journal, no lock, no write; cached 60 s). Fully covered shows a green Prepaid card at $0 with Approve; crossing the 4 hours shows only the overage with an "x h extra" pill and Charge; used up is unchanged. Approve writes the PLAN OK line (making the Actions row first when there is none), then calls <code>POST /plan-now</code>, which runs the bot for that one booking under its own lock on or after the booking day; before that day it says so and the bot settles on the day (d96). The Deck never calls <code>settle_plan_allowance</code>.</p>
+      <p><strong>Failure mode.</strong> A preview read failure or an unknown answer leaves Skedda's price and Charge, as before. <code>/plan-now</code> failures leave the booking to the bot's next round.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-29</span>
       <h3>Vendor promos with "cancel" in the footer no longer open a Care ticket<span class="kind">The Concierge intake (intake_decide) &middot; route, failure &middot; scripts/spam_filter.py, scripts/intake_decide.py, d20 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1467">desk-correspondence #1467</a></span></h3></summary>
       <p>Junyan: &ldquo;20 yes do it&rdquo;</p>
