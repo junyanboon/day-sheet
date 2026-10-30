@@ -1367,6 +1367,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>Prepaid 1AP/AAP rows lose Approve; a booking the robot did not settle by its day shows "Not settled" and a Fix button that files a Fixer row<span class="kind">The Deck &middot; failure &middot; deck-app src/live-unpaid.js markOverdue and planFix, src/index.js POST /api/charge/plan-fix, sources/deck.html planCardsHtml and planFix, test/charges-prepaid.test.js, test/charges-list.test.js &middot; deck-app</span></h3></summary>
+      <p>Junyan: &ldquo;"We don't block human actions we only inform them." (2026-10-30, d9)&rdquo;</p>
+      <p><strong>Why.</strong> A fully prepaid 1AP/AAP booking is the prepaid-hours bot's to mark paid on its booking day, so an Approve button only invited a press that did nothing new. The real failure is the bot missing a day, which nothing showed.</p>
+      <p><strong>Route.</strong> On or before the booking day (Toronto) the plan card shows a green Prepaid pill, $0.00, "robot settles &lt;date&gt;" and no button. After the day, still unpaid in Skedda, it shows a red "Not settled" pill and Fix. Fix calls POST /api/charge/plan-fix, which files one Actions row: Raised by The Fixer, Executed by Agent, Type Review, Pending Review, Request tagged <code>[prepaid-fix:&lt;booking id&gt;]</code>, with renter, booking, date, hours booked, plan use and the error in Basis. It never sets Booking ref, so the Charge flow cannot take it as the booking's row. An open row with the tag already there makes the button read "Already filed for the Fixer" and a press files nothing new.</p>
+      <p><strong>Failure mode.</strong> Fix moves no money, settles nothing and calls no bot. If the open-row lookup fails, the card still offers Fix. Starting a Claude repair session from the button is not built (no trigger-run token exists).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>The Charges tab lists Skedda's unpaid bookings at once; plan rows show "Counting…" until the prepaid-hours bot answers<span class="kind">The Deck &middot; failure &middot; deck-app src/live-unpaid.js liveUnpaid and livePrepaid, src/index.js GET /api/unpaid-live/prepaid, sources/deck.html loadLivePrepaid, test/charges-prepaid.test.js, test/charges-list.test.js &middot; deck-app</span></h3></summary>
+      <p>Junyan: &ldquo;"We don't block human actions we only inform them." (2026-10-30, d8)&rdquo;</p>
+      <p><strong>Why.</strong> GET /api/unpaid-live waited on event-gate POST /plan-preview (up to 30 s) before it returned, so the tab sat on "Reading Skedda…" while the bot read each plan renter's month.</p>
+      <p><strong>Route.</strong> GET /api/unpaid-live now returns the list from Skedda and the Actions rows only; each unpaid 1AP/AAP row carries a grey "Counting…" pill and keeps Skedda's price and Charge. The page then calls GET /api/unpaid-live/prepaid, which reuses the list read from the last minute, asks /plan-preview once, and returns the list with Prepaid, "0.5 h extra", Not settled or Bot Error; the page swaps those rows in by booking id. Charge, Approve and Fix still count live before they act.</p>
+      <p><strong>Failure mode.</strong> A /plan-preview timeout or error, or a failed /prepaid call, turns each Counting… row into Bot Error, as before. Non-plan rows never wait.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>Alarms tab fetches one Alarm.com photo by id; alarm-mcp sends frames since yesterday, tagged with their studio<span class="kind">deck &middot; tool, failure &middot; src/alarm-panel.js (photos, photoImage, ADC_LIMIT), danceannex-alarm-monitor alarm_monitor/deck_panel.py (image_rows, fetch_image), hosting/server_http.py (/panel-images, /panel-image) &middot; <a href="https://github.com/junyanboon/deck-app/pull/553">deck-app #553</a></span></h3></summary>
+      <p>Junyan: &ldquo;approved 2026-10-30 (d12)&rdquo;</p>
+      <p><strong>Why.</strong> Opening one Alarm.com photo pulled every frame with its bytes from alarm-mcp, and alarm-mcp kept a count (30) instead of a time window. Frames came back with no studio, because every panel camera has the same bare id.</p>
+      <p><strong>Tool change.</strong> The 60 s list asks <code>/panel-images?data=0</code> (no bytes); alarm-mcp keeps frames since the start of yesterday (Toronto), at most 60, each tagged with the studio of the system it was taken on (509 stays "509" unless the camera name says A or B). <code>/api/alarm/photo?id=</code> asks alarm-mcp's new <code>GET /panel-image?id=</code> for that one frame. Alarm.com still answers only for the session's selected system (901), so 509, 527 and 693 photos still come from the TELUS mails.</p>
+      <p><strong>Failure mode.</strong> An alarm-mcp without <code>/panel-image</code> yet (before its deploy) answers a plain 404: the Deck falls back to the whole list with bytes, as before. A frame Alarm.com no longer has answers 404 "not found" and the box shows a broken image.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>Move questions and counter-proposals only name the artist's "Studios that fit"<span class="kind">The Registrar &middot; failure &middot; EVENT-GATE move_confirm.ask, move_confirm.room_check, move_sweep.studios_that_fit, move_sweep.queue_counter, library/studio-tickets-bookings.md § Evidence and availability, library/autonomy.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1476">desk-correspondence #1476</a></span></h3></summary>
       <p>Junyan: &ldquo;approved 2026-10-30 ("8 yes", from Nicholas Walsh / Youth Theatre Canada, fits 527, 693, 901)&rdquo;</p>
       <p><strong>Why.</strong> The move lane could ask a renter to confirm, or offer as a free alternative, a studio that does not suit their group.</p>
