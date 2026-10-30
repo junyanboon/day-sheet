@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>The Host covers back-to-back bookings' shared touchpoint once instead of failing<span class="kind">The Host &middot; failure &middot; EVENT-GATE staff_coverage.ensure, staff_coverage.legacy_matches &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1477">desk-correspondence #1477</a></span></h3></summary>
+      <p>Junyan: &ldquo;approved 2026-10-30 ("f4 yes", Fixer row 4097503281c4813aa2e7e71c6ab3e823, Saneea Clarke 527 party 21:00-00:00 then 00:00-02:00)&rdquo;</p>
+      <p><strong>Why.</strong> Part 1's end touchpoint and part 2's start touchpoint were the same 23:45-00:15 slot, one placeholder matched both rows, and the pass failed with "multiple existing placeholders match booking touchpoint".</p>
+      <p><strong>Change.</strong> One pass groups touchpoints by studio and window; the earlier booking's end side owns a shared slot. Several Need placeholders at the same window and room: the first by id is adopted and the rest are logged as duplicates (nothing is created or deleted). A legacy placeholder whose description is exactly a neighbouring booking's summary no longer matches this row.</p>
+      <p><strong>Failure mode.</strong> Duplicates are logged, not raised. A failure on a shared slot names every row sharing it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>Prepaid 1AP/AAP rows lose Approve; a booking the robot did not settle by its day shows "Not settled" and a Fix button that files a Fixer row<span class="kind">The Deck &middot; failure &middot; deck-app src/live-unpaid.js markOverdue and planFix, src/index.js POST /api/charge/plan-fix, sources/deck.html planCardsHtml and planFix, test/charges-prepaid.test.js, test/charges-list.test.js &middot; deck-app</span></h3></summary>
       <p>Junyan: &ldquo;"We don't block human actions we only inform them." (2026-10-30, d9)&rdquo;</p>
       <p><strong>Why.</strong> A fully prepaid 1AP/AAP booking is the prepaid-hours bot's to mark paid on its booking day, so an Approve button only invited a press that did nothing new. The real failure is the bot missing a day, which nothing showed.</p>
