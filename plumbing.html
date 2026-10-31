@@ -1367,6 +1367,35 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>Studio change difference rows are read by their words, not only the marker<span class="kind">event-gate &middot; failure &middot; invariants.is_price_difference, skedda_sync, stale sweep, Desk Sort money close-out &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1481">desk-correspondence #1481</a></span></h3></summary>
+      <p><strong>Case.</strong> Sebastien Prosper, Skedda 123781359, Sun 2026-11-01 4:30-5:30 PM, paid $33.90 in 509B, moved to 901 ($58.76) on 2026-10-30. Charge row 40975032-81c4-81b5-89b5-ef182db6387b at $24.86.</p>
+      <p><strong>What broke.</strong> the row was hand-filed as "studio change 509B to 901" with no <code>[price-difference]</code> marker. <code>invariants.is_price_difference</code> only knew "studio/rate/price difference", so skedda_sync reset the Amount to the booking's paid $33.90 and the stale sweep closed it because the booking reads paid. The Desk Sort close-out saw no payment proof but left it Processed.</p>
+      <p><strong>Fix.</strong> - <code>is_price_difference</code> also matches "studio change / move / switch / upgrade" and "upcharge", and reads Ask and Plain ask as well as Request, Booking ref and Basis. skedda_sync and the stale sweep already skip such rows. - Desk Sort money close-out: a Processed difference row with no Stripe payment of its own amount is reopened at Pending Review. - Deck (deck-app PR, same day): the same test, so the card shows the row's own amount, Charged does not compare it to Skedda's price or the booking's old payment.</p>
+      <p><strong>Tests.</strong> test_skedda_sync.py and test_stale_sweep.py, Sebastien's row.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>Intake ignores quoted history for problem words and keeps one-time-code mail as a notice<span class="kind">responder &middot; failure &middot; desk-correspondence scripts/intake_decide.py decide (new_words, machine_mail) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1496">desk-correspondence #1496</a></span></h3></summary>
+      <p>Junyan: &ldquo;72 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-19 a Rogers "Here is your verification code" email (gmail-1a153a608e8b3e2b, from notifications@rci.rogers.com) was forced from automated notice to a question, because the sender is not a no-reply address. A "cancelled" in the quoted history of a reply opened a Care ticket for Nick.</p>
+      <p><strong>Failure mode.</strong> The problem-word check now reads only the sender's new words (above "On ... wrote:", "&gt; " or "Original Message"), the subject and the form's ask; a problem word only in our quoted text no longer forces a ticket. Mail from a notifications@, alerts@, verify@ or security@ style sender, or with a verification, one-time, login or sign-in code subject, stays an automated notice when the form says so.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>Send right away names the row it released, the engine waits for the lock and nudges the Deck after the claim, and the sending bubble checks every 1 s<span class="kind">The Deck &middot; route &middot; deck-app src/send-kick.js (SendKicker ids, watch skip, sentNudge, step times), src/send-kick-object.js, src/index.js POST /api/robot/sent-nudge and kickSendEngine(c, rowId), public/tab-kit.js SENT_EVERY_MS, test/send-kick.test.js; send-engine v49 &middot; deck-app</span></h3></summary>
+      <p>Junyan: &ldquo;"24 yes 25 no 26 no" (2026-10-30)&rdquo;</p>
+      <p><strong>Why.</strong> A Deck Send took several seconds to leave: the engine searched the whole queue, read pages one after another, ran the extras, and a locked kick waited 15 s for a retry.</p>
+      <p><strong>Route.</strong> Each Deck release (Texts Send, Messages Send and Approve, the agreement send) kicks with its row id. The SendKick object gathers ids and calls main("kick", {rows, nudge}); a kick from event-gate (no row) still reads the whole queue. The v49 engine reads only those pages, then runs every gate, the pre-claim re-read and the claim as before; a page that is not a Ready to Send queue row with no receipt and a due Send After is left alone. A locked kick waits up to 20 s inside the engine (no 15 s Deck retry). Right after each claim the engine posts {nonce, row} to POST /api/robot/sent-nudge (only the running kick's one-time nonce counts) and every open Deck rereads its sending rows; the sending-row check runs every 1 s. event-gate's 15 s watcher is skipped while a kick runs. Each sent row's step times go on its "[sent-by ...]" Reasoning line and into kick-status (last.rows).</p>
+      <p><strong>Failure mode.</strong> A failed kick or nudge changes nothing: the every-minute run still sends, with its extras and second look. A wrong nonce gets 403 and no nudge.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>A renter's payment answer joins their open payment ticket; the Deck's Process button drafts only reply steps<span class="kind">The Responder &middot; route &middot; scripts/intake_decide.py, EVENT-GATE process_ticket.py, process_io.py, library/the-responder.md, d9, d10 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1493">desk-correspondence #1493</a></span></h3></summary>
       <p>Junyan: &ldquo;9 yes, 10 yes&rdquo;</p>
       <p><strong>Why.</strong> Stephanie Brinning's "Yes that's fine" to a payment ask carried no dates, so each answer opened a new Care ticket (3ce75032, 40675032 and a third closed as a duplicate).</p>
@@ -1754,7 +1783,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> Natalia C. texted asking to see a studio and offered two times. The Responder's reply was held and a person had to book the tour, after a few back and forths.</p>
       <p><strong>Route.</strong> New 5 minute <code>/viewing-sweep</code> (event-gate, off until <code>enable-viewing-sweep.sh</code> installs its timer). A direct email or text that only asks to view: no Skedda account gets the viewing sign-up link (invite 850380), one account gets "which studio, and what date and time?". The renter's named times get "Studio X is free for your viewing ... Want me to book it?" for the earliest time that passes (08:00 to 22:30, 60 minutes ahead, 15 minute buffer). Their YES books a $0 15 minute "Studio Viewing" under their account, then the Registrar's existing viewing carve-out sends T3 and the How-to-Access. Platform relays are never read here (the phone ask comes first, d51).</p>
       <p><strong>Failure mode.</strong> Anything unclear writes nothing and the Responder keeps it. A refused YES (room taken, too late, not exactly one account, no read-back) files one Review Action and books nothing. Every text stays at Pending Review through <code>VIEWING_AUTO_HELD_UNTIL</code> (unset means held, d50). No sign-up link set means that reply is held. Kill switch <code>VIEWING_AUTO_DISABLED=1</code>.</p>
-      <p>## Junyan's rulings on the build (2026-10-28) "54 yes, 55yes 56 yes so they can go there and avoid us needing to even have them in the studio if necessary, 57 email replies yes, 58 yes" - d54 merge and switch on (first week held). d55 no Studio Viewing tag for account holders; the desk books them at $0 itself. - d56 both first replies offer the 3D tour (www.danceannex.ca/studio-tour). d57 email follow-ups stay with the Responder. d58 the Studio Viewing SOP is updated in Notion. - Timer second moved from :41 to :32 (the stagger test allows 20 to 40).</p>
+      <p><strong>Junyan's rulings on the build (2026-10-28).</strong> "54 yes, 55yes 56 yes so they can go there and avoid us needing to even have them in the studio if necessary, 57 email replies yes, 58 yes" - d54 merge and switch on (first week held). d55 no Studio Viewing tag for account holders; the desk books them at $0 itself. - d56 both first replies offer the 3D tour (www.danceannex.ca/studio-tour). d57 email follow-ups stay with the Responder. d58 the Studio Viewing SOP is updated in Notion. - Timer second moved from :41 to :32 (the stagger test allows 20 to 40).</p>
     </details>
     </li>
     <li class="entry det">
