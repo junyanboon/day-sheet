@@ -90,7 +90,7 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </style></head><body><div class="wrap">
 <nav class="tabs"><a class="tabtab" href="board.html">🎭 Crew Board</a><a class="tabtab on" href="tickets.html" aria-current="page">🎟 Tickets</a><a class="tabtab" href="messages.html">💬 Messages</a></nav>
 <header>
-<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-05 08:58 UTC-04:00</div>
+<div class="eyebrow">Dance Annex · desk repair · updated 2026-10-30 21:12 UTC-04:00</div>
 <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true" style="vertical-align:-3px;margin-right:.45rem">
 <rect x="1" y="1" width="30" height="30" rx="7" fill="#2f6b4f"/>
 <path d="M9 10h7a4 4 0 0 1 4 4v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,14 +99,14 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <div class="goal">🎯 A front desk that runs itself — Junyan only makes the big calls.</div>
 </header>
 <div class="stats">
-<div class="stat"><div class="n">4</div><div class="l">🔨 Working on now</div></div>
-<div class="stat"><div class="n">23</div><div class="l">🟢 Ready to start</div></div>
+<div class="stat"><div class="n">5</div><div class="l">🔨 Working on now</div></div>
+<div class="stat"><div class="n">25</div><div class="l">🟢 Ready to start</div></div>
 <div class="stat"><div class="n">9</div><div class="l">⏳ Waiting</div></div>
-<div class="stat"><div class="n">122</div><div class="l">✅ Finished</div></div>
+<div class="stat"><div class="n">123</div><div class="l">✅ Finished</div></div>
 </div>
 <h2>The work</h2>
 <div class="cols">
-<div class="col"><h3>🔨 Working on now<span class="cnt">4</span></h3><div class="job"><div class="jnum">#145</div><div class="jhead"><span class="emoji">🔑</span><h4>The stale-row checker trips on a charge row somebody just marked done</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sep 16. Twice, right after a person marked a charge row done, the checker looked for a field the row did not have, and the whole ten-minute sweep failed for that pass</li><li>Fix: skip the row with a reason instead of failing the sweep, and test it with that exact row shape</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>stale sweep raises KeyError on a freshly Processed Charge row and fails the reconcile tick</b></p><h2>Question</h2>
+<div class="col"><h3>🔨 Working on now<span class="cnt">5</span></h3><div class="job"><div class="jnum">#145</div><div class="jhead"><span class="emoji">🔑</span><h4>The stale-row checker trips on a charge row somebody just marked done</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Found Sep 16. Twice, right after a person marked a charge row done, the checker looked for a field the row did not have, and the whole ten-minute sweep failed for that pass</li><li>Fix: skip the row with a reason instead of failing the sweep, and test it with that exact row shape</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>stale sweep raises KeyError on a freshly Processed Charge row and fails the reconcile tick</b></p><h2>Question</h2>
 
 <p>Found 2026-09-16 while reading 144&#x27;s 24 h check. Twice since the 144 deploy the 10-min</p>
 <p><code>/reconcile-sweep</code> ended <code>RuntimeError: stale sweep source/readback failed: [{&quot;id&quot;: …, &quot;kind&quot;:</p>
@@ -740,8 +740,97 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 <p>session, run by Junyan; session cse_01AsikUafWMDZQcn6TKvZea4): <code>RENEWAL_PLAN_TOKEN=SET</code> (64 chars) in</p>
 <p>env_01C4WwRd8o9KQUyFg4savhMd, plan route with token HTTP 400 (want 400), without HTTP 404 (want 404). Every piece</p>
 <p>is live. Ticket stays open for the first real renewal (Desk Watch BG).</p>
+</div></details></details></div><div class="job"><div class="jnum">#162</div><div class="jhead"><span class="emoji">🗂️</span><h4>Concierge and Responder quit early on 2026-10-30 morning passes</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Concierge and Responder quit early on 2026-10-30 morning passes</b></p><h2>Findings (run logs, 2026-10-30)</h2>
+
+<p>Concierge 08:33 pass (<code>cse_011wqCsmkqRb7KVHhdjuT9KS</code>, Opus, 482s, 22 turns): lock claim took 5 min;</p>
+<p>worked one item then closed Skipped Steps with ready intake, deadlines, feedback, handbacks, closes left.</p>
+<p>No script creates the Concierge rolling report (<code>scripts/rolling_report.py</code> LANES has only responder),</p>
+<p>so it built one by hand. <code>sop_attach.py</code> HTTP 400 on Parmida Azizi: rich_text 2001 &gt; 2000, because</p>
+<p><code>ticket_edit.rich</code> slices by Python code points while Notion counts UTF-16 units (emoji = 2).</p>
+<p>10:08 pass: gate took 10+ min, same leftovers.</p>
+
+<p>Responder :20 pass 13:22 UTC (<code>cse_011wqCskhg8rXkgmTQnkjrD5</code>, Sonnet, 79s): hand-built a Notion</p>
+<p>no-show query (invalid args) instead of <code>scripts/no_show_candidates.py</code>; skipped the stale-draft recheck.</p>
+<p>The 08:20 pass also skipped the no-show check. The 22 assignments were Fixer code fixes.</p>
+
+<h2>Rulings</h2>
+
+<ul>
+<li>- 2026-10-30 Junyan: &quot;5 yes 6 yes, 7 yes, 8 yes, 4 no&quot;.</li>
+</ul>
+<p>d5 UTF-16 aware chunking in ticket_edit.rich; d6 rolling_report.py makes the Concierge report;</p>
+<p>d7 one script runs no-show + stale-draft recheck, Responder must run it each pass (replaces d3);</p>
+<p>d8 investigate the 5 to 10 min Concierge gate/lock claim. d4 (extra 06:10 pass) declined.</p>
+<p>Shipper builds to open PRs only; merge and prompt push are Junyan&#x27;s.</p>
+
+<h2>Build</h2>
+
+<p>2026-10-30, Shipper. Four PRs open on junyanboon/desk-correspondence, none merged.</p>
+
+<ul>
+<li>- d5, PR 1469 (https://github.com/junyanboon/desk-correspondence/pull/1469): new <code>scripts/notion_text.py</code></li>
+</ul>
+<p>chunks and truncates by UTF-16 units, never splitting an emoji. Used by <code>ticket_edit.rich</code> (the</p>
+<p>sop_attach 400) and every other 2000/1900 slicer found: booking_state_set, queue_draft,</p>
+<p>platform_review, run_error, rolling_report, intake_decide. Tests: <code>test_notion_text.py</code> 5 new;</p>
+<p>1001 of 1002 related scripts tests pass (test_credit_claim regex test fails the same on main);</p>
+<p>event-gate tests that touch these scripts: same failures before and after (local missing packages).</p>
+<p>No PR check runs for scripts-only changes.</p>
+<ul>
+<li>- d6, PR 1470 (https://github.com/junyanboon/desk-correspondence/pull/1470): <code>rolling_report.py</code> gains</li>
+</ul>
+<p>the concierge lane (Run Monitor 3907503281c48106bb70c480fdb489c1); <code>concierge_pass.py report find</code></p>
+<p>creates today&#x27;s report when missing (<code>--no-create</code> keeps the old exit 2). Canon line says so, file</p>
+<p>at 53,840 of its 53,850 budget. CI pass.</p>
+<ul>
+<li>- d7, PR 1471 (https://github.com/junyanboon/desk-correspondence/pull/1471): new</li>
+</ul>
+<p><code>scripts/responder_sweeps.py --apply</code> runs the no-show query and the already_answered recheck on</p>
+<p>every held Responder row, kills answered rows Will Not Send with the d72 note, prints</p>
+<p><code>no-show: N found, M queued-needed</code> and <code>recheck: N pending, M superseded/killed</code>, exit 4 on any</p>
+<p>failure. Canon makes it required right after &quot;Clock first&quot;. CI pass.</p>
+<p>Live prompt draft (not pushed): failover/live-prompts/responder-cloud.txt.v27-draft-2026-10-30,</p>
+<p>diff responder-cloud-v27-2026-10-30.diff (based on the local v26 copy of 2026-10-20). It replaces</p>
+<p>STEP 1.5a (hand-built Actions no-show query), STEP 2.6 and STEP 3.5&#x27;s query with the script, and</p>
+<p>runs it on quiet passes too.</p>
+<ul>
+<li>- d8, PR 1472 (https://github.com/junyanboon/desk-correspondence/pull/1472): timed the gate read-only</li>
+</ul>
+<p>at cloud pacing (2 calls/s): 626 Notion calls, 323 s. The lock claim is 3 calls and not slow.</p>
+<p>Intake was 281 calls because the tick&#x27;s stored inventory is always marked truncated: 40 open items</p>
+<p>are 23.5K chars over the 20K INVENTORY_CAP. Cap raised to 40000 (head stays under 64K, below the</p>
+<p>80K 504). Expected about 345 calls, about 3 min. Handback (194 calls) is next. Needs an event-gate</p>
+<p>deploy after merge. CI pass.</p>
+<ul>
+<li>- 2026-10-30 check: live no-show Action titles carry <code>[attend:&lt;id&gt;]</code> (e.g. 40675032-81c4-8183-b87c-d85557d5e5b1,</li>
+</ul>
+<p>Dana Hufe), so responder_sweeps.py will see them. Before pushing v27, read the live prompt page and</p>
+<p>confirm it still matches the local v26.</p>
+<ul>
+<li>- 2026-10-30 check: live prompt page 3e575032 is v26 (sha 587f3c68, last edited 2026-10-20), same as</li>
+</ul>
+<p>the local v26 that v27 was built on. Safe to push v27 after PR 1471 merges. Root cause note: v26</p>
+<p>STEP 2.6 itself told the lane to hand-build the Actions no-show query, which is why it failed.</p>
+<ul>
+<li>- 2026-10-30 Junyan: &quot;10 yes 11 running&quot;. Responder prompt v27 pushed to Notion page 3e575032 at</li>
+</ul>
+<p>15:41Z (4 hunks + header, sha eee14f05; read back, all present). deploy-gate f1a04987 started by Junyan, result not yet seen.</p>
+<p>Junyan&#x27;s terminal (11:44 Toronto): &quot;LIVE e7a0a66&quot;, run 41082901685 success. But e7a0a66 (watchlist</p>
+<p>refresh 15:32Z) is BEFORE the four merges, so d8 is NOT live yet. Needs <code>deploy-gate f1a049871737f5b1173e994db6d0699a6da8dd5a</code>.</p>
+<ul>
+<li>- 2026-10-30 12:36 Toronto, Junyan&#x27;s terminal: run 41090662713 success, /health git_sha f1a0498,</li>
+</ul>
+<p>&quot;LIVE f1a0498&quot;. All four fixes live. Still to watch: next Concierge pass gate time (expect ~3 min)</p>
+<p>and next Responder pass shows <code>no-show:</code> and <code>recheck:</code> lines from responder_sweeps.py.</p>
+<ul>
+<li>- 2026-10-30 Junyan: &quot;9 yes merge&quot;. Shipper dispatched to merge 1469 to 1472 (no deploy, no prompt push).</li>
+<li>- Merged: PR 1469 725f074851ab97b741cbc03c7173129494cf1b1b (already merged 2026-10-30 15:38Z before dispatch).</li>
+<li>- Merged: PR 1470 0df372d80f90d319086fb4ef482ebbaaf23e8c33 (2026-10-30, Shipper, checks pass).</li>
+<li>- Merged: PR 1471 0fd201fe6685800509b17a90888afa63e826ffa3 (already merged 2026-10-30 15:37Z before dispatch).</li>
+<li>- Merged: PR 1472 f1a049871737f5b1173e994db6d0699a6da8dd5a (2026-10-30, Shipper, checks pass). Waits on Junyan: <code>deploy-gate f1a049871737f5b1173e994db6d0699a6da8dd5a</code>, then push Responder v27.</li>
+</ul>
 </div></details></details></div></div>
-<div class="col"><h3>🟢 Ready to start<span class="cnt">23</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
+<div class="col"><h3>🟢 Ready to start<span class="cnt">25</span></h3><div class="job"><div class="jnum">#020</div><div class="jhead"><span class="emoji">📺</span><h4>The studio monitor page grows into the main window on the business</h4></div><details><summary>Details</summary><ul class="plain-bullets"><li>Junyan noticed it himself (Aug 15): the monitor page is becoming the thing he and the duty manager actually look at</li><li>RULED Aug 15 (Junyan): the monitor IS the main page now — the Day Sheet no longer is</li><li>It was stuck waiting on a Zapier build that will never happen; the alarm data it wants comes from the every-minute alarm program instead</li><li>Claimed shifts should land on it within a minute too (ticket 075)</li><li>Sep 8: the old auto-update-the-board idea (016) closed; if messages for future bookings are still queued by hand, cut a small ticket then</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Evolve the FBS Monitor into the Ops-lead live studio board (incl. emergencies)</b></p><h2>Status update 2026-07-17 (Ela meeting)</h2>
 
 <p>Ela <b>accepted the Ops-lead role</b>. Two unblocks before it&#x27;s real (both queued into</p>
 <p>Junyan&#x27;s Main Focus window today):</p>
@@ -2577,6 +2666,384 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 
 <p>Each of the three rows closes on a passing night (or the lane is ruled out of the verifier), and</p>
 <p>Desk Watch AT reads zero Overnight Verifier rows past deadline.</p>
+</div></details></details></div><div class="job"><div class="jnum">#160</div><div class="jhead"><span class="emoji">🗂️</span><h4>A paid platform booking must reach Skedda, a code and an access text without a person noticing (Parisa B. miss, 2026-10-07)</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>A paid platform booking must reach Skedda, a code and an access text without a person noticing (Parisa B. miss, 2026-10-07)</b></p><h2>Question</h2>
+
+<p>Cut 2026-10-08 from the Parisa B. miss. Design spec only. Nothing in canon, code, prompts or records was changed.</p>
+
+<p>Parisa B. (Giggster booking 06b9d19a-a7e9-4c13-88a4-30c59d088468, chat 40c8505e-f912-44c8-9297-582c5b7062d7,</p>
+<p>Studio 509A, Wed Oct 7 4:30 to 5:30 PM, payout $32.40) never became a Skedda booking, an alarm code or an access</p>
+<p>text. She was at the door from about 4:44 PM. Junyan heard at 5:14 PM. What must be true so that no paid platform</p>
+<p>booking can reach its start without a mirror, a code and an access text, and so that a renter at the door is</p>
+<p>handled in minutes?</p>
+
+<h2>True timeline (Toronto; from the correspondence log, the Actions and ticket mirrors, and the VPS event-gate journal)</h2>
+
+<p>| Time | What | Source |</p>
+<p>|---|---|---|</p>
+<p>| Oct 6 6:31 PM | Inquiry (mail + proxy SMS) | gmail-1a11358240b2cb3c |</p>
+<p>| Oct 6 9:00 PM | Giggster &quot;You have a new booking request&quot; mail (offer expires Oct 8) and SMS &quot;New booking request ... Accept your booking at /bookings/06b9d19a...&quot; from her proxy +13433064673 | gmail-1a113e099919eb0c, sms-in-4e1e16d4 |</p>
+<p>| Oct 6 9:50 PM | Concierge parks the sales ticket at Gate: Staff (&quot;accepting in the Giggster app is human-only&quot;) | ticket 3f275032-81c4-81e5 |</p>
+<p>| Oct 6 evening (Junyan: &quot;yesterday&quot;) | Junyan accepts. Giggster shows it UNPAID. <b>No mail or SMS marks the accept.</b> No lane can see it | Junyan; absent from the log |</p>
+<p>| Oct 7 2:35 AM | Custodian JOB 8 bounces the ticket: no 509A booking in Skedda | Action 3f275032-81c4-813a |</p>
+<p>| <b>Oct 7 7:47:07 AM</b> | Giggster sends, the same second, &quot;Confirmed Booking Details&quot; (Approved, &quot;your booking for $40.00 is confirmed&quot;) and &quot;Get ready for your booking&quot; (&quot;Your shoot is almost here!&quot;). SMS &quot;Your booking for Oct 7 has been confirmed&quot; at 7:47:09 from her proxy number. <b>This is the payment moment, not the accept.</b> | gmail-1a116305fa7e08ea, gmail-1a116305c807c0be, sms-in-4d7dedeb |</p>
+<p>| 7:48 AM | event-gate drops the SMS as <code>relay-traffic</code>, <code>ensure_artist skipped:relay</code>. Greeter and PlatformMirror both ignore the mail (see root causes) | VPS journal 11:48:10Z |</p>
+<p>| 8:20 AM, 8:25 AM, 8:50 AM | Responder logs the mail &quot;new&quot;. Desk Sort cards &quot;Accept on Giggster&quot; (reads Skedda only). JOB3 repeats &quot;not accepted yet&quot; | tickets, Action |</p>
+<p>| 8:53 AM | The SMS is minted as a person&#x27;s care ticket with an empty Asked | ticket 3f275032-81c4-8143 |</p>
+<p>| 4:28 PM | &quot;I&#x27;m a little late, can I stay an hour?&quot; Registrar extension lane: no Artist-linked booking, raises an Action at 4:31 PM | Action 3f275032-81c4-81a8 |</p>
+<p>| <b>4:44 and 4:46 PM</b> | &quot;How can I enter the studio?&quot; / &quot;what is the access code&quot;. <b>The stuck-access lane read both within a minute and logged <code>outcome=no-booking-today, kind=missing</code>. Silent. No alert.</b> | VPS journal 20:45 to 20:48Z |</p>
+<p>| 5:14 PM | Junyan texted by the Desk Sort | Action 3f275032-81c4-81a8 |</p>
+
+<p>Correction to the tracer: 7:47 AM was payment (booking turned from unpaid to paid), not accept and pay together.</p>
+<p>The Giggster accept itself is invisible to the desk. Also she wrote at 4:28 that she was late, so &quot;waiting since</p>
+<p>4:30&quot; is really about 4:44.</p>
+
+<h2>&quot;Your shoot is almost here&quot; (Get ready) email</h2>
+
+<p>Subject &quot;Get ready for your booking on &lt;date&gt;&quot;, from hello@giggster.com. For Parisa it arrived 7:47:07 AM, 8 h 43 m</p>
+<p>before start, the same second as the Confirmed mail. Across 17 in the log:</p>
+<ul>
+<li>- Normal case: <b>9:00 AM Toronto exactly two calendar days before the booking</b> (lead 2 d 1 h to 2 d 10 h; e.g. Welton Aug 13 9:00 for Aug 15 19:30).</li>
+<li>- Late-paid case: it fires at the moment of confirmation, together with the Confirmed mail (Parisa, Fox Jun 7, Jesse Jul 25).</li>
+<li>- It <b>never arrives for an accepted-unpaid booking</b>. Parisa was inside the two-day window from her accept onward and got nothing until she paid. So it is a &quot;paid and close&quot; signal, not an &quot;unpaid, check&quot; warning.</li>
+<li>- Use: it is a free second check at T-48h for bookings paid early (a miss then has two days to be caught), and for late payers it adds nothing beyond the Confirmed mail. It is not a substitute for catching the Confirmed mail.</li>
+<li>- Other Giggster timers: &quot;Wrap Report&quot; arrives 1 h before the booking END (a started signal; too late to fix a miss). No &quot;starts soon&quot; exists on Giggster. Peerspace has &quot;coming up&quot; (about 8:15 PM, 2 to 3 days before) and <b>&quot;starts soon&quot; exactly 30 min before start</b>.</li>
+</ul>
+
+<h2>Root causes (five gaps in series, any one of which would have saved her)</h2>
+
+<ol>
+<li>1. <b>PlatformMirror.gs (Apps Script, every 5 min) cannot read Giggster&#x27;s request-then-pay confirmation.</b></li>
+</ol>
+<p><code>pmParseGiggster_</code> returns null unless the body says &quot;instant booking&quot; or the subject says &quot;Instant Booking</p>
+<p>Details&quot;. Parisa&#x27;s mail is &quot;Confirmed Booking Details&quot; / &quot;your booking ... is confirmed&quot;. PLATFORM-MIRROR.md says</p>
+<p>&quot;do not loosen&quot; and lists only &quot;Get ready&quot; and Wrap Report as lookalikes to refuse. The mirror lane went live</p>
+<p>2026-08-24. <b>Parisa is the first Giggster booking through the request-then-pay path since then</b>; the four earlier</p>
+<p>Confirmed mails (Apr 28, May 5, Jun 7, Jul 25) predate it and were mirrored by hand. Instant books still mirror</p>
+<p>fine (gate-1 row 18 to 22 min after the mail: Jessica, Daniel, June P.).</p>
+<ol>
+<li>2. <b>The Greeter has no Giggster <code>request</code> or <code>confirmed</code> shape.</b> <code>_SHAPES</code> for giggster knows only message,</li>
+</ol>
+<p>instant, cancelled. Peerspace and Tagvenue requests hold the room on Skedda at once (Junyan 2026-09-02, &quot;a request is</p>
+<p>accepted by default&quot;; Jannaya R. Peerspace Sep 27: request 1:21 PM, hold, verifier row 1:33 PM). The Giggster</p>
+<p>request mail (&quot;You have a new booking request for your listing on Giggster&quot;) classifies as None, so it gets no hold,</p>
+<p>no decision row and no text.</p>
+<ol>
+<li>3. <b>The Concierge and Desk Sort wait on a signal only Skedda can show.</b> Both treat &quot;accept on Giggster&quot; as</li>
+</ol>
+<p>human-only and &quot;verify by the Skedda booking&quot;, but the Skedda booking is created only after a paid mail they never</p>
+<p>look for. A circular wait. The Desk Sort&#x27;s card says &quot;No Giggster request is waiting in Skedda&#x27;s approval list&quot;,</p>
+<p>which is the wrong place to look for a Giggster request. <code>house-rules.md:408</code> (&quot;every pass that touches a platform</p>
+<p>booking checks the Skedda mirror&quot;) fires only when someone touches it.</p>
+<ol>
+<li>4. <b>The SMS &quot;Your booking for Oct 7 has been confirmed&quot; is dropped</b> as relay-traffic (<code>relay_classify: no-match</code>),</li>
+</ol>
+<p>and then a later intake mints it as a person&#x27;s care ticket with an empty Ask (against <code>house-rules.md:870</code>).</p>
+<ol>
+<li>5. <b>The renter-at-the-door lane is silent when there is no Skedda booking.</b> <code>stuck_access._handle</code> returns</li>
+</ol>
+<p><code>no-booking-today</code> and sends no alert. It was built for &quot;renter with a booking, no code&quot;; a renter whose booking was</p>
+<p>never mirrored is the worst case and gets nothing. Also <code>urgent_decision_sweep</code> keys on a Skedda id (1 plus 8</p>
+<p>digits), so an accept decision with no Skedda booking is invisible to it, and it is still in <b>shadow</b> mode</p>
+<p>(would_text 5, texted 0 on the last pass).</p>
+
+<p>Classification: canon gap plus code gaps (1, 2, 5); the lane followed canon that is wrong (3); a classifier gap (4).</p>
+
+<h2>Platform life cycle and the exact signals</h2>
+
+<p>Giggster (hello@giggster.com; SMS from <code>Giggster:</code> shared numbers or the guest&#x27;s proxy):</p>
+
+<p>| State | Signal | What the desk must do |</p>
+<p>|---|---|---|</p>
+<p>| Inquiry | Mail &quot;New Message From X About &lt;listing&gt;&quot; with Inquiry Details; SMS &quot;(Giggster) New inquiry ...&quot; | Greeter answers (exists) |</p>
+<p>| Request | Mail &quot;You have a new booking request for your listing on Giggster&quot; (Offer expires date); SMS &quot;Giggster: New booking request from X for &lt;listing&gt;. ... /bookings/&lt;uuid&gt;&quot; | <b>New:</b> Greeter <code>request</code> shape: hold the room as a tentative mirror (see D1), one Decision row &quot;Accept or decline&quot;, on-call text if today or tomorrow. Record booking uuid, proxy number, chat uuid |</p>
+<p>| Accepted, unpaid | <b>No signal</b> | Nothing visible. The desk must not wait for it. Pre-stage (D1) so that payment alone completes setup |</p>
+<p>| Paid / confirmed | Mail &quot;Confirmed Booking Details: &lt;listing&gt; on &lt;date&gt;&quot; (body &quot;Approved&quot;, &quot;Congrats, your booking for $X is confirmed&quot;); SMS &quot;Giggster: Your booking for &lt;date&gt; has been confirmed. Your payout amount: $X&quot; (no guest name, no booking id; sent from the guest&#x27;s proxy number when it was a request booking, from a shared pool number when instant). Instant books: &quot;Instant Booking Details&quot; plus the same SMS | <b>New:</b> PlatformMirror and Greeter treat it as the go signal: mirror, then the Registrar chain, then close the Decision row, wake the parked ticket |</p>
+<p>| Reminder | &quot;Get ready for your booking on &lt;date&gt;&quot;, 9:00 AM two days before, or at confirmation if later | Second check only (T-48h audit, below). Never mirror from it |</p>
+<p>| Update | &quot;Booking update has been approved&quot; (renter changed time) | Ticket 111 (existing gap) |</p>
+<p>| Started | none; &quot;Your &lt;date&gt; Wrap Report&quot; at end minus 1 h | Too late to rely on |</p>
+<p>| Cancelled / refunded | &quot;Your booking has been canceled&quot; (Reason: Cancelled by Renter) plus SMS &quot;Giggster: The booking was canceled.&quot;; &quot;The booking was canceled due to the renter&#x27;s unresolved payment issue&quot; (24 h to fix a failed card); &quot;Booking request expired&quot; shape not seen yet | Release the mirror (exists in PlatformMirror); drop the staged code and held text |</p>
+<p>| After | &quot;Leave a review&quot;, &quot;Giggster - Payout Sent&quot; | No action |</p>
+
+<p>Peerspace (team@peerspace.com): request &quot;X sent you a booking request&quot; (Greeter holds the room, works); accepted-paid</p>
+<p>&quot;Your booking is confirmed with X on &lt;date&gt;&quot;; instant &quot;X booked your space on &lt;date&gt;&quot;; &quot;Action required: expiring</p>
+<p>request&quot; and &quot;Your request from X has expired&quot;; reminders &quot;is coming up&quot; (2 to 3 days) and <b>&quot;starts soon&quot; (30 min</p>
+<p>before)</b>; &quot;is complete&quot;; update &quot;X wants to update their booking&quot; / &quot;Your booking with X has been updated&quot;; cancel</p>
+<p>&quot;Your booking with X was cancelled&quot;. All of these are already parsed by PlatformMirror or Greeter except expiry and</p>
+<p>&quot;starts soon&quot;. Peerspace guests do not have the Giggster blind spot.</p>
+
+<p>Tagvenue (reply.tagvenue.com): &quot;Booking request from X&quot; (Greeter holds); &quot;Your booking is confirmed with X on &lt;date&gt;&quot;</p>
+<p>(body &quot;confirmed and paid&quot;; PlatformMirror parses it, but the Greeter docstring wrongly says Tagvenue sends no</p>
+<p>confirmed mail and has no <code>confirmed</code> shape for it, so its decision row closes only by other routes); &quot;X accepted</p>
+<p>your booking update&quot;; &quot;Your offer was sent to X&quot; / &quot;offer expired&quot; / &quot;withdrew their booking request&quot;. No reminder</p>
+<p>mails exist. Tagvenue&#x27;s only backstop is the invariant below. Splacer: marker only, no mail seen.</p>
+
+<h2>The invariant (core)</h2>
+
+<blockquote><b>Any platform booking known to be paid or accepted that starts within 36 hours must have, in this order, a Skedda</blockquote>
+<blockquote>mirror, a live alarm code covering the window, and an access text that is Sent or is explicitly held for a</blockquote>
+<blockquote>named human. If a stage is missing at its deadline, the desk repairs it if it can, and otherwise pages Junyan.</b></blockquote>
+
+<p>Deadlines (relative to start): mirror by T-24h (repair at once; page if repair fails); code live by T-12h; access</p>
+<p>text Sent by T-2h (or by T-30 min if the booking was paid inside the final 2 h). A booking that becomes paid inside</p>
+<p>a stage&#x27;s window has that stage&#x27;s deadline at paid time plus 10 minutes. Page levels: first page when a deadline is</p>
+<p>missed; second at T-2h and at T-30 min if still open. Paging uses the existing owner text path</p>
+<p>(<code>owner_text_release</code>), tagged <code>[platbook:&lt;key&gt;:&lt;stage&gt;]</code> so each stage pages once.</p>
+
+<p><b>Owner: a new coded lane, <code>platform_booking_watch</code> in <code>services/event-gate/</code>, no AI</b>, run by a VPS systemd timer</p>
+<p>every 5 min 07:00 to 23:00 (Toronto) and once at 06:00 (the overnight sweep for the first booking of the day).</p>
+<p>Reasons: the Concierge/Desk Sort are hourly cloud AI lanes that already failed this way; the event-gate poll is every</p>
+<p>minute and already holds the Skedda, Notion and alarm reads; &quot;pages Junyan&quot; needs the owner text path which lives</p>
+<p>there. The 06:00 Doorman and the 04:00 arm-check do not run often enough.</p>
+
+<p><b>What it reads (stateless, re-derives each pass, like the Greeter):</b></p>
+<ol>
+<li>1. Signal ledger: Gmail and SMS in <code>messages/</code> (or the Gmail API directly, as the Greeter does) for the last 14 days,</li>
+</ol>
+<p>classified by one shared table of platform shapes (the table in this ticket, one module, used by the Greeter, the</p>
+<p>mirror watcher and this lane so the three never disagree again).</p>
+<ol>
+<li>2. Skedda range read for today through +2 days (<code>skedda_read.bookings_range</code>; a blind read pages as &quot;cannot verify&quot;,</li>
+</ol>
+<p>never as &quot;all clear&quot;).</p>
+<ol>
+<li>3. Alarm panel <code>verify_only</code> per booking (as <code>stuck_access.send_guards</code> does).</li>
+<li>4. Message Queue: any access-shaped row for the Artist since 48 h before start (<code>booking_sweep.hta_queued</code>).</li>
+</ol>
+
+<p><b>How it matches signals to a booking.</b> Build a booking key <code>platform|studio|start-ISO|renter-first-name</code>, with</p>
+<p>these aliases collected as they appear: Giggster booking uuid (request SMS URL), chat uuid (proxy SMS URL), proxy</p>
+<p>phone number (the confirmed SMS comes from the same proxy for request bookings), renter first name plus listing plus</p>
+<p>date plus payout (the Confirmed mail has no ids in plain text). Match order: booking uuid, chat uuid or proxy number</p>
+<p>plus date, then name plus studio plus start. Never match on name alone (the Jessica case: five cards).</p>
+<p>Studio comes from the listing table already in the Greeter (<code>LISTINGS</code>).</p>
+
+<p><b>Repair before alarm.</b> If the mirror is missing and the signal is Paid, the watcher calls the same</p>
+<p><code>/mirror-booking</code> route (<code>hold_room</code>, <code>confirm: true</code>, carve-out <code>tags.md:19</code>) and re-reads. Only a failed repair, a</p>
+<p>missing code or an unsent text pages.</p>
+
+<h2>Specific answers</h2>
+
+<p><b>Accepted but unpaid (staff and code).</b> Recommend: stage everything, send nothing. At the request mail the Greeter</p>
+<p>holds the room as a tentative mirror (title &quot;&lt;Name&gt; Giggster&quot;, payment_status unpaid, activity &quot;Giggster request,</p>
+<p>unpaid&quot;), so the room cannot be double-booked and the Registrar can provision the code. The access text is queued</p>
+<p><b>held</b> (not released). No staff are scheduled for an unpaid booking; staff are added at the paid signal (the</p>
+<p>Planner&#x27;s 19:30 pass for tomorrow, an on-call text for today). On the paid signal, a code that is already live and a</p>
+<p>held text turn the response into one release click or an automatic release (D3). If it stays unpaid at start plus 15</p>
+<p>min, the lane writes a Decision row &quot;never paid, release the hold?&quot; and does not page. Risk accepted: a code exists</p>
+<p>for an unpaid renter for a few hours (codes are low risk and rotatable, <code>autonomy.md</code> 2026-09-10).</p>
+<p>Alternative (D1 option B): do nothing until paid. Simpler, but then everything depends on a 5 to 35 minute chain on</p>
+<p>the payment day, which is too slow for a payer at 4:25 PM.</p>
+
+<p><b>Payment signal.</b> The Confirmed mail is primary; the confirmed SMS is the fast duplicate (arrives 2 s later).</p>
+<p>Classify the SMS in <code>app.py</code> before the relay-traffic drop: shared-pool <code>Giggster:</code> bodies &quot;New booking request&quot;,</p>
+<p>&quot;Your booking for &lt;date&gt; has been confirmed&quot;, &quot;The booking was canceled&quot; become typed platform events written to the</p>
+<p>signal ledger, never contacts, never person tickets (this keeps <code>house-rules.md:870</code>). Fix the intake that minted</p>
+<p>the empty-Ask care ticket from the same SMS.</p>
+
+<p><b>Get-ready as backstop.</b> Parsed as <code>reminder</code>. On receipt, if the booking has no mirror, code or text, the lane</p>
+<p>treats it as a hard T-48h failure and pages once. It is also the trigger for the T-48h audit of early payers.</p>
+
+<p><b>How a parked ticket wakes up.</b> When a Paid signal matches a ticket (by key), the lane writes one line to the</p>
+<p>ticket (&quot;Giggster paid 07:47, mirror made/not made, code, text&quot;), clears <code>Gate: Staff</code> if the only gate was the</p>
+<p>accept, sets Position so the next Concierge pass advances it, and closes the &quot;Accept on Giggster&quot; Action as</p>
+<p>Processed with the signal id as evidence. Canon change: the Concierge and Desk Sort stop saying &quot;verify by the Skedda</p>
+<p>booking&quot; for a Giggster accept and instead read the signal ledger (or the watcher&#x27;s line). <code>[R-same-day]</code> gains:</p>
+<p>&quot;a platform request parks only until the platform&#x27;s Paid signal; the Paid signal is a mail or SMS, not a Skedda row.&quot;</p>
+
+<p><b>Renter at the door.</b> Change <code>stuck_access._handle</code>: when the ask is <code>missing</code> or <code>failing</code> and there is <b>no</p>
+<p>Skedda booking today</b>, look the sender up in the platform signal ledger (proxy number, conversation uuid, name). If a</p>
+<p>matching paid or accepted platform booking within +/- 2 h exists: page Junyan at once (&quot;Parisa B. is at 509A, paid</p>
+<p>Giggster booking has no mirror/code&quot;), and run the repair (mirror, then the existing d48 guards for the text). If no</p>
+<p>match, still send one owner text (&quot;unknown sender asks for a code, no booking found&quot;) instead of silence. Target:</p>
+<p>under 3 minutes from her first message (her 4:44 PM text would have paged by 4:46 PM). Never silent on a</p>
+<p>code-ask for any reason.</p>
+
+<p><b>Giggster SMS classification.</b> Four classes, one table: (a) guest chat <code>(Giggster) &lt;guest&gt;:</code> with <code>Reply via text</code></p>
+<p>and <code>/messages/&lt;uuid&gt;</code> is a proxy, keeps existing handling; (b) <code>Giggster:</code> lifecycle (request, confirmed, canceled,</p>
+<p>update confirmed) typed platform events; (c) <code>[reminder: X is waiting ...]</code> is nudge noise, mark read; (d) anything</p>
+<p>else stays relay-traffic. The typed events must carry date, payout and sender number for matching.</p>
+
+<h2>60-day near-miss look-back (Aug 8 to Oct 7)</h2>
+
+<p>Platform confirmation to Skedda mirror, same pattern each time:</p>
+<ul>
+<li>- Julia S. (Peerspace, 509A, Aug 23): mirror made Aug 24 15:40, after she danced. Led to the mirror lane (109).</li>
+<li>- xavier (Tagvenue, 693, Sep 4): accepted requests reached Skedda about 7 h late, by hand. Led to hold-at-request (Greeter, Sep 2).</li>
+<li>- Raquel K. (Peerspace, Aug 25): mirror died at &quot;no phone&quot;, empty-named card. Fixed by 124.</li>
+<li>- KerriAnn M. (Peerspace, Sep 5): booking moved Sep 25 to Oct 16, Skedda kept Sep 25 (ticket 111, still open).</li>
+<li>- Peerspace Jannaya R. (Sep 27, same-day, 7 PM) and Jack C. (Oct 6): relay access text &quot;needs a human&quot; at the verifier. Jannaya&#x27;s Action still reads Pending Review in the mirror; read its live row before concluding anything.</li>
+<li>- Yvette M. (Peerspace, Oct 17): &quot;Hold the room by hand&quot; Action still Pending Review plus a &quot;free the room by hand&quot; cancellation row. Hand to the Desk Hand.</li>
+<li>- Parisa B. (Giggster, Oct 7): this ticket. Only booking with a renter at the door.</li>
+</ul>
+<p>Pattern: every earlier miss was a platform paid signal that no code path turned into a mirror within minutes. Hold-at-request closed the Tagvenue and Peerspace holes; Giggster request/confirm is the last one open. Not checked: live Skedda for upcoming platform bookings (needs a Skedda read; see hand-back).</p>
+
+<h2>Fixes, ranked by risk reduced per effort</h2>
+
+<p>| Rank | Fix | Touches | Effort | Risk removed |</p>
+<p>|---|---|---|---|---|</p>
+<p>| 1 | PlatformMirror accepts &quot;Confirmed Booking Details&quot; (positive Giggster parser pinned to the Oct 7 mail as a fixture; keep &quot;Get ready&quot; and Wrap Report negative tests) and Greeter gets giggster <code>confirmed</code> and <code>request</code> shapes | <code>dance-annex/send-engine/PlatformMirror.gs/.js</code>, <code>test_platform_mirror.js</code>, fixtures; <code>services/event-gate/greeter_sweep.py</code> <code>_SHAPES</code>; <code>PLATFORM-MIRROR.md</code> | Small (hours) | Closes the exact Parisa path: mirror within 5 min of payment |</p>
+<p>| 2 | stuck-access never silent; platform-ledger lookup for a renter with no Skedda booking | <code>services/event-gate/stuck_access.py</code>, tests | Small | Renter at the door paged in 2 to 3 minutes for any cause |</p>
+<p>| 3 | Flip <code>URGENT_DECISION_SWEEP</code> from shadow to live and let it key on platform decisions (Booking ref with a platform key, not only a Skedda id) | <code>urgent_decision_sweep.py</code>, switch (Junyan&#x27;s) | Small | Unruled accept cards text him when the booking is within 30 h |</p>
+<p>| 4 | <code>platform_booking_watch</code> invariant lane (mirror/code/text per deadline, repair first, page by stage, T-48h Get-ready audit) | new <code>services/event-gate/platform_booking_watch.py</code>, timer, <code>lanes.md</code> row, <code>job-10-desk-invariants.md</code> letter, <code>house-rules.md:408</code> | Medium | Catches every other cause, including future shape changes |</p>
+<p>| 5 | Shared platform-signal table and typed Giggster SMS events before relay-traffic drop; stop the empty-Ask person ticket | <code>services/event-gate/app.py</code>, <code>inbound.py</code>, <code>concierge_intake.py</code>, <code>house-rules.md:868-872</code>, <code>relay-addresses.md</code> | Medium | Payment SMS becomes a first-class signal and ledger entry |</p>
+<p>| 6 | Canon: Giggster accept is not &quot;verify by Skedda&quot;; paid signal wakes the ticket; Desk Sort reads the ledger; Last-Minute SOP step &quot;Create the Skedda booking [STAFF]&quot; updated to &quot;verify the mirror&quot; | <code>concierge-orchestration.md</code> [R-same-day], <code>gates.md</code>, <code>desk-sort.md</code>, <code>job-2-triage.md</code> (Giggster shapes, request/confirmed lines, Greeter doc), <code>tags.md:19</code>, SOPs 38475032 and 36175032 | Small to medium, after 4 and 5 exist | Stops the circular wait |</p>
+<p>| 7 | Tentative hold at Giggster request plus held access text (D1 and D3) | Greeter <code>request</code> branch, Registrar | Medium, needs rulings | Removes the last-minute payer latency |</p>
+<p>| 8 | Peerspace &quot;starts soon&quot; (T-30 min) check; Tagvenue/Greeter docstring and <code>confirmed</code> shape fix | Greeter, watcher | Small | Cheap extra backstops |</p>
+
+<p>Fixes 1 to 3 together are the minimum before Friday; they are small and independent. Ship 1 and 2 first.</p>
+
+<h2>Decisions for Junyan (carried to the hand-back table)</h2>
+
+<ul>
+<li>- D1: At a Giggster request, hold the room tentatively and stage the code (pick A), or wait for the paid signal (B)?</li>
+<li>- D2: Page rule: text at each missed deadline and at T-2h and T-30 min (pick yes)?</li>
+<li>- D3: When the paid signal lands and the room, code and held text are all ready, send the access text automatically (new carve-out) or leave it as one release click? Pick: one click first; automatic after two clean weeks.</li>
+<li>- D4: Flip <code>URGENT_DECISION_SWEEP</code> to live (pick yes).</li>
+<li>- D5: Renter at the door with no booking found: text Junyan every time (pick yes).</li>
+</ul>
+
+<h2>Acceptance</h2>
+
+<ul>
+<li>- Replaying the Oct 7 7:47 AM mail through the new parser yields a 509A 4:30 to 5:30 PM &quot;Parisa Giggster&quot; mirror at $32.40, and the Registrar gate-1 row appears on its next pass.</li>
+<li>- Replaying her 4:44 PM text produces an owner text in under 3 minutes with a mirror repair attempted.</li>
+<li>- A booking made paid at T-3h with no mirror pages within 10 minutes in a dry run.</li>
+<li>- Three clean weeks: no paid platform booking within 36 h without all three stages.</li>
+</ul>
+
+<h2>Open points not verified</h2>
+
+<ul>
+<li>- Giggster&#x27;s own rules for an accepted booking that is never paid (expiry time) were not read; ask Junyan or read the host help pages before D1.</li>
+<li>- Whether the Apps Script trigger and <code>PLATFORM_MIRROR_ENABLED</code> are on today is inferred from instant-book mirrors working (gate-1 within 20 min on Sep 5, 15, 16); the Script Properties were not read.</li>
+<li>- The 8:53 AM care ticket body says Junyan was sent a &quot;Need Help&quot; text; whether it reached him was not checked.</li>
+<li>- Cloud lane runs (Responder 8:20, Desk Sort 8:25, Concierge 9:50 PM) were read from their written traces only; no RemoteTrigger run logs.</li>
+<li>- Greeter is returning ERROR every 5 minutes for an unrelated Tagvenue enquiry (&quot;existing draft requires consolidation&quot;); it keeps processing, but a lane that always reports failed hides new failures. Separate ticket.</li>
+</ul>
+</div></details></details></div><div class="job"><div class="jnum">#163</div><div class="jhead"><span class="emoji">🗂️</span><h4>Responder, Concierge and Greeter overlap - who owns which reply</h4></div><details><summary>Details</summary><details><summary>Technical notes</summary><div class="tech"><p><b>Responder, Concierge and Greeter overlap - who owns which reply</b></p><h2>Question</h2>
+
+<p>Junyan (2026-10-30): the Responder, the Concierge and the Greeter overlap too much. Should they be</p>
+<p>merged, split or re-scoped, and where does the &quot;check Stripe before any payment reply&quot; rule (held as</p>
+<p><b>d11</b>) live? Charted 2026-10-30 from canon on <code>main</code> (desk-correspondence, 2026-10-30 21:04 -0400).</p>
+<p>No canon or lane changed.</p>
+
+<h2>What each lane does today (from canon)</h2>
+
+<p>| Lane | Kind | When | What it owns |</p>
+<p>|---|---|---|---|</p>
+<p>| 🎤 Responder | Claude cloud, LLM | :20 and :50 | Opens the mail and texts, classifies and labels the inbox, fills the intake form (<code>intake_decide.py</code> makes the ticket), queues the <b>first</b> held reply on a new ticket, and drafts every non-ticket reply: courtesy, quick answers, nudges (&quot;any update?&quot;), PBF replies and review asks, no-show texts, credit and balance questions, photo inbound. Fallback for the code-ask fast lane and the Greeter (d44). (<code>library/the-responder.md</code> § Scope, § Intake) |</p>
+<p>| 🛎️ Concierge | Claude cloud, LLM | hourly :10 | Works tickets after they exist: picks up Responder stubs (JOB 2, mandatory), deadlines, customer questions on tickets, Closer leftovers (reconcile, close), SOP attach, Case B access, feedback. Writes every later reply on a ticket. (<code>library/concierge-orchestration.md</code> § Every pass) |</p>
+<p>| 👋 Greeter | code, no LLM | every 5 min | Platform mail only (Tagvenue, Peerspace, Giggster): holds the room on Skedda, files one Decision row, texts the on-call phone, queues a fixed first-reply template. Guest chat messages get a text and a Review row, no reply. Platform &quot;confirmed/paid&quot; mail closes rows. (<code>services/event-gate/greeter_sweep.py</code> header, <code>lanes.md</code>) |</p>
+
+<p>Plus five small code lanes that also queue replies the Responder used to write: rates-sweep (price</p>
+<p>questions), extension-sweep, move-sweep (Registrar), the Courtesy Reply Lane, Insurance Processor.</p>
+
+<h2>Where they step on each other</h2>
+
+<ol>
+<li>1. <b>The ticket line is blurry.</b> The Responder writes a ticket&#x27;s first reply and its &quot;nudge&quot; replies</li>
+</ol>
+<p>(answered &quot;from the ticket&#x27;s current state and its SOP&quot;), the Concierge writes every other reply</p>
+<p>on the same ticket. Two lanes, same thread, 30 minutes apart, each reading the other&#x27;s half-done</p>
+<p>state. Clara Fu (2026-10-30): a ticket note told the Concierge to stand down, so its SOP was never</p>
+<p>ticked (fixed in canon PR 1490, but the cause is the split itself).</p>
+<ol>
+<li>2. <b>Who decides &quot;is this a ticket&quot; is the Responder, matched on dates only.</b> Stephanie Brinning</li>
+</ol>
+<p>(SMS, 2026-10-30): intake made a second payment ticket, Process landed on a stale old one, and the</p>
+<p>Responder wrote &quot;thanks for taking care of that&quot; with no Stripe read (she had only asked us to retry;</p>
+<p>she paid at 8:19 PM). The Responder is guessing at ticket state it does not own.</p>
+<ol>
+<li>3. <b>Platform guests have two owners.</b> The Greeter owns the first reply; a guest chat message gets</li>
+</ol>
+<p>only a Review row, so the real reply falls to the Responder (backup, d44) or the Concierge (if the</p>
+<p>booking has a ticket). Which one depends on timing.</p>
+<ol>
+<li>4. <b>Payment facts have no single reader.</b> The Responder checks the calendar <code>[Paid]</code> tag; the</li>
+</ol>
+<p>Concierge reads Stripe for gates; the Greeter trusts platform mail. No lane is told to read Stripe</p>
+<p>before it writes about money to a renter.</p>
+<ol>
+<li>5. <b>The Responder rule book is 935 lines.</b> Every incident adds a rule to it (this is the pattern</li>
+</ol>
+<p>Junyan wants to stop). Much of it is about tickets the Concierge owns.</p>
+
+<h2>Options</h2>
+
+<ul>
+<li>- <b>A. Re-scope by &quot;does a ticket exist&quot; (recommended).</b> Responder = front door only: read, label,</li>
+</ul>
+<p>intake, and replies to mail that has <b>no</b> open ticket. The moment a ticket exists (new or matched),</p>
+<p>every reply on it, the first one included, is the Concierge&#x27;s. Greeter stays as is (fast platform</p>
+<p>first reply, it is code and does its job), but a guest chat message with a booking goes to the</p>
+<p>Concierge, one without goes to the Responder. Cost: the Concierge is hourly, so a new ticket&#x27;s first</p>
+<p>reply could wait up to an hour unless intake-tick (every 10 min) wakes it or the Responder still</p>
+<p>queues a holding reply only (&quot;got it, on it&quot;).</p>
+<ul>
+<li>- <b>B. Merge Responder and Concierge into one lane.</b> One reader of every thread, no handback at all.</li>
+</ul>
+<p>Cost: one big prompt doing both, and the Concierge passes already run 8 to 10 min and quit early</p>
+<p>(ticket 162). Biggest change, most risk.</p>
+<ul>
+<li>- <b>C. Keep the lanes, add a rule each time.</b> Today&#x27;s path. Cheapest now, keeps the overlap.</li>
+<li>- <b>Greeter merge:</b> not recommended. It is fast, has no LLM and its only overlap is item 3, which</li>
+</ul>
+<p>option A fixes.</p>
+
+<h2>Where the d11 Stripe rule should live</h2>
+
+<p>Recommendation: <b>one shared rule plus one shared check, not a Responder rule.</b></p>
+
+<ul>
+<li>- Rule text in <code>library/house-rules.md</code> (every drafting lane reads it): before any reply that says or</li>
+</ul>
+<p>implies a payment happened, read Stripe (and the platform payout for platform bookings); never thank</p>
+<p>a renter for paying until Stripe shows the charge; a &quot;please retry&quot; or &quot;I&#x27;ll pay&quot; message is a</p>
+<p>payment ask, not a payment.</p>
+<ul>
+<li>- One read-only script (e.g. <code>scripts/payment_check.py &lt;renter&gt;</code>) that both LLM lanes call, so the</li>
+</ul>
+<p>check is the same everywhere; the Greeter keeps trusting platform paid mail (that is the platform&#x27;s</p>
+<p>own Stripe).</p>
+<ul>
+<li>- The Responder and Concierge canon each get one line pointing at the house rule, nothing more.</li>
+<li>- Needs Junyan&#x27;s read-only stripe-mcp on both cloud triggers (he is adding it to the Responder now).</li>
+</ul>
+
+<h2>Decisions for Junyan</h2>
+
+<p>| # | What I need from you | Why it matters | My pick |</p>
+<p>|---|---|---|---|</p>
+<p>| <b>d11</b> | Put &quot;check Stripe before any payment reply, never thank for a payment Stripe does not show&quot; in the shared house rules, used by every lane that writes to renters, not just the Responder. | Stephanie&#x27;s wrong &quot;thanks&quot; could come from any lane, not only the Responder. | ✅ Yes |</p>
+<p>| <b>d12</b> | Give the Concierge read-only Stripe too (same as you are adding to the Responder). | Without it the Concierge cannot follow d11. | ✅ Yes |</p>
+<p>| <b>d13</b> | Split the work by one simple line: no ticket yet = Responder, ticket exists = Concierge writes every reply on it (option A). | Two lanes writing on the same ticket is what broke Clara and Stephanie. | ✅ Yes |</p>
+<p>| <b>d14</b> | If d13 is yes: while the Concierge is hourly, the Responder may still send a short &quot;got it, on it&quot; holding reply on a brand new ticket. | Keeps first replies fast without the Responder guessing about the ticket. | ✅ Yes |</p>
+<p>| <b>d15</b> | Merge the Responder and the Concierge into one lane (option B). | Removes all handoffs but makes one huge, slower lane. | ❌ No |</p>
+<p>| <b>d16</b> | Leave the Greeter as it is (platform first reply, code only). | It is fast and mostly does not overlap. | ✅ Yes |</p>
+
+<p><b>Reply:</b> like <code>11 yes, 12 yes, 13 yes, 14 yes, 15 no, 16 yes</code></p>
+
+<p>On yes, the build goes to the Shipper as canon PRs (house rule, shared check script, Responder scope</p>
+<p>cut, Concierge first-reply ownership), no live change until Junyan merges.</p>
+
+<h2>Rulings</h2>
+
+<ul>
+<li>- 2026-10-30 Junyan: &quot;11 yes, 12 done, 13 yeah I want to change how this is all processed. I&#x27;m doing a</li>
+</ul>
+<p>new email triage system in another session right now, maybe it will be set up so that different bots</p>
+<p>will handle different labels. 14 I need fast replies which is one of hte main issues with the</p>
+<p>concierge. still need to figure it out. 15 not at this time, 16 yes&quot;</p>
+<ul>
+<li>- <b>d11 yes</b>: Stripe rule goes in shared house rules plus one shared check. Ready to build (Shipper, PR only).</li>
+<li>- <b>d12 done</b> (Junyan&#x27;s word): Concierge has read-only Stripe. Not verified on the trigger this session.</li>
+<li>- <b>d13 open, direction agreed</b>: the split will be redrawn around Junyan&#x27;s new email triage system</li>
+</ul>
+<p>(another session; maybe one bot per label). Revisit once that design is known.</p>
+<ul>
+<li>- <b>d14 open</b>: fast replies are a must and are a main Concierge weakness; not settled.</li>
+<li>- <b>d15 no for now. d16 yes</b>: Greeter stays as is.</li>
+</ul>
 </div></details></details></div></div>
 <div class="col"><h3>⏳ Waiting<span class="cnt">9</span></h3><div class="job"><div class="jnum">#056</div><div class="jhead"><span class="emoji">🤝</span><h4>Merge the message-writing robot into the new loop</h4></div><span class="pill p-wait">needs 053 first</span> <details><summary>Details</summary><ul class="plain-bullets"><li>Junyan agreed: its job is narrow enough that it doesn&#x27;t need to be its own robot</li><li>Why it matters: a robot that only sees one message can&#x27;t know what step of a process we&#x27;re on</li><li>That&#x27;s what went wrong with Dana&#x27;s booking — the invoice and payment deadline lines were missing</li><li>Junyan fixed it by writing it himself, and the system learned nothing — the new loop catches that</li><li>Not doing it yet: the loop has to prove itself first, and another plan uses this robot as its test subject</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Fold The Responder into the advancement loop</b></p><h2>Question</h2>
 
@@ -3140,7 +3607,230 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div></details></details></div></div>
 </div>
 <h2>Finished</h2><div class="done-list">
-<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#130</span><span class="emoji">🦾</span><span class="done-title">Give the desk a pair of hands inside Giggster and Tagvenue</span><span class="done-date">2026-10-03</span></summary><div class="done-body"><ul class="plain-bullets"><li>Two booking websites hold conversations we cannot finish. Giggster has no way to send a reply from the desk. Tagvenue forwards messages but blanks out every link</li><li>So a customer&#x27;s reply has sat unsent for 29 days, and a 30-person weekly lead sent us a link twice that nobody has been able to open</li><li>The robot kept asking a person to go log in and look. That is not a task, it is a missing tool</li><li>This job builds the tool: something that can log in, read the whole thread including links, post a reply a human already approved, and close out finished enquiries</li><li>Hard lines: it never sees a password, it never writes its own messages, and it stops dead if the website asks it to prove it is human</li><li>Accepting bookings stays with a person, because accepting charges the customer&#x27;s card</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the platform messenger agent (grokbot) — the desk&#x27;s hands inside Giggster and Tagvenue</b></p><h2>Question</h2>
+<details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#161</span><span class="emoji">🗂️</span><span class="done-title">Cloud lanes go missing when the account hits its weekly limit; &quot;skipped steps&quot; is the per-pass cap</span><span class="done-date">2026-10-27</span></summary><div class="done-body"><details><summary>Technical notes</summary><div class="tech"><p><b>Cloud lanes go missing when the account hits its weekly limit; &quot;skipped steps&quot; is the per-pass cap</b></p><h2>Question</h2>
+
+<p>Why does The Concierge (cloud) keep ending early or going missing, and do the other cloud lanes</p>
+<p>(Responder, Doorman, Custodian, Desk Sort) have the same problem? Sentinel, #desk-drops 2026-10-26:</p>
+<p>&quot;We are missing The Concierge · The Responder&quot; (13:08 EDT) and &quot;The Concierge (skipped steps ×4) is</p>
+<p>running but not finishing&quot; (10:08 EDT). Same &quot;skipped steps&quot; alert on 10-18, 10-22, 10-23.</p>
+
+<h2>Findings (session 2026-10-26, RemoteTrigger past runs + run logs + Slack)</h2>
+
+<p>Two separate problems hide under the two alerts.</p>
+
+<h3>A. &quot;Missing&quot;: the Claude account ran out of its weekly limit (pinned)</h3>
+
+<p>Every Concierge run from 16:10 to 20:13 UTC on 2026-10-26 (12:10 to 16:13 EDT, five passes) lasted</p>
+<p>about 20 seconds. The logs (<code>cse_0178azfuTUJCBYgyvYx5wKSj</code> 16:10, <code>cse_01SBfRdmcrfHdbrjGf7mxKmU</code> 19:11) say:</p>
+
+<p>rate_limit: rejected (seven_day) resets_at=1793048400</p>
+<p>assistant: You&#x27;ve hit your weekly limit · resets 9pm (UTC)</p>
+<p>result: is_error=true turns=1 duration=1s</p>
+
+<p>The Desk Sort (cloud) shows the same 20 second runs at 17:06, 18:09, 19:07, 20:06 UTC. The Sentinel&#x27;s</p>
+<p>13:08 EDT &quot;missing Concierge · Responder&quot; sits inside that window. The first run after the 21:00 UTC</p>
+<p>reset (Concierge 21:12 UTC) worked normally, which is the 21:12 pass fleet-last showed.</p>
+
+<p>All the cloud lanes share one Claude account&#x27;s seven-day quota, and nearly all run on Opus:</p>
+<p>Concierge 15 passes a day, Desk Sort 15, Responder 48 (:20 and :50), plus Custodian 2, Doorman 1,</p>
+<p>Timekeeper 1, Planner, Treasurer. When the week&#x27;s quota is spent, every lane stops at once until the</p>
+<p>reset, and any interactive Claude Code session on the same account competes for the same pool.</p>
+<p>The quota resets weekly at 21:00 UTC, so the wall lands near the end of each week&#x27;s cycle.</p>
+
+<p>Not yet checked: whether the same wall hit last week (would need paging list_runs back ~7 days).</p>
+
+<p>Waste that feeds the quota on every Concierge pass (seen in <code>cse_015UncQAiscEHaDCLy3n5RfZ</code>):</p>
+<ul>
+<li>- reads the whole 51KB <code>library/concierge-orchestration.md</code> into context each pass (15x a day);</li>
+<li>- spends about 3 minutes on <code>pip install -r requirements.txt</code> that errors on PyYAML (time, not tokens);</li>
+<li>- most passes find nothing ready (that pass: no intake, no deadlines, handbacks all waiting on people).</li>
+</ul>
+
+<h3>B. &quot;Skipped steps&quot;: the per-pass caps, not a crash</h3>
+
+<p>The 15:16 UTC pass (<code>cse_015UncQAiscEHaDCLy3n5RfZ</code>, 369s, Completed) looked at 3 of 6 handbacks and</p>
+<p>said &quot;The other 3 were over this pass&#x27;s cap and weren&#x27;t looked at.&quot; The Concierge itself told</p>
+<p>#desk-drops on 10-23 that passes close as Skipped Steps &quot;because handback, finished-ticket and JOB 3</p>
+<p>work runs past each pass&#x27;s caps.&quot; So the Sentinel counts a pass that hit its cap as &quot;not finishing&quot;.</p>
+<p>Most leftover items are waiting on people, so re-reading them each pass is cost with no output.</p>
+
+<h2>Fix spec (Shipper builds after Junyan rules; no lane prompt or code changed in this session)</h2>
+
+<ol>
+<li>1. <b>Cut Opus use where it is not needed.</b> Move The Responder (48 a day) and The Desk Sort (15 a day)</li>
+</ol>
+<p>to Sonnet, and drop the Concierge to every 2 hours (8 a day) instead of hourly. Biggest quota win.</p>
+<ol>
+<li>2. <b>Stop re-reading parked work.</b> Handbacks and finished tickets whose Ball in court is a person, and</li>
+</ol>
+<p>unchanged since the last pass, are skipped without a card read. Pass line counts them as &quot;waiting&quot;.</p>
+<ol>
+<li>3. <b>Teach the Sentinel the difference.</b> A run whose log ends <code>rate_limit: rejected (seven_day)</code> is</li>
+</ol>
+<p>reported as &quot;Out of weekly Claude quota until &lt;reset time&gt;&quot;, one alert for all lanes, not</p>
+<p>&quot;missing&quot; per lane. A pass that stopped only at its caps with nothing ready is not &quot;skipped steps&quot;.</p>
+<ol>
+<li>4. <b>Early warning.</b> A daily check of quota use posts to #desk-drops when the week passes 80%.</li>
+<li>5. Small: drop or fix the <code>pip install</code> step (PyYAML conflict, 3 minutes per pass).</li>
+</ol>
+
+<p>Acceptance: no lane refused for the weekly limit across the next two weekly cycles; &quot;skipped steps&quot;</p>
+<p>alerts only for passes that left ready work undone.</p>
+
+<h2>Rulings</h2>
+
+<ul>
+<li>- 2026-10-26 Junyan: &quot;1 yes&quot; (d1 approved: Shipper builds fix items 1 to 5).</li>
+<li>- 2026-10-26 Junyan: &quot;d2 yes&quot; (after a ranking by job: Responder first, Desk Sort cheapest to slow).</li>
+</ul>
+<p>Desk Sort trigger <code>trig_01JYL7nMW9eWZqjQDx3cd93z</code> cron changed from <code>5 0-2,12-23 <i> </i> *</code> (15 a day)</p>
+<p>to <code>5 0,12,15,18,21 <i> </i> *</code> (5 a day, UTC). Stopgap: restore hourly once fix item 1 ships.</p>
+<ul>
+<li>- 2026-10-26 Junyan: &quot;you can do it&quot; (go on fixes). Done: Concierge trigger cron changed from</li>
+</ul>
+<p><code>10 0-2,12-23 <i> </i> <i></code> (15 a day) to <code>10 0,12,14,16,18,20,22 </i> <i> </i></code> (7 a day, UTC). Not done: Sonnet</p>
+<p>swap for Responder and Desk Sort; fixes 2 to 5 (Shipper dispatch with merge+deploy was refused by</p>
+<p>the auto mode guard).</p>
+<ul>
+<li>- 2026-10-26 Junyan: &quot;4 done&quot;. Checked live: Desk Sort and both Responder triggers (:20, :50) now run</li>
+</ul>
+<p>claude-sonnet-5-5. Fix 1 complete. Fixes 2 to 5: Shipper building to open PR only (d3 yes).</p>
+<ul>
+<li>- 2026-10-27 Junyan: &quot;5 yes, 6 yes, 7 yes&quot;. PR 1357 found already merged (957e90e2). Deploy is</li>
+</ul>
+<p>Junyan&#x27;s own act (d18): <code>deploy-gate 957e90e293da95d91ffc3e4cdfbe08358014850a</code>, not yet confirmed run.</p>
+<p>d6 done: Concierge trigger prompt replaced with <code>concierge-cloud.next-2026-10-26-t161.txt</code></p>
+<p>(read back: matches exactly; connectors, cron and enabled unchanged; next run 12:10 UTC).</p>
+<p>d7 blocked: TRIGGER_API_TOKEN is a Claude Code bearer token that no script can mint today</p>
+<p>(claude_usage_cloud.py docstring); a session cannot create or enter secrets. Open question for Junyan.</p>
+<ul>
+<li>- 2026-10-27 Junyan on d8: &quot;let&#x27;s just drop this one. I can just tell you when the quota is low ... by</li>
+</ul>
+<p>pressing a button on the robots tab&quot;. Token route dropped. Replacement (fix 3b, proposed, not built):</p>
+<p>a &quot;Claude quota low&quot; toggle on the Deck Robots tab, in the &quot;Claude account A/B: not tracked yet&quot; slot.</p>
+<p>Press = writes <code>quota_low_until</code> (default next Monday 17:00 Toronto, the 21:00 UTC reset) on the</p>
+<p>CLAUDE USAGE V1 block. Sentinel reads it: while set, cloud lanes refused or missing raise no per-lane</p>
+<p>alarm, one line &quot;Claude quota marked low by Junyan until &lt;time&gt;&quot;. Optional: Concierge and Desk Sort</p>
+<p>read it at STEP 0 and run only every other slot. Auto clears at the reset time.</p>
+<ul>
+<li>- 2026-10-27 Junyan: &quot;9 yes, 10 yes&quot;. Fix 3b approved with the every-other-slot option; Shipper</li>
+</ul>
+<p>dispatched to build to an open PR only (no merge, deploy or prompt push).</p>
+<ul>
+<li>- 2026-10-27 00:26 Toronto: Junyan ran <code>deploy-gate 957e90e2</code>; run 40449356062 success, /health</li>
+</ul>
+<p>git_sha 957e90e, &quot;LIVE 957e90e&quot; (his terminal screenshot). PR 1357 is live on event-gate.</p>
+
+<h2>Decision for Junyan</h2>
+
+<p>d1: approve fix items 1 to 5 for a Shipper. d2: as a stopgap until then, pause the Desk Sort&#x27;s hourly</p>
+<p>runs to every 3 hours.</p>
+
+<h2>Build (Shipper, 2026-10-26)</h2>
+
+<p>PR: https://github.com/junyanboon/desk-correspondence/pull/1357 (branch <code>claude/161-weekly-limit</code>, open, not merged, not deployed). Event-gate tests 12640 passed, 240 skipped; canon and plumbing checks pass.</p>
+
+<ul>
+<li>- Fix 2 built: <code>concierge_gate.py --last-pass auto</code> parks person-gated handbacks and finished tickets unchanged since the last pass (<code>concierge_parked.py</code>), counted &quot;waiting&quot;. Canon [R-parked-unchanged], [R-caps-complete]: cap-only leftovers close Completed. Goes live for the cloud Concierge the moment the PR merges (passes clone main).</li>
+<li>- Fix 3 built: Sentinel raises one <code>quota:weekly</code> alarm to Junyan (&quot;Out of weekly Claude quota until &lt;reset&gt;&quot;) and stops calling cloud lanes missing. The Sentinel cannot see run logs itself; its signal is the CLAUDE USAGE V1 block that <code>claude_usage_cloud.py</code> fills from the trigger API. That needs <code>TRIGGER_API_TOKEN</code> and <code>CLAUDE_USAGE_CLOUD_ENABLED=1</code> (plus <code>CLAUDE_USAGE_PAGE</code>) on event-gate, which do not exist yet; until then nothing changes.</li>
+<li>- Fix 5 built in two parts: the session-start hook no longer dies on PyYAML (in the PR); the Concierge cloud prompt&#x27;s <code>pip install -r requirements.txt</code> step is removed in a prepared prompt edit: <code>failover/live-prompts/concierge-cloud.next-2026-10-26-t161.txt</code> (diff <code>concierge-cloud-t161-2026-10-26.diff</code>). It also adds <code>--last-pass auto</code> to the gate call. Built on the 2026-10-23 local copy: re-check against the live trigger prompt before applying.</li>
+<li>- Fix 4 not built: no readable weekly-quota usage source exists (the cloud run logs only show the wall once hit; Claude Code&#x27;s <code>/usage</code> needs the account&#x27;s sign-in token, which is not a script credential).</li>
+</ul>
+
+<p>Order to go live (Junyan): 1) merge PR 1357 after checks pass; 2) <code>deploy-gate &lt;merge sha&gt;</code> for the Sentinel part; 3) then apply the prompt edit to the Concierge (cloud) trigger via RemoteTrigger update in a foreground session (not before the merge, or the old gate rejects <code>--last-pass</code>).</p>
+
+<p>Not done: fix 1 Sonnet swap (Junyan&#x27;s); TRIGGER_API_TOKEN; screenshot slice is not parked (unread screenshots are real work); Deck Usage tab does not yet show the new <code>quota</code> status label.</p>
+
+<h2>Build 3b (Shipper, 2026-10-27)</h2>
+
+<p>PRs (open, not merged, not deployed, no prompt applied):</p>
+<ul>
+<li>- desk-correspondence https://github.com/junyanboon/desk-correspondence/pull/1359 (branch <code>claude/161-quota-low</code>). Event-gate tests 12665 passed, 240 skipped; canon and plumbing checks pass.</li>
+<li>- deck-app https://github.com/junyanboon/deck-app/pull/422 (branch <code>claude/161-quota-low</code>). New tests pass; full suite 2238 of 2241, the 3 failures (alarm-live-stream, calendar-a1) fail on main too.</li>
+</ul>
+
+<p>What it does:</p>
+<ul>
+<li>- Deck Robots tab, Claude group, beside the &quot;Claude account A/B&quot; chips: a &quot;Claude quota low&quot; button. Press writes <code>quota_low_until</code> = next Monday 21:00 UTC; the chip then reads &quot;Claude quota marked low until &lt;Toronto time&gt;&quot; with a Clear button (writes null). Stored as its own <code>CLAUDE QUOTA LOW V1</code> code block on the Claude usage page (3e875032-81c4-81bd-89de-fe511a98fcc5), not inside CLAUDE USAGE V1: both usage collectors rewrite that block every 5 minutes and drop keys they do not know.</li>
+<li>- Sentinel: while the mark is in the future, Claude cloud lanes get no per-lane missing or not finishing alarm (same path as PR 1357&#x27;s quota wall); its log says &quot;Claude quota marked low by Junyan until &lt;Toronto time&gt;&quot;. No text is sent (Junyan pressed it himself). Ends by itself at the reset.</li>
+<li>- d10: <code>services/event-gate/claude_quota_low.py</code> (read-only). Rule while the mark is on: run only when the UTC hour mod 4 is 0 or 1. Concierge keeps 00, 12, 16, 20 UTC (4 of 7); Desk Sort keeps 00, 12, 21 UTC (3 of 5). Skipped slot: write nothing, one line answer. Unreadable mark = run as usual.</li>
+<li>- Prompt edits prepared in <code>failover/live-prompts/</code>: <code>concierge-cloud.next-2026-10-27-t161-3b.txt</code> (diff <code>concierge-cloud-t161-3b-2026-10-27.diff</code>, built on the live <code>concierge-cloud.next-2026-10-26-t161.txt</code>) and <code>desk-sort-cloud.next-2026-10-27-t161-3b.txt</code> (diff <code>desk-sort-cloud-t161-3b-2026-10-27.diff</code>). The check sits right after the canon clone (STEP 1c for both), not literally STEP 0, because the helper lives in canon.</li>
+</ul>
+
+<p>Apply order (Junyan):</p>
+<ol>
+<li>1. Merge PR 1359 and deck-app PR 422 after their checks pass.</li>
+<li>2. <code>deploy-gate &lt;PR 1359 merge sha&gt;</code> for the Sentinel (also carries PR 1357 if that deploy never ran). Deploy the Deck the usual way for PR 422.</li>
+<li>3. Then apply the two prompt edits to the Concierge (cloud) and Desk Sort (cloud) triggers in a foreground session. Not before step 1, or the clone has no <code>claude_quota_low.py</code> (the pass would just run as usual).</li>
+</ol>
+
+<p>Not done:</p>
+<ul>
+<li>- The Desk Sort edit is built on the 2026-10-02 local copy <code>desk-sort-cloud.v1.2.0.txt</code>; its live trigger prompt was not readable here (no RemoteTrigger). Read the live prompt back and compare before applying.</li>
+<li>- The Concierge canon (<code>concierge-orchestration.md</code>) is at its size budget, so its rule lives only in the cloud prompt and the helper docstring.</li>
+<li>- Skipped slots stamp no heartbeat, so the Robots tab may show those lanes late while the mark is on (the Sentinel is quiet for them).</li>
+<li>- No live check yet (nothing merged or deployed).</li>
+</ul>
+
+<h3>Desk Sort live prompt check (2026-10-27, this session)</h3>
+
+<p>Live Desk Sort trigger prompt is <code>desk-sort-cloud-v1.1.0-2026-09-28</code>, OLDER than the local</p>
+<p><code>desk-sort-cloud.v1.2.0.txt</code> the 3b edit is built on. The only difference: live lacks the</p>
+<p>&quot;STEP 1b. Lease (d71, 2026-10-02)&quot; lease_check line, so v1.2.0 was never applied live. Applying the 3b</p>
+<p>file therefore also turns on the d71 lease check for the Desk Sort. Nothing else would be undone.</p>
+<p>PRs 1359 (desk-correspondence) and deck-app 422: OPEN, awaiting Junyan.</p>
+<ul>
+<li>- 2026-10-27 Junyan: &quot;11 yes, 12 yes, 13 yes&quot;. Merged: PR 1359 -&gt; 5331fe32, deck-app PR 422 -&gt; b87d9901.</li>
+</ul>
+<p>Waiting on Junyan: <code>deploy-gate 5331fe3230fc36bc4ddd668fc4182bb1c4d1bb06</code> and the Deck deploy. Then this</p>
+<p>session applies the two prepared 3b prompts (d13).</p>
+<ul>
+<li>- 2026-10-27 Junyan: &quot;you can actually just update the instructions for those two scheduled runs on your</li>
+</ul>
+<p>own&quot;. Applied both 3b prompts (helper already merged; unreadable mark = normal run):</p>
+<p>Desk Sort -&gt; desk-sort-cloud-v1.3.0-2026-10-27 (also turns on the d71 lease check; lease_check.py only</p>
+<p>stops if executors.desk-sort names another runner), Sonnet, connectors kept.</p>
+<p>Concierge -&gt; concierge-cloud.next-2026-10-27-t161-3b.txt, read back exact.</p>
+<p>Still Junyan&#x27;s: <code>deploy-gate 5331fe3230fc36bc4ddd668fc4182bb1c4d1bb06</code> (Sentinel) and the Deck deploy (button).</p>
+<ul>
+<li>- 2026-10-27 00:42 Toronto: Junyan ran deploy-gate 5331fe3; run 40450864861 success, &quot;LIVE 5331fe3&quot;</li>
+</ul>
+<p>(also carried PR 1358, d93). Sentinel quota-low path is live.</p>
+<ul>
+<li>- 2026-10-27: Robots tab Claude account A/B usage chips removed (Junyan: &quot;maybe let&#x27;s drop the claude a and b quotas?&quot;), quota low button kept. PR https://github.com/junyanboon/deck-app/pull/423 (open, not merged or deployed).</li>
+<li>- 2026-10-27 Junyan: &quot;14 yes&quot;. deck-app PR 423 merged (Claude account A/B chips removed). Deck deploy is Junyan&#x27;s.</li>
+<li>- 2026-10-27 Junyan: &quot;14 yes&quot;. deck-app PR 423 merged as 82eacdd9 (Claude account A/B chips removed). Deck deploy is Junyan&#x27;s.</li>
+<li>- 2026-10-27 Shipper: deck-app PR https://github.com/junyanboon/deck-app/pull/425 (open, not merged or deployed): &quot;Low Tokens&quot; button beside the CLAUDE title; &quot;Quota mark not readable&quot; removed. Cause: the live GET /api/claude-quota-low answers 200 with ok:false (wrangler tail, no log line), so the Notion read of the usage page throws; CLAUDE_USAGE_PAGE is set in wrangler.jsonc, so not a missing var. Exact Notion error not visible until this PR logs it.</li>
+<li>- 2026-10-27 Junyan: &quot;15 yes, 16 yes&quot;. deck-app PR 425 (Low Tokens button beside CLAUDE, read error now logged) merged. Next: Junyan deploys the Deck, then this session tails the Deck log for the Notion read error.</li>
+<li>- 2026-10-27 Junyan: &quot;17 done&quot; (shared 📊 Claude Usage page 3e875032-81c4-81bd-89de-fe511a98fcc5 with the Deck&#x27;s Notion integration). Two settings only (Low/High), Build 3c dispatched to a Shipper, PR only.</li>
+</ul>
+
+<h2>Build 3c (Shipper, 2026-10-27)</h2>
+
+<p>Junyan: make Low Tokens red; &quot;I want to be able to turn it up to high tokens if I have a lot of tokens&quot;; &quot;Only two settings: low and high tokens&quot;; &quot;no need the until nov 2&quot;.</p>
+<p>PRs (open, not merged, not deployed, no trigger or prompt applied):</p>
+<ul>
+<li>- desk-correspondence https://github.com/junyanboon/desk-correspondence/pull/1362 (branch <code>claude/161-tokens-switch</code>): <code>claude_quota_low.py</code> reads <code>tokens</code> low/high (no expiry, old <code>quota_low_until</code> still reads), new <code>--lane concierge|desk-sort</code>. HIGH every slot; LOW Concierge 00, 12, 16, 20 UTC, Desk Sort 00, 12, 21 UTC; unreadable = HIGH. Sentinel on LOW logs &quot;Low Tokens set by Junyan&quot; (no date), no per-lane missing alarms for cloud lanes; HIGH normal. Event-gate 12677 passed, 240 skipped; canon and plumbing checks pass.</li>
+<li>- deck-app https://github.com/junyanboon/deck-app/pull/428 (branch <code>claude/161-tokens-switch</code>): switch beside CLAUDE, Low Tokens (red) / High Tokens (green), one lit, no date; writes <code>{&quot;tokens&quot;:&quot;low&quot;|&quot;high&quot;,&quot;set_at&quot;,&quot;set_by&quot;}</code> in the CLAUDE QUOTA LOW V1 block. Suite 2255 pass, 1 old fail (calendar grid).</li>
+<li>- Prompt files (STEP 1c wording had to change: adds <code>--lane</code>, new skip line): <code>failover/live-prompts/concierge-cloud.next-2026-10-27-t161-3c.txt</code> (diff <code>concierge-cloud-t161-3c-2026-10-27.diff</code>), <code>desk-sort-cloud.next-2026-10-27-t161-3c.txt</code> (diff <code>desk-sort-cloud-t161-3c-2026-10-27.diff</code>, version v1.4.0). Built on the live 3b files; only STEP 1c changes.</li>
+</ul>
+<p>Apply order once merged and deployed: (1) apply both 3c prompts, (2) then crons: Concierge <code>10 0-2,12-23 <i> </i> <i></code>, Desk Sort <code>5 0-2,12-23 </i> <i> </i></code> (Desk Sort 08:00 to 21:59 Toronto guard stays). If crons go hourly before the prompts carry <code>--lane</code>, LOW falls back to the 3b mod-4 rule (runs 8 slots, not 4/3).</p>
+<p>Still blocked: the Deck&#x27;s Notion integration gets &quot;Could not find block&quot; on the usage page until Junyan shares it.</p>
+<ul>
+<li>- 2026-10-27 Junyan: &quot;20 yes&quot;. Merged canon PR 1362 (3ec43019) and deck-app PR 428 (3e8fa054). Applied 3c</li>
+</ul>
+<p>prompts with hourly crons in one update each: Desk Sort v1.4.0 <code>5 0-2,12-23 <i> </i> *</code>; Concierge 3c</p>
+<p><code>10 0-2,12-23 <i> </i> *</code> (read back exact). Still Junyan&#x27;s: <code>deploy-gate 3ec430198a71c0a9b36feda139fc594f46973346</code></p>
+<p>and the Deck deploy.</p>
+<ul>
+<li>- 2026-10-27 Junyan: switch showed a Saving pill; should just toggle. deck-app PR 429 (flip at once, revert on failed save) opened by this session; tests pass.</li>
+<li>- 2026-10-27 Junyan: &quot;21 yes&quot;. deck-app PR 429 merged. Deck deploy is Junyan&#x27;s.</li>
+<li>- 2026-10-27 Junyan tested the Deck switch after deploy: &quot;Seems like it worked&quot;. Sentinel deploy</li>
+</ul>
+<p>3ec43019 success (05:19 UTC). Ticket closed. Final state: Responder and Desk Sort on Sonnet; Concierge</p>
+<p>and Desk Sort hourly, cut to 4 and 3 runs on Low Tokens; Sentinel quiet on Low; Concierge skips parked</p>
+<p>work and no pip step. Not built: weekly usage auto-warning (no readable usage source).</p>
+</div></details></div></details><details class="done-row"><summary><span class="done-check">✅</span><span class="done-num">#130</span><span class="emoji">🦾</span><span class="done-title">Give the desk a pair of hands inside Giggster and Tagvenue</span><span class="done-date">2026-10-03</span></summary><div class="done-body"><ul class="plain-bullets"><li>Two booking websites hold conversations we cannot finish. Giggster has no way to send a reply from the desk. Tagvenue forwards messages but blanks out every link</li><li>So a customer&#x27;s reply has sat unsent for 29 days, and a 30-person weekly lead sent us a link twice that nobody has been able to open</li><li>The robot kept asking a person to go log in and look. That is not a task, it is a missing tool</li><li>This job builds the tool: something that can log in, read the whole thread including links, post a reply a human already approved, and close out finished enquiries</li><li>Hard lines: it never sees a password, it never writes its own messages, and it stops dead if the website asks it to prove it is human</li><li>Accepting bookings stays with a person, because accepting charges the customer&#x27;s card</li></ul><details><summary>Technical notes</summary><div class="tech"><p><b>Build the platform messenger agent (grokbot) — the desk&#x27;s hands inside Giggster and Tagvenue</b></p><h2>Question</h2>
 
 <p>Two platforms hold conversations the desk cannot finish:</p>
 
@@ -21260,5 +21950,5 @@ footer{margin-top:3rem;font-size:.8rem;color:var(--muted);border-top:1px solid v
 </div>
 <h2>Later</h2>
 <div class="later">💭 Ideas we know are coming but haven&#x27;t planned yet: report cards for each job, a live helper for renters in the studio, and sorting every job into its robot.</div>
-<footer>Updated 2026-10-05 08:58 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
+<footer>Updated 2026-10-30 21:12 UTC-04:00 from the wayfinder tickets. Edit tickets in git, re-run render_tickets.py, push day-sheet.</footer>
 </div></body></html>
