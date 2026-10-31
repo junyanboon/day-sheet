@@ -1367,6 +1367,35 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>Concierge accepts an early-edited Sent reply, shows its evening cursor, retires cleared reviews<span class="kind">concierge &middot; failure &middot; concierge_intake.queue_proves, concierge_pass.lock_view, concierge_pass.deadlines_brief &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1505">desk-correspondence #1505</a></span></h3></summary>
+      <p><strong>Case.</strong> CelestialSand inbound 2026-10-04 13:54, answered by Sent queue 3ef75032-81c4-8139 at 14:10 (gmail:1a1081c9c85ca94e) but last edited before the audit row was made. Evening pass 2026-10-19 20:10 could not see its sampling cursor. Ticket 3fc7503281c4819faad4eb62ae5a0caf resolved on 2026-10-19 but its old review stayed missing_evidence.</p>
+      <p><strong>What broke.</strong> - <code>queue_proves</code> rejected any queue row last edited before the audit row, Sent ones too. - <code>lock status</code> (lock_view) left out <code>last_heavy_pass_am/pm</code>, and the lane may not read the lock block. - <code>deadlines_brief</code> called <code>reconcile_prior</code> without <code>api</code>, so a cleared review could never retire.</p>
+      <p><strong>Fix.</strong> - A Sent row with a dispatch receipt skips the edit-order check (marker check still applies). - lock_view returns <code>last_heavy_pass_am</code> and <code>last_heavy_pass_pm</code>. - <code>deadlines_brief</code> passes its read-only api to <code>reconcile_prior</code>.</p>
+      <p><strong>Tests.</strong> test_concierge_intake_fold.py, test_concierge_pass_b8_b9.py.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>Greeter no longer closes an accept gate on a Sent reply; close and delivery proofs read invoice lines, Notes queue refs and normalised bodies<span class="kind">The Greeter &middot; failure &middot; EVENT-GATE greeter_sweep.py, close_gate.py, completion_sweep.py, d72, d73 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1499">desk-correspondence #1499</a></span></h3></summary>
+      <p>Junyan: &ldquo;72 yes, 73 yes&rdquo;</p>
+      <p><strong>Why.</strong> The Daniel Davis Tagvenue gate (Action 3fd75032) was closed four times on 2026-10-30 on the desk's Sent reply alone, with no acceptance or payout proof. A paid Skedda invoice (in_1USIES..., booking 123037804) could not close its charge, a delivered-message alert naming its queue row only in Notes stayed open, and two Sent queue rows had no delivery proof because the stored body held literal <code>\n\n</code> or HTML breaks.</p>
+      <p><strong>Failure mode change.</strong> The Greeter now only reports a Sent reply (<code>reply_sent_open</code>); the decision row closes on the platform's own mail or by a person with the proof. <code>close_gate.paid_stripe</code> binds an invoice by its line <code>metadata.booking_id</code>. <code>linked_closed</code> accepts a queue row named in the title or Notes, and only when it is Sent with a receipt. <code>completion_sweep.delivery_proof</code> compares bodies after folding literal <code>\n</code>, HTML breaks, tags, entities and whitespace.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>Send right away keeps its Google token about 50 minutes, and kick-status shows the send route, token, run and engine timing<span class="kind">The Deck &middot; route &middot; deck-app src/send-kick.js (runSendEngine cache and timing, routeOf), src/send-kick-object.js, src/texts-send.js routeClock, src/index.js updatePage onStage and kickSendEngine(c, rowId, route), test/send-kick.test.js, test/texts-send.test.js; send-engine v50; event-gate outbound_guard.dispatch step_ms &middot; <a href="https://github.com/junyanboon/deck-app/pull/576">deck-app #576</a></span></h3></summary>
+      <p>Junyan: &ldquo;"29 yes 30 yes 31 yes" (2026-10-30)&rdquo;</p>
+      <p><strong>Why.</strong> Deck Texts tests took 20 to 25 s and the engine's "checks" step (6 to 7 s) could not be split; the token fetch and the send route before the kick were not timed at all.</p>
+      <p><strong>Route.</strong> Unchanged in order and guards. The SendKick object keeps the Google access token for about 50 minutes (10 minutes short of Google's hour) and reuses it; a run Google answers 401 drops it, fetches a fresh one and asks once more. The Texts tab's send route times its steps (find send, cards, row create, Conversation read, each release stage including the event-gate release check and the Notion write, the Deck nudge) and hands them to the kick. kick-status <code>last</code> now carries <code>route</code> (per row), <code>timing</code> (token fetched or cached and its ms, when the run was asked and returned, the engine main's own start and end, REPLY_ALL_ROWS_GUARD) and each row's event-gate step ms (<code>rows[].gate</code>).</p>
+      <p><strong>Failure mode.</strong> A refused token or run reads as before ("Google refused the sign-in", "Apps Script refused the run"), and the minute run still sends. Timing never stops a send.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>A booking's unpaid row closes on Skedda paid, fees still need Stripe, and no row is raised before the booking day is over<span class="kind">The Stale Sweep &middot; route &middot; services/event-gate/stale_sweep.py paid_booking fee_row, services/event-gate/unpaid_review.py inspect apply, library/studio-tickets-bookings.md, library/autonomy.md, d84, d85 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1500">desk-correspondence #1500</a></span></h3></summary>
       <p>Junyan: &ldquo;d84 "yes let's use Skedda unless it is some kind of special fee outside of the calendar"; d85 "yes" (2026-10-30)&rdquo;</p>
       <p><strong>Why.</strong> Since d380 (2026-10-17) a money row about a booking stayed open until Stripe showed the payment, even when Skedda already read the booking paid, and the unpaid-booking review raised "Review unpaid booking" rows days before the booking happened.</p>
