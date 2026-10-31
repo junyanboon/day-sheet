@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>event-gate alerts Junyan in #desk-status, at most once an hour, when the every-minute backup sent a row while send right away (D or E) is on, with the likely cause<span class="kind">event-gate &middot; failure &middot; services/event-gate/minute_sent_watch.py, send_kick.py (LAST_KICK, Caps.capped_at), app.py (minute_sent_watch.start), test_minute_sent_watch.py; deck-app POST /api/send-kick answers the last run &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;"21 yes" (2026-10-30)&rdquo;</p>
+      <p><strong>Why.</strong> With D and E on, a row sent by the minute run ("[sent-by &lt;time&gt;] minute" in Reasoning) means the fast path missed it, and nobody would notice.</p>
+      <p><strong>Route.</strong> Every 10 minutes one query for Sent rows whose Reasoning names the minute run, edited since event-gate first saw a flag on. New ones are batched into one owner_notify post (route YOU, #desk-status) at most once an hour, naming the count, up to five row ids and the likely cause: Google sign-in lapsed, the Deck's last kicked run failed or was locked, send right away off on the Deck, the kick cap reached, a flag off, or no kick at all. The every-minute trigger is unchanged.</p>
+      <p><strong>Failure mode.</strong> While both flags are off nothing is alerted (the minute run is the only sender, expected). A failed query is logged (minute_sent_watch_failed); a failed post keeps the rows for the next look. Nothing here writes Notion or sends to a renter.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>event-gate can ask the Deck to run the Send Engine now, on its own releases (SEND_KICK_ON_RELEASE) and every 15 s for due rows still waiting (DUE_WATCH_LIVE); both off until switched on<span class="kind">event-gate &middot; route &middot; services/event-gate/send_kick.py, app.py (send_kick.install, start_watcher), test_send_kick.py; deck-app POST /api/send-kick (PR 567); send-engine v48 (PR 68) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1489">desk-correspondence #1489</a></span></h3></summary>
       <p>Junyan: &ldquo;"d15 yes, d16 yes, d17 yes, d19 yes, d20 yes" (2026-10-30)&rdquo;</p>
       <p><strong>Why.</strong> Texts released by a robot, or by hand in Notion, waited for the Send Engine's next minute run; only a Deck Send kicked it.</p>
