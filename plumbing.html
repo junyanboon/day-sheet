@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>A renter's payment answer joins their open payment ticket; the Deck's Process button drafts only reply steps<span class="kind">The Responder &middot; route &middot; scripts/intake_decide.py, EVENT-GATE process_ticket.py, process_io.py, library/the-responder.md, d9, d10 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1493">desk-correspondence #1493</a></span></h3></summary>
+      <p>Junyan: &ldquo;9 yes, 10 yes&rdquo;</p>
+      <p><strong>Why.</strong> Stephanie Brinning's "Yes that's fine" to a payment ask carried no dates, so each answer opened a new Care ticket (3ce75032, 40675032 and a third closed as a duplicate).</p>
+      <p><strong>Route change.</strong> Intake has a <code>payment_ask</code> intent: it routes to the renter's one open ticket at Gate: Money or on the Delay Payment or Change Payment Method SOP, with no dates needed. The Process button drafts a reply only for a reply step, a staff step reads "Waiting on staff: &lt;step title&gt;", and on a tie the ticket with an open Action is worked first.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>event-gate alerts Junyan in #desk-status, at most once an hour, when the every-minute backup sent a row while send right away (D or E) is on, with the likely cause<span class="kind">event-gate &middot; failure &middot; services/event-gate/minute_sent_watch.py, send_kick.py (LAST_KICK, Caps.capped_at), app.py (minute_sent_watch.start), test_minute_sent_watch.py; deck-app POST /api/send-kick answers the last run &middot; desk-correspondence</span></h3></summary>
       <p>Junyan: &ldquo;"21 yes" (2026-10-30)&rdquo;</p>
       <p><strong>Why.</strong> With D and E on, a row sent by the minute run ("[sent-by &lt;time&gt;] minute" in Reasoning) means the fast path missed it, and nobody would notice.</p>
