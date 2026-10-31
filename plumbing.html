@@ -1364,6 +1364,35 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>The Registrar's move lane gets an LLM reader, in shadow (acts on nothing)<span class="kind">The Registrar &middot; tool, failure &middot; move_reader.shadow, move_reader.digest, move_sweep._shadow_read, drafter.last_api_usage &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1513">desk-correspondence #1513</a></span></h3></summary>
+      <p><strong>What.</strong> Beside the regex reading, each move request (and each first reply to an open move question) is read once by <code>claude-sonnet-5-5</code> through the cliproxy relay only (<code>_relay_post</code>, attempts 1, no CLI fallback). Code checks every field: each must quote the renter's own words, the booking must be one of the sender's upcoming Skedda bookings, confidence at least 0.8. <code>MOVE_READER_MODE=shadow</code> (default) writes one line per message to <code>/var/lib/eventgate/move_reader_shadow.jsonl</code> and moves, queues and sends nothing.</p>
+      <p><strong>Where Junyan sees it.</strong> After 23:00 Toronto, one Review row a day, "Move reader shadow, &lt;day&gt;: N disagreements", listing each disagreement and the spend line. <code>/health</code> shows <code>move_reader</code> with today's calls and <code>~$X.XX</code>.</p>
+      <p><strong>Guards</strong> (Junyan, 2026-10-30, "20 yes, 21 yes, 22 yes, 23 yes"): one call per message id (sqlite <code>move-reader.sqlite3</code>), input trimmed, max_tokens 600; caps 60 calls and US$2 a Toronto day (<code>MOVE_READER_MAX_CALLS</code>, <code>MOVE_READER_MAX_USD</code>); a cap hit or a relay outage means the regex alone, plus one Review row that day ("Move reader hit its daily cap" or "Move reader could not reach the relay"). <code>MOVE_READER_MODE=off</code> is the kill switch. Price used: US$2 in, US$10 out per million tokens. Live mode needs a new yes.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>A declined draft no longer files feedback<span class="kind">The Custodian &middot; route &middot; reviewer_verdict.route, scripts/verdict_route.py, library/the-custodian.md JOB 9 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1516">desk-correspondence #1516</a></span></h3></summary>
+      <p><strong>Case.</strong> Junyan, 2026-10-30, "96 no let's just drop this": a draft rejected in the Deck (Will Not Send) kept turning into a Sweep Feedback row and then an "Operational feedback" Action row.</p>
+      <p><strong>What changed.</strong> The Custodian's JOB 9 routes each reviewer verdict through <code>reviewer_verdict.route</code>. A verified decline now prints <code>qa_line</code> ("a decline files no feedback"), never <code>file</code>, owes no Action row and does not count toward the two-in-a-window threshold. Release-with-edit (wording) verdicts still file HTR suggestions. The rest of lane_feedback and the cause cards are untouched; with no decline rows filed, the Concierge has none to turn into Operational feedback cards.</p>
+      <p><strong>Switch.</strong> <code>REVIEWER_DECLINE_FEEDBACK=on</code> brings the old loop back. It is off unless set.</p>
+      <p><strong>Tests.</strong> test_reviewer_verdict.py: declines file nothing (new and old stamps), edits still file, the switch brings the loop back.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>When alarm-mcp refuses the end + 20 arm for a system reason, the renter gets the plain please-arm reminder and the Fixer gets a row<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/closing_reminder.py (SYSTEM_REFUSAL_RE, template("reminder")), library/closing-reminder.md, a3 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1514">desk-correspondence #1514</a></span></h3></summary>
+      <p>Junyan: &ldquo;yes build the back up&rdquo;</p>
+      <p><strong>Why.</strong> From 2026-10-17 every auto-arm was refused because alarm-mcp's auto-arm.json was never seeded, and a refusal sent nothing, so no renter was armed or texted for 13 days.</p>
+      <p><strong>Route change.</strong> A system refusal (store, calendar or door log unreadable, alarm-mcp HTTP error, malformed request, no single partition) now sends the CLOSING_REMINDER_HTR_ID please-arm text under the same claim and files a <code>closing-auto-arm-refused:&lt;key&gt;</code> Actions row for the Fixer. Rule refusals stay silent.</p>
+      <p><strong>Failure mode.</strong> An unreadable reminder row sends nothing and still files the row. Turning off <code>CLOSING_AUTO_ARM_LIVE</code> returns the lane to the plain reminder for everyone.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
