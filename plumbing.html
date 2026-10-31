@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>Queue drafts refuse unsourced promises and bodies for another renter; no holding reply beside a reply in flight<span class="kind">event-gate &middot; failure &middot; reply_check.PROMISE, reply_check.addressee_mismatch, reply_check.canonical_source, queue_draft.addressee_refusal, holding_reply._worth_a_row &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1504">desk-correspondence #1504</a></span></h3></summary>
+      <p><strong>Case.</strong> Zoey Gould, 2026-09-16: a Lost and Found draft promised "We'll reach out to the..." with no source. MQ 3e27503281c4811aafc6fae1b41b20db, 2026-09-22: Stephanie Billones' Studio 509B confirmation addressed to Lily Whiting. Responder BELT row 3fe7503281c4814aa76de54318b2f4b8: Source Email <code>gmail-1a155a5bb678fcf1</code>. Two Oct 1 holding replies rejected as already handled.</p>
+      <p><strong>What broke.</strong> <code>reply_check</code> had no rule for commitments or for the greeting naming another person; queue_draft wrote Source Email in whatever form it was given; the Courtesy Reply Lane skipped only its close, not its holding reply, when another reply was in flight.</p>
+      <p><strong>Fix.</strong> - New refusal <code>[promise]</code> (a note on a staff row): a first-person future commitment needs <code>--allow promise=&lt;source&gt;</code>. - New refusal <code>[addressee]</code>: the greeting names someone who is neither the linked Artist nor named in the code or Reasoning. An unreadable card never blocks. - queue_draft writes an Email row's Source Email as <code>#all/&lt;id&gt;</code>, on new rows and on merges. - holding_reply: a real reply to this renter in the last 15 minutes means no holding row either.</p>
+      <p><strong>Tests.</strong> test_reply_check_queue_guards.py, test_holding_reply.py (A3), scripts/test_queue_draft_guards.py.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>The Doorman arms every disarmed studio at 04:03, not only before the first booking<span class="kind">The Doorman &middot; cadence &middot; alarm_monitor/opening_check.due_studios, hosting/vps/danceannex-alarm-opening-check.timer &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1509">desk-correspondence #1509</a></span></h3></summary>
+      <p><strong>Case.</strong> Junyan, 2026-10-30, d95: "95 yes it can be at 4am though I thought I had someone already that does this".</p>
+      <p><strong>What was missing.</strong> The pre-opening check armed a studio left open only 60 minutes before the building's first booking of the day (07:00 on a day with none). A room left disarmed after the last renter stayed open overnight and through the morning. The 04:00 arm-check only flags it.</p>
+      <p><strong>Change.</strong> The opening-check timer also fires at 04:03 Toronto. In that hour every studio is due, so every partition reading disarmed goes through the same guards (presence, live booking, renter hold, auto-arm off) and is armed away and verified; a presence block sends the same on-call text. The night pass keeps its own dedup key so the daytime check still runs.</p>
+      <p><strong>Tests.</strong> tests/test_opening_check.py (night pass: arms, guard texts, armed untouched, daytime check not used up).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>Unconfirmed holds skip the Registrar, the Analyst finds an old pair's phone card, the Treasurer reads a phase's schedule<span class="kind">event-gate &middot; failure &middot; booking_sweep.selection_of, analyst_sweep._artist_page, treasurer_sweep.next_charges &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1502">desk-correspondence #1502</a></span></h3></summary>
       <p><strong>Cases.</strong> Feliciana (Tagvenue, Skedda 122997317, "EVENT UNCONFIRMED" hold, Oct 2026); Jack C. (Peerspace, 901, 2026-10-06, a relay-only card and a phone card); Enrico Casertano (sub_1ULbBFPunGOWPTflGDoS7FxF, active, canceled_at set with a future cancel_at, 2026-10-15).</p>
       <p><strong>What broke.</strong> The Registrar ran platform gate 1 on an unconfirmed hold as if accepted. The Analyst's platform lookup saw two cards for Jack C. and gave up, so no handoff text could go. The Treasurer's next-charge audit previewed only the ending phase's subscription, found no November invoice, and filed "nothing scheduled".</p>
