@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-31</span>
+      <h3>Desk Invariants flag a ticket with its SOP but no reply after an hour; the Concierge gate stops at 5 minutes<span class="kind">event-gate &middot; failure &middot; no_draft_watch.py, invariants.run_no_draft, concierge_gate.GATE_BUDGET_S, concierge-orchestration.md [R-gate] &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1520">desk-correspondence #1520</a></span></h3></summary>
+      <p><strong>Case.</strong> Parmida Azizi, Sales ticket 40a75032-81c4-8163-a109-cedd3f0b1331, opened by the Responder 08:22 Toronto on 2026-10-31, which ran out of pass time before queuing the reply. The Concierge attached the SOP at 09:12 and stopped; at 10:12 its start gate spent 15 minutes on an intake-read HTTP 502 and advanced 0 items. The ticket sat at Routing with no Message Queue row for hours.</p>
+      <p><strong>What broke.</strong> Nothing watched for "SOP attached, no reply queued", and one slow or failing reader held the whole start gate.</p>
+      <p><strong>Fix.</strong> - d4: Desk Invariants X2 (<code>no_draft_watch.py</code>). A Sales or CC ticket over 60 min old at Routing or In Progress with an SOP, no linked queue row and an open first <code>[AI→draft]</code> step gets one Fixer row <code>[no-draft:&lt;ticket&gt;]</code> and one ops text; the row closes itself once a queue row links the ticket. - d5: <code>concierge_gate.py</code> stops at 5 minutes (<code>CONCIERGE_GATE_BUDGET_S</code>). A reader past the cap, or one failing on a transient error (HTTP 429/5xx, timeout), is listed in <code>skipped</code>, logged, and the pass carries on to item work from the other readers.</p>
+      <p><strong>Tests.</strong> test_no_draft_watch.py (Parmida replay), test_concierge_gate.py (cap and 502 skip).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-31</span>
       <h3>No-shows are read from Alarm.com's stored history 20 min after the end, and set Missed Booking<span class="kind">event-gate &middot; failure &middot; board_status.history_noshow, noshow_history.py, gtg_sweep.pbf_alerts, Responder no-show step &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1519">desk-correspondence #1519</a></span></h3></summary>
       <p><strong>Case.</strong> Amreet Gill, Skedda 123853181, 509B 07:45-08:45 on 2026-10-31, did not come. Board row 40a75032-81c4-81b7-86b9-e0456a5cd1ab stayed Upcoming, Disarmed blank, no <code>[attend:...]</code> card, so the Responder never drafted the held "we missed you". The PBF step's 120-min alert read "PBF not drafted".</p>
       <p><strong>What broke.</strong> the live websocket ledger had 36 short drops overnight and <code>decide()</code> refuses a no-show on any gap. Alarm.com's own record showed 509B silent the whole time.</p>
