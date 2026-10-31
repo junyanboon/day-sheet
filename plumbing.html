@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>Replies and website forms join the renter's open same-SOP ticket<span class="kind">responder &middot; route &middot; intake_decide.artist_ticket_match, intake_decide.join_ticket, ticket_dupe_merge, Custodian JOB 12 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1512">desk-correspondence #1512</a></span></h3></summary>
+      <p><strong>Case.</strong> Dennis Jun's [FORM] Change My Plan cancel (gmail-1a18e6d34f1e601f, 2026-10-30) opened a second Early Termination ticket beside his open one that waited on that form. Sebastien Prosper's text "Sunday around 4;30" opened a stub beside his phone ticket on Booking Changes.</p>
+      <p><strong>What broke.</strong> a renter's message joined an open ticket only on a shared date or time. The form notice is our own mail from info@, so the sender never resolved to the renter, and "4;30" read as no time.</p>
+      <p><strong>Fix.</strong> - intake_decide: after the date match, the one open ticket of the same renter on the same board and SOP joins with no date needed; 2+ such tickets still ask. A [FORM] notice resolves the renter from its body Email/Phone. "4;30" reads as 4:30. Log-dropped texts count as texts. - On that join: the ids go onto Source messages, the first "Wait for ..." step is ticked <code>[done:&lt;id&gt;]</code>, Gate: Artist / Gate: Money moves to In Progress. - The Custodian's night pass runs scripts/ticket_dupe_merge.py (JOB 12): two open tickets, same board, Artist and SOP, merge newer into older; unclear groups go to Junyan as one Action row.</p>
+      <p><strong>Tests.</strong> test_intake_decide.py (Dennis, Sebastien, two-ticket ask, different SOP) and test_ticket_dupe_merge.py.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>Skedda paid also closes a booking's row in the Desk Sort close gate, makes a Sales ticket Won, and clears a Gate: Money ticket; fees still need Stripe<span class="kind">The Desk Sort &middot; route &middot; services/event-gate/close_gate.py paid_skedda, services/event-gate/terminal_gate.py won, services/event-gate/auto_review.py money_reconcile, library/desk-sort.md, library/job-8-review.md, library/automatic-operational-closure.md, d84, d94 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1510">desk-correspondence #1510</a></span></h3></summary>
       <p>Junyan: &ldquo;d84 "yes let's use Skedda unless it is some kind of special fee outside of the calendar"; d94 "94 yes" (2026-10-30)&rdquo;</p>
       <p><strong>Why.</strong> d84 (PR 1500) let the Stale Sweep close a booking's money row on Skedda paid, but three other places still used d380 "Stripe only": the Desk Sort's close gate, the Job 8 check that marks a Sales ticket Won, and auto_review clearing a "Gate: Money" block.</p>
@@ -1654,6 +1664,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> The Charges tab showed Skedda's full price and Charge for any unpaid 1AP/AAP booking the prepaid-hours bot had not reached yet (it waits until 24 hours before, d106).</p>
       <p><strong>Route change.</strong> On every Charges tab load the Deck sends the unpaid 1AP/AAP bookings to event-gate <code>POST /plan-preview</code>, which runs the bot's own forecast path with <code>settle_plan_allowance</code> confirm=false (no receipt, no journal, no lock, no write; cached 60 s). Fully covered shows a green Prepaid card at $0 with Approve; crossing the 4 hours shows only the overage with an "x h extra" pill and Charge; used up is unchanged. Approve writes the PLAN OK line (making the Actions row first when there is none), then calls <code>POST /plan-now</code>, which runs the bot for that one booking under its own lock on or after the booking day; before that day it says so and the bot settles on the day (d96). The Deck never calls <code>settle_plan_allowance</code>.</p>
       <p><strong>Failure mode.</strong> A preview read failure or an unknown answer leaves Skedda's price and Charge, as before. <code>/plan-now</code> failures leave the booking to the bot's next round.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-29</span>
+      <h3>The end + 20 lane texts a renter who left disarmed when the next renter took the panel, and robots know their own texts by the help line<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/closing_reminder.py (following, _handover, HANDOVER_HTR_ID), services/event-gate/inbound.py (ROBOT_SIGN_RE), emergency_scorecard.py, cards.py, registrar_auto_move.py, library/closing-reminder.md, library/house-rules.md, d2 d7 d8 h1 h2 h3 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1468">desk-correspondence #1468</a></span></h3></summary>
+      <p>Junyan: &ldquo;2 yes just a text to them is still okay. The one that was supposed to send would probably have been good.&rdquo;</p>
+      <p><strong>Why.</strong> Erica Lombardo left 509A disarmed on 2026-10-29; the next renter's keypad touched the panel at 6:20:08 PM, so the lane stood down and she got nothing. Junyan also wants "This is an automated message" out of the texts that end with the house help line (d8), so robots first had to stop relying on it to spot their own sends (d7).</p>
+      <p><strong>Route change.</strong> Closing lane: when the next renter's keypad is the first thing on the panel after the end, for a booking starting 30 minutes or more after it, the renter gets the handover text (HTR <code>HANDOVER_HTR_ID</code>), never an arm. A mixed multi-room booking logs <code>mixed</code> and sends nothing. Robot-send detection (<code>inbound.is_automated</code>, the emergency scorecard, the cards' own-text echo) now also reads the help line "reply here and we'll see if one of our staff is available to assist you". The move receipt drops the disclosure and still accepts the old row until Junyan edits it.</p>
+      <p><strong>Failure mode.</strong> No <code>HANDOVER_HTR_ID</code> or a row not on Auto-send: no handover text (<code>skipped: handover_template</code>). A feed gap, staff or remote event, an unknown actor or a tight turnover sends nothing. Turning off <code>CLOSING_AUTO_ARM_LIVE</code> turns off both the arm and the handover.</p>
     </details>
     </li>
     <li class="entry det">
