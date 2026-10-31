@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>Forgot to Arm reminders to staff send without a Deck press<span class="kind">event-gate &middot; route &middot; overtime_sweep.fta_reminder, overtime_sweep.staff_autorelease, lane_common.STAFF &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1498">desk-correspondence #1498</a></span></h3></summary>
+      <p><strong>Rule.</strong> Junyan, 2026-10-30: "this can be automatic it doesn't even need staff approval because it's internal."</p>
+      <p><strong>Change.</strong> The Timekeeper's Step 10 T2 (Forgot to Arm, Case B) is still queued at Pending Review and re-read. When the recipient's Artist card is on the staff roster, it is then moved to Ready to Send with Send After inside 09:00 to 21:00 Toronto, and the ticket's ask says nothing is needed. Renter recipients stay held. Switch: <code>STAFF_REMINDER_AUTOSEND_DISABLED=1</code>.</p>
+      <p><strong>Tests.</strong> test_staff_arm_autosend.py: staff released, renter held, switch holds.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>Studio change difference rows are read by their words, not only the marker<span class="kind">event-gate &middot; failure &middot; invariants.is_price_difference, skedda_sync, stale sweep, Desk Sort money close-out &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1481">desk-correspondence #1481</a></span></h3></summary>
       <p><strong>Case.</strong> Sebastien Prosper, Skedda 123781359, Sun 2026-11-01 4:30-5:30 PM, paid $33.90 in 509B, moved to 901 ($58.76) on 2026-10-30. Charge row 40975032-81c4-81b5-89b5-ef182db6387b at $24.86.</p>
       <p><strong>What broke.</strong> the row was hand-filed as "studio change 509B to 901" with no <code>[price-difference]</code> marker. <code>invariants.is_price_difference</code> only knew "studio/rate/price difference", so skedda_sync reset the Amount to the booking's paid $33.90 and the stale sweep closed it because the booking reads paid. The Desk Sort close-out saw no payment proof but left it Processed.</p>
