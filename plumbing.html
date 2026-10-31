@@ -1367,6 +1367,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>Skedda paid also closes a booking's row in the Desk Sort close gate, makes a Sales ticket Won, and clears a Gate: Money ticket; fees still need Stripe<span class="kind">The Desk Sort &middot; route &middot; services/event-gate/close_gate.py paid_skedda, services/event-gate/terminal_gate.py won, services/event-gate/auto_review.py money_reconcile, library/desk-sort.md, library/job-8-review.md, library/automatic-operational-closure.md, d84, d94 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1510">desk-correspondence #1510</a></span></h3></summary>
+      <p>Junyan: &ldquo;d84 "yes let's use Skedda unless it is some kind of special fee outside of the calendar"; d94 "94 yes" (2026-10-30)&rdquo;</p>
+      <p><strong>Why.</strong> d84 (PR 1500) let the Stale Sweep close a booking's money row on Skedda paid, but three other places still used d380 "Stripe only": the Desk Sort's close gate, the Job 8 check that marks a Sales ticket Won, and auto_review clearing a "Gate: Money" block.</p>
+      <p><strong>Route change.</strong> The close gate takes a new reason <code>paid_skedda</code>: a Charge, Invoice or Platform charge request row closes Processed and Verified when every booking it settles, read by id, reads payment_status 3 ($0 stays <code>skedda_zero</code>). Job 8 marks a Sales ticket Won when each booking reads paid or $0 in Skedda, with no Stripe read; any other booking still needs one. auto_review clears a Gate: Money blocker when its booking reads paid or $0 in Skedda, with no Stripe read.</p>
+      <p><strong>Failure mode.</strong> A fee (a separate Stripe invoice, a room or price difference, an extra-move, deferral or late fee) still needs Stripe in all three: the close gate keeps such a row open on <code>paid_skedda</code>, an open fee Money row still holds the Sales ticket at Review, and a fee blocker on a Gate: Money ticket is cleared only when Stripe shows the payment. Fee rows are told apart with <code>stale_sweep.fee_row</code> and its <code>FEE</code> pattern from PR 1500.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>The Doorman's 04:00 arm-check leaves studios disarmed after a booking to the Timekeeper<span class="kind">event-gate &middot; route &middot; doorman_armcheck.flag_unarmed, doorman_armcheck.booked_earlier, Timekeeper Step 10 Forgot to Arm, d93 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1507">desk-correspondence #1507</a></span></h3></summary>
+      <p><strong>Ruling.</strong> Junyan, 2026-10-30, d93: "let's just drop the overlap and leave it with the time keeper. We just need to make sure we have a bot that makes sure all of the studios are armed."</p>
+      <p><strong>What changed.</strong> A studio reading disarmed at 04:00 with a renter booking that ended since 05:00 yesterday gets the new verdict <code>booked-earlier-timekeeper</code> and no Actions row; the Timekeeper's Step 10 Forgot to Arm owns it. A disarmed studio with no booking behind it, and any studio reading <code>unknown</code>, are still flagged (one deduped Studio Issue row). Internal and Unavailable blocks do not count as a booking. The heartbeat headline names the studios left to the Timekeeper.</p>
+      <p><strong>Tests.</strong> test_doorman_armcheck.py, the four <code>test_d93_*</code> cases.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>Queue drafts refuse unsourced promises and bodies for another renter; no holding reply beside a reply in flight<span class="kind">event-gate &middot; failure &middot; reply_check.PROMISE, reply_check.addressee_mismatch, reply_check.canonical_source, queue_draft.addressee_refusal, holding_reply._worth_a_row &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1504">desk-correspondence #1504</a></span></h3></summary>
       <p><strong>Case.</strong> Zoey Gould, 2026-09-16: a Lost and Found draft promised "We'll reach out to the..." with no source. MQ 3e27503281c4811aafc6fae1b41b20db, 2026-09-22: Stephanie Billones' Studio 509B confirmation addressed to Lily Whiting. Responder BELT row 3fe7503281c4814aa76de54318b2f4b8: Source Email <code>gmail-1a155a5bb678fcf1</code>. Two Oct 1 holding replies rejected as already handled.</p>
       <p><strong>What broke.</strong> <code>reply_check</code> had no rule for commitments or for the greeting naming another person; queue_draft wrote Source Email in whatever form it was given; the Courtesy Reply Lane skipped only its close, not its holding reply, when another reply was in flight.</p>
