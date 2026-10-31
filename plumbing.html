@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-31</span>
+      <h3>Access texts read the board's Type of Booking first, and one agreement rule decides on the booking day<span class="kind">event-gate &middot; route &middot; booking_sweep.agreement_rung, booking_sweep.board_type_for, booking_sweep.merged_access_day_sessions, host_sweep.tier_for, host_sweep.should_retier &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1526">desk-correspondence #1526</a></span></h3></summary>
+      <p><strong>Case.</strong> Shamir Panchal (Fixed Option, Active), Nov 1 2026. His card's Agreement End Date was a stale 2026-10-31. The Host tiered his rows Self Serve using today; the Registrar re-derived "not agreement" using the booking day, ignored the board, and his 509B one-off pulled his 509A series session into a merged HTA (queue row 40a7503281c481a79d04dcccdeee7f39, set Will Not Send by hand).</p>
+      <p><strong>Fix.</strong> - d19: before any same-day or next-day access text the Registrar reads the board row's Type of Booking. Self Serve skips with <code>hta:not-needed-selfserve</code>. A merged access text drops every Self Serve or agreement booking, and an excluded lead skips the whole group. - One function, <code>booking_sweep.agreement_rung</code>, on the BOOKING day, for the Host and the Registrar. - The Host re-tiers every Upcoming, not-yet-started row in its window each pass (was Pending only), so a card End Date change relabels the row. A row whose Why carries a Support Override, and a Studio Viewing, are never re-tiered, nor a Type a person changed by hand (d28). - d23: an agreement renter's first visit to a room (no completed visit there) tiers FBS. - d29: an End Date passed within 14 days still counts as a running plan when the Treasurer's RENEWED test finds a later Rental Agreement on 📎 Docs (<code>booking_sweep.renewed_on_docs</code>). - No grace period after End Date (d20 declined).</p>
+      <p><strong>Tests.</strong> test_agreement_tier_d19_d23.py.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-31</span>
       <h3>On a typed Deck send, "the same message already went out" is a normal warning with Send anyway, not a grey note<span class="kind">The Deck &middot; failure &middot; deck-app src/outbound-guard.js TYPED_NOTE; test/texts-send.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/592">deck-app #592</a></span></h3></summary>
       <p>Junyan: &ldquo;"7 it shoudl be in the same colour and place as theother warnings" (2026-10-31)&rdquo;</p>
       <p><strong>Why.</strong> PR 590 turned twin_sent into a grey note on typed sends; Junyan wants it shown like the other warnings.</p>
