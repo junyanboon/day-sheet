@@ -1367,6 +1367,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>Unconfirmed holds skip the Registrar, the Analyst finds an old pair's phone card, the Treasurer reads a phase's schedule<span class="kind">event-gate &middot; failure &middot; booking_sweep.selection_of, analyst_sweep._artist_page, treasurer_sweep.next_charges &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1502">desk-correspondence #1502</a></span></h3></summary>
+      <p><strong>Cases.</strong> Feliciana (Tagvenue, Skedda 122997317, "EVENT UNCONFIRMED" hold, Oct 2026); Jack C. (Peerspace, 901, 2026-10-06, a relay-only card and a phone card); Enrico Casertano (sub_1ULbBFPunGOWPTflGDoS7FxF, active, canceled_at set with a future cancel_at, 2026-10-15).</p>
+      <p><strong>What broke.</strong> The Registrar ran platform gate 1 on an unconfirmed hold as if accepted. The Analyst's platform lookup saw two cards for Jack C. and gave up, so no handoff text could go. The Treasurer's next-charge audit previewed only the ending phase's subscription, found no November invoice, and filed "nothing scheduled".</p>
+      <p><strong>Fix.</strong> - <code>selection_of</code> skips any booking whose title says UNCONFIRMED (as the Planner already does). - <code>_artist_page</code> takes the phone card when the only other card is an old relay-only card (d249); two phone cards or a d267 card still stay unguessed (d271). - <code>next_charges</code> falls back to the subscription's schedule preview when the subscription itself previews nothing for the month.</p>
+      <p><strong>Tests.</strong> test_booking_sweep.py, test_analyst_sweep.py, test_treasurer_sweep.py.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>Held drafts past their moment are retired, not left for the Deck<span class="kind">event-gate &middot; failure &middot; queue_hygiene, queue_draft.py --useful-until, decay_pass nudge, Custodian JOB 9 too_late &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1501">desk-correspondence #1501</a></span></h3></summary>
+      <p><strong>Case.</strong> Custodian JOB 9, 2026-10-30 02:35: two Deck rejections "Stale, the time has passed" (an agreement payment-info email and the sales-decay still-interested nudge queued Oct 27), after 16 earlier too_late verdicts. Actions 4097503281c48140bc4aca00c669c19b, 4027503281c48114a87fdcd7284f7d8b.</p>
+      <p><strong>What broke.</strong> queue hygiene only retires a held row carrying <code>[expires:]</code>, and only timed relay texts and Analyst rows wrote one. Other lanes' drafts had no deadline on the row, so they stayed held past their moment. The Responder recheck (PR 1471) only kills rows the renter was already answered on, and only Responder rows.</p>
+      <p><strong>Fix.</strong> - Queue hygiene also reads <code>[useful-until:&lt;ISO&gt;]</code> (same deadline, no SMS routing side effect). - <code>queue_draft.py --useful-until 'YYYY-MM-DDTHH:MM'</code> writes it; canon tells drafting lanes to use it. - The sales-decay nudge writes its close-by day, 23:59, itself.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>Concierge accepts an early-edited Sent reply, shows its evening cursor, retires cleared reviews<span class="kind">concierge &middot; failure &middot; concierge_intake.queue_proves, concierge_pass.lock_view, concierge_pass.deadlines_brief &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1505">desk-correspondence #1505</a></span></h3></summary>
       <p><strong>Case.</strong> CelestialSand inbound 2026-10-04 13:54, answered by Sent queue 3ef75032-81c4-8139 at 14:10 (gmail:1a1081c9c85ca94e) but last edited before the audit row was made. Evening pass 2026-10-19 20:10 could not see its sampling cursor. Ticket 3fc7503281c4819faad4eb62ae5a0caf resolved on 2026-10-19 but its old review stayed missing_evidence.</p>
       <p><strong>What broke.</strong> - <code>queue_proves</code> rejected any queue row last edited before the audit row, Sent ones too. - <code>lock status</code> (lock_view) left out <code>last_heavy_pass_am/pm</code>, and the lane may not read the lock block. - <code>deadlines_brief</code> called <code>reconcile_prior</code> without <code>api</code>, so a cleared review could never retire.</p>
