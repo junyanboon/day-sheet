@@ -1367,6 +1367,36 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-31</span>
+      <h3>Any paid Stripe invoice closes its open money row, settles every booking it billed, and retires held messages naming it<span class="kind">Money reconcile &middot; failure &middot; deck-app src/card-paid-record.js, src/index.js /api/charge/card-on-file, test/card-on-file-paid-line.test.js; desk-correspondence services/event-gate/paid_proof_close.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1524">desk-correspondence #1524</a></span></h3></summary>
+      <p>Junyan: &ldquo;"Yes, ship it" (2026-10-31, relayed by the boss)&rdquo;</p>
+      <p><strong>Why.</strong> Maryna Stupak's paid in_1UVd7OPunGOWPTflXxUEsbh9 was missed because every paid closer read only rows with Verified unticked and an INVOICED newest You line; hers was Verified from a hand-close the Desk Sort reopen left ticked.</p>
+      <p><strong>Route.</strong> New <code>paid_proof_close</code> runs in the money_reconcile round before invoice_settle: open Charge or Invoice rows (any Verified, any You line) without INVOICE-PAID-V1 whose invoice (in_ in Notes, or Stripe's deck_action / dl_ metadata on invoices paid in the last 21 days) reads paid get the mark and close Processed + Verified. Closed rows are left alone. invoice_settle now settles every booking one invoice billed (Skedda prices less the invoice's credit lines must equal what Stripe took). Held unsent Message Queue rows whose Reasoning or Notes name a paid in_ and were queued before the payment go Will Not Send.</p>
+      <p><strong>Failure mode.</strong> A Stripe or Notion read error writes nothing that round. A price mismatch files the usual Ops Lead settle row. Kill switch PAID_PROOF_CLOSE_DISABLED=1.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-31</span>
+      <h3>An access text unclaimed 30 minutes before a near booking pages Junyan, and the stale pass keeps Error rows<span class="kind">event-gate &middot; route, failure &middot; EVENT-GATE access_unclaimed.py, queue_hygiene.py, library/send-message.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1525">desk-correspondence #1525</a></span></h3></summary>
+      <p>Junyan: &ldquo;d14 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-31 Ehsan Soltan Aghai's How to Access text (509A, 1:30 PM) sat Ready to Send from 2:39 AM with nothing claiming it, and the only signal was an Actions card that sat 10 hours. When it finally failed (Phone.com 504, 4:39 PM, Error), the 5:00 PM hygiene pass rewrote the Error as Will Not Send ("stale"), hiding the failure.</p>
+      <p><strong>Route change.</strong> Every 5 minutes event-gate looks for access-shaped Message Queue rows that are Ready to Send and due 30 minutes or more, whose booking starts within 3 hours (or started under 2 hours ago). Each one pages Junyan once in Slack #desk-status (SMS if Slack fails) with the renter, room, start time, the Deck link and the queue row link, and once more when the start is under 30 minutes away. The queue hygiene stale pass no longer retires a row in Error or one whose Reasoning holds an <code>[Error —</code> stamp.</p>
+      <p><strong>Failure mode.</strong> A row whose booking start cannot be read (no <code>HTA-sweep-MMDD-HHMM-</code> code, no dated Booking link) is logged and not paged; the stuck-send Action and the HTA watchdog still cover it. A failed page is retried next pass. Fired pages are kept in <code>/var/lib/eventgate/access-unclaimed.json</code>. <code>ACCESS_UNCLAIMED_DISABLED=1</code> turns it off. Nothing is sent to a renter and no queue row is changed.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-31</span>
+      <h3>Charge card on file writes its CHARGED line and paid mark on the Actions row<span class="kind">The Deck &middot; failure &middot; deck-app src/card-paid-record.js, src/index.js /api/charge/card-on-file, test/card-on-file-paid-line.test.js; desk-correspondence services/event-gate/paid_proof_close.py &middot; <a href="https://github.com/junyanboon/deck-app/pull/591">deck-app #591</a></span></h3></summary>
+      <p>Junyan: &ldquo;"Yes, ship it" (2026-10-31, relayed by the boss)&rdquo;</p>
+      <p><strong>Why.</strong> Maryna Stupak's in_1UVd7OPunGOWPTflXxUEsbh9 ($107.35) was paid from the Charges tab's Charge card on file on 2026-10-30 and nothing was written on her Actions row, so it never closed and Skedda was never settled.</p>
+      <p><strong>Route.</strong> After a paid press the Deck re-reads the invoice and, on each row it bills (deck_action or a combined dl_ line), writes <code>You · &lt;stamp&gt; · CHARGED — Stripe in_… $X on &lt;card&gt; (charged the card on file) [INVOICE-PAID-V1:in_…]</code>, and closes an open row Processed, Verified, proof type paid. A closed row gets the line only. Held INVOICE-CHASE reminders for the row are retired.</p>
+      <p><strong>Failure mode.</strong> A failed write never undoes or blocks the charge; the press answer carries <code>recorded.errors</code>, and the event-gate money round (paid_proof_close) marks and closes the row within about 10 minutes.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-31</span>
       <h3>Intake joins a renter's open same-SOP ticket instead of trusting new_because, and asks on a vague day<span class="kind">responder &middot; route &middot; intake_decide.artist_ticket_match, the-responder.md intake form, concierge-orchestration.md, studio-tickets-intake.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1522">desk-correspondence #1522</a></span></h3></summary>
       <p><strong>Case.</strong> Parmida Azizi, 2026-10-31: three Sales tickets for one booking (40975032-81c4-81a1, 40a75032-81c4-8163, 40a75032-81c4-81d8). Her 3:29 PM nudge opened the third with a false new_because "No open ticket matched".</p>
       <p><strong>What broke.</strong> <code>artist_ticket_match</code> looped <code>for board in (SALES, CC)</code>, overwriting its <code>board</code> argument, so the ticket-174 same-renter-same-SOP join never matched a Sales ticket; and any <code>new_because</code> of 10+ characters opened a stub even when an open ticket fit.</p>
