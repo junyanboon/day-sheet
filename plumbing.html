@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>A booking's unpaid row closes on Skedda paid, fees still need Stripe, and no row is raised before the booking day is over<span class="kind">The Stale Sweep &middot; route &middot; services/event-gate/stale_sweep.py paid_booking fee_row, services/event-gate/unpaid_review.py inspect apply, library/studio-tickets-bookings.md, library/autonomy.md, d84, d85 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1500">desk-correspondence #1500</a></span></h3></summary>
+      <p>Junyan: &ldquo;d84 "yes let's use Skedda unless it is some kind of special fee outside of the calendar"; d85 "yes" (2026-10-30)&rdquo;</p>
+      <p><strong>Why.</strong> Since d380 (2026-10-17) a money row about a booking stayed open until Stripe showed the payment, even when Skedda already read the booking paid, and the unpaid-booking review raised "Review unpaid booking" rows days before the booking happened.</p>
+      <p><strong>Route change.</strong> The Stale Sweep closes a booking's own money row when every Skedda booking it names reads paid (payment_status 3), with no Stripe read; a $0 booking still closes Cancelled as before. A fee row (a Stripe-invoice contract, a room or price difference, an extra-move, deferral or late fee) still closes only on Stripe. The unpaid-booking review treats a booking Skedda reads paid as paid (no "Review payment evidence" row), and raises no new "Review unpaid booking" or "Review payment evidence" row until the booking's Toronto day is over; existing rows are still kept current.</p>
+      <p><strong>Failure mode.</strong> A fee row whose Stripe read fails or shows nothing is carried with no write, as before. A booking still unpaid after its day ends gets its row on the first pass after 10:00 Toronto the next day (the review reads yesterday onward). Until then the Deck's Charges tab still lists it live from Skedda, so nothing owed goes unseen. The Desk Sort's close gate is unchanged and still asks for Stripe.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>Forgot to Arm reminders to staff send without a Deck press<span class="kind">event-gate &middot; route &middot; overtime_sweep.fta_reminder, overtime_sweep.staff_autorelease, lane_common.STAFF &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1498">desk-correspondence #1498</a></span></h3></summary>
       <p><strong>Rule.</strong> Junyan, 2026-10-30: "this can be automatic it doesn't even need staff approval because it's internal."</p>
       <p><strong>Change.</strong> The Timekeeper's Step 10 T2 (Forgot to Arm, Case B) is still queued at Pending Review and re-read. When the recipient's Artist card is on the staff roster, it is then moved to Ready to Send with Send After inside 09:00 to 21:00 Toronto, and the ticket's ask says nothing is needed. Renter recipients stay held. Switch: <code>STAFF_REMINDER_AUTOSEND_DISABLED=1</code>.</p>
