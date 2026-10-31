@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-30</span>
+      <h3>event-gate can ask the Deck to run the Send Engine now, on its own releases (SEND_KICK_ON_RELEASE) and every 15 s for due rows still waiting (DUE_WATCH_LIVE); both off until switched on<span class="kind">event-gate &middot; route &middot; services/event-gate/send_kick.py, app.py (send_kick.install, start_watcher), test_send_kick.py; deck-app POST /api/send-kick (PR 567); send-engine v48 (PR 68) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1489">desk-correspondence #1489</a></span></h3></summary>
+      <p>Junyan: &ldquo;"d15 yes, d16 yes, d17 yes, d19 yes, d20 yes" (2026-10-30)&rdquo;</p>
+      <p><strong>Why.</strong> Texts released by a robot, or by hand in Notion, waited for the Send Engine's next minute run; only a Deck Send kicked it.</p>
+      <p><strong>Route.</strong> D: when a Notion write event-gate makes returns a Message Queue row at Ready to Send with no future Send After, event-gate posts POST /api/send-kick (path kick) on its own thread. E: every 15 s one query for Ready to Send rows that are due; any found, one POST /api/send-kick (path watch). The Deck sets its SendKick alarm and the Send Engine runs main with every check. Caps: 2 kicks per row, 60 kicks an hour, D and E together. The every-minute trigger is unchanged. Each sent row's Reasoning ends with "[sent-by &lt;time&gt;] kick|watch|minute|manual", so a slow fast path shows which robot it was.</p>
+      <p><strong>Failure mode.</strong> A failed kick or query is logged (send_kick, due_watch_failed) and changes nothing: the minute run still sends. Nothing here writes a queue row or sends.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>Send right away retries a locked run once after 15 s, tells the Send Engine which path started it, and takes kicks from event-gate on POST /api/send-kick<span class="kind">The Deck &middot; route &middot; deck-app src/send-kick.js (runSendEngine path and result, SendKicker locked retry), src/robot-charge.js robotSendKick, src/index.js POST /api/send-kick, test/send-kick.test.js; send-engine v48 (PR 68) &middot; <a href="https://github.com/junyanboon/deck-app/pull/567">deck-app #567</a></span></h3></summary>
+      <p>Junyan: &ldquo;"d15 yes, d16 yes, d17 yes, d19 yes, d20 yes" (2026-10-30)&rdquo;</p>
+      <p><strong>Why.</strong> A kick that lands while the every-minute run holds the Send Engine's lock used to do nothing, so that text waited for the next minute.</p>
+      <p><strong>Route.</strong> The Deck calls main with one parameter, the path ("kick" after a Deck Send, "watch" from event-gate's due watcher). The v48 engine answers "locked" or "ran". On "locked" the SendKick object sets one more alarm 15 s later, once per kick. kick-status now shows the last run's path and result. POST /api/send-kick (bearer ROBOT_CHARGE_TOKEN, the robot routes' token) lets event-gate ask for the same run; it only sets the alarm.</p>
+      <p><strong>Failure mode.</strong> A refused or failed kick changes nothing: the every-minute run still sends. A wrong or missing token gets 401 or 503 and no run.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
       <h3>A reply in a Customer Care thread joins its open ticket instead of opening a new stub<span class="kind">The Responder &middot; route &middot; scripts/intake_decide.py direct_email_ticket artist_ticket_match &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1486">desk-correspondence #1486</a></span></h3></summary>
       <p>Junyan: &ldquo;d16 yes&rdquo;</p>
       <p><strong>Why.</strong> Nicholas Walsh's 2026-10-30 5:04 PM reply (Gmail 1a18ea143f0729ab, thread 19f96f5c2336b19e) sat on open Care ticket 40975032-81c4-8150-a664-d760b81c0da2, keyed on his first message, but intake opened duplicate stub 40975032-81c4-8188-b5f4-fe4bd704486f. The lookup through earlier mails in the same thread (d108) ran for Sales stubs only.</p>
