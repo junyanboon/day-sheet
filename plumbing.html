@@ -1364,6 +1364,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>Notion text pieces stop at 1900, counted the way Notion counts (emoji = 2)<span class="kind">shared (ticket_edit, sop_attach, Desk Invariants, auto-review, the Analyst) &middot; failure &middot; scripts/notion_text.py LIMIT, services/event-gate/notion_text.py, invariants._rich_text, auto_review.done_text, analyst_sweep.notion_title &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1508">desk-correspondence #1508</a></span></h3></summary>
+      <p>Junyan: &ldquo;approved 2026-10-30 ("75 yes I don't want them to get clsoe to the 2000 limit")&rdquo;</p>
+      <p><strong>Why.</strong> Notion refuses a text piece over 2000 UTF-16 units, and an emoji counts 2. sop_attach.py hit HTTP 400 at 2001 on Parmida Azizi's ticket (fixed in #1469). Three event-gate writers still cut by Python characters at exactly 2000: Desk Invariants' rich text, the auto-review step tick, and the Analyst's ticket title rename.</p>
+      <p><strong>Change.</strong> The shared splitter stops at 1900 units, leaving 100 of room. event-gate gets its own copy (its image cannot import scripts/), kept identical by a test. The three writers use it. The auto-review tick now cuts the step text and keeps its done marker, which the old cut could drop.</p>
+      <p><strong>Failure mode.</strong> Very long text splits into one more piece, or a very long title is cut 100 units sooner.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-30</span>
+      <h3>Handback sweep names an unreadable parked ticket and keeps going; Run Error rows carry the error's own words<span class="kind">handback-sweep &middot; failure &middot; EVENT-GATE handback_sweep.inventory, handback_sweep.run, handback_sweep._err &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1497">desk-correspondence #1497</a></span></h3></summary>
+      <p>Junyan: &ldquo;asked 2026-10-30 (Robots tab Fix in Claude: "handback-sweep (Hostinger) has stopped (4h 47m late)")&rdquo;</p>
+      <p><strong>Why.</strong> From 16:49 Toronto on 2026-10-30 every pass failed with only <code>[{"source": "screenshots", "kind": "ValueError"}]</code> on its Run Error row (26 failed passes by 20:57). No heartbeat was stamped, so the Robots tab said stopped, and nothing on the row said which ticket or why.</p>
+      <p><strong>Change.</strong> In the screenshots step, a parked ticket that cannot be read is listed under <code>unreadable</code> (ticket, title, error kind, error words) and skipped; the other tickets are still read and the pass still checks in. The tick log line names each one. Only when every parked ticket fails is the step an error. Every error entry now carries <code>detail</code>, the error's own words, so the Run Error row says why.</p>
+      <p><strong>Failure mode.</strong> A ticket that keeps failing is skipped every pass until someone reads the log line; its screenshots are not listed meanwhile.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-10-30</span>
