@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-01</span>
+      <h3>The Send Engine works soonest first, says why it holds a row, and never sends a late AVA or EOB<span class="kind">Send Engine &middot; failure &middot; send-engine Code.gs v51 (orderRows_, holdRow_, lateHold_, processRow_), send-engine PR 71, d31 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1545">desk-correspondence #1545</a></span></h3></summary>
+      <p>Junyan: &ldquo;31 yes (2026-11-01)&rdquo;</p>
+      <p><strong>Why.</strong> On 11/01 nothing sent from 12:48 PM to past 5:30 PM Toronto. event-gate's duplicate check took 24 s to 379 s, longer than the engine's 60 s wait, so each run held one head row as "could not be read" and spent its time there; the rows behind it never reached the check, and no hold left a trace.</p>
+      <p><strong>Route change.</strong> Due rows go soonest Send After first (a row a person released with no Send After goes first). A row held in the last 30 minutes waits behind the others.</p>
+      <p><strong>Failure mode.</strong> Every row left unsent logs "HELD, not sent: why", and its last reason is kept in the Script Property ENGINE_HOLDS (run <code>engineHolds()</code> in the editor to list them). After one event-gate timeout, the rest of that run holds at once with a reason. An AVA past its booking start (Send After + 2 h) or an EOB past its booking end (Send After + 15 min) goes back to Pending Review with a <code>[late-hold]</code> Reasoning line, never sent late. While event-gate's check stays over 60 s, rows still hold (fail closed). To undo, revert PR 71 and run <code>clasp push</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
+      <h3>The Send Engine's duplicate check only warns; the FBS monitor goes red on kills, pauses and late rows<span class="kind">Send Engine &middot; failure &middot; send-engine Code.gs v52 (processRow_, gatePause_, noteLateRows_, engineTrouble_), Heartbeat.gs, send-engine PR 72 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1546">desk-correspondence #1546</a></span></h3></summary>
+      <p>Junyan: &ldquo;"24 turn it off and keep it off. I only want warnings not blocks" (2026-11-01)&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-11-01 no queue row went out after 12:48 Toronto. event-gate's /message-dispatch-check took 50 to 60 s (11 to 13 Notion reads, each waiting about 4.5 s in event-gate's shared Notion line), which is Google's 60 s limit for one call. Calls timed out or runs were killed inside them (11 kills from 04:05), the engine paused its event-gate calls for 10, 20, 40 and 60 minutes, and every row whose duplicate check could not be read waited (v46). The Run Monitor still said complete, so the FBS monitor stayed green, and the pause email goes once a day.</p>
+      <p><strong>Route change.</strong> The duplicate check no longer holds a row: a hand-sent match, an unreadable answer or a paused gate is one <code>[duplicate-warning]</code> line in Reasoning and the row sends. An EOB reminder whose live booking check says expired or retimed still does not go (Junyan: "If their booking was cancelled or moved then the EOB text is moot and shouldn't go out"); a check that cannot answer warns and the reminder sends. The v51 holds for a slow event-gate (the rest of the run held at once, a timed-out row held) are now warnings too.</p>
+      <p><strong>Failure mode.</strong> The Run Monitor row's Last Outcome is <code>failed</code>, with a plain reason, when a run was stopped inside an event-gate call, the gate is paused, or a due Ready to Send row is over 10 minutes late; the FBS monitor shows it. The pause email goes on the first kill of each run of pauses. A true double text can now go out with a warning on the row instead of being held. To undo, revert send-engine PR 72 and run <code>clasp push</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
       <h3>Coverage watch takes a cancelled Open Shifts row's Need event off the Staff calendar<span class="kind">The Deck &middot; failure &middot; deck-app src/coverage-preparation.js cancelledNeedTargets/clearCancelledNeeds, src/coverage_run.js runCoverage, src/coverage.js plan suppressed, test/coverage-cancelled.test.js; pairs with event-gate PR 1542 &middot; <a href="https://github.com/junyanboon/deck-app/pull/601">deck-app #601</a></span></h3></summary>
       <p>Junyan: &ldquo;"19 yes" (2026-11-01)&rdquo;</p>
       <p><strong>Why.</strong> Ticking Cancelled on an Open Shifts row left its "Need ..." event on the Staff Scheduling calendar (Scott Vandenberg's 09:00 and 10:00 slots, 2026-11-01).</p>
@@ -3920,6 +3940,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> From 02:07 to 12:04 Toronto on 10/20, and from 21:46 on 10/20 to 07:57 on 10/21, every engine run was killed at Google's 6-minute limit (about 200 kills). event-gate was jammed (its own requests took over an hour), and the engine's call to it for the EOB check never came back, so no row behind that one went out. Apps Script cannot put a timeout on a call.</p>
       <p><strong>Route change.</strong> None. Rows go out the same way, with the same guards in the same order.</p>
       <p><strong>Failure mode.</strong> Each engine call to event-gate leaves a mark while it runs. When a run is killed inside the call, the next run finds the mark and pauses event-gate calls for 10 minutes, then 20, 40 and 60 while it keeps happening. A call that times out pauses them too. While paused, EOB reminders wait unclaimed, and the duplicate and reply checks are skipped with a warning on the row, which then sends (the same as when event-gate is down). The call that closes a granted reply reservation is always made. A run that tries event-gate again after a pause can still be killed if event-gate is still jammed. That is one kill per pause, not one every 6 minutes. One alert email a day: "[Send Engine] event-gate not answering, its checks are paused". No event-gate call starts unless a 60 s call still fits in the 6 minutes. To end a pause by hand, delete the Script Property GATE_PAUSED_UNTIL. To undo, revert PR 61 and run <code>clasp push</code>.</p>
+      <p><strong>Update 2026-11-01 (v51, Junyan d24: "I only want warnings not blocks").</strong> A pause no longer stops any row but an EOB reminder: the duplicate check is skipped with a warning and the row sends. See <code>2026-11-01-duplicate-check-warns-only.md</code>.</p>
     </details>
     </li>
     <li class="entry det">
