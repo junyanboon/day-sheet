@@ -1375,6 +1375,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-31</span>
+      <h3>GitHub token expiry check moves to the Treasurer, and the insurance sweep goes fully live<span class="kind">The Treasurer &middot; route, failure &middot; desk-correspondence services/event-gate/github_tokens.py, treasurer_sweep.py, insurance_sweep.py, services/finance-watch/finwatch/monthly.py, library/the-treasurer.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1536">desk-correspondence #1536</a></span></h3></summary>
+      <p>Junyan: &ldquo;Personal finance check shouldn't have github token expires that should be moved to treasurer." and "insurance check should be on regular mode.. what's the point if it's in test mode.&rdquo;</p>
+      <p><strong>Why.</strong> The studio's GitHub tokens were checked by Junyan's personal finance job, which emailed him from his own account. Studio work belongs with the studio's Treasurer. The insurance sweep's per-event check was still in shadow.</p>
+      <p><strong>Route.</strong> On the 1st the Treasurer code pass reads <code>github-tokens.yaml</code> from the event-gate state folder and files one Review row on the Actions board when a token is due (<code>[GH-TOKENS-YYYY-MM]</code>). finance-monthly no longer checks tokens and no longer needs <code>tokens.yaml</code>. The insurance sweep's per-event after-booking check is now the default; <code>INSURANCE_PER_EVENT_MODE=shadow</code> turns it back.</p>
+      <p><strong>Failure mode.</strong> A missing or unreadable token file files one "GitHub token check could not run" Review row a month, and never stops the money pass.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-31</span>
+      <h3>The chase sweep chases unsigned Deck agreements from the day after the link email was Sent, and moves the Sales ticket to Gate: Artist<span class="kind">Chase sweep &middot; cadence &middot; desk-correspondence services/event-gate/chase_sweep.py (deck_agreement_lane), test_chase_sweep.py, library/rental-agreement-onboarding.md § 2b step 3 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1534">desk-correspondence #1534</a></span></h3></summary>
+      <p>Junyan: &ldquo;d164 approved (2026-10-31, relayed by the boss); d165, d166&rdquo;</p>
+      <p><strong>Why.</strong> Canon § 2b step 3 says "sent" means the link email row is Sent, but the Deck lane counted from when the link was made and skipped cards whose link went by email, so unsigned Deck agreements were not chased.</p>
+      <p><strong>Route.</strong> The lane reads each Pending Review <code>[deck-agreement]</code> row's newest approval and its <code>queued</code> link email row. When that row is Sent and there is no <code>agreed</code> or later <code>revoked</code> event, it queues held <code>AGREEMENT-CHASE-&lt;n&gt;</code> Email rows: the first the day after the Sent At (Toronto), then every 2 days, up to 5, then a capped Review row. It moves the card's one Sales Ticket from Gate: Staff to Gate: Artist. The hand-sent follow-up of 2026-10-31 to three renters (d165) counts as their chase 1.</p>
+      <p><strong>Failure mode.</strong> A Notion read error fails the lane for that pass and writes nothing for that card. A ticket move error is logged and the chase still runs. Nothing is sent: every row is Pending Review. Kill switch CHASE_SWEEP_DISABLED=1 stops the whole sweep.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-31</span>
       <h3>Overtime counts from the last of back-to-back bookings, and a missing Skedda write no longer stops the overtime notice<span class="kind">event-gate &middot; route &middot; services/event-gate/closing_overtime.py miss_text, library/studio-tickets-bookings.md "One window for back-to-back bookings" and "No Skedda write is no reason to stop" &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1533">desk-correspondence #1533</a></span></h3></summary>
       <p>Junyan: &ldquo;"d46" approved (2026-10-31)&rdquo;</p>
       <p><strong>Why.</strong> Saneea Clarke, Studio 527, Oct 30 to 31: two back-to-back bookings (123412170, 9 PM to midnight, and 123412167, midnight to 2 AM). Her overtime ticket named the first booking and its midnight end, then parked at Gate: Staff on the Skedda booking step the cloud Concierge cannot do. No overtime notice was drafted and the plain thank-you went out at 3 AM with no overtime line.</p>
