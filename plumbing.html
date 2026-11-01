@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-01</span>
+      <h3>Coverage watch takes a cancelled Open Shifts row's Need event off the Staff calendar<span class="kind">The Deck &middot; failure &middot; deck-app src/coverage-preparation.js cancelledNeedTargets/clearCancelledNeeds, src/coverage_run.js runCoverage, src/coverage.js plan suppressed, test/coverage-cancelled.test.js; pairs with event-gate PR 1542 &middot; <a href="https://github.com/junyanboon/deck-app/pull/601">deck-app #601</a></span></h3></summary>
+      <p>Junyan: &ldquo;"19 yes" (2026-11-01)&rdquo;</p>
+      <p><strong>Why.</strong> Ticking Cancelled on an Open Shifts row left its "Need ..." event on the Staff Scheduling calendar (Scott Vandenberg's 09:00 and 10:00 slots, 2026-11-01).</p>
+      <p><strong>Route.</strong> Each coverage run (every 15 min) reads Open Shifts rows ticked Cancelled in the next four days. For each one with no Claimed By, it finds the one Need event with the same role, studio and window (the Host intent eventId first) and deletes it. The same window is kept out of the run's placeholder creates, so a sibling Need cannot put it back.</p>
+      <p><strong>Failure mode.</strong> Never touches a claimed row or a Need with a named staff block on its window (e.g. "Ela FBS ..."). Two matching Need events is an error in coverage:last, nothing deleted. An event already gone (404/410) counts as done, so reruns are safe. Dry mode only counts (cleared.wouldDelete). A Notion read failure is logged and the rest of the run goes on.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
       <h3>A past Skedda booking counts as a room visit only when the renter's code opened the door<span class="kind">event-gate &middot; failure &middot; EVENT-GATE booking_sweep.py, library/support-ladder.md, d12 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1543">desk-correspondence #1543</a></span></h3></summary>
       <p>Junyan: &ldquo;d12 "door codes is the right call."&rdquo;</p>
       <p>The ladder's Skedda visit count now checks the door ledger (alarm-mcp <code>/door-history</code>) for each earlier booking in the room: it counts only when the holder's own code disarmed that room from 30 minutes before the start to the end. Booked but never came is no visit and still gets the full set of texts. If the door read fails, the board's Complete rows decide, as before; a failed read never counts as a visit.</p>
