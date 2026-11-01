@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-31</span>
+      <h3>An agreement renter's "first visit to this room" needs real booking history, and a booking already started gets no new row or text<span class="kind">event-gate &middot; route, failure &middot; EVENT-GATE booking_sweep.py (agreement_rung, prior_room_bookings, _process_room), host_sweep.py tier_for &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1529">desk-correspondence #1529</a></span></h3></summary>
+      <p>Junyan: &ldquo;d5 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-31 Maryna Stupak (Fixed Option, weekly 509A Saturdays since Sep 12) was tiered FBS "agreement renter, first visit to this room" and got a board row plus a held merged confirmation and access text at 7:37 PM for a booking that ended at 1:15 PM. The d23 rule counted Complete FBS board rows, and agreement renters are never put on that board, so every one read as zero visits.</p>
+      <p><strong>Route change.</strong> Zero Complete board rows no longer means a first visit. The rung says first visit only when the booking history proves none: no earlier occurrence of the same Skedda series, and no earlier Skedda booking by the same holder in that room in the last 40 days. If that cannot be read (no holder id, Skedda read fails, board read fails) the answer is record-only. The Registrar no longer creates a board row, a confirmation or an access text for a booking whose start has already passed (steps <code>board:past-booking</code>, <code>confirmation:past-booking</code>, <code>hta:past-booking</code>); an existing board row is still kept current.</p>
+      <p><strong>Failure mode.</strong> An unreadable history gives record-only, so a genuinely new agreement renter in a room may miss the full set when Skedda is down; the desk sees no FBS row for them. Nothing is sent by this change.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-31</span>
       <h3>A renewal ticket cannot close while the Artist card is behind, and the "card not moved" check runs daily<span class="kind">The Concierge, The Treasurer &middot; failure &middot; scripts/ticket_edit.py, scripts/renewal_close_guard.py, EVENT-GATE agreement_end.py, treasurer_sweep.py, library/the-treasurer.md, d32, d33 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1528">desk-correspondence #1528</a></span></h3></summary>
       <p>Junyan: &ldquo;31 yes, 32 yes, 33 yes&rdquo;</p>
       <p><strong>Why.</strong> Shamir Panchal signed his Time Slot renewal on 2026-09-28 and the ticket closed Won, but his Artist card still ended 2026-10-31, so a wrong How-to-Access went out on Nov 1.</p>
