@@ -1367,6 +1367,22 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-01</span>
+      <h3>Send right away kicks name themselves, so the Deck stops refusing them<span class="kind">event-gate &middot; failure &middot; EVENT-GATE send_kick.py, d15 to d20 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1541">desk-correspondence #1541</a></span></h3></summary>
+      <p>Junyan: &ldquo;10 yes&rdquo;</p>
+      <p>event-gate's release kick and 15 s due watcher now send a <code>DanceAnnex-SendKick/1.0</code> User-Agent when they POST the Deck's <code>/api/send-kick</code>. Without it, Cloudflare in front of fbs.danceannex.ca answered 403 to urllib's default <code>Python-urllib</code> name, so every kick failed and released rows waited for the Send Engine's minute run. Origin: 23 kicks in 3 hours on 2026-11-01, all HTTP 403, Avishek's HTA-sweep-1101-1700-509B among the rows left waiting.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
+      <h3>Regulars are no longer reset to first-timers, and AVA/EOB re-check the tier<span class="kind">event-gate &middot; failure &middot; EVENT-GATE booking_sweep.py, EVENT-GATE host_sweep.py, library/support-ladder.md, d2, d5 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1539">desk-correspondence #1539</a></span></h3></summary>
+      <p>Junyan: &ldquo;d2 "Let's do after 60 days away instead to give more time.", d5 yes&rdquo;</p>
+      <p>The room timer is 60 days, not 40. A visit now also counts when the booking holder has an earlier Skedda booking in the same room inside those 60 days, so renters who were never board rows (agreement renters) are not read as away; the Registrar now gives the ladder the booking so it can look. The AVA and EOB lane re-reads the board row's Type of Booking and the card's Support Override right before it queues, and queues nothing when either says Self Serve or the read fails. Origin: the 2026-11-01 overnight sweep queued HTA/AVA/EOB for Shamir Panchal, Carlos and Alison Murray and others (22 rows marked Will Not Send), and AVA/EOB for Nicholas Walsh two minutes after he was retyped Self Serve.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
       <h3>Charges gets a By renter view; invoice + message, Charge card, Plan, Late fee, Move fee and Remind<span class="kind">The Deck &middot; route &middot; deck-app src/renter-bill.js, src/renter-plan.js, src/renter-remind.js, src/by-renter.js, src/late-fee.js, src/late-fee-mark.js, src/renter-fee.js, src/index.js /api/renter/*, /api/charge/add-fee, test/renter-bill.test.js, test/charges-by-renter.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/600">deck-app #600</a></span></h3></summary>
       <p>Junyan: &ldquo;"keep the current version I have but also have a second tab for by the renter as well" (2026-11-01); d2, d3, d4 yes&rdquo;</p>
       <p><strong>Why.</strong> Junyan wants each renter's charges, open invoices and monthly plans in one place, and to bill all of a renter's lines with one invoice and one message.</p>
