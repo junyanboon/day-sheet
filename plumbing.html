@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-31</span>
+      <h3>A facilitator under an agreement holder always gets a board row and climbs their own ladder<span class="kind">Booking sweep &middot; failure &middot; desk-correspondence services/event-gate/booking_sweep.py arriving_record_only, test_facilitator_agreement_ladder.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1532">desk-correspondence #1532</a></span></h3></summary>
+      <p>Junyan: &ldquo;"15 yes obviously" (2026-10-31, Fixer)&rdquo;</p>
+      <p><strong>Why.</strong> Since PR 1531 a facilitator with one Complete visit in the room inside 40 days was skipped as record-only, so their count stopped at 1 and after 40 days they read as away and got the full HTA again about every 6 weeks.</p>
+      <p><strong>Route.</strong> A booking with a real <code>[Facilitator: Name]</code> who is not the holder is never record-only: every booking gets a board row on the facilitator's card, and the normal ladder (support-ladder.md) sets FBS, Monitor Only or Self Serve per person and room. Holder-only agreement bookings stay record-only. Confirmation still goes to the holder.</p>
+      <p><strong>Failure mode.</strong> An unresolvable or ambiguous label falls back to the holder's rung as before. A visit read failure reads as a first visit. Support Override on the facilitator's card still wins. A started booking still gets no new row.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-31</span>
       <h3>A facilitator under an agreement holder gets a board row, codes and their own visit count<span class="kind">The Registrar &middot; route &middot; EVENT-GATE booking_sweep.py arriving_record_only, test_facilitator_agreement_ladder.py, d11 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1531">desk-correspondence #1531</a></span></h3></summary>
       <p>Junyan: &ldquo;11 yes&rdquo;</p>
       <p><strong>Why.</strong> A <code>[Facilitator: Name]</code> booking under an agreement holder (Nicholas Walsh, Fixed Option) was judged on the holder's card, so it read record-only: no board row, no visit count, and since #1529 a brand-new facilitator got no codes at all. Junyan: "If Nicholas never comes in he should never be given a counter."</p>
