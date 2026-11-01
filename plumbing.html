@@ -1367,6 +1367,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-01</span>
+      <h3>A past Skedda booking counts as a room visit only when the renter's code opened the door<span class="kind">event-gate &middot; failure &middot; EVENT-GATE booking_sweep.py, library/support-ladder.md, d12 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1543">desk-correspondence #1543</a></span></h3></summary>
+      <p>Junyan: &ldquo;d12 "door codes is the right call."&rdquo;</p>
+      <p>The ladder's Skedda visit count now checks the door ledger (alarm-mcp <code>/door-history</code>) for each earlier booking in the room: it counts only when the holder's own code disarmed that room from 30 minutes before the start to the end. Booked but never came is no visit and still gets the full set of texts. If the door read fails, the board's Complete rows decide, as before; a failed read never counts as a visit.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
       <h3>Send right away kicks name themselves, so the Deck stops refusing them<span class="kind">event-gate &middot; failure &middot; EVENT-GATE send_kick.py, d15 to d20 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1541">desk-correspondence #1541</a></span></h3></summary>
       <p>Junyan: &ldquo;10 yes&rdquo;</p>
       <p>event-gate's release kick and 15 s due watcher now send a <code>DanceAnnex-SendKick/1.0</code> User-Agent when they POST the Deck's <code>/api/send-kick</code>. Without it, Cloudflare in front of fbs.danceannex.ca answered 403 to urllib's default <code>Python-urllib</code> name, so every kick failed and released rows waited for the Send Engine's minute run. Origin: 23 kicks in 3 hours on 2026-11-01, all HTTP 403, Avishek's HTA-sweep-1101-1700-509B among the rows left waiting.</p>
