@@ -1366,6 +1366,14 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-11-01</span>
+      <h3>An overtime charge is never mistaken for a prepaid-hours card<span class="kind">event-gate &middot; failure &middot; EVENT-GATE plan_allowance_sweep.py, EVENT-GATE invoice_settle.py, library/desk-sort.md, d23 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1535">desk-correspondence #1535</a></span></h3></summary>
+      <p>Junyan: &ldquo;23 yes&rdquo;</p>
+      <p>The prepaid-hours bot no longer stamps its <code>held;</code> line or a Plain ask on overtime rows (<code>[ot:</code>, a <code>Skedda block</code>) or rows the Timekeeper raised. The charge settle sweep now skips a row as prepaid only when its Basis carries the bot's real card marker, and never on a <code>Skedda block</code>, so a Deck overtime charge always gets its Skedda booking marked paid. Origin: overtime on Skedda block 123739957, charged 2026-10-30, left unpaid in Skedda.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-10-31</span>
       <h3>Overtime counts from the last of back-to-back bookings, and a missing Skedda write no longer stops the overtime notice<span class="kind">event-gate &middot; route &middot; services/event-gate/closing_overtime.py miss_text, library/studio-tickets-bookings.md "One window for back-to-back bookings" and "No Skedda write is no reason to stop" &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1533">desk-correspondence #1533</a></span></h3></summary>
       <p>Junyan: &ldquo;"d46" approved (2026-10-31)&rdquo;</p>
