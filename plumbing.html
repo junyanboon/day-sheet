@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-01</span>
+      <h3>Charges gets a By renter view; invoice + message, Charge card, Plan, Late fee, Move fee and Remind<span class="kind">The Deck &middot; route &middot; deck-app src/renter-bill.js, src/renter-plan.js, src/renter-remind.js, src/by-renter.js, src/late-fee.js, src/late-fee-mark.js, src/renter-fee.js, src/index.js /api/renter/*, /api/charge/add-fee, test/renter-bill.test.js, test/charges-by-renter.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/600">deck-app #600</a></span></h3></summary>
+      <p>Junyan: &ldquo;"keep the current version I have but also have a second tab for by the renter as well" (2026-11-01); d2, d3, d4 yes&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wants each renter's charges, open invoices and monthly plans in one place, and to bill all of a renter's lines with one invoice and one message.</p>
+      <p><strong>Route.</strong> "Invoice all N + message" and Send invoices make ONE Stripe invoice for the renter's lines (each fee its own line), finalize it with auto_advance off, put its pay.danceannex.ca link in the text or email, and send that through the Messages tab's own send (sendText or sendEmail, held-message rules and the outbound guard apply). Invoice only has Stripe email it. Remind queues one reminder text at Pending Review for the owner's Send (never sends). Charge card takes one payment for the lines on the card on file (X-Deck-Press, owner only). Plan makes a Stripe subscription schedule that ends after the last payment. Late fee and Move fee (renter card only) each make their own Pending Review Charge row for that renter, tagged [DECK-FEE-V1:&lt;press&gt;] so a retry never makes two. The owner's press has no amount cap (Junyan 2026-11-01); a robot charge keeps CHARGE_MAX_CAD.</p>
+      <p><strong>Failure mode.</strong> All or nothing (d18): a message that cannot go is refused before Stripe is touched; a missing link or a refused send voids the invoice and marks no row ("Renter invoice stopped, nothing went out"). Every Stripe write carries an idempotency key from the rows and the total, so a second press reuses the same object.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
       <h3>An overtime charge is never mistaken for a prepaid-hours card<span class="kind">event-gate &middot; failure &middot; EVENT-GATE plan_allowance_sweep.py, EVENT-GATE invoice_settle.py, library/desk-sort.md, d23 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1535">desk-correspondence #1535</a></span></h3></summary>
       <p>Junyan: &ldquo;23 yes&rdquo;</p>
       <p>The prepaid-hours bot no longer stamps its <code>held;</code> line or a Plain ask on overtime rows (<code>[ot:</code>, a <code>Skedda block</code>) or rows the Timekeeper raised. The charge settle sweep now skips a row as prepaid only when its Basis carries the bot's real card marker, and never on a <code>Skedda block</code>, so a Deck overtime charge always gets its Skedda booking marked paid. Origin: overtime on Skedda block 123739957, charged 2026-10-30, left unpaid in Skedda.</p>
