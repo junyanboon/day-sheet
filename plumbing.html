@@ -1375,6 +1375,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-10-31</span>
+      <h3>Signing on the Deck agreement page now renews the Artist card itself (end date, monthly instalment)<span class="kind">The Deck &middot; failure &middot; deck-app src/agreements.js cardChanges, artistCardStep, nextSteps step artistcard; src/agreements-io.js artistCard, setArtistCard; test/agreements-artist-card.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/599">deck-app #599</a></span></h3></summary>
+      <p>Junyan: &ldquo;"yes of course" (2026-10-31, d11)&rdquo;</p>
+      <p><strong>Why.</strong> Khalid Roach-McLeod signed his 2027 agreement in the Deck on 2026-10-30 and his card kept the old Monthly Instalments ($1,762.80, not $1,993.32); Junyan fixed it by hand.</p>
+      <p><strong>Route.</strong> After the Time Slot Board step, the Deck sets the renter's Artist card as close-pause-change-accounts.md "Renew it" says: Agreement End Date = the agreed term end, Monthly Instalments = the agreed instalment, an old Account Closed On cleared, and on a renewal a One-Off or Pending Close card goes Active. One dated line goes in the card body, then the card is read back. A card already right is not written.</p>
+      <p><strong>Failure mode.</strong> A card that does not read back, or a write Notion refuses, files one Review row for the Ops Lead "Check the Artist card: &lt;name&gt; ... [deck-agree-card:&lt;row&gt;]", no retry. It never writes money, Stripe, Skedda, Alarm.com or messages. Amendments are unchanged (the desk row still lists them).</p>
+      <p>Also: the Time Slot Board dated Notes line now starts with the ISO date (it began "October 30:").</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-31</span>
       <h3>GitHub token expiry check moves to the Treasurer, and the insurance sweep goes fully live<span class="kind">The Treasurer &middot; route, failure &middot; desk-correspondence services/event-gate/github_tokens.py, treasurer_sweep.py, insurance_sweep.py, services/finance-watch/finwatch/monthly.py, library/the-treasurer.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1536">desk-correspondence #1536</a></span></h3></summary>
       <p>Junyan: &ldquo;Personal finance check shouldn't have github token expires that should be moved to treasurer." and "insurance check should be on regular mode.. what's the point if it's in test mode.&rdquo;</p>
       <p><strong>Why.</strong> The studio's GitHub tokens were checked by Junyan's personal finance job, which emailed him from his own account. Studio work belongs with the studio's Treasurer. The insurance sweep's per-event check was still in shadow.</p>
