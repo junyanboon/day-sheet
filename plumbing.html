@@ -1367,6 +1367,42 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-01</span>
+      <h3>Robot offers with a dash, colon or bracket still send, with a warning for Junyan<span class="kind">event-gate &middot; failure &middot; EVENT-GATE paid_booking.release, scripts/artist_card.py, d9, d11 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1550">desk-correspondence #1550</a></span></h3></summary>
+      <p>Junyan: &ldquo;9 yes, 11 yes&rdquo;</p>
+      <p><code>paid_booking.release</code> (paid offer, paid reply, credit offer, viewing replies) no longer holds a message at Pending Review for a dash, a colon outside a link or an unfilled [bracket]. It goes out at its normal Ready to Send / Send After 9 AM status and the row's Reasoning carries a WORDING WARNING for Junyan. Also <code>queue_draft.py --artist auto</code> now takes an Instagram (<code>IG:...</code>) or WhatsApp (<code>WA:...</code> or international number) sender id: one card holding it links, otherwise the draft queues unlinked with a warning instead of refusing. Origin: Jocelyn Bermudez's Instagram reply could not be queued on 2026-11-01.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
+      <h3>A queued text is never parked: Not Before stops holding texts; a text that cannot go is a loud Error<span class="kind">Send Engine &middot; route &middot; send-engine v53 (Code.gs processRow_, SendLater.gs, SmsDelivery.gs), send-engine PR 73 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1548">desk-correspondence #1548</a></span></h3></summary>
+      <p>Junyan: &ldquo;"If it's scheduled it goes out at the scheduled time. You can only park tickets but you can't park a text" (2026-11-01, d26)&rdquo;</p>
+      <p><strong>Why.</strong> Junyan ruled that only tickets can be parked; a queued text goes at its scheduled time. He also ruled "nothing should ever block messages only warn".</p>
+      <p><strong>Route change.</strong> The Send Engine no longer puts a row with a future Not Before back at Pending Review; it writes a warning line and sends at its Send After. A Send later text that failed twice, and a picture text whose link text also failed, become a loud Error with the usual stamp and alert, never Pending Review. Zero open rows had Not Before set when this went in. The Deck's "Not before" button and the Send-Timing Verifier's hold are still to change.</p>
+      <p><strong>Failure mode.</strong> A text queued too early now goes out; the only way to stop it is not to queue it, or to set Send After. To undo, revert send-engine PR 73 and run <code>clasp push</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
+      <h3>Send checks go to the front of event-gate's Notion line again<span class="kind">event-gate &middot; failure &middot; services/event-gate/notion_http.py (PRIORITY_ROUTES), services/event-gate/test_notion_pacing_priority.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1548">desk-correspondence #1548</a></span></h3></summary>
+      <p>Junyan: &ldquo;"Yes, start them" (2026-11-01, the follow-up after the queue stall)&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-11-01 each /message-dispatch-check made 11 to 13 Notion reads and waited about 4.5 s behind robot sweeps for each one, so one check took 50 to 60 s, hit Google's 60 s limit and stalled the Send Engine from 12:48 Toronto. The send checks had waited in line since the EY switch back of 2026-10-25.</p>
+      <p><strong>Route change.</strong> /message-dispatch-check and /message-release-check take the next free turn on the shared Notion line ahead of waiting sweep calls (the PR 1256 rule). The rate cap and 429 cooldowns still hold.</p>
+      <p><strong>Failure mode.</strong> Sweeps may wait a little longer when the line is busy. To undo, set PRIORITY_ROUTES back to an empty set and deploy event-gate.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
+      <h3>One "is this room free" answer for the Responder, and Studio 901 may run back to back<span class="kind">event-gate &middot; route &middot; EVENT-GATE availability.py, POST /availability, scripts/availability_ask.py, d7, d12 to d15 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1551">desk-correspondence #1551</a></span></h3></summary>
+      <p>Junyan: &ldquo;12 no gap required for 901, 13 yes, 14 sure three alternatives is fine, 15 yes correct&rdquo;</p>
+      <p>New read-only route <code>POST /availability</code> (and <code>scripts/availability_ask.py</code> for cloud passes) answers free, taken or unknown for a studio and time, reads the whole day itself (the 11-01 miss came from the end-exclusive MCP range), lists the bookings in the way by id, and offers up to 3 other times in the same room plus other rooms free then. A regular's standing slot reads only "booked". It never blocks a message. The coded paid offer, paid booking and credit offer clash checks now let Studio 901 run back to back (no 15 minute gap); other studios keep it. The Responder calls it before saying any room is open.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
       <h3>The Send Engine works soonest first, says why it holds a row, and never sends a late AVA or EOB<span class="kind">Send Engine &middot; failure &middot; send-engine Code.gs v51 (orderRows_, holdRow_, lateHold_, processRow_), send-engine PR 71, d31 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1545">desk-correspondence #1545</a></span></h3></summary>
       <p>Junyan: &ldquo;31 yes (2026-11-01)&rdquo;</p>
       <p><strong>Why.</strong> On 11/01 nothing sent from 12:48 PM to past 5:30 PM Toronto. event-gate's duplicate check took 24 s to 379 s, longer than the engine's 60 s wait, so each run held one head row as "could not be read" and spent its time there; the rows behind it never reached the check, and no hold left a trace.</p>
