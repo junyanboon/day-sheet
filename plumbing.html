@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-02</span>
+      <h3>The Host texts Junyan when today's renter has no access text, or one was cancelled<span class="kind">event-gate &middot; route &middot; EVENT-GATE host_sweep.hta_coverage, host_sweep.room_rule_warnings, owner_text_release &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1574">desk-correspondence #1574</a></span></h3></summary>
+      <p><strong>Why.</strong> Juliana Juresic (693, 8:00 PM) had a coverage-miss Action at 09:09Z that nobody saw until she texted at 11:53 (Junyan, d6: "let's send a text to me instead since it's too urgent"; d7: "yes").</p>
+      <p><strong>Route change.</strong> A coverage miss for a booking today that has not started still files its Action (now with a plain Ask line) and also queues one owner text on Junyan's card, tagged <code>[owner:&lt;action key&gt;] [sms]</code>, plus at most one <code>:3h</code> reminder about three hours before start. An access row set Will Not Send whose Artist has no Complete board visit to that Studio within the 60-day room timer files a Review Action, and the same text when the booking is today. owner_text_release sends any <code>[sms]</code> row to Ready to Send (the Send Engine texts his phone) instead of Slack, and now accepts Raised by = The Host.</p>
+      <p><strong>Failure mode.</strong> Warning only: nothing is written or sent to the renter, and the queue row is never reopened. A failed text or read is logged and the pass goes on; the minute poll retries a row left at Pending Review for 60 minutes.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-02</span>
       <h3>The Deck retries a Notion read that times out at the gateway<span class="kind">The Deck &middot; failure &middot; deck-app src/notion.js notion(), test/notion-read-retry.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/616">deck-app #616</a></span></h3></summary>
       <p>Junyan: &ldquo;"11 yes" (2026-11-02)&rdquo;</p>
       <p><strong>Why.</strong> Parmida Azizi's Send at 1:20 PM Toronto failed with "Notion 504" on a read after the event-gate check; one gateway timeout ended the Send.</p>
