@@ -1367,6 +1367,41 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-01</span>
+      <h3>The viewing sign-up reply always carries the real invite link, never a placeholder<span class="kind">The Registrar &middot; failure &middot; event-gate viewing_book.py SIGNUP_FALLBACK &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1554">desk-correspondence #1554</a></span></h3></summary>
+      <p>Junyan: &ldquo;d23 (2026-11-01)&rdquo;</p>
+      <p><strong>Why.</strong> If <code>VIEWING_SIGNUP_URL</code> was not set on the VPS, the no-account viewing reply carried the text "[viewing sign-up link]", and since the never-block rule (PR 1550) that would reach a renter. Nobody could confirm the variable is set.</p>
+      <p><strong>Change.</strong> The reply now falls back to the fixed Skedda invite 850380 link (the one that adds tag 866036 "Studio Viewing"). The env var still wins when it is set.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
+      <h3>Send Engine v54 writes event-gate's guard warnings into Reasoning and sends a row that changed mid-check<span class="kind">send-engine &middot; failure &middot; send-engine Code.gs changedRowRecheck_, OutboundGuard.gs outboundGuard_, d43 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1553">desk-correspondence #1553</a></span></h3></summary>
+      <p>Junyan: &ldquo;43 yes, 44 keep, 45 keep&rdquo;</p>
+      <p>An allowed <code>/message-dispatch-check</code> verdict that carries <code>warnings</code> becomes a <code>[duplicate-warning ...]</code> line in the row's Reasoning naming each finding, and the row sends. A row the duplicate check found changed is read again: if it is still Ready to Send with no receipt it is checked once more on its new version and sent, with a <code>[changed-warning ...]</code> line; it is held only when a person set another status (Will Not Send, Pending Review) or it already has a Dispatch Receipt. The unused v47 hand-sent hold (<code>duplicateHold_</code>) is removed. Unchanged: late AVA/EOB to Pending Review, Not Before and deadline-contract timing, the EOB expired/retimed stop.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
+      <h3>Duplicate, history, Skedda and relay checks warn instead of holding a renter message<span class="kind">event-gate &middot; failure &middot; EVENT-GATE outbound_guard.dispatch/prepare/_release_decision, reply_sources.giggster_proxy_route, PR 1547, d43 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1553">desk-correspondence #1553</a></span></h3></summary>
+      <p>Junyan: &ldquo;43 yes, 44 keep, 45 keep&rdquo;</p>
+      <p><code>/message-dispatch-check</code>, <code>/message-release-check</code> and queue-time <code>prepare</code> no longer hold a row for duplicate_held, duplicate_released, queue_changed, conversation_changed, scope_changed, history_*, queue_ambiguous, queue_read_failed, delivery_uncertain, earlier_claim_unknown, staff_replied_after_draft, a Skedda mismatch or unreadable Skedda (booking_state_mismatch / booking_state_unverified), relay_access_unreleased, relay_book_direct, proxy_access_refused or giggster_proxy_unverified. The verdict allows the send and carries the codes in <code>warnings</code> with plain sentences in <code>warning_text</code>; a robot draft that was already answered keeps its status with a warning in Reasoning and History Check. Still held: internal ids and unfilled placeholders, a missing or malformed booking contract and an unrun prepared action, a row that changed during the check, no recipient, a bad address (including a Deck Texts row with no phone number), an empty body, and unknown errors (check_incomplete).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
+      <h3>A queue row with no Artist but a Reply To address can be sent from the Deck<span class="kind">The Deck &middot; failure &middot; deck-app sources/deck.html preflightOf/renderPreflight, test/no-artist-warns.test.js; send-engine v23 and event-gate outbound_guard.recipient already route Email on Reply To &middot; <a href="https://github.com/junyanboon/deck-app/pull/604">deck-app #604</a></span></h3></summary>
+      <p>Junyan: &ldquo;2 yes" (2026-11-01); "any check or guard may only warn; the message still sends and the concern is flagged&rdquo;</p>
+      <p><strong>Why.</strong> Heureuse Lubemba's Tagvenue reply showed the right To address but the Deck said "Can't dispatch yet: Artist not linked", so it sat unsent.</p>
+      <p><strong>Route.</strong> An Email row with no linked Artist and an address in Reply To now passes the Deck check and goes to that address, as the engine and event-gate already route it.</p>
+      <p><strong>Failure mode.</strong> The red box became an amber "Heads up" warning naming the address. Only a row with no Artist and no address at all still cannot go, with a loud "nowhere to send it" note.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
       <h3>The Send-Timing Verifier releases and retimes rows whatever their Not Before<span class="kind">Send-Timing Verifier &middot; failure &middot; services/event-gate/send_verifier.py run_verifier, test_not_before.py, test_send_verifier.py; pairs with send-engine v53 (PR 73) and deck-app Not Before removal &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1552">desk-correspondence #1552</a></span></h3></summary>
       <p>Junyan: &ldquo;30 yes" (2026-11-01); d26 "If it's scheduled it goes out at the scheduled time. You can only park tickets but you can't park a text&rdquo;</p>
       <p><strong>Why.</strong> The verifier left a Pending Review row unreleased while its Not Before was ahead, and skipped the Send After retime on a Ready to Send row under a future Not Before. Texts are never parked (d26).</p>
