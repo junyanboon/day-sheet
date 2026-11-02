@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-02</span>
+      <h3>A Send that fails after the checks leaves a "⚠️ Send failed" warning on the Actions board<span class="kind">The Deck &middot; failure &middot; deck-app src/send-failed.js, src/index.js releaseFailed(), test/send-failed.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/618">deck-app #618</a></span></h3></summary>
+      <p>Junyan: &ldquo;"16 yes" (2026-11-02)&rdquo;</p>
+      <p><strong>Why.</strong> Parmida Azizi's Send at 1:20 PM Toronto passed the event-gate check and then got "Notion 504"; only the card said so, and nothing on the board recorded that the message may not have gone out.</p>
+      <p><strong>Route.</strong> Unchanged. Nothing is blocked and no message is sent or queued by this change.</p>
+      <p><strong>Failure mode.</strong> A Notion or system error after the event-gate check passed files one Actions row "⚠️ Send failed: &lt;renter&gt; &lt;message code&gt; (&lt;error&gt;)", For Junyan, Raised by The Deck, linking the queue row, Artist and ticket. A repeat failure on the same queue row adds a dated line to the open row. The row closes itself (Processed, "Closed: queue row now reads Sent at &lt;time&gt;") on the next Actions read after the queue row reads Sent. The Actions tab lists it under Warnings with an amber tag and two buttons, Open message and Done.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-02</span>
       <h3>The Host texts Junyan when today's renter has no access text, or one was cancelled<span class="kind">event-gate &middot; route &middot; EVENT-GATE host_sweep.hta_coverage, host_sweep.room_rule_warnings, owner_text_release &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1574">desk-correspondence #1574</a></span></h3></summary>
       <p><strong>Why.</strong> Juliana Juresic (693, 8:00 PM) had a coverage-miss Action at 09:09Z that nobody saw until she texted at 11:53 (Junyan, d6: "let's send a text to me instead since it's too urgent"; d7: "yes").</p>
       <p><strong>Route change.</strong> A coverage miss for a booking today that has not started still files its Action (now with a plain Ask line) and also queues one owner text on Junyan's card, tagged <code>[owner:&lt;action key&gt;] [sms]</code>, plus at most one <code>:3h</code> reminder about three hours before start. An access row set Will Not Send whose Artist has no Complete board visit to that Studio within the 60-day room timer files a Review Action, and the same text when the booking is today. owner_text_release sends any <code>[sms]</code> row to Ready to Send (the Send Engine texts his phone) instead of Slack, and now accepts Raised by = The Host.</p>
