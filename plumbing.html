@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-02</span>
+      <h3>The Deck retries a Notion read that times out at the gateway<span class="kind">The Deck &middot; failure &middot; deck-app src/notion.js notion(), test/notion-read-retry.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/616">deck-app #616</a></span></h3></summary>
+      <p>Junyan: &ldquo;"11 yes" (2026-11-02)&rdquo;</p>
+      <p><strong>Why.</strong> Parmida Azizi's Send at 1:20 PM Toronto failed with "Notion 504" on a read after the event-gate check; one gateway timeout ended the Send.</p>
+      <p><strong>Route.</strong> Unchanged.</p>
+      <p><strong>Failure mode.</strong> Every Deck read from Notion (GET) that gets a 502, 503 or 504 is tried again up to twice (after 0.3 s, then 0.9 s), and each retry logs <code>notion_read_retry</code>. Writes (PATCH, POST) are never retried, so nothing can be written twice.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-02</span>
       <h3>Robots follow whichever shape the Artist card's Product has today<span class="kind">event-gate &middot; failure &middot; EVENT-GATE artist_product.py, treasurer_sweep.roster, plan_drift, booking_sweep.create_artist, greeter_sweep &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1572">desk-correspondence #1572</a></span></h3></summary>
       <p><strong>Why.</strong> Product went to a select on 2026-11-01 and back to a multi-select by 2026-11-02 17:05Z, so the Treasurer rerun failed again with the opposite Notion 400.</p>
       <p><strong>Route change.</strong> None. Filters and new-card writes now read Product's live type from the Artist schema once per process. If Notion still answers with the select / multi-select mismatch 400, the call runs once more in the shape Notion names. Reads accept either shape.</p>
