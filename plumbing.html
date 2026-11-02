@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-01</span>
+      <h3>The Send-Timing Verifier releases and retimes rows whatever their Not Before<span class="kind">Send-Timing Verifier &middot; failure &middot; services/event-gate/send_verifier.py run_verifier, test_not_before.py, test_send_verifier.py; pairs with send-engine v53 (PR 73) and deck-app Not Before removal &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1552">desk-correspondence #1552</a></span></h3></summary>
+      <p>Junyan: &ldquo;30 yes" (2026-11-01); d26 "If it's scheduled it goes out at the scheduled time. You can only park tickets but you can't park a text&rdquo;</p>
+      <p><strong>Why.</strong> The verifier left a Pending Review row unreleased while its Not Before was ahead, and skipped the Send After retime on a Ready to Send row under a future Not Before. Texts are never parked (d26).</p>
+      <p><strong>Route.</strong> A Pending Review row goes through the same release guards as any row; a Ready to Send HTA/EOB/AVA/RA row is retimed by the board rule unless a person picked its time (d70, d93).</p>
+      <p><strong>Failure mode.</strong> No new failure: one hold removed. The Send Engine warns when Not Before is ahead (v53). The waiting-list lane's own parking of tickets (slot_waitlist) is unchanged.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
+      <h3>The Deck no longer refuses a text with a future Not Before<span class="kind">The Deck &middot; failure &middot; deck-app sources/deck.html renderVerbs/decideSend/sendViaZapier, src/index.js updatePageCore, src/not-before.js removed, test/not-before.test.js, test/texts-drafts-routes.test.js; pairs with send-engine v53 (PR 73) and canon send_verifier &middot; <a href="https://github.com/junyanboon/deck-app/pull/603">deck-app #603</a></span></h3></summary>
+      <p>Junyan: &ldquo;30 yes" (2026-11-01); d26 "If it's scheduled it goes out at the scheduled time. You can only park tickets but you can't park a text&rdquo;</p>
+      <p><strong>Why.</strong> A row with a future Not Before showed a greyed "Not before &lt;date&gt;" button and the worker refused its release, so a scheduled text could be parked. Junyan ruled texts are never parked (d26).</p>
+      <p><strong>Route.</strong> Send, Send later, phone.com Send and Sent Manually work on every row whatever its Not Before. The worker releases it like any row; a scheduled text goes at its Send After. The Deck no longer reads Not Before at all.</p>
+      <p><strong>Failure mode.</strong> No new failure: one refusal removed. The Send Engine still adds a warning line when Not Before is ahead (v53), so Junyan sees it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
       <h3>Robot offers with a dash, colon or bracket still send, with a warning for Junyan<span class="kind">event-gate &middot; failure &middot; EVENT-GATE paid_booking.release, scripts/artist_card.py, d9, d11 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1550">desk-correspondence #1550</a></span></h3></summary>
       <p>Junyan: &ldquo;9 yes, 11 yes&rdquo;</p>
       <p><code>paid_booking.release</code> (paid offer, paid reply, credit offer, viewing replies) no longer holds a message at Pending Review for a dash, a colon outside a link or an unfilled [bracket]. It goes out at its normal Ready to Send / Send After 9 AM status and the row's Reasoning carries a WORDING WARNING for Junyan. Also <code>queue_draft.py --artist auto</code> now takes an Instagram (<code>IG:...</code>) or WhatsApp (<code>WA:...</code> or international number) sender id: one card holding it links, otherwise the draft queues unlinked with a warning instead of refusing. Origin: Jocelyn Bermudez's Instagram reply could not be queued on 2026-11-01.</p>
