@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-01</span>
+      <h3>The Greeter links the Artist onto its own reply row and reads it back<span class="kind">The Greeter &middot; failure &middot; services/event-gate/greeter_sweep.py link_own_row, ensure_platform_artist; test_greeter_links_own_row.py; pairs with deck-app no-artist-warns &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1556">desk-correspondence #1556</a></span></h3></summary>
+      <p>Junyan: &ldquo;"it should have been auto-created by the Greeter since it doesn't exist" (2026-11-01); boss: link the Artist it finds or creates onto its own row, and read it back&rdquo;</p>
+      <p><strong>Why.</strong> Heureuse Lubemba's Tagvenue enquiry: the Greeter made her Artist card, but its reply row had no Artist relation, so the Deck said "Artist not linked" and the reply sat.</p>
+      <p><strong>Route.</strong> After writing a platform Email reply row, the Greeter reads the row back. If its Artist relation is empty it links the card it found or made (re-found by the relay Contact Point if the id was lost), then reads it again. A card made before a later step fails is now kept and returned instead of dropped.</p>
+      <p><strong>Failure mode.</strong> No card to link, or a link that does not read back, prints a "LOUD" line in the event-gate log; the reply stays queued and still goes to Reply To.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
       <h3>The viewing sign-up reply always carries the real invite link, never a placeholder<span class="kind">The Registrar &middot; failure &middot; event-gate viewing_book.py SIGNUP_FALLBACK &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1554">desk-correspondence #1554</a></span></h3></summary>
       <p>Junyan: &ldquo;d23 (2026-11-01)&rdquo;</p>
       <p><strong>Why.</strong> If <code>VIEWING_SIGNUP_URL</code> was not set on the VPS, the no-account viewing reply carried the text "[viewing sign-up link]", and since the never-block rule (PR 1550) that would reach a renter. Nobody could confirm the variable is set.</p>
