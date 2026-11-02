@@ -1366,6 +1366,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-11-02</span>
+      <h3>Robots follow whichever shape the Artist card's Product has today<span class="kind">event-gate &middot; failure &middot; EVENT-GATE artist_product.py, treasurer_sweep.roster, plan_drift, booking_sweep.create_artist, greeter_sweep &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1572">desk-correspondence #1572</a></span></h3></summary>
+      <p><strong>Why.</strong> Product went to a select on 2026-11-01 and back to a multi-select by 2026-11-02 17:05Z, so the Treasurer rerun failed again with the opposite Notion 400.</p>
+      <p><strong>Route change.</strong> None. Filters and new-card writes now read Product's live type from the Artist schema once per process. If Notion still answers with the select / multi-select mismatch 400, the call runs once more in the shape Notion names. Reads accept either shape.</p>
+      <p><strong>Failure mode.</strong> Any other 400 is raised as before. If the schema read fails, the robots start with multi-select and correct on the first mismatch.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-11-01</span>
       <h3>A possible repeat and a crashed send check both warn and send, never hold<span class="kind">event-gate &middot; failure &middot; EVENT-GATE outbound_guard._inspect_warned, outbound_guard.bug_verdict, /message-dispatch-check, send-engine PR 76 (v55), d46, d48 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1567">desk-correspondence #1567</a></span></h3></summary>
       <p>Junyan: &ldquo;46 yes, 48 yes&rdquo;</p>
