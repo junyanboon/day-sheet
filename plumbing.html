@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-02</span>
+      <h3>The "⚠️ Send failed" warning card gets a Send again button in place of Open message<span class="kind">The Deck &middot; failure &middot; deck-app sources/deck.html sendFailedRetry(), test/send-failed.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/620">deck-app #620</a></span></h3></summary>
+      <p>Junyan: &ldquo;"The send failed card shouldn't have open message it should have a send again" (2026-11-02)&rdquo;</p>
+      <p><strong>Why.</strong> The warning card only linked to the queue row in Notion; Junyan wants to retry from the card itself.</p>
+      <p><strong>Route.</strong> Unchanged. Send again runs the Deck's normal Send on the linked queue row's card: same checks, same Undo window, warn-only, never blocked. If that card is no longer waiting, a note says so and nothing is sent.</p>
+      <p><strong>Failure mode.</strong> A retry that fails again after the checks adds a dated line to the same warning row (no second row). The row still closes itself once the queue row reads Sent. Buttons are now Send again and Done.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-02</span>
       <h3>A Send that fails after the checks leaves a "⚠️ Send failed" warning on the Actions board<span class="kind">The Deck &middot; failure &middot; deck-app src/send-failed.js, src/index.js releaseFailed(), test/send-failed.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/618">deck-app #618</a></span></h3></summary>
       <p>Junyan: &ldquo;"16 yes" (2026-11-02)&rdquo;</p>
       <p><strong>Why.</strong> Parmida Azizi's Send at 1:20 PM Toronto passed the event-gate check and then got "Notion 504"; only the card said so, and nothing on the board recorded that the message may not have gone out.</p>
