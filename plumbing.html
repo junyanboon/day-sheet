@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-01</span>
+      <h3>Robots read and write the Artist card's Product as a single choice<span class="kind">event-gate &middot; failure &middot; EVENT-GATE artist_product.py, treasurer_sweep.roster, booking_sweep, greeter_sweep, plan_drift &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1563">desk-correspondence #1563</a></span></h3></summary>
+      <p>Junyan: &ldquo;I assumed only one product per account&rdquo;</p>
+      <p><strong>Why.</strong> Junyan changed the Artist card's <code>Product</code> from a multi-select to a select on 2026-11-01. Notion then refused the Treasurer's multi-select filter (400) and the 1st-of-month pass failed all 4 tries. Other lanes read Product as a multi-select and silently saw no plan.</p>
+      <p><strong>Route change.</strong> None. Every lane now goes through <code>artist_product.py</code>: filters use <code>select equals</code>, new cards write <code>{"select": ...}</code>, and reads accept either shape.</p>
+      <p><strong>Failure mode.</strong> If Product changes shape again, reads return no plan (plan renters look like one-offs) and filters or writes get a Notion 400. Fix in <code>artist_product.py</code> only.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-01</span>
       <h3>The Greeter links the Artist onto its own reply row and reads it back<span class="kind">The Greeter &middot; failure &middot; services/event-gate/greeter_sweep.py link_own_row, ensure_platform_artist; test_greeter_links_own_row.py; pairs with deck-app no-artist-warns &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1556">desk-correspondence #1556</a></span></h3></summary>
       <p>Junyan: &ldquo;"it should have been auto-created by the Greeter since it doesn't exist" (2026-11-01); boss: link the Artist it finds or creates onto its own row, and read it back&rdquo;</p>
       <p><strong>Why.</strong> Heureuse Lubemba's Tagvenue enquiry: the Greeter made her Artist card, but its reply row had no Artist relation, so the Deck said "Artist not linked" and the reply sat.</p>
