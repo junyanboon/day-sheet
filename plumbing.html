@@ -1366,6 +1366,24 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-11-03</span>
+      <h3>The Treasurer's failed-rent message sends by itself after Stripe's second failed try<span class="kind">event-gate &middot; route &middot; EVENT-GATE treasurer_sweep.sop_tickets, treasurer_sweep.send_failed_message, treasurer_sweep._layer1_expects_nothing &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1584">desk-correspondence #1584</a></span></h3></summary>
+      <p><strong>Why.</strong> Kyle FitzGerald and Aakanksha Patel paid on Stripe's first retry, so a message on the first decline would have been for nothing (Junyan, d16: "okay sure"; d17: "yes let's set it up"). Maggie Morrison's November decline got no ticket at all: a Paused From date read as text crashed every 08:00 dunning run on 2026-11-03 (HTTP 500).</p>
+      <p><strong>Route change.</strong> First decline: Customer Care ticket and a held draft, as before. When the invoice is still open after attempt 2 or later, the daily check releases the <code>TREASURER-FAILED-&lt;yyyymm&gt;-&lt;artist8&gt;</code> row to Ready to Send (an existing held row, hand-made or robot, is released, never duplicated). Hold list, staff-first cases, Radar blocks and paid or voided invoices never send.</p>
+      <p><strong>Failure mode.</strong> A failed Stripe re-read, queue read, write or release read-back is reported in <code>sop_sends</code> and fails the run, so the 15-minute retry tries again. Nothing is sent on an unknown.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-03</span>
+      <h3>A held confirmation draft no longer turns the same-day combined text into a bare access text<span class="kind">event-gate &middot; route &middot; EVENT-GATE booking_sweep.confirmation_queued, booking_sweep.retire_held_confirmations &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1583">desk-correspondence #1583</a></span></h3></summary>
+      <p><strong>Why.</strong> Brittney (Giggster, 509B, Wed 2026-11-04 11:00 to 1:00): the Greeter's confirmation draft sat at Pending Review, the 08:34Z booking-sweep pass counted it as "found", and a bare access text was queued instead of the combined confirmation + access text (Junyan, 2026-11-03, d2: "Yes, build it").</p>
+      <p><strong>Route change.</strong> Same-day, with the combined text about to be queued (not dry run), <code>confirmation_queued(..., sent_only=True)</code> ignores held unsent rows; Ready to Send, Scheduled and Sent still cover. The pass logs <code>confirmation:held-superseded</code> then <code>confirmation:merged-into-hta</code> and queues the combined text. After it is queued, each held matching confirmation is set Will Not Send with a Reasoning line naming the combined row. A row a person edited is kept and flagged as a Review Action. Each chain row now logs its full steps list.</p>
+      <p><strong>Failure mode.</strong> Retiring only warns: a Notion error leaves the draft held and the combined text stands. Outside the same-day window nothing changes.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-11-02</span>
       <h3>A Sales booking ask from a renter holding credit opens on the Booking Credit SOP<span class="kind">The Responder &middot; route, failure &middot; scripts/intake_decide.py credit_reason, scripts/jev_sop.py CROSS_MODE &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1580">desk-correspondence #1580</a></span></h3></summary>
       <p><strong>Why.</strong> Shaka Lee texted on 2026-11-02 to book 509B for Nov 13 with a $20 goodwill credit open. The credit lane answered correctly, but the Responder's :50 intake opened a Sales ticket on Booking Inquiry Case C, because intake never looked at credit and the credit routing row was Customer Care only (Junyan, 2026-11-02, d3: "d3 yes").</p>
