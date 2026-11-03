@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-02</span>
+      <h3>The caught-up Reviews tab shows up to three five-star reviews of us from this month and last<span class="kind">The Deck &middot; tool &middot; deck-app src/guest-reviews.js praise; public/reviews-tab.js partyHtml; test/guest-reviews.test.js; test/reviews-tab-page.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/635">deck-app #635</a></span></h3></summary>
+      <p>Junyan: &ldquo;"maybe also let's have a call out below with some of the reviews we received this month and last month that were awesome and encouraging" (2026-11-02)&rdquo;</p>
+      <p><strong>Why.</strong> The caught-up screen had room to remind Junyan what guests say about the studios.</p>
+      <p><strong>Tool surface.</strong> With nothing to post, GET /api/reviews also reads the Reviews list (Review Date from the 1st of last month, Toronto) and returns <code>praise</code>: up to 3 five-star reviews with words, newest first, one per guest, each cut to its first sentence and eight words, the guest as first name and last initial. A Tagvenue row with words and no stars borrows the five stars from the same guest's row on that platform within 14 days. "Hidden until we review" rows are skipped. The tab shows them as quote cards under the star.</p>
+      <p><strong>Failure mode.</strong> Read only. A failed read shows no quotes and never fails the list.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-02</span>
+      <h3>The empty Reviews tab celebrates with this month's count and the last review posted<span class="kind">The Deck &middot; tool &middot; deck-app src/guest-reviews.js list (posted); public/reviews-tab.js partyHtml; test/guest-reviews.test.js; test/reviews-tab-page.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/634">deck-app #634</a></span></h3></summary>
+      <p>Junyan: &ldquo;"When there's no reviews to post let's have something a bit more exciting here." (2026-11-02)&rdquo;</p>
+      <p><strong>Why.</strong> "No reviews to post." in a dashed box read as nothing happening.</p>
+      <p><strong>Tool surface.</strong> With nothing to post the tab shows a gold star that pops in with a few sparks, "All caught up!" and the number of guest reviews posted this Toronto month (Processed guest-review rows, dated by their close) labelled "this month". The list column on the left is hidden (Junyan: "Not bad but too many words", "what are the two random items on the side"). The count rides on GET /api/reviews (<code>posted: {month, total, last}</code>) from the same Actions read; skips (Won't Do) do not count. Motion stops for people who ask their system for less motion.</p>
+      <p><strong>Failure mode.</strong> Display only. No count from the Worker: the star and "All caught up!" alone.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-02</span>
       <h3>Each Reviews card opens its own platform mail's Leave a review link, and the card's words are short<span class="kind">The Deck &middot; tool &middot; deck-app src/guest-reviews.js mailLinks, reviewLinkIn, shortFact; src/index.js GET /api/reviews; public/reviews-tab.js; test/guest-reviews.test.js; test/reviews-tab-page.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/633">deck-app #633</a></span></h3></summary>
       <p>Junyan: &ldquo;"the link to review is actually inside the gmail mail. Can that be the one we use in each card?" and "Can we use design principles to cut it down to 8 word sentences and only what is necessary" (2026-11-02)&rdquo;</p>
       <p><strong>Why.</strong> The card's button opened the Peerspace inbox or Giggster messages, not the review form; the form's link is the Leave a review button in the platform's mail. The card read like a manual.</p>
