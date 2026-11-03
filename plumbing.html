@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-02</span>
+      <h3>A Deck Charge shows Paid as soon as Stripe says succeeded; the Skedda paid mark finishes in the background<span class="kind">The Deck &middot; failure &middot; deck-app src/charge-settle-now.js settleSoon(), src/live-unpaid.js gather(onlyId), src/index.js, test/charge-settle-now.test.js, test/charges-prepaid.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/628">deck-app #628</a></span></h3></summary>
+      <p>Junyan: &ldquo;"Yes look into it" (2026-11-02)&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-11-01 Shaka Lee's $13.90 Charge sat on "Getting it ready…" for minutes while Stripe had already taken it (pi_3UXXi7PunGOWPTfl0IaY1rcg, 9:44 PM Toronto). Making the charge row waited on the prepaid-hours bot's count for every plan renter on the list (Brad Wong and David Garzon showed Bot Error that night), and the Charge answer then waited up to 25 seconds on Skedda's paid mark.</p>
+      <p><strong>Route.</strong> Unchanged. No message is sent or queued. Stripe is called exactly as before.</p>
+      <p><strong>Failure mode.</strong> Charge asks the prepaid-hours bot about the pressed booking only, and not at all for a non-plan booking. After Stripe succeeds, the answer waits at most 3 seconds for Skedda's paid mark; a slower mark carries on in the background and the row reads "Paid · Skedda updating" until it lands. If it never lands, the 10-minute settle round marks Skedda paid, as before.</p>
+    </details>
+    </li>
     <li class="entry llm">
     <details>
       <summary><span class="when">2026-11-02</span>
@@ -3226,6 +3236,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> On the evening of 2026-10-23, three hostinger deploys in a row were cancelled ("The operation was canceled") in the step "Send image through restricted deployment key". The deploy-hostinger job had a 25 minute cap, and the Test step now takes about 23 minutes (run 40045771437: Test 00:36:49Z to 00:59:55Z, cancelled at 01:01:19Z, 25 minutes after the job started). On 10-23 the same tests took 6 to 13 minutes and the send took 1 to 8.</p>
       <p><strong>Route change.</strong> Each slow step now has its own cap: Test 40 minutes, Send 20 minutes. The job cap is 70 minutes, so a slow Test can no longer use up the send's time.</p>
       <p><strong>Failure mode.</strong> A deploy that truly hangs now holds the deploy runner for up to 70 minutes instead of 25. A Test step that goes past 40 minutes fails the deploy before anything is sent, so nothing reaches the host. To undo, revert this PR.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
+      <h3>Guest-review rows live in the Deck's Reviews tab, not the Fixer, and Done there writes the Reviews row<span class="kind">The Analyst, The Desk Sort, The Responder &middot; route &middot; services/event-gate/guest_review.py ASK_TAIL; library/analyst-issue-prevention.md Step 8b; library/desk-sort.md drain step 2; library/the-responder.md review ask step 3; deck-app src/guest-reviews.js (deck-app PR 370) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1289">desk-correspondence #1289</a></span></h3></summary>
+      <p>Junyan: &ldquo;"maybe we need to put it into the FBS monitor as a side tab so I can see them and process them one by one. I recently made a review database as well so I can upload a screenshot of my review and it can go there" (2026-10-23)&rdquo;</p>
+      <p><strong>Why.</strong> The Analyst's <code>[guest-review:...]</code> rows sat on the Deck's Fixer page, which Junyan clears to 0 daily, and only he can post them. The Deck now has a Reviews tab for them (deck-app PR 370).</p>
+      <p><strong>Route change.</strong> The Analyst's ask now ends "Paste it on the platform, then press Done in the Deck's Reviews tab with a screenshot of it." The Deck leaves these rows off the Fixer and Actions tabs. Done in the Reviews tab writes <code>Our review</code>, <code>Our review posted</code>, <code>Our review screenshot</code> and the <code>our review posted &lt;date&gt;</code> Match Notes line on the guest's Reviews row (making one marked "Our review of the guest only" when none exists) and closes the Action <code>Processed</code>; Skip closes it <code>Won't Do</code>. The Desk Sort no longer cards open guest-review rows and has nothing to do for a row the Deck closed. The Responder's "already reviewed us" check skips a row that holds only our review.</p>
+      <p><strong>Failure mode.</strong> A Deck-made row has no <code>Review Date</code>, so the Treasurer's monthly look-back never reads it as a review of us. When the guest's own review arrives the Platform Watch may add a second row for it (keyed by the platform's booking id); both rows stay correct.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-10-23</span>
+      <h3>The Deck has a Reviews tab where Junyan posts each guest review one by one and saves the screenshot to the Reviews list<span class="kind">The Deck &middot; tool, route &middot; deck-app src/guest-reviews.js; public/reviews-tab.js; src/index.js /api/reviews, /api/reviews/done, /api/reviews/skip; sources/deck.html isGuestReview; test/guest-reviews.test.js; test/reviews-tab-page.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/370">deck-app #370</a></span></h3></summary>
+      <p>Junyan: &ldquo;"maybe we need to put it into the FBS monitor as a side tab so I can see them and process them one by one. I recently made a review database as well so I can upload a screenshot of my review and it can go there" (2026-10-23)&rdquo;</p>
+      <p><strong>Why.</strong> The Analyst's guest-review rows (<code>[guest-review:&lt;platform&gt;:&lt;booking id&gt;]</code>, Step 8b) sat on the Fixer page, which Junyan wants at 0 every day, and only he can post on the platforms. They needed their own place, with proof of the post.</p>
+      <p><strong>Tool surface.</strong> A Reviews entry in the desktop sidebar, after Agreements. One card per open guest-review row, oldest first: guest, platform, studio and booking time, the draft in an editable box with Copy, an Open &lt;platform&gt; link, what the draft rests on, and a screenshot box (choose, drop or paste). Done (owner only) uploads the screenshot, writes <code>Our review</code>, <code>Our review posted</code> and <code>Our review screenshot</code> on the guest's Reviews row (found by booking id, else Artist and platform with no review of ours yet, else a new row marked "Our review of the guest only"), appends the Desk Sort's <code>our review posted &lt;date&gt;</code> line to its Match Notes, and last sets the Actions row Processed with a Notes line naming the Reviews row. Skip (owner only) sets it Won't Do with a reason. The three columns are added to the Reviews list the first time if missing. The Actions to-do list keeps them as one "guest reviews waiting · Reviews tab" line that opens the tab.</p>
+      <p><strong>Failure mode.</strong> Every refusal comes before any write: no words, no image, not an open guest review, columns that cannot be added. A failed upload or Reviews write leaves the Actions row open, so a retry starts clean. Nothing is posted on a platform or sent to a guest.</p>
     </details>
     </li>
     <li class="entry det">
