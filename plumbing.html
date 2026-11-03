@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-02</span>
+      <h3>A Sales booking ask from a renter holding credit opens on the Booking Credit SOP<span class="kind">The Responder &middot; route, failure &middot; scripts/intake_decide.py credit_reason, scripts/jev_sop.py CROSS_MODE &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1580">desk-correspondence #1580</a></span></h3></summary>
+      <p><strong>Why.</strong> Shaka Lee texted on 2026-11-02 to book 509B for Nov 13 with a $20 goodwill credit open. The credit lane answered correctly, but the Responder's :50 intake opened a Sales ticket on Booking Inquiry Case C, because intake never looked at credit and the credit routing row was Customer Care only (Junyan, 2026-11-02, d3: "d3 yes").</p>
+      <p><strong>Route change.</strong> Before the SOP pick on a new Sales ticket, intake looks for a <code>[credit:&lt;id&gt;]</code> key on the Message Queue or Actions for the source message, then reads the Artist's 💳 Artist Credits balance (unused, unexpired). Either one attaches "Artist requests to use Booking Credit" and the reason goes in <code>sop_source</code>. The Customer Care "use credit they already hold" routing row is now also a Jev candidate for Sales stubs.</p>
+      <p><strong>Failure mode.</strong> Warning only: a failed credit read is logged and the ticket opens on the normal SOP pick.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-02</span>
       <h3>New 1st of the Month tab gathers what the 1st-of-month robots raised, with done counts<span class="kind">The Deck &middot; route &middot; deck-app public/first-of-month-tab.js, src/first-of-month.js, src/index.js GET /api/first-of-month, test/first-of-month.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/636">deck-app #636</a></span></h3></summary>
       <p>Junyan: &ldquo;"Yes, build it" (2026-11-02)&rdquo;</p>
       <p><strong>Why.</strong> On the 1st Junyan had to hunt across the Actions board for what The Treasurer and the Insurance Sweep filed. This tab puts it on one page with a done count.</p>
