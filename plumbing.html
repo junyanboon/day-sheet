@@ -1367,6 +1367,24 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-03</span>
+      <h3>The Deck's prepaid-hours check runs once per booking; extra presses reuse it<span class="kind">event-gate &middot; failure &middot; EVENT-GATE app._plan_preview_answers, plan_allowance_sweep.preview_bookings, DECK live-unpaid.planPreviews &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1586">desk-correspondence #1586</a></span></h3></summary>
+      <p><strong>Why.</strong> c4 timing (Oct 30 to Nov 2): median 12.8 s, p90 30 s, 3 of 13 loads hit the Worker's 30 s limit and showed Bot Error; four copies of the same check ran side by side at about 60 s each in Notion's rate limit (Junyan, c3 and c5, 2026-11-03).</p>
+      <p><strong>Change.</strong> event-gate /plan-preview counts a booking only once at a time: a press that asks for a booking already being counted waits for that run and reuses its answer. The reply now carries <code>stats</code> (ms, pace_s, notion_reads, fresh, shared). The Notion reads underneath stay memoised for 180 s (PLAN_PREVIEW_CACHE_SECONDS), as before.</p>
+      <p><strong>Failure mode.</strong> Read only, nothing written. A failed run fails every press waiting on it (the Deck shows Bot Error, as before) and is not remembered, so the next press tries again.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-03</span>
+      <h3>The Charges tab waits 45 s for the prepaid-hours check, past the gate's 25 s budget<span class="kind">deck &middot; failure &middot; DECK live-unpaid.planPreviews PLAN_PREVIEW_TIMEOUT_MS, EVENT-GATE /plan-preview &middot; <a href="https://github.com/junyanboon/deck-app/pull/640">deck-app #640</a></span></h3></summary>
+      <p><strong>Why.</strong> The gate gives the check a 25 s budget and then answers, but the Worker gave up at 30 s, so 3 of 13 loads (Oct 30 to Nov 2) showed Bot Error on a check that was about to finish (Junyan, c5, 2026-11-03).</p>
+      <p><strong>Change.</strong> The Worker waits 45 s. Its <code>plan-preview</code> log line adds the gate's gate_ms, pace_s, notion_reads and shared.</p>
+      <p><strong>Failure mode.</strong> Unchanged in kind: a check that still fails or passes 45 s shows Bot Error and Skedda's price. Nothing charges without the owner's press.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-03</span>
       <h3>The Treasurer's failed-rent message sends by itself after Stripe's second failed try<span class="kind">event-gate &middot; route &middot; EVENT-GATE treasurer_sweep.sop_tickets, treasurer_sweep.send_failed_message, treasurer_sweep._layer1_expects_nothing &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1584">desk-correspondence #1584</a></span></h3></summary>
       <p><strong>Why.</strong> Kyle FitzGerald and Aakanksha Patel paid on Stripe's first retry, so a message on the first decline would have been for nothing (Junyan, d16: "okay sure"; d17: "yes let's set it up"). Maggie Morrison's November decline got no ticket at all: a Paused From date read as text crashed every 08:00 dunning run on 2026-11-03 (HTTP 500).</p>
       <p><strong>Route change.</strong> First decline: Customer Care ticket and a held draft, as before. When the invoice is still open after attempt 2 or later, the daily check releases the <code>TREASURER-FAILED-&lt;yyyymm&gt;-&lt;artist8&gt;</code> row to Ready to Send (an existing held row, hand-made or robot, is released, never duplicated). Hold list, staff-first cases, Radar blocks and paid or voided invoices never send.</p>
