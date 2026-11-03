@@ -1364,6 +1364,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-11-02</span>
+      <h3>A front-door reader sorts every renter text and email into one pill for the Deck's Decide tab (read only)<span class="kind">event-gate &middot; route &middot; services/event-gate/front_door_reader.py, app.py GET /decide-rows, test_front_door_reader.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1577">desk-correspondence #1577</a></span></h3></summary>
+      <p>Junyan: &ldquo;"Yes, hand it over" (2026-11-02, step 1 only)&rdquo;</p>
+      <p><strong>Why.</strong> Renters said yes to booking offers on Nov 1 and 2 (Sergio Acanne, Shaka Lee, Matt Lepoidevin) and no robot picked it up: each lane scans for its own words and drops the rest with no record.</p>
+      <p><strong>Route.</strong> New, read only. At most every 15 minutes, started in a background thread after the move sweep's pass (no new timer), the reader takes the last 24 hours of Gmail inbox and Phone.com texts, asks the relay model (Sonnet) for one pill from the fixed list (two when the message asks two things), the quoted fields and the plain steps, and keeps one row per message in <code>/var/lib/eventgate/front-door.sqlite3</code>. GET /decide-rows serves the rows to the Deck. Nothing is booked, charged, queued or sent, and every other robot runs exactly as before.</p>
+      <p><strong>Failure mode.</strong> A quote that is not in the renter's words (or in our own message they answer), an unknown pill, more than two pills or low confidence turn the row into "Needs you" with the reason. Daily cap 150 calls or US$4 (FRONT_DOOR_MAX_CALLS, FRONT_DOOR_MAX_USD): one Review row, messages wait until midnight. Relay down: one Review row a day, retried next pass. FRONT_DOOR_MODE=off stops it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-02</span>
+      <h3>New Decide tab shows how the front-door reader sorted each renter message (read only)<span class="kind">The Deck &middot; route &middot; deck-app public/decide-tab.js, src/decide.js, src/index.js GET /api/decide, test/decide-tab.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/626">deck-app #626</a></span></h3></summary>
+      <p>Junyan: &ldquo;"Yes, hand it over" (2026-11-02, step 1 only)&rdquo;</p>
+      <p><strong>Why.</strong> Step 1 of docs/design/decide-tab.md: Junyan sees, for every renter text and email, which pill the reader picked, the SOP and the steps it would take, before any robot is allowed to act on it.</p>
+      <p><strong>Route.</strong> New tab after Time Slots, full logins only. It reads event-gate GET /decide-rows (last 2 days) and shows three columns: the list, the conversation as a text thread, the plan panel. It has no button that acts. Nothing is booked, charged, queued or sent.</p>
+      <p><strong>Failure mode.</strong> If event-gate cannot be read, the tab says so in red; nothing else on the Deck changes.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-02</span>
