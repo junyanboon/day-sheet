@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-03</span>
+      <h3>One "regular until" record per renter and studio; regulars get no PBF and no newcomer text<span class="kind">event-gate &middot; route &middot; EVENT-GATE regular_until.regular_on, host_sweep.tier_for, gtg_sweep.renter_regular, gtg_sweep.pbf_step &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1587">desk-correspondence #1587</a></span></h3></summary>
+      <p><strong>Why.</strong> Janet Zamora, a weekly Monday renter in 901, was queued a How to Access on 2026-11-01 (Product read empty after the select change, old timer) and then a "How did everything go?" because an HTA row existed. Junyan rejected it as "regular" (d6, d4, d5).</p>
+      <p><strong>Route change.</strong> The Host ladder writes <code>901: regular until &lt;last visit + 60 days&gt;</code> into the Artist card's <code>Regular Until</code> text each time it decides a booking. The Registrar's tier and the PBF step read that one record: a regular gets no newcomer text and no PBF (<code>&lt;label&gt;: regular, no PBF</code>, board PBF set Will Not Send). A hand-sent HTA set Will Not Send still earns a first-timer's PBF.</p>
+      <p><strong>Failure mode.</strong> A missing or unreadable record falls back to the live count (board Complete rows and door-proved Skedda visits); it never suppresses a PBF or triggers a newcomer text. Product on the card in a shape that reads empty holds a newcomer answer to Monitor Only and files one Actions row for Junyan (warn only). No write happens until the <code>Regular Until</code> property exists on the Artist DB.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-03</span>
       <h3>The Deck's prepaid-hours check runs once per booking; extra presses reuse it<span class="kind">event-gate &middot; failure &middot; EVENT-GATE app._plan_preview_answers, plan_allowance_sweep.preview_bookings, DECK live-unpaid.planPreviews &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1586">desk-correspondence #1586</a></span></h3></summary>
       <p><strong>Why.</strong> c4 timing (Oct 30 to Nov 2): median 12.8 s, p90 30 s, 3 of 13 loads hit the Worker's 30 s limit and showed Bot Error; four copies of the same check ran side by side at about 60 s each in Notion's rate limit (Junyan, c3 and c5, 2026-11-03).</p>
       <p><strong>Change.</strong> event-gate /plan-preview counts a booking only once at a time: a press that asks for a booking already being counted waits for that run and reuses its answer. The reply now carries <code>stats</code> (ms, pace_s, notion_reads, fresh, shared). The Notion reads underneath stay memoised for 180 s (PLAN_PREVIEW_CACHE_SECONDS), as before.</p>
