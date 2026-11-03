@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-02</span>
+      <h3>Each Reviews card opens its own platform mail's Leave a review link, and the card's words are short<span class="kind">The Deck &middot; tool &middot; deck-app src/guest-reviews.js mailLinks, reviewLinkIn, shortFact; src/index.js GET /api/reviews; public/reviews-tab.js; test/guest-reviews.test.js; test/reviews-tab-page.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/633">deck-app #633</a></span></h3></summary>
+      <p>Junyan: &ldquo;"the link to review is actually inside the gmail mail. Can that be the one we use in each card?" and "Can we use design principles to cut it down to 8 word sentences and only what is necessary" (2026-11-02)&rdquo;</p>
+      <p><strong>Why.</strong> The card's button opened the Peerspace inbox or Giggster messages, not the review form; the form's link is the Leave a review button in the platform's mail. The card read like a manual.</p>
+      <p><strong>Tool surface.</strong> GET /api/reviews reads, with the Gmail tab's read-only grant, the guest's own mail from the last 45 days (Peerspace "Your booking with &lt;guest&gt; is complete", Giggster "Leave a review for &lt;guest&gt;" or "Please leave a review for you &lt;date&gt; booking") and gives the card that mail's Leave a review link (<code>mailLink</code>). The button reads "Review on &lt;platform&gt;"; with no mail found it opens the platform page and says "No mail found. Opens the &lt;platform&gt; inbox." Answers are kept in the Worker for a day (none found: 10 minutes). Facts become short lines ("Left on time, alarm set."), headings "1. Our review", "Facts", "2. Screenshot (optional)", buttons Done and Skip, eight words at most each.</p>
+      <p><strong>Failure mode.</strong> A failed Gmail read leaves the platform page on that card and the list still loads; nothing is written to Gmail.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-02</span>
       <h3>The Reviews tab's screenshot is optional; Done saves the words alone<span class="kind">The Deck &middot; tool &middot; deck-app src/guest-reviews.js readImage, done; public/reviews-tab.js; test/guest-reviews.test.js; test/reviews-tab-page.test.js &middot; <a href="https://github.com/junyanboon/deck-app/pull/630">deck-app #630</a></span></h3></summary>
       <p>Junyan: &ldquo;"2 yes screenshot optional" (2026-11-02), after Peerspace's thank-you screen showed no words ("what I copied was what was written")&rdquo;</p>
       <p><strong>Why.</strong> Peerspace's screen after posting says only "Thanks for sharing your experience", so the screenshot never shows the words. The words in the box are the record.</p>
