@@ -1367,6 +1367,23 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-03</span>
+      <h3>An unreadable Product no longer holds the newcomer How to Access; it only warns<span class="kind">event-gate &middot; failure &middot; EVENT-GATE host_sweep.tier_for, host_sweep.warn_product_shape &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1589">desk-correspondence #1589</a></span></h3></summary>
+      <p><strong>Why.</strong> PR 1587 (d4) held a newcomer answer to Monitor Only when the Artist card's Product was present but read empty. That held an outbound message, against Junyan's standing rule. He ruled d9 on 2026-11-03 ("9 yes"): do not hold it, only warn.</p>
+      <p><strong>Failure mode.</strong> When Product reads empty in an unexpected shape, the tier stays FBS, so the normal newcomer path queues the How to Access / first-timer text. One Actions row still warns Junyan, once per card, studio and day. The <code>Regular Until</code> record (now a live rich-text property on the Artist DB) still lifts a real regular to Monitor Only before this check.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-03</span>
+      <h3>The Deck's Alarms tab gets a Users sub-tab that removes and adds alarm users through the guarded access_operation<span class="kind">deck &middot; tool &middot; DECK alarm-users.js /api/alarm/users*, ALARM-MCP /alarm-users /access-operation /access-request-status (Deck token) &middot; <a href="https://github.com/junyanboon/deck-app/pull/642">deck-app #642</a></span></h3></summary>
+      <p><strong>Why.</strong> Junyan wanted to see every Alarm.com user and remove or add one from the Deck, with a warning first and no blocks (2026-11-03, d23, d24).</p>
+      <p><strong>Change.</strong> Alarms › Users lists every user (name, studios x/4, paused, last door use, linked Artist card; never a code). Remove shows a warning (upcoming Skedda bookings, Authorized Under, a live plan), then on Confirm writes or reuses an Actions row whose Notes carry one line "&lt;who&gt; approved removal of &lt;Name&gt;, alarm user ID &lt;id&gt;, &lt;date&gt; (Deck Alarms › Users)" and calls access_operation preview then confirm with the same request_id. Add person uses the phone-suffix policy or the renter's own message as the code source; the Deck never holds the code. alarm-mcp opens /alarm-users, /access-operation and /access-request-status to the Deck's PANEL_CONTROL_TOKEN.</p>
+      <p><strong>Failure mode.</strong> Every access_operation rail stays (lease, a named open Actions row, two all-panel proofs &gt;= 10 min apart). A refusal shows its reason in the dialog; the row stays "Removing…" until state=verified. The read-only checker cannot write.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-03</span>
       <h3>One "regular until" record per renter and studio; regulars get no PBF and no newcomer text<span class="kind">event-gate &middot; route &middot; EVENT-GATE regular_until.regular_on, host_sweep.tier_for, gtg_sweep.renter_regular, gtg_sweep.pbf_step &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1587">desk-correspondence #1587</a></span></h3></summary>
       <p><strong>Why.</strong> Janet Zamora, a weekly Monday renter in 901, was queued a How to Access on 2026-11-01 (Product read empty after the select change, old timer) and then a "How did everything go?" because an HTA row existed. Junyan rejected it as "regular" (d6, d4, d5).</p>
       <p><strong>Route change.</strong> The Host ladder writes <code>901: regular until &lt;last visit + 60 days&gt;</code> into the Artist card's <code>Regular Until</code> text each time it decides a booking. The Registrar's tier and the PBF step read that one record: a regular gets no newcomer text and no PBF (<code>&lt;label&gt;: regular, no PBF</code>, board PBF set Will Not Send). A hand-sent HTA set Will Not Send still earns a first-timer's PBF.</p>
