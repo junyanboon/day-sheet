@@ -1364,6 +1364,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>Insurance asks and chases wait 3 days after expiry, stop on a renter reply (parked to a send-by date) and reply in the same thread<span class="kind">event-gate &middot; route &middot; services/event-gate/insurance_sweep.py, services/event-gate/chase_sweep.py, services/event-gate/insurance_promise.py, library/job-2-triage.md Insurance certificates &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1600">desk-correspondence #1600</a></span></h3></summary>
+      <p>Junyan: &ldquo;3 yes, 4 wait a few days (2026-11-03)&rdquo;</p>
+      <p><strong>Why.</strong> Renters were asked for a new certificate weeks before theirs ran out (the month end + 7 days window), chased even after they answered, and every ask opened a new email thread.</p>
+      <p><strong>Route.</strong> The monthly ask and every chase now queue only once the certificate has been expired 3 days (Toronto date). A chase is not drafted when the renter has written since our last insurance message: a reply with a send-by date files one Ops Lead Action that parks the chase until the day after that date, any other reply files one Ops Lead Action to read it. A newer Certificate of Insurance in Docs also stops the draft. Asks and chases carry the previous insurance email's Gmail id in Source Email with a "Re:" subject, so they reply in the existing thread. Rows are still held at Pending Review and nothing already queued is held or retired.</p>
+    </details>
+    </li>
     <li class="entry human">
     <details>
       <summary><span class="when">2026-11-04</span>
