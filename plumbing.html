@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-04</span>
+      <h3>event-gate deploys drain running jobs during the Mac tests and keep the build cache<span class="kind">event-gate &middot; failure &middot; services/event-gate/hosting/deploy_hostinger.py, scripts/deploy_gate.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1622">desk-correspondence #1622</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> A direct deploy took 453 s: a cold image build (the cache was wiped by the cleanup) and a 241 s wait for running jobs that only began after the tests (Junyan, 2026-11-04, "Yes, go").</p>
+      <p><strong>Change.</strong> <code>src-prepare</code> (deploy-gate only) starts a drainer that holds new jobs back and lets running ones finish while the Mac tests run; <code>src-update</code> takes over its lock and swaps at once. New jobs wait (never skip) for at most 10 min from the stage start; failed tests release them at once. The build cache prune keeps cache used in the last 48 h (full prune only under 15% disk free). The Codex clone cleanup runs <code>find</code> from <code>/</code>, fixing "Failed to restore initial working directory".</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
       <h3>The Responder hands a "Good to go!" to the sweep, waits on a platform request the Greeter holds, and the 30-day manual book is Case C<span class="kind">The Responder &middot; route, failure &middot; scripts/intake_decide.py, library/the-responder.md, sops/ROUTING.md, sops/pages/36175032-81c4-80bb-9d6d-fbaf10371019.md, sops/pages/803170c5-efc8-4608-bb17-512d84f9d7a5.md, sops/pages/36175032-81c4-80de-8176-c73d80aba61e.md, d6, d7, d8 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1619">desk-correspondence #1619</a></span></h3></summary>
       <p>Junyan: &ldquo;d6 as corrected, d7, d8 approved 2026-11-04&rdquo;</p>
       <p><strong>Why.</strong> Three misses on 2026-11-04. Matt L.'s "Good to go!" (509B, Nov 5) answered our access text but the form named another intent, so it opened a Care ticket and a Need Help text. atusa m.'s Peerspace request (509B, Nov 7) was already held by the Greeter, yet the Responder doubted its SOP and texted Junyan at 3:23 PM. Juliana's Studio 693 dates (30-day window) were handled right by the desk, but two SOPs disagreed on which one owns them.</p>
