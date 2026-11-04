@@ -1386,6 +1386,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-03</span>
+      <h3>A slow prepaid count keeps the last good answer<span class="kind">deck &middot; failure &middot; DECK live-unpaid.livePrepaid withLastGood LAST_GOOD_MS, EVENT-GATE /plan-preview &middot; <a href="https://github.com/junyanboon/deck-app/pull/649">deck-app #649</a></span></h3></summary>
+      <p><strong>Why.</strong> David Garzon Nov 4 and Brad Wong Nov 6 and 13 flipped between Prepaid $0.00 and Bot Error at Skedda's price (Junyan, 2026-11-03). The count was right; about one load in three ran past the 45 s wait when the gate's few-minute Notion memo had lapsed, so every plan row went red.</p>
+      <p><strong>Change.</strong> The Worker keeps each booking's last good count (covered, extra or used up) for 10 minutes and uses it when the gate fails, times out or answers unknown.</p>
+      <p><strong>Failure mode.</strong> A count still missing after 10 minutes shows Bot Error with Skedda's price and Charge, as before.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-03</span>
       <h3>A paid Deck invoice closes its Action and shows paid in Skedda within seconds<span class="kind">deck &middot; cadence &middot; DECK /stripe-webhook invoice-paid-now.onInvoicePaid, EVENT-GATE /charge-settle invoice_settle.settle_now &middot; <a href="https://github.com/junyanboon/deck-app/pull/647">deck-app #647</a></span></h3></summary>
       <p><strong>Why.</strong> A paid Deck invoice waited up to 15 minutes for the closer and 10 more for the Skedda round, while a card charge shows paid at once (Junyan, d11, 2026-11-03: "11 yes").</p>
       <p><strong>Change.</strong> Stripe's <code>invoice.paid</code> on the Deck's existing <code>/stripe-webhook</code> (same signature check): a Deck invoice (metadata <code>deck_action</code>) is re-read from Stripe, each Action it bills is closed with <code>[INVOICE-PAID-V1:in_…]</code>, and event-gate <code>/charge-settle</code> settles that invoice in Skedda now with the round's guards, refusal row and <code>[SKEDDA-SETTLED-V1:in_…]</code> marker. Skedda-native invoices are ignored.</p>
