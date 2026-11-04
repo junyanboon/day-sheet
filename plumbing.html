@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-04</span>
+      <h3>The Insurance Processor and the ledger now see a certificate PDF that Apple Mail sends inline<span class="kind">send-engine &middot; failure &middot; send-engine/InsuranceIntake.gs, scripts/gmail_pull.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1629">desk-correspondence #1629</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> Risa Waldman's certificate (Gmail 1a1a7c12a13a92c4, 2026-11-04) came from Apple Mail with the PDF marked Content-Disposition: inline. The Insurance Processor read attachments with inline parts left out, so it saw no PDF and filed a false "no supported PDF attachment" Actions row; the ledger also logged the message with no attachments. It was hand-filed (d77, Junyan 2026-11-04).</p>
+      <p><strong>Route.</strong> A PDF or HTML part (by name or content type) now counts as a certificate whatever its disposition, in send-engine (<code>insuranceCertAttachments_</code>, <code>insuranceLaterPdf_</code>, <code>insuranceOwned_</code>) and in gmail_pull's <code>attachments</code> list, which <code>insurance_owned.py</code> reads. Inline images still never count on their own: a JPEG or PNG is used only when it is not inline, there is no PDF or HTML, and it passes the size floor.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
       <h3>A Slack rate limit on the desk-drop follow-through waits for the next pass instead of filing a Run Error<span class="kind">event-gate &middot; failure &middot; services/event-gate/drop_sweep.py, services/event-gate/desk_drop_followthrough.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1624">desk-correspondence #1624</a></span></h3></summary>
       <p>Junyan: &ldquo;pending&rdquo;</p>
       <p><strong>Why.</strong> The desk-drop follow-through called reactions.remove on every open drop row every pass, so Slack answered HTTP 429, which was read as a rejection and filed "Slack follow-through blocked" Run Errors (d56, Junyan 2026-11-04).</p>
