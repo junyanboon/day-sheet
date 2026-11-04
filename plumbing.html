@@ -1395,6 +1395,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-03</span>
+      <h3>The Concierge intake tick copies a linked SOP's steps itself, closed tickets are no longer asked for steps, and the deadline reader fails loudly with no Notion<span class="kind">event-gate &middot; failure &middot; EVENT-GATE concierge_intake.py, concierge_intake_ledger.py, concierge_pass.py, test_concierge_intake_ledger.py, test_concierge_pass.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1599">desk-correspondence #1599</a></span></h3></summary>
+      <p>Junyan: &ldquo;d14 yes&rdquo;</p>
+      <p><strong>Why.</strong> Pickups sat as <code>needs_sop_steps</code> waiting for an AI turn even when the ticket already had its SOP linked, and Done, Won or Lost tickets were still asked for SOP steps. <code>concierge_pass.py deadlines</code> with no Notion launcher and no NOTION_TOKEN printed "items 0, required 0", which reads as a clean worklist.</p>
+      <p><strong>Failure mode.</strong> Each intake tick runs scripts/sop_attach.py for up to 5 <code>needs_sop_steps</code> tickets whose SOP is linked, through a writer that may only add blocks under that ticket and reword a paragraph. A refusal (for example a multi-case SOP) is listed in <code>sop_attach_failed</code> and left for the Concierge; the tick still saves. <code>CONCIERGE_INTAKE_SOP_AUTOATTACH=0</code> turns it off. A ticket at Done, Won or Lost is never asked for SOP steps. <code>concierge_pass.py deadlines</code> with no Notion exits 2 with "NOTION UNAVAILABLE" on stderr and prints no counts.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-03</span>
       <h3>A move hand-off refused for a stale ticket retries once, and a failed fallback keeps Notion's error<span class="kind">The Responder &middot; failure &middot; EVENT-GATE registrar_move_intake.route_retrying, move_handoff_fallback.error_text, d16 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1598">desk-correspondence #1598</a></span></h3></summary>
       <p>Junyan: &ldquo;16 yes&rdquo;</p>
       <p><strong>Why.</strong> Laurie-Eve's second move on 2026-11-02 20:20: <code>intake_decide.py</code> wrote the ticket after the move request was built, so the Registrar hand-off was refused with "ticket changed: reread before routing". The fallback then failed with a bare HTTP 400 and no Ops Lead Action was filed, and the request file died with the cloud sandbox.</p>
