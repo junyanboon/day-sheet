@@ -1367,6 +1367,33 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-04</span>
+      <h3>A Slack rate limit on the desk-drop follow-through waits for the next pass instead of filing a Run Error<span class="kind">event-gate &middot; failure &middot; services/event-gate/drop_sweep.py, services/event-gate/desk_drop_followthrough.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1624">desk-correspondence #1624</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> The desk-drop follow-through called reactions.remove on every open drop row every pass, so Slack answered HTTP 429, which was read as a rejection and filed "Slack follow-through blocked" Run Errors (d56, Junyan 2026-11-04).</p>
+      <p><strong>Route.</strong> <code>_slack_api</code> reads Retry-After on a 429 (or Slack's <code>ratelimited</code> code) and raises <code>SlackRateLimited</code>. The follow-through counts that row and every later row in the pass as <code>followthrough_pending</code>, logs the Slack method and the wait, and files no Run Error. The ledger now remembers the check mark is off, so an open or reopened row calls reactions.remove once, not every pass. A first post that hits a 429 is released for retry, never held as "delivery uncertain".</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>The money reconcile round no longer fails when one of its sub-lanes does<span class="kind">event-gate &middot; failure &middot; services/event-gate/money_reconcile.py, services/event-gate/paid_proof_close.py, services/event-gate/reconcile_sweep.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1623">desk-correspondence #1623</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> From 2026-10-31 every money round failed: the paid close (PR 1524) filtered the Message Queue on a "Sending" status that does not exist, so Notion answered 400, and a replaced Stripe draft (Natalia C, in_1UXwuT) answered 404. Either one turned the whole sweep red (d55, Junyan 2026-11-04).</p>
+      <p><strong>Route.</strong> The paid close filters only on real Status options and logs a Stripe 404 resource_missing as <code>gone</code> and skips it. A sub-lane's failure (plan drift, unpaid review, prepaid hours, paid close, invoice settle, paid invoice pass) now goes into <code>lane_errors</code>, which the reconcile sweep logs by lane each round; it no longer raises the money Run Error. A money row's own read or write failure still does.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>The Concierge deadline audit drops resolved entries after 14 days and warns before it gets too big<span class="kind">event-gate &middot; failure &middot; services/event-gate/concierge_deadlines.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1625">desk-correspondence #1625</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> The rolling Concierge deadline audit row (Actions 3d97503281c481c293bec7fdf2a8b5c2) keeps a "resolved" list in Basis that only grew: about 84 entries, about 129,085 of the 190,000 characters Notion allows. At the limit the write raised and the audit quietly stopped updating (d57, Junyan 2026-11-04).</p>
+      <p><strong>Route.</strong> Each resolved entry now carries <code>resolved_at</code> (older entries use their retirement proof's ticket revision, or start the clock on this pass). Before writing, entries older than 14 days are dropped. Over 80% of the limit logs a warning. If it is still over the limit, the oldest resolved entries are dropped early, an ERROR is logged and an error line goes on the row, which turns it Pending Review, so the audit keeps updating and the trim is visible. Only open items alone over the limit still raise, with an ERROR log.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
       <h3>Info-only notices now post to Slack #desk-status instead of filing Actions rows<span class="kind">event-gate &middot; route &middot; services/event-gate/lane_common.py, services/event-gate/move_reader.py, services/event-gate/inspection_findings.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1621">desk-correspondence #1621</a></span></h3></summary>
       <p>Junyan: &ldquo;pending&rdquo;</p>
       <p><strong>Why.</strong> Junyan, 2026-11-04, d48: "if we need to be notified it goes to desk-status not actions to perform". Born-closed FYI rows and the move reader's shadow digest were still landing on the Actions board.</p>
