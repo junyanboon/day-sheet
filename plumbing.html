@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry human">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>Alarm adds and removals read every panel back, and Retry always works<span class="kind">The Deck &middot; failure, route &middot; deck-app src/alarm-users.js, alarm-monitor alarm_monitor/access_requests.py (panel_report, retry), hosting/server_http.py /access-retry, d28 &middot; <a href="https://github.com/junyanboon/deck-app/pull/650">deck-app #650</a></span></h3></summary>
+      <p>Junyan: &ldquo;d28 approved 2026-11-04&rdquo;</p>
+      <p><strong>Why.</strong> Junyan (d28): a Remove or Add could quietly fail to stick, and Retry was unreliable.</p>
+      <p><strong>Failure mode.</strong> After a press the alarm service reads the four panels back and answers per panel. If one did not take it, the row turns red and names it ("Didn't take on Studio C") with a <strong>Retry</strong> button. Retry re-runs the SAME request: it writes only where the read-back says it did not take, writes nothing when everything already took, and works however many times it is pressed. No reload, no new preview, no approval row (the press is the authority, d25).</p>
+      <p><strong>What broke Retry.</strong> The old retry was a second Remove, which made a new request that the service refuses while the first is unresolved; and the first request's press time went stale after ten minutes, so it could not be re-sent either.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-04</span>
