@@ -1386,6 +1386,23 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-03</span>
+      <h3>A move hand-off refused for a stale ticket retries once, and a failed fallback keeps Notion's error<span class="kind">The Responder &middot; failure &middot; EVENT-GATE registrar_move_intake.route_retrying, move_handoff_fallback.error_text, d16 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1598">desk-correspondence #1598</a></span></h3></summary>
+      <p>Junyan: &ldquo;16 yes&rdquo;</p>
+      <p><strong>Why.</strong> Laurie-Eve's second move on 2026-11-02 20:20: <code>intake_decide.py</code> wrote the ticket after the move request was built, so the Registrar hand-off was refused with "ticket changed: reread before routing". The fallback then failed with a bare HTTP 400 and no Ops Lead Action was filed, and the request file died with the cloud sandbox.</p>
+      <p><strong>Failure mode.</strong> On that one refusal <code>registrar_move_intake.py</code> re-reads the ticket and routes once more with its fresh revision; every other check still runs, and any other refusal or a second stale read is not retried. Both scripts now print Notion's error body with the error, and the fallback Action's Basis keeps the whole request. The Responder writes the request only after <code>intake_decide.py</code> and keeps it in <code>/tmp/move/</code> for the pass.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-03</span>
+      <h3>Extra-hours summary learns the agreement series from the months before<span class="kind">The Treasurer &middot; failure &middot; EVENT-GATE extra_hours.py classify, library/the-treasurer.md, Fixer d2, booking 119955194 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1597">desk-correspondence #1597</a></span></h3></summary>
+      <p><strong>Why.</strong> Maggie's October summary held on Oct 7 (booking 119955194). Skedda had moved every October Wednesday of her agreement out as one-offs (119955194 to 119955198) and the Wednesday series last ran Sep 23, so no Wednesday series was seen inside October and the d12 rule could not match. Junyan approved the fix forward on 2026-11-03 (Fixer d2).</p>
+      <p><strong>Failure mode.</strong> The series slots the "agreement day" rule matches against now also come from the renter's Paid, uncharged series bookings in the 120 days before the month (one extra Skedda read). If that read fails the rule uses the month alone, as before, so a failure can only hold a summary, never drop a booking.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-03</span>
       <h3>A slow prepaid count keeps the last good answer<span class="kind">deck &middot; failure &middot; DECK live-unpaid.livePrepaid withLastGood LAST_GOOD_MS, EVENT-GATE /plan-preview &middot; <a href="https://github.com/junyanboon/deck-app/pull/649">deck-app #649</a></span></h3></summary>
       <p><strong>Why.</strong> David Garzon Nov 4 and Brad Wong Nov 6 and 13 flipped between Prepaid $0.00 and Bot Error at Skedda's price (Junyan, 2026-11-03). The count was right; about one load in three ran past the 45 s wait when the gate's few-minute Notion memo had lapsed, so every plan row went red.</p>
       <p><strong>Change.</strong> The Worker keeps each booking's last good count (covered, extra or used up) for 10 minutes and uses it when the gate fails, times out or answers unknown.</p>
