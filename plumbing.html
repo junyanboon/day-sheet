@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-04</span>
+      <h3>The insurance sweep runs on the 1st and the 16th at 09:00 Toronto, not just the 1st<span class="kind">event-gate &middot; cadence &middot; services/event-gate/hosting/install-insurance-sweep-timer.sh, services/event-gate/insurance_sweep.py, registry/jobs.json, library/lanes.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1606">desk-correspondence #1606</a></span></h3></summary>
+      <p>Junyan: &ldquo;7 yes (2026-11-04)&rdquo;</p>
+      <p><strong>Why.</strong> Asks wait until a certificate has been expired 3 days. On a monthly run a certificate that ran out at the end of a month waited almost a full month for its ask.</p>
+      <p><strong>Route.</strong> The timer <code>danceannex-insurance-sweep.timer</code> fires on the 1st and 16th at 09:00 Toronto. Dedupe is unchanged: one ask per renter inside 45 days, whatever the month, so a 16th run never re-asks someone asked on the 1st. The per-event after-booking lookback drops from 35 to 20 days so a run does not re-check bookings the last run already filed. Staleness window is now 24480 min (17 days). Rows still queue at Pending Review.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
       <h3>A credit's expiry now follows the booking it came from, not the first product on the Artist card<span class="kind">event-gate &middot; failure &middot; services/event-gate/credit_expiry.py, scripts/credit_expiry_for.py, library/autonomy.md credit carve-out &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1614">desk-correspondence #1614</a></span></h3></summary>
       <p>Junyan: &ldquo;d61 yes&rdquo;</p>
       <p><strong>Why.</strong> Avante Dance Company (Fixed Option + Private Class Add-on) got a 3-month expiry (2027-02-04) on a credit from a Fixed Option series booking (Skedda 118550158, Dec 28, Studio 527). Junyan: "It should be good until December 31st when her contract ends."</p>
