@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-04</span>
+      <h3>Info-only notices now post to Slack #desk-status instead of filing Actions rows<span class="kind">event-gate &middot; route &middot; services/event-gate/lane_common.py, services/event-gate/move_reader.py, services/event-gate/inspection_findings.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1621">desk-correspondence #1621</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-11-04, d48: "if we need to be notified it goes to desk-status not actions to perform". Born-closed FYI rows and the move reader's shadow digest were still landing on the Actions board.</p>
+      <p><strong>Route.</strong> New <code>lane_common.desk_status_notice(key, text)</code> posts once per key to #desk-status (owner_notify YOU route) with the key kept as <code>[key]</code> at the end. Dedupe is a sqlite ledger (<code>DESK_STATUS_NOTICES_DB</code>, default <code>/var/lib/eventgate/desk-status-notices.sqlite3</code>) plus any Actions row already filed under the key before d48. A failed post is not recorded, so the next pass retries. <code>fyi_row</code> (the Analyst's Inspection Note with no rule) and the move reader's <code>[move-reader-digest-&lt;date&gt;]</code> now use it. Rows that ask someone to act (alarm triggers, PBF failures, a retired merged reply, a Left unarmed card) are unchanged.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
       <h3>event-gate deploys drain running jobs during the Mac tests and keep the build cache<span class="kind">event-gate &middot; failure &middot; services/event-gate/hosting/deploy_hostinger.py, scripts/deploy_gate.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1622">desk-correspondence #1622</a></span></h3></summary>
       <p>Junyan: &ldquo;pending&rdquo;</p>
       <p><strong>Why.</strong> A direct deploy took 453 s: a cold image build (the cache was wiped by the cleanup) and a 241 s wait for running jobs that only began after the tests (Junyan, 2026-11-04, "Yes, go").</p>
