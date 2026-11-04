@@ -1367,6 +1367,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-04</span>
+      <h3>The merged same-day confirmation and the Monitor Only Returning Access now read the panel before they quote a code<span class="kind">event-gate &middot; failure &middot; services/event-gate/booking_sweep.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1613">desk-correspondence #1613</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> PR 1611 (d37) made the How-to-Access read the panel first after the Lexi Haney lockout. Two more paths still quoted the Artist card's code unread: the same-day confirmation with the returning codes merged in, and the Monitor Only Returning Access text (d40, Junyan 2026-11-04).</p>
+      <p><strong>Route.</strong> Both now call <code>returning_access_code_checked</code>, which wraps the PR 1611 <code>hta_code_from_panel</code> read-only compare. Match: the Reasoning says "Code read from the panel this pass." Mismatch: the text still queues (never blocked) with the panel's digits, the card is corrected, the Reasoning carries the "⚠ card differed from panel" line, and one Access / PIN Action is filed. No panel answer: the card's code is used and the Reasoning says "Code NOT checked on the panel this pass". A blank card with a panel answer now gets the panel's code instead of being held.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>Every extension ask gets its own Extra booking; only that booking is invoiced and released<span class="kind">The Registrar &middot; route, failure &middot; EVENT-GATE extension_sweep.py, extension_invoice.py, open_invoice_watch.py, d56, d57 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1609">desk-correspondence #1609</a></span></h3></summary>
+      <p>Junyan: &ldquo;we have to separate bookings so that the skedda booking only is connected to the extension booking&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-11-04 (d56, d57): the renter's own booking is never changed, paid or unpaid, and the unpaid-invoice timer "should only affect the extension booking. we'll send a follow up after 24 hrs and then cancel after 48".</p>
+      <p><strong>Route change.</strong> An email or text ask for more time on an unpaid booking no longer stretches it in place: like a paid one, it gets a separate unpaid Extra booking, and the draft invoice bills and is tagged to that Extra booking only. Unpaid invoice: one held follow-up 24 hours after it was sent, the Extra booking released at 48 hours (never once started).</p>
+      <p><strong>Failure mode.</strong> <code>EXTENSION_STRETCH_ROLLBACK=1</code> restores the old in-place stretch (unpaid) and person hand-off (paid).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
       <h3>A card merge now clears the merged card's alarm code and re-reads the surviving card's code from the panel<span class="kind">desk-sort &middot; failure &middot; scripts/merge_cards.py, library/relay-addresses.md, library/desk-sort.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1612">desk-correspondence #1612</a></span></h3></summary>
       <p>Junyan: &ldquo;pending&rdquo;</p>
       <p><strong>Why.</strong> After a same-person merge, Lexi Haney's two cards both held one Alarm User ID; the stale card said 7112, the panel 8773, and the wrong code was texted (Nov 3 2026).</p>
