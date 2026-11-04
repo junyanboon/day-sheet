@@ -1367,6 +1367,24 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-04</span>
+      <h3>A card merge now clears the merged card's alarm code and re-reads the surviving card's code from the panel<span class="kind">desk-sort &middot; failure &middot; scripts/merge_cards.py, library/relay-addresses.md, library/desk-sort.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1612">desk-correspondence #1612</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> After a same-person merge, Lexi Haney's two cards both held one Alarm User ID; the stale card said 7112, the panel 8773, and the wrong code was texted (Nov 3 2026).</p>
+      <p><strong>Route.</strong> <code>scripts/merge_cards.py</code> now blanks the tombstone's Alarm Code and Alarm User ID (the old user id stays in the merge note) and re-reads the survivor's code and user id from alarm-mcp with a read-only verify_only call, writing them when they differ. No panel answer: the survivor is left as is and the script prints <code>survivor: panel not read</code> for the Door Checker.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>Every access text the Registrar queues now reads the panel first and uses the panel's code, even when the booking's access was settled earlier<span class="kind">event-gate &middot; failure &middot; services/event-gate/booking_sweep.py, library/doorman-access-lifecycle.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1611">desk-correspondence #1611</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> Alexander (Lexi) Haney's card said 7112 while the panel held 8773. Her booking's access step was already settled, so no panel read ran, and the Nov 3 HTA quoted the card's 7112 under a Reasoning that said "code verified against the panel this pass". She was locked out of 509A on Nov 4.</p>
+      <p><strong>Route.</strong> Before a holder's How-to-Access or Returning Access row is queued, <code>hta_code_from_panel</code> does a read-only verify_only compare. Match: unchanged. Mismatch: the text still queues (never blocked, Junyan 2026-11-01) with the PANEL's digits, the Artist card's Alarm Code is set to the panel's, the Reasoning starts with "⚠ card differed from panel", and one Access / PIN Action <code>hta-panel:&lt;card&gt;:&lt;date&gt;</code> is filed. No panel answer: the card's code is used and the Reasoning says "code NOT checked on the panel this pass (why)". A facilitator's text is unchanged (already proven by <code>facilitator_access</code>).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
       <h3>A paid desk or Deck invoice now marks its Skedda bookings paid straight from Stripe, even when its Action row is closed or Cancelled<span class="kind">event-gate &middot; route, failure &middot; services/event-gate/paid_invoice_settle.py, services/event-gate/money_reconcile.py, library/autonomy.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1604">desk-correspondence #1604</a></span></h3></summary>
       <p>Junyan: &ldquo;pending&rdquo;</p>
       <p><strong>Why.</strong> Himanshi Mehta paid her $29.38 invoice (in_1UXlWkPunGOWPTflqLFe93Em) on 2026-11-03 for Skedda 123891997, but Skedda kept reading unpaid. The invoice's Action row had been Cancelled that noon and the invoice also listed a booking that had been made complimentary, so the Deck webhook, the paid-proof close and the invoice settle round all skipped it. Junyan marked it by hand.</p>
