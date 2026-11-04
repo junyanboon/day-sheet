@@ -1367,6 +1367,24 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-04</span>
+      <h3>Giggster's review-request SMS is a platform notice, so Junyan no longer gets a Need Help text for it<span class="kind">responder &middot; failure &middot; scripts/intake_decide.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1618">desk-correspondence #1618</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-11-04 (and Oct 11, Oct 14) Giggster's "How did your shoot on &lt;date&gt; go? Please leave a review at ..." SMS matched no platform pattern, so intake treated it as a person's text and queued a Need Help text to Junyan with no quote (Junyan, 2026-11-04, d3).</p>
+      <p><strong>Change.</strong> <code>intake_decide.py</code> recognises the review SMS and any SMS whose only content is a Giggster, Peerspace or Tagvenue link with no question or person's words. It declines them (platform notice), and queues no Need Help text when every message is a platform's own text. A Need Help text with an empty ask now quotes the first message body. Nothing to a renter is blocked.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>deploy-gate deploys event-gate straight to the VPS from the Mac, no GitHub runner queue<span class="kind">event-gate &middot; route &middot; scripts/deploy_gate.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1617">desk-correspondence #1617</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> Deploys waited 15 to 30 min in the queue for GitHub's self-hosted VPS runner for about 8 min of work (Junyan, 2026-11-04, "66 yes please!").</p>
+      <p><strong>Route.</strong> <code>deploy-gate</code> packs the source on the Mac with the workflow's own Bundle step, runs the tests on the Mac while the VPS builds (<code>src-stage</code>), then sends <code>src-update &lt;sha&gt;</code> through the restricted <code>github-deploy</code> login (Mac key, root as jump host). Same preview, one question, <code>/health</code> git_sha check; a failed check rolls back to the previous live sha, and <code>deploy-gate --undo</code> does it by hand. <code>--via-github</code> keeps the old runner path. <code>deploy-gate deck</code> wraps the Deck deploy too.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
       <h3>The insurance sweep runs on the 1st and the 16th at 09:00 Toronto, not just the 1st<span class="kind">event-gate &middot; cadence &middot; services/event-gate/hosting/install-insurance-sweep-timer.sh, services/event-gate/insurance_sweep.py, registry/jobs.json, library/lanes.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1606">desk-correspondence #1606</a></span></h3></summary>
       <p>Junyan: &ldquo;7 yes (2026-11-04)&rdquo;</p>
       <p><strong>Why.</strong> Asks wait until a certificate has been expired 3 days. On a monthly run a certificate that ran out at the end of a month waited almost a full month for its ask.</p>
