@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>A renter who says they will not come gets Will Not Attend, no follow-up and a thank-you<span class="kind">Concierge / Responder / Registrar &middot; route &middot; services/event-gate/gtg_sweep.py (pbf_step), services/event-gate/end_of_day_review.py, services/event-gate/board_status.py (SETTLED), services/event-gate/host_sweep.py, library/concierge-orchestration.md, library/the-responder.md, services/event-gate/test_gtg_sweep.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1678">desk-correspondence #1678</a></span></h3></summary>
+      <p>Junyan: &ldquo;approved the build in chat (2026-11-05, Sierra Goulding "I am no longer able to make it today")&rdquo;</p>
+      <p><strong>Why.</strong> Sierra Goulding texted that she could not make her booking while her AVA and EOB were still queued. The desk had no way to record "not coming" short of Cancelled or Missed Booking, and Missed Booking drafts a "we missed you" and can raise a fee card.</p>
+      <p><strong>Route change.</strong> A new 🛎️ board <code>Booking Status</code>, <code>Will Not Attend</code>, set by the desk from the renter's own words. The desk sets that booking's still-queued HTA, AVA and EOB rows <code>Will Not Send</code> with a dated quote (a marking, not a guard; a person can still send any row). The GTG sweep's PBF step skips the row, the end-of-day review no longer asks for its messages, PBF or status repair, and the attendance lane counts it as settled. The Responder drafts one short warm thank-you held at Pending Review instead of access text.</p>
+      <p><strong>Failure mode.</strong> Until Junyan adds the <code>Will Not Attend</code> option to the board's Booking Status, nobody can set it and nothing changes. A row left Upcoming behaves as before (attendance robot, PBF).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>The paid-booking robot files one complete Sales ticket when it books and bills a YES<span class="kind">Registrar &middot; route &middot; services/event-gate/paid_booking_ticket.py, services/event-gate/paid_booking.py (file_ticket), services/event-gate/paid_booking_live.py (ticket), scripts/intake_decide.py (robot_lane_reason), library/process-studio-tickets.md, library/specs/paid-booking.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1677">desk-correspondence #1677</a></span></h3></summary>
+      <p>Junyan: &ldquo;"22 yes" (2026-11-05)&rdquo;</p>
+      <p><strong>Why.</strong> The robot booked, billed and sent the receipt for a renter's YES but left no ticket, so the rest of the booking (alarm code, Phone.com contact, close out) had nothing for the desk to open.</p>
+      <p><strong>Route change.</strong> After the receipt is queued, <code>/paid-booking-sweep</code> files one Sales ticket in the Sales database: title <code>Booking request [&lt;holder&gt;] [paid-booking-ticket:paid:&lt;yes id&gt;]</code>, the Artist card the robot resolved, SOP Skedda Booking Inquiry Case C with its steps copied from <code>sops/pages</code> and the robot's own steps ticked, Stage First Booking Support (card charged) or Offer Sent (invoice), Position In Progress. <code>intake_decide.py</code> finds the ticket by its key, so the Responder opens no second one.</p>
+      <p><strong>Failure mode.</strong> No Artist card, a failed lookup or a failed create: nothing is filed and the line is logged; the booking, charge and receipt are unaffected. A claim plus a status-blind key lookup keep it to one ticket; a failed checklist write is logged and never makes a second ticket.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>A message the paid-booking robot already answered opens no Responder ticket<span class="kind">Responder / Registrar &middot; route &middot; scripts/intake_decide.py (robot_lane_reason), scripts/already_answered.py (closes_robot_reply), scripts/credit_claim.py (claim_rows prefixes), library/the-responder.md, scripts/test_intake_robot_lane.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1674">desk-correspondence #1674</a></span></h3></summary>
       <p>Junyan: &ldquo;"11 yes" (2026-11-05, fixes #1 and #3 from the Camila Avendano trace)&rdquo;</p>
       <p><strong>Why.</strong> The Registrar's robot offered Camila Avendano a paid booking, booked on her YES and sent the receipt. Her "Thank you!!" a minute later still got a Customer Care ticket at 10:53 Toronto, because intake only looked for <code>[credit:</code> keys on Sales tickets, and the already-answered check counted her thank-you as a new open turn.</p>
