@@ -1364,6 +1364,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>Google review alerts outside the inbox and Peerspace hidden reviews now reach the Reviews list<span class="kind">The Responder, Platform Watch &middot; route, failure &middot; library/the-responder.md § Google review alerts, scripts/peerspace_hidden_review.py, platform-watch/RUNBOOK.md § Reviews of us &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1628">desk-correspondence #1628</a></span></h3></summary>
+      <p>Junyan: &ldquo;(Reviews tab session, 2026-11-04) missed reviews never reached the tab&rdquo;</p>
+      <p><strong>Why.</strong> The Lane Detective traced two reviews that never reached the Reviews list or the Deck's Reviews tab. Jake Maresca's Google alert (Oct 30) was filed under <code>Artist Care - Reviews</code> out of the inbox, and the Responder reads <code>in:inbox</code> only. atusa M.'s Peerspace review (Nov 2) is hidden until we review her back, and the host reviews page the Platform Watch reads does not list hidden ones.</p>
+      <p><strong>Route change.</strong> The Responder now sweeps <code>google_review_alert.py --since &lt;3 days ago&gt;</code> every pass (the correspondence log holds every label) and files a row and task for any alert with no Reviews row. The Platform Watch, in its daily reviews run, reads Peerspace "See what your guest, &lt;name&gt; wrote about you" mail with <code>scripts/peerspace_hidden_review.py</code>, which takes the Peerspace booking id out of the tracked Leave a review link, and upserts a hidden row keyed <code>peerspace:&lt;booking id&gt;</code>, the same key the reviews page uses, so the words fill in later.</p>
+      <p><strong>Failure mode.</strong> A mail with no decodable link gives an empty id and is skipped. A failed Reviews read writes nothing. The runbook change is a local file (backup <code>RUNBOOK.md.bak-2026-11-04-hidden-peerspace</code>) and calls the script from the canon checkout, so it works once this merges.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>deploy-gate runs one at a time, and the VPS keeps one drainer<span class="kind">event-gate &middot; failure &middot; scripts/deploy_gate.py, services/event-gate/hosting/deploy_hostinger.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1630">desk-correspondence #1630</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> Two deploy-gate runs for the same sha at once hung a deploy for about 20 min: the second <code>src-prepare</code> started a second drainer, which removed the first drainer's socket, so <code>src-update</code> could not get the held lock (Junyan, 2026-11-04, d76 "76 if it's needed").</p>
+      <p><strong>Change.</strong> <code>deploy-gate</code> takes a lock on the Mac (<code>~/.local/state/deploy-gate/run.lock</code>, pid, start time and arguments inside); a second run stops at once and names the run that is going. A lock left by a dead run is taken over. On the VPS, <code>src-prepare</code> for a sha that already has a live drainer reuses it; for a different sha while a drainer is live it refuses with that sha. Each drainer holds an flock on its own marker file, so a dead one is never counted, and a prepare waits (under a short prepare lock) until the drainer it started is visible.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-04</span>
