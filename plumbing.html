@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>A pause date that is not the 1st of a month raises a warning (Treasurer row and Desk Invariants X)<span class="kind">Treasurer / Desk Invariants &middot; failure &middot; EVENT-GATE treasurer_sweep.py, invariants.py, test_treasurer_sweep.py, test_invariants.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1656">desk-correspondence #1656</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-11-05 ("There shouldn't be way to pause mid-month")&rdquo;</p>
+      <p><strong>Why.</strong> The Deck counted a pause by the day while the Treasurer counts by the month, so a mid-month date meant two answers for the same renter.</p>
+      <p><strong>Change.</strong> Paused From and Unpause Date are always the 1st. The Treasurer files one Review row per card and date <code>[treasurer:pausedate:&lt;artist id&gt;:&lt;paused|unpause&gt;:&lt;date&gt;]</code>, and Desk Invariants reports X for the same card. Warning only: nothing is blocked, the card is never edited, and the month logic still reads the date by its month.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>Gate-1 platform rows and the unanswered "Which guest?" Decision are one row per guest<span class="kind">event-gate booking sweep / Registrar &middot; route &middot; EVENT-GATE booking_sweep.py, platform_identity.py, test_one_row_per_guest.py, PR 1652 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1654">desk-correspondence #1654</a></span></h3></summary>
       <p>Junyan: &ldquo;d163 ("163 yes")&rdquo;</p>
       <p><strong>Why.</strong> A platform guest with three bookings drew three gate-1 "NO phone on file" rows and up to three "Which &lt;name&gt;? still unanswered" Decisions, all asking the same thing (left out of PR 1652).</p>
@@ -1420,6 +1429,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> Junyan wants to approve each release (d85). The 24 h reminder stays automatic.</p>
       <p><strong>Route change.</strong> At the further-out release step (48 h, or 2 h before the start if sooner; extensions included) the invoice-first timer files ONE Charges-tab card keyed <code>[openinv:&lt;in_id&gt;]</code> (Review, Cancel / Keep / Remind, the One-Off open-invoice card) and records <code>carded</code> in its state, so it files once. Nothing is voided or removed. Junyan's Cancel voids the invoice from the Deck (Stripe re-read first); the open-invoice DECIDE pass then removes only that booking (the Extra booking for an extension), logs the <code>[invfirst:]</code> evidence and holds the released text at Pending Review. Shadow logs "would card". Same-day and next-day releases, and the no-reply card path, are unchanged.</p>
       <p><strong>Failure mode.</strong> No Artist card or a failed Skedda read files no card that pass and tries again next pass. A booking that has started gets no card and its invoice stays open for a person.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>A late-only overtime now always files a held charge and queued notice; no more Desk Drops miss<span class="kind">event-gate &middot; failure, route &middot; services/event-gate/closing_overtime.py (ready, renter_texted, owns, run_pass), services/event-gate/overtime_sweep.py (closing_owns), services/event-gate/operational_feedback.py (overtime_row), library/timekeeper-overtime.md (Overtime after the lock-up) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1650">desk-correspondence #1650</a></span></h3></summary>
+      <p>Junyan: &ldquo;d151 to d155 (2026-11-04): "151 okay yes, 152 no queue it up first, 153 yes, 154 booking holder gets the overtime text, 155 yes"&rdquo;</p>
+      <p><strong>Why.</strong> Saneea Clarke (527, Oct 30) and Hossein Davary (693, Nov 2) left late but got no charge and no notice: the closing lane declined, the 04:00 Timekeeper skipped them, and the case ended at a person's row (three rows for Hossein).</p>
+      <p><strong>Failure mode change.</strong> The closing lane holds back only for a keypad re-entry, or a text between booking end and the arm that asks for or offers more time. Staff remote disarms, texts after the arm, plain replies, an unreadable inbox or a missing phone no longer hold. Anything it does not file, the 04:00 run files (it skips only keys in the closing lane's own filed table). The #desk-drops miss post and its "skipped steps" stamp are gone.</p>
+      <p><strong>Route change.</strong> The overtime notice is queued at Pending Review for Junyan's Send press; the closing lane no longer releases it to the send engine. Notice and charge go to the Skedda booking holder. An overtime drop or staff report attaches to the existing <code>[ot:&lt;studio&gt;:&lt;day&gt;:</code> Action instead of opening a new "Operational feedback" row.</p>
     </details>
     </li>
     <li class="entry det">
