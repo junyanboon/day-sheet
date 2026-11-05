@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>Mail rules sort Skedda notices and Send Engine alerts (dry run first)<span class="kind">event-gate mail-rules &middot; route &middot; EVENT-GATE mail_rules.py, mail_rules.json, test_mail_rules.py, library/the-responder.md, d210 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1668">desk-correspondence #1668</a></span></h3></summary>
+      <p>Junyan: &ldquo;d210 ("210 yes")&rdquo;</p>
+      <p><strong>Why.</strong> Since Nov 4 the Responder's passes often left Skedda notices and Send Engine alert mails unlabelled in the inbox.</p>
+      <p><strong>Route change.</strong> Three new rules in the 5-minute mail-rules lane, no model in it: Skedda booking made / changed / cancelled notices get <code>Sales - Skedda</code>; <code>[Send Engine] ...</code> alerts from the studio address and Google's "Message Queue Send Engine" Apps Script failure summary get <code>Junyan - Maintenance</code>. Skedda "awaiting approval" requests, anything mentioning insurance, other scripts' failure summaries and every multi-message (human) thread are never touched. The rules ship Provisional: label only (shadow <code>rules/&lt;id&gt;</code> until the lane is live), no archive and no mark-read until Junyan promotes them to Full on shadow evidence.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>Plan renters' prepaid-hours card opens 24 hours before again; the Fixer's prepaid-fix row carries a Booking ref<span class="kind">event-gate unpaid review / prepaid-hours bot / Deck Fix &middot; route &middot; EVENT-GATE unpaid_review.py, test_unpaid_review.py, test_plan_allowance_sweep.py; deck-app src/live-unpaid.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1666">desk-correspondence #1666</a></span></h3></summary>
       <p>Junyan: &ldquo;d196 ("196 yes"), d197 ("197 yes")&rdquo;</p>
       <p><strong>Why.</strong> d85 (2026-10-30) held every unpaid-review row until the booking day was over. That also held Active 1AP/AAP renters' prepaid-hours cards, so plan_allowance_sweep settled them a day late and the Deck and Fixer flagged "not settled on its day". The Fixer's "Prepaid booking not settled" rows had no Booking ref, so the bot could not act on them (David Garzon, Skedda 123428010).</p>
