@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>A Will Not Attend renter who arrives anyway gets the booking and the EOB back<span class="kind">Attendance Sweep / Booking Sweep &middot; route &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1680">desk-correspondence #1680</a></span></h3></summary>
+      <p><strong>Why.</strong> Junyan (d12): a renter marked Will Not Attend might still turn up. Their EOB sits at Will Not Send, which does not show on the Deck board, so nobody would see it to send it.</p>
+      <p><strong>Route change.</strong> Each reconcile tick the attendance lane reads today's Will Not Attend rows. When the renter's own code disarms the booked studio inside the window, it sets Booking Status back to In Studio (or Upcoming before the start), sets the desk's Will Not Send EOB for that booking back to Ready to Send with its original Send After, and files one Actions card for Junyan. The booking sweep queues no new AVA, EOB, RA or multi-studio EOB for a Will Not Attend row.</p>
+      <p><strong>Failure mode.</strong> Each step is tried on its own and only logs an error; nothing is blocked. Shadow (<code>live=False</code>) writes nothing. <code>WNA_RETURN=off</code> turns the check off; then a renter who comes anyway is handled by hand as before.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>A renter who says they will not come gets Will Not Attend, no follow-up and a thank-you<span class="kind">Concierge / Responder / Registrar &middot; route &middot; services/event-gate/gtg_sweep.py (pbf_step), services/event-gate/end_of_day_review.py, services/event-gate/board_status.py (SETTLED), services/event-gate/host_sweep.py, library/concierge-orchestration.md, library/the-responder.md, services/event-gate/test_gtg_sweep.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1678">desk-correspondence #1678</a></span></h3></summary>
       <p>Junyan: &ldquo;approved the build in chat (2026-11-05, Sierra Goulding "I am no longer able to make it today")&rdquo;</p>
       <p><strong>Why.</strong> Sierra Goulding texted that she could not make her booking while her AVA and EOB were still queued. The desk had no way to record "not coming" short of Cancelled or Missed Booking, and Missed Booking drafts a "we missed you" and can raise a fee card.</p>
