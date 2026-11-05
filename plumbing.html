@@ -1364,6 +1364,24 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>The invoice chase no longer reads the studio's own Gmail or system notices as the payer writing in<span class="kind">event-gate chase sweep (invoices) &middot; route &middot; EVENT-GATE chase_sweep.py, test_chase_payer_mail_own_and_system.py, PR 1052 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1660">desk-correspondence #1660</a></span></h3></summary>
+      <p>Junyan: &ldquo;d183 ("183 yes")&rdquo;</p>
+      <p><strong>Why.</strong> The Desk Watch DO check failed: <code>payer_mail</code> (PR 1052) counted mail from the studio's own Gmail (thedanceannex@gmail.com, not on the danceannex.ca domain) and system notices as a payer reply, which held reminders and filed "payer replied" Reviews for nothing.</p>
+      <p><strong>Route change.</strong> The studio's own mailbox (<code>mail_rules.MAILBOX</code>, or <code>CHASE_STUDIO_ADDRESSES</code>) counts as the studio, never the payer; it still counts as our side when choosing the thread to reply in. A message whose headers mark it a system notice (<code>Auto-Submitted</code> other than <code>no</code>, or <code>Precedence: bulk/list/junk</code>) is ignored like the known automated senders. Real payer replies are unchanged.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>Concierge deadline entries that named the retired Ops Executor now belong to the Desk Sort<span class="kind">event-gate Concierge deadline audit &middot; route &middot; EVENT-GATE deadline_obligations.py, deadline_receivers.py, test_deadline_owner_ops_executor_retired.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1659">desk-correspondence #1659</a></span></h3></summary>
+      <p>Junyan: &ldquo;d171 ("171 yes")&rdquo;</p>
+      <p><strong>Why.</strong> The Ops Executor was retired on 2026-09-23, but a deadline route or an SOP page "Deadline owner" naming it still assigned work to it. Nothing works an Ops Executor list, so those entries could never clear and held the audit row open (Actions row 3d975032, Run Error).</p>
+      <p><strong>Route change.</strong> <code>ops-executor</code> is no longer a deadline owner. A route naming it is read as <code>desk-sort</code> (the old name kept as <code>retired_owner</code> on the assignment), and an SOP page set to "Ops Executor" routes to the Desk Sort. The audit's size guard (resolved entries dropped after 14 days) already shipped in PR 1625 (d57).</p>
+    </details>
+    </li>
     <li class="entry alert">
     <details>
       <summary><span class="when">2026-11-05</span>
