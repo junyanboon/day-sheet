@@ -1367,6 +1367,33 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>Send Engine failure alerts become one Actions row a day, traced daily<span class="kind">event-gate mail-rules &middot; route &middot; EVENT-GATE send_failure_rows.py, mail_rules.py, mail_rules.json, library/send-failure-trace.md, d216 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1669">desk-correspondence #1669</a></span></h3></summary>
+      <p>Junyan: &ldquo;d216 ("216 yes")&rdquo;</p>
+      <p><strong>Why.</strong> A Send Engine failure alert only got a label, so a failed renter message could wait in the inbox unseen.</p>
+      <p><strong>Route change.</strong> Every mail-rules pass now groups <code>[Send Engine]</code> alerts and the "Message Queue Send Engine" failure summaries into one <code>Send failure: N errors, &lt;date&gt;</code> Actions row per Toronto day, with each Gmail id and error line in Notes; the same error 3 or more times in a day also files one Shipper repair task. The two Send Engine rules archive an alert only after its Gmail id is on a row (and only once Junyan promotes them to Full). A daily Mac scheduled task runs the Message Tracer over each open row: what failed, whether a retry sent it, re-queue anything never sent as Pending Review for Junyan's Send, then close the row with the finding.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>A pay link text that does not queue now says why, on the toast and the row<span class="kind">The Deck &middot; failure &middot; src/charge-fail-text.js (queueFailText), src/index.js (/api/charge/run), sources/deck.html (chargeToast) &middot; <a href="https://github.com/junyanboon/deck-app/pull/702">deck-app #702</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-11-05: Hossein Davary's Charge made invoice in_1UYZ27PunGOWPTflKuheX5MU, no queue row, toast "Pay link not texted: undefined."&rdquo;</p>
+      <p><strong>Why.</strong> A Charge made the invoice but no Message Queue row, and the toast gave no reason.</p>
+      <p><strong>Failure mode.</strong> Every miss in queueFailText (no phone, a queue write that throws, a write that gives back no row id) returns a real reason and writes a "PAY LINK TEXT NOT queued" note on the Actions row with the full text and link to send by hand. A queued result also carries a why, so an older open Deck page reads "queued in Messages" instead of "undefined". The toast never prints "undefined". Nothing blocks a message; nothing sends.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>A Combine press whose card fails or has no card makes one invoice and queues one pay link text<span class="kind">The Deck &middot; route &middot; src/charge.js (runCombined), src/index.js (combinedChargeRun), src/charge-fail-text.js (queueFailText) &middot; <a href="https://github.com/junyanboon/deck-app/pull/704">deck-app #704</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-11-05: approved the Combine version of "failed charge becomes invoice + queued pay-link text".&rdquo;</p>
+      <p><strong>Why.</strong> The single-row Charge already turns a declined card or no card into an invoice plus a queued text; Combine only failed.</p>
+      <p><strong>Route.</strong> On a clear card decline, or no card on file (not Send invoice), Combine makes ONE Stripe invoice with one line per row (tagged deck_combined, dl_&lt;row&gt;, card_failed), finalized but never emailed by Stripe. Every row is marked INVOICED with that invoice and "pay link text queued for your Send". One SMS row goes to the Message Queue at Pending Review (FAIL_TEXT or NO_CARD_TEXT, item "your N bookings"). A queue miss writes its reason on every combined row. Nothing sends by itself; nothing blocks.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>Alarm Watch condition rows close themselves once the panel trouble is gone<span class="kind">Alarm Watch (alarm-monitor watchdog) &middot; route &middot; ALARM-MONITOR escalate.py, action_alerts.py, test_action_autoclear.py, PR 64 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1662">desk-correspondence #1662</a></span></h3></summary>
       <p>Junyan: &ldquo;2026-11-05 ("should auto-clear from the actions to perform when it's fixed")&rdquo;</p>
       <p><strong>Why.</strong> "Review alarm condition" rows stayed open after the panel fault cleared, and nobody owned closing them.</p>
