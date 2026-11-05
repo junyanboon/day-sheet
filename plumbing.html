@@ -1367,6 +1367,25 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>Alarm Watch condition rows close themselves once the panel trouble is gone<span class="kind">Alarm Watch (alarm-monitor watchdog) &middot; route &middot; ALARM-MONITOR escalate.py, action_alerts.py, test_action_autoclear.py, PR 64 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1662">desk-correspondence #1662</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-11-05 ("should auto-clear from the actions to perform when it's fixed")&rdquo;</p>
+      <p><strong>Why.</strong> "Review alarm condition" rows stayed open after the panel fault cleared, and nobody owned closing them.</p>
+      <p><strong>Route change.</strong> Each watchdog tick tracks open Alarm Watch condition rows. A row whose trouble is gone from the panel on two reads at least 10 minutes apart is set Processed with a dated "cleared on its own" note. AC Power Failure rows are now filed URGENT with today's deadline.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>A failed Charge makes an invoice and queues a pay link text<span class="kind">The Deck &middot; route &middot; src/charge.js (invoiceAfterFail, run opts.failInvoice), src/charge-fail-text.js (FAIL_TEXT, queueFailText), src/index.js (/api/charge/run) &middot; <a href="https://github.com/junyanboon/deck-app/pull/696">deck-app #696</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-11-05: on a failed card charge, make a Stripe invoice and queue an SMS with the pay link&rdquo;</p>
+      <p><strong>Why.</strong> A declined card left the row open with nothing sent; the renter had no way to pay.</p>
+      <p><strong>Route change.</strong> On the owner's Charge press (not the robot, not a bundle press), a clear card decline makes one Stripe invoice for the same amount and lines (metadata deck_action, skedda_booking, card_failed; each line deck_action and booking_id), finalized but not emailed by Stripe, and writes an INVOICED line on the row. The Deck then queues one SMS at Pending Review in the Message Queue (tagged <code>[invoice-text:in_...]</code>) with the short pay link, from the single template FAIL_TEXT. It never sends by itself.</p>
+      <p><strong>Failure mode.</strong> No short link: the text still queues, with <code>[PAY LINK]</code> in place and a WARNING in Reasoning. No phone: a note on the row, no text. Invoice not made: a note on the row and the decline shows as before; nothing billed.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>deploy-gate waits its turn behind another run instead of failing<span class="kind">event-gate &middot; route &middot; scripts/deploy_gate.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1681">desk-correspondence #1681</a></span></h3></summary>
       <p>Junyan: &ldquo;pending&rdquo;</p>
       <p><strong>Why.</strong> A second <code>deploy-gate</code> ended with "FAILED another deploy-gate run is going" and the VPS refused a second prepare while one was draining, so Junyan had to watch and re-run by hand (Junyan, 2026-11-05, "30 yes").</p>
