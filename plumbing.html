@@ -1366,6 +1366,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>The invoice-first 48 h release now files a Deck card instead of cancelling<span class="kind">event-gate &middot; route &middot; services/event-gate/open_invoice_watch.py (invoice_first, _first_card, first_card_info, decide_row), library/autonomy.md (Grant: invoice-first release; Grant: an extension's unpaid Extra booking) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1642">desk-correspondence #1642</a></span></h3></summary>
+      <p>Junyan: &ldquo;d85 (2026-11-05): the robot must not cancel bookings on its own at 48 hours&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wants to approve each release (d85). The 24 h reminder stays automatic.</p>
+      <p><strong>Route change.</strong> At the further-out release step (48 h, or 2 h before the start if sooner; extensions included) the invoice-first timer files ONE Charges-tab card keyed <code>[openinv:&lt;in_id&gt;]</code> (Review, Cancel / Keep / Remind, the One-Off open-invoice card) and records <code>carded</code> in its state, so it files once. Nothing is voided or removed. Junyan's Cancel voids the invoice from the Deck (Stripe re-read first); the open-invoice DECIDE pass then removes only that booking (the Extra booking for an extension), logs the <code>[invfirst:]</code> evidence and holds the released text at Pending Review. Shadow logs "would card". Same-day and next-day releases, and the no-reply card path, are unchanged.</p>
+      <p><strong>Failure mode.</strong> No Artist card or a failed Skedda read files no card that pass and tries again next pass. A booking that has started gets no card and its invoice stays open for a person.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-11-04</span>
       <h3>A new "Booking sweep FAILED" row now texts Junyan's phone once<span class="kind">event-gate &middot; route &middot; services/event-gate/booking_sweep.py, services/event-gate/owner_text_release.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1633">desk-correspondence #1633</a></span></h3></summary>
       <p>Junyan: &ldquo;pending&rdquo;</p>
