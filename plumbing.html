@@ -1367,6 +1367,34 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>Gate-1 platform rows and the unanswered "Which guest?" Decision are one row per guest<span class="kind">event-gate booking sweep / Registrar &middot; route &middot; EVENT-GATE booking_sweep.py, platform_identity.py, test_one_row_per_guest.py, PR 1652 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1654">desk-correspondence #1654</a></span></h3></summary>
+      <p>Junyan: &ldquo;d163 ("163 yes")&rdquo;</p>
+      <p><strong>Why.</strong> A platform guest with three bookings drew three gate-1 "NO phone on file" rows and up to three "Which &lt;name&gt;? still unanswered" Decisions, all asking the same thing (left out of PR 1652).</p>
+      <p><strong>Route change.</strong> Both are now keyed by platform + normalised guest name (desk tags stripped, lower case). A later booking of the same guest appends one dated line to the open row, marked so a pass never adds it twice. Answering the one row (the card resolves with a phone) closes it for every booking on it. A booking already on any row, or on a pre-change per-booking row, files nothing (closed rows never re-arm). A guest back after the row was answered gets a fresh row keyed <code>[key#2]</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>A Buy supplies row closes when its order email matches; put-away is tracked apart<span class="kind">event-gate procurement &middot; route &middot; EVENT-GATE procurement_sweep.py, test_procurement_sweep.py, library/cleaning-tab.md, deck-app PR 681 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1653">desk-correspondence #1653</a></span></h3></summary>
+      <p>Junyan: &ldquo;d160 ("160 sure but who will track this?")&rdquo;</p>
+      <p><strong>Why.</strong> Buy supplies rows sat open on Junyan's Actions board until Stefan put the item away, long after the buying was done.</p>
+      <p><strong>Route change.</strong> When the procurement robot matches an order email to a Buy row it now sets the row Processed (Executed by Agent) along with the Ordered line. The row stays on the shopping list, keeps getting its Shipped lines and keeps Stefan's Put away card until a Put away line is on it (deck-app PR 681 reads the same rule). If a delivered line is 3 or more days old with no Put away, the robot files ONE "Put away overdue: &lt;items&gt;" Actions row for Junyan; later overdue items join it by a Notes line.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>A Buy row closed at order keeps its Put away card (d160)<span class="kind">The Deck &middot; route &middot; src/cleaning-supplies.js (inHand, inHandFilter, openRow, the list query, sweep, raiseApproved) &middot; <a href="https://github.com/junyanboon/deck-app/pull/681">deck-app #681</a></span></h3></summary>
+      <p>Junyan: &ldquo;d160 (2026-11-05, "160 sure"): the procurement robot closes a Buy row when its order email is matched&rdquo;</p>
+      <p><strong>Why.</strong> The event-gate procurement robot now sets a Buy row Processed (Executed by Agent) when it matches the order email, and keeps adding Shipped lines after.</p>
+      <p><strong>Route change.</strong> The Cleaning tab lists a "Buy supplies:" row while it is open, or Processed with an Ordered or Shipped line and no Put away line (created in the last 120 days). The one-row-per-item check counts such a row too, so no duplicate Buy row is raised while an item is ordered or on its way. Put away on it adds its usual line and raises the count once, leaving the Status alone; the Put away line then takes it off the list. Remove is unchanged.</p>
+      <p><strong>Failure mode.</strong> A failed Notion read keeps the last kept list; a failed Put away write is retried and never counted twice (as before).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>The no-reply 48 h release now files a Deck card instead of cancelling<span class="kind">event-gate &middot; route &middot; services/event-gate/open_invoice_watch.py (consent_first, consent_card_info, consent_decide), deck-app src/open-invoice-cancel.js, library/autonomy.md (Grant: invoice-first release), library/desk-sort.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1644">desk-correspondence #1644</a></span></h3></summary>
       <p>Junyan: &ldquo;d88 (2026-11-05): the consent / no-reply path must stop removing a further-out booking at 48 hours by itself; d87: the same-day and next-day 1 h release stays automatic&rdquo;</p>
       <p><strong>Why.</strong> Junyan wants to approve each release (d88), as he does for the invoice path since d85. The 24 h check-in stays automatic.</p>
