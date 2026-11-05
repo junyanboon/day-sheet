@@ -1367,6 +1367,33 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>Plan renters' prepaid-hours card opens 24 hours before again; the Fixer's prepaid-fix row carries a Booking ref<span class="kind">event-gate unpaid review / prepaid-hours bot / Deck Fix &middot; route &middot; EVENT-GATE unpaid_review.py, test_unpaid_review.py, test_plan_allowance_sweep.py; deck-app src/live-unpaid.js &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1666">desk-correspondence #1666</a></span></h3></summary>
+      <p>Junyan: &ldquo;d196 ("196 yes"), d197 ("197 yes")&rdquo;</p>
+      <p><strong>Why.</strong> d85 (2026-10-30) held every unpaid-review row until the booking day was over. That also held Active 1AP/AAP renters' prepaid-hours cards, so plan_allowance_sweep settled them a day late and the Deck and Fixer flagged "not settled on its day". The Fixer's "Prepaid booking not settled" rows had no Booking ref, so the bot could not act on them (David Garzon, Skedda 123428010).</p>
+      <p><strong>Route change.</strong> An Active plan renter's prepaid-hours card opens from 24 hours before the booking again; per-booking renters keep d85. The Deck's Fix writes Booking ref <code>skedda:&lt;id&gt; start:... end:...</code> on its Fixer row when no open row already names the booking (else it names that row in Basis), so the bot settles from it. While that Fixer row is open, the unpaid review files no second card for the booking (it would be a collision the bot refuses).</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>A Concierge reader the gate skips is a carry-over, not a Skipped Steps pass<span class="kind">The Concierge &middot; failure &middot; library/concierge-orchestration.md [R-gate] [R-caps-complete] [R-intake-report] [R-full-pass] &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1663">desk-correspondence #1663</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-11-05 ("1 yes 2 yes")&rdquo;</p>
+      <p><strong>Why.</strong> The start gate's 5 minute cap skipped the intake and handback readers on most passes, and canon counted a skipped reader as a failed step, so five days in a row (11-01 to 11-05) ended Skipped Steps and the Fixer kept filing cards.</p>
+      <p><strong>Failure mode change.</strong> A reader the gate skips (cap, 5xx, timeout) is named on the pass line with its last known count and the pass is Completed when everything it could read was worked or is a genuine wait. The same reader skipped on 3 passes in a row makes the pass Skipped Steps and raises one deduped Action. A non-transient read error is still incomplete, never zero.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>A robot can no longer cancel an access text in favour of itself<span class="kind">event-gate booking sweep / Registrar &middot; failure &middot; EVENT-GATE booking_sweep.py, test_booking_sweep.py, test_merge_waiting.py, library/fast-track.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1665">desk-correspondence #1665</a></span></h3></summary>
+      <p>Junyan: &ldquo;d201 ("201 yes")&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-11-05 the Registrar queued Leo Roytman's combined confirmation + access text (HTA-sweep-1106-1845-693), then its own held-confirmation clean-up found that same row (it names the date and says "confirmed") and set it Will Not Send, "Superseded by combined confirmation + access text" naming itself. The access check then read that Will Not Send as handled, so no text was ever queued again.</p>
+      <p><strong>Failure mode change.</strong> The clean-up now skips the new row (by id and by its Message Code), never looks at access rows, and retires nothing unless the replacement exists and is not cancelled. One shared check (<code>mark_superseded</code>) refuses a self, missing or cancelled replacement, for both the clean-up and the same-day merge void. A Will Not Send whose Reasoning says "Superseded by combined confirmation + access text" or "Not a human decision" no longer counts as handled, so the next pass queues a fresh access text. A person's cancel still blocks.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>The Concierge gate runs intake in its own 5 minute group and logs per-reader time; the Fixer waits on an open day's Rolling Daily<span class="kind">event-gate &middot; failure &middot; concierge_gate.reader_groups, concierge_gate.reader_timing, notion_http.tally, report_recovery.open_day_wait, operational_feedback.skip_streak &middot; desk-correspondence</span></h3></summary>
       <p><strong>Case.</strong> The Concierge Rolling Daily read Skipped Steps every day from 2026-11-01 to 2026-11-05 (reports 40c75032-81c4-81b7, 40d75032-81c4-81c6, 40e75032-81c4-8127, 40f75032-81c4-81c2). The start gate hit its 300s cap with the intake and handback readers still running, and the Fixer filed a card on the mid-day Status even when a later pass that day caught up.</p>
       <p><strong>What broke.</strong> All seven gate readers shared one 300s cap and one Notion line, so intake (30 to 130 items) starved the rest; the gate did not say which reader used the time; the Fixer read an open day's last-pass-wins Status as a final one.</p>
