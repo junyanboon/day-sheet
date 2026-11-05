@@ -1397,6 +1397,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-04</span>
+      <h3>Insurance drafts warn instead of blocking; Invariant P files a Responder outage to Run monitoring<span class="kind">event-gate &middot; failure &middot; scripts/queue_draft.py, services/event-gate/invariants.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1648">desk-correspondence #1648</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> Karly's text asking about her insurance certificate (sms-in-35479ce9, Oct 26) got no draft for 7 h because queue_draft.py refused the Responder's "yes, we got it" reply, and P blamed the Responder for a miss that happened while Claude was down. Junyan, 2026-11-04, d8, d9, d12.</p>
+      <p><strong>Change.</strong> queue_draft.py no longer refuses an insurance draft: it skips the check for SMS and for a reply to a message that asks about insurance, and otherwise prints a warning and adds it to the row's Reasoning, then queues the held row as usual. Invariant P reads the Responder's Rolling Daily: no pass in the 4 h after the text was owed files the miss as <code>J24 Run monitoring</code> instead of handing it to the Responder. An audit row saying <code>no_reply_needed</code> or <code>declined</code> now counts as answered.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
       <h3>A weekly series counts as one room visit per occurrence, so a series renter's one-off booking is not a "first visit"<span class="kind">event-gate &middot; route &middot; EVENT-GATE booking_sweep.py (room_history_rows, skedda_room_visits, prior_room_bookings), host_sweep.py tier_for &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1646">desk-correspondence #1646</a></span></h3></summary>
       <p>Junyan: &ldquo;d104 yes, d133 yes&rdquo;</p>
       <p><strong>Why.</strong> On 2026-11-01 Claudia Dzierbicki (Avante Dance Company, Skedda user 4018614) got a "first visit" welcome text for a one-off Studio 527 booking (123297180), though her weekly 527 series (118550158, Mondays since Sep 7) had run for eight weeks. Skedda hands a series back stamped with its first day, so the room history saw one Sep 7 booking instead of every Monday, and the room timer read her as away.</p>
