@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>The Concierge intake skips Audit Log rows already proved finished (Concierge Done)<span class="kind">event-gate Concierge intake tick / Concierge gate &middot; failure &middot; EVENT-GATE concierge_intake.py, concierge_intake_ledger.py, concierge_done_backfill.py, test_concierge_done.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1671">desk-correspondence #1671</a></span></h3></summary>
+      <p>Junyan: &ldquo;d6 ("6 yes")&rdquo;</p>
+      <p><strong>Why.</strong> Every intake read re-proved every stub/routed Audit Log row since 2026-09-11, hundreds of them long closed, and the 2026-11-05 11:10 Concierge pass skipped intake over the 300s gate cap.</p>
+      <p><strong>Change.</strong> The intake tick now ticks a new Audit Log checkbox, Concierge Done, on every row whose full proof this tick is settled (draft or non-message verified, handled elsewhere, queue handled, no ticket noted), never while its ticket is still New or Routing, and a platform fold only as a whole. Full reads leave ticked rows out; a checkpoint's scoped read still reads them. A new inbound is a new, unticked row. If the checkbox is missing the read falls back to the old query. <code>CONCIERGE_INTAKE_MARK_DONE=0</code> stops the ticking.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>Mail rules sort Skedda notices and Send Engine alerts (dry run first)<span class="kind">event-gate mail-rules &middot; route &middot; EVENT-GATE mail_rules.py, mail_rules.json, test_mail_rules.py, library/the-responder.md, d210 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1668">desk-correspondence #1668</a></span></h3></summary>
       <p>Junyan: &ldquo;d210 ("210 yes")&rdquo;</p>
       <p><strong>Why.</strong> Since Nov 4 the Responder's passes often left Skedda notices and Send Engine alert mails unlabelled in the inbox.</p>
