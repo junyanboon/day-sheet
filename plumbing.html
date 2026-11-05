@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>A message the paid-booking robot already answered opens no Responder ticket<span class="kind">Responder / Registrar &middot; route &middot; scripts/intake_decide.py (robot_lane_reason), scripts/already_answered.py (closes_robot_reply), scripts/credit_claim.py (claim_rows prefixes), library/the-responder.md, scripts/test_intake_robot_lane.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1674">desk-correspondence #1674</a></span></h3></summary>
+      <p>Junyan: &ldquo;"11 yes" (2026-11-05, fixes #1 and #3 from the Camila Avendano trace)&rdquo;</p>
+      <p><strong>Why.</strong> The Registrar's robot offered Camila Avendano a paid booking, booked on her YES and sent the receipt. Her "Thank you!!" a minute later still got a Customer Care ticket at 10:53 Toronto, because intake only looked for <code>[credit:</code> keys on Sales tickets, and the already-answered check counted her thank-you as a new open turn.</p>
+      <p><strong>Route change.</strong> Before a ticket is created, <code>intake_decide.py</code> looks for the robot's real codes (<code>[paid-offer:</code>, <code>[paid-booking:paid:</code>, <code>[paid-reply:paid:</code>, <code>[paid-review:paid:</code>) on any source id of the form, on any board. A hit reports <code>routed-no-draft</code>, writes the audit row and opens no ticket and no Need Help text. A closing thank-you within 10 minutes after a <code>[paid-reply:</code> or <code>[paid-offer:</code> send to the same Artist is treated the same way, and <code>already_answered.py</code> no longer lets such a thank-you reopen the turn.</p>
+      <p><strong>Failure mode.</strong> A failed read only warns and the ticket opens as before. A thank-you with a question, or more than 10 minutes later, is an ordinary message. Other lanes' keys are not touched (no shared ownership check yet).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>Paid-booking sweep runs one at a time, and a paid offer is claimed per ask<span class="kind">event-gate &middot; route &middot; services/event-gate/app.py (/paid-booking-sweep), services/event-gate/paid_offer.py, services/event-gate/test_paid_offer.py, services/event-gate/test_paid_booking_sweep_single_flight.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1673">desk-correspondence #1673</a></span></h3></summary>
+      <p>Junyan: &ldquo;"11 yes" (2026-11-05, fixes #1 and #3 from the Camila Avendano trace)&rdquo;</p>
+      <p><strong>Why.</strong> Camila Avendano got the same "Studio 509A is free... Reply YES" offer twice, 39 s apart. The 5-minute timer's client gives up at 255 s but the sweep keeps running inside the container, so the next fire overlapped it and both runs passed the "already handled" check before either wrote.</p>
+      <p><strong>Route change.</strong> <code>/paid-booking-sweep</code> now runs one real sweep at a time: a fire that finds one running answers <code>{"ok": true, "skipped": "sweep already running"}</code> (HTTP 200) and touches nothing. A dry run only reads and is never skipped. <code>paid_offer.offer</code> also takes <code>prepared_action.claim("paid-offer:&lt;message id&gt;")</code> before the desk check and releases it after the row is written, like the YES step.</p>
+      <p><strong>Failure mode.</strong> While a long sweep runs, later timer fires are skipped, so a renter's YES waits for the running pass to finish instead of being worked twice. The claim guards only the same ask; a different message is never blocked, and no outbound send is blocked (Junyan, 2026-11-01: checks only warn). A claim older than 10 minutes is treated as dead.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>The Concierge intake skips Audit Log rows already proved finished (Concierge Done)<span class="kind">event-gate Concierge intake tick / Concierge gate &middot; failure &middot; EVENT-GATE concierge_intake.py, concierge_intake_ledger.py, concierge_done_backfill.py, test_concierge_done.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1671">desk-correspondence #1671</a></span></h3></summary>
       <p>Junyan: &ldquo;d6 ("6 yes")&rdquo;</p>
       <p><strong>Why.</strong> Every intake read re-proved every stub/routed Audit Log row since 2026-09-11, hundreds of them long closed, and the 2026-11-05 11:10 Concierge pass skipped intake over the 300s gate cap.</p>
