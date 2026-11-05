@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>deploy-gate waits its turn behind another run instead of failing<span class="kind">event-gate &middot; route &middot; scripts/deploy_gate.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1681">desk-correspondence #1681</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> A second <code>deploy-gate</code> ended with "FAILED another deploy-gate run is going" and the VPS refused a second prepare while one was draining, so Junyan had to watch and re-run by hand (Junyan, 2026-11-05, "30 yes").</p>
+      <p><strong>Route.</strong> When the Mac lock is held, <code>deploy-gate</code> names the holder, prints a heartbeat every 30 s and waits up to 15 minutes, then starts over from the fetch: a bare run re-reads origin/main, shows the preview and asks y/N again (<code>--yes</code> does not skip that after a wait), and a sha that went live meanwhile ends <code>LIVE</code>. If the VPS says "Another deploy is already draining", the direct path retries the prepare every 30 s for up to 15 minutes, checking <code>/health</code> each time; it ends <code>LIVE</code> if the other deploy included the sha and refuses if <code>/health</code> moved to a sha that does not contain it. The VPS ancestry guard is unchanged. <code>--no-wait</code> keeps the old fail-fast. The last line is still <code>LIVE &lt;sha&gt;</code> or <code>FAILED ...</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>A Will Not Attend renter who arrives anyway gets the booking and the EOB back<span class="kind">Attendance Sweep / Booking Sweep &middot; route &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1680">desk-correspondence #1680</a></span></h3></summary>
       <p><strong>Why.</strong> Junyan (d12): a renter marked Will Not Attend might still turn up. Their EOB sits at Will Not Send, which does not show on the Deck board, so nobody would see it to send it.</p>
       <p><strong>Route change.</strong> Each reconcile tick the attendance lane reads today's Will Not Attend rows. When the renter's own code disarms the booked studio inside the window, it sets Booking Status back to In Studio (or Upcoming before the start), sets the desk's Will Not Send EOB for that booking back to Ready to Send with its original Send After, and files one Actions card for Junyan. The booking sweep queues no new AVA, EOB, RA or multi-studio EOB for a Will Not Attend row.</p>
