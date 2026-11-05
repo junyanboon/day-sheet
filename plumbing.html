@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>The Concierge gate runs intake in its own 5 minute group and logs per-reader time; the Fixer waits on an open day's Rolling Daily<span class="kind">event-gate &middot; failure &middot; concierge_gate.reader_groups, concierge_gate.reader_timing, notion_http.tally, report_recovery.open_day_wait, operational_feedback.skip_streak &middot; desk-correspondence</span></h3></summary>
+      <p><strong>Case.</strong> The Concierge Rolling Daily read Skipped Steps every day from 2026-11-01 to 2026-11-05 (reports 40c75032-81c4-81b7, 40d75032-81c4-81c6, 40e75032-81c4-8127, 40f75032-81c4-81c2). The start gate hit its 300s cap with the intake and handback readers still running, and the Fixer filed a card on the mid-day Status even when a later pass that day caught up.</p>
+      <p><strong>What broke.</strong> All seven gate readers shared one 300s cap and one Notion line, so intake (30 to 130 items) starved the rest; the gate did not say which reader used the time; the Fixer read an open day's last-pass-wins Status as a final one.</p>
+      <p><strong>Fix.</strong> - <code>concierge_gate.py</code>: intake runs first in its own 300s group, then the other six together in a second 300s group (the gate can now take up to 10 minutes). gate.json has a <code>timing</code> map per reader: <code>seconds</code>, <code>notion_calls</code>, <code>state</code> (done, skipped, over cap). - <code>report_recovery.py</code>: a Skipped or Ended Early report titled with today's Toronto date waits while its Completed At is under 3 hours old, unless 3 Skipped passes in a row were seen (counted in operational-feedback.sqlite3 <code>skip_streaks</code>, reset when the report reads Completed). Past days file as before.</p>
+      <p><strong>Tests.</strong> test_concierge_gate.py (timing, groups, slow intake), test_report_recovery.py (open day waits, past day files, 3h quiet files, 3 in a row files, streak reset).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>The Codex autopilot can move allowed desk lanes to Codex when Claude is down (installed off)<span class="kind">Codex autopilot (VPS) and the fleet lease &middot; route, cadence, failure &middot; agent-fleet failover/codex codex_autopilot.py, autopilot_live.py, vps/install.sh, claude_down.py, PR 1657, d13 &middot; desk-correspondence</span></h3></summary>
+      <p>Junyan: &ldquo;13 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-26 Claude was down for about 5 hours and no robot ran, because moving the lanes to Codex needed someone to type <code>codex-takeover on</code> (d13).</p>
+      <p><strong>Route change.</strong> A root timer on the VPS (<code>danceannex-codex-autopilot</code>, every 5 minutes) reads the Sentinel's Claude-down state from event-gate. When it says down, the autopilot moves each lane on its allowed list from <code>executors.&lt;lane&gt;</code> = cloud to codex (never <code>holder</code>), tests recovery by handing the Responder back, and hands back only the lanes it moved, each while holding that lane's Codex pass lock. Every move is a Lease Log row with By = <code>codex-autopilot</code> and one line in #desk-status through event-gate's <code>send_ops_text</code>.</p>
+      <p><strong>Failure mode.</strong> If the Sentinel state, the Responder's report or the lease cannot be read, that tick moves nothing and logs one line on the VPS. It installs off with an empty allowed list; <code>codex-takeover auto off</code> stops it, and a person's own lease change always wins.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>The invoice chase no longer reads the studio's own Gmail or system notices as the payer writing in<span class="kind">event-gate chase sweep (invoices) &middot; route &middot; EVENT-GATE chase_sweep.py, test_chase_payer_mail_own_and_system.py, PR 1052 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1660">desk-correspondence #1660</a></span></h3></summary>
       <p>Junyan: &ldquo;d183 ("183 yes")&rdquo;</p>
       <p><strong>Why.</strong> The Desk Watch DO check failed: <code>payer_mail</code> (PR 1052) counted mail from the studio's own Gmail (thedanceannex@gmail.com, not on the danceannex.ca domain) and system notices as a payer reply, which held reminders and filed "payer replied" Reviews for nothing.</p>
