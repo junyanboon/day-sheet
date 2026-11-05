@@ -1364,6 +1364,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 
   <ul class="log">
 <!-- changes:start -->
+    <li class="entry alert">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>The Sentinel's Claude-down post is one line, "Claude is down. Codex is taking over."<span class="kind">The Sentinel &middot; route &middot; EVENT-GATE claude_down.py, library/lanes.md, Agent Workspace fleet/wayfinder/codex-autopilot/SPEC.md, d13 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1657">desk-correspondence #1657</a></span></h3></summary>
+      <p>Junyan: &ldquo;It needs to be just one short line each. As of right now I just need something like Claude is down Codex is taking over.&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-10-26 Claude was down for about 5 hours and no lane ran, because moving the robots to Codex waited on Junyan typing <code>codex-takeover on</code>. Junyan, d13: when Claude is down, Codex takes over by itself and hands back after. The Codex autopilot on the VPS does that move, so the Sentinel's posts no longer carry steps.</p>
+      <p><strong>Route change.</strong> The Sentinel's hourly Claude-down check posts one line to #desk-status: "🛑 Claude is down. Codex is taking over." When a cloud lane runs again while a lane is still on Codex, it posts "✅ Claude is back. Codex is handing the robots back." The status-page note, the lane names, the lease-key command and the <code>codex-takeover</code> steps are gone from both posts. The Sentinel's rule for "down" did not change.</p>
+      <p><strong>Failure mode.</strong> The post does not check whether the Codex autopilot is on or allowed to move anything. If it is off, <code>codex-takeover on</code> and <code>off</code> on Junyan's Mac still work as before (<code>failover/codex/READINESS.md</code>), and <code>codex-takeover auto status</code> shows what the autopilot is doing.</p>
+    </details>
+    </li>
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
