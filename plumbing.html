@@ -1397,6 +1397,35 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-04</span>
+      <h3>A weekly series counts as one room visit per occurrence, so a series renter's one-off booking is not a "first visit"<span class="kind">event-gate &middot; route &middot; EVENT-GATE booking_sweep.py (room_history_rows, skedda_room_visits, prior_room_bookings), host_sweep.py tier_for &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1646">desk-correspondence #1646</a></span></h3></summary>
+      <p>Junyan: &ldquo;d104 yes, d133 yes&rdquo;</p>
+      <p><strong>Why.</strong> On 2026-11-01 Claudia Dzierbicki (Avante Dance Company, Skedda user 4018614) got a "first visit" welcome text for a one-off Studio 527 booking (123297180), though her weekly 527 series (118550158, Mondays since Sep 7) had run for eight weeks. Skedda hands a series back stamped with its first day, so the room history saw one Sep 7 booking instead of every Monday, and the room timer read her as away.</p>
+      <p><strong>Route change.</strong> The holder's room history (the ladder's door-checked Skedda visits and the agreement rung's prior-booking check) now turns each recurring series into its dated occurrences inside the 60-day room timer before counting. Earlier occurrences of the booking's own series now count too. A series whose rule cannot be read is kept as one row, as before. Nothing is sent by this change; fewer welcome texts are queued for regulars.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>A bare Greeter card takes a returning platform guest's next relay<span class="kind">event-gate &middot; route &middot; services/event-gate/card_autolink.py (bare_card, is_bare), services/event-gate/greeter_sweep.py (ensure_platform_artist, _relay_review), services/event-gate/same_person.py (name_ask_key, ask), library/relay-addresses.md item 6c &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1652">desk-correspondence #1652</a></span></h3></summary>
+      <p>Junyan: &ldquo;d112 and d113 (2026-11-04): stop duplicate Peerspace guest cards&rdquo;</p>
+      <p><strong>Why.</strong> Atusa M. sent three Peerspace requests with no phone and got three cards and three "same person?" Decisions.</p>
+      <p><strong>Route change.</strong> When no card holds a new relay, the Greeter first looks for a bare card it made for the same label and platform (no phone, email, code, Skedda id, Paid by, Sales ticket or past board row). One or several: the relay is filed on the oldest, no card is made and no question is asked. The same check runs before a <code>[thread-relay:]</code> Review row. The "Is this the same?" Decision is keyed per guest name and platform; while it is open, a later new card is added to its Basis instead of a second row.</p>
+      <p><strong>Failure mode.</strong> A failed read finds no bare card, so the Greeter makes a new card and asks, as before. Kill switch: <code>CARD_AUTOLINK_DISABLED=1</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>No lane writes to an Artist page body; dated lines go to the row that asked<span class="kind">event-gate &middot; route &middot; services/event-gate/renewal_signed.py (NotionDesk.set_artist, run close line), services/event-gate/agreement_end.py, library/house-rules.md (The Artist page body stays empty), library/doorman-access-lifecycle.md, library/action-board-routing.md (d82 read-why bullet) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1647">desk-correspondence #1647</a></span></h3></summary>
+      <p>Junyan: &ldquo;d17 (2026-11-04): there should be no notes in the body of the artist's page; d11 (2026-11-04): read-why feedback rows get the cause line&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wants Artist page bodies empty (d17); a lane's "read why" feedback row was being answered <code>not-mine</code> (d11).</p>
+      <p><strong>Route change.</strong> The renewal series lane no longer appends a dated paragraph to the Artist page body; the same line (old end date, Renew unticked) now ends the handoff row's <code>RENEWAL-SIGNED-V1</code> close line. Agreement-end steps tell the person to note the change on the Action row. Doorman job D records an old code in its pass report's <code>differs</code> list. A "read why" Sweep Feedback row gets <code>Lane feedback disposition: cause ...; fix needs the Shipper: ...</code> and Status Applied.</p>
+      <p><strong>Failure mode.</strong> Unchanged: a card that does not read back files one Review row and the handoff stays open.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
       <h3>A new "Booking sweep FAILED" row now texts Junyan's phone once<span class="kind">event-gate &middot; route &middot; services/event-gate/booking_sweep.py, services/event-gate/owner_text_release.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1633">desk-correspondence #1633</a></span></h3></summary>
       <p>Junyan: &ldquo;pending&rdquo;</p>
       <p><strong>Why.</strong> Leo Roytman's "Booking sweep FAILED" row (693, Nov 6) sat open on the Actions board from Nov 1 and nobody saw it; Matt Lepoidevin's (Nov 5) was another. Junyan, 2026-11-04, d83: "Text me specifically for the Leo type cases".</p>
