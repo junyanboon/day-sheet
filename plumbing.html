@@ -1367,6 +1367,34 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-04</span>
+      <h3>A new "Booking sweep FAILED" row now texts Junyan's phone once<span class="kind">event-gate &middot; route &middot; services/event-gate/booking_sweep.py, services/event-gate/owner_text_release.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1633">desk-correspondence #1633</a></span></h3></summary>
+      <p>Junyan: &ldquo;pending&rdquo;</p>
+      <p><strong>Why.</strong> Leo Roytman's "Booking sweep FAILED" row (693, Nov 6) sat open on the Actions board from Nov 1 and nobody saw it; Matt Lepoidevin's (Nov 5) was another. Junyan, 2026-11-04, d83: "Text me specifically for the Leo type cases".</p>
+      <p><strong>Route.</strong> When the Registrar first files that row for a booking that has not started, it also writes one owner text on Junyan's card at Pending Review, tagged <code>[owner:registrar-failed:&lt;key&gt;] [sms]</code>, Raised by The Registrar: renter, studio, time, a one-line reason and the row link. owner_text_release (which now accepts The Registrar) flips it to Ready to Send and the Send Engine texts his phone. A dedupe repeat never texts, the tag is checked before writing, and a read the d81 retry recovered files no row and no text. The row stays on the board as before. No other alert kind texts him.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>A script switches the invoice-first lane from shadow to live (and back)<span class="kind">event-gate &middot; failure &middot; services/event-gate/hosting/enable-open-invoice-first-live.sh, services/event-gate/open_invoice_watch.py (invoice_first_mode), library/autonomy.md (Grant: invoice-first release) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1636">desk-correspondence #1636</a></span></h3></summary>
+      <p>Junyan: &ldquo;"81 yes" (2026-11-04)&rdquo;</p>
+      <p><strong>Why.</strong> After the shadow week, Junyan approved turning the invoice-first lane live (d81).</p>
+      <p><strong>Route change.</strong> None until Junyan runs the script: it sets OPEN_INVOICE_FIRST=live in event-gate.env and recreates event-gate. Live, the lane queues held reminder and release texts and releases unpaid desk-made bookings as the 2026-10-28 entry describes.</p>
+      <p><strong>Failure mode.</strong> The script waits for the deploy and Ops locks, backs up the env file, and restores it if event-gate is not healthy or does not read the new mode. <code>shadow</code> or <code>off</code> undoes it.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
+      <h3>Closed Case B refusal rows stop logging every tick, and Slack errors name the missing scope<span class="kind">event-gate (reconcile tick, owner_notify) &middot; failure &middot; services/event-gate/first_case_cloud.py, services/event-gate/first_case.py, services/event-gate/owner_notify.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1637">desk-correspondence #1637</a></span></h3></summary>
+      <p>Junyan: &ldquo;(2026-11-04, d88) "88 yes"&rdquo;</p>
+      <p><strong>Why.</strong> Every 10 minutes the reconcile tick logged "alarm service refused a Case B create twice" for two Concierge rows Processed in October, because the AK refusal query read closed rows too. Separately, ela-feed failed on <code>users.conversations</code> with a bare <code>missing_scope</code>, which did not say which scope to add.</p>
+      <p><strong>Failure mode change.</strong> The AK refusal query now skips rows whose Status is Processed, Cancelled or Won't Do. <code>first_case.report</code> no longer logs a case it has already counted ("seen"); new, filed and error results still log. A failed Slack API call now raises with Slack's <code>needed=</code> and <code>provided=</code> fields when Slack sends them, so the next scope error names the exact scope.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-04</span>
       <h3>The booking sweep asks Notion again when a read drops its TLS connection, and the card closes itself on a clean pass<span class="kind">event-gate &middot; failure &middot; services/event-gate/booking_sweep.py, services/event-gate/test_lookup_recovery.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1631">desk-correspondence #1631</a></span></h3></summary>
       <p>Junyan: &ldquo;approved&rdquo;</p>
       <p><strong>Why.</strong> On 2026-11-04 at 17:18Z the artist lookup for Matt Lepoidevin failed on "[SSL: UNEXPECTED_EOF_WHILE_READING]". The read retry only covered timeouts and connection errors, so the booking got a "Booking sweep FAILED" card, and that card was not on the auto-close list (d81, Junyan 2026-11-04).</p>
