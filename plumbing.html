@@ -1367,6 +1367,26 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>The no-reply 48 h release now files a Deck card instead of cancelling<span class="kind">event-gate &middot; route &middot; services/event-gate/open_invoice_watch.py (consent_first, consent_card_info, consent_decide), deck-app src/open-invoice-cancel.js, library/autonomy.md (Grant: invoice-first release), library/desk-sort.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1644">desk-correspondence #1644</a></span></h3></summary>
+      <p>Junyan: &ldquo;d88 (2026-11-05): the consent / no-reply path must stop removing a further-out booking at 48 hours by itself; d87: the same-day and next-day 1 h release stays automatic&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wants to approve each release (d88), as he does for the invoice path since d85. The 24 h check-in stays automatic.</p>
+      <p><strong>Route change.</strong> At the further-out no-reply release step (48 h, or 2 h before the start if sooner) the timer files ONE Charges-tab card keyed <code>[consentfirst:&lt;Charge row id&gt;]</code> (Type Charge, For Junyan, an <code>OI-V1</code> line with <code>"consent"</code> and no invoice) and records <code>carded</code> in its state, so it files once. Nothing is removed. The Deck's Cancel / Keep / Remind write a <code>(consent-first)</code> line with no Stripe call; the open-invoice pass (<code>consent_decide</code>, live mode only) then removes the booking on Cancel, logs the <code>[invfirst:consent:]</code> evidence, sets the money row Cancelled and holds the released text at Pending Review. Remind queues one held check-in per click. Shadow logs "would card". Same-day and next-day no-reply releases are unchanged.</p>
+      <p><strong>Failure mode.</strong> A failed money-row or Stripe read files no card that pass and tries again. A yes, a CHARGED, INVOICED or PAID line, or a Stripe payment for the row closes the card Processed and keeps the booking, even after a Cancel click. A booking that starts with no click closes the card and nothing is removed. A failed removal retries twice, then raises a staff Action. Until the Deck PR is live the card shows on the Charges tab without working buttons.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>The Charges tab decides the no-reply booking card (consentfirst)<span class="kind">The Deck &middot; route &middot; src/open-invoice-cancel.js (consentFields, consentPreview, consentRun), sources/deck.html (cfCard, isOpenInvoiceRow), canon services/event-gate/open_invoice_watch.py (consent_decide) &middot; <a href="https://github.com/junyanboon/deck-app/pull/678">deck-app #678</a></span></h3></summary>
+      <p>Junyan: &ldquo;d88 (2026-11-05): remove a further-out no-reply booking only after Junyan presses Cancel&rdquo;</p>
+      <p><strong>Why.</strong> The canon lane no longer removes a further-out booking whose renter never said yes; it files a <code>[consentfirst:&lt;Charge row id&gt;]</code> card instead (d88).</p>
+      <p><strong>Route change.</strong> The open-invoice card's Cancel / Keep / Remind now also serve this card. The Deck makes no Stripe call for it (there is no invoice); it re-reads the money row, refuses when the renter said yes or the row was charged or closed, and writes one <code>(consent-first)</code> line. The canon lane carries the line out within 5 minutes.</p>
+      <p><strong>Failure mode.</strong> A failed Notion write throws and nothing is written, so nothing is removed; pressing again is safe.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>The invoice-first 48 h release now files a Deck card instead of cancelling<span class="kind">event-gate &middot; route &middot; services/event-gate/open_invoice_watch.py (invoice_first, _first_card, first_card_info, decide_row), library/autonomy.md (Grant: invoice-first release; Grant: an extension's unpaid Extra booking) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1642">desk-correspondence #1642</a></span></h3></summary>
       <p>Junyan: &ldquo;d85 (2026-11-05): the robot must not cancel bookings on its own at 48 hours&rdquo;</p>
       <p><strong>Why.</strong> Junyan wants to approve each release (d85). The 24 h reminder stays automatic.</p>
