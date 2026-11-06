@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-06</span>
+      <h3>Every text to Junyan's cell is one SMS segment, emoji kept (70 UTF-16 units, or 160 if plain GSM-7), no reply asks<span class="kind">event-gate (URGENT summons, Stuck Access, Access unclaimed, Urgent decision, Sentinel, Steward report, handoff text) &middot; failure &middot; services/event-gate/actuator.py (sms_fit, page_phone, send_ops_text, send_summons), services/event-gate/handoff_text.py (body_for), services/event-gate/access_unclaimed.py, services/event-gate/steward_report.py, services/event-gate/urgent_decision_sweep.py, services/event-gate/sentinel_evidence.py, services/event-gate/test_sms_one_segment.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1697">desk-correspondence #1697</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-11-06, every SMS to him must be exactly 1 segment; later the same day "I won't be replying to these texts... I also want to keep the emojis so make the message even more tight"&rdquo;</p>
+      <p><strong>Why.</strong> Long texts made Phone.com bill owner texts as several segments. Junyan wants the emoji kept and no "reply ..." asks, since he does not answer alert texts.</p>
+      <p><strong>Route change.</strong> None. Texts still go to ON_CALL_PHONE through Phone.com (then Twilio), at the same moments. Each alert now leads with emoji, what, and who or where (for example "🔴 Access text not sent: Nina Li 509A 6PM"). The Steward "could not fix" text no longer asks for a reply; that call lives on the Fixer row.</p>
+      <p><strong>Failure mode.</strong> <code>actuator.sms_fit</code> runs on every owner text: dashes and curly quotes become plain ones, emoji and non-Latin letters stay. A text with any non-GSM-7 character must fit 70 UTF-16 units, a plain one 160 septets; over that it is cut at a word and ends "...". The full words stay on the Fixer row and in the gate log. A long text is cut, never refused or dropped.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-06</span>
       <h3>Attendance no longer refuses a renter with a blank Alarm User ID, and says so to the Fixer<span class="kind">Attendance (board_status.py) &middot; failure &middot; services/event-gate/board_status.py (renter_people, identity_note, observe_failure_line), services/event-gate/test_attendance_blank_renter_id_d237.py, services/event-gate/conftest.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1694">desk-correspondence #1694</a></span></h3></summary>
       <p>Junyan: &ldquo;d237 (2026-11-06, "237 yes")&rdquo;</p>
       <p><strong>Why.</strong> A full alarm user reset on 2026-11-06 16:30 UTC may have blanked or changed renters' Alarm User IDs. A blank renter id made every pass refuse the row ("missing stable alarm identity for renter"), and the refusal was seen only in the hourly error log.</p>
