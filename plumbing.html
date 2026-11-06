@@ -1366,6 +1366,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-11-06</span>
+      <h3>Attendance no longer refuses a renter with a blank Alarm User ID, and says so to the Fixer<span class="kind">Attendance (board_status.py) &middot; failure &middot; services/event-gate/board_status.py (renter_people, identity_note, observe_failure_line), services/event-gate/test_attendance_blank_renter_id_d237.py, services/event-gate/conftest.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1694">desk-correspondence #1694</a></span></h3></summary>
+      <p>Junyan: &ldquo;d237 (2026-11-06, "237 yes")&rdquo;</p>
+      <p><strong>Why.</strong> A full alarm user reset on 2026-11-06 16:30 UTC may have blanked or changed renters' Alarm User IDs. A blank renter id made every pass refuse the row ("missing stable alarm identity for renter"), and the refusal was seen only in the hourly error log.</p>
+      <p><strong>Failure mode.</strong> A blank renter id now keeps the ids that do exist (authorized users) and lets the renter's names and the board Disarmed cell carry the arrival. The card's Basis gets an "Alarm ids: renter has no Alarm User ID (name)" line. The row is refused only when nobody on the card has an id or a name. When observe() refuses a row (any plain ValueError, not a coverage gap or stale ledger), one 🔧 Sweep Feedback line for The Fixer names the cards with a blank id, once per renter card per day. Warning only: filing it never blocks the pass. Kill switch <code>OBSERVE_FIXER_LINE=off</code>.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-11-05</span>
       <h3>Real emergencies text Junyan's phone as well as filing the Fixer row<span class="kind">event-gate &middot; route &middot; services/event-gate/owner_notify.py, services/event-gate/actuator.py, services/event-gate/owner_text_release.py, services/event-gate/stuck_access.py, services/event-gate/access_unclaimed.py, services/event-gate/urgent_decision_sweep.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1688">desk-correspondence #1688</a></span></h3></summary>
       <p>Junyan: &ldquo;1 text 2 yes 3 yes&rdquo;</p>
