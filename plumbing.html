@@ -1367,6 +1367,34 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>Real emergencies text Junyan's phone as well as filing the Fixer row<span class="kind">event-gate &middot; route &middot; services/event-gate/owner_notify.py, services/event-gate/actuator.py, services/event-gate/owner_text_release.py, services/event-gate/stuck_access.py, services/event-gate/access_unclaimed.py, services/event-gate/urgent_decision_sweep.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1688">desk-correspondence #1688</a></span></h3></summary>
+      <p>Junyan: &ldquo;1 text 2 yes 3 yes&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-11-05, follow-up to PR 1687 (#desk-status closed). A Fixer row alone is not seen in real time, so a real emergency must also reach his phone.</p>
+      <p><strong>Route.</strong> <code>owner_notify.send(..., urgent=True)</code> files the Fixer row and also texts Junyan through <code>actuator.page_phone</code> (Phone.com, then Twilio: the owner text path the callers already fell back to). It counts as sent when either lands, so no caller texts twice. Urgent callers: every summons (<code>actuator.send_summons</code>: renter emergency texts, escalation, emergency scorecard, panel door alarms from <code>alarm_watch</code>), stuck access pages (<code>stuck_access</code>, and <code>owner_text_release</code> for <code>[urgent:</code> rows), unclaimed access pages (<code>access_unclaimed</code>) and urgent decisions (<code>urgent_decision_sweep</code>). Every other notice stays a Fixer row only.</p>
+      <p><strong>Fixer ping.</strong> Rulings 2 and 3: the Mac <code>fixer-ping</code> task stays off (it was already disabled; the <code>/fixer-ping</code> route has queued nothing since d369), and the <code>emergency-writer-shadow-review</code> task now reads the writer's watch-only drafts from Fixer rows instead of #desk-status.</p>
+    </details>
+    </li>
+    <li class="entry llm">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>The Concierge answers Desk Drops on the row, names carry-overs instead of Skipping, reports JOB7 sampling every evening, and routed-no-draft rows with no ticket need no pickup<span class="kind">concierge &middot; failure &middot; library/concierge-orchestration.md, library/job-7-self-heal.md, services/event-gate/concierge_intake.py, scripts/intake_decide.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1686">desk-correspondence #1686</a></span></h3></summary>
+      <p>Junyan: &ldquo;16 yes, 18 yes, 19 yes, 20 yes&rdquo;</p>
+      <p><strong>Why.</strong> Cloud passes reported Desk Drop replies as a Slack-reply runtime gap and raised Actions for it, though the drop sweep already posts what the Concierge writes on the drop's row. Items waiting on another lane or on Junyan (Hossein, Jennifer) ended passes Skipped. A robot-lane routed-no-draft audit row with no ticket was typed <code>handed_off</code>, so the reader kept surfacing it (audit 3f27503281c4810c8c68d19eafcbf355, fixed by hand on 2026-11-05).</p>
+      <p><strong>Failure mode change.</strong> The Concierge answers a drop by writing Work Owner, Slack Update and Follow-through on its row; there is no Slack-reply gap and no Action for it. An item waiting on another lane or on Junyan is a named carry-over, not Skipped Steps; an alarm panel re-check goes to the Doorman or Door Checker with one deduped Action. A ticket at Review with Junyan's own send or booking as evidence gets its non-message receipt in the same pass; leaving it is Skipped. JOB7 sampling reports <code>JOB7-sampling ran: N rows judged, M feedback rows</code> every evening, or <code>sampling carried (&lt;date&gt;)</code> after the 22:00 window; three carried days in a row are Skipped Steps with one deduped Action. intake_decide types a routed-no-draft row with no ticket as <code>no_reply_needed</code> (with a ticket it stays <code>handed_off</code>), and concierge_intake notes such a row before reading Pickup.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
+      <h3>Agreements cards get an Approve without email button<span class="kind">The Deck &middot; route &middot; public/agreements-tab.js (Approve without email), src/agreements.js (approve with no text sends nothing) &middot; <a href="https://github.com/junyanboon/deck-app/pull/710">deck-app #710</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-11-05, d12 "yes": re-approve Maggie Morrison Makos and Angus, whose links paused after PR 709, without emailing them again.&rdquo;</p>
+      <p><strong>Why.</strong> A card change pauses a renter's link. Approve and send was the only button, so re-approving also emailed the renter a link they already had.</p>
+      <p><strong>Route.</strong> Approve without email posts the row with no message text. The server approves, keeps the same link slug live, and sends no email. Approve and send is unchanged. The amber "Skedda differs" warning shows on both buttons and never blocks.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>#desk-status is closed: every owner notice is now one Fixer row<span class="kind">event-gate &middot; route &middot; services/event-gate/owner_notify.py, services/event-gate/lane_common.py, services/event-gate/minute_sent_watch.py, services/event-gate/move_reader.py, services/event-gate/move_sweep.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1687">desk-correspondence #1687</a></span></h3></summary>
       <p>Junyan: &ldquo;1 yes and move all message to the fixer instead, 2 yes 3 yes 4 move everything to fixer. I'm closing this channel&rdquo;</p>
       <p><strong>Why.</strong> Junyan, 2026-11-05, closing Slack #desk-status. Overrides d48 (2026-11-04), which had sent info-only notices and the move reader digest to #desk-status.</p>
