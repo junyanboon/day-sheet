@@ -1367,6 +1367,17 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>#desk-status is closed: every owner notice is now one Fixer row<span class="kind">event-gate &middot; route &middot; services/event-gate/owner_notify.py, services/event-gate/lane_common.py, services/event-gate/minute_sent_watch.py, services/event-gate/move_reader.py, services/event-gate/move_sweep.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1687">desk-correspondence #1687</a></span></h3></summary>
+      <p>Junyan: &ldquo;1 yes and move all message to the fixer instead, 2 yes 3 yes 4 move everything to fixer. I'm closing this channel&rdquo;</p>
+      <p><strong>Why.</strong> Junyan, 2026-11-05, closing Slack #desk-status. Overrides d48 (2026-11-04), which had sent info-only notices and the move reader digest to #desk-status.</p>
+      <p><strong>Route.</strong> <code>owner_notify.send</code> YOU route (and the DROP fallback) now files one Actions row: Raised by The Fixer, For Junyan, Type Review, keyed <code>[owner:&lt;Toronto day&gt;:&lt;hash&gt;]</code>, no @mention. Every caller moves with it: registrar no-way-forward and stall notices, open-invoice cards and auto-voids, stuck/unclaimed access pages, summons, alarms (sentinel, climate), Skedda watch, relay login, Claude down, disk watch, GTG, stale-claim, treasurer, and the owner Message Queue rows <code>owner_text_release.py</code> releases (Desk Sort problem texts, Need Help, Urgent, fixer ping, 693 closes). <code>lane_common.desk_status_notice</code> / <code>fyi_row</code> file a keyed Fixer row. A failed board write still falls back to SMS. <code>OWNER_NOTIFY_ROUTE=slack</code> restores the old post.</p>
+      <p><strong>Minute-send watch.</strong> No hourly alert. One Fixer row a Toronto day (<code>[minute-sent-&lt;day&gt;]</code>), only when 5 or more messages went by the every-minute backup that day. Info only: they still sent.</p>
+      <p><strong>Move reader digest.</strong> It counted every pass's log line (833 "disagreements" were 3 message ids); now each message id counts once. Its blank readings were on "Ok thanks!", "Sounds good!", "Yup": every pooled message was read as a possible yes to a move offer the reader was never shown. Now only a first reply to a desk move question is shadow-read, with that question in its thread. The digest is one Fixer row a day.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>The Responder pass posts its steps live to one Notion progress block<span class="kind">Responder (cloud) &middot; tool, failure &middot; scripts/responder_progress.py, scripts/test_responder_progress.py, config/responder-progress.json, library/the-responder.md &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1683">desk-correspondence #1683</a></span></h3></summary>
       <p>Junyan: &ldquo;2026-11-05 ("make one for the Responder as well")&rdquo;</p>
       <p><strong>Why.</strong> A Responder pass showed nothing until its report block at the end, so the new responder-watch viewer on the Mac could not show what a pass was doing.</p>
