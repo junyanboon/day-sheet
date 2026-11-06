@@ -1367,6 +1367,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-05</span>
+      <h3>Send Engine stops false "event-gate not answering" pauses<span class="kind">send-engine &middot; failure &middot; SEND-ENGINE Code.gs gateMark_ v56, send-engine PR 78, d231 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1682">desk-correspondence #1682</a></span></h3></summary>
+      <p>Junyan: &ldquo;d231 ("yes")&rdquo;</p>
+      <p><strong>Why.</strong> Six "event-gate not answering, its checks are paused" alerts on 11/04 and 11/05 were false. docIntakeTick's heartbeat write through the store door at :47 left the shared in-flight mark, and a main run starting in those seconds read the live call as a killed run, so it paused the event-gate checks for 10 minutes.</p>
+      <p><strong>Failure mode change.</strong> Only main(), while it holds the script lock, sets the in-flight mark. A main run killed inside an event-gate call still pauses the checks; a timeout on any path still pauses them; another trigger's live call no longer does.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-05</span>
       <h3>The Concierge run posts its steps live to one Notion progress block<span class="kind">Concierge (cloud) &middot; tool, failure &middot; EVENT-GATE concierge_progress.py, concierge_gate.py, concierge_pass.py, config/concierge-progress.json, test_concierge_progress.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1675">desk-correspondence #1675</a></span></h3></summary>
       <p>Junyan: &ldquo;d5 ("5 yes")&rdquo;</p>
       <p><strong>Why.</strong> From outside, a Concierge run showed nothing until its report line at the end. The concierge-watch viewer on the Mac could not show what a run was doing.</p>
