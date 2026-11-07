@@ -1366,6 +1366,15 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
 <!-- changes:start -->
     <li class="entry det">
     <details>
+      <summary><span class="when">2026-11-07</span>
+      <h3>Combine and By renter presses never text a pay link for a Timekeeper row<span class="kind">The Deck &middot; route, failure &middot; src/charge.js (runCombined, tk), src/index.js (combinedChargeRun), src/renter-bill.js (runRenter, timekeeper), src/bundle.js (timekeeperRow), sources/deck.html (isTimekeeperRow, combineRun, brComposeGo) &middot; <a href="https://github.com/junyanboon/deck-app/pull/727">deck-app #727</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-11-07, d16: apply the d10 + d14 no-text rule to the two bulk paths.&rdquo;</p>
+      <p><strong>Why.</strong> PR 726 stopped the single-row press texting a pay link for a Timekeeper row, but Combine (failInvoice) and By renter "Invoice all + message" could still queue or send one.</p>
+      <p><strong>Route.</strong> Combine holding any Timekeeper row (Raised by The Timekeeper, or Request <code>[ot:K:charge]</code>): no card means Stripe emails the one invoice for all ticked rows and no pay link text is queued (<code>no_text</code>); a declined card only fails, no invoice. By renter with a Timekeeper row and channel Text: Stripe emails the invoice and the typed text is not sent (<code>no_text</code>); Email, Invoice only and Charge card are unchanged. The Deck's toast says so. One shared rule, <code>Bundle.timekeeperRow</code>, now serves the Deck, src/charge.js and <code>Bundle.timekeeperCharge</code> (which now counts the <code>[ot:]</code> tag too).</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
       <summary><span class="when">2026-11-06</span>
       <h3>A Timekeeper row whose text already went alone bills by Stripe's emailed invoice, no pay link text<span class="kind">The Deck &middot; route, failure &middot; src/charge.js (run, no_text), src/index.js (/api/charge/run), sources/deck.html (chargeBtnLabel, isTimekeeperRow, clChargeBtns) &middot; <a href="https://github.com/junyanboon/deck-app/pull/726">deck-app #726</a></span></h3></summary>
       <p>Junyan: &ldquo;2026-11-06, d10: these rows get no text. d14: with no card, the press sends Stripe's emailed invoice and no text.&rdquo;</p>
