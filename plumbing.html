@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-06</span>
+      <h3>Concierge intake checkpoints read only open Audit Log rows, and the queue marker read may pass 1000 rows<span class="kind">Concierge (concierge_items.py --checkpoints, concierge_intake.py, concierge_deadlines.py) &middot; failure &middot; services/event-gate/concierge_intake.py (inspect), services/event-gate/concierge_deadlines.py (query, QUEUE_CAP), services/event-gate/concierge_items.py (checkpoint), services/event-gate/tests/test_concierge_intake.py, services/event-gate/tests/test_concierge_deadlines_cap.py, services/event-gate/tests/test_concierge_items_read_error.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1702">desk-correspondence #1702</a></span></h3></summary>
+      <p>Junyan: &ldquo;none yet (PR waits on his merge and deploy)&rdquo;</p>
+      <p><strong>Why.</strong> The 2026-11-06 20:10 pass refused every intake checkpoint: the scoped read pulled every routed/stub Audit Log row since 2026-09-11 (no Concierge Done filter), went past the 1000-row cap, and the empty result read as "source absent".</p>
+      <p><strong>Route change.</strong> None. Nothing new is sent or queued.</p>
+      <p><strong>Failure mode.</strong> A scoped checkpoint read now uses the Concierge Done filter like the full read, and fetches any named head the tick ticked in between by id. The Message Queue marker reads (intake and deadlines) may return up to 10000 rows and print a WARNING past 1000; other reads keep the 1000 cap. Bad pagination still fails closed. A checkpoint refused by a failed read now says "intake read incomplete" with the read error, not "source absent".</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-06</span>
       <h3>A stale ticket goes to the Fixer, and a blocked Review ticket goes back to its Gate<span class="kind">event-gate (Desk Invariants Y, auto-review), intake_decide &middot; failure &middot; services/event-gate/stale_ticket_watch.py, services/event-gate/auto_review.py (open_blocked_lines), services/event-gate/invariants.py (run_stale_tickets, e_due_why), scripts/intake_decide.py (requested_date), services/event-gate/test_stale_ticket_watch.py &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1701">desk-correspondence #1701</a></span></h3></summary>
       <p>Junyan: &ldquo;2026-11-06, d7 "we just need to get these tickets done on time so they don't get stale.. like pushed to the fixer"; d8; d9&rdquo;</p>
       <p><strong>Why.</strong> Maggie Morrison's lesson ticket sat at Review for 12 days (Oct 25 to Nov 6) while her Oct 26 booking (Skedda 123441114) was already paid. Auto-review had moved it there over an open "Blocked, staff" line, the terminal gate's keep_open wrote nothing, and the Desk Invariants nudge named the Concierge, which leaves Review to the Custodian.</p>
