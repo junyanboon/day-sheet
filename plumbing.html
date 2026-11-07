@@ -1367,6 +1367,24 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-07</span>
+      <h3>Invoice reminder and insufficient funds heads-up use Junyan's new words; the heads-up carries the pay link<span class="kind">The Chase Sweep, The Treasurer &middot; route &middot; services/event-gate/chase_sweep.py (DEFAULT_INVOICE_BODY, compose_invoice), services/event-gate/failed_payment_ticket.py (DECLINED_CARD_BODY, draft_text), services/event-gate/treasurer_sweep.py (failed payment draft) &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1719">desk-correspondence #1719</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-11-07: new Correct Response on HTR "Invoice reminder — unpaid invoice" and "Card declined: insufficient funds (heads-up)".&rdquo;</p>
+      <p><strong>Why.</strong> Junyan reworded both renter payment texts on 2026-11-07.</p>
+      <p><strong>Route.</strong> The invoice reminder ends at the link ("You can find it here: [invoice link]."), with "You can find it in the invoice we sent you." when no link can be read. The Treasurer's insufficient funds heads-up now reads the HTR words and asks the Deck for the failed invoice's pay.danceannex.ca link; if none can be made it still queues, pointing at the invoice we sent. Both still wait at Pending Review.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-07</span>
+      <h3>No card or a declined card is always invoice + queued text, Timekeeper rows too, never Stripe's email<span class="kind">The Deck &middot; route &middot; src/charge.js (run textAfter, extraTimeFields, runCombined), src/pay-link-text.js (forCharge), src/charge-fail-text.js (queueFailText), src/index.js (charge run, combinedChargeRun), src/renter-bill.js (runRenter), sources/deck.html (clPayTextOf, clChargeBtns, brComposeHtml) &middot; <a href="https://github.com/junyanboon/deck-app/pull/729">deck-app #729</a></span></h3></summary>
+      <p>Junyan: &ldquo;2026-11-07: "No email, ever, for these" (reverses d10, d14, d16 and PRs 726/727); "D is also good" (FAIL_TEXT unchanged).&rdquo;</p>
+      <p><strong>Why.</strong> Junyan wants a renter with no card or a declined card to get the pay link by text, never Stripe's emailed invoice, Timekeeper extra time rows included.</p>
+      <p><strong>Route.</strong> Charge press, single row: no card or a declined card makes the Stripe invoice (not emailed) and queues the pay link text at Pending Review for the owner's Send, Timekeeper rows too. A Timekeeper no card row gets the approved overtime text (early or late minutes line); a declined card always gets FAIL_TEXT. Combine: the same, with NO_CARD_TEXT naming every booking day, or FAIL_TEXT with "your N bookings" and the combined total. By renter Invoice all: Text stays Text when a Timekeeper row is in it. The <code>no_text</code> flag and its skips are gone.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-07</span>
       <h3>The fast-track list now carries the booking holder's authorised users and any named facilitator, not just the holder<span class="kind">watchlist &middot; route &middot; CANON scripts/watchlist_build.py companions(), scripts/test_watchlist_companions.py, d5 d6 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1717">desk-correspondence #1717</a></span></h3></summary>
       <p>Junyan: &ldquo;anyone who is an auth user of the person who has a booking should be on the fast track along with anyone who's listed as a facilitator&rdquo;</p>
       <p><strong>Why.</strong> Sergio Acanne texted "My code doesn't work" for Studio 527, Nov 7 8:30 AM, on a booking held by Tufan Bhattarai with "[Facilitator: Sergio Acanne]". Only Tufan's phone was on the list, so the event gate logged <code>not_on_watchlist</code> and no quick-answer card went out. Same shape on Nov 1.</p>
