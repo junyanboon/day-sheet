@@ -1367,6 +1367,16 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
     <li class="entry det">
     <details>
       <summary><span class="when">2026-11-07</span>
+      <h3>The fast-track list now carries the booking holder's authorised users and any named facilitator, not just the holder<span class="kind">watchlist &middot; route &middot; CANON scripts/watchlist_build.py companions(), scripts/test_watchlist_companions.py, d5 d6 &middot; <a href="https://github.com/junyanboon/desk-correspondence/pull/1717">desk-correspondence #1717</a></span></h3></summary>
+      <p>Junyan: &ldquo;anyone who is an auth user of the person who has a booking should be on the fast track along with anyone who's listed as a facilitator&rdquo;</p>
+      <p><strong>Why.</strong> Sergio Acanne texted "My code doesn't work" for Studio 527, Nov 7 8:30 AM, on a booking held by Tufan Bhattarai with "[Facilitator: Sergio Acanne]". Only Tufan's phone was on the list, so the event gate logged <code>not_on_watchlist</code> and no quick-answer card went out. Same shape on Nov 1.</p>
+      <p><strong>Route change.</strong> For every booking the watchlist build also adds a row (same studio and window, the person's own name, alarm code and Artist page, plus <code>via</code> = the holder) for each Artist in the holder's <code>Authorized Users</code> relation and each name in <code>[Facilitator: ...]</code> or <code>(Facilitator: ...)</code> in the calendar title. A person on two bookings gets one row with both windows.</p>
+      <p><strong>Failure mode.</strong> A facilitator name with no exact Artist match, or a person with no phone, is skipped quietly; the holder's row is unchanged. No switch: revert the PR to go back.</p>
+    </details>
+    </li>
+    <li class="entry det">
+    <details>
+      <summary><span class="when">2026-11-07</span>
       <h3>Combine and By renter presses never text a pay link for a Timekeeper row<span class="kind">The Deck &middot; route, failure &middot; src/charge.js (runCombined, tk), src/index.js (combinedChargeRun), src/renter-bill.js (runRenter, timekeeper), src/bundle.js (timekeeperRow), sources/deck.html (isTimekeeperRow, combineRun, brComposeGo) &middot; <a href="https://github.com/junyanboon/deck-app/pull/727">deck-app #727</a></span></h3></summary>
       <p>Junyan: &ldquo;2026-11-07, d16: apply the d10 + d14 no-text rule to the two bulk paths.&rdquo;</p>
       <p><strong>Why.</strong> PR 726 stopped the single-row press texting a pay link for a Timekeeper row, but Combine (failInvoice) and By renter "Invoice all + message" could still queue or send one.</p>
@@ -5676,6 +5686,7 @@ footer{margin-top:1.6rem;color:var(--muted);font-size:.78rem;max-width:70ch}
       <p><strong>Why.</strong> A person answered in as little as 18 s while the robot waited for its minute check, and its word list missed how renters say things.</p>
       <p><strong>Route change.</strong> A thread reads the business Gmail every 3 s; Phone.com's email copy of a text (about 5 s after it) runs the text check at once, and the minute check stays the backup (d414). When no card's words match a renter whose booking is on now, Jev picks among the emergency cards; at 0.70 or more, and only if that card's own checks pass, the card goes out like a word match (d415). When no card fits an urgent text, a model drafts 1 to 3 sentences from the renter's own facts; code checks it (no new digits or links, no dashes, short, a Jev second look). When the writer wakes, on-call is paged unless the classifier or the escalation check already did. For the first week it sends nothing and shows Junyan each draft in Slack, with codes, phone numbers and emails masked (d416).</p>
       <p><strong>Failure mode.</strong> Gmail unreadable: the minute check still runs. No Jev key or Jev down: today's behaviour, and a ledger row says so. Writer down: Junyan sees "no draft" in the shadow line. Switches: <code>SMS_WAKE_DISABLED</code>, <code>EMERGENCY_JEV_DISABLED</code>, <code>EMERGENCY_WRITER_DISABLED</code>; the writer sends only with <code>EMERGENCY_WRITER_LIVE=1</code>.</p>
+      <p><strong>Still shadow (Junyan, 2026-11-07, d6: no).</strong> The writer stays watch-only: <code>EMERGENCY_WRITER_LIVE</code> stays unset, so it drafts into Slack and sends nothing.</p>
     </details>
     </li>
     <li class="entry det">
